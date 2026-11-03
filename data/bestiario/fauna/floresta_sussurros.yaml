@@ -1,0 +1,661 @@
+# SPEC-370 R1 (lote 3) — bloco de fauna da Floresta dos Sussurros: 25 fichas da SPEC-349 + legado
+# `valoria` da região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# E18: 2 `imediato` no hub (Sombra Deitada e Abafador de Candeias).
+# Revisão de fauna: handoffs/SPEC-370-independent-review.md (lote 3; revisor ≠ autor).
+regiao: floresta_sussurros
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_lixado_da_fronteira:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [fs_fronteira_xylos]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um fio de poeira cinza e fina no chão de folhas, contínuo como o de saco furado, que volta sempre ao mesmo trecho."
+      resto: "Uma couraça de couro com a marca de dois tocos apertados no peito, e no lugar deles o couro virado pó."
+      som: "Um chiado seco, de areia escorrendo, que acompanha passos arrastados entre os troncos."
+      cheiro: "Pó de pedra e osso moído, seco, como de oficina de quem lapida mármore."
+      marca: "Num tronco da borda seca, a casca alisada numa curva macia do lado esquerdo, como se algo a tivesse gastado ao passar."
+      aproximacao: "Um homem gasto de um lado só, ombro e costelas terminando numa curva lisa de pó cinza, estende dois tocos sem dedos para o seu escudo."
+      rumor: "um lenhador conta que depois da névoa da borda o machado do irmão virou poeira na mão dele"
+    contra_jogo: "Manter distância ou largar o escudo antes que vire pó; depois de alguns agarrões os tocos chegam aos punhos e ele não segura mais nada."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_abafador_de_candeias:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [floresta_sussurros]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: imediato
+      rastro: "Riscos fundos de unha descendo um tronco de cabeça para baixo, que acabam na altura de um homem em pé."
+      resto: "Uma lanterna de viagem esmagada contra algo macio, o vidro inteiro, o pavio sufocado em fiapos pretos."
+      som: null
+      cheiro: "Pavio abafado e feltro morno, como de casaco que alguém usou para apagar uma vela."
+      marca: "Em volta do lugar de uma fogueira, os troncos lisos de cima a baixo, sem musgo, de tanto algo subir e descer neles."
+      aproximacao: "A sua chama apaga de repente contra um peito de feltro preto, e um rosto liso sem olhos, de orelhas em concha, está colado ao seu."
+      rumor: "os carvoeiros da floresta acendem fogo só no chão aberto, e com duas tochas, nunca uma"
+    contra_jogo: "Lutar com a luz no chão, longe de quem combate, ou com duas luzes; reacender logo devolve a mira, e sem luz para seguir ele se guia pelo ouvido."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_fechado_de_escapulas:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [floresta_sussurros]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas pesadas de alguém de braços curtos que anda até um ferido e para de frente para ele, sempre o mesmo passo."
+      resto: "Uma lâmina partida contra algo liso e branco, a ponta lascada em leque, caída junto a um ferido que sobreviveu."
+      som: "Um estalo grave de duas placas se encontrando, como portas de armário fechando de uma vez."
+      cheiro: "Osso limpo e músculo exposto, um cheiro de açougue lavado."
+      marca: "Entre as raízes, uma depressão rasa do tamanho de um homem agachado, cercada de musgo raspado em arco."
+      aproximacao: "Entre as raízes, uma pedra clara se abre em duas placas de osso, e entre elas um homem de antebraços grossos se ergue diante do ferido."
+      rumor: "um caçador diz que mirou num bicho ferido e a flecha bateu numa pedra que antes não estava ali"
+    contra_jogo: "Esperar que ele abra para bater e golpear o músculo entre as placas; ou ir primeiro, pelo lado, em quem ele protege, antes que ele chegue lá."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_virado_do_avesso:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [floresta_sussurros]
+      permanencia: [7, 10]
+      foge_de: [mon_dedos_de_colheita]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de pés sem unha, molhadas de vermelho, que andam sem rumo e deixam cada folha pisada grudenta."
+      resto: "Uma bolsa de colhedor aberta e vazia, com pó vermelho espalhado e marcas de dedos em carne viva no couro."
+      som: "Um gemido baixo a cada passo, sempre igual, como de quem pisa numa ferida a cada vez."
+      cheiro: "Pó de sonho doce misturado a gemido de febre, um cheiro de enfermaria de viciados."
+      marca: "Num tronco, uma mancha rosada na altura de um ombro, como se alguém em carne viva tivesse se encostado ali para descansar."
+      aproximacao: "Gemendo, vem um corpo com o músculo por fora, vermelho e úmido, as pálpebras viradas para trás e os tendões brancos à vista."
+      rumor: "uma colhedora jura que viu um colega comer da mancha escura e, no dia seguinte, ele estava com a carne para fora"
+    contra_jogo: "Bater uma vez por rodada, forte, ou deixá-lo uma rodada sem golpe para que se acalme; fogo e frio nos nervos à flor o fazem encolher e perder a rodada."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_calado_das_guelras:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [floresta_sussurros, fs_fronteira_xylos]
+      permanencia: [6, 9]
+    sinais:
+      antecedencia: cedo
+      rastro: "Calcanhares duros de pés descalços, três ou quatro, que correm juntos direto para onde alguém parou para recuperar o fôlego."
+      resto: "Um viajante caído de joelhos, como quem ficou sem ar, com marcas de unhas duras de várias mãos nas costas."
+      som: "Um silêncio de bando, sem passo, e só um ofegar molhado de fendas abrindo e fechando."
+      cheiro: "Pele seca de boca nenhuma e um ar úmido de peixe fora d'água."
+      marca: "Na beira da trilha, uma pedra de beber onde ninguém bebe, só as bordas marcadas de pescoço encostado de lado."
+      aproximacao: "Sem nenhum som, três magros de boca selada correm para quem arfa mais, e no pescoço deles se abrem fendas de bordas vermelhas."
+      rumor: "os guias da floresta mandam respirar devagar nas subidas: dizem que lá tem quem escute o cansaço"
+    contra_jogo: "Não deixar ninguém chegar ao fim do Fôlego quando eles estão perto, ou pôr o mais cansado atrás de quem aguenta; as fendas do pescoço são moles, e um golpe ali os derruba."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  enemy_aranha_lobo:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [floresta_sussurros]
+      permanencia: [6, 9]
+      foge_de: [mon_vespa_coveira, mon_picanco_de_espinheiro]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de pouso afastadas na terra fofa, de dez em dez passos, cada uma com dois furinhos de antena na frente."
+      resto: "Uma perna de grilo enorme, branca e translúcida, arrancada e largada num oco de raiz."
+      som: "Um tique de mola soltando, depois outro do lado oposto, e um cri-cri grave no oco da madeira."
+      cheiro: "Raiz podre e quitina mole, um bafo frio que sai dos ocos como de adega esquecida."
+      marca: "Na boca de um oco de raiz, a terra fina toda riscada por antenas compridas, como quem varreu com pincel."
+      aproximacao: "Das raízes salta um bicho branco do tamanho de um cão, translúcido, sem olhos, e as mandíbulas de poda já fecham perto de você."
+      rumor: "os lenhadores encostam as costas num tronco antes de descansar, para não serem mordidos de trás"
+    contra_jogo: "Ficar de costas para um tronco ou para outro do grupo; um corte nas antenas e ele salta às cegas, para qualquer lado."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_urso_coruja_mutante:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [fs_fronteira_xylos]
+      permanencia: [8, 11]
+      foge_de: [mon_onca_vazada]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de três dedos grossos, maiores que de homem, com um furo estreito e reto ao lado de cada uma, como de adaga fincada."
+      resto: "Um viajante chutado de cima para baixo, com um único furo largo de unha atravessando a couraça."
+      som: "Um ronco grave e oco, de garganta de ave grande, e o baque de pés pesados que saltam."
+      cheiro: "Pena dura molhada e terra pisada, como de galinheiro de bicho enorme."
+      marca: "Num tronco da borda, a casca rasgada em riscos verticais à altura de um chute, um sobre o outro."
+      aproximacao: "Uma ave do tamanho de um homem, de penas pretas como crina e osso cobrindo os olhos, salta e chuta com uma unha de adaga."
+      rumor: "os batedores da borda ficam parados quando ouvem o ronco, e quem corre é quem volta mancando"
+    contra_jogo: "Ficar parado quando ela está perto e deixar outro se mexer; ela não vê, e o elmo pesado a desequilibra quando erra o chute."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ent_dormindo:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [floresta_sussurros]
+      permanencia: [10, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um caminho reto e antigo atravessando a mata densa, de árvores empurradas para os lados, como se algo grande passasse por ali há eras."
+      resto: "Um caçador achado apertado contra um tronco, a couraça amassada por três garras curvas, como num abraço."
+      som: "Uma respiração lenta e funda de bicho muito grande, tão espaçada que parece parar."
+      cheiro: "Bolor de pelo antigo e folha podre, como de tapete velho esquecido no mato."
+      marca: "Numa árvore grossa do caminho, a casca gasta lisa até a altura de um cavalo, como encosto de quem dorme em pé."
+      aproximacao: "Encostado a uma árvore, um bicho maior que um boi, de pelo cinza-esverdeado cheio de folhas, abre três garras do tamanho de um braço sem abrir os olhos."
+      rumor: "os velhos dizem que na floresta há um caminho de antes das árvores, e que ainda tem quem o use"
+    contra_jogo: "Rodear o caminho, em silêncio; ele é lento e não persegue. Quem foi puxado se solta cortando os tendões dos dedos, por baixo das garras."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_morcego_rasteiro:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [floresta_sussurros]
+      permanencia: [6, 9]
+      presas: [mon_mariposa_sussurro]
+      foge_de: [mon_serpente_raiz]
+    sinais:
+      antecedencia: cedo
+      rastro: "Na terra úmida, marcas de punhos dobrados e de pés de unha curva, em bando, que sobem pelos troncos."
+      resto: "Asas de mariposa grandes, ainda com desenhos, cortadas por dentes finos e largadas embaixo de um oco alto."
+      som: "Estalos de língua miúdos e incessantes, que se juntam num tique-tique de muitos e vêm na direção do barulho."
+      cheiro: "Guano azedo e couro fino de asa, um cheiro de forro de telhado velho."
+      marca: "Ao pé de um oco alto, um monte de guano escuro e pedacinhos de asa, numa camada que range sob a bota."
+      aproximacao: "Pelo tronco descem bichos do tamanho de gatos, de conchas rosadas enormes dobradas nas costas, e um deles gruda em você estalando alto."
+      rumor: "os caçadores da floresta enrolam as fivelas em pano: dizem que lá dentro o metal batendo chama coisa"
+    contra_jogo: "Arrancar e matar o que está grudado antes que o resto chegue; ou lutar em silêncio, sem metal batendo, e ele não acha quem marcar."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_besouro_do_estalo:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [floresta_sussurros, fs_fronteira_xylos]
+      permanencia: [6, 9]
+      foge_de: [mon_lagarta_de_visgo]
+    sinais:
+      antecedencia: cedo
+      rastro: "No chão de folhas, círculos úmidos e escaldados, do tamanho de uma roda, deixados onde não havia fogo."
+      resto: "Uma bota com o couro cozido e enrugado em volta do tornozelo, largada no meio de um anel de folhas murchas."
+      som: "Um estouro seco como porta batida, e muito depois, no mesmo lugar, um chiado de água jogada em brasa."
+      cheiro: "Vapor ácido e folha cozida, um cheiro de panela de ferver couro."
+      marca: "Em vários troncos baixos, manchas pardas de queimadura de vapor espirradas de baixo para cima."
+      aproximacao: "Um bicho preto de cabeça vermelha do tamanho de um cão pequeno vira o traseiro para você, e o estouro vem antes do jato."
+      rumor: "um colhedor diz que na floresta é preciso sair de onde se ouviu o estouro, e não de onde veio o vapor"
+    contra_jogo: "Sair do chão marcado assim que ouvir o estalo; virá-lo de costas expõe o ventre mole, e as bolsas se esgotam depois de alguns disparos."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_onca_vazada:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [fs_fronteira_xylos]
+      permanencia: [7, 10]
+      presas: [enemy_urso_coruja_mutante]
+      foge_de: [mon_olho_de_petala]
+    sinais:
+      antecedencia: imediato
+      rastro: "Pegadas de felino grande que somem nos trechos de luz e sombra, como se o bicho ficasse leve onde a luz cai em pedaços."
+      resto: "Uma ave grande de pescoço quebrado por uma mordida só, arrastada para debaixo de um arbusto."
+      som: null
+      cheiro: "Pelo de gato grande e sangue fresco, um almíscar quente que o vento não leva."
+      marca: "Na terra de baixo das copas, manchas de luz que não batem com os buracos das folhas lá em cima."
+      aproximacao: "A sombra manchada salta: um felino grande de pelo furado de lado a lado, e por um dos furos você vê o coração dela batendo."
+      rumor: "os batedores da borda dizem que onde a luz cai em pedaços a sombra também caça"
+    contra_jogo: "Luz inteira, sem manchas, de fogo alto ou clareira; e o coração fica à vista num dos furos do flanco."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lagarta_de_visgo:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [floresta_sussurros]
+      permanencia: [7, 10]
+      presas: [mon_besouro_do_estalo]
+      foge_de: [mon_picanco_de_espinheiro]
+      reage:
+        - {quando: "clima:chuva", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Debaixo das folhas mortas, um túnel raso e úmido, com marcas de patinhas grossas a cada palmo."
+      resto: "Dois caçadores colados ombro a ombro por uma cola branca e dura, e mordidas de dois ganchos nas pernas."
+      som: "Um esguicho fino e úmido, como de seringa apertada, e o estalar da cola secando."
+      cheiro: "Cola de peixe e folha molhada, um cheiro grudento de oficina de encadernador."
+      marca: "Entre dois troncos próximos, fios brancos endurecidos em leque, colando um ao outro na altura das pernas."
+      aproximacao: "Das folhas ergue a cabeça um verme aveludado e cinza-azulado, e de dois tubos da cabeça sai um leque de cola branca."
+      rumor: "os lenhadores andam espaçados no mato baixo: dizem que lá dentro quem anda junto fica junto"
+    contra_jogo: "Não andar ombro a ombro perto das folhas; fogo ou água quente amolecem a cola, e ela demora a refazer a reserva depois do primeiro leque."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_toldo_das_clareiras:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde]
+      territorio: [floresta_sussurros]
+      permanencia: [3, 4]
+      presas: [mon_bugio_invertido]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "No centro de um espaço aberto, uma mochila e um chapéu caídos lado a lado, e a terra amassada num círculo largo, sem pegada saindo."
+      som: "Um bater surdo e enorme de pele no ar, como de vela de navio caindo sobre um convés."
+      cheiro: "Couro de asa morno e musgo de copa, um cheiro de sótão fechado no alto das árvores."
+      marca: "Nos galhos das bordas de um espaço aberto, a casca arrancada em sulcos curvos de unhas compridas, em volta de todo o círculo."
+      aproximacao: "O céu do espaço aberto cai: uma pele escura do tamanho de uma vela de navio desce inteira sobre você, e uma cabeça pequena de dentes em pente morde."
+      rumor: "os guias dizem que na floresta não se atravessa espaço aberto pelo meio, por mais que pareça a saída"
+    contra_jogo: "Não atravessar clareira pelo centro; a membrana é fina, quem cortar por dentro abre caminho para os outros, e as bordas presas aos galhos são o ponto fraco."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vespa_coveira:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      estacoes: {verao: 1.3, inverno: 0.5}
+      territorio: [floresta_sussurros, fs_fronteira_xylos]
+      permanencia: [7, 10]
+      presas: [enemy_aranha_lobo]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto leve e reto no chão de folhas, como de corpo puxado pelo tornozelo, que termina num buraco recém-fechado."
+      resto: "Um grilo branco do tamanho de um cão, imóvel e vivo, com um furo de ferrão no pescoço, deitado junto a uma cova aberta."
+      som: "Um zumbido grave, de asa grande, que passa baixo entre os troncos e não tem pressa."
+      cheiro: "Terra cavada de fresco e veneno amargo, como de raiz de mandioca brava."
+      marca: "No chão da floresta, montes de terra fofa enfileirados, cada um do tamanho de um corpo, e um furo no topo."
+      aproximacao: "Entre os troncos voa baixo um inseto de ferrão do tamanho de um cão de caça, de asas cor de ferrugem, e as antenas batem no seu sangue."
+      rumor: "um caçador diz que achou o companheiro enterrado vivo, mole, e com uma coisa crescendo dentro"
+    contra_jogo: "Proteger quem está sangrando e ir nela quando arrasta, que é quando voa baixo e devagar; as asas rasgam fácil."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_bugio_invertido:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [floresta_sussurros]
+      permanencia: [7, 10]
+      foge_de: [mon_toldo_das_clareiras]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um viajante caído de costas na frente de uma trilha, quebrado como quem despencou de muito alto, sem árvore acima dele."
+      som: "Um farfalhar de bando na copa, de baixo para cima, e uma garganta que incha sem soltar o uivo."
+      cheiro: "Pelo ruivo e fruta mastigada, um cheiro de macaco que vem do alto."
+      marca: "Na face de baixo dos galhos grossos, tufos de pelo ruivo presos de pé, e frutas roídas grudadas por baixo, sem cair."
+      aproximacao: "Da face de baixo de um galho desce um braço ruivo e comprido, agarra o seu colarinho e solta, e você cai para cima."
+      rumor: "os guias põem o mais forte no fim da fila na floresta: dizem que é por lá que somem os viajantes"
+    contra_jogo: "Andar junto, sem ninguém sozinho no fim da fila; um golpe na cauda o faz largar o galho, e ele mesmo cai para cima, para longe da luta."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_dedos_de_colheita:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [floresta_sussurros]
+      permanencia: [7, 10]
+      suprime: [mon_virado_do_avesso]
+      reage:
+        - {quando: "pressao:fome", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de colhedor em volta de uma mancha de fungo vermelho, pisadas e repisadas como guarda de canteiro."
+      resto: "Um rosto de viajante espetado de talos vermelhos e quebradiços, ainda soltando pó, e os olhos vermelhos de quem respirou."
+      som: "Um choro baixinho e conformado, vindo de alguém sentado no mato, sem nada nas mãos."
+      cheiro: "Pó vermelho de fungo no ar, doce e enjoativo, que arde no nariz e dá sono."
+      marca: "Na mancha de fungo, tocos de talos vermelhos partidos na altura de uma mão, colhidos sem faca."
+      aproximacao: "Um colhedor de olhos todos vermelhos corre para você, os talos ferrugem que tem no lugar das unhas estendidos para o seu rosto."
+      rumor: "os compradores de Pó dizem que o melhor colhedor é o que já não tem unha nenhuma"
+    contra_jogo: "Derrubá-lo antes que chegue perto; quem foi pego deve arrancar os talos logo, antes de jogar as Cartas caras."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_olho_de_petala:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [floresta_sussurros]
+      permanencia: [7, 10]
+      presas: [mon_ent_dormindo]
+      foge_de: [mon_cacador_casca]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota de caçador atrás de um tronco grosso, viradas para o escuro, e marcas de um joelho apoiado."
+      resto: "Um virote de besta cravado num tronco no meio do escuro, certo demais para quem não via nada."
+      som: "Um estalo de besta disparando de onde não há luz, e depois passos que mudam de lugar depressa."
+      cheiro: "Néctar úmido e carne de flor, adocicado, misturado a óleo de besta."
+      marca: "No chão de um posto de tocaia, folhas de flor pálidas e carnudas caídas, e um pano úmido de limpar uma vista que não pisca."
+      aproximacao: "Atrás de um tronco, um caçador de rosto com uma flor carnuda aberta na órbita, molhada e sem pálpebra, ergue a besta para você."
+      rumor: "um mercador de curiosidades paga caro por bicho raro da floresta e não pergunta como o caçador enxerga no escuro"
+    contra_jogo: "Luz forte no rosto fecha as pétalas e o deixa só com o olho leitoso; e quem chega perto o pega sem besta, que de perto ele não sabe lutar."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mapa_de_cicatrizes:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [floresta_sussurros]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas que param, viram, andam de novo, como de quem consulta algo a cada dez passos e muda de ideia."
+      resto: "Uma faca pequena de marcar couro caída numa trilha, com sangue fresco no gume e fios de pele."
+      som: "Um grito de quem descobriu o caminho, e logo o barulho de muitos bichos correndo para onde ele apontou."
+      cheiro: "Sangue fresco de corte raso e tinta de cartógrafo, um cheiro de escritório e de enfermaria."
+      marca: "Num tronco da trilha, um traçado de trilhas riscado a faca na casca, e por cima dele outro, e outro, nenhum batendo com o anterior."
+      aproximacao: "Um homem de olheiras fundas e peito coberto de linhas e cruzes em carne viva grita, aponta, e a floresta se move para lá."
+      rumor: "um cartógrafo de Nova Arcádia desistiu de mapear a floresta: diz que o ajudante dele continuou, na própria pele"
+    contra_jogo: "Derrubá-lo primeiro desfaz a manobra dos outros; ou cortar a cicatriz que ele está lendo, e ele perde a trilha por uma rodada."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ressecado_da_travessia:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [fs_fronteira_xylos]
+      permanencia: [7, 10]
+      foge_de: [mon_cacador_casca]
+      reage:
+        - {quando: "clima:chuva", efeito: menos}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco de corpo rastejando na terra seca, que desvia de tudo e vai direto até cada poça da borda."
+      resto: "Um cantil de couro mordido e chupado até ficar seco, com lascas pardas e fibrosas presas no gargalo."
+      som: "Um rachar de casca seca, como pão velho partido, e uma respiração rouca de garganta sem saliva."
+      cheiro: "Mofo morto e seco, como de pão esquecido, com um fundo de fungo que já não vive."
+      marca: "Na borda seca, placas pardas e rachadas caídas no chão como casca de árvore, e leques murchos de cogumelo entre elas."
+      aproximacao: "Rastejando vem um homem coberto de placas pardas rachadas, de lábios abertos até a gengiva, que fareja a sua ferida."
+      rumor: "os batedores da borda dizem que a selva manda gente para o lado seco e não a chama de volta"
+    contra_jogo: "Fechar as feridas antes que ele chegue; seco, as placas racham e se partem fácil, e fogo o desmancha."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mascador_de_raiz:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [floresta_sussurros]
+      permanencia: [10, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Lascas de uma planta clara mastigadas e cuspidas em monte, e entre elas dentes da frente amarelos que caíram."
+      som: "Um mastigar sem fim, de dentes compridos roendo fibra, e um sussurro entre os dentes que conta onde você está."
+      cheiro: "Seiva amarga e saliva velha, um cheiro de remédio de feiticeiro que ninguém queria tomar."
+      marca: "Num chão de mata, dois buracos fundos de joelho afundados na terra dura, com a erva em volta morta de anos."
+      aproximacao: "Ajoelhado no chão, um homem de mandíbula presa a uma fibra que sai da terra masca mais forte e vira os olhos rápidos para onde você está."
+      rumor: "um mago de revelação foi mascar na floresta o que só funciona fresco, e o grupo dele diz que ele ainda está mascando"
+    contra_jogo: "Cortar a raiz entre ele e o chão o cala por uma rodada; ou derrubá-lo de longe, que ele não sai do lugar, antes de tentar surpreender alguém."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  enemy_sombra_espreitadora:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [floresta_sussurros]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um viajante sentado contra uma árvore, frio e pálido, com uma marca redonda e branca no tornozelo, sem sangue."
+      som: null
+      cheiro: "Um frio sem cheiro de nada, como se o calor do chão tivesse sido bebido ali."
+      marca: "Na trilha, uma faixa comprida e estreita de folhas descoradas e frias ao toque, como se algo tivesse ficado deitado ali por dias."
+      aproximacao: "A faixa escura no chão se ergue pelo seu tornozelo, chata como couro, e uma cabeça em meia-lua se cola na sua pele."
+      rumor: "os guias da floresta olham para cima antes de pisar numa faixa escura: se não há galho, não pisam"
+    contra_jogo: "Olhar o chão antes de pisar, porque sombra sem galho em cima é ela; e a cabeça em meia-lua é mole, cortá-la faz o resto soltar."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ermitao_de_carcaca:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [floresta_sussurros]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de cascos de cervo que se arrastam em vez de andar, com um sulco mole e branco por baixo entre elas."
+      resto: "O couro de um javali aberto pela barriga e vazio por dentro, sem uma tripa, largado inteiro como roupa tirada."
+      som: "Um arrasto de patas mortas no chão de folhas e um raspar úmido vindo de dentro de um corpo."
+      cheiro: "Carniça fresca demais, sem moscas, com um fundo de larva limpa."
+      marca: "Junto aos bichos mortos da floresta, um rastro de muco branco que vai de um corpo a outro e entra pela barriga."
+      aproximacao: "Um cervo morto se levanta de cabeça pendida, e por entre as costelas abertas saem dedos brancos e compridos segurando o couro."
+      rumor: "um caçador da floresta queima o que mata: diz que bicho morto lá dentro às vezes levanta"
+    contra_jogo: "Acertá-la no instante da troca, quando está nua e mole entre uma carcaça e outra; depois disso, afastar os corpos caídos dela."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_desafiante_rubro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [fs_fronteira_xylos]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de mãos e pés grandes que sobem num tronco caído e ficam ali, viradas para quem chega."
+      resto: "O guerreiro mais forte de um grupo caído no meio dos outros, todos vivos, só ele surrado até os ossos."
+      som: "Um bater de punhos em vidro grosso, que ecoa entre os troncos como sino rachado."
+      cheiro: "Vidro quente e pelo suado de macaco, um cheiro de forja dentro da mata."
+      marca: "No alto de uma pedra da borda, lascas de vidro vermelho-escuro caídas e marcas de nós de dedos esfolados na rocha."
+      aproximacao: "Do alto de um tronco caído, um macaco de ombros enormes e peito coberto de placas de vidro vermelho bate no peito e olha só para o mais forte."
+      rumor: "os batedores da borda mandam o mais forte andar no meio: dizem que lá tem quem só briga com o melhor"
+    contra_jogo: "Deixar o escolhido segurá-lo enquanto os outros acertam as frestas do vidro, onde o músculo está à vista; ou o escolhido recuar, e ele, que não recua, se expõe para seguir."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_enrolado_da_clareira:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [floresta_sussurros]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma faixa larga de folhagem esmagada em linha reta, como de barril rolado, que foge do lugar onde alguém acendeu fogo."
+      resto: "Uma tocha largada e esmagada sob algo pesado e redondo, o cabo partido, a chama morta na terra."
+      som: "Um rolar pesado e oco pelo mato, como barril vazio descendo ladeira, e um estalar de placas se fechando."
+      cheiro: "Folha podre e terra úmida, cheiro de tronco caído virado com o pé."
+      marca: "Debaixo da folhagem mais grossa, uma cova rasa e redonda, lisa por dentro, e muitas patinhas marcadas na borda."
+      aproximacao: "Na luz da sua tocha, um bicho cinza-chumbo do tamanho de um barril fecha catorze placas e rola contra você, sem frente nem cara."
+      rumor: "os carvoeiros dizem que na floresta a luz pode trazer coisa rolando, e que é preciso saber para que lado ela foge"
+    contra_jogo: "Baixar a luz e atacar o ventre mole enquanto ele está aberto; quem precisa de luz deve mantê-la do lado do grupo, para que ele role para longe."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_picanco_de_espinheiro:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [floresta_sussurros, fs_fronteira_xylos]
+      permanencia: [7, 10]
+      presas: [enemy_aranha_lobo, mon_lagarta_de_visgo]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Num galho afiado, um grilo branco enorme espetado ainda mexendo as pernas, e ao lado dele outro já comido pela metade."
+      som: "Um chamado áspero de pássaro, repetido, e o farfalhar de algo pesado pousando num arbusto de pontas."
+      cheiro: "Carne espetada ao vento e penas secas, um cheiro de despensa de caçador."
+      marca: "Num arbusto de galhos pontudos da borda, restos de bichos espetados em fila, uns secos e outros frescos."
+      aproximacao: "Um pássaro do tamanho de um abutre, de máscara preta nos olhos e bico em gancho de esfolar, desce sobre quem está sozinho."
+      rumor: "uma caçadora diz que achou o irmão vivo, espetado no alto de um arbusto, e que o pássaro voltava toda vez que ele gemia"
+    contra_jogo: "Soltar logo o espetado, que é quando o pássaro desce; ele não larga a presa que escolheu, então fica previsível."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  mon_cacador_casca:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [fs_fronteira_xylos]
+      permanencia: [8, 11]
+      suprime: [mon_ressecado_da_travessia, mon_olho_de_petala]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um viajante atravessado por uma lança de madeira viva, ainda verde, com folhas brotando do cabo."
+      som: null
+      cheiro: "Seiva fresca e madeira verde partida, forte demais para um lugar onde ninguém cortou nada."
+      marca: "Ao pé dos troncos da borda, lascas verdes de madeira viva caídas, como de lança afiada ali mesmo, e nenhum machado por perto."
+      aproximacao: "Um dos troncos ao seu lado se mexe: um vulto de madeira de braço erguido, com uma lança viva já apontada para você."
+      rumor: "os batedores dizem que a floresta decide quem atravessa, e que quem não foi aceito não volta"
+    contra_jogo: "Ficar de costas para o grupo e não ser o alvo marcado: ele ataca da ocultação o desprevenido, devolve golpe, recua para se esconder quando descoberto e foge ferido."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mariposa_sussurro:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [floresta_sussurros, fs_fronteira_xylos]
+      permanencia: [6, 9]
+      foge_de: [mon_morcego_rasteiro]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um viajante dormindo pesado no meio da trilha, sem conseguir acordar, coberto de um pó fino e prateado."
+      som: "Um bater de asas macio como folha e, no meio dele, palavras soltas que ninguém disse."
+      cheiro: "Pó de asa e flor noturna, adocicado, que dá sono depressa."
+      marca: "Nas cascas claras dos troncos, desenhos de pó prateado que formam letras de uma língua antiga, apagando aos poucos."
+      aproximacao: "Um bicho de asas largas e empoeiradas, do tamanho de uma mão aberta, pousa perto de você, e nas asas dela está escrita uma palavra que ainda não foi dita."
+      rumor: "um mago diz que leu nas asas de um bicho da floresta uma frase que ninguém pronunciou ainda"
+    contra_jogo: "Não deixá-la marcar o alvo e não correr atrás: ela só ataca com vantagem ou pelas costas, dá sono e foge ao primeiro ferimento."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_serpente_raiz:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [floresta_sussurros, fs_fronteira_xylos]
+      permanencia: [6, 9]
+      presas: [mon_morcego_rasteiro]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um caminho de terra levantada entre as tramas do chão, que se move quando não se olha diretamente."
+      resto: "Um morcego grande morto num oco baixo, inchado, com dois furos finos e escuros no pescoço."
+      som: "Um sibilo baixo que vem do chão no meio das tramas, e o roçar de casca contra casca sem vento."
+      cheiro: "Terra úmida e veneno amargo, como de fruta verde cortada."
+      marca: "Na base de uma árvore, uma pele de cobra trocada, parda e nodosa, que parece um pedaço de tronco descascado."
+      aproximacao: "Um dos nós do chão se ergue: uma cobra parda e nodosa, de pele igual à casca, abre a boca para o bote."
+      rumor: "os lenhadores dizem que no fundo da floresta é melhor não pisar no que parece madeira"
+    contra_jogo: "Não persegui-la quando foge e soltar-se logo: ela só ataca com vantagem, prende a vítima no lugar com a teia e foge ferida."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_urso_de_espinha:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [floresta_sussurros, fs_fronteira_xylos]
+      permanencia: [6, 9]
+      presas: [enemy_urso_coruja_mutante]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas enormes de garras com pus seco nas bordas, e tufos de pelo caído espalhados pelo caminho."
+      resto: "Uma ave grande de pernas grossas rasgada em pedaços, e as feridas ainda abertas e molhadas dias depois."
+      som: "Um rosnado grave cheio de catarro, e o estalo de galhos quebrados por algo que não desvia de nada."
+      cheiro: "Pus e carne podre viva, forte, de ferida que não fecha."
+      marca: "Num tronco grosso, arranhões fundos cheios de pus seco e espinhos de osso quebrados cravados na madeira."
+      aproximacao: "Um bicho enorme de pelagem caída e pele purulenta, eriçado de pontas de osso, avança sobre o mais ferido com fúria."
+      rumor: "um lenhador diz que levou uma patada de raspão no verão e que a ferida ainda não fechou"
+    contra_jogo: "Não ficar ferido nem isolado à vista: ele persegue o mais ferido e não para; acabar rápido, porque cada garra abre ferida que não fecha."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
