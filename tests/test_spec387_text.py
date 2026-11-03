@@ -185,3 +185,18 @@ def test_narrate_rejects_place_as_actor(monkeypatch):
         gold_check=({50, 30}, 30, "Skallgard"),
     )
     assert out == "Forja dos Clãs fecha o negócio sem cerimônia." and "place_as_actor" in events
+
+
+def test_frustrated_omen_line_in_registry(saves):
+    """SPEC-387 (pendência 6a): o presságio frustrado aparece no registro, sem id nem Carta oculta."""
+    _, st = load(2, "frustrar", saves)
+    foe = st["enemies"][0]["id"]
+    with sd._legacy(saves):
+        for seed in range(10):
+            _out, text, raw = play(st, [step_card("arc1_des_estouro_contido", foe)], seed)
+            assert raw.get("pressagios_frustrados"), seed
+            assert text.count("Presságio frustrado: Goblin") == 1, (seed, text)
+            assert (
+                not ID_RE.search(text)
+                and "Investida" not in text.split("Presságio frustrado")[1].splitlines()[0]
+            )

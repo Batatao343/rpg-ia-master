@@ -605,10 +605,12 @@ Branch `spec-387`, 6 commits de executor (ver `git log`). Testes novos: `tests/t
 `spec-363`, como a da 367; a R30 muda o orquestrador de propósito). `tests/size_budget.json`: baseline atualizada (arquivos de motor
 que a spec manda tocar; o código novo grande foi para módulos novos).
 
-**Observações fora do escopo (não corrigidas):** (a) o registro não mostra a linha do presságio frustrado ("O golpe de X morreu no ar.")
-nem o `pressagios_frustrados` aparece no chip: a seed `2 frustrar` prova o evento no motor; (b) um inimigo derrubado pela Reação
-ainda resolve o ataque dele na mesma rodada (visto nos logs da seed `13 reacao`); (c) `ruff format --check .` na raiz acusa 3 specs `.md`
-(377–379, blocos de código) que não são desta spec.
+**Pendências 6a/6b (corrigidas a pedido do coordenador, 03/11):** (a) o registro mostra "Presságio frustrado: Goblin" (sem id e SEM
+a Carta, que ainda está oculta porque não foi jogada); teste `test_frustrated_omen_line_in_registry`. (b) Atacante derrubado pela Reação
+resolvia o próprio ataque: era **bug**, não regra (SPEC-232 R3 só proíbe revide sem atacante vivo ANTES; nenhuma regra manda resolver o
+ataque de quem já caiu). Em `_resolve_actor_turn_inner`, `if not _can_act(actor): return` depois da janela de Reação (commit separado, fácil
+de reverter). Golden 330 e 453+223 testes de motor/sim verdes; **a arena não foi rodada**: só muda em rodadas em que uma Reação derruba o atacante
+(raro), mas o coordenador decide se rebate a arena. Ainda fora do escopo: `ruff format --check .` acusa os specs 377–379 (`.md`, já na base).
 
 **Fica para o smoke §6 (coordenador):** itens 1–16 inteiros — nenhum foi rodado com LLM/staging reais aqui. Em especial 2 (causa de
 `offer_omitted`), 3 (latência do chip ao vivo), 4 (aberturas no Pântano/Floresta), 12 (Groq 120b faz tool call no router) e 14 (`draft.py` real).

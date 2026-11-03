@@ -394,6 +394,9 @@ def round_registry(
             if human not in dot_lines:
                 dot_lines.append(human)
 
+    for fr in out.get("pressagios_frustrados") or []:  # SPEC-387: sem Carta (ainda oculta) nem id
+        who = names.get(str(fr.get("actor_id")), "Alguém")
+        dot_lines.append(f"Presságio frustrado: {who}")
     for line in extra_lines or []:  # fuga, ordens a companheiros, clima: já humanas
         line = str(line or "").strip()
         if line and not _is_arith(line) and line not in dot_lines:

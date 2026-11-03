@@ -171,6 +171,9 @@ def test_reacao_kills_and_the_summary_cites_the_author(saves, seeded):
         assert blows and blows[0]["by_actor_id"] == "player", seed
         sentence = round_log.final_blow_sentence(raw, {"player": "Você", _enemy(st): "Goblin"})
         assert "reação" in sentence and "Goblin" in sentence, (seed, sentence)
+        # SPEC-387: derrubado pela Reação, o atacante não resolve o próprio ataque na rodada
+        assert not any(x.get("actor_id") == _enemy(st) for x in raw.get("attacks") or []), seed
+        assert not any("Usa Investida Cega" in ln for ln in raw["logs"]), seed
 
     _all_seeds(saves, st, [guard], check, reaction="dev_encaixe")
 

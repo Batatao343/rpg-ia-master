@@ -1930,6 +1930,8 @@ def _resolve_actor_turn_inner(
         _open_reaction_window(
             scene, actor_id, acao.target_id, actors_by_id, sides, out, state, rng=rng, step=acao
         )
+        if not _can_act(actor):  # SPEC-387: derrubado pela Reação, o atacante não resolve o ataque
+            return
 
     if acao is not None and acao.kind == "tactic":
         cs.reset_turn_budget(scene, actor_id)
