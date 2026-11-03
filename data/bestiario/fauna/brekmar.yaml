@@ -1,0 +1,598 @@
+# SPEC-370 R1 (lote 1) — bloco de fauna de Brekmar: 20 fichas da SPEC-349 + legado `valoria` da
+# região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# Revisão de fauna: handoffs/SPEC-370-independent-review.md (lote 1; revisor ≠ autor).
+regiao: brekmar
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_casco_de_costelas:
+    fonte: ficha
+    ecologia:
+      horario: [Noite]
+      territorio: [bk_docas_velhas]
+      permanencia: [3, 4]
+      presas: [mon_cardume_coagulado]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Tábuas das docas partidas ao meio em duas fileiras paralelas, largas como uma carroça, que saem da água e voltam para ela."
+      resto: "Um bote esmagado e dobrado para dentro, como se algo o tivesse abraçado com força demais, ainda com a rede presa."
+      som: "Na maré cheia, um ranger de madeira velha sob peso enorme e, por dentro dele, água batendo num porão."
+      cheiro: "Breu velho e carne de bicho do fundo, salgada e gorda, como de baleia encalhada."
+      marca: "A lama do fundo, na maré baixa, mostra um afundado enorme e vazio onde ontem havia um navio naufragado."
+      aproximacao: "Da água sobe um navio de tabuado podre e carne cinza, andando em pernas curvas de madeira, a frente rachada aberta em boca."
+      rumor: "um vigia das docas jura que o naufrágio do canto mudou de lugar três noites seguidas"
+    contra_jogo: "Quebrar as costelas de um lado para soltar quem está no porão, ou atraí-lo para as docas de pedra, onde as pernas de madeira escorregam e ele tomba."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_quilhado_do_estaleiro:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [brekmar]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Na serragem das rampas, uma vala reta e funda, como se uma tábua de quina tivesse atravessado a multidão correndo."
+      resto: "Um barril de pregos aberto ao meio de cima a baixo, num corte limpo, sem marca de machado."
+      som: "Uma corrida pesada e curvada, e o chiado de uma coisa dura rasgando lona."
+      cheiro: "Pó de osso serrado, seco e fino, que gruda na garganta e faz tossir."
+      marca: "Num pilar das rampas, a madeira lixada numa curva lisa, na altura das costas de um homem curvado."
+      aproximacao: "Um aprendiz curvado de peito rachado vira o ombro para você, e nas costas uma crista branca de osso corta o ar."
+      rumor: "um mestre de rampa diz que tem aprendiz que nunca tira folga e que ninguém tem coragem de despedir"
+    contra_jogo: "Não fazer fila na frente dele; lutar lado a lado ou de costas para uma parede, onde a investida não tem por onde sair, e bater no peito rachado quando ele para."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_odre_de_oleo:
+    fonte: ficha
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [brekmar]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pingos amarelos e gordurosos ao pé de cada poste da rua, um por um, na ordem da ronda."
+      resto: "Uma escada de mão caída no meio da rua, os degraus besuntados, e um chapéu queimado só na aba."
+      som: "Uma lata batendo no ombro de alguém, ritmada, e um estalar de língua, como de quem prova algo."
+      cheiro: "Gordura de baleia morna e cabelo chamuscado, um cheiro que sobe quando se passa perto de uma chama."
+      marca: "Na parede de um beco, um leque de fuligem e uma sombra de homem que o fogo não pegou."
+      aproximacao: "Encostado num poste, um homem careca de pescoço inchado em bolsas amarelas sorri, e as bolsas brilham perto da chama."
+      rumor: "um taverneiro jura que o acendedor da rua dele não envelheceu nada desde que ele era menino"
+    contra_jogo: "Derrubá-lo longe de você e longe das lanternas, ou deixá-lo em pé até o fim; vivo, ele é só um homem gordo com uma escada."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lavado_da_mare_vermelha:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [bk_docas_velhas]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "clima:chuva", efeito: menos}
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma faixa escura e espessa nas tábuas, que não seca ao sol e escorre sempre para o lado da água."
+      resto: "Tiras compridas de pele, finas e cor de alga, presas nas farpas de um mourão como roupa esquecida."
+      som: "Uma respiração pela boca, lenta, e um fungar molhado que goteja a cada sopro."
+      cheiro: "Alga podre e sangue, num caldo morno de praia depois de peixe morto."
+      marca: "Pegadas de bota que escorregaram de lado para a borda das docas e somem na água, mais de uma pessoa."
+      aproximacao: "Um pescador de olhos todos vermelhos vem devagar pelo cais, as tiras de pele pendendo dos braços como fitas de alga."
+      rumor: "uma pescadora conta que o chão do cais velho puxa para a água quando o mar vem tingido"
+    contra_jogo: "Lutar de costas para a terra, não para o mar, e jogar areia ou serragem na mancha antes de pisar; sem o rastro, ele é só um homem lento."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  mon_cardume_coagulado:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [bk_docas_velhas]
+      permanencia: [6, 9]
+      presas: [mon_tripeiro_de_fundo]
+      foge_de: [mon_casco_de_costelas]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um rastro largo e pegajoso nas tábuas, do comprimento de um bote, coberto de escamas soltas grudadas umas nas outras."
+      resto: "Um gato morto todo mordido em pontinhos, centenas de bocas pequenas que não chegaram a arrancar nada."
+      som: "Um bater de caudas em compasso, todas juntas, e um estalo úmido como de muitos beijos de uma vez."
+      cheiro: "Sardinha passada e muco de peixe, forte como dentro de uma rede esquecida ao sol."
+      marca: "Nas estacas, uma linha de escamas cravadas em fila, todas à mesma altura, como se algo grande se esfregasse ali."
+      aproximacao: "Pelas tábuas se arrasta uma massa de peixes colados, e a fileira de cabeças do flanco abre todas as bocas para você."
+      rumor: "os pescadores das docas velhas falam de uma rede que fecha sozinha, e ninguém quer puxar"
+    contra_jogo: "Ficar longe do flanco e bater na ponta das caudas, que viram o corpo; fora da água ele seca, e cada rodada longe do mar o enfraquece."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_gato_de_lastro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [brekmar, bk_docas_velhas]
+      permanencia: [8, 11]
+      presas: [mon_rato_cais_brekmar]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas fundas de garra nas estacas, subindo de dentro d'água em linha reta, como de quem escala sem nadar."
+      resto: "Um rato do porto partido em dois por uma mordida só, os ossos esmigalhados como cascalho."
+      som: "Um miado grave e rouco, que parece vir de um bicho muito maior, e tábuas gemendo sob peso."
+      cheiro: "Pelo molhado e porão fechado, com um fundo de breu e urina velha."
+      marca: "Uma pilha de caixotes que nenhum estivador mexe, com uma tábua vergada no alto, no formato de um bicho sentado."
+      aproximacao: "Em cima da carga, um bicho de pelo liso e patas arqueadas, de crânio largo como o de um cão, abre os olhos e não se mexe."
+      rumor: "um estivador diz que tem carga que ninguém leva do cais enquanto o bicho de porão estiver sentado nela"
+    contra_jogo: "Não empurrar; atraí-lo com peixe ou com barulho para longe do que guarda, ou derrubar a tábua debaixo dele, que afunda com ele."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_craca_de_amarra:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [bk_docas_velhas]
+      permanencia: [10, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um marinheiro morto com o braço preso num gesso branco de sal e cones de casca, endurecido até o ombro."
+      som: "Um estalar miúdo e seco, de mil cascas abrindo e fechando ao mesmo tempo, quando alguém pisa perto."
+      cheiro: "Sal seco e mar parado, um cheiro mineral de casco de navio raspado."
+      marca: "Nas cordas grossas de um navio velho, um tronco branco de cones do tamanho de um homem, com perninhas de pena se abrindo no ar."
+      aproximacao: "O tronco branco preso à corda estala inteiro, e uma nuvem de pontinhos se lança sobre quem está do seu lado."
+      rumor: "os do cais velho dizem que briga perto dos navios parados nunca termina quando devia"
+    contra_jogo: "Cortar a amarra; solta da estaca, a colônia cai na água e para de cuspir. A casca nova quebra com golpe de martelo ou de clava, não de lâmina."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_pescador_de_lanterna:
+    fonte: ficha
+    ecologia:
+      horario: [Noite]
+      territorio: [bk_docas_velhas]
+      permanencia: [6, 9]
+      presas: [mon_cardume_coagulado]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: imediato
+      rastro: "Duas marcas de mão curta e gorda nas tábuas molhadas, e atrás delas um arrasto de couro mole."
+      resto: "Um chapéu de marinheiro bêbado boiando junto ao píer, e mais nada dele em lugar nenhum."
+      som: null
+      cheiro: "Peixe de água funda, frio e azedo, que não se sente no resto do porto."
+      marca: "Na fileira de luzes do píer, um poste apagado e, ao lado dele, uma chama amarela baixa demais, quase no chão."
+      aproximacao: "A luz amarela do canto do píer se ergue numa vara de carne, e abaixo dela uma boca abre de um lado ao outro da cabeça."
+      rumor: "as mulheres do cais mandam os maridos contarem as luzes antes de voltar para o barco"
+    contra_jogo: "Contar as lanternas do píer antes de andar; apagar a isca, ou cortar a vara, o deixa cego e lento fora da água."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_tripeiro_de_fundo:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [bk_docas_velhas]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: imediato
+      rastro: "Uma faixa de lodo cinza nas tábuas baixas, como se alguém tivesse arrastado um saco molhado da água até ali e parado."
+      resto: "Um pé de bota preso às tábuas num emaranhado branco e grudento, esticado como cola fria."
+      som: null
+      cheiro: "Lodo de esgoto do porto, grosso e doce, que sobe quando a maré enche."
+      marca: "Entre o lixo das tábuas baixas, um volume cor de lama, cheio de verrugas, que não estava ali na maré anterior."
+      aproximacao: "O monte de lixo em que você pisou se contrai como um punho e despeja um emaranhado de tripas brancas nas suas pernas."
+      rumor: "um menino do cais aprendeu a nunca chutar o lixo das docas velhas quando a água sobe"
+    contra_jogo: "Não bater nele primeiro; passar por cima, ou deixar que outra coisa o pise. Depois de despejar, ele não tem mais nada."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_sangria_de_aluguel:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [brekmar]
+      permanencia: [7, 10]
+      suprime: [mon_capangas_do_poco]
+    sinais:
+      antecedencia: cedo
+      rastro: "Duas linhas de pegadas sempre juntas, uma de sapato fino e outra de bota, que fica um passo atrás."
+      resto: "Uma casca de ferida do tamanho de uma palma, escura e grossa, largada no chão como pedaço de couro."
+      som: "Um descolar lento, como de esparadrapo velho arrancado, e um gemido abafado de quem não queria gemer."
+      cheiro: "Sangue seco e unguento barato de boticário, adocicado demais."
+      marca: "Um mercador ferido que diz que um homem fechou o corte dele com uma placa vermelha que não era dele."
+      aproximacao: "Um passo atrás do mercador, um homem de antebraços cobertos de crostas pretas crava as unhas numa delas, olhando você."
+      rumor: "um mercador de especiarias diz que contratou um guarda que nunca sangra e cobra por isso"
+    contra_jogo: "Bater nele antes do contratante; cada crosta que ele empresta deixa a pele fina à mostra, e por ali ele sangra como qualquer um."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_torcido_da_rinha:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [brekmar]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas desiguais, uma funda e outra rasa, com o risco de uma cauda arrastada que dobra em dois lugares."
+      resto: "Um apostador de dente quebrado sentado na calçada, ainda contando as moedas que perdeu."
+      som: "Um estalo seco de osso que se ajeita sozinho, e uma risada curta, sem dor nenhuma."
+      cheiro: "Suor de briga e serragem pisada com sangue, cheiro de arena de taverna."
+      marca: "Na parede da Boca do Fundo, um placar de giz com o mesmo nome em cima há anos e nenhuma derrota."
+      aproximacao: "Um lutador de pele escura e ombro calombado gira o braço em gancho com um estalo e sorri sem saber que já apanhou."
+      rumor: "os apostadores da Boca do Fundo dizem que tem lutador que não sabe a hora de cair e por isso nunca cai"
+    contra_jogo: "Não trocar golpe com ele; segurá-lo, derrubá-lo, prender o braço em gancho. Ele não sente dor, mas sente o chão."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_anzolado_da_casa:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [brekmar]
+      permanencia: [7, 10]
+      foge_de: [mon_cobrador_gancho]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas que seguem coladas às de outra pessoa, passo por passo, e um fio de linha de pesca arrastando ao lado."
+      resto: "Um anzol enferrujado preso no casaco de um bêbado adormecido, com um palmo de linha pendente."
+      som: "Um sussurro perto demais do ouvido, pedindo para sentir o que você está sentindo."
+      cheiro: "Incenso adocicado das Marés e ferro velho, como de prego tirado da pele."
+      marca: "Numa porta perto do Poço das Dívidas, dezenas de anzóis cravados na madeira, cada um com sua linha."
+      aproximacao: "Um homem de pele tingida de ferrugem, crivado de ganchos com linhas penduradas, enrola uma nos dedos e não tira os olhos de você."
+      rumor: "uma moça do porto diz que um homem andou a noite toda ao lado dela, de mão no ombro, e o ombro sangrou"
+    contra_jogo: "Cortar a linha antes de se afastar, e só então se afastar. Ficar perto e bater nele dói menos que fugir."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_tambor_do_ossario:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [bk_docas_velhas]
+      permanencia: [9, 12]
+      suprime: [enemy_pirata_brekmar]
+    sinais:
+      antecedencia: cedo
+      rastro: "Na madeira das docas, uma marca rasa e comprida, de algo duro e oco encostado nas tábuas muitas vezes."
+      resto: "Um intruso caído de bruços nas tábuas, as mãos dormentes, que não consegue fechar os dedos."
+      som: "Um tom grave e baixo, que se sente nos dentes antes de se ouvir, e as tábuas zumbindo junto."
+      cheiro: "Couro curtido e sebo de vigília, com o cheiro seco de osso velho de bicho grande."
+      marca: "Uma corda trançada com ossinhos esticada entre duas estacas, marcando onde começa a zona dos Osshari."
+      aproximacao: "Um Osshari de crânio alongado numa crista oca baixa a cabeça até as tábuas, e a garganta incha como um fole."
+      rumor: "os carregadores dizem que perto do crânio velho as docas cantam, e quem ouve de perto deixa cair a carga"
+    contra_jogo: "Tirá-lo das tábuas para a pedra ou a areia, onde o chão não ressoa, ou rachar a crista com golpe pesado; rachada, ela não soa."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_penhorado_do_poco:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [brekmar, bk_docas_velhas]
+      permanencia: [6, 9]
+      foge_de: [mon_capangas_do_poco, mon_sangria_de_aluguel]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas tortas de quem anda curvado para um lado, e entre elas um pino de madeira caído, gasto como dente."
+      resto: "Uma bolsa cortada e esvaziada largada na sarjeta, com um bilhete de valor riscado e reescrito mais alto."
+      som: "Um contar baixinho, de número em número, e um estalo de dedos de pau batendo uns nos outros."
+      cheiro: "Cortiça molhada e ferida mal fechada, um cheiro de remendo velho."
+      marca: "Num muro do porto, uma tabela de juros riscada a carvão, com um nome a cada linha e a última vazia."
+      aproximacao: "Um homem curvado sobre a barriga oca estende para a sua bolsa uma mão de dedos de cavilha amarrados com arame."
+      rumor: "um agiota das dívidas ri e diz que tem devedor que ainda paga com o que lhe sobrou do corpo"
+    contra_jogo: "Pagar cedo, enquanto o resgate ainda é barato, ou não deixar nada preparado à mão quando ele chega perto; e não matá-lo com o penhor no bolso."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_sino_de_enlace:
+    fonte: ficha
+    ecologia:
+      horario: [Noite]
+      territorio: [brekmar]
+      permanencia: [7, 10]
+      presas: [mon_anzolado_da_casa]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na rua molhada, pegadas descalças de alguém que andou devagar, em linha reta, sem desviar das poças."
+      resto: "Um homem nu e vazio caído na sarjeta, de olhos abertos, inteiro e sem uma marca."
+      som: "Um gotejar macio e um suspiro de alívio, como de quem finalmente pôde descansar, vindo da escuridão."
+      cheiro: "Água-viva morna e perfume das Marés, doce e salgado ao mesmo tempo."
+      marca: "Filamentos finos, rosados e pegajosos colados numa porta, como se algo tivesse tentado puxá-la para dentro."
+      aproximacao: "Uma redoma de carne translúcida e rosada anda sobre as pernas de alguém que flutua dentro dela, de braços abertos e rosto em paz."
+      rumor: "uma meretriz das Marés diz que um cliente saiu sozinho pela rua e voltou dentro de outra coisa"
+    contra_jogo: "Não deixar ninguém sozinho perto dele e cortar os filamentos antes que puxem; quem estiver para ser levado larga as cartas preparadas antes de entrar, e o Sino fica de mãos vazias."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_carranca_de_proa:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [brekmar, bk_docas_velhas]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco de madeira quebrada arrastada pelo cais e, de cada lado, marcas de mãos enormes puxando o peso."
+      resto: "Um capitão de renome sentado contra um mastro, de joelhos dobrados, o pescoço marcado por dedos grossos."
+      som: "Um raspar de madeira sobre pedra, pesado, e o estalo de pálpebras que piscam."
+      cheiro: "Tinta velha de navio e verniz rachado, com um fundo de carne de afogado."
+      marca: "Na fachada de uma taverna de capitães, um entalhe de rosto altivo arrancado à força, deixando o buraco na madeira."
+      aproximacao: "Um busto de madeira de queixo erguido se arrasta em braços humanos longos demais, e os olhos pintados piscam para quem bateu mais forte."
+      rumor: "um capitão diz que nas tavernas do cais ninguém mais conta vantagem alto, por precaução"
+    contra_jogo: "Quem foi escolhido recua ou se curva e deixa os outros baterem; ela não se vira para quem não acha digno, e o orgulho a deixa sem guarda pelas costas."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_estivador_das_facas:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [brekmar]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas largas e pesadas numa rua onde houve briga, e um risco de gancho arrastado na pedra."
+      resto: "Dois irmãos de sindicato caídos um sobre o outro, cada um com a lâmina do outro na mão."
+      som: "Um tilintar de muitas lâminas soltas batendo umas nas outras, como uma gaveta de cutelaria andando."
+      cheiro: "Ferro velho enferrujado e suor de estiva, com um fundo de sangue derramado à noite."
+      marca: "Num poste do cais, entalhes de três sindicatos riscados uns por cima dos outros até a madeira ceder."
+      aproximacao: "Um homem enorme, de costas eriçadas de cabos de lâmina e crostas de ferrugem, ergue um gancho de estiva."
+      rumor: "um carregador diz que depois da última noite de guerra os irmãos dele não se falam mais, e nem sabem por quê"
+    contra_jogo: "Lutar com espaço entre os heróis enquanto ele estiver de pé; ou levá-lo para o meio dos outros inimigos, onde a rixa fere os dele e não os seus."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_boia_de_bracos:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [bk_docas_velhas]
+      permanencia: [8, 11]
+      presas: [mon_rato_cais_brekmar]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Uma escada de pedra do cais com arranhões de unha na base, fundos e desesperados, de muitas mãos diferentes."
+      som: "Um borbulhar de gás saindo da água e um arquejo curto, como de alguém que sobe à tona para respirar."
+      cheiro: "Gás de afogado, adocicado e podre, que sobe em bolhas rente às docas."
+      marca: "Rente à escada de pedra, uma coisa clara e redonda flutua parada contra a corrente, rodeada de dedos na água."
+      aproximacao: "Junto à escada sobe um saco claro e inchado como cortiça, e um anel de mãos de afogados se abre na sua direção."
+      rumor: "as crianças do cais velho aprenderam a não descer a escada de pedra sozinhas"
+    contra_jogo: "Não lutar na borda perto dela; se alguém for agarrado, os outros cortam os braços um a um ou furam o saco de gás, e ela afunda sozinha."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_broca_de_costado:
+    fonte: ficha
+    ecologia:
+      horario: [Noite, Amanhecer]
+      territorio: [bk_docas_velhas]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um furo redondo e liso do tamanho de um barril num cais de madeira, fechado do outro lado por duas palhetas de casca."
+      resto: "Serragem molhada misturada a lascas de cravo de ferro e uma unha de osso, cuspidas em monte."
+      som: "Um rangido de serra que gira devagar, vindo de dentro de um casco de navio atracado."
+      cheiro: "Madeira de navio molhada e moída, com o cheiro salgado de verme do mar."
+      marca: "O navio mais novo do cais adernado no porto, com o casco furado de dentro para fora, enquanto o vizinho está intacto."
+      aproximacao: "Da madeira sai um verme pálido do tamanho de um bote, a cabeça de duas conchas serrilhadas girando uma contra a outra."
+      rumor: "um armador diz que, no porto, o barco que vai bem é o que afunda primeiro"
+    contra_jogo: "Tapar o furo logo, com a mão ou um pano, antes que vaze; e manter o grupo parelho, porque quando ninguém está melhor que o vizinho ela não tem o que nivelar. A carne atrás das conchas corta fácil."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mao_estendida:
+    fonte: ficha
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [brekmar]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um negociante caído de costas, ainda com o sorriso de quem fechou acordo, e quatro furos finos sob a axila."
+      som: null
+      cheiro: "Pele morna e limpa demais, como de banho tomado há pouco, no meio do fedor do cais."
+      marca: "Num balcão de negócio, dois copos servidos e só um bebido, e a cadeira do outro lado ainda morna."
+      aproximacao: "Um estranho alto de rosto bom de olhar estende a mão quente para você, e algo duro se mexe debaixo da axila dele."
+      rumor: "um corretor do cais diz que só fecha acordo com quem tem os dois braços à vista"
+    contra_jogo: "Não aceitar a trégua; bater nela na primeira rodada, quando ela não se defende, ou prender o braço escondido debaixo da axila antes que saia."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  enemy_arpoador_osshari:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde]
+      territorio: [bk_docas_velhas]
+      permanencia: [6, 9]
+      presas: [mon_cardume_coagulado]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas firmes e espaçadas na beira do cais, paradas de frente para a água, como de quem espera a hora do arremesso."
+      resto: "Uma ponta de ferro farpada e enorme cravada num mourão, com um pedaço de carne cinza do fundo ainda preso."
+      som: "Um zunido de corda correndo depressa e o baque seco de ferro entrando em madeira molhada."
+      cheiro: "Óleo de bicho grande e couro curtido, o cheiro de quem passou a vida limpando caça do mar."
+      marca: "Num poste, entalhes de caçadas em fila, cada um com o desenho de um bicho maior que o anterior."
+      aproximacao: "Na beira do cais, um caçador de pele grossa e rosto calmo ergue um arpão do tamanho de um homem e mira em você."
+      rumor: "um peixeiro diz que os caçadores do crânio velho perderam o mar e agora caçam o que sobe nas docas"
+    contra_jogo: "Colar nele e ficar colado: ele recua para retomar a distância e arremessar, e foge quando a linha da frente cai."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_pirata_brekmar:
+    fonte: legado
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [brekmar]
+      permanencia: [6, 9]
+      foge_de: [mon_tambor_do_ossario, mon_capita_corda]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Botas de convés em bando, apressadas, que saem das tavernas do porto e se separam nas vielas."
+      resto: "Um baú de mercador arrombado a cutelo na viela, as moedas ruins deixadas para trás, as boas não."
+      som: "Um tiro de pederneira abafado, risadas e o barulho de vidro quebrando numa taverna mais adiante."
+      cheiro: "Pólvora queimada, rum barato e alcatrão, um cheiro de convés depois da abordagem."
+      marca: "Na parede de uma viela, a marca de uma tripulação pintada a piche por cima da marca de outra."
+      aproximacao: "Da viela sai um bando de marinheiros de cutelo na mão e pistola no cinto, rindo como quem já sabe o preço da briga."
+      rumor: "um mercador diz que a guerra das rotas desceu do mar para as vielas e que agora se cobra pedágio em terra"
+    contra_jogo: "Derrubar primeiro os da frente: o bando se apoia nos números e, se a linha cai, os de trás fogem com o que pegaram."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_capangas_do_poco:
+    fonte: legado
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [brekmar]
+      permanencia: [6, 9]
+      suprime: [mon_penhorado_do_poco]
+      reage:
+        - {quando: "pressao:fome", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Duas linhas de pegadas pesadas, lado a lado, que param à porta de cada casa da rua e seguem para a próxima."
+      resto: "Uma porta de oficina arrombada e um tear quebrado ao meio, com método, sem levar nada."
+      som: "Duas vozes calmas fazendo contas alto, e uma pancada surda de madeira em madeira."
+      cheiro: "Fumo de corda e suor de quem carrega peso, um cheiro de taverna de sindicato."
+      marca: "Num batente, uma cruz de giz ao lado de um número, e a casa da frente já de janelas tapadas."
+      aproximacao: "Dois homens largos de porrete na mão se separam para cercar você, e o mais velho já sabe o seu nome."
+      rumor: "uma viúva do porto diz que pagou a dívida do marido três vezes e que eles ainda passam toda semana"
+    contra_jogo: "Concentrar no da frente e lutar de costas para uma parede: eles marcam o alvo mais ferido e, cercados e feridos, recuam ou se rendem."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_capita_corda:
+    fonte: legado
+    ecologia:
+      horario: [Noite, Amanhecer]
+      territorio: [bk_docas_velhas]
+      permanencia: [6, 9]
+      suprime: [enemy_pirata_brekmar]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas encharcadas de várias pessoas em fila, todas com uma volta de cabo arrastando atrás, presas à mesma estaca."
+      resto: "Um nó de marinheiro inchado de água, apertado em volta de um pulso descarnado que ninguém soltou."
+      som: "Um sino de bordo batendo as horas de um navio que não está ali, e uma voz rouca dando ordens."
+      cheiro: "Cânhamo encharcado e água salgada parada, como de porão alagado há anos."
+      marca: "Nas estacas do cais velho, cabos grossos esticados para dentro da água, tensos, como se alguém os puxasse lá embaixo."
+      aproximacao: "Da água sobe uma mulher de sabre na mão e cabelo grudado ao rosto, e atrás dela uma fileira presa pela cintura."
+      rumor: "os do cais velho dizem que de madrugada o sino de bordo de um navio afundado ainda chama a tripulação"
+    contra_jogo: "Derrubá-la primeiro, ou romper a fileira que ela comanda: ela aponta o mais frágil, provoca para atrair os golpes e empurra a linha; sem o bando, recua."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cobrador_gancho:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [brekmar]
+      permanencia: [6, 9]
+      suprime: [mon_anzolado_da_casa]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de algo arrastado vivo pela rua, as unhas de alguém riscando a pedra, e ao lado um sulco de ferro curvo."
+      resto: "Um colete rasgado nas costas por um único furo curvo, largado na porta de um devedor."
+      som: "Um arrastar de ferro e corrente no fim da rua, e um sino pequeno, de dívida, batendo três vezes."
+      cheiro: "Ferrugem de ferro curvo e cachorro molhado, com um fundo de medo velho."
+      marca: "Numa porta, uma placa de cobre pregada com o valor devido, e o prazo riscado."
+      aproximacao: "Algo grande e curvado, de couro marcado a ferro com os selos dos sindicatos, ergue um ferro de pesca na sua direção."
+      rumor: "os devedores do porto dizem que ninguém foge do sino pequeno: ele sempre traz quem deve vivo"
+    contra_jogo: "Não deixar que ele marque você: ficar junto dos outros, aguentar a provocação do sino e atacar o mais ferido dos dele; acuado, recua em ordem."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_rato_cais_brekmar:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [brekmar, bk_docas_velhas]
+      permanencia: [6, 9]
+      foge_de: [mon_gato_de_lastro]
+      reage:
+        - {quando: "pressao:fome", efeito: mais}
+        - {quando: "pressao:praga", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Trilhas miúdas nas cordas e nas estacas, todas indo dar nas bancas de câmbio do porto."
+      resto: "Moedas mordidas espalhadas na lama, umas com a borda roída até o cobre, outras intactas."
+      som: "Um chiado agudo que corta o ouvido e um raspar de dentinhos em metal."
+      cheiro: "Esgoto e cobre azedo, como de bolso velho cheio de troco."
+      marca: "Na bolsa de um cambista, um furo redondo e limpo, e só as moedas falsas faltando."
+      aproximacao: "Das cordas desce uma fila de bichos cinzentos de dentes amarelos, e o primeiro vai direto para a sua bolsa."
+      rumor: "um cambista diz que os bichos do porto acham moeda falsa melhor que qualquer balança"
+    contra_jogo: "Não guardar moeda falsa e não perder tempo correndo atrás: eles atacam pelas costas e fogem ao primeiro ferimento, e o chiado deles dói nos ouvidos."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
