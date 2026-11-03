@@ -13,6 +13,7 @@ from services import economy as eco
 from services import graph_resolver as gr
 from services.event_processor import apply_event, process_pending_events
 from services.world_validators import validate_proposal
+from tests.factories import make_state
 
 BREKMAR = "brekmar"
 NOVA = "nova_arcadia"
@@ -42,7 +43,7 @@ def _state(**over):
         "player": {"name": "T", "gold": 500, "inventory": [], "hp": 30, "max_hp": 30},
     }
     base.update(over)
-    return base
+    return make_state(**base)
 
 
 def _blocked(*pairs):
