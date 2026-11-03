@@ -1,6 +1,6 @@
 # SPEC-379 — Testes: fábricas de estado, fake único de LLM, cobertura real e testes que leem código-fonte
 
-> **Status:** `draft`
+> **Status:** `approved` (03/11 noite, dono: "vai executando o que puder"; D1–D11 = defaults do §8)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11, [docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md) §4.6 (itens 1–3 e "Cobertura") e §5 letras **H + I**; regras da onda **W1–W8** (§6.2). Fica de fora o que a §6.4 retirou: **não** renomear os 299 `test_specNNN_*`.
 > **Depende de:** nada para começar (§6.3 da auditoria: "pode começar já"). Cada etapa passa pela trava **W1** antes de começar. **W6**: é a única spec de refatoração da onda em voo enquanto estiver `in-progress`.
