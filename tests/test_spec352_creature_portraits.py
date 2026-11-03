@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from io import BytesIO
 from pathlib import Path
+from types import SimpleNamespace
 from uuid import uuid4
 
 import pytest
@@ -459,5 +460,34 @@ def test_s3_shared_store_copy_and_sign_path():
     assert store.signed_url(out["key"], 600).startswith(
         "https://s3.example/private/shared/creatures/"
     )
-    runtime_src = (ROOT / "infrastructure/runtime.py").read_text(encoding="utf-8")
-    assert "shared_blob_store = blob_store" in runtime_src
+
+
+def test_s3_runtime_shares_the_private_blob_store(monkeypatch):
+    """SPEC-379 R6 (a): o runtime s3 monta UM store e o expoe como compartilhado (prefixo shared/)."""
+    import sys
+
+    from infrastructure import postgres, runtime
+    from infrastructure.s3_blob import S3BlobStore
+    from tests.test_s3_blob import FakeS3
+
+    class FakePool:
+        def __init__(self, dsn, **kwargs):
+            pass
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(postgres, "PostgresPool", FakePool)
+    monkeypatch.setitem(sys.modules, "boto3", SimpleNamespace(client=lambda *_a, **_k: FakeS3()))
+    monkeypatch.setenv("RPG_S3_BUCKET", "private")
+    env = {
+        "RPG_RUNTIME_PROFILE": "portable",
+        "DATABASE_URL": "postgresql://localhost/postgres",
+        "RPG_OIDC_USERINFO_URL": "https://identity.example/userinfo",
+        "RPG_OIDC_ISSUER": "https://identity.example",
+        "RPG_OIDC_JWKS_URL": "https://identity.example/jwks",
+        "RPG_OIDC_AUDIENCE": "rpg-api",
+    }
+    built = runtime.build_database_runtime(runtime.RuntimeConfig.from_env(env))
+    assert isinstance(built.blob_store, S3BlobStore)
+    assert built.shared_blob_store is built.blob_store
