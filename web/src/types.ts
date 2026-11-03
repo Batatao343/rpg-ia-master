@@ -541,6 +541,10 @@ export interface PressagioView {
   faixa: [number, number] | null;
   carta_nome: string | null;
   sinal: string;
+  /** SPEC-332/371: frase do golpe preparado (assinatura na rodada seguinte). */
+  prenuncio?: string | null;
+  /** SPEC-371 R10: contra-jogo já aprendido; só na linha com `prenuncio`. */
+  contra_jogo?: string | null;
 }
 
 /** SPEC-334 R4: prévia determinística (POST /game/combat/preview). */
@@ -1012,7 +1016,15 @@ export interface CodexCharacter extends CodexKnowledgeFields {
   revealed_traits?: Array<{ id: string; name: string; description: string }>;
 }
 
-export interface CodexCreature extends CodexKnowledgeFields {
+/** SPEC-371 R13/R15: saber do jogador sobre a criatura (ausente com `RPG_FAUNA_SABER=off`). */
+export interface CreatureSaber {
+  sinais_vistos?: Array<{ tipo: string; texto: string }>;
+  telegrafos_vistos?: string[];
+  contra_jogo?: string;
+  contra_jogo_motivo?: string;
+}
+
+export interface CodexCreature extends CodexKnowledgeFields, CreatureSaber {
   id: string;
   tier: 1 | 2 | 3 | 4;
   tier_name: string; // "Rumores" | "Encontrada" | "Estudada" | "Dominada"
@@ -1143,7 +1155,7 @@ export interface SecretDossier extends DossierBase {
   turn: number;
 }
 
-export interface CreatureDossier extends DossierBase {
+export interface CreatureDossier extends DossierBase, CreatureSaber {
   kind: "creature";
   tier: number;
   tier_name: string;
@@ -1234,7 +1246,7 @@ export interface ScenePressagioView { id: string; nome: string; pressagio: strin
 export interface SceneObjectiveView { tipo: "sobreviver_n_rodadas" | "proteger" | "alcancar_zona" | "destruir_objeto" | "interromper_ritual" | "capturar_vivo"; alvo_nome?: string; n?: number; rodada: number; resultado: "cumprido" | "falhou" | null }
 export interface SceneCardsView { cartas: { id: string; nome: string; sabor: string }[]; relogio: { desde: number; teto: number; rodada: number; ativo: boolean } }
 /** SPEC-342 R8: presságio pronto para exibir no chip do inimigo. */
-export interface OmenView { icon: import("./design/icons").IconName; text: string; num: string | null; card: string | null; veiled: boolean; spoken: string }
+export interface OmenView { icon: import("./design/icons").IconName; text: string; num: string | null; card: string | null; veiled: boolean; spoken: string; prenuncio?: string | null; saber?: string | null }
 
 /** SPEC-347 R14: uma jogada da rodada resolvida (carta ou ataque), na ordem dos turnos. */
 export interface RoundLogEntry {

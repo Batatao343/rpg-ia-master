@@ -3,6 +3,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "./fixtures";
 import type { Page } from "@playwright/test";
+import { armDeck, openCombat } from "./deck-342-helpers";
 
 async function assertA11y(page: Page) {
   const result = await new AxeBuilder({ page }).analyze();
@@ -133,5 +134,66 @@ test.describe("dossiês split ~50% / mobile", () => {
     await page.keyboard.press("Enter");
     await expect(page.getByRole("article", { name: "Dossiê: Grum" })).toBeVisible();
     await assertA11y(page);
+  });
+});
+
+// SPEC-371 R16: saber do jogador no dossiê (Rastros lidos, Presságios testemunhados, Como se luta).
+test.describe("fauna: saber do jogador", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  test("dossiê da criatura mostra os três blocos, nesta ordem", async ({ page, backend }) => {
+    const base = payload();
+    backend.dossiers = {
+      ...base,
+      bestiary: [{
+        ...base.bestiary[0], id: "mon_arame_vivo", title: "Arame Vivo", tier: 2,
+        sinais_vistos: [{ tipo: "rastro", texto: "Um sulco fino de arame corta a lama." }],
+        telegrafos_vistos: ["Arame Vivo recolhe o arame das costas e abre os ganchos das mãos."],
+        contra_jogo: "Manter distância e cortar o arame antes que feche.",
+        contra_jogo_motivo: "Aprendido ao aguentar o golpe preparado",
+      }],
+    };
+    await openGame(page);
+    await page.getByRole("tab", { name: "Bestiário" }).click();
+    await page.getByRole("button", { name: /Arame Vivo/ }).click();
+    const dossier = page.getByRole("article", { name: "Dossiê: Arame Vivo" });
+    await expect(dossier.getByText("Rastros lidos")).toBeVisible();
+    await expect(dossier.getByText("Um sulco fino de arame corta a lama.")).toBeVisible();
+    await expect(dossier.getByText("Presságios testemunhados")).toBeVisible();
+    await expect(dossier.getByText("Como se luta")).toBeVisible();
+    await expect(dossier.getByText("Aprendido ao aguentar o golpe preparado")).toBeVisible();
+    const order = await dossier.locator("[data-saber]").evaluateAll((els) => els.map((e) => e.getAttribute("data-saber")));
+    expect(order).toEqual(["sinais", "telegrafos", "contra-jogo"]);
+  });
+
+  test("sem os campos novos, nenhum bloco de saber aparece", async ({ page, backend }) => {
+    backend.dossiers = payload();
+    await openGame(page);
+    await page.getByRole("tab", { name: "Bestiário" }).click();
+    await page.getByRole("button", { name: /Rato da Peste/ }).click();
+    await expect(page.locator("[data-saber]")).toHaveCount(0);
+  });
+
+  test("combate: o chip mostra o prenuncio e 'Você sabe:'", async ({ page, backend }) => {
+    const state = armDeck(backend, { intent: true });
+    state.combat.pressagios_publicos = [{
+      actor_id: "e1", tipo: "ataque", alvo_id: "player", valor_estimado: 5, faixa: [4, 8], carta_nome: "Enroscar",
+      sinal: "ergue a lâmina", prenuncio: "Saqueador recolhe o arame e abre os ganchos.",
+      contra_jogo: "Manter distância e cortar o arame.",
+    }];
+    await openCombat(page);
+    await expect(page.locator("[data-omen-prenuncio]").first()).toHaveText("Saqueador recolhe o arame e abre os ganchos.");
+    await expect(page.locator("[data-omen-saber]").first()).toContainText("Você sabe: Manter distância e cortar o arame.");
+  });
+
+  test("combate: o prenuncio aparece mesmo sem contra-jogo (flag off)", async ({ page, backend }) => {
+    const state = armDeck(backend, { intent: true });
+    state.combat.pressagios_publicos = [{
+      actor_id: "e1", tipo: "ataque", alvo_id: "player", valor_estimado: null, faixa: [4, 8], carta_nome: null,
+      sinal: "ergue a lâmina", prenuncio: "Saqueador recolhe o arame.",
+    }];
+    await openCombat(page);
+    await expect(page.locator("[data-omen-prenuncio]").first()).toBeVisible();
+    await expect(page.locator("[data-omen-saber]")).toHaveCount(0);
   });
 });

@@ -4,6 +4,7 @@ import { mdLite } from "../lib";
 import type { DossiersPayload, PlayerCodex } from "../types";
 import { categoryCount } from "../codexKnowledge";
 import { isProjectionBehind } from "../dossiers";
+import { FaunaSaber } from "./FaunaSaber";
 import { CertaintyBadge, KnowledgeNotes } from "./tabs/CertaintyBadge";
 import { DossierBrowser } from "./tabs/DossierBrowser";
 import { useDossiers } from "./tabs/useDossiers";
@@ -172,6 +173,7 @@ export function CreatureList({ creatures }: { creatures: PlayerCodex["creatures"
           {cr.loot && cr.loot.length > 0 && (
             <p className="codex-entry__meta">Loot: {cr.loot.join(", ")}</p>
           )}
+          <FaunaSaber saber={cr} />
           <KnowledgeNotes notes={cr.notes} />
         </ArrivalLi>
       ))}

@@ -195,9 +195,8 @@ def test_prep_prompt_off_byte_identico():
 
 
 def _drive(monkeypatch, saber: str, max_rounds: int = 6) -> dict:
-    import mock_llm
-
     import agents.combat as combat
+    import mock_llm
     from playtest.runner import _build_initial_state
 
     monkeypatch.setenv("RPG_FAUNA_SABER", saber)

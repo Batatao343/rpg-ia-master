@@ -8,8 +8,7 @@ from pathlib import Path
 import pytest
 
 from services import discovery as disc
-from services import dossiers
-from services import fauna
+from services import dossiers, fauna
 from services import fauna_saber as fs
 
 CID = "mon_arame_vivo"

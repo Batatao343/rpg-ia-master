@@ -179,12 +179,19 @@ export const VEILED_TEXT = "Intenção velada";
 /** `p` nulo (inimigo sem entrada com a flag de intenção ligada) ou `desconhecido` → velada (R8.3). */
 export function omenView(p: PressagioView | null, name: string): OmenView {
   if (!p || p.tipo === "desconhecido") {
-    return { icon: "dark", text: VEILED_TEXT, num: null, card: null, veiled: true, spoken: `${name}: ${VEILED_TEXT}` };
+    const prenuncio = p?.prenuncio ?? null;
+    return {
+      icon: "dark", text: VEILED_TEXT, num: null, card: null, veiled: true, ...(prenuncio ? { prenuncio } : {}),
+      spoken: `${name}: ${VEILED_TEXT}${prenuncio ? `. ${prenuncio}` : ""}`,
+    };
   }
   const num = p.valor_estimado !== null ? `~${p.valor_estimado}` : p.faixa ? `${p.faixa[0]}–${p.faixa[1]}` : null;
   const icon = (OMEN_ICON as Record<string, IconName>)[p.tipo] ?? "dark";
-  const spoken = `${p.sinal.startsWith(name) ? "" : `${name}: `}${p.sinal}${p.carta_nome ? ` — ${p.carta_nome}` : ""}${num ? ` (${num})` : ""}`;
-  return { icon, text: p.sinal, num, card: p.carta_nome, veiled: false, spoken };
+  const prenuncio = p.prenuncio ?? null;
+  const saber = p.contra_jogo ?? null;
+  const spoken = `${p.sinal.startsWith(name) ? "" : `${name}: `}${p.sinal}${p.carta_nome ? ` — ${p.carta_nome}` : ""}${num ? ` (${num})` : ""}`
+    + `${prenuncio ? `. ${prenuncio}` : ""}${saber ? `. Você sabe: ${saber}` : ""}`;
+  return { icon, text: p.sinal, num, card: p.carta_nome, veiled: false, ...(prenuncio ? { prenuncio } : {}), ...(saber ? { saber } : {}), spoken };
 }
 
 /** SPEC-342 R2.3: objetivo da cena por extenso (strings da D-342-7). */

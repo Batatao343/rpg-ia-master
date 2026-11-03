@@ -99,6 +99,8 @@ export function TargetChip({ p, aim, onPick, omen, onGenerate, genDisabled }: {
           {omen.num && <span className="tchip__omen-num">{omen.num}</span>}
         </span>
       )}
+      {omen?.prenuncio && <span className="tchip__meta" data-omen-prenuncio>{omen.prenuncio}</span>}
+      {omen?.saber && <span className="tchip__meta" data-omen-saber>{`Você sabe: ${omen.saber}`}</span>}
     </>
   );
   const cls = `tchip tchip--${p.role}${aim ? (aim.valid ? " is-valid" : " is-invalid") : ""}${p.retrato ? " tchip--portrait" : ""}`;

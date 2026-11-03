@@ -2,6 +2,7 @@ import type {
   CreatureDossier, DossierBase, DossierClaim, FactionDossier, LocationDossier, NpcDossier, SecretDossier, VisualAsset,
 } from "../../types";
 import { mdLite } from "../../lib";
+import { FaunaSaber } from "../FaunaSaber";
 import { VisualArtwork } from "../VisualArtwork";
 import { CertaintyBadge, KnowledgeNotes } from "./CertaintyBadge";
 
@@ -156,6 +157,7 @@ function CreatureView({ item }: { item: CreatureDossier }) {
       {item.revealed_resistances && item.revealed_resistances.length > 0 && (
         <p className="codex-entry__meta">Resistências reveladas: {item.revealed_resistances.join(", ")}</p>
       )}
+      <FaunaSaber saber={item} />
       <KnowledgeNotes notes={item.notes} />
     </>
   );
