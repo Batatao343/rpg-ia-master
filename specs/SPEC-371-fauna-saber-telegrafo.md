@@ -396,3 +396,5 @@ Coordenador, com chave (`ROUTES` de hoje), API local, `RPG_FAUNA_SABER=on`, `RPG
 | Médico de Campo | 46,7 % | 44,0 % | 47,5 % |
 
   Todas as Posturas armadas ficam em 45–85 %. Único valor abaixo do piso: Médico `depois_sem_armar` 44,0 % (jogador que ensina a reação ao baralho e nunca a arma; o ganho de armar é +3,5 pp). O Corruptor é o mais perto do piso (48,7 %) e quase não ganha por armar (gatilho só de projétil).
+
+**Smoke real §6 (03/11, DeepSeek, `app.invoke` em vez de API; `docs/spec371/smoke-real.md`).** Passos 1, 2, 3 (pelo JSON), 5 OK; 4 parcial (campos do save OK, mas a linha R14 "Você aprendeu…" não chega ao jogador); 6 não exercitado (sem cena preparada); 7 chamadas `on` = `off` (19 = 19), Δ p50 ≈ +0,3 s não conclusivo.
