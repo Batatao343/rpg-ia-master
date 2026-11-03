@@ -50,6 +50,7 @@ def draft(region: str) -> dict:
                 "horario": guess_horario(prose),
                 "territorio": fl.effective_territory(cid, {}, refs),
                 "presas": [],
+                "suprime": [],
                 "foge_de": [],
                 "reage": [],
             },

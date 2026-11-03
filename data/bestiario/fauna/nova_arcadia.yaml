@@ -388,7 +388,7 @@ criaturas:
       horario: [Manhã, Tarde, Anoitecer]
       territorio: [na_anel_ferro, na_anel_lama]
       permanencia: [7, 9]
-      presas: [enemy_iniciado_chama_azul]
+      suprime: [enemy_iniciado_chama_azul]
       reage:
         - {quando: "pressao:abismo", efeito: mais}
     sinais:
@@ -687,7 +687,7 @@ criaturas:
       horario: [Amanhecer, Manhã, Tarde]
       territorio: [nova_arcadia, na_anel_ferro, na_anel_dourado]
       permanencia: [6, 8]
-      presas: [enemy_degolador_mao_sombria]
+      suprime: [enemy_degolador_mao_sombria]
       reage:
         - {quando: "pressao:guerra", efeito: mais}
     sinais:

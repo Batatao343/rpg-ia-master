@@ -1,6 +1,6 @@
 """SPEC-360 R4: lint deterministico do bloco de fauna (`data/bestiario/fauna/<regiao>.yaml`).
 
-Fonte unica das regras E1-E16 (§3.4) e da cobertura R2. `lint_region(doc, refs)` e puro
+Fonte unica das regras E1-E18 (§3.4; E17/E18 = SPEC-370) e da cobertura R2. `lint_region(doc, refs)` e puro
 (recebe as referencias prontas); `load_refs(regiao)` monta as referencias dos dados reais.
 Chamado por `content_validator.validate_fauna()` e por `scripts/fauna/lint.py --regiao`.
 """
@@ -33,6 +33,7 @@ MAX_SIGN = 160
 MAX_RUMOR = 120
 MIN_SIGNS = 3
 MAX_IMEDIATO = 0.30
+MAX_IMEDIATO_HUB = 2  # E18 (SPEC-370 R6)
 MIN_TROFICA = 0.60
 MAX_JACCARD = 0.5
 MIN_NAME_TOKEN = 4
@@ -48,7 +49,16 @@ ENTRY_KEYS = {
     "revisao",
 }
 ENTRY_REQUIRED = {"fonte", "ecologia", "sinais", "contra_jogo", "autor", "revisao"}
-ECO_KEYS = {"horario", "estacoes", "territorio", "permanencia", "presas", "foge_de", "reage"}
+ECO_KEYS = {
+    "horario",
+    "estacoes",
+    "territorio",
+    "permanencia",
+    "presas",
+    "suprime",
+    "foge_de",
+    "reage",
+}
 SINAIS_KEYS = {"antecedencia", *TEXT_KINDS}
 _STOP = {
     "a", "o", "as", "os", "um", "uma", "uns", "umas", "de", "da", "do", "das", "dos", "e",
@@ -73,6 +83,7 @@ class Refs:
     vagos: tuple[str, ...] = ()
     leak_phrases: tuple[str, ...] = ()
     other_presas: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    hub: str = ""  # E18: no raiz com o id da regiao (chegada mais usada), "" se nao existir
 
 
 # --------------------------------------------------------------------------- texto
@@ -176,7 +187,7 @@ def _e1_entry(cid: str, e: Any, refs: Refs) -> list[str]:
         and perm[0] <= perm[1]
     ):
         errs.append(f"E1 {cid}: permanencia deve ser [min, max] em dias (1..30)")
-    for key in ("presas", "foge_de", "territorio", "horario"):
+    for key in ("presas", "suprime", "foge_de", "territorio", "horario"):
         if key in eco and not isinstance(eco[key], list):
             errs.append(f"E1 {cid}: {key} deve ser lista")
     for r in eco.get("reage") or []:
@@ -232,12 +243,19 @@ def _rules_entry(cid: str, e: dict, refs: Refs) -> list[str]:
         errs.append(f"E4 {cid}: territorio {sorted(set(terr) - allowed)} fora do habitat/regiao")
     if not effective_territory(cid, eco, refs):
         errs.append(f"E4 {cid}: territorio efetivo vazio")
-    for key in ("presas", "foge_de"):
+    for key in ("presas", "suprime", "foge_de"):
         for other in eco.get(key) or []:
             if other == cid:
                 errs.append(f"E5 {cid}: {key} contem a propria criatura")
             elif other not in refs.bestiary:
                 errs.append(f"E5 {cid}: {key} {other!r} nao existe no bestiario")
+    both = set(eco.get("presas") or []) & set(eco.get("suprime") or [])
+    if both:
+        errs.append(f"E17 {cid}: {sorted(both)} em presas e suprime ao mesmo tempo")
+    for sup in eco.get("suprime") or []:
+        regions = set((refs.bestiary.get(sup) or {}).get("regions") or [])
+        if refs.bestiary.get(sup) and not regions & ({refs.region} | set(refs.adjacency)):
+            errs.append(f"E17 {cid}: suprime {sup} fora da regiao e das adjacentes")
     for prey in eco.get("presas") or []:
         b = refs.bestiary.get(prey) or {}
         if b.get("boss"):
@@ -307,6 +325,12 @@ def lint_region(doc: Any, refs: Refs) -> list[str]:
         for b in sorted(presas.get(a, ())):
             if a in presas.get(b, ()):
                 errs.append(f"E7 {a}: ciclo de predacao com {b}")
+    # E17: suprime sem ciclo de tamanho 2 (supressao e uma ordem, nao uma briga mutua)
+    supr = {c: set((e.get("ecologia") or {}).get("suprime") or []) for c, e in entries.items()}
+    for a in sorted(entries):
+        for b in sorted(supr.get(a, ())):
+            if a in supr.get(b, ()):
+                errs.append(f"E17 {a}: ciclo de suprime com {b}")
     # E12: anti-reskin entre criaturas da regiao, por tipo de sinal
     ids = sorted(entries)
     for k in TEXT_KINDS:
@@ -329,11 +353,26 @@ def lint_region(doc: Any, refs: Refs) -> list[str]:
             errs.append(f"E14: {len(imediato)}/{len(entries)} com antecedencia imediato (> 30 %)")
         non_boss = [c for c in entries if not (refs.bestiary.get(c) or {}).get("boss")]
         preyed = {p for ps in presas.values() for p in ps}
-        linked = [c for c in non_boss if presas.get(c) or c in preyed]
+        suppressed = {p for ps in supr.values() for p in ps}  # `suprime` conta como ligacao
+        linked = [
+            c for c in non_boss if presas.get(c) or supr.get(c) or c in preyed or c in suppressed
+        ]
         if non_boss and len(linked) < MIN_TROFICA * len(non_boss):
             errs.append(
                 f"E15: so {len(linked)}/{len(non_boss)} nao-BOSS com ligacao trofica (< 60 %)"
             )
+        # E18: no maximo 2 `imediato` cujo territorio inclui o no de chegada da regiao
+        if refs.hub:
+            at_hub = [
+                c
+                for c in imediato
+                if refs.hub in effective_territory(c, entries[c].get("ecologia") or {}, refs)
+            ]
+            if len(at_hub) > MAX_IMEDIATO_HUB:
+                errs.append(
+                    f"E18: {len(at_hub)} imediato no no de chegada {refs.hub} "
+                    f"(max {MAX_IMEDIATO_HUB}): {sorted(at_hub)}"
+                )
     return errs
 
 
@@ -420,6 +459,14 @@ def load_refs(region: str, *, exclude_other: bool = False) -> Refs:
             for c, e in (doc.get("criaturas") or {}).items():
                 if isinstance(e, dict):
                     other[c] = tuple((e.get("ecologia") or {}).get("presas") or [])
+    hub = next(
+        (
+            loc["id"]
+            for loc in gamedata.WORLD_MAP.get("locations", [])
+            if loc.get("id") == region and not loc.get("parent_id")
+        ),
+        "",
+    )
     lex = _lexico_sections()
     return Refs(
         region=region,
@@ -435,6 +482,7 @@ def load_refs(region: str, *, exclude_other: bool = False) -> Refs:
         vagos=tuple(lex.get("vagos") or []),
         leak_phrases=leak_phrases(),
         other_presas=other,
+        hub=hub,
     )
 
 

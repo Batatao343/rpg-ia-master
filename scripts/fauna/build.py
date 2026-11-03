@@ -55,12 +55,20 @@ def build_doc() -> dict:
                 "tramas": list(e.get("tramas") or []),
                 "predadores": [],
             }
+            if eco.get("suprime"):  # SPEC-370 R11: so emite quando ha (diff minimo)
+                criaturas[cid]["ecologia"]["suprime"] = sorted(eco["suprime"])
     for cid, e in criaturas.items():
         for prey in e["ecologia"]["presas"]:
             if prey in criaturas:
                 criaturas[prey]["predadores"].append(cid)
+    for cid, e in list(criaturas.items()):
+        for target in e["ecologia"].get("suprime") or []:
+            if target in criaturas:
+                criaturas[target].setdefault("suprimidos_por", []).append(cid)
     for e in criaturas.values():
         e["predadores"] = sorted(set(e["predadores"]))
+        if e.get("suprimidos_por"):
+            e["suprimidos_por"] = sorted(set(e["suprimidos_por"]))
     return {"version": 1, "criaturas": dict(sorted(criaturas.items()))}
 
 

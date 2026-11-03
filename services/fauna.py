@@ -137,7 +137,7 @@ def _empty() -> FaunaSim:
     return {"v": SIM_VERSION, "presencas": [], "carcacas": []}
 
 
-def _cap_presences(rows: list[dict]) -> list[dict]:
+def _cap_presences(rows: list[dict], protect: str | None = None) -> list[dict]:
     cap = int(const("MAX_PRESENCAS"))
     if len(rows) <= cap:
         return rows
@@ -147,7 +147,68 @@ def _cap_presences(rows: list[dict]) -> list[dict]:
         key=lambda r: (-int(r.get("born_day", 0)), str(r.get("pid"))),
     )
     keep = {id(r) for r in (active + rest)[:cap]}
+    if protect:  # SPEC-370 R10: a recem-nascida nunca sai pelo cap (cede a ativa mais antiga)
+        mine = [r for r in rows if r.get("pid") == protect]
+        if mine and id(mine[0]) not in keep:
+            others = [r for r in active + rest if id(r) in keep and r.get("pid") != protect]
+            keep.discard(id(others[-1]))
+            keep.add(id(mine[0]))
     return [r for r in rows if id(r) in keep]
+
+
+@lru_cache(maxsize=1)
+def _root_counts() -> dict[str, int]:
+    import gamedata
+
+    out: dict[str, int] = {}
+    for loc in gamedata.WORLD_MAP.get("locations", []):
+        if not loc.get("parent_id"):
+            rid = str(loc.get("region_id") or "")
+            out[rid] = out.get(rid, 0) + 1
+    return out
+
+
+def region_cap(region_id: str) -> int:
+    """SPEC-370 R9: teto de presencas ativas da regiao = min(MAX_PRESENCAS_REGIAO, nos raiz x
+    PRESENCAS_POR_NO). Regiao sem no raiz conhecido: o teto fixo."""
+    top = int(const("MAX_PRESENCAS_REGIAO"))
+    nodes = _root_counts().get(region_id, 0)
+    if nodes <= 0:
+        return top
+    return max(1, min(top, nodes * int(const("PRESENCAS_POR_NO"))))
+
+
+def _make_room(
+    fauna: FaunaSim, region: str, here_region: str, frequented: list[str], day: int
+) -> bool:
+    """SPEC-370 R10: abre vaga no cap global ANTES de criar a presenca. Sai primeiro a nao
+    ativa mais antiga; depois a ativa mais antiga de regiao que nao e a atual nem a mais
+    frequentada (`frequented[0]`). Nunca descarta a presenca ja lida da regiao atual."""
+    cap = int(const("MAX_PRESENCAS"))
+    rows = list(fauna["presencas"])
+    protected = {here_region, *(frequented[:1])}
+
+    def _drop(pool: list[dict]) -> bool:
+        if not pool:
+            return False
+        victim = min(pool, key=lambda r: (int(r.get("born_day", 0)), str(r.get("pid"))))
+        rows.remove(victim)
+        return True
+
+    while len(rows) >= cap:
+        if _drop([r for r in rows if not _active(r, day)]):
+            continue
+        pool = [
+            r
+            for r in rows
+            if _active(r, day)
+            and r.get("region_id") not in protected
+            and not (r.get("region_id") == here_region and r.get("sinais_mostrados"))
+        ]
+        if not _drop(pool):
+            break
+    fauna["presencas"] = rows
+    return len(rows) < cap
 
 
 def normalize_fauna_sim(raw: Any) -> FaunaSim:
@@ -339,7 +400,8 @@ def eco_multiplier(entry: dict, ctx: EcoCtx) -> tuple[float, list[str]]:
         f *= float(const("TERRITORIO_FORA"))
         why.append("territorio")
     preds = [p for p in entry.get("predadores") or [] if _in_region(p, ctx.region_id)]
-    if any(_suppressed(p, ctx) for p in preds):
+    sups = [p for p in entry.get("suprimidos_por") or [] if _in_region(p, ctx.region_id)]
+    if any(_suppressed(p, ctx) for p in [*preds, *sups]):
         f *= float(const("PRESA_LIBERADA"))
         why.append("presa_liberada")
     preys = [q for q in eco.get("presas") or [] if _in_region(q, ctx.region_id)]
@@ -454,6 +516,10 @@ def day_hook(ctx: Any):
     here = wp.region_of(str(((ctx.world or {}).get("current_location_id")) or ""))
     if here:
         regions.add(here)
+    seen = (sim or {}).get("region_presence") or {}
+    frequented = sorted(  # mais recente primeiro (R10: a mais frequentada nunca perde vaga)
+        (r for r in regions if r in seen), key=lambda r: (-int(seen.get(r) or 0), r)
+    )
     state = ctx.state or {}
     world = ctx.world or {}
     from services import world_calendar
@@ -463,7 +529,7 @@ def day_hook(ctx: Any):
     for region in sorted(regions):
         roll, pick = rng.random(), rng.random()  # sempre 2 sorteios por regiao
         active = [p for p in fauna["presencas"] if p["region_id"] == region and _active(p, day)]
-        if len(active) >= int(const("MAX_PRESENCAS_REGIAO")) or roll >= float(const("P_PRESENCA")):
+        if len(active) >= region_cap(region) or roll >= float(const("P_PRESENCA")):
             continue
         taken = {p["creature_id"] for p in active}
         ectx = EcoCtx(
@@ -513,6 +579,8 @@ def day_hook(ctx: Any):
             "dia",
             _ttl(chosen, ctx.game_id, day, chosen["id"]),
         )
+        if not _make_room(fauna, region, here or "", frequented, day):
+            continue  # sem vaga: nao nasce e nao loga (R10)
         fauna["presencas"].append(pres)
         _log("presenca_nasce", creature=chosen["id"], region=region, origem="dia")
     fauna["presencas"] = _cap_presences(fauna["presencas"])
@@ -587,7 +655,10 @@ def _add_presence(
     )
     if first:
         pres["sinais_mostrados"] = [first]
-    fauna["presencas"] = _cap_presences([*fauna["presencas"], pres])
+    if _make_room(fauna, region, region, [region], day):
+        fauna["presencas"].append(pres)
+    else:
+        fauna["presencas"] = _cap_presences([*fauna["presencas"], pres], protect=pres["pid"])
     _log("presenca_nasce", creature=e["id"], region=region, origem=origem)
     return _with_fauna(sim, fauna), pres
 

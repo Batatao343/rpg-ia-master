@@ -269,4 +269,35 @@ Coordenador, API local, rotas `ROUTES` de hoje (DeepSeek primário), `RPG_WORLD_
 
 ## 9. Registro de execução
 
-*(vazio; o executor preenche: tabela de legado por região, decisões de calibração, constantes ajustadas, resultados do eval por lote, rodadas de revisão.)*
+### Etapa 0 — sondas (03/11, executor)
+
+Contagens do HEAD (fichas = `status` nova/reinventada/adotada; legado = `classe: valoria` com `regions[0]` = região; BOSS = `encounter_budget.is_boss`; nós raiz = sem `parent_id`). Total fora de NA: 254 fichas + **76** legados = 330 entradas (a spec dizia 77; a contagem por `regions[0]` dá 76, o `lint --regiao` é a fonte).
+
+| Região | Fichas | Legado | BOSS (fichas+legado) | Nós raiz | Rascunho sugere `imediato` |
+|---|---|---|---|---|---|
+| pantano_melancolia | 22 | 8 | 2 | 2 | 1 |
+| brekmar | 20 | 6 | 1 | 2 | 2 |
+| skallgard | 23 | 8 | 3 | 3 | 2 |
+| pradaria_ruinas | 22 | 11 | 1 | 4 | 1 |
+| montanhas_afiadas | 27 | 6 | 1 | 3 | 4 |
+| aethelgard | 25 | 5 | 1 | 2 | 2 |
+| floresta_sussurros | 25 | 4 | 1 | 2 | 2 |
+| selva_xylos | 22 | 8 | 2 | 3 | 3 |
+| deserto_zhur | 26 | 6 | 3 | 2 | 4 |
+| costa_negra | 22 | 7 | 2 | 2 | 3 |
+| ophidia | 20 | 7 | 2 | 1 | 3 |
+
+- `rascunho.py --regiao <r>` funciona nas 11 regiões (em memória; 0 território vazio). Mudança: o rascunho agora emite `suprime: []`. As sugestões de `imediato` por emboscador são só ponto de partida: o teto E14 é 30 % da região e o E18 limita 2 no nó-hub (nó raiz com o id da região, que existe nas 12 regiões).
+- Nó-hub (E18) existe em todas as regiões (`<regiao>` raiz). Montanhas e Zhur sugerem 4 `imediato` no rascunho: o autor precisa baixar para ≤ 2 no hub.
+- Calendário (R4, `calendar.json` `encounter_mult`): `skallgard` (`enemy_lobo_invernal` e `enemy_yeti`, inverno 1,5), `montanhas_afiadas` (`enemy_yeti` inverno 1,5; `enemy_wyvern_jovem` verão 1,5), `deserto_zhur` (`enemy_verme_areia_jovem` verão 1,5; `enemy_escorpiao_cristal` verão 1,3), `selva_xylos` (`enemy_hospedeiro_fungico` primavera 1,3). Cada um que for legado ou ficha da região leva `estacoes` com o mesmo valor.
+- Baseline antes do motor: `tests/test_spec360_*.py` + `test_spec312_seeds.py` verdes; eval de NA com o oráculo novo (Etapa 1): M1 0,7508 (legado 0,7542), M8 0,3146.
+
+### Etapa 2 — motor em escala (03/11, executor)
+
+- R9 `region_cap` (`min(4, nós raiz × PRESENCAS_POR_NO)`; `PRESENCAS_POR_NO = 1` em `fauna_config.json`): Ophidia 1, Skallgard 3, NA 4. Região sem nó raiz conhecido volta ao teto fixo.
+- R10 `_make_room` (cap global antes de criar, também no caminho `_add_presence` da conversão/rastro): descarta não-ativas, depois a ativa mais antiga de região que não é a atual nem a mais recente em `region_presence`; sem vaga, não nasce nem loga. `_cap_presences` ganhou `protect` para o caminho da conversão.
+- R11 `suprime`: lint E17 (E5 de existência/si mesmo, ciclo de 2, região/adjacente, presas∩suprime) e E15 conta `suprime`; `build.py` emite `suprime` só quando há e deriva `suprimidos_por`; `eco_multiplier` usa `suprimidos_por` só para `PRESA_LIBERADA`. F-16 migrado em `nova_arcadia.yaml` (`enemy_soldado_legiao_ferro` → `enemy_degolador_mao_sombria`; `mon_sorvedouro_do_codigo` → `enemy_iniciado_chama_azul`); o diff de `fauna.json` são 4 linhas.
+- R12: `neutral` sai de `_weighted_pool`; com `on` o migrante pesa `MIGRANT_WEIGHT × neutral` (teste falha sem a mudança). R13: teste pelo `_combat_node` (`normalize_bestiary_id` é trocado no teste porque o roster do encontro só aceita o goblin da cena).
+- Eval de NA depois da migração e do motor: todos os limiares verdes (M1 0,7508, M3 sem os 2 pares migrados, M5 −16,9 %, M7 igual, M8 0,3146); `docs/spec360/eval-nova_arcadia.md` regenerado. `test_spec360_eval.py` e `test_spec370_eval.py` verdes (25 passed, 99 skipped por falta de fauna das outras regiões).
+- **Achado `services/ecology.py:59` (`random.Random()` sem semente): NÃO corrigido.** O caminho `on` com `why` vazio (pool sem fauna) e todo o `off` usam o RNG global de propósito; semear só o `on` desloca o sorteio relativo ao `off` e quebra `test_zero_chamada_llm_nova` (72 × 64 chamadas na mesma seed), e semear o `off` quebra o byte-idêntico. Fica como follow-up (precisa decidir se o `off` pode mudar de fonte de acaso); o `on` com fauna no pool já é semeado desde a 360.
+- D8 (Víbora, R2-02) não aplicado: é prosa já aprovada; fica para o autor do lote 1.

@@ -1127,6 +1127,7 @@ def _weighted_pool(
             weights = [w * float(smult.get(e.get("id", ""), 1.0)) for w, e in zip(weights, pool)]
     legacy_weights = list(weights)
     why: dict[str, list[str]] = {}
+    neutral = 1.0  # SPEC-370 R12: o migrante também escala pelo fator neutro (só `on`)
     if fauna_on:
         from services import fauna
 
@@ -1163,7 +1164,7 @@ def _weighted_pool(
         if migrants:
             m = sorted(migrants, key=lambda e: e.get("id", ""))[int(turn) % len(migrants)]
             pool = pool + [m]
-            weights = weights + [eco3.MIGRANT_WEIGHT]
+            weights = weights + [eco3.MIGRANT_WEIGHT * (neutral if fauna_on else 1.0)]
     return pool, weights, why
 
 
