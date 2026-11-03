@@ -1166,8 +1166,10 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
 
         if isinstance(state.get("player"), dict):
             card_piles.sync_deck_mode(state["player"])
-    except Exception:  # pragma: no cover - nunca quebrar o load por isso
-        pass
+    except Exception as exc:  # pragma: no cover - nunca quebrar o load por isso
+        from observability.telemetry import log_fallback
+
+        log_fallback("persistence", "deck_mode_sync_failed", exc)
     return state
 
 

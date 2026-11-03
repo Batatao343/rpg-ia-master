@@ -6081,7 +6081,13 @@ def _apply_play_list(state: dict, req: ActionRequest, active_enemies: list[dict]
             play.action_kind == "discard"
         ):  # SPEC-368 R6: descartar por Fôlego; sem alvo, o motor valida
             if not play.card_id:
-                raise HTTPException(422, detail="Descartar pede a Carta (card_id).")
+                raise HTTPException(
+                    422,
+                    detail={
+                        "code": "validation_failed",
+                        "message": "Descartar pede a Carta (card_id).",
+                    },
+                )
             steps.append({"kind": "discard", "card_id": play.card_id})
             continue
         bad = _targeting.check_declared_target(
