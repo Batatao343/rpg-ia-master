@@ -273,3 +273,29 @@ def test_lint_primeira_conta_linha_e_forma(monkeypatch):
     ficha, info = cg.gerar_nova(_p(), cg.Decisao("nova"), bestiary={}, runtime=[], lore="")
     assert ficha is not None and info["lint_primeira"] is True
     assert ficha["telegrafo"].startswith("{nome} bate")
+
+
+def test_lint_primeira_msgs_e_id_do_nome_limpo(monkeypatch):
+    """P2-3/P2-6: a 1ª reprovação grava código+mensagem curta; o id sai do nome já limpo."""
+    sujo = cg.FichaCriaturaGerada(**_gen(nome="Coro  de   Quitina", contra_jogo="Acertar 3 vezes."))
+    ok = cg.FichaCriaturaGerada(**_gen(nome="Coro  de   Quitina"))
+    _usar(monkeypatch, _Script([sujo, ok]))
+    ficha, info = cg.gerar_nova(_p(), cg.Decisao("nova"), bestiary={}, runtime=[], lore="")
+    assert info["lint_primeira"] is False
+    assert any(m.startswith("R20:") and len(m) <= 125 for m in info["lint_primeira_msgs"])
+    assert ficha is not None and ficha["nome"] == "Coro de Quitina"
+    assert ficha["id"] == cg.id_nova("Coro de Quitina", "g-374", 4)
+
+
+def test_regiao_saturada_enum_quase_certo_e_fechado():
+    base = _gen(
+        plano_corporal="radial",
+        material="cera_sebo",
+        escala="Pequena",
+        locomocao="escala_paredes",
+        percepcao="vibracao",
+        papel_tatico="suporte",
+    )
+    assert cg.FichaCriaturaGeradaEixosLivres(**base).escala == "pequena"
+    with pytest.raises(ValueError):
+        cg.FichaCriaturaGeradaEixosLivres(**{**base, "material": "aco_inox"})

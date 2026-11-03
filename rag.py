@@ -1750,6 +1750,8 @@ def reindex_global(only: str = "all") -> None:
     """
     import sys
 
+    if only not in ("all", "rules", "lore"):
+        raise ValueError(f"only desconhecido: {only!r} (all|rules|lore)")
     from services import content_validator
 
     findings = content_validator.validate_all()

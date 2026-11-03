@@ -52,3 +52,9 @@ def test_lint_com_erro_aborta_sem_indexar(monkeypatch, chamadas):
     with pytest.raises(SystemExit):
         rag.reindex_global("rules")
     assert chamadas["arquivo"] == [] and chamadas["codex"] == []
+
+
+def test_only_desconhecido_levanta_erro(chamadas):
+    with pytest.raises(ValueError):
+        rag.reindex_global("regras")
+    assert chamadas["arquivo"] == [] and chamadas["codex"] == []

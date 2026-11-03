@@ -900,11 +900,15 @@ def padroes_livres(
         if len(set(c)) > 1 and ofensivos & set(c)
     ]
     cands.sort(key=lambda c: hashlib.sha256(f"{regiao}|{semente}|{c}".encode()).hexdigest())
-    partes: list[str] = []
-    for rotulo, cad in (("lacaio ou padrao", 3), ("elite ou chefe", 2)):
-        livres = [c for c in cands if (tuple(c), cad) not in usados][:n]
-        if livres:
-            partes.append(f"{rotulo}: " + " | ".join(",".join(c) for c in livres))
+    por_cad = {cad: [c for c in cands if (tuple(c), cad) not in usados][:n] for cad in (3, 2)}
+    fmt = lambda ls: " | ".join(",".join(c) for c in ls)  # noqa: E731
+    if por_cad[3] == por_cad[2]:  # nada colide: uma lista só (economiza prompt)
+        return f"qualquer categoria: {fmt(por_cad[3])}" if por_cad[3] else ""
+    partes = [
+        f"{rotulo}: {fmt(por_cad[cad])}"
+        for rotulo, cad in (("lacaio ou padrao", 3), ("elite ou chefe", 2))
+        if por_cad[cad]
+    ]
     return "; ".join(partes)
 
 
@@ -1584,8 +1588,8 @@ _ARTIGO = r"(?:(?:o|a|os|as|um|uma)\s+)?"
 
 def _limpar_forma(texto: str) -> str:
     t = " ".join(texto.translate(_ASPAS).split())
-    if len(t) >= 2 and t[0] == t[-1] and t[0] in "\"'":
-        t = t[1:-1].strip()  # o campo inteiro entre aspas
+    if len(t) >= 2 and t[0] == t[-1] and t[0] in "\"'" and t[0] not in t[1:-1]:
+        t = t[1:-1].strip()  # o campo inteiro entre UM par de aspas (não '"a" e "b"')
     t = _PONTUACAO_DUPLA.sub(r"\1", t)
     return _PONTO_DUPLO.sub(".", t)
 
@@ -1712,16 +1716,20 @@ def gerar_nova(
                 info["lint_primeira"] = False
             issues = [Issue("error", "SCHEMA", "a resposta não veio na ficha")]
             continue
-        gen_anterior = normalizar_forma(gen.model_dump(), nome=gen.nome)
+        gen_anterior = normalizar_forma(gen.model_dump(), nome=_limpar_forma(gen.nome))
         ficha = ficha_runtime(
             gen_anterior,
             regiao=p.regiao,
-            fid=id_nova(gen.nome, p.game_id, p.turn),
+            fid=id_nova(str(gen_anterior["nome"]), p.game_id, p.turn),
             livres=livres,
         )
         issues = lint(ficha)
         if tentativa == 1:
             info["lint_primeira"] = not issues  # cru: antes de qualquer reparo (D3)
+            # P2-6: o que reprovou na 1ª (código + mensagem curta), para o relatório do eval
+            info["lint_primeira_msgs"] = [
+                f"{i.code}: {cortar_frase(i.message, 120)}" for i in issues[:8]
+            ]
         if issues:
             reparada = reparar_padrao(ficha, issues, lint)
             if reparada is not None:

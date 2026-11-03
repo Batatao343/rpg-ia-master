@@ -114,15 +114,38 @@ def test_linha_nucleos_lista_a_primeira_palavra_das_listadas():
 
 def test_padroes_livres_nao_repetem_os_da_regiao():
     linha = cg.padroes_livres("deserto_zhur", [], "x|g")
-    assert linha.startswith("lacaio ou padrao: ") and "elite ou chefe: " in linha
     usados = {
         (tuple(f.get("padrao") or []), f.get("a_cada_n"))
         for f in cg.fichas_da_regiao("deserto_zhur")
     }
-    for rotulo, cad in (("lacaio ou padrao: ", 3), ("elite ou chefe: ", 2)):
+    rotulos = [
+        (r, c) for r, c in (("lacaio ou padrao: ", 3), ("elite ou chefe: ", 2)) if r in linha
+    ]
+    if not rotulos:  # nada colide: lista única (sem repetir ~170 caracteres)
+        assert linha.startswith("qualquer categoria: ")
+        rotulos = [("qualquer categoria: ", 3), ("qualquer categoria: ", 2)]
+    for rotulo, cad in rotulos:
         trecho = linha.split(rotulo)[1].split(";")[0]
         for pad in trecho.split(" | "):
             slots = tuple(pad.split(","))
             assert (slots, cad) not in usados
             assert {"ataque", "ataque_multiplo"} & set(slots)
     assert linha == cg.padroes_livres("deserto_zhur", [], "x|g")  # determinístico
+
+
+def test_padroes_livres_lista_unica_quando_iguais():
+    linha = cg.padroes_livres("costa_negra", [], "s")
+    if "qualquer categoria: " in linha:
+        assert "elite ou chefe" not in linha and linha.count(" | ") <= 3
+
+
+def test_aspas_so_caem_quando_embrulham_o_campo_inteiro():
+    f = cg._limpar_forma
+    assert f('"Abre" e depois "fecha"') == '"Abre" e depois "fecha"'
+    assert f('"Vulto baixo."') == "Vulto baixo."
+
+
+def test_nome_sujo_vira_placeholder():
+    nome = cg._limpar_forma("Coro de   Quitina")
+    out = cg.normalizar_forma({"telegrafo": "Coro de Quitina bate."}, nome=nome)
+    assert out["telegrafo"] == "{nome} bate."
