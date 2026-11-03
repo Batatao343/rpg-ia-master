@@ -140,3 +140,67 @@ eval --regiao nova_arcadia → gates ok (M1 0,7366 / 0,7433; M8 0,3127)
 pytest test_spec360_build test_spec312_seeds test_spec370_suprime test_spec370_caps → 33 passed
 pytest -m "not slow" test_spec370_eval test_spec360_eval → passed (exit 0; os slow foram pulados)
 ```
+
+## Lote 3 — Floresta dos Sussurros, Selva de Xylos, Deserto de Zhur
+
+> **Veredito:** `APPROVED` (depois de uma correção de conteúdo feita pelo revisor)
+> **Revisor:** Opus 5.5 (`spec-reviewer`, independente; `revisor_fauna: opus-370-revisor-lote3`; autor `opus-370-lote3`)
+> **Data:** 2026-11-03 · **Commits revisados:** `dd12c9a6`, `4b5fcc59`, `c6049684` · **Correção:** `e9dec3e6`
+
+### Escopo
+
+`data/bestiario/fauna/{floresta_sussurros,selva_xylos,deserto_zhur}.yaml` (29 + 30 + 32 = 91 entradas), mais a edição do autor no `rastro` da Pernalta do Conselho (`aethelgard.yaml`). Usei o mesmo método dos lotes 1 e 2. A leitura entre regiões cobriu as 10 regiões com fauna; pela `region_adjacency()`, a Floresta é vizinha de Aethelgard, Pântano e Selva, a Selva só da Floresta e Zhur só de NA.
+
+O lote é o mais limpo até aqui. As `marca` agora são vestígios (rede, cova, muda, ninho) e não o corpo disfarçado; os autores seguiram a nota do lote 1.
+
+### Achados
+
+| ID | Sev. | Arquivo (entrada) | Problema | Correção |
+|---|---|---|---|---|
+| H-01 | P2 | `floresta_sussurros.yaml` (`mon_picanco_de_espinheiro`) | Item 6: o `resto` do Picanço e o da Vespa Coveira mostravam a mesma vítima, um grilo branco do tamanho de um cão. Somado ao `resto` do próprio Saltão, eram três sinais com o grilo branco na mesma região | O resto do Picanço passa a mostrar a sua outra presa (Lagarta de Visgo espetada). O grilo fica com a Vespa e com o Saltão |
+| H-02 | P2 (executor) | `services/fauna_lint.py` (E9) × `tests/test_spec360_sinais.py:313-318` | O lint aceita sinal de até 160 caracteres, mas `test_bloco_ate_60_tokens` exige `len(render_block(texto)) / 4 ≤ 60`, ou seja, bloco ≤ 240 caracteres com o prefixo, o que dá uns 135 caracteres por sinal. Um sinal pode passar no lint e quebrar a suíte; a edição do autor na Pernalta do Conselho existe por causa disso | Executor: alinhar o E9 ao teto real do bloco (calcular pelo `render_block`) ou relatar no lint a medida do teste. Não é conteúdo; não mexi |
+| H-03 | P1 (executor) | `tests/test_spec360_sinais.py:105-114` × `services/fauna.py` (`render_block`) × `skallgard.yaml` (`mon_escuta_do_sinal`, lote 1) | `test_bloco_sem_nome` falha: o envelope `<SINAIS_NA_CENA>` do `render_block` vira o token `sinal` no singular, e "sinal" é token proibido do nome "Escuta do Sinal". Qualquer sinal dessa criatura falha, mesmo com o texto limpo (o E10 lê o texto cru e passa). Falha desde `7fdfa47e`; não foi pega no lote 1 porque eu não rodei esse arquivo | Executor: o teste deve checar `leaked_tokens` no texto do sinal (ou no bloco sem o envelope e a `SCENE_RULE`), não no bloco inteiro. Conteúdo não resolve: o token está no envelope. Não toquei no teste (é do executor; não é protegido) |
+
+**Edição na Pernalta do Conselho (Aethelgard):** "que dão sempre a volta no mesmo quarteirão" virou "sempre em volta do mesmo quarteirão". O sentido e a distinção do G-02 continuam; aprovado.
+
+Conferido e **mantido** (pontos do autor):
+
+1. **`suprime`.** Dedos de Colheita→Virado do Avesso: colhedores defendem a mancha de fungo da qual o Virado comeu, e o Virado `foge_de` Dedos. Caçador Sem Calor→Fervente: Devorador contra o doente que os Saqueadores-de-Cristal levam para cavar, ou seja, grupo contra grupo. Os demais também são relações de ordem ou território: Caçador de Casca→intrusos; Surdo→Hospedeiro; Sentinela→Enxertadora/Surdo; Mascador de Néctar e Hospedeiro→Pressa da Seiva; Carregador de Liteira e Couro Pegado→Mãos de Cinzel; Costurado→Peito de Geodo.
+2. **Presas no limite.** Todas aceitas, cada uma com base na ficha ou no resto:
+   - Olho de Pétala→Preguiça: caçador de curiosidades contra bicho raro;
+   - Toldo→Bugio: o Bugio vive sob a copa e foge do Toldo;
+   - Urso-de-Espinha e Onça→Casuar;
+   - Serpente-Raiz→Morcego: o resto do morcego com dois furos;
+   - Tamanduá→Vespa Oleira: ninhos de barro abertos sob as plataformas;
+   - Remendado→Laçado: caça "o que sangra", e o Laçado tem feridas que não fecham;
+   - Predador Crescido→Preguiça de Pomar;
+   - Lastreiro→Hiena: as duas rondam acampamentos à noite;
+   - Verme→Tatu;
+   - Cavador de Funil→Lambedor/Escaravelho: formiga-leão contra besouros.
+3. **Estações extras.** Vespa Coveira no verão, Vespa Oleira na primavera e Varano no verão são coerentes. R4 está carregado: `enemy_verme_areia_jovem` com verão 1,5, `enemy_escorpiao_cristal` com verão 1,3 e `enemy_hospedeiro_fungico` com primavera 1,3 (`calendar.json:47-48`).
+4. **Mariposa na Fronteira e horários alargados.** A prosa aguenta: a Mariposa fica só em Anoitecer e Noite, e nenhum horário contradiz o `comportamento` (os noturnos de verdade ficam na noite; os de clareira e de sol, no dia).
+5. **"Saltão" repetido** (Saltão Desbotado na Floresta, Saltão de Galeria nas Montanhas): é nome de ficha, fora da fauna. As regiões não são vizinhas e os sinais não se parecem. Fica para a esteira do bestiário (U4), junto com "Pernalta" (lote 2) e "Lagarta", "Ermitão" e "Geodo", que também se repetem entre regiões.
+
+`imediato` no hub: Floresta (Abafador e Sombra Deitada), Selva (Vinha e Vípera) e Zhur (Verme e Caçador Sem Calor) estão no teto de 2, todos de tocaia ou disfarce. Nota sem correção: o Toldo das Clareiras usa "espaço aberto" quatro vezes, porque o E10 barra "clareira"; soa um pouco duro, mas não confunde.
+
+### Correções aplicadas
+
+`e9dec3e6`: H-01; as 91 entradas com `revisao: aprovada` e `revisor_fauna: opus-370-revisor-lote3`; `fauna.json` regenerado (312 criaturas). `rumor_seeds.json` não mudou, porque o H-01 não toca em rumor.
+
+### Pendências
+
+- H-02 (executor): alinhar o limite de tamanho do E9 ao `test_bloco_ate_60_tokens`.
+- **H-03 (executor, P1): `test_bloco_sem_nome` vermelho por causa do envelope do bloco; corrigir antes do pouso.**
+- O M1 de NA continua em 0,7366, sem mudança neste lote (Zhur não tirou folga de NA).
+
+### Comandos rodados
+
+```text
+scripts/fauna/lint.py --regiao {floresta_sussurros,selva_xylos,deserto_zhur,aethelgard} → 0 erro cada
+scripts/fauna/build.py → fauna.json: 312 criaturas · build_rumor_seeds.py → ok · validate_content.py → 0 ERRO(S)
+eval --regiao floresta_sussurros → gates ok (M1 0,787 / legado 0,7886; M8 0,2794; M5 −0,149)
+eval --regiao selva_xylos → gates ok (M1 0,791 / 0,7977; M8 0,3071; M5 −0,173)
+eval --regiao deserto_zhur → gates ok (M1 0,8185 / 0,8336; M8 0,2913; M5 −0,177)
+eval --regiao nova_arcadia → gates ok (M1 0,7366 / 0,7433)
+pytest -m "not slow" test_spec360_build test_spec312_seeds test_spec370_suprime test_spec370_caps test_spec360_sinais test_spec370_eval test_spec360_eval → só test_bloco_sem_nome falhou (H-03); test_bloco_ate_60_tokens passou
+```
