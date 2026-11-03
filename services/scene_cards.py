@@ -694,6 +694,37 @@ def object_cards(scene: dict, zone_id: str | None) -> list[dict]:
     return out
 
 
+def rehydrate(state: dict | None) -> int:
+    """SPEC-387 R1: registra no catalogo em memoria as Cartas de objeto da cena SALVA.
+    O cache de processo nao e fonte: outra instancia (ou o LRU) reconstroi daqui. Sem filtro
+    de zona/uso/destruido (resolver o nome de uma Carta ja exaurida tambem conta)."""
+    from services import cards
+
+    combat = (state or {}).get("combat")
+    scene = combat.get("scene") if isinstance(combat, dict) else None
+    n = 0
+    for obj in (scene or {}).get("objects") or []:
+        if not isinstance(obj, dict):
+            continue
+        for it in obj.get("interactions") or []:
+            card = _object_card(obj, it) if isinstance(it, dict) else None
+            if card is not None:
+                cards.register_temp_card(card)
+                n += 1
+    return n
+
+
+def rehydrate_safe(state: dict | None) -> int:
+    """`rehydrate` para o load: nunca quebra (R1)."""
+    try:
+        return rehydrate(state)
+    except Exception as exc:  # objeto malformado nao derruba o load
+        from observability.telemetry import log_fallback
+
+        log_fallback("persistence", "scene_cards_rehydrate_failed", exc)
+        return 0
+
+
 def sync_hand(scene: dict, piles: dict | None, player_id: str) -> list[str]:
     """R6: poe/tira as Cartas de objeto da mao conforme a zona do jogador. Registra as
     Cartas no catalogo em memoria (reconstruidas a cada sync -> sobrevive a reload).

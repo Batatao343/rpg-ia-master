@@ -20,6 +20,7 @@ import random
 from collections.abc import Callable
 from typing import Any, Literal
 
+from observability.telemetry import log_event
 from services import card_effects as fx
 from services import cards
 
@@ -729,6 +730,9 @@ def public_view(piles: dict | None, player: dict | None = None) -> dict | None:
     hand = []
     for cid in piles.get("mao") or []:
         card = card_of(cid)
+        if not card and str(cid).startswith("cena_"):  # SPEC-387 R4: orfa nunca sai com id cru
+            log_event("combat", "scene_card_orphan", level="warning")
+            continue
         fardo = is_fardo(card)
         hand.append(
             {

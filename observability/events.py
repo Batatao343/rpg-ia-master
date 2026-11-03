@@ -156,6 +156,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "combat.reveal_resist_shadow": ("effect",),
     "combat.revelar_knowledge_failed": (),
     "combat.scene_card_dropped": ("reason",),
+    "combat.scene_card_orphan": (),
     "combat.scene_card_shadow": ("card_id", "rnd"),
     "combat.scene_cards_catalog_unavailable": (),
     "combat.scene_cards_regions_unavailable": (),
