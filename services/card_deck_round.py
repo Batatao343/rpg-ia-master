@@ -91,7 +91,9 @@ def resolve_player_plays(
         orch._resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
         return
     acting = [i for i, p in enumerate(plays) if str(p.kind or "").lower() != "discard"]
-    first, last = (acting[0], acting[-1]) if acting else (0, len(plays) - 1)  # pre/pos nas jogadas que agem
+    first, last = (
+        (acting[0], acting[-1]) if acting else (0, len(plays) - 1)
+    )  # pre/pos nas jogadas que agem
     carry_guard = False
     acted = False
     for i, step in enumerate(plays):

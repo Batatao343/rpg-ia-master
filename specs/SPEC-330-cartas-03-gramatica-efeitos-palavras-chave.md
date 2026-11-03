@@ -1,6 +1,6 @@
 # SPEC-330 — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
 
-> **Status:** `in-progress` (Grupo A e Grupo B pousados `off` em 27/10 após re-revisões Sol APPROVED; falta smoke real §6 e follow-ups D-13 — escolha do descartar na UI (333), `_bump` (335), Fardo por evento do Abismo)
+> **Status:** `in-progress` (Grupo A e Grupo B pousados `off` em 27/10 após re-revisões Sol APPROVED; falta smoke real §6; follow-ups D-13 resolvidos na SPEC-368 em 03/11 — escolha do descartar na UI, `_bump` travado por lint, Fardo por evento do Abismo = decisão de não fazer)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (`comprar`/`descartar`/`Guardar`/`Exaurir` precisam das pilhas). As palavras-chave sem pilha (R5 grupo A) podem pousar antes.
@@ -212,6 +212,7 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
   três cenários nas formas legada e `efeitos=[efeito]`. P2-5: `revelar` (`resistencias`/
   `cartas`) agora grava no `bestiary_knowledge` (perfil `legacy`; outros perfis só marcam
   `revealed_*` na ficha; falha → `combat.revelar_knowledge_failed`, cosmética).
-- **Follow-ups abertos.** Fardo por evento do Abismo (hoje só por Carta de inimigo/efeito);
+- **Follow-ups D-13 resolvidos (SPEC-368, 03/11).** (a) Escolha do `descartar` na UI: `PlayStepRequest.descartar` (≤ 4) → `step.params["descartar"]` → `piles["descartar_escolhidas"]` transitório → `card_piles.pick_discards(prefer=…)` (`services/card_deck_round.py`, `services/card_effects.py` ramo `descartar`); UI em `web/src/components/combat/DeckCombat.tsx` (chips "Descartar até N"). (b) `_bump` (`services/card_effects.py:943`): `validate_card` rejeita Ressoar com mais de uma chave de valor; o catálogo está limpo (teste). (c) Fardo por evento do Abismo: **decisão de não fazer** — o Abismo já planta Fardo pela 333 R9 (`card_status._rot_sussurro`) e um gatilho novo mudaria o balanço medido pela 362; detalhes na SPEC-368 §9.
+- **Follow-ups (antigos, para histórico).** Fardo por evento do Abismo (hoje só por Carta de inimigo/efeito);
   política de `descartar` com `escolha` real exige UI (SPEC-333); `ao_comprar` na compra de
   início de rodada; texto/UI do `FOLEGO_MAX`; smoke real (§6) e re-revisão do Grupo B.

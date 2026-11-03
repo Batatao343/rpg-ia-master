@@ -51,7 +51,8 @@ Objetivo: corrigir 1 e 2 com TDD, medir 3 de forma determinística (arena/bot, s
   (`fx.budget_error is None`) e a gramática da 330. Voz das Cartas: aprovação em bloco do dono de 27/10
   (memória `cartas-autorizacao-dono`). Tema de cada facção a partir do Codex/bestiário (Grep, nunca Read inteiro).
 - **R5** — Critério da 332 "cada família e facção com ≥ 1 Carta exclusiva" vira teste sobre o catálogo real
-  (11 famílias, 14 facções), sem lista de exceção.
+  (11 famílias + **toda facção que tem criatura no bestiário**, derivada do `data/bestiary.json`, sem lista fixa nem
+  exceção; 24 facções em 03/11: as 14 da 332/368 e as 10 que a 349 trouxe).
 - **R6** — "Dor Surda" ganha a jogada "1 Fôlego para descartar" (contrato aditivo na view da mão; botão na UI do
   combate; sem LLM). Fôlego insuficiente → recusa explicada sem gasto.
 - **R7** — `essencia_de_cinza` ganha ≥ 1 fonte de drop determinística (tabela de espólio existente), coberta por
@@ -76,8 +77,11 @@ Objetivo: corrigir 1 e 2 com TDD, medir 3 de forma determinística (arena/bot, s
 
 ### D. Smoke real dos §6 não verificados
 
-- **R13** — Fixtures de cenário determinístico (estado montado, sem LLM) que colocam o jogo em cada situação do §6
-  abaixo, reutilizáveis pelo smoke (`tests/fixtures/spec368_scenarios.py`) e testadas offline.
+- **R13** — Cenários determinísticos (sem LLM) para cada situação do §6. (a) `tests/fixtures/spec368_seed.py::seed_save(item, variant=)`
+  grava um **save `legacy` real** (jogo criado e conflito aberto pela API, receita aplicada, `save_game_state`) para os itens
+  1–7, 12–14, com teste de round-trip save → load → `/game/state` (`tests/test_spec368_seed.py`); o espólio do item 6 sai
+  determinístico (`variant="espolio"`). (b) `tests/fixtures/spec368_scenarios.py` prova as mesmas situações no motor.
+  (c) Itens 8–11 (draft.py, modo `off`, router esgotado, retrato/concorrência) não têm save: roteiro executável no §9.
 
 ### Fora de escopo
 
@@ -129,7 +133,7 @@ Uma fixture por item do §6; teste offline de cada uma (estado chega à situaç�
 - [ ] Revisão independente `Sol` sem achado aberto
 - [ ] **Smoke real §6 (coordenador)** registrado em `docs/spec368/smoke-final.md`
 
-## 6. Smoke test com LLM real (coordenador; usar as fixtures do R13 para chegar a cada cena)
+## 6. Smoke test com LLM real (coordenador; `seed_save` do R13 leva o jogo real a cada cena dos itens 1–7, 12–14; itens 8–11 pelo roteiro do §9)
 
 Local `legacy` com o preset do staging (cartas `on`) salvo onde indicado. Registrar provider/modelo/custo.
 
@@ -192,5 +196,38 @@ Cartas/rodada 1,92 (meta ≥ 2: **não**, −0,08) · rodadas com ≥ 3 escolhas
 ### Desvios / follow-ups
 
 - Metas 327/329/331 **não atingidas**, registradas sem mudar o critério (D-368-1). Follow-ups: bot que lê a faixa do Presságio; Médico de Campo (p95 19, 4,4 % de timeouts); Cartas de uso > 60 % são aviso desde a 358.
-- Smoke real §6 é do coordenador (`docs/spec368/smoke-final.md`); as fixtures do R13 levam a cada cena.
+- Smoke real §6 é do coordenador (`docs/spec368/smoke-final.md`); `seed_save` leva o jogo real aos itens 1–7 e 12–14, os itens 8–11 seguem o roteiro abaixo.
 - Revisão independente `Sol` pendente (não autoaprovada); suíte completa é do coordenador.
+
+### Correções da revisão Sol (03/11, `handoffs/SPEC-368-sol-review.md`)
+
+- **P1-1 (R13):** `tests/fixtures/spec368_seed.py::seed_save(item, variant=, saves_dir=)` grava o save real (legacy, MockLLM, cartas `on`,
+  conflito aberto pela API e elenco/mão/Fôlego/espólio trocados na receita) e `view(game_id)` devolve o `/game/state`. Variantes:
+  1 `rollback`; 3 `rachadura`; 5 `chefe`/`nova`; 6 `espolio` (Mão Sombria derrotada, `espolio_pendente` com Carta da facção, Esquecer
+  disponível); 7 `medico`; 13 `leitura`/`armadura`/`renegado`/`reacao`. Uso: `bash scripts/dev/py.sh -c "from tests.fixtures.spec368_seed import seed_save; print(seed_save(3, variant='rachadura'))"`
+  (grava em `./saves`; passe `saves_dir` para outro lugar) e abrir o jogo com o `game_id` devolvido. 22 testes de round-trip em
+  `tests/test_spec368_seed.py`, inclusive uma rodada jogada pela API real a partir do save do item 12.
+- **Roteiro executável dos itens 8–11 (sem save):**
+  - **8 (336):** `bash scripts/dev/py.sh scripts/cards/draft.py --postura "Médico de Campo" --subclasse boticario --n 4 --raridades comum --onda 368`
+    (chave real; custo de 1 chamada SMART) → `scripts/cards/lint.py --lote data/cards/_rascunhos/<arquivo>.json` →
+    `scripts/cards/sim.py --lote … --json` → `scripts/cards/promote.py --lote …` → jogar 1 Carta (`seed_save(7, variant="medico")`
+    ou jogo novo de Médico). Registrar o custo.
+  - **9 (345):** API local `legacy` com `RPG_CARD_DECK=off RPG_ENEMY_INTENT=off RPG_ENEMY_DECKS=off RPG_SCENE_CARDS=off RPG_CARD_REWARDS=off`
+    (`bash scripts/dev/py.sh -m uvicorn api:app --port 8000`), jogo novo, 1 conflito; conferir ausência de `pilhas` em `/game/state`.
+  - **10 (346):** mesma API com `RPG_ROUTES='{"classify":[["groq","openai/gpt-oss-20b"]],"fast":[["groq","llama-3.3-70b-versatile"]],"smart":[["groq","openai/gpt-oss-120b"]]}'`
+    e `GROQ_API_KEY=invalida` (router esgotado, CLASSIFY só no Groq); depois `RPG_CARD_DECK=off` e uma rodada; a morte real vem de
+    `seed_save(1)` com o herói a 1 de Vitalidade (editar `player.vitalidade` no save) ou de um conflito jogado até cair.
+  - **11 (347/352):** `bash scripts/dev/py.sh scripts/import_bestiary_art.py <pasta>` (PNG 512×512 em `<pasta>/criaturas/enemy_goblin.png`);
+    "Agora não" sem cotação/request; duas contas no staging para o chefe `unico:{game}`; duas confirmações concorrentes com
+    `curl` em paralelo usando `action_id` distintos; `image_generation` ligado só durante o item e conferido com `list` no fim.
+- **P2-1 (R5):** o teste deriva as facções do bestiário (`tests/test_spec368_content.py`); as 10 facções da 349 sem baralho
+  (`casa_mares_dominio_lyss`, `goblins_mineiros`, `ultimos_anoes_reino`, `clas_tecnologicos`, `tres_sindicatos_comercio`,
+  `cidades_estado_sobreviventes_vaelorn_solvhen`, `cultos_despertar_dispersos`, `encapuzados_fornalha`, `mercadores_curiosidades`,
+  `druidas_ciclo_cinzento`) ganharam 6 Cartas cada (tema das criaturas do bestiário; lint, orçamento e gramática limpos).
+- **P2-2:** resolução do D-13 registrada na SPEC-330.
+- **P3:** `move` revalida a fila (descarte não passa para depois de Pacto, aviso ao jogador); a nota "Nenhuma carta responde" não aparece
+  com Descartar disponível; "Disparo de Tendão" sem promessa de escalada; `pre_acao`/`pos_acao` presos às jogadas que agem (teste);
+  docstring das métricas corrigida (Cartas *declaradas*, todas as rodadas); R10 com rng próprio do Presságio (pareado por semente) e JSON
+  regerado; R11 é **sintético** (replay canned), a taxa real de `replace` da rota de combate fica para o smoke §6 (telemetria do staging).
+- **Números regerados (R10 pareado):** R9 idêntico (1,92 cartas/rodada; 87,7 %; 14 Cartas > 60 %; p95 12). R10: `off` 11,96 × `on` 13,17
+  (+10,1 %, vitória 64,6 → 57,6 %) — mesmo total; por Postura Devoto 10,20→11,24 e Sangromante 11,74→13,19 (antes 11,26/13,18).

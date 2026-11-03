@@ -1,5 +1,7 @@
 """SPEC-368 R13 - cenarios deterministicos (estado montado, SEM LLM) para o smoke real do §6.
 
+Para o JOGO REAL (save/API/UI) use `tests/fixtures/spec368_seed.py::seed_save` (P1-1 da revisão Sol); este módulo prova a situação no motor.
+
 Cada item do §6 da spec tem um construtor `s6_NN_*` que devolve um `Scenario`: o estado/objetos que
 colocam o jogo na situacao pedida, as variaveis de ambiente que o smoke precisa e `check()`, que
 devolve os problemas encontrados (lista vazia = a situacao foi alcancada). O smoke do coordenador

@@ -179,5 +179,7 @@ def test_pre_and_pos_action_stick_to_the_acting_plays(monkeypatch):
     from services import card_deck_round as cdr
 
     scene, actors, sides, state = s
-    cdr.resolve_player_plays(scene, actors["player"], "player", actors, sides, decl, state, {"logs": []}, None)
+    cdr.resolve_player_plays(
+        scene, actors["player"], "player", actors, sides, decl, state, {"logs": []}, None
+    )
     assert len(seen) == 1 and seen[0].pre_acao == pre and seen[0].pos_acao == pos
