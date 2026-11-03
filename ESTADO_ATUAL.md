@@ -73,6 +73,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 <!-- onda:inserir-aqui -->
 - 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
 - 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`.
+- 03/11 refatoração: SPEC-375–385 `draft` (auditoria `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §6). Nada executa sem o dono; regra W1: etapa só começa se nenhuma branch aberta toca os arquivos dela; 381 pede janela sem ninguém em `api.py`.
 - 28/10–02/11 cartas: 342–357 e 362 pousadas (352 migration aplicada no staging); 358 `done` (protocolo `lote-v2` opt-in); smoke LLM real ao fim.
 
 
