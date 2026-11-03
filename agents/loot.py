@@ -352,8 +352,26 @@ def _deal_fallback(merchant_name: object) -> str:
     return f"{name} fecha o negócio sem cerimônia." if name else "O negócio se fecha sem cerimônia."
 
 
-def _narrate(context: str, fallback_text: str, canonical_summary: dict | None = None) -> str:
-    """1 chamada SMART para prosa curta; qualquer falha cai no texto mecânico."""
+def _gold_context(before: int, price: int, after: int) -> str:
+    """SPEC-367 R15: saldo antes/preço/depois vindos do motor, para o narrador não inventar ouro."""
+    rule = (
+        " Se o ouro depois for maior que zero, nunca diga que foram as últimas moedas nem que a "
+        "bolsa ficou vazia;"
+        if after > 0
+        else ""
+    )
+    tail = " não cite outro número de moedas." if rule else " Não cite outro número de moedas."
+    return f"\nOuro antes: {before}. Preço: {abs(price)}. Ouro depois: {after}.{rule}{tail}"
+
+
+def _narrate(
+    context: str,
+    fallback_text: str,
+    canonical_summary: dict | None = None,
+    gold_check: tuple[set[int], int] | None = None,
+) -> str:
+    """1 chamada SMART para prosa curta; qualquer falha cai no texto mecânico.
+    SPEC-367 R16: `gold_check=(números permitidos, ouro depois)` aplica V-G à prosa."""
     try:
         llm = get_llm(temperature=0.6, tier=ModelTier.FAST)
         if getattr(llm, "is_fallback", False):
@@ -384,6 +402,11 @@ def _narrate(context: str, fallback_text: str, canonical_summary: dict | None = 
         if isinstance(text, list):  # Gemini pode devolver parts (smoke 2026-07-05)
             text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in text)
         text = prose_guard.sanitize_meta_preamble(str(text))
+        if text and gold_check is not None:
+            allowed, after = gold_check
+            if not prose_guard.gold_claims_ok(text, allowed=allowed, gold_after=after):
+                _log_event("loot", "trade_prose_rejected", level="warning")
+                return prose_guard.sanitize_meta_preamble(fallback_text)
         if text:
             if canonical_summary:
                 return _validated_narrative(canonical_summary, text)
@@ -608,8 +631,10 @@ def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dic
     shop_name = (economy.MERCHANTS.get(card_shop.shelf(work_state)[0] or "") or {}).get("name")
     msg = _narrate(
         f"BUY: Carta {name}, ouro −{res['gold']}, ouro final {total}"
+        + _gold_context(gold_before, int(res["gold"]), total)
         + _merchant_context(shop_name, world.get("current_location")),
         _deal_fallback(shop_name),
+        gold_check=({gold_before, abs(int(res["gold"])), total}, total),
     )
     result = {
         "player": player,
@@ -740,9 +765,13 @@ def loot_node(state: GameState):
         merchant_ctx = _merchant_context(
             (market_before or {}).get("merchant_name"), world.get("current_location")
         )
+        gold_after = int(outcome["player"].get("gold", 0) or 0)
         msg = _narrate(
-            (f"{resumo}\n{reasons_ctx}" if reasons_ctx else resumo) + merchant_ctx,
+            (f"{resumo}\n{reasons_ctx}" if reasons_ctx else resumo)
+            + _gold_context(gold_before, delta, gold_after)
+            + merchant_ctx,
             _deal_fallback((market_before or {}).get("merchant_name")),
+            gold_check=({gold_before, abs(delta), gold_after}, gold_after),
         )
         result = {
             "player": outcome["player"],

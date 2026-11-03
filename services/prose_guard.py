@@ -488,3 +488,62 @@ def reconcile_count_sentence(flags: list[dict]) -> str:
     word = _NUM_BY_VALUE.get(n, str(n))
     verb = "avança" if n == 1 else "avançam"
     return f"Só {word} do bando {verb} contra você; o resto some na sombra."
+
+
+# --- SPEC-367 R16: V-G, validação do ouro citado na narração de compra/venda -------------
+_GOLD_STOP_UNITS = {
+    "um": 1, "uma": 1, "dois": 2, "duas": 2, "tres": 3, "quatro": 4, "cinco": 5, "seis": 6,
+    "sete": 7, "oito": 8, "nove": 9, "dez": 10, "onze": 11, "doze": 12, "treze": 13,
+    "catorze": 14, "quatorze": 14, "quinze": 15, "dezesseis": 16, "dezessete": 17,
+    "dezoito": 18, "dezenove": 19, "vinte": 20,
+}  # fmt: skip
+_GOLD_TENS = {
+    "trinta": 30, "quarenta": 40, "cinquenta": 50, "sessenta": 60, "setenta": 70,
+    "oitenta": 80, "noventa": 90, "cem": 100,
+}  # fmt: skip
+_GOLD_WORD_NUM = "|".join(sorted({*_GOLD_STOP_UNITS, *_GOLD_TENS}, key=len, reverse=True))
+_GOLD_NUM_RE = re.compile(
+    rf"\b(?:(?P<dig>\d+)|(?P<ten>{'|'.join(_GOLD_TENS)}|vinte)(?: e (?P<unit>[a-z]+))?|(?P<word>{_GOLD_WORD_NUM}))\b"
+)
+_GOLD_NOUN_RE = re.compile(r"^(?:\s+[a-z]+){0,2}?\s+(?:moedas?|ouro|coroas?)\b")
+_GOLD_ADJ_RE = re.compile(r"^\s+(?:moedas?|ouro|coroas?)\b")
+_GOLD_EXHAUST_RE = re.compile(
+    r"\b(?:ultimas? (?:\d+ )?moedas?|todas as (?:suas )?moedas|todo o (?:seu )?ouro|"
+    r"bolsa (?:\w+ )?vazia|"
+    r"sem (?:nenhuma )?moeda|nenhuma moeda)\b"
+)
+
+
+def _fold_gold(text: str) -> str:
+    import unicodedata
+
+    nfkd = unicodedata.normalize("NFKD", str(text or "").lower())
+    return "".join(c for c in nfkd if not unicodedata.combining(c))
+
+
+def gold_claims_ok(text: str, *, allowed: set[int], gold_after: int) -> bool:
+    """SPEC-367 R16: a prosa não cita ouro fora de {antes, preço, depois} nem afirma esgotamento
+    quando sobrou ouro. Só valida (rejeita), nunca reescreve."""
+    t = _fold_gold(text)
+    if gold_after > 0 and _GOLD_EXHAUST_RE.search(t):
+        return False
+    for m in _GOLD_NUM_RE.finditer(t):
+        if m.group("dig") is not None:
+            value = int(m.group("dig"))
+            tail_re = _GOLD_NOUN_RE
+        elif m.group("ten"):
+            value = {**_GOLD_TENS, "vinte": 20}[m.group("ten")]
+            unit = m.group("unit")
+            if unit in _GOLD_STOP_UNITS and _GOLD_STOP_UNITS[unit] < 10:
+                value += _GOLD_STOP_UNITS[unit]
+            tail_re = _GOLD_NOUN_RE
+        else:
+            word = m.group("word")
+            value = _GOLD_STOP_UNITS.get(word) or _GOLD_TENS.get(word, 0)
+            # "um/uma" só vale colado ("uma moeda"); "uma bolsa de moedas" não é cifra
+            tail_re = _GOLD_ADJ_RE if word in ("um", "uma") else _GOLD_NOUN_RE
+        if value in allowed:
+            continue
+        if tail_re.match(t[m.end() :]):
+            return False
+    return True

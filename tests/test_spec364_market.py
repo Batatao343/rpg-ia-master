@@ -155,7 +155,7 @@ def test_short_display():
 def _capture(monkeypatch):
     seen = []
 
-    def fake(context, fallback, canonical_summary=None):
+    def fake(context, fallback, canonical_summary=None, gold_check=None):
         seen.append((context, fallback))
         return fallback
 
