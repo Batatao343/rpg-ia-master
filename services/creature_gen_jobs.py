@@ -136,10 +136,15 @@ FOLGA_JANELA_S = 3.0  # R14: margem entre o fim da geração e o fim da janela d
 
 
 def janela_minima_s() -> float:
+    """Default = ``prazo_s() + FOLGA_JANELA_S`` (33 s): só começa com folga para o prazo CHEIO.
+    A env baixa o piso (nesse caso o prazo encolhe junto, ver ``prazo_na_janela``)."""
+    from services import creature_gen as cg
+
+    padrao = cg.prazo_s() + FOLGA_JANELA_S
     try:
-        return float(os.getenv("RPG_CREATURE_GEN_MIN_WINDOW_S", "") or 12.0)
+        return float(os.getenv("RPG_CREATURE_GEN_MIN_WINDOW_S", "") or padrao)
     except ValueError:
-        return 12.0
+        return padrao
 
 
 def prazo_na_janela() -> float | None:

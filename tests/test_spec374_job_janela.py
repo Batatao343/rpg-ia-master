@@ -74,7 +74,8 @@ def test_janela_minima_configuravel(capturar, monkeypatch):
         assert jobs.prazo_na_janela() == 5.0  # 8 - 3 s de folga
 
 
-def test_prazo_efetivo_menor_que_janela(capturar):
+def test_prazo_efetivo_menor_que_janela(capturar, monkeypatch):
+    monkeypatch.setenv("RPG_CREATURE_GEN_MIN_WINDOW_S", "12")  # piso baixado de propósito
     clock = Relogio(0.0)
     with drain.job_window_scope(20.0, clock):
         assert drain.job_window_remaining() == 20.0
@@ -165,3 +166,25 @@ def test_outros_jobs_janela_inalterada():
     out = drain.drain_jobs(30.0, 5, "t", worker=worker, clock=clock)
     assert out["processed"] == 1 and visto == [27.0]
     assert drain.job_window_remaining() is None
+
+
+def test_default_adia_sem_folga_para_o_prazo_cheio(capturar):
+    """P1-2: com os defaults, janela < prazo + 3 s adia (não corta o prazo e vira fallback)."""
+    assert jobs.janela_minima_s() == cg.prazo_s() + 3.0 == 33.0
+    with drain.job_window_scope(32.0, Relogio(0.0)):
+        with pytest.raises(JobDeferred):
+            jobs.prazo_na_janela()
+    with drain.job_window_scope(33.0, Relogio(0.0)):
+        assert jobs.prazo_na_janela() == 30.0
+
+
+def test_drain_real_com_defaults_adia_o_job(capturar):
+    """Cron com orçamento de 20 s (smoke 6.6): o dreno real (min 15 s, margem 3 s) entrega o
+    job ao handler, que adia sem gerar; nada de LLM, o job segue na fila."""
+    q = _fila_com_job(max_attempts=2)
+    worker = JobWorker(q, {jobs.JOB_KIND: jobs.handler}, worker_id="t")
+    out = drain.drain_jobs(20.0, 1, "t", worker=worker, clock=Relogio(0.0))
+    assert out["deferred"] == 1 and out["dead"] == 0 and out["failed"] == 0
+    assert capturar["prazos"] == []
+    row = next(iter(q._jobs.values()))
+    assert row.status == "queued" and row.attempt == 0
