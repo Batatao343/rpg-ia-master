@@ -84,7 +84,7 @@ def test_u14_conta_no_lint_primeira_e_reparo_nao(monkeypatch):
     assert info["lint_primeira"] is False  # U14 conta no lint_primeira (é a 1ª leitura)
     if ficha is not None:
         assert ficha["anatomia"]["material"] == "sal_mineral"
-        assert "U2U3-eixos-reparados" in info["codigos"]
+        assert "U14-eixos-reparados" in info["codigos"]
     assert any(m.startswith("U14:") for m in info["lint_primeira_msgs"])
 
 
@@ -118,3 +118,42 @@ def test_composicao_usa_o_lugar_do_texto(ouvido):
     assert "Mar de Vidro" not in comp
     sem_lugar = {**ouvido, "arte": {}, "silhueta": "Vulto.", "description": "Vulto."}
     assert "Mar de Vidro" in mod._composicao(sem_lugar, REGIAO)  # sem lugar no texto: habitat
+
+
+def _mod_pool_revisao():
+    spec = importlib.util.spec_from_file_location(
+        "pool_revisao_374b", ROOT / "scripts/bestiario/pool_revisao.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_lugar_do_texto_so_com_substantivo_de_lugar():
+    """R3-P1-1: em TODAS as aprovadas, o lugar do texto tem núcleo na lista fechada; o resto usa
+    o habitat. ("azul", "lábios", "que" não são lugar.)"""
+    mod = _mod_pool_revisao()
+    fichas = list(cg.fichas_aprovadas().values())
+    com_lugar, sem_lugar = [], 0
+    for f in fichas:
+        lugar = mod.lugar_do_texto(f)
+        if not lugar:
+            sem_lugar += 1
+            continue
+        nucleo = mod._fold(lugar.split()[0])
+        assert nucleo in mod.SUBSTANTIVOS_DE_LUGAR, (f["id"], lugar)
+        com_lugar.append(lugar)
+    print(f"lugar do texto: {len(com_lugar)}; habitat: {sem_lugar}; total {len(fichas)}")
+    assert len(com_lugar) + sem_lugar == len(fichas)
+    for ruim in ("azul", "labios", "que", "placas", "pele", "pescoco"):
+        assert not any(mod._fold(x.split()[0]) == ruim for x in com_lugar)
+
+
+def test_lugar_fora_da_lista_cai_no_habitat():
+    mod = _mod_pool_revisao()
+    ficha = {
+        "arte": {"visual": "Criatura de lábios azuis em um corpo de placas."},
+        "habitat": ["deserto_zhur"],
+    }
+    assert mod.lugar_do_texto(ficha) == ""
+    assert "Mar de Vidro" in mod._composicao(ficha, REGIAO)

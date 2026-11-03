@@ -113,13 +113,37 @@ _LUGAR = re.compile(
 )
 
 
+# Lista FECHADA de substantivos de lugar (raiz dobrada, sem acento): só estes valem como "lugar do
+# texto". O núcleo é a 1ª palavra do sintagma ("cisterna de pedra" -> "cisterna").
+SUBSTANTIVOS_DE_LUGAR = frozenset(
+    """cisterna poco gruta caverna galeria mina margem praia poca pantano brejo ruina ruinas cripta
+    porao esgoto doca docas cais ponte estrada floresta mata duna dunas deserto campo campos forja
+    oficina torre farol camara tunel salao beco igreja catedral templo capela cemiterio fosso vale
+    colina serra montanha penhasco canyon rio lago mar costa porto vila cidade aldeia taverna
+    estalagem mercado praca rua viela telhado muralha castelo fortaleza celeiro estabulo curral
+    moinho fabrica fundicao armazem deposito biblioteca mausoleu tumulo ossuario catacumba labirinto
+    corredor patio jardim horta pomar bosque clareira trilha caminho encruzilhada passagem desfiladeiro
+    abismo cratera vulcao geleira tundra savana selva jungla charco lodacal manguezal recife ilha
+    ilhota farol cabana choupana casebre abrigo toca ninho covil salina areal planicie pradaria
+    descampado barranco falesia gruta mirante""".split()
+)
+
+
+def _fold(texto: str) -> str:
+    return cg.bl._fold(texto)
+
+
 def lugar_do_texto(ficha: dict) -> str:
-    """O lugar que a PRÓPRIA ficha descreve (arte, silhueta, descrição), ou vazio."""
+    """O lugar que a PRÓPRIA ficha descreve (arte, silhueta, descrição), ou vazio.
+
+    Só vale quando o substantivo núcleo está em ``SUBSTANTIVOS_DE_LUGAR``; "azul", "lábios",
+    "que" e afins NÃO são lugar e voltam para o habitat do mapa."""
     arte = ficha.get("arte") or {}
     for texto in (arte.get("visual"), ficha.get("silhueta"), ficha.get("description")):
-        m = _LUGAR.search(str(texto or ""))
-        if m:
-            return m.group(1).strip()
+        for m in _LUGAR.finditer(str(texto or "")):
+            lugar = m.group(1).strip()
+            if _fold(lugar.split()[0]) in SUBSTANTIVOS_DE_LUGAR:
+                return lugar
     return ""
 
 

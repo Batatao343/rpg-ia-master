@@ -1770,7 +1770,8 @@ def gerar_nova(
         if issues:
             trocada = reparar_eixos(ficha, issues, livres, lint)
             if trocada is not None:
-                info["codigos"].append("U2U3-eixos-reparados")
+                u14 = any(i.code == "U14" for i in issues)
+                info["codigos"].append("U14-eixos-reparados" if u14 else "U2U3-eixos-reparados")
                 ficha, issues = trocada, []
         if not issues:
             return ficha, info
