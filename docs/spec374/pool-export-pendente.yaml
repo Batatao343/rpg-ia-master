@@ -1,0 +1,84 @@
+spec: SPEC-361
+gerado_em: '2026-11-03'
+revisor: opus-spec-reviewer
+checklist:
+- 'Criatura física de Valoria: corpo concreto com partes nomeadas, nada conceitual (U9).'
+- Família coerente com a lore (Reescrito, Besta Torta, Cobrado, Cria de Apetite) e com a região.
+- 'Não repete nenhum vizinho listado: corpo, papel, silhueta, telegrafo e gancho próprios.'
+- Nome de 2-4 palavras, sem monstro de manual, sem marcador de variante (U1/U4/U5/U8).
+- Zero número, dado ou jargão de sistema em qualquer texto (R20).
+- Sem PII, sem nome de pessoa real, sem instrução ao narrador, sem segredo da lore.
+- 'Arte: visual legível e evitar com o clichê certo; nada que copie criatura de outra obra.'
+instrucao: 'Preencha veredito (aprovada | rejeitada) e motivo (<= 200). Não edite a ficha: ajuste = rejeitada.'
+entradas:
+- entry_id: pool_bst_ec23a18c37be
+  regiao: deserto_zhur
+  nome: Ouvido de Sal
+  ficha:
+    a_cada_n: 3
+    anatomia:
+      escala: pequena
+      locomocao: nada
+      material: carne_exposta
+      percepcao: respiracao
+      plano_corporal: radial
+      texto: Um caroço de sal branco do tamanho de um cesto, grudado no fundo da cisterna, com crosta
+        que estala quando seca. Na face de cima abre uma boca larga em anel, sem dentes, forrada de carne
+        úmida. Em volta da boca saem seis hastes finas de sal, cada uma com uma bolha de água salgada
+        na ponta que treme quando o ar vibra. Por baixo, raízes de sal descem pela rachadura e seguram
+        o corpo na pedra.
+    aparencia: Crosta branca e rachada em forma de cesto, boca redonda de carne úmida ao centro e seis
+      hastes finas com bolhas de água salgada nas pontas.
+    arquetipo: emboscador
+    arte:
+      evitar: Bolha gelatinosa translúcida com olhos, lesma gigante de desenho animado, cristal azul brilhante
+        de fantasia.
+      visual: Criatura de sal branco e rachado no fundo de uma cisterna de pedra seca, boca circular de
+        carne rosada e úmida, seis hastes finas erguidas com gotas salgadas brilhando na ponta, areia
+        e vidro fosco ao redor, luz de lua entrando pela abertura.
+    autor: runtime
+    categoria: padrao
+    comportamento: Fica parado no fundo seco e escuta o eco que volta das paredes. Quando o eco traz passo,
+      as hastes se erguem e a boca começa a sugar o ar, puxando o que estiver solto na borda.
+    contra_jogo: 'Andar sem arrastar o pé e falar baixo: sem eco, as hastes não se erguem. Rachar a crosta
+      seca com pedra antes de descer.'
+    description: Caroço de sal no fundo da cisterna que acorda com o eco dos passos e cospe salmoura.
+    estilo_ataque: distancia
+    faccao: null
+    familia: besta_entropia
+    gancho: As cisternas secas da borda sul guardam água de outra época; quem desce para raspar o sal
+      ouve a boca abrir antes de ver o fundo.
+    habitat:
+    - deserto_zhur
+    id: mon_ouvido_de_sal_rt_bkjcma
+    mecanica_assinatura:
+      frase: Depois de ouvir o eco, suga o ar da cisterna e devolve salmoura em jato por cima da borda.
+    nome: Ouvido de Sal
+    nome_ataque: Sopro de Salmoura
+    origem_lore:
+      detalhe: null
+      fonte: abismo
+      refs: []
+    padrao:
+    - reforco_proprio
+    - enfraquecer
+    - ataque
+    papel_tatico: controlador
+    regiao: deserto_zhur
+    revisao: pendente
+    silhueta: Um cesto de sal rachado no fundo da cisterna, com uma boca redonda e hastes de bolha erguidas.
+    status: nova
+    telegrafo: '{nome} ergue as hastes e a bolha de cada ponta começa a ferver.'
+  vizinhos:
+  - id: mon_aguadeiro_de_bucho
+    nome: Aguadeiro de Bucho
+    eixos_iguais: 2
+  - id: mon_furador_de_odres
+    nome: Furador de Odres
+    eixos_iguais: 2
+  - id: mon_lambedor_de_halito
+    nome: Lambedor de Hálito
+    eixos_iguais: 2
+  avisos: []
+  veredito: ''
+  motivo: ''
