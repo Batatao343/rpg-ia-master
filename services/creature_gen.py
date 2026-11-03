@@ -933,10 +933,9 @@ PAPEL = (
 _EIXOS_LINHA = (
     "Eixos: escolha UMA linha de <eixos_livres> e escreva só o número dela em linha_eixos; "
     "o motor grava os seis eixos. O corpo tem de caber na linha, mas em matéria que se toca e "
-    "não em rótulo: o material vira o que a mão sente (cera_sebo é banha que escorre e "
-    "endurece; escoria_fuligem é casca de forno que esfarela), a locomoção vira o jeito de "
-    "andar e a percepção vira o órgão que sente. Nunca copie as palavras da linha no nome "
-    "nem no texto."
+    "não em rótulo: o material vira o que a mão sentiria, a locomoção vira o jeito de andar e "
+    "a percepção vira o órgão que sente, com imagem tirada do lugar e do pedido. Nunca copie "
+    "as palavras da linha no nome nem no texto, e o nome não é o material."
 )
 _EIXOS_LIVRE = (
     "Eixos: escreva os seis eixos (plano, material, escala, locomoção, percepção, papel). A tripla "
