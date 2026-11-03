@@ -9,6 +9,7 @@ from services import dossiers as dz
 from services import memory_provenance as mp
 from services import player_knowledge as pk
 from services.dossier_visibility import assert_no_private_fields, leak_view
+from tests.factories import make_state
 
 RATO = "enemy_rato_peste_anel_lama"
 HIDDEN_LOC = "mon_verme_primordial_das_raizes_do_mundo"
@@ -70,7 +71,7 @@ def _state(**extra):
         ],
     }
     base.update(extra)
-    return base
+    return make_state(**base)
 
 
 def test_oraculos_verdes_sobre_payload_completo():
