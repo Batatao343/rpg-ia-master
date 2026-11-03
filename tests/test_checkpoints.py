@@ -12,6 +12,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 import persistence
 from services import checkpoints as cp
+from tests.factories import make_state
 
 
 @pytest.fixture()
@@ -21,9 +22,9 @@ def saves_dir(tmp_path, monkeypatch):
 
 
 def _state(game_id, turn=5, danger=2, loc="pantano", gold=50):
-    return {
-        "game_id": game_id,
-        "player": {
+    return make_state(
+        game_id=game_id,
+        player={
             "name": "Herói",
             "class_name": "Sangromante",
             "level": 2,
@@ -33,16 +34,16 @@ def _state(game_id, turn=5, danger=2, loc="pantano", gold=50):
             "inventory": [],
             "known_abilities": ["ataque_basico"],
         },
-        "world": {
+        world={
             "current_location_id": loc,
             "current_location": loc,
             "turn_count": turn,
             "danger_level": danger,
             "visited": [loc],
         },
-        "messages": [HumanMessage(content="ação"), AIMessage(content="narração")],
-        "campaign_plan": {"beats": []},
-    }
+        messages=[HumanMessage(content="ação"), AIMessage(content="narração")],
+        campaign_plan={"beats": []},
+    )
 
 
 # --- D5/round-trip: slot único em disco --------------------------------------
