@@ -272,4 +272,10 @@ Coordenador, API local, rotas `ROUTES` de hoje (DeepSeek primário), com `RPG_WO
 
 ## 9. Registro de execução
 
-*(vazio; o executor preenche: respostas da Etapa 0, ligações escolhidas, constantes ajustadas, resultados T1–T8, rodadas de revisão.)*
+**Etapa 0 (sondas, executor Terra, 03/11).**
+- NPC conhecido: `known_by_player is True` ou `knowledge_source == "met"` na linha de `state["npcs"]` resolvida por `npc_world._row_for`; sem linha = nao conhecido (o default `True` de `npc_layers` so vale para linha existente).
+- `opening_thread.thread_refs`: ids de **porta** (`<thread>__pN`, `prologue.py:180`); `plot_stage` aceita tambem o id da trama.
+- Quest -> semente: `quest.lore_anchor.id` e o `rumor_id`; a `seed_id` vem da linha em `world_sim.rumors`. Rumor `confirmado` fica com `perceived_day > 0` e `resolution == "confirmado"`.
+- `state` ate `pick_encounter_enemy`: `agents/storyteller.py` -> `check_encounter(..., trama_stages=)`; os outros chamadores (`rumor_adoption`, `encounter_budget`, `world_utils:1889`) nao passam `world` e ficam sem portao (fora de escopo).
+- Desvio: `tramas_mode`/portao/puxao/nascimento/rumor ficaram em `services/fauna_tramas.py` e a forma + E19-E22 em `services/fauna_lint_tramas.py` (modulos novos), para `fauna.py`/`fauna_lint.py` crescerem pouco e o rebase da SPEC-370 ficar localizado. `fauna.tramas_mode()` delega. Sem `trama_puxao` em telemetria (so `trama_portao`/`trama_presenca`).
+- Ligacoes em NA (Etapa 4) ainda nao feitas: T1-T3 do avaliador seguem `xfail(strict)` ate `fauna.json` ter `tramas`.

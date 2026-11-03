@@ -428,7 +428,9 @@ def _stage_signals(state: dict) -> dict[str, Any]:
     """Uma passada por rumores, quests e event_log (R3). Não muta o estado."""
     from services.memory_provenance import accepted_secret_ids
 
-    rumors = [r for r in ((state.get("world_sim") or {}).get("rumors") or []) if isinstance(r, dict)]
+    rumors = [
+        r for r in ((state.get("world_sim") or {}).get("rumors") or []) if isinstance(r, dict)
+    ]
     seed_of = {str(r.get("rumor_id")): str(r.get("seed_id") or "") for r in rumors}
     quest_seeds: set[str] = set()
     for q in state.get("quests") or []:

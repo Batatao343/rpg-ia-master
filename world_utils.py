@@ -953,6 +953,7 @@ def pick_encounter_enemy(
     world: dict | None = None,
     world_sim: dict | None = None,
     game_id: str = "",
+    trama_stages: dict | None = None,
 ):
     """
     Fase 2.5b (R11): sorteio DETERMINÍSTICO de criatura concreta do bestiário.
@@ -982,6 +983,12 @@ def pick_encounter_enemy(
         return None
     pool, regional, themed = prep
     if bestiary_knowledge is None and projection is None:
+        if trama_stages:  # SPEC-372 R8: o portão vale também no ramo legado
+            from services import fauna_tramas
+
+            pool = fauna_tramas.open_pool(pool, trama_stages)
+            if not pool:
+                return None
         return pool[int(turn) % len(pool)]  # legado: determinístico por turno
 
     from services import ecology as eco3
@@ -989,7 +996,9 @@ def pick_encounter_enemy(
     args = (pool, regional, themed, loc, danger, turn, bestiary_knowledge, projection, theme)
     fmode = _fauna_mode(world)
     if fmode == "on":
-        cands, weights, why = _weighted_pool(*args, season, world, world_sim, fauna_on=True)
+        cands, weights, why = _weighted_pool(
+            *args, season, world, world_sim, fauna_on=True, trama_stages=trama_stages
+        )
         if why and rng is None:
             # SPEC-360: com ecologia no pool o sorteio é determinístico (semente do turno, do
             # local e do relógio; M7) e não consome o `random` global; sem fauna no pool, igual
@@ -1088,6 +1097,7 @@ def _weighted_pool(
     world_sim,
     *,
     fauna_on: bool,
+    trama_stages: dict | None = None,
 ):
     """Fase 6.3 + SPEC-289/292/303 (+ SPEC-360 R8 com `fauna_on`): candidatos, pesos e as
     razões ecológicas por id. Sem `fauna_on` é o sorteio ponderado de antes, byte a byte."""
@@ -1139,6 +1149,7 @@ def _weighted_pool(
             bestiary_knowledge=bestiary_knowledge,
             turn=turn,
             season=season,
+            trama_stages=trama_stages,
         )
         factors: dict[int, float] = {}
         for i, e in enumerate(pool):
@@ -1167,6 +1178,10 @@ def _weighted_pool(
             m = sorted(migrants, key=lambda e: e.get("id", ""))[int(turn) % len(migrants)]
             pool = pool + [m]
             weights = weights + [eco3.MIGRANT_WEIGHT * (neutral if fauna_on else 1.0)]
+    if fauna_on and trama_stages:  # SPEC-372 R8: portão por último (legado e migrantes)
+        from services import fauna_tramas
+
+        weights = fauna_tramas.apply_gate(pool, weights, trama_stages)
     return pool, weights, why
 
 
@@ -1181,6 +1196,7 @@ def encounter_distribution(
     season: str | None = None,
     world: dict | None = None,
     world_sim: dict | None = None,
+    trama_stages: dict | None = None,
 ) -> list[tuple[dict, float]]:
     """SPEC-360 R28: `[(entrada, peso)]` exatos do sorteio ponderado regional (sem fação),
     com a ecologia quando `RPG_FAUNA=on` e há `world`. Leitura pura (avaliador e testes)."""
@@ -1202,6 +1218,7 @@ def encounter_distribution(
         world,
         world_sim,
         fauna_on=_fauna_mode(world) == "on",
+        trama_stages=trama_stages,
     )
     return [(e, w) for e, w in zip(cands, weights) if w > 0]
 
@@ -1246,6 +1263,7 @@ def check_encounter(
     rumor_hint: dict | None = None,
     world_sim: dict | None = None,
     game_id: str = "",
+    trama_stages: dict | None = None,
 ):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
@@ -1393,6 +1411,7 @@ def check_encounter(
             world=fauna_world,
             world_sim=world_sim,
             game_id=game_id,
+            trama_stages=trama_stages,
         )
         entry = _presence_entry(entry, presence, loc, eff)  # SPEC-360 R15
         flavor = str(threat)
@@ -1428,6 +1447,7 @@ def check_encounter(
             world=fauna_world,
             world_sim=world_sim,
             game_id=game_id,
+            trama_stages=trama_stages,
         )
         entry = _presence_entry(entry, presence, loc, eff)  # SPEC-360 R15
         hint = entry.get("name") if entry else f"feras/perigos de {region}"

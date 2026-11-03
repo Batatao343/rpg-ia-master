@@ -16,10 +16,13 @@ import hashlib
 import json
 import os
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Literal, TypedDict
+from typing import Any, Literal, NotRequired, TypedDict
+
+from services import fauna_tramas
 
 MODES = ("off", "shadow", "on")  # RPG_FAUNA
 SINAIS_MODES = ("off", "on")  # RPG_FAUNA_SINAIS
@@ -44,6 +47,7 @@ class Presenca(TypedDict):
     sinais_mostrados: list[str]
     origem: Literal["dia", "conversao", "rastro"]
     status: Literal["ativa", "encontrada", "dispersa", "cacada"]
+    trama_id: NotRequired[str]  # SPEC-372 R10: so com RPG_FAUNA_TRAMAS=on
 
 
 class FaunaSim(TypedDict):
@@ -74,6 +78,11 @@ def sinais_mode() -> str:
             _log("sinais_sem_motor")
         return "off"
     return val
+
+
+def tramas_mode() -> str:
+    """SPEC-372 R12: `RPG_FAUNA_TRAMAS` efetivo (`off` sem `RPG_FAUNA=on` e `RPG_PLOT_THREADS=on`)."""
+    return fauna_tramas.mode()
 
 
 @lru_cache(maxsize=1)
@@ -262,6 +271,8 @@ def normalize_fauna_sim(raw: Any) -> FaunaSim:
             "origem": p.get("origem") if p.get("origem") in _ORIGENS else "dia",
             "status": p.get("status") if p.get("status") in _STATUS else "ativa",
         }
+        if p.get("trama_id"):
+            row["trama_id"] = str(p["trama_id"])
         pres.append(row)
     carc = [
         {"loc": str(c["loc"]), "day": int(c["day"]), "creature_id": str(c["creature_id"])}
@@ -344,6 +355,7 @@ class EcoCtx:
     weather_state: str | None = None
     carcacas_aqui: list = field(default_factory=list)
     presencas_aqui: list = field(default_factory=list)
+    trama_stages: Mapping[str, str] = field(default_factory=dict)  # SPEC-372
 
 
 def eco_ctx(
@@ -355,6 +367,7 @@ def eco_ctx(
     bestiary_knowledge: dict | None,
     turn: int,
     season: str | None,
+    trama_stages: Mapping[str, str] | None = None,
 ) -> EcoCtx:
     world = world or {}
     sim = world_sim or {}
@@ -376,6 +389,7 @@ def eco_ctx(
         weather_state=world.get("weather_state"),
         carcacas_aqui=_carcasses_at(fauna, location_id, day) if location_id else [],
         presencas_aqui=pres,
+        trama_stages=dict(trama_stages or {}),
     )
 
 
@@ -434,6 +448,10 @@ def eco_multiplier(entry: dict, ctx: EcoCtx) -> tuple[float, list[str]]:
                 eff, 0.0
             )
             why.append(f"reage:{r.get('quando')}:{eff}")
+    tf, tw = fauna_tramas.factor(entry, ctx.location_id, ctx.trama_stages)  # SPEC-372 R7/R9
+    if tw:
+        f *= tf
+        why.append(tw)
     return f, why
 
 
@@ -544,6 +562,7 @@ def day_hook(ctx: Any):
     rng = world_engine.day_rng(ctx.game_id, day, "fauna")
     for region in sorted(regions):
         roll, pick = rng.random(), rng.random()  # sempre 2 sorteios por regiao
+        stages = fauna_tramas.region_stages(state, region)  # SPEC-372 R3 ({} com a flag off)
         active = [p for p in fauna["presencas"] if p["region_id"] == region and _active(p, day)]
         if len(active) >= region_cap(region) or roll >= float(const("P_PRESENCA")):
             continue
@@ -557,12 +576,14 @@ def day_hook(ctx: Any):
             turn=int(world.get("turn_count", 0) or 0),
             pressure_bands=dict((sim.get("bands") or {}).get(region) or {}),
             weather_state=world.get("weather_state"),
+            trama_stages=stages,
         )
         cands = [
             e
             for e in _region_candidates(region, _region_danger(region, world))
             if e["id"] not in taken
         ]
+        fauna_tramas.log_gates(cands, stages)
         # territorio ja ocupado por outra presenca pesa menos (as criaturas se espalham)
         covered = {n for p in active for n in p["locais"]}
         weights = [
@@ -584,6 +605,9 @@ def day_hook(ctx: Any):
                 chosen = e
                 break
         locais = [n for n in effective_territory(chosen["id"]) if wp.region_of(n) == region]
+        born = fauna_tramas.birth(chosen, stages, locais)  # SPEC-372 R10
+        if born:
+            locais = born[0]
         if not locais:
             continue
         pres = _make_presence(
@@ -595,8 +619,12 @@ def day_hook(ctx: Any):
             "dia",
             _ttl(chosen, ctx.game_id, day, chosen["id"]),
         )
+        if born and born[1]:
+            pres["trama_id"] = born[1]
         if not _make_room(fauna, region, here or "", frequented, day):
             continue  # sem vaga: nao nasce e nao loga (R10)
+        if born and born[1]:
+            _log("trama_presenca", creature=chosen["id"], thread=born[1], stage=stages.get(born[1]))
         fauna["presencas"].append(pres)
         _log("presenca_nasce", creature=chosen["id"], region=region, origem="dia")
     fauna["presencas"] = _cap_presences(fauna["presencas"])

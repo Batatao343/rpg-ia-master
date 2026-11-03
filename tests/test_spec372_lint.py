@@ -21,7 +21,9 @@ def _thr() -> pt.PlotThread:
 def _refs(boss: set[str] = frozenset(), n: int = 10) -> fl.Refs:
     thr = _thr()
     nodes = frozenset(thr.locations)
-    bestiary = {f"c{i}": {"name": f"criatura{i}", "regions": [REGION], "boss": False} for i in range(n)}
+    bestiary = {
+        f"c{i}": {"name": f"criatura{i}", "regions": [REGION], "boss": False} for i in range(n)
+    }
     for b in boss:
         bestiary[b] = {"name": b, "regions": [REGION], "boss": True}
     return fl.Refs(region=REGION, region_nodes=nodes, bestiary=bestiary)
@@ -74,7 +76,9 @@ def test_e20_tres_tramas_e_desde_invalido():
     ids = [t.id for t in pt.threads_for_region(REGION)][:3]
     errs = _run({"c0": _entry(ids, terr=list(_thr().locations))}, _refs())
     assert any("E20 c0" in e and "max 2" in e for e in errs)
-    errs = _run({"c0": _entry([{"id": CORPOS, "desde": "nunca"}], terr=list(_thr().locations))}, _refs())
+    errs = _run(
+        {"c0": _entry([{"id": CORPOS, "desde": "nunca"}], terr=list(_thr().locations))}, _refs()
+    )
     assert any("E20 c0" in e and "desde" in e for e in errs)
 
 

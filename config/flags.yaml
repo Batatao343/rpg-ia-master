@@ -376,6 +376,12 @@ RPG_FAUNA_SINAIS:
   spec: SPEC-360
   expires: 2027-03-01
   note: "fauna viva: presença, sinais antes da luta, aproximação, caça e rumor (exige RPG_FAUNA)"
+RPG_FAUNA_TRAMAS:
+  kind: release
+  default: "off"
+  spec: SPEC-372
+  expires: 2027-03-01
+  note: "fauna viva: criatura ligada a trama (portão/puxão/presença/rumor); exige RPG_FAUNA e RPG_PLOT_THREADS"
 RPG_FAUNA_SABER:
   kind: release
   default: "off"

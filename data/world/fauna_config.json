@@ -21,6 +21,7 @@
     "TERRITORIO_OCUPADO": 0.05,
     "ANUNCIA_PRESENCA_NOVA": false,
     "P_SINAL_CENA": 0.35,
-    "RUMOR_BOOST": 3.0
+    "RUMOR_BOOST": 3.0,
+    "TRAMA_MULT": 2.0
   }
 }

@@ -245,6 +245,9 @@ def candidates(state: dict, sim: dict, region_id: str, day: int) -> list[tuple[d
             )
             for s, w in own
         ]
+    from services import fauna_tramas
+
+    own = fauna_tramas.rumor_adjust(state, sim, region_id, day, own)  # SPEC-372 R11
     # AVISTAMENTO_FALSE_P: a massa dos avistamentos de regiao vizinha (falsos) e a fracao p
     own_avist = sum(w for s, w in own if s["family"] == "avistamento")
     if adj:
