@@ -452,4 +452,26 @@ Registrar em `docs/spec367/smoke-final.md` (trechos, sem segredos), com provider
 
 ## 9. Registro de implementação
 
-(preencher na execução: Etapa 0, commits por etapa, desvios, expected de testes antigos alterados)
+**Etapa 0 (confirmações).** A1: o teste de nome parcial falhou com a consulta antes do código. A4: o
+fallback chega ao jogador como `fallback_criatura_hostil[_N]`; `is_fallback_enemy` testa id, id sem
+sufixo `_N`/`_rN`, `bestiary_id` e `normalize_bestiary_id`. A5: registro, linhas de status (`_normalize_status_logs`)
+e `mech_log` passam por `round_log._voce`. A7: `PoolTimeout` sai do checkout antes de qualquer `execute`.
+
+**Commits (branch `spec-367`).** (1) R1-R3 prefixo; (2) R7-R9/R13-R14 voz; (3) R15-R17 ouro; (4) R10-R12
+fallback e retirada; (5) R4-R6 front; (6) R18-R19 pool de operação; (7) guardas R22/R24 e este registro.
+
+**Desvios.**
+- R16: "um/uma" só vale como cifra colado ("uma moeda"); "uma bolsa de moedas" não é cifra (evita falso
+  positivo). A regra (b) aceita um número entre "últimas" e "moedas" ("últimas 45 moedas", o texto real) e
+  "bolsa (palavra) vazia".
+- R9: o teste usa o nó de combate real + `api._combat_block` (a view de `/game/state`), sem TestClient.
+- R18: `OperationalError` só é repetido se nenhum frame de comando (`execute`...) está no traceback.
+- R12: `--env-file` usa `dotenv.load_dotenv(override=False)`; `--dry-run` faz um `select` somente leitura.
+- Expected de teste antigo alterado: `tests/test_spec364_market.py::_capture` (`fake` aceita `gold_check`).
+  Nenhum expected de frase do presságio mudou.
+- R5 e R4: a trava `portraitInFlight` (useRef) e `withPortraitPending` estão em `App.tsx`/`portraitOrder.ts`;
+  o e2e novo cobre duplo clique (`dblclick`) = 1 cotação e 1 confirmação, a 390 e 1440.
+
+**Fica para o smoke §6 (coordenador):** retirada de `tipo:fallback_criatura_hostil` no staging (`--dry-run` e
+real), 3 execuções de `list`/`art_preflight` sem `PoolTimeout`, cotação por nome parcial e narração da compra
+com LLM real, presságio com "você" no chip, chip "Gerando retrato…" no staging.
