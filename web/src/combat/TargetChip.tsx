@@ -46,7 +46,7 @@ function PortraitOffer({ p, onGenerate, disabled }: { p: Participant; onGenerate
   if (!asking) {
     return (
       <button type="button" className="btn btn--ghost btn--sm tchip__gen" data-gen-portrait={p.id}
-        aria-disabled={disabled || undefined} onClick={() => { if (!disabled) setAsking(true); }}>
+        aria-disabled={disabled || undefined} disabled={disabled} onClick={() => { if (!disabled) setAsking(true); }}>
         {`Gerar retrato (até ${price})`}
       </button>
     );

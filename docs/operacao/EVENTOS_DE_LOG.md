@@ -149,6 +149,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `context.prefetch_miss` | `reason` |
 | `context_builder.fallback` | — |
 | `creature_portrait.fallback` | — |
+| `creature_portrait.offer_omitted` | `cause`, `error_class` |
 | `cron.auth_rejected` | `reason` |
 | `cron.failed` | `duration_s`, `error_type`, `stack`, `task` |
 | `cron.item_failed` | `error_type`, `item_kind`, `item_ref`, `task` |

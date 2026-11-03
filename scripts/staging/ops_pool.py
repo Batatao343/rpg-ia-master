@@ -12,37 +12,13 @@ import time
 from collections.abc import Callable, Sequence
 from typing import Any
 
-_COMMAND_FRAMES = {
-    "execute", "executemany", "fetchone", "fetchall", "fetchmany", "copy",
-    "commit", "rollback", "__exit__", "wait", "_commit_gen", "_exit_gen",
-}  # fmt: skip
-_CHECKOUT_FRAMES = {"getconn", "connection", "_connect", "connect"}
+from services.checkout_retry import is_checkout_failure as _is_checkout_failure
 
 
 def open_ops_pool(dsn: str):
     from infrastructure.postgres import PostgresPool
 
     return PostgresPool(dsn, max_size=1, timeout=20.0, connect_timeout=10.0)
-
-
-def _is_checkout_failure(exc: BaseException) -> bool:
-    """PoolTimeout é sempre de checkout; OperationalError só se veio do checkout/connect (nunca de comando ou commit)."""
-    try:
-        from psycopg import OperationalError
-        from psycopg_pool import PoolTimeout
-    except ImportError:  # sem psycopg não há o que repetir
-        return False
-    if isinstance(exc, PoolTimeout):
-        return True
-    if not isinstance(exc, OperationalError):
-        return False
-    names: list[str] = []
-    tb = exc.__traceback__
-    while tb is not None:
-        names.append(tb.tb_frame.f_code.co_name)
-        tb = tb.tb_next
-    # detecção POSITIVA: passou pelo checkout/connect e por nenhum comando nem commit
-    return bool(_CHECKOUT_FRAMES & set(names)) and not (_COMMAND_FRAMES & set(names))
 
 
 class DbUnavailable(RuntimeError):

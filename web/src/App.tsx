@@ -24,7 +24,7 @@ import { AuthScreen, hasEmailActionLink } from "./components/AuthScreen";
 import { authErrorMessage } from "./lib/authErrors";
 import { errMsg, errRequestId } from "./lib/errorMessages";
 import { publishRejectedPlay } from "./lib/rejectedPlay";
-import { portraitErrorBanner, shouldHidePortraitOffer, withinShownPrice, withoutPortraitOffer, withPortraitPending } from "./lib/portraitOrder";
+import { portraitErrorBanner, shouldHidePortraitOffer, withinShownPrice, withoutPortraitOffer, withPortraitPending, withPortraitRestored, snapshotPortraits } from "./lib/portraitOrder";
 import { AccountScreen } from "./components/AccountScreen";
 import { estilhasLabel } from "./lib/estilhas";
 
@@ -80,6 +80,7 @@ export function App() {
   const [authConfig, setAuthConfig] = useState<api.AuthConfig>();
   const [authRequired, setAuthRequired] = useState(false);
   const [imageQuote, setImageQuote] = useState<{ quote: api.ImageQuote; gameId: string; session: number; actionId: string; enemyId?: string } | null>(null);
+  const portraitSnapshot = useRef<{ gameId: string; enemyId: string; shot: Record<string, unknown> } | null>(null); // SPEC-387 R8
   const portraitInFlight = useRef(false); // SPEC-367 R5: trava síncrona (React state não pega 2 cliques no mesmo tick)
   const [imageBusy, setImageBusy] = useState(false);
   const [imageError, setImageError] = useState("");
@@ -395,6 +396,9 @@ export function App() {
     portraitInFlight.current = true;
     const generation = session.current;
     setImageBusy(true); setImageError("");
+    // SPEC-387 R8: o chip vira "Gerando retrato…" no mesmo frame; erro/cancelamento devolve o retrato anterior.
+    portraitSnapshot.current = { gameId, enemyId, shot: snapshotPortraits(data, enemyId) };
+    setData(prev => (prev?.game_id === gameId ? withPortraitPending(prev, enemyId) : prev));
     try {
       const quote = await api.requestImageQuote(gameId, "monster", false, undefined, enemyId);
       if (session.current !== generation) return;
@@ -405,10 +409,18 @@ export function App() {
       if (session.current === generation) {
         const status = error instanceof api.HttpError ? error.status : undefined;
         const code = error instanceof api.HttpError ? error.code : undefined;
+        restorePortrait();
         if (shouldHidePortraitOffer(status, code)) setData(prev => (prev?.game_id === gameId ? withoutPortraitOffer(prev, enemyId) : prev));
         setBanner({ ...portraitErrorBanner(status, code, "Cotação indisponível: " + errMsg(error)), requestId: errRequestId(error) });
       }
     } finally { portraitInFlight.current = false; if (session.current === generation) setImageBusy(false); }
+  }
+
+  /** SPEC-387 R8: devolve o `retrato` guardado (erro, cancelamento ou "Agora não"); no-op sem pedido em curso. */
+  function restorePortrait() {
+    const snap = portraitSnapshot.current;
+    portraitSnapshot.current = null;
+    if (snap) setData(prev => (prev?.game_id === snap.gameId ? withPortraitRestored(prev, snap.enemyId, snap.shot) : prev));
   }
 
   async function confirmImageQuote(direct?: typeof imageQuote, inline = false) {
@@ -428,6 +440,7 @@ export function App() {
         art_offers: art.art_offers ?? prev.art_offers,
       } : prev);
       setImageQuote(null);
+      portraitSnapshot.current = null; // confirmado: o servidor já está "gerando"
       setBanner({
         msg: current.quote.type === "monster" ? "Retrato encomendado. O saldo foi reservado."
           : "Imagem confirmada. O saldo foi reservado e a geração será processada.",
@@ -441,6 +454,7 @@ export function App() {
         const status = error instanceof api.HttpError ? error.status : undefined;
         const code = error instanceof api.HttpError ? error.code : undefined;
         setImageQuote(null);
+        restorePortrait();
         setBanner({ ...portraitErrorBanner(status, code, "Não foi possível confirmar: " + errMsg(error)), requestId: errRequestId(error) });
       } else setImageError("Não foi possível confirmar: " + errMsg(error));
     } finally { if (session.current === current.session) setImageBusy(false); }
@@ -977,7 +991,7 @@ export function App() {
       {screen !== "play" && <Banner state={banner} onDone={clearBanner} />}
       {imageQuote && imageQuote.session === session.current && screen === "play" &&
         <ImageQuoteDialog quote={imageQuote.quote} busy={imageBusy} error={imageError}
-          onConfirm={() => void confirmImageQuote()} onCancel={() => setImageQuote(null)} />}
+          onConfirm={() => void confirmImageQuote()} onCancel={() => { setImageQuote(null); if (imageQuote.enemyId) restorePortrait(); }} />}
       {screen === "play" && pending && turn.stage !== "waiting" && turn.stage !== "narrated" && <div className={"pending-operation" + (busy ? " is-busy" : "")} role="group" aria-label="Ação pendente">
         {/* SPEC-321: quando o turno falhou depois da narração, a linha de status do compositor já oferece
             "Tentar de novo" — não repete o mesmo botão aqui; fica só o descarte. */}
@@ -1116,6 +1130,7 @@ export function App() {
               artPanel={artPanel}
               onQuoteOffer={offer => { if (data?.game_id) void openImageQuote(data.game_id, offer.type, false, offer.offer_id); }}
               offersDisabled={busy || imageBusy}
+              imageBusy={imageBusy}
               owner={renderedOwner}
             />
           </motion.div>

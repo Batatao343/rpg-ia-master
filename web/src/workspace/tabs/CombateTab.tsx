@@ -59,7 +59,7 @@ const SPARE_TEXT = "Sem matar.";
 /** SPEC-325 R12/R13: frases que o servidor reconhece (combat_intents.abandon_target / accepts_sacrifice). */
 const ABANDON_TEXT = (name: string) => `Fujo e deixo ${name} para trás.`;
 const SACRIFICE_TEXT = "Aceito o sacrifício.";
-export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onCardReward, onGeneratePortrait, onOpenLevelUp, dismissedResult, onDismissResult, lastNarration, onShowChat }: {
+export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onCardReward, onGeneratePortrait, imageBusy, onOpenLevelUp, dismissedResult, onDismissResult, lastNarration, onShowChat }: {
   data: GameResponse | null;
   busy: boolean;
   blocked: boolean;
@@ -77,6 +77,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   onCardReward?: RewardSender;
   /** SPEC-352 R12: retrato pago de inimigo; a Arena só mostra a oferta quando o servidor mandar `retrato.gerar`. */
   onGeneratePortrait?: (enemyId: string, priceShards: number, priceMilli?: string) => void;
+  imageBusy?: boolean;
   onOpenLevelUp?: () => void;
   /** SPEC-212: dispensa controlada pelo PlayScreen (sequencia o modal de nível); sem props = local. */
   dismissedResult?: string | null;
@@ -325,7 +326,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
               onArm={(index, targets) => { targeting.cancel(); deckArm.arm(index, targets); }}
               onDisarm={deckArm.disarm} onClearTarget={deckArm.clearTarget}
               spareAvailable={!!combat.nonlethal_available} spare={spareOn} onSpare={() => setSpare((v) => !v)} onStuck={setStuck}
-              arena={(omens) => <Arena combat={combat} party={data?.party ?? []} npcs={data?.npcs} aim={aimMarks} onPick={pick} omens={omens} compact onGenerate={onGeneratePortrait ? generate : undefined} genDisabled={busy} />}
+              arena={(omens) => <Arena combat={combat} party={data?.party ?? []} npcs={data?.npcs} aim={aimMarks} onPick={pick} omens={omens} compact onGenerate={onGeneratePortrait ? generate : undefined} genDisabled={busy || !!imageBusy} />}
               maneuverAim={state.phase === "aiming" ? (
                 <div className="aimbar" data-aim-safe>
                   <span>{`Mirando ${aimLabel}: escolha o alvo na arena.`}</span>
@@ -338,7 +339,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
               }} />
           ) : (
             <>
-              <Arena combat={combat} party={data?.party ?? []} npcs={data?.npcs} aim={aimMarks} onPick={pick} onGenerate={onGeneratePortrait ? generate : undefined} genDisabled={busy} />
+              <Arena combat={combat} party={data?.party ?? []} npcs={data?.npcs} aim={aimMarks} onPick={pick} onGenerate={onGeneratePortrait ? generate : undefined} genDisabled={busy || !!imageBusy} />
               <div className="aimbar" data-aim-safe>
                 <span>{state.phase === "aiming" ? `Mirando ${aimLabel}: escolha um alvo`
                   : state.phase === "submitting" ? "Enviando…" : "Escolha uma carta ou ação"}</span>

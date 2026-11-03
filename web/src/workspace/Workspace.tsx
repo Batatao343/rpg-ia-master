@@ -44,6 +44,7 @@ interface Props {
   onCardReward?: RewardSender;
   /** SPEC-352 R12: pedir o retrato pago de um inimigo (id da instância, preço mostrado em Estilhas). */
   onGeneratePortrait?: (enemyId: string, priceShards: number, priceMilli?: string) => void;
+  imageBusy?: boolean;
   onOpenLevelUp?: () => void;
   /** SPEC-212: desfecho do combate dispensado (elevado ao PlayScreen p/ sequenciar o modal de nível). */
   dismissedResult?: string | null;
@@ -363,7 +364,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             codexSection={codexSection} onCodexSection={setCodexSection}
             onSelectTab={openTab} onClose={showChat} onEscape={() => composerRef.current?.focus()}
             onAction={onAction} onEquip={onEquip}
-            onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onGeneratePortrait={props.onGeneratePortrait} onOpenLevelUp={props.onOpenLevelUp}
+            onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onGeneratePortrait={props.onGeneratePortrait} imageBusy={props.imageBusy} onOpenLevelUp={props.onOpenLevelUp}
             dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} artPanel={props.artPanel}
             lastNarration={lastNarration} onShowChat={showChat} />
         </div>

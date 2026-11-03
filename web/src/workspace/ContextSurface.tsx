@@ -48,6 +48,7 @@ export interface ContextSurfaceProps {
   onCardReward?: RewardSender;
   /** SPEC-352 R12: pedir o retrato pago de um inimigo (id da instância, preço mostrado em Estilhas). */
   onGeneratePortrait?: (enemyId: string, priceShards: number, priceMilli?: string) => void;
+  imageBusy?: boolean;
   onOpenLevelUp?: () => void;
   dismissedResult?: string | null;
   onDismissResult?: (resultEventId: string) => void;
@@ -124,7 +125,7 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
     case "combate":
       return <CombateTab data={data} busy={busy} blocked={blocked} hitKey={hitKey} ended={props.combatEnded} touch={!!props.mobile}
         reactionCardId={props.reactionCardId} onReaction={props.onReaction} onAction={props.onAction}
-        onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onGeneratePortrait={props.onGeneratePortrait} onOpenLevelUp={props.onOpenLevelUp}
+        onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onGeneratePortrait={props.onGeneratePortrait} imageBusy={props.imageBusy} onOpenLevelUp={props.onOpenLevelUp}
         dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult}
         lastNarration={props.lastNarration} onShowChat={props.onShowChat} />;
     case "bestiario":

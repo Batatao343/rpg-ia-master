@@ -55,16 +55,43 @@ interface WithPendingEnemies { combat?: { enemies?: PendingEnemy[] } | null }
 
 const baseName = (name: string | undefined) => (name ?? "").replace(/\s+\d+$/, "").trim().toLowerCase();
 
+function pendingHit(data: WithPendingEnemies, enemyId: string): ((e: PendingEnemy) => boolean) | null {
+  const clicked = data.combat?.enemies?.find((e) => e.id === enemyId);
+  if (!clicked) return null;
+  const sameType = (e: PendingEnemy) =>
+    clicked.retrato?.gerar?.escopo === "tipo" && e.retrato?.gerar?.escopo === "tipo" && baseName(e.name) === baseName(clicked.name);
+  return (e) => !!e.retrato?.gerar && (e.id === enemyId || sameType(e));
+}
+
+/** SPEC-387 R8: o `retrato` ANTERIOR (por id) dos inimigos que `withPortraitPending` vai trocar. */
+export function snapshotPortraits(data: WithPendingEnemies, enemyId: string): Record<string, unknown> {
+  const hit = pendingHit(data, enemyId);
+  const out: Record<string, unknown> = {};
+  for (const e of data.combat?.enemies ?? []) if (hit?.(e)) out[e.id] = e.retrato;
+  return out;
+}
+
+/** SPEC-387 R8: erro/cancelamento — devolve o `retrato` guardado dos inimigos ainda "gerando" por este pedido.
+ *  Imutável; o mesmo objeto quando nada muda (inimigo sumiu ou o servidor já trouxe outro estado). */
+export function withPortraitRestored<T extends WithPendingEnemies>(data: T, _enemyId: string, snapshot: Record<string, unknown>): T {
+  const enemies = data.combat?.enemies;
+  if (!enemies || !enemies.some((e) => e.id in snapshot && e.retrato?.estado === "gerando" && !e.retrato?.gerar)) return data;
+  return {
+    ...data,
+    combat: {
+      ...data.combat,
+      enemies: enemies.map((e) => (e.id in snapshot && e.retrato?.estado === "gerando" && !e.retrato?.gerar
+        ? { ...e, retrato: snapshot[e.id] as PendingEnemy["retrato"] } : e)),
+    },
+  };
+}
+
 /** SPEC-367 R4: a confirmação deu certo — o inimigo clicado (e os de mesmo tipo, escopo "tipo") passam a
  *  "gerando" e perdem a oferta. Imutável; devolve o mesmo objeto quando nada muda. */
 export function withPortraitPending<T extends WithPendingEnemies>(data: T, enemyId: string): T {
   const enemies = data.combat?.enemies;
-  const clicked = enemies?.find((e) => e.id === enemyId);
-  if (!enemies || !clicked) return data;
-  const sameType = (e: PendingEnemy) =>
-    clicked.retrato?.gerar?.escopo === "tipo" && e.retrato?.gerar?.escopo === "tipo" && baseName(e.name) === baseName(clicked.name);
-  const hit = (e: PendingEnemy) => !!e.retrato?.gerar && (e.id === enemyId || sameType(e));
-  if (!enemies.some(hit)) return data;
+  const hit = pendingHit(data, enemyId);
+  if (!enemies || !hit || !enemies.some(hit)) return data;
   return {
     ...data,
     combat: {

@@ -38,13 +38,15 @@ interface Props {
   artPanel?: ReactNode;
   onQuoteOffer?: (offer: NonNullable<GameResponse["art_offers"]>[number]) => void;
   offersDisabled?: boolean;
+  /** SPEC-387 R9: cotação/confirmação do retrato em curso (trava o "Gerar"). */
+  imageBusy?: boolean;
   /** Dono da sessão: escopo da preferência de layout (SPEC-204 R9). */
   owner?: string;
 }
 
 /** SPEC-204: orquestrador da tela de jogo — topbar + workspace (chat + UM painel)
  *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
-export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onCardReward, onGeneratePortrait, onLogout, onAccount, accountBalance, confirmLeave = false, artPanel, onQuoteOffer, offersDisabled, owner = "legacy" }: Props) {
+export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onCardReward, onGeneratePortrait, onLogout, onAccount, accountBalance, confirmLeave = false, artPanel, onQuoteOffer, offersDisabled, imageBusy, owner = "legacy" }: Props) {
   const compact = useIsCompact();
   const [confirmingNew, setConfirmingNew] = useState(false);
   const [luDismissedKey, setLuDismissedKey] = useState<string | null>(null);
@@ -128,7 +130,7 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
       <Workspace key={data?.game_id ?? "sem-jogo"} ref={workspace} owner={owner} data={data} log={log}
         thinking={thinking} turn={turn} onRetryTurn={onRetryTurn} busy={busy} blocked={blocked}
         onAction={onAction} onEquip={onEquip}
-        onPrepareCards={onPrepareCards} onCardReward={onCardReward} onGeneratePortrait={onGeneratePortrait} onOpenLevelUp={openLevelUp}
+        onPrepareCards={onPrepareCards} onCardReward={onCardReward} onGeneratePortrait={onGeneratePortrait} imageBusy={imageBusy} onOpenLevelUp={openLevelUp}
         artPanel={artPanel} onQuoteOffer={onQuoteOffer} offersDisabled={offersDisabled}
         place={data?.current_location || "—"} banner={compact ? banner : undefined}
         headActions={compact ? (

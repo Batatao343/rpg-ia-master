@@ -23,6 +23,7 @@ from typing import Protocol
 from collections.abc import Callable, Mapping
 
 from observability.metrics import metrics
+from services.checkout_retry import retry_once
 
 KEY_RE = re.compile(
     r"^(image_generation|stt_fallback_expensive|model:[A-Za-z0-9._/-]{1,200}"
@@ -165,7 +166,7 @@ class KillSwitches:
                 try:
                     store = self._resolve_store()
                     if store is not None:
-                        self._cache = store.load()
+                        self._cache = retry_once(store.load)  # SPEC-387 R6: 1 retry de checkout
                         self._ever_loaded = True
                     self._load_failed = False
                 except Exception as exc:  # fail-safe: keep last good snapshot, never disable
@@ -183,6 +184,11 @@ class KillSwitches:
         for key in _env_off():
             state[key] = False
         return state
+
+    @property
+    def unreadable(self) -> bool:
+        """SPEC-387 R7: a 1ª carga falhou e não há snapshot anterior (chaves fail-closed)."""
+        return self._load_failed and not self._ever_loaded
 
     def is_enabled(self, key: str) -> bool:
         return self.snapshot().get(key, True)

@@ -74,6 +74,8 @@ from persistence import (
     save_path,
 )
 from services import combat_flags
+from services.checkout_retry import retry_once
+from services.portrait_offer_log import offer_omitted
 from services import enemy_intent as _enemy_intent
 from services import npc_world as _npc_world
 from services import quest_log
@@ -2881,13 +2883,16 @@ def _image_effect_open() -> bool:
     from services.shard_pricing import PricingUnavailable
 
     try:
-        if not get_switches().is_enabled(IMAGE):
+        switches = get_switches()
+        if not switches.is_enabled(IMAGE):
+            if switches.unreadable:
+                offer_omitted("switches_unreadable")
             return False
         require_paid_effect("image")
     except PricingUnavailable:
         return False
     except Exception as exc:  # leitura do store falhou: sem oferta (fail-closed)
-        log_fallback("creature_portrait", "image_gate_failed", exc)
+        offer_omitted("image_gate_failed", exc)
         return False
     return True
 
@@ -2909,11 +2914,13 @@ def _portrait_price_estilhas() -> int | None:
         from infrastructure.runtime import get_runtime
         from services.image_quotes import ImageQuoteRepository
 
-        milli = ImageQuoteRepository(get_runtime().resources[0]).peek_ceiling("monster")
+        repo = ImageQuoteRepository(get_runtime().resources[0])
+        milli = retry_once(lambda: repo.peek_ceiling("monster"))  # SPEC-387 R6
         value = -(-int(milli) // 1000) if milli else None
         _PORTRAIT_PRICE_CACHE["milli"] = int(milli) if milli else None
     except Exception as exc:
-        log_fallback("creature_portrait", "price_peek_failed", exc)
+        offer_omitted("price_peek_failed", exc)
+        return None  # SPEC-387 R5: falha nunca vai para o cache (a próxima view tenta de novo)
     _PORTRAIT_PRICE_CACHE.update(at=now, value=value)
     return value
 
@@ -2987,9 +2994,10 @@ def _portrait_registry(state: dict, meta: dict, enemies: list[dict]):
     if npc_entity_id:
         known.append(f"npc:{npc_entity_id}")  # o NPC está em cena: já é conhecido do jogador
     try:
-        rows = _portrait_store().get_many(keys, game_id=game_id, npc_known=known)
+        store = _portrait_store()
+        rows = retry_once(lambda: store.get_many(keys, game_id=game_id, npc_known=known))
     except Exception as exc:
-        log_fallback("creature_portrait", "registry_read_failed", exc)
+        offer_omitted("registry_read_failed", exc)
         return None
     return SnapshotRegistry(rows, sign=_portrait_sign)
 
