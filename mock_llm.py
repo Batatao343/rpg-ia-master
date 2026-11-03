@@ -585,6 +585,28 @@ _MOCK_PARTES = (
 )
 
 
+def _linha_de_eixos_do_prompt(system: str):
+    """SPEC-374 R10: com <eixos_livres> numerado o mock escolhe a linha 1 (o motor escreve os
+    eixos). Devolve ``escolha | None`` (com a chave ``linha``)."""
+    import re
+
+    from services import bestiary_lint as bl
+
+    escolha = None
+    livres_bloco = re.search(r"<eixos_livres>\n(.*?)\n</eixos_livres>", system, re.S)
+    for linha in livres_bloco.group(1).splitlines() if livres_bloco else []:
+        m_lin = re.match(r"(\d+)\. (.+)$", linha)
+        vals = [v.strip() for v in m_lin.group(2).split(" / ")] if m_lin else []
+        if len(vals) == 6:
+            escolha = {
+                "anatomia": dict(zip(bl.EIXOS_PADRAO_ENUM, vals[:5], strict=True)),
+                "papel_tatico": vals[5],
+                "linha": int(m_lin.group(1)),
+            }
+            break
+    return escolha
+
+
 def _ficha_criatura_gerada(model, messages):
     """SPEC-361 R31: ficha determinística (hash do pedido) que passa no gate U1-U13.
 
@@ -626,20 +648,7 @@ def _ficha_criatura_gerada(model, messages):
         k = (h >> salto) % len(vals)
         return vals[k:] + vals[:k]
 
-    escolha = None
-    # SPEC-374 R10: com <eixos_livres> numerado o mock escolhe a linha 1 (o motor escreve os eixos)
-    linha_eixos = 1
-    livres_bloco = re.search(r"<eixos_livres>\n(.*?)\n</eixos_livres>", system, re.S)
-    for linha in livres_bloco.group(1).splitlines() if livres_bloco else []:
-        m_lin = re.match(r"(\d+)\. (.+)$", linha)
-        vals = [v.strip() for v in m_lin.group(2).split(" / ")] if m_lin else []
-        if len(vals) == 6:
-            escolha = {
-                "anatomia": dict(zip(bl.EIXOS_PADRAO_ENUM, vals[:5], strict=True)),
-                "papel_tatico": vals[5],
-            }
-            linha_eixos = int(m_lin.group(1))
-            break
+    escolha = _linha_de_eixos_do_prompt(system)
     combos = itertools.product(
         ordenado("plano_corporal", 3),
         ordenado("material", 7),
@@ -728,7 +737,7 @@ def _ficha_criatura_gerada(model, messages):
             "demonio": demonio,
             "faccao": None,
             **anat,
-            "linha_eixos": linha_eixos,
+            "linha_eixos": (escolha or {}).get("linha", 1),
             "anatomia_texto": texto,
             "silhueta": f"Vulto {anat['escala']} de {p[0][0]} à mostra, rente ao chão.",
             "comportamento": f"Ronda o lugar de onde veio e só ataca quem chega perto do {p[1][0]}.",
