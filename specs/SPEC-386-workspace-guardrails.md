@@ -1,6 +1,6 @@
 # SPEC-386 — Workspace: guardrails de qualidade e de tokens para os agentes
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** [auditoria do workspace 03/11](../docs/auditorias/auditoria-workspace-2026-11-03.md) · aprovação do dono 03/11 ("pode executar tudo"; refatoração fica nas 375–385)
 > **Depende de:** nenhuma
@@ -95,11 +95,11 @@ baratas e não reintroduzam o que estão limpando.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R3, R8: testes de hook verdes; teste vivo na sessão do coordenador.
-- [ ] R4/R5/R7/R11: rodam no checkout principal e no worktree.
-- [ ] R6: suíte verde com a baseline gerada; crescimento sintético falha.
-- [ ] R9/R10: textos curtos; `tests/test_agents_contract.py` e `test_dev_tooling.py` verdes.
-- [ ] `uv run pytest` verde (suíte completa offline).
+- [x] R1–R3, R8: testes de hook verdes; teste vivo na sessão do coordenador.
+- [x] R4/R5/R7/R11: rodam no checkout principal e no worktree.
+- [x] R6: suíte verde com a baseline gerada; crescimento sintético falha.
+- [x] R9/R10: textos curtos; `tests/test_agents_contract.py` e `test_dev_tooling.py` verdes.
+- [x] `uv run pytest` verde (suíte completa offline).
 
 ## 6. Smoke test com LLM real
 
@@ -107,6 +107,13 @@ Não se aplica (tooling de desenvolvimento, sem caminho de LLM do jogo). O smoke
 vivo dos hooks na sessão do coordenador após o pouso (Read grande negado, edição formatada).
 
 ## 7. Riscos & compatibilidade
+
+- Revisão independente (Sonnet, papel terra): `APPROVED_WITH_FOLLOWUPS`
+  ([handoff](../handoffs/SPEC-386-terra-review.md)). P2-1 (caminho Windows sem aspas) e P2-3
+  (ruff no evals protegido) corrigidos com teste; P2-2 (heredoc multilinha) aceito; P2-4: a
+  SPEC-375 deve localizar linhas do AGENTS.md por texto, não por número.
+- Baseline de medição (subagentes, 27/10–03/11, `agent_stats.py --since 2026-10-27`):
+  45 M chars de tool_result, 239 `cat` inteiro, 104 Edit sem Read, 43 Read > 40 KB sem limit.
 
 - Hook com bug pode travar agentes: todos saem 0 em exceção e têm `timeout` 5–20 s.
 - Gate de tamanho pode barrar specs em voo que engordam `api.py`: a mensagem orienta

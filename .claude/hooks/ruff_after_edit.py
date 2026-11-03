@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 
 MAX_LINES = 10
+PROTECTED_PREFIXES = ("evals/", "web/e2e/contracts/")
 
 
 def _repo_root(path: Path) -> Path | None:
@@ -68,6 +69,9 @@ def main() -> None:
         return
     root = _repo_root(path.resolve())
     if root is None:
+        return
+    rel = path.resolve().relative_to(root).as_posix()
+    if rel.startswith(PROTECTED_PREFIXES):  # evals/contratos: hash travado, nunca reescrever
         return
     ruff = _ruff(root)
     if ruff is None:

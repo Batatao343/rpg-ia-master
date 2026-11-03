@@ -85,10 +85,18 @@ def test_read_transcript_is_denied(tmp_path: Path) -> None:
 
 @pytest.mark.parametrize(
     "cmd",
-    ["cat big.md", "cd sub && cat ../big.md", "cat small.md big.md", "Get-Content big.md"],
+    [
+        "cat big.md",
+        "cd sub && cat ../big.md",
+        "cat small.md big.md",
+        "Get-Content big.md",
+        "WINPATH",
+    ],
 )
 def test_cat_big_file_is_denied(big: Path, cmd: str) -> None:
     (big.parent / "sub").mkdir(exist_ok=True)
+    if cmd == "WINPATH":
+        cmd = f"cat {big}"  # C:\...\big.md sem aspas
     tool = "PowerShell" if cmd.startswith("Get-") else "Bash"
     assert _denied(_run("guard_tools.py", _sh(cmd, big.parent, tool=tool)))
 
@@ -202,3 +210,12 @@ def test_settings_register_every_hook_checkout_relative() -> None:
         cmd = next(c for c in commands if script in c)
         assert "$CLAUDE_PROJECT_DIR/.claude/hooks/" in cmd and "Trabalho" not in cmd
         assert (HOOKS / script).is_file()
+
+
+def test_ruff_hook_skips_protected_eval_paths(tmp_path: Path) -> None:
+    (tmp_path / "pyproject.toml").write_text("[tool.ruff]\n", encoding="utf-8")
+    py = tmp_path / "evals" / "core" / "x.py"
+    py.parent.mkdir(parents=True)
+    py.write_text("x=1\n", encoding="utf-8")
+    assert _run("ruff_after_edit.py", {"tool_input": {"file_path": str(py)}}) is None
+    assert py.read_text(encoding="utf-8") == "x=1\n"

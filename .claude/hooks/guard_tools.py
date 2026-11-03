@@ -82,10 +82,13 @@ def _split_pipeline(segment: str) -> list[str]:
 
 
 def _words(text: str) -> list[str]:
+    # Caminho Windows (C:\x\y): posix come a barra invertida; aí divide sem posix e tira aspas.
+    posix = "\\" not in text
     try:
-        return shlex.split(text, posix=True)
+        words = shlex.split(text, posix=posix)
     except ValueError:
-        return text.split()
+        words = text.split()
+    return words if posix else [w.strip("\"'") for w in words]
 
 
 def check_shell(command: str, cwd: str, is_subagent: bool) -> None:
