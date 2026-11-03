@@ -132,3 +132,24 @@ seed_save(1|6|12) em pasta temporária → tamanhos de pilha acima (P3-7)
 ### Para fechar
 
 P3-7 e P3-8 são locais à fixture (sem efeito no produto). Corrigidos com o teste de composição, a rodada 3 é só conferência.
+
+---
+
+## Rodada 3 (2026-11-03)
+
+> **Veredito:** `APPROVED`
+> **Revisor:** Opus / papel Sol · **Commit revisado:** `bd820b7a` (`git diff 7b68684e..bd820b7a`, 2 arquivos de teste)
+
+| ID | Status | Evidência |
+|---|---|---|
+| P3-7 | **resolvido** | `_force_hand` (`tests/fixtures/spec368_seed.py:99`) tira uma cópia por Carta forçada de `mao + compra` e devolve o resto à compra. Cartas de fora do Acervo (`sts_dor_surda`) entram de fora, como pedido. Testes novos: unitário com cópias repetidas, e itens 1 e 12 com `len(mao)+len(compra)` igual ao de `start_piles`. A compra fica com a mão original na frente, na ordem já embaralhada por `start_piles`: determinístico e sem efeito na cena. |
+| P3-8 | **resolvido** | `_level_up` removida; sem referência restante. |
+
+Escopo do diff: só fixture e teste; sem produto, sem `evals/`, sem golden/arenas/`sim.py`.
+
+```text
+pytest -n 2 tests/test_spec368_seed.py tests/test_spec368_scenarios.py → 42 passed
+ruff check (2 arquivos) → ok
+```
+
+Nenhum achado aberto. A SPEC-368 segue para o pouso (smoke real §6 e suíte completa ficam com o coordenador).
