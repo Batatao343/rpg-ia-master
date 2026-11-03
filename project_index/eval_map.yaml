@@ -92,7 +92,7 @@ coverage:
       - frontend_a11y_serious_critical
     regression_tests:
       - tests/test_eval_frontend.py
-      - tests/test_frontend_accessibility_contracts.py
+      - web/e2e/visual-cue.spec.ts
       - tests/test_frontend_visual_contracts.py
     datasets:
       - web/e2e/critical-journeys.yaml

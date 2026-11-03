@@ -120,8 +120,8 @@ domains:
       - web/src/components/Hud.tsx
     state: []
     tests:
-      - tests/test_frontend_accessibility_contracts.py
+      - web/e2e/visual-cue.spec.ts
       - tests/test_frontend_visual_contracts.py
-      - tests/test_frontend_auth_bootstrap.py
+      - web/e2e/auth-bootstrap.spec.ts
     evals:
       - frontend_critical_journey_pass_rate
