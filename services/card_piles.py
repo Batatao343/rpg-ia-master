@@ -683,7 +683,15 @@ def plan_plays(
             entropy_cost,
         )
         if not plan["ok"]:
-            return {"ok": False, "motivo": plan["motivo"], **total}
+            motivo = plan["motivo"]
+            if motivo.startswith("Fôlego insuficiente"):  # SPEC-387 R34: a recusa conta o LOTE
+                batch = sum(step_folego(s, get_card) for s in plays)
+                motivo = (
+                    f"Fôlego insuficiente: estas jogadas custam {batch}, você tem "
+                    f"{int(piles.get('folego', 0) or 0)} e o Pacto do Abismo empresta no máximo "
+                    f"{PACTO_MAX_FOLEGO} por rodada."
+                )
+            return {"ok": False, "motivo": motivo, **total}
         sim["folego"] = max(0, int(sim["folego"]) - plan["folego"])
         sim["folego_emprestado"] = int(sim["folego_emprestado"]) + plan["emprestado"]
         entropy -= entropy_cost + plan["entropia_extra"]

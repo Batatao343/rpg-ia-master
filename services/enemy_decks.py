@@ -587,7 +587,9 @@ def apply_phases(
                 fases[idx].get("narracao") or "{nome} muda de postura; a luta não será a mesma."
             )
             out.setdefault("logs", []).append(linha.format(nome=nome))
-            out.setdefault("fases", []).append({"actor_id": aid, "fase": idx + 1})
+            out.setdefault("fases", []).append(
+                {"actor_id": aid, "fase": idx + 1, "texto": linha.format(nome=nome)}
+            )
         changed = True
     return changed
 

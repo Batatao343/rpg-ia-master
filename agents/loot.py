@@ -343,8 +343,13 @@ def _merchant_context(merchant_name: object, location: object) -> str:
     name = str(merchant_name or "").strip()
     if not name:
         return ""
-    where = f" ({location})" if location else ""
-    return f"\nMercador: {name}{where}. Chame o mercador por esse nome; não invente outro."
+    # SPEC-387 R35: o lugar não age; quem entrega e recebe é o mercador
+    where = (
+        f" Lugar: {location} (o lugar não age; quem entrega e recebe é o mercador)."
+        if location
+        else ""
+    )
+    return f"\nMercador: {name}.{where} Chame o mercador por esse nome; não invente outro."
 
 
 def _deal_fallback(merchant_name: object) -> str:
@@ -368,7 +373,7 @@ def _narrate(
     context: str,
     fallback_text: str,
     canonical_summary: dict | None = None,
-    gold_check: tuple[set[int], int] | None = None,
+    gold_check: tuple | None = None,
 ) -> str:
     """1 chamada SMART para prosa curta; qualquer falha cai no texto mecânico.
     SPEC-367 R16: `gold_check=(números permitidos, ouro depois)` aplica V-G à prosa."""
@@ -403,9 +408,12 @@ def _narrate(
             text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in text)
         text = prose_guard.sanitize_meta_preamble(str(text))
         if text and gold_check is not None:
-            allowed, after = gold_check
+            allowed, after, *rest = gold_check  # SPEC-387 R35: 3º item opcional = lugar da loja
             if not prose_guard.gold_claims_ok(text, allowed=allowed, gold_after=after):
                 _log_event("loot", "trade_prose_rejected", level="warning")
+                return prose_guard.sanitize_meta_preamble(fallback_text)
+            if rest and prose_guard.place_as_actor(text, str(rest[0] or "")):
+                _log_event("loot", "trade_prose_rejected", level="warning", reason="place_as_actor")
                 return prose_guard.sanitize_meta_preamble(fallback_text)
         if text:
             if canonical_summary:
@@ -634,7 +642,11 @@ def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dic
         + _gold_context(gold_before, int(res["gold"]), total)
         + _merchant_context(shop_name, world.get("current_location")),
         _deal_fallback(shop_name),
-        gold_check=({gold_before, abs(int(res["gold"])), total}, total),
+        gold_check=(
+            {gold_before, abs(int(res["gold"])), total},
+            total,
+            world.get("current_location"),
+        ),
     )
     result = {
         "player": player,
@@ -771,7 +783,11 @@ def loot_node(state: GameState):
             + _gold_context(gold_before, delta, gold_after)
             + merchant_ctx,
             _deal_fallback((market_before or {}).get("merchant_name")),
-            gold_check=({gold_before, abs(delta), gold_after}, gold_after),
+            gold_check=(
+                {gold_before, abs(delta), gold_after},
+                gold_after,
+                world.get("current_location"),
+            ),
         )
         result = {
             "player": outcome["player"],

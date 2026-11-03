@@ -522,6 +522,23 @@ def _fold_gold(text: str) -> str:
     return "".join(c for c in nfkd if not unicodedata.combining(c))
 
 
+_PLACE_VERBS = (
+    "entrega", "desliza", "estende", "conta", "recebe", "aceita", "passa", "oferece", "vende",
+    "devolve", "guarda", "sorri", "empurra", "pousa",
+)  # fmt: skip
+
+
+def place_as_actor(text: str, place: str) -> bool:
+    """SPEC-387 R35: o NOME DO LUGAR aparece como sujeito (seguido, em até 1 palavra, de um verbo da
+    lista fechada) — "Skallgard desliza a Carta…". Só valida (rejeita), nunca reescreve."""
+    name = _fold_gold(place).strip()
+    if not name:
+        return False
+    verbs = "|".join(_PLACE_VERBS)
+    rx = rf"(?<![a-z0-9]){re.escape(name)}(?:\s+[a-z]+)?\s+(?:{verbs})(?![a-z])"
+    return bool(re.search(rx, _fold_gold(text)))
+
+
 def gold_claims_ok(text: str, *, allowed: set[int], gold_after: int) -> bool:
     """SPEC-367 R16: a prosa não cita ouro fora de {antes, preço, depois} nem afirma esgotamento
     quando sobrou ouro. Só valida (rejeita), nunca reescreve."""

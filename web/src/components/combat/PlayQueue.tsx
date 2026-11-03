@@ -32,6 +32,19 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
 }) {
   const [confirmFlee, setConfirmFlee] = useState(false);
   const fleeRef = useRef<HTMLButtonElement>(null);
+  const endRef = useRef<HTMLDivElement>(null);
+  // SPEC-387 R32: a barra fixa (celular) não cobre o fim do conteúdo — reserva a altura MEDIDA dela no contêiner.
+  useEffect(() => {
+    const bar = endRef.current;
+    const host = bar?.closest<HTMLElement>(".ws-combat");
+    if (!bar || !host) return;
+    const apply = () => host.style.setProperty("--play-end-h", `${Math.ceil(bar.getBoundingClientRect().height)}px`);
+    apply();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(apply);
+    ro.observe(bar);
+    return () => { ro.disconnect(); host.style.removeProperty("--play-end-h"); };
+  }, []);
   const confirmRef = useRef<HTMLDivElement>(null);
   useEffect(() => { if (confirmFlee) confirmRef.current?.querySelector<HTMLElement>("[data-flee-go]")?.focus(); }, [confirmFlee]);
   const closeFlee = () => { setConfirmFlee(false); window.setTimeout(() => fleeRef.current?.focus(), 0); };
@@ -79,7 +92,7 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
       )}
       {spare && <p className="play-queue__spare" role="note" data-queue-tail>{SPARE_NOTE}</p>}
     </section>
-    <div className="play-queue__end" data-aim-safe>
+    <div className="play-queue__end" data-aim-safe ref={endRef}>
         {spareAvailable && (
           <button type="button" className="actionchip" data-spare aria-pressed={spare} onClick={onSpare}
             title="Os golpes desta rodada derrubam o alvo sem matá-lo (se a forma do ataque permitir).">

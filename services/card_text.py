@@ -8,6 +8,7 @@ em Vitalidade e a utilitária no conflito. Puro: sem LLM, sem efeito colateral.
 from __future__ import annotations
 
 import re
+from functools import lru_cache
 from typing import Any
 
 from services import card_effects as fx
@@ -64,3 +65,36 @@ def _with_effective_damage(text: str, player: dict, card: dict, target: Any) -> 
     for part in partes[1:]:
         detail += f" − {part[1:]}" if part.startswith("-") else f" + {part.lstrip('+')}"
     return _CAUSA_RE.sub(f"Causa {total} de dano ({detail})", text, count=1)
+
+
+_ARTICLE_RE = re.compile(r"^(?:A|O|As|Os)\s+")
+
+
+@lru_cache(maxsize=1)
+def _faction_names() -> dict[str, str]:
+    """`{id: nome}` das facções do grafo do mundo (sem artigo inicial: "A Mão Sombria" -> "Mão Sombria")."""
+    import gamedata
+
+    rows = gamedata.load_json_data("graph/entities.json") or {}
+    return {
+        str(k): _ARTICLE_RE.sub("", str(v.get("name") or ""))
+        for k, v in rows.items()
+        if isinstance(v, dict) and v.get("type") == "faction"
+    }
+
+
+def subclass_label(card: dict) -> str:
+    """SPEC-387 R31: rótulo humano de `subclasse` — facção -> nome da facção; Postura -> nome do ramo;
+    desconhecida -> "" (sem chip). Nunca devolve o id cru (`mao_sombria`)."""
+    sub = str(card.get("subclasse") or "").strip()
+    if not sub:
+        return ""
+    faction = _faction_names().get(sub)
+    if faction:
+        return faction
+    import gamedata
+
+    branch = (
+        (gamedata.CLASSES.get(str(card.get("classe") or "")) or {}).get("branches") or {}
+    ).get(sub)
+    return str((branch or {}).get("name") or "")

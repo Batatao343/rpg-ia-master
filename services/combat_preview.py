@@ -382,6 +382,9 @@ def mech_log(
         if atk.get("acerto") and atk.get("dano_final") is not None:
             if int(atk.get("absorvido", 0) or 0) > 0:  # SPEC-353 R20
                 tail += f" · Proteção −{int(atk['absorvido'])}"
+            pct = int(atk.get("pct_dano", 0) or 0)  # SPEC-387 R28: o ±% entra antes do dano final
+            if pct:
+                tail += f" · {'Rachadura +' if pct > 0 else 'Torpor −'}{abs(pct)} %"
             tail += f" · {int(atk['dano_final'])} dano"
         if atk.get("label") == "Última Ação":
             head = f"Última Ação: {who} → {target}"
@@ -631,8 +634,15 @@ def round_board(
         }
 
     def pressagio_entry(p: dict) -> dict[str, Any]:
-        entry = queda_entry(str(p.get("actor_id")), "cumpre o presságio")
+        actor = names.get(str(p.get("actor_id")), "Alguém")
+        card = cards.get_card(str(p.get("carta_id") or "")) if p.get("carta_id") else None
+        # SPEC-387 R30: "Goblin — Pancada de Tronco" (a Carta já foi revelada por ter sido jogada)
+        entry = queda_entry(
+            str(p.get("actor_id")),
+            f"{actor} — {card['name']}" if card else f"{actor} age como anunciou",
+        )
         entry["tipo"] = "pressagio"
+        entry["carta_nome"] = card["name"] if card else None
         return entry
 
     entries: list[dict[str, Any]] = []

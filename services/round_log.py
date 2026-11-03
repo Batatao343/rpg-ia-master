@@ -287,6 +287,29 @@ def humanize_ids(text: str, actors_by_id: dict[str, dict] | None = None) -> str:
     return _INSTANCE_ID_RE.sub(sub, text)
 
 
+_USA_RE = re.compile(r"^Usa (.+?)(?: \(| —|$)")
+
+
+def _card_name(card_id: Any) -> str:
+    return str((_card(card_id) or {}).get("name") or "") if card_id else ""
+
+
+def _conditions_after_cards(out: dict, hero_name: str) -> dict[str, list[str]]:
+    """SPEC-387 R28: "X ganha a condição Y" entra logo DEPOIS da jogada que a aplicou (e antes do
+    ataque seguinte do inimigo). Lido da ordem do próprio `logs` do motor: "Usa <Carta>" abre a
+    janela; a linha "ganha condição" seguinte pertence a essa Carta."""
+    by_card: dict[str, list[str]] = {}
+    current = ""
+    for raw in out.get("logs") or []:
+        line = str(raw)
+        m = _USA_RE.match(line)
+        if m:
+            current = m.group(1)
+        elif current and ": ganha condição " in line and _is_human_line(line):
+            by_card.setdefault(current, []).append(_voce(line, hero_name))
+    return by_card
+
+
 def round_registry(
     out: dict,
     actors_by_id: dict[str, dict],
@@ -308,11 +331,13 @@ def round_registry(
         if a.get("card_id") and a.get("label") != "Última Ação"
     }
     event_lines: list[str] = []
+    after_card = _conditions_after_cards(out, hero_name)  # SPEC-387 R28
     for kind, payload in chrono_events(out):
         if kind == "attack":
             atk = payload[0]
             if atk.get("label") != "Última Ação":
                 event_lines.append(_attack_line(atk, names, actors_by_id))
+                event_lines += after_card.pop(_card_name(atk.get("card_id")), [])
         elif kind == "tick":
             victim = names.get(
                 str(payload.get("actor_id")), str(payload.get("actor_id") or "Alguém")
@@ -344,6 +369,7 @@ def round_registry(
             who = names.get(str(used.get("actor_id")), "Alguém")
             sabor = _sabor(card)
             event_lines.append(f"{who} joga {card.get('name')}" + (f": {sabor}." if sabor else "."))
+            event_lines += after_card.pop(str(card.get("name") or ""), [])
 
     dot_lines: list[str] = []
     for novo in out.get("condicoes_novas") or []:  # SPEC-353 R39a: a Provocação diz o que faz
@@ -354,6 +380,11 @@ def round_registry(
                 f"{names.get(str(novo.get('victim_id')), 'Alguém')} está provocado: "
                 f"a próxima intenção dele mira {alvo} (com chance)."
             )
+    for fase in (
+        out.get("fases") or []
+    ):  # SPEC-387 R29: a troca de fase do chefe é visível, 1× por fase
+        if fase.get("texto"):
+            dot_lines.append(str(fase["texto"]))
     for m in out.get("class_mechanics") or []:
         if m.get("kind") == "special:taunt_resisted":
             dot_lines.append(f"{names.get(str(m.get('actor_id')), 'Alguém')} resiste à Provocação.")
@@ -854,3 +885,29 @@ WHEEL_TEXT = (
     "A escuridão te engole — mas a Roda do Abismo ainda não decidiu. "
     "Voltar ao último respiro seguro, ou aceitar o fim aqui?"
 )
+
+
+_RAW_ID_RE = re.compile(r"\b[a-z]+(?:_[a-z0-9]+)+\b")
+
+
+def off_fallback_text(logs: Iterable[str], hero_name: str, flavor: str, victory: bool) -> str:
+    """SPEC-387 R33: texto do modo `off` sem LLM — só linhas humanas do motor, na voz do jogador
+    ("você"), sem id, sem bullets nem "⚔️"; um parágrafo como `deterministic_outcome_text`."""
+    lines: list[str] = []
+    for raw in logs:
+        line = str(raw or "").strip()
+        if not line or _is_arith(line) or not _is_human_line(line):
+            continue
+        human = _voce(line, hero_name)
+        if _RAW_ID_RE.search(human) or human in lines:
+            continue
+        lines.append(human)
+    head = [flavor.strip()] if flavor and flavor.strip() else []
+    tail = "Vitória! O campo silencia." if victory else "O que você faz?"
+    return " ".join([*head, *lines]) + ("\n\n" if lines or head else "") + tail
+
+
+def names_hero(text: str, hero_name: str) -> bool:
+    """SPEC-387 R33 [D-387-6]: a prosa usou o nome próprio do herói (a voz é "você")."""
+    hero = (hero_name or "").strip()
+    return bool(hero) and bool(re.search(rf"(?<!\w){re.escape(hero)}(?!\w)", text or ""))

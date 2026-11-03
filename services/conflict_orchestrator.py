@@ -1860,6 +1860,7 @@ def _resolve_actor_turn(
 
 
 _ABSORB_RE = re.compile(r"(?:Proteção(?: \(efeito\))?|Vigília) -(\d+)")
+_PCT_RE = re.compile(r"Rachadura/Torpor ([+-]\d+)%")  # SPEC-387 R28
 
 
 def _annotate_absorbed(sub: dict) -> None:
@@ -1875,6 +1876,11 @@ def _annotate_absorbed(sub: dict) -> None:
         total = sum(int(n) for n in _ABSORB_RE.findall(str(line)))
         if total > 0:
             atk["absorvido"] = total
+        pct = _PCT_RE.search(str(line))
+        if pct:
+            atk["pct_dano"] = int(
+                pct.group(1)
+            )  # SPEC-387 R28: o +25 % da Rachadura vira explicação
 
 
 def _resolve_actor_turn_inner(
@@ -2756,6 +2762,7 @@ def _run_round(
                     "actor_id": actor_id,
                     "tipo": intent["tipo"],
                     "alvo_id": desviado or intent.get("alvo_id"),
+                    "carta_id": intent.get("carta_id"),  # SPEC-387 R30
                 }
             )
             if not desviado:  # desviado: a linha "muda de alvo" já diz o que acontece
@@ -2878,9 +2885,20 @@ def _run_round(
                     if _it is not None and _it.get("interrompido_por"):
                         _frustrate(actor_id, _it, "incapaz")  # SPEC-330 Interromper
                 continue
-            out["logs"].append(f"{_name(actor)} age de novo.")
+            _mark = (
+                len(out["logs"]),
+                len(out.get("attacks") or []),
+                len(out.get("cards_used") or []),
+            )
             decl = _enemy_decl(actor_id, actor)
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+            _new = out["logs"][_mark[0] :]
+            _did = (len(out.get("attacks") or []), len(out.get("cards_used") or [])) != _mark[1:]
+            if _did or any(ln != "Ataque sem alvo válido." for ln in _new):
+                out["logs"].insert(_mark[0], f"{_name(actor)} age de novo.")  # SPEC-387 R29
+            else:  # ação extra sem alvo válido: nenhuma linha para o jogador
+                del out["logs"][_mark[0] :]
+                _log_event("combat", "enemy_extra_action_skipped", level="info")
             _spend_taunt(actor_id, actor)
             _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
             _mark_fresh_conditions(

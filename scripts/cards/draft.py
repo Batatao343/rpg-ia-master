@@ -40,12 +40,14 @@ _PATAMAR_POR_RARIDADE = {
 
 
 class EfeitoRascunho(BaseModel):
-    """Efeito na gramática da SPEC-330 (campos livres; o vocabulário é checado depois)."""
+    """Efeito na gramática da SPEC-330. SPEC-387 R26: `alvo` leva o vocabulário fechado no SCHEMA
+    (enum para o LLM), mas o parse segue tolerante: uma Carta fora dele cai em `rejeitadas` (e no
+    reparo), em vez de derrubar o lote inteiro."""
 
     kind: str
     quando: str | None = None
     se: dict[str, Any] | None = None
-    alvo: str | None = None
+    alvo: str | None = Field(default=None, json_schema_extra={"enum": sorted(fx.ALVOS)})
     valor: int | None = None
     dano_base: int | None = None
     categoria_arma: str | None = None
@@ -100,6 +102,52 @@ def existing_for(postura: str, subclasse: str) -> list[dict]:
     ]
 
 
+def _budget_text() -> str:
+    """Faixas de `power_score` (raridade x custo de Fôlego) e limites de complexidade, LIDOS do orçamento
+    e do lint (nada copiado à mão)."""
+    faixas = fx.budget_config().get("faixas") or {}
+    linhas = [
+        f"- {rar}: " + ", ".join(f"Fôlego {k}: [{v[0]}, {v[1]}]" for k, v in sorted(por.items()))
+        for rar, por in faixas.items()
+        if rar in ("comum", "incomum", "rara")
+    ]
+    regra = "- comum: 1 efeito e ≤ 1 palavra-chave; incomum: ≤ 2 e ≤ 2; rara: livre."
+    return "\n".join([*linhas, regra])
+
+
+_EXEMPLO_POR_RARIDADE = {
+    "comum": {
+        "tipo": "ativa", "patamar": "inicial", "raridade": "comum", "frequencia": "cena",
+        "efeitos": [{"kind": "dano", "categoria_arma": "leve", "dano_base": 3}],
+    },
+    "incomum": {
+        "tipo": "ativa", "patamar": "avancado", "raridade": "incomum", "frequencia": "cena",
+        "efeitos": [
+            {"kind": "dano", "categoria_arma": "leve", "dano_base": 3},
+            {"kind": "aplicar_condicao", "condicao": "sangramento", "duracao": 2},
+        ],
+    },
+    "rara": {
+        "tipo": "ativa", "patamar": "epico_i", "raridade": "rara", "frequencia": "cena",
+        "efeitos": [
+            {"kind": "dano", "categoria_arma": "marcial", "dano_base": 5,
+             "escala": {"por": "carga", "fator": 1, "max": 3}},
+        ],
+    },
+}  # fmt: skip
+
+
+def _examples(raridades: tuple[str, ...], postura: str, subclasse: str) -> str:
+    rows = []
+    for rar in raridades:
+        base = _EXEMPLO_POR_RARIDADE.get(rar)
+        if base:
+            rows.append(
+                json.dumps({"id": "exemplo", "name": "Exemplo", **base}, ensure_ascii=False)
+            )
+    return "\n".join(rows) or "(sem exemplo para estas raridades)"
+
+
 def build_prompt(
     postura: str,
     subclasse: str,
@@ -126,6 +174,13 @@ GLOSSÁRIO DE VALORIA
 RODA DA POSTURA {postura}
 - primário: {rule.get("primario")}  - secundário: {rule.get("secundario")}
 - NUNCA: {rule.get("nunca")}  (cartas com isto são descartadas)
+
+GRAMÁTICA DE `escala` (opcional, por efeito): {{"por": um de {sorted(fx.ESCALA_POR)}, "fator": número, "max": inteiro}}.
+`alvo` de um efeito é SÓ um destes: {sorted(fx.ALVOS)} (nunca "aliado", "inimigo" nem "si").
+ORÇAMENTO por raridade (power_score da Carta tem de caber na faixa do seu custo de Fôlego):
+{_budget_text()}
+EXEMPLO VÁLIDO por raridade pedida:
+{_examples(raridades, postura, subclasse)}
 
 VOZ: nome até 4 palavras; descrição até 140 caracteres, concreta e sensorial, SEM números;
 sabor de Valoria ({", ".join(lex["valoria"][:12])}); proibido: {", ".join(lex["proibidos"][:10])}…
@@ -204,7 +259,39 @@ def generate(
     aceitas: list[dict] = []
     rejeitadas: list[dict] = []
     vistos: set[str] = set()
-    for raw in result.cartas:
+    _triagem(result.cartas, postura, subclasse, onda, aceitas, rejeitadas, vistos)
+    chars = len(system) + len(human) + len(result.model_dump_json())
+    if rejeitadas:  # SPEC-387 R27: UM pedido de reparo (mesma chamada SMART), com os motivos
+        fixed, extra = _reparar(llm, system, human, rejeitadas)
+        chars += extra
+        antes = {c["id"] for c in aceitas}
+        novas: list[dict] = []
+        _triagem(fixed, postura, subclasse, onda, aceitas, novas, vistos)
+        consertadas = {c["id"] for c in aceitas} - antes
+        ids_rejeitados = {r["id"] for r in rejeitadas}
+        rejeitadas = [r for r in rejeitadas if r["id"] not in consertadas] + [
+            r for r in novas if r["id"] not in ids_rejeitados
+        ]
+    return {
+        "cards": aceitas,
+        "rejeitadas": rejeitadas,
+        "aviso": "",
+        "pedidas": n,
+        "entregues": len(aceitas),
+        "custo_usd_estimado": round(chars / 4 * 0.6e-6, 4),  # ~0,6 US$/M tokens, ordem de grandeza
+    }
+
+
+def _triagem(
+    cartas: list[CartaRascunho],
+    postura: str,
+    subclasse: str,
+    onda: int,
+    aceitas: list[dict],
+    rejeitadas: list[dict],
+    vistos: set[str],
+) -> None:
+    for raw in cartas:
         card = to_card(raw, postura, subclasse, onda)
         problemas = fx.validate_card(card)
         if card["id"] in vistos:
@@ -214,7 +301,41 @@ def generate(
             continue
         vistos.add(card["id"])
         aceitas.append(card)
-    return {"cards": aceitas, "rejeitadas": rejeitadas, "aviso": ""}
+
+
+def _reparar(
+    llm: Any, system: str, human: str, rejeitadas: list[dict]
+) -> tuple[list[CartaRascunho], int]:
+    """SPEC-387 R27 [D-387-10]: 1 chamada extra com os motivos; erro/mensagem do LLM = nada reparado."""
+    pedido = (
+        human
+        + "\n\nREPARO: estas cartas foram REJEITADAS pelo vocabulário. Devolva SÓ as cartas "
+        + "corrigidas (mesmos ids), respeitando o vocabulário fechado:\n"
+        + json.dumps(rejeitadas, ensure_ascii=False)
+    )
+    try:
+        res = llm.with_structured_output(LoteRascunho).invoke(
+            [SystemMessage(content=system), HumanMessage(content=pedido)]
+        )
+    except Exception as exc:  # noqa: BLE001 - o reparo é opcional
+        log_fallback("card_draft", "repair_error", exc)
+        return [], len(pedido)
+    if not isinstance(res, LoteRascunho):  # guard do FallbackLLM
+        log_fallback("card_draft", "repair_fallback")
+        return [], len(pedido)
+    return res.cartas, len(pedido) + len(res.model_dump_json())
+
+
+def next_commands(path: str, onda: int) -> list[str]:
+    """SPEC-387 R27: os 3 comandos seguintes CORRETOS (lote posicional; `lote-v2` explícito no gate)."""
+    rel = os.path.relpath(path).replace(os.sep, "/")
+    rep = rel.replace(".json", ".sim.json")
+    run = "bash scripts/dev/py.sh scripts/cards"
+    return [
+        f"{run}/lint.py {rel}",
+        f"{run}/sim.py --lote {rel} --protocolo lote-v2 --json --out {rep}",
+        f"{run}/promote.py {rel} --onda {onda} --protocolo lote-v2 --sim-report {rep}",
+    ]
 
 
 def write_batch(
@@ -254,6 +375,16 @@ def main(argv: list[str] | None = None) -> int:
         print(f"AVISO: {out['aviso']}")
     path = write_batch(out, args.postura, args.subclasse, args.onda)
     print(f"{len(out['cards'])} cartas ({len(out['rejeitadas'])} fora do vocabulário) -> {path}")
+    if "pedidas" in out:
+        print(
+            f"pedidas={out['pedidas']} entregues={out['entregues']} "
+            f"rejeitadas={len(out['rejeitadas'])} custo_estimado=US$ {out['custo_usd_estimado']}"
+        )
+        if out["entregues"] < out["pedidas"]:
+            print(f"AVISO: pediu {out['pedidas']}, entregou {out['entregues']}")
+    print("Próximos passos:")
+    for cmd in next_commands(path, args.onda):
+        print(f"  {cmd}")
     return 0
 
 

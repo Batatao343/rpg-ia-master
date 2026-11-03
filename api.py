@@ -2596,7 +2596,7 @@ def _cards_block(player: dict, *, prepared_only: bool = False) -> list[dict[str,
                 "description": card.get("descricao", ""),
                 "effect_kind": effect_kind,
                 "target_kind": "self" if friendly else "enemy",
-                "subclass": card.get("subclasse", ""),
+                "subclass": card_text.subclass_label(card),
                 "prepared": is_prepared,
                 "cost": cost,
                 "base_cost": base_cost,
@@ -2663,7 +2663,7 @@ def _levelup_block(player: dict) -> dict[str, Any]:
     pending = player.get("pending_choices", []) or []
     if not pending:
         return {}
-    from services import cards
+    from services import card_text, cards
 
     eligible = []
     for cid in progression.eligible_cards(player):
@@ -2673,7 +2673,7 @@ def _levelup_block(player: dict) -> dict[str, Any]:
                 "id": cid,
                 "name": card.get("name", cid),
                 "description": card.get("descricao", ""),
-                "subclass": card.get("subclasse", ""),
+                "subclass": card_text.subclass_label(card),
                 "tier": int(card.get("tier", 1) or 1),
                 "tier_label": gamedata.TIER_LABELS.get(int(card.get("tier", 1) or 1), ""),
                 "level_req": int(card.get("level_req", 1) or 1),

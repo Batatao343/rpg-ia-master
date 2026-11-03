@@ -380,6 +380,8 @@ details.scene-strip { display: block; }
 @media (max-width: 640px) {
   .deck-hand__rail { grid-auto-columns: minmax(9.5rem, 46vw); }
   .play-queue__end { position: sticky; bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); z-index: var(--z-hud); padding: 0.5rem 0; background: var(--bg); }
+  /* SPEC-387 R32: a barra fixa não cobre a linha do presságio — reserva a altura medida dela no fim do contêiner */
+  .ws-combat { padding-bottom: var(--play-end-h, 0px); scroll-padding-bottom: var(--play-end-h, 0px); }
 }
 /* SPEC-342 R5/R9.2 — piso de toque do Baralho (>= 44x44 com ponteiro grosso; a area cresce por min-size) */
 @media (pointer: coarse) {

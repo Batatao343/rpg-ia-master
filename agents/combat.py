@@ -1745,7 +1745,7 @@ def _narrate(
     fecho_override: str | None = None,
     fallback_text: str | None = None,
 ) -> str:
-    from services import prose_guard
+    from services import prose_guard, round_log
 
     canonical = sorted(
         {
@@ -1780,7 +1780,8 @@ def _narrate(
         content=f"""
     <role>Narrador de Combate — Dark Fantasy</role>
     Descreva o round em 1-2 parágrafos, com base APENAS no log mecânico. Não invente
-    dano nem resultado fora do log. Visceral, conciso. Ferimentos são localizados e
+    dano nem resultado fora do log. Trate o jogador por "você"; nunca use o nome próprio do
+    herói. Visceral, conciso. Ferimentos são localizados e
     permanentes; Vitalidade é fôlego/vigor. Use o CONTEXTO só para ambientar.
 
     {("ENTRADA: " + spawned_flavor) if spawned_flavor else ""}
@@ -1814,16 +1815,17 @@ def _narrate(
             # SPEC-203 R9: prosa que troca a espécie do elenco é neutralizada
             # (cai no texto determinístico); o estado nunca é reescrito.
             drift = prose_guard.species_drift(text, manifest) if manifest else []
-            if not drift:
+            if round_log.names_hero(text, str(player.get("name") or "")):  # SPEC-387 R33
+                _log_event("combat", "narration_hero_name", level="info")
+            elif not drift:
                 return text
-            prose_guard.log_species_drift(drift, where="combate")
+            if drift:
+                prose_guard.log_species_drift(drift, where="combate")
     except Exception as e:
         _log_event("combat", "narrate_failed", level="warning", error=type(e).__name__)
     if fallback_text is not None:  # SPEC-346 R15/R16: legível, sem bullets de log cru
         return fallback_text
-    prefix = (spawned_flavor + "\n\n") if spawned_flavor else ""
-    suffix = "\n\nVitória! O campo silencia." if victory else "\n\nO que você faz?"
-    return f"⚔️ {prefix}" + "\n".join(f"• {l}" for l in logs if l) + suffix
+    return round_log.off_fallback_text(logs, str(player.get("name") or ""), spawned_flavor, victory)
 
 
 # ==========================================================================
