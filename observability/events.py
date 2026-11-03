@@ -58,7 +58,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "bestiary.creature_gen_deadline": (),
     "bestiary.creature_gen_drain_failed": ("error",),
     "bestiary.creature_gen_invoke_failed": ("error",),
-    "bestiary.creature_gen_job": ("codigos", "estado", "status"),
+    "bestiary.creature_gen_job": ("codigos", "estado", "restante_s", "status"),
     "bestiary.creature_gen_lore_failed": ("error",),
     "bestiary.creature_gen_schedule_failed": ("error",),
     "bestiary.creature_gen_scheduled": (),
