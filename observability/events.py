@@ -350,6 +350,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "persistence.checkpoint_write_failed": ("duration_ms", "error_type", "game_ref"),
     "persistence.checkpoint_written": ("duration_ms", "game_ref", "turn"),
     "persistence.combat_normalize_failed": ("error",),
+    "persistence.fallback": (),
     "persistence.load_failed": ("duration_ms", "error_type", "game_ref"),
     "persistence.migrated": ("from_version", "game_ref", "steps", "to_version"),
     "persistence.save_failed": ("duration_ms", "error_type", "game_ref"),
