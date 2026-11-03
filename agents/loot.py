@@ -147,18 +147,43 @@ _CATALOG_RE = re.compile(
 _QUESTION_RE = re.compile(r"^(?:o que|quanto|qual|quais|posso|tem|voces? tem|me vende)\b")
 
 
+_PREFIX_STOP = frozenset("de da do das dos e com em a o as os um uma para pra no na".split())
+_TOKEN_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+
+
+def _prefix_match_len(item_name: str, folded: str) -> int:
+    """SPEC-367 R1: maior prefixo (em tokens) do nome do item que aparece no texto com >= 2
+    tokens significativos. 0 = nenhum."""
+    tokens = _TOKEN_RE.findall(economy._fold_key(item_name.replace("…", " ")))
+    for k in range(len(tokens), 1, -1):
+        head = tokens[:k]
+        if sum(1 for t in head if len(t) >= 3 and t not in _PREFIX_STOP) < 2:
+            continue
+        pat = r"\b" + r"[\s,;:.]+".join(re.escape(t) for t in head) + r"\b"
+        if re.search(pat, folded):
+            return k
+    return 0
+
+
 def _cites_inventory(state: GameState, folded: str) -> dict | None:
-    """SPEC-364 R4: o texto cita (por nome inteiro) um item do inventario do heroi?"""
+    """SPEC-364 R4: o texto cita (por nome inteiro) um item do inventario do heroi?
+    SPEC-367 R1: senao, por prefixo significativo (ambiguo -> None)."""
     import inventory as inv
 
-    for entry in (state.get("player") or {}).get("inventory") or []:
-        if not isinstance(entry, dict):
-            continue
+    entries = [e for e in (state.get("player") or {}).get("inventory") or [] if isinstance(e, dict)]
+    for entry in entries:
         for name in {inv.item_display(entry), inv.short_display(entry)}:
             n = economy._fold_key(name)
             if len(n) >= 3 and re.search(rf"\b{re.escape(n)}\b", folded):
                 return entry
-    return None
+    best, best_k, tie = None, 0, False
+    for entry in entries:
+        k = _prefix_match_len(inv.item_display(entry), folded)
+        if k > best_k:
+            best, best_k, tie = entry, k, False
+        elif k and k == best_k and entry is not best:
+            tie = True
+    return None if tie else best
 
 
 def _is_catalog_question(state: GameState, folded: str) -> bool:
