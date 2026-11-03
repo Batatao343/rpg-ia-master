@@ -20,3 +20,5 @@ tests/fixtures/spec361_pedidos.yaml
 tests/fixtures/spec374_pedidos_ajuste.yaml
 scripts/bestiario/eval_geracao.py
 tests/test_spec370_eval.py
+scripts/fauna/eval_tramas.py
+tests/test_spec372_eval.py
