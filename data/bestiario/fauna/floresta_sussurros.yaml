@@ -26,8 +26,8 @@ criaturas:
     contra_jogo: "Manter distância ou largar o escudo antes que vire pó; depois de alguns agarrões os tocos chegam aos punhos e ele não segura mais nada."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_abafador_de_candeias:
     fonte: ficha
@@ -47,8 +47,8 @@ criaturas:
     contra_jogo: "Lutar com a luz no chão, longe de quem combate, ou com duas luzes; reacender logo devolve a mira, e sem luz para seguir ele se guia pelo ouvido."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_fechado_de_escapulas:
     fonte: ficha
@@ -68,8 +68,8 @@ criaturas:
     contra_jogo: "Esperar que ele abra para bater e golpear o músculo entre as placas; ou ir primeiro, pelo lado, em quem ele protege, antes que ele chegue lá."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_virado_do_avesso:
     fonte: ficha
@@ -90,8 +90,8 @@ criaturas:
     contra_jogo: "Bater uma vez por rodada, forte, ou deixá-lo uma rodada sem golpe para que se acalme; fogo e frio nos nervos à flor o fazem encolher e perder a rodada."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_calado_das_guelras:
     fonte: ficha
@@ -111,8 +111,8 @@ criaturas:
     contra_jogo: "Não deixar ninguém chegar ao fim do Fôlego quando eles estão perto, ou pôr o mais cansado atrás de quem aguenta; as fendas do pescoço são moles, e um golpe ali os derruba."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   # ============================== BESTAS DA ENTROPIA ==============================
   enemy_aranha_lobo:
@@ -134,8 +134,8 @@ criaturas:
     contra_jogo: "Ficar de costas para um tronco ou para outro do grupo; um corte nas antenas e ele salta às cegas, para qualquer lado."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   enemy_urso_coruja_mutante:
     fonte: ficha
@@ -156,8 +156,8 @@ criaturas:
     contra_jogo: "Ficar parado quando ela está perto e deixar outro se mexer; ela não vê, e o elmo pesado a desequilibra quando erra o chute."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_ent_dormindo:
     fonte: ficha
@@ -177,8 +177,8 @@ criaturas:
     contra_jogo: "Rodear o caminho, em silêncio; ele é lento e não persegue. Quem foi puxado se solta cortando os tendões dos dedos, por baixo das garras."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_morcego_rasteiro:
     fonte: ficha
@@ -200,8 +200,8 @@ criaturas:
     contra_jogo: "Arrancar e matar o que está grudado antes que o resto chegue; ou lutar em silêncio, sem metal batendo, e ele não acha quem marcar."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_besouro_do_estalo:
     fonte: ficha
@@ -222,8 +222,8 @@ criaturas:
     contra_jogo: "Sair do chão marcado assim que ouvir o estalo; virá-lo de costas expõe o ventre mole, e as bolsas se esgotam depois de alguns disparos."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_onca_vazada:
     fonte: ficha
@@ -245,8 +245,8 @@ criaturas:
     contra_jogo: "Luz inteira, sem manchas, de fogo alto ou clareira; e o coração fica à vista num dos furos do flanco."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_lagarta_de_visgo:
     fonte: ficha
@@ -270,8 +270,8 @@ criaturas:
     contra_jogo: "Não andar ombro a ombro perto das folhas; fogo ou água quente amolecem a cola, e ela demora a refazer a reserva depois do primeiro leque."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_toldo_das_clareiras:
     fonte: ficha
@@ -292,8 +292,8 @@ criaturas:
     contra_jogo: "Não atravessar clareira pelo centro; a membrana é fina, quem cortar por dentro abre caminho para os outros, e as bordas presas aos galhos são o ponto fraco."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_vespa_coveira:
     fonte: ficha
@@ -317,8 +317,8 @@ criaturas:
     contra_jogo: "Proteger quem está sangrando e ir nela quando arrasta, que é quando voa baixo e devagar; as asas rasgam fácil."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_bugio_invertido:
     fonte: ficha
@@ -339,8 +339,8 @@ criaturas:
     contra_jogo: "Andar junto, sem ninguém sozinho no fim da fila; um golpe na cauda o faz largar o galho, e ele mesmo cai para cima, para longe da luta."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
   mon_dedos_de_colheita:
@@ -364,8 +364,8 @@ criaturas:
     contra_jogo: "Derrubá-lo antes que chegue perto; quem foi pego deve arrancar os talos logo, antes de jogar as Cartas caras."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_olho_de_petala:
     fonte: ficha
@@ -387,8 +387,8 @@ criaturas:
     contra_jogo: "Luz forte no rosto fecha as pétalas e o deixa só com o olho leitoso; e quem chega perto o pega sem besta, que de perto ele não sabe lutar."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_mapa_de_cicatrizes:
     fonte: ficha
@@ -410,8 +410,8 @@ criaturas:
     contra_jogo: "Derrubá-lo primeiro desfaz a manobra dos outros; ou cortar a cicatriz que ele está lendo, e ele perde a trilha por uma rodada."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_ressecado_da_travessia:
     fonte: ficha
@@ -434,8 +434,8 @@ criaturas:
     contra_jogo: "Fechar as feridas antes que ele chegue; seco, as placas racham e se partem fácil, e fogo o desmancha."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_mascador_de_raiz:
     fonte: ficha
@@ -455,8 +455,8 @@ criaturas:
     contra_jogo: "Cortar a raiz entre ele e o chão o cala por uma rodada; ou derrubá-lo de longe, que ele não sai do lugar, antes de tentar surpreender alguém."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
   enemy_sombra_espreitadora:
@@ -477,8 +477,8 @@ criaturas:
     contra_jogo: "Olhar o chão antes de pisar, porque sombra sem galho em cima é ela; e a cabeça em meia-lua é mole, cortá-la faz o resto soltar."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_ermitao_de_carcaca:
     fonte: ficha
@@ -500,8 +500,8 @@ criaturas:
     contra_jogo: "Acertá-la no instante da troca, quando está nua e mole entre uma carcaça e outra; depois disso, afastar os corpos caídos dela."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_desafiante_rubro:
     fonte: ficha
@@ -523,8 +523,8 @@ criaturas:
     contra_jogo: "Deixar o escolhido segurá-lo enquanto os outros acertam as frestas do vidro, onde o músculo está à vista; ou o escolhido recuar, e ele, que não recua, se expõe para seguir."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_enrolado_da_clareira:
     fonte: ficha
@@ -544,8 +544,8 @@ criaturas:
     contra_jogo: "Baixar a luz e atacar o ventre mole enquanto ele está aberto; quem precisa de luz deve mantê-la do lado do grupo, para que ele role para longe."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_picanco_de_espinheiro:
     fonte: ficha
@@ -559,7 +559,7 @@ criaturas:
     sinais:
       antecedencia: cedo
       rastro: null
-      resto: "Num galho afiado, um grilo branco enorme espetado ainda mexendo as pernas, e ao lado dele outro já comido pela metade."
+      resto: "Num galho afiado, um verme aveludado espetado pelo meio, ainda se contorcendo, e ao lado dele outro já comido pela metade."
       som: "Um chamado áspero de pássaro, repetido, e o farfalhar de algo pesado pousando num arbusto de pontas."
       cheiro: "Carne espetada ao vento e penas secas, um cheiro de despensa de caçador."
       marca: "Num arbusto de galhos pontudos da borda, restos de bichos espetados em fila, uns secos e outros frescos."
@@ -568,8 +568,8 @@ criaturas:
     contra_jogo: "Soltar logo o espetado, que é quando o pássaro desce; ele não larga a presa que escolheu, então fica previsível."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   # ============================== LEGADO (valoria) ==============================
   mon_cacador_casca:
@@ -591,8 +591,8 @@ criaturas:
     contra_jogo: "Ficar de costas para o grupo e não ser o alvo marcado: ele ataca da ocultação o desprevenido, devolve golpe, recua para se esconder quando descoberto e foge ferido."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_mariposa_sussurro:
     fonte: legado
@@ -613,8 +613,8 @@ criaturas:
     contra_jogo: "Não deixá-la marcar o alvo e não correr atrás: ela só ataca com vantagem ou pelas costas, dá sono e foge ao primeiro ferimento."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_serpente_raiz:
     fonte: legado
@@ -635,8 +635,8 @@ criaturas:
     contra_jogo: "Não persegui-la quando foge e soltar-se logo: ela só ataca com vantagem, prende a vítima no lugar com a teia e foge ferida."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
 
   mon_urso_de_espinha:
     fonte: legado
@@ -657,5 +657,5 @@ criaturas:
     contra_jogo: "Não ficar ferido nem isolado à vista: ele persegue o mais ferido e não para; acabar rápido, porque cada garra abre ferida que não fecha."
     tramas: []
     autor: opus-370-lote3
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote3
+    revisao: aprovada
