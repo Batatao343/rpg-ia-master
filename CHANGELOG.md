@@ -5,6 +5,14 @@
 
 ---
 
+## 2026-11-03 — notas de onda movidas do ESTADO (27/10–02/11)
+
+- 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
+- 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`.
+- 28/10–02/11 cartas: 342–357 e 362 pousadas (352 migration aplicada no staging); 358 `done` (protocolo `lote-v2` opt-in); smoke LLM real ao fim.
+
+---
+
 ## 2026-10-27 — A/B de latência 316–319 e hedge desligado
 
 - Dono desligou o hedge da SPEC-319 (D2): preset `RPG_LLM_HEDGE_MS=0`; 319 `done`.

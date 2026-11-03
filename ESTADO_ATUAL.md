@@ -1,4 +1,4 @@
-# ESTADO_ATUAL — 2026-11-02
+# ESTADO_ATUAL — 2026-11-03
 
 > **Regra deste arquivo: substituir, nunca anexar.** Teto de 8 KB
 > (`uv run python scripts/spec_index.py estado-size` falha acima disso).
@@ -8,20 +8,20 @@
 
 ## Estado em 10 linhas
 
-- staging = `fae9a4e` (cartas `off`; 3 smokes verdes 28/10). 296–326 `done` exceto épico de cartas.
-- Épico cartas 327–362 na `main` (`b186db3a`), flags `off`; combate sem LLM nas rodadas (346). 342–357/362 só esperam o smoke real §6 em staging com cartas `on`.
-- Balanço: Arcanista 49,7 % (362, vitalidade 8); Sangromante acima do teto aceito pelo dono; `bomba_estopim` dominante (follow-up).
-- **Latência** (316–319 `done`): 1ª narração p50 2,6 s; turno inteiro ~10 s.
-- Flags: `config/flags.yaml` (340); staging `scripts/staging/staging_flags.json`.
-- Máquina: e2e `--workers=1`; sem `uv run` em worktree.
-- 02/11 (main `5528fc69`, suíte completa verde por pouso): 349 bestiário 12 regiões (689 Cartas, arena 253/281), 350 tramas NA, 351 abertura, 360 fauna NA, 361 criatura runtime, 366 follow-ups. Flags novas off/legacy: `RPG_PLOT_THREADS`, `RPG_FAUNA`/`_SINAIS`, `RPG_CREATURE_GEN`; `RPG_OPENING_THREAD` on.
+- staging = `9e5f43d9` (cartas `on`, preset `staging_flags.json`; 3 smokes pós-deploy verdes 03/11). 296–326 `done`.
+- Épico cartas: 334/342/353/354/362/363/364 `done`; 367 (acabamento smoke 5) e 368 (fechamento: rollback, 24 baralhos de facção, Dor Surda, métricas, `seed_save`) na `main`, revisão Sol aprovada, `in-progress` até a 387.
+- Smoke 6 (03/11, LLM real; `docs/spec367/smoke-staging.md`, `docs/spec36{7,8}/smoke-local.md`): 0 LLM por rodada; débito 8 ≤ 15 milli; concorrência ok. Achados → **SPEC-387** (`draft`): Carta de Cena só no cache do processo (P1 serverless), oferta de retrato intermitente, chip "Gerando…" tardio, fallback Groq quebrado (2 de 3 tiers), seeds e 10 P3.
+- Métricas do épico não atingidas registradas (368 R9/R10) → SPEC-369 (balanço) a escrever.
+- Balanço: Arcanista 49,7 %; Sangromante acima do teto (aceito).
+- Latência: 1ª narração p50 2,6 s; abertura de combate ~13 s (staging). Flags: `config/flags.yaml`, preset `staging_flags.json`.
+- 02/11: 349/350/351/360/361/366 `done`; flags novas off/legacy (`RPG_PLOT_THREADS`, `RPG_FAUNA`, `RPG_CREATURE_GEN`).
+- Retrato `tipo:gen:criatura-hostil` retirado do staging (03/11).
 
 ## Próximos 3 passos
 
-1. Deploy staging com cartas `on` + smoke LLM real (fecha §6 de 342–357/362; 1–3 retratos pagos; `/game/history` do Livro).
-2. Follow-ups: `bomba_estopim` dominante; Corruptor sem carta anti-emboscada; recalibrar ref. v2 (358); turno ~10 s; 319 P2-1.
-3. Revisar 10 artes do staging (326 D2); `summary.lifecycle` (seeds 25/32); 57 oklch (322).
-4. Bestiário/tramas: smoke real §6 de 349/359/360/361; reindex de `faiss_rules_index` (Jina 429); ligar flags novas (dono); 361 D11 (lint_primeira ≥ 70 %, limiar de latência do job); filhas 360-B/C/D; 336 (teto de usos de família); 9 chefes `on` < 45 %.
+1. SPEC-387: aprovar → executar → Sol → pouso → deploy → smoke curto; depois fechar 367/368 e 327–333, 335, 336, 345–347, 352, 355, 357.
+2. SPEC-369 (balanço: Médico p95 19, bot que lê o Presságio, cartas/rodada ≥ 2, 14 Cartas > 60 %).
+3. Follow-ups: `bomba_estopim`; Corruptor anti-emboscada; turno ~10 s; artes do staging (326 D2); smoke §6 de 349/359/360/361; refatoração 375–385 (outra sessão).
 
 ## Bloqueios no dono
 
@@ -29,41 +29,51 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 
 | Item | Ação do dono | Quando ele disser… |
 |---|---|---|
-| Conta no staging (R-01) | criar/entrar em https://rpg-ia-master-staging.vercel.app e confirmar o e-mail | "confirmei e loguei" → fechar R-01 no risk register + checklist |
-| SPEC-222 compra de teste | criar conta Stripe (modo teste) e colar `STRIPE_SECRET_KEY=sk_test_…` + webhook secret no `.env.staging` | "colei a Stripe" → env no staging, compra de teste, `purchase_token IS NULL`, fechar 222 (exceto domínio) |
-| SPEC-222/197 domínio de produção | comprar domínio e apontar DNS para a Vercel | "comprei o domínio X" → URLs legais, CORS/cookies, checklist |
-| SPEC-197 | contas pagas (Vercel/Supabase Pro), Stripe live, go/no-go ([lista](docs/spec197/decision-request.md)) | "go do beta" → checklist `--env production` e release; Vercel paga → spec de cold start (19–59 s; bundle, Fluid, aquecimento) |
-| SPEC-198 | Play Console (taxa), package ID, service account | "criei o Play Console" → `applicationId`, upload interno, licença real |
-| Logs externos (Axiom) | criar conta Axiom e colar o token no `.env.staging` | "faz o Axiom" → envio direto do app, retenção ~30 d |
-| SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
-| Auth staging/prod (343) | confirmar `RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED=1` e captcha `gotrue` na Vercel | "confirmei" → fechar achado de enumeração; Stripe live → virar gate `livemode` |
+| Conta no staging (R-01) | entrar no staging e confirmar o e-mail | "confirmei" → fechar R-01 |
+| SPEC-222 compra de teste | Stripe teste: chave + webhook secret no `.env.staging` | "colei" → compra de teste, fechar 222 |
+| SPEC-222/197 domínio de produção | comprar domínio e apontar DNS para a Vercel | "comprei X" → URLs, CORS, checklist |
+| SPEC-197 | contas pagas, Stripe live, go/no-go ([lista](docs/spec197/decision-request.md)) | "go" → checklist production e release; spec de cold start |
+| SPEC-198 | Play Console (taxa), package ID, service account | "criei" → upload interno |
+| Logs externos (Axiom) | token Axiom no `.env.staging` | "faz" → envio do app |
+| SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera" → certificação |
+| Auth staging/prod (343) | confirmar e-mail obrigatório + captcha na Vercel | "confirmei" → fechar enumeração |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
-| Worktree `rpg-spec-350` contaminado (stash pop acidental; nada a perder, 350 pousou via `spec-350-fix`) | autorizar remoção forçada | "pode apagar" → `git worktree remove --force` + apagar branch `spec-350` |
+| Decisões abertas | D-363-1 (crítico em dupla abaixo da defesa), D-363-2 (teto diário R$ 5), D-364-2 ("até 0,015 Estilhas"), D-367-2 (8 frases do Presságio em "você") | dono responde → registrar na spec |
 | Flags novas (350/360/361) | decidir quando ligar `RPG_PLOT_THREADS` / `RPG_FAUNA` / `RPG_CREATURE_GEN` | "liga X" → staging_flags + smoke real |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
-| Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
+| Lore 312 D1 / 313 D8 | ler `data/world/rumor_seed_overrides.json`, `lore_quests.json` | ajustes → reindexar |
 
 ## Decisões recentes (≤ 1 dia)
 
 Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
-- 2026-11-02 · SPEC-368 `draft` — cartas-fechamento-epico
-- 2026-11-02 · SPEC-367 `draft` — cartas-smoke5-acabamento
-- 2026-11-02 · SPEC-366 `done` — abertura-followups
-- 2026-11-02 · SPEC-365 `done` — deps-eslint-minimatch
-- 2026-11-02 · SPEC-364 `in-progress` — Cartas: correções do 4º smoke real (trilha da fuga, consulta do mercado, débito do retrato, tempo do resumo, voz do registro e cenários não verificados)
-- 2026-11-02 · SPEC-363 `in-progress` — Cartas: correções do 3º smoke real (retrato pago coerente, texto de morte, autoria do resumo, mira, fuga, ids e cenários raros)
-- 2026-11-02 · SPEC-362 `in-progress` — Balanço do Arcanista Cinzento pós-SPEC-355 (piso de 45 % com folga; exceções do Sangromante definitivas)
-- 2026-11-02 · SPEC-361 `done` — Criatura gerada em jogo com ficha de Valoria: few-shot, trama, gate U1–U13, variante antes de nova e revisão Opus antes do pool
-- 2026-11-02 · SPEC-360 `done` — Criaturas vivas no mundo: sinal antes da luta, ecologia determinística, tramas e telegrafo visível (guarda-chuva; Fase 1 executável)
-- 2026-11-02 · SPEC-359 `approved` — Bestiário de Valoria, onda 2: Pântano da Melancolia
-- 2026-11-02 · SPEC-351 `done` — Abertura ligada às tramas do mundo (1º arco, 1 NPC pessoal + 1 NPC da trama)
-- 2026-11-02 · SPEC-350 `done` — Mundo povoado por tramas: NPCs nomeados com papel concreto, por região, em ondas
-- 2026-11-02 · SPEC-349 `done` — Bestiário de Valoria: esteira por região de ameaças físicas, com gate de unicidade (onda 1: Nova Arcádia)
-- 2026-11-01 · SPEC-358 `done` — Arena de Cartas por substituição (`lote-v2`) e uso do bot como aviso
-- 2026-11-01 · SPEC-357 `in-progress` — Cartas neutras na loja do mercador e como recompensa de missão
-- 2026-11-01 · SPEC-355 `in-progress` — Cartas: pendências abertas do épico (regras do motor, conteúdo e balanço final)
+- 2026-11-03 · SPEC-387 `draft` — cartas-smoke6-serverless
+- 2026-11-03 · SPEC-386 `approved` — Workspace: guardrails de qualidade e de tokens para os agentes
+- 2026-11-03 · SPEC-385 `draft` — Contrato front↔back: forma real das respostas × backend falso do e2e
+- 2026-11-03 · SPEC-384 `draft` — Poda que depende do dono: flags aposentáveis, reforços, combate sem tabuleiro, perfis portable/hosted, CLI, `set_deck`, aliases e métrica antiga
+- 2026-11-03 · SPEC-383 `draft` — Front: hooks do `App.tsx`, `GameActionsContext`, `Hud.tsx` por aba e poda de e2e de prints
+- 2026-11-03 · SPEC-382 `draft` — Refatoração pura dos nós grandes: `storyteller_node`, `_combat_node` e `_run_round` em fases nomeadas no mesmo módulo
+- 2026-11-03 · SPEC-381 `draft` — Fatiar `api.py` em routers por domínio, DTOs e montagem de resposta (refatoração pura)
+- 2026-11-03 · SPEC-380 `draft` — Evals vivos: baseline no CI, suíte `cards_combat` e playtest real semanal
+- 2026-11-03 · SPEC-379 `draft` — Testes: fábricas de estado, fake único de LLM, cobertura real e testes que leem código-fonte
+- 2026-11-03 · SPEC-378 `draft` — Refatoração: helpers comuns (fold, leitor de flag, structured output, telemetria do LLM, memória do RAG, perfil runtime)
+- 2026-11-03 · SPEC-377 `draft` — Divergências de regra: poda da lei, custo de Fôlego, "vivo" no combate e esconder facção
+- 2026-11-03 · SPEC-376 `draft` — Refatoração: fonte única de Cartas/classes (geradores-armadilha) e poda de scripts e código sem chamador
+- 2026-11-03 · SPEC-375 `draft` — Higiene do repositório: Project Index fora do git, CI sem passos repetidos, lixo local
+- 2026-11-03 · SPEC-374 `draft` — creature-gen-d11
+- 2026-11-03 · SPEC-373 `draft` — bestiario-chefes-familia
+- 2026-11-03 · SPEC-372 `draft` — fauna-tramas
+- 2026-11-03 · SPEC-371 `draft` — fauna-saber-telegrafo
+- 2026-11-03 · SPEC-370 `draft` — fauna-backfill-regioes
+- 2026-11-03 · SPEC-369 `draft` — cartas-balanco-metas-epico
+- 2026-11-03 · SPEC-368 `in-progress` — Cartas: fechamento do épico (bug do rollback, conteúdo faltante, métricas nunca medidas e smoke dos §6 não verificados)
+- 2026-11-03 · SPEC-367 `approved` — Cartas: acabamento do 5º smoke real (cotação por nome parcial, chip do retrato depois de confirmar, presságio na voz do jogador, retrato de inimigo de fallback, condição de inimigo que termina, ouro na narração da compra, timeout do pool dos scripts de operação)
+- 2026-11-03 · SPEC-355 `in-progress` — Cartas: pendências abertas do épico (regras do motor, conteúdo e balanço final)
+- 2026-11-03 · SPEC-331 `in-progress` — Cartas #04: A LLM monta a cena, a cena vira tabuleiro (Cartas de Cena, Objetivo e Relógio)
+- 2026-11-03 · SPEC-330 `in-progress` — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
+- 2026-11-03 · SPEC-329 `in-progress` — Cartas #02: Presságio (intenção do inimigo visível antes da jogada)
+- 2026-11-03 · SPEC-327 `approved` — Cartas #00: Visão — o conflito de Valoria como jogo de cartas estratégico
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
@@ -71,10 +81,8 @@ Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os
 Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover para `CHANGELOG.md`.
 
 <!-- onda:inserir-aqui -->
-- 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
-- 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`.
+- Notas 27/10–02/11 → `CHANGELOG.md`.
 - 03/11: SPEC-375–385 `draft` (refatoração; plano e regra W1 anti-conflito em `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §6).
-- 28/10–02/11 cartas: 342–357 e 362 pousadas (352 migration aplicada no staging); 358 `done` (protocolo `lote-v2` opt-in); smoke LLM real ao fim.
 
 
 ## Como rodar
@@ -84,10 +92,8 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 ## Limitações conhecidas
 
-- Perfil `legacy` serializa por processo e não tem login (por design; hosted é fail-closed).
+- `legacy` sem login, serializa por processo (por design).
 - Cloud de produção não certificada (SPEC-104 on hold); só staging.
-- `saves/` local mistura fixtures e campanhas reais (limpeza só com o dono).
-- Long-runs são opt-in (free tiers não sustentam).
 - Arquivista `inline` no Vercel (`post_response` não compensa, 213).
 - FAISS via `langchain-community` descontinuado (migração exige spec).
 - Flake conhecido: `WinError 5` no `os.replace` sob OneDrive (há retry).
