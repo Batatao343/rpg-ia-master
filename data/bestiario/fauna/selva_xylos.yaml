@@ -1,0 +1,686 @@
+# SPEC-370 R1 (lote 3) — bloco de fauna da Selva de Xylos: 22 fichas da SPEC-349 + legado `valoria`
+# da região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# Estação do calendário (R4): enemy_hospedeiro_fungico com primavera 1,3 (calendar.json).
+# E18: 2 `imediato` no hub (Serpente Cipó Constritora e Vipera-Flora).
+# Revisão de fauna: handoffs/SPEC-370-independent-review.md (lote 3; revisor ≠ autor).
+regiao: selva_xylos
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_lamelas_de_ferrugem:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [selva_xylos]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "pressao:praga", efeito: mais}
+        - {quando: "clima:chuva", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas lentas de alguém dobrado na cintura, e ao lado delas uma trilha de pó alaranjado assentado nas folhas."
+      resto: "Um viajante sentado contra um tronco, tossindo um catarro cor de tijolo, com as narinas sujas de pó laranja."
+      som: "Um sacudir seco de prateleiras de casca batendo umas nas outras, e uma tosse funda que vem atrás."
+      cheiro: "Pó de cogumelo de tronco e ferro úmido, um cheiro de porão de ferreiro molhado."
+      marca: "Na trilha da borda, folhas largas cobertas por uma camada fina de pó alaranjado, que sobe em nuvem quando alguém passa."
+      aproximacao: "Dobrado na cintura em ângulo reto, vem um homem de costas cobertas de degraus duros cor de tijolo, e cada respiração solta pó."
+      rumor: "um doente da Praga subiu atrás da cura na selva, e o irmão diz que ele achou outra coisa"
+    contra_jogo: "Bater de longe ou de uma vez só, com força; quem fica trocando golpes curtos com ele respira o pó a cada um."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ariete_de_medula:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [sx_profundezas, selva_xylos]
+      permanencia: [7, 10]
+      foge_de: [mon_predador_crescido]
+    sinais:
+      antecedencia: cedo
+      rastro: "Cascos fundos de bicho pesado que correm em linha reta até um tronco e param ali, e recomeçam em outra direção."
+      resto: "Um pilar de ponte de corda rachado de cima a baixo, com lascas brancas de chifre cravadas na madeira."
+      som: "Um baque surdo e repetido de cabeçada contra madeira dura, e um bufar de quem não consegue respirar direito."
+      cheiro: "Couro de porco do mato e tutano rachado, um cheiro de açougue de ossos."
+      marca: "Na borda do fundo, troncos grossos partidos na altura de um boi, todos com a casca esmagada no mesmo ponto."
+      aproximacao: "Uma queixada do tamanho de um boi baixa uma cunha branca e lisa maior que a cabeça, e investe contra o que está de pé."
+      rumor: "os caçadores da borda dizem que tem bicho no fundo que derruba árvore tentando quebrar a própria cara"
+    contra_jogo: "Sair da linha em vez de segurar a guarda; ela não vira, e depois de bater fica de lado, com as frestas do lombo à mostra."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lacado_de_hifas:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [selva_xylos]
+      permanencia: [6, 9]
+      foge_de: [mon_remendado_de_osso]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota de garimpeiro que farejam de um lado a outro da trilha, e entre elas gotas de luz escura no chão."
+      resto: "Um cordão branco e fino arrebentado no chão, como cadarço de bota partido, com carne viva presa nas pontas."
+      som: "Um fungar de boca aberta, alto, e o rangido de cordões esticando como couro molhado."
+      cheiro: "Ferida aberta e mofo branco, um cheiro de curativo esquecido no calor."
+      marca: "Num tronco da trilha, a casca arranhada na altura do ombro e respingada de um sangue que brilha fraco no escuro."
+      aproximacao: "Um garimpeiro de boca aberta, as feridas do ombro e das coxas costuradas por laços brancos, fareja você e vem."
+      rumor: "um garimpeiro diz que acertou um homem de raspão na selva e que o homem o seguiu três dias"
+    contra_jogo: "Bater com pancada, que não rompe os laços, ou matá-lo com o primeiro corte; quem só arranha fica marcado."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_recusado_do_ciclo:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [sx_profundezas]
+      permanencia: [9, 12]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas descalças que deixam o chão nu atrás de si, sem uma folha, uma raiz ou um broto, numa selva onde tudo cresce."
+      resto: "Uma fruta madura pendurada que não cai e não apodrece, num galho morto no meio da mata viva."
+      som: "Um silêncio redondo no meio do barulho da selva, como se ali os bichos tivessem parado de existir."
+      cheiro: "Cinza fria e terra lavada, sem cheiro de nada vivo, estranho no úmido da selva."
+      marca: "No fundo, um círculo de chão nu e seco do tamanho de uma casa, com as folhas em volta viradas para fora."
+      aproximacao: "Descalço, um homem cinzento de pele cheia de furinhos redondos e olhos como pedra opaca anda até você, e o chão fica nu sob os pés."
+      rumor: "os da borda dizem que no fundo há lugares onde a selva não cresce, e que quem chega lá não cresce mais"
+    contra_jogo: "Sair do círculo para se cuidar e voltar para bater; ele é lento e não persegue além do chão nu."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_remendado_de_osso:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [sx_profundezas, selva_xylos]
+      permanencia: [8, 11]
+      presas: [mon_lacado_de_hifas]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de pouso pesado de galho em galho, e embaixo de cada uma, lascas brancas e pele nova caídas."
+      resto: "Uma placa branca partida ao meio no chão, e na quebra uma película de pele recente começando a cobrir a borda."
+      som: "Um repuxar úmido de pele que se estica a cada salto, e nenhum grito quando algo bate."
+      cheiro: "Sangue fresco e mofo limpo de fungo jovem, um cheiro de ferida que cicatriza depressa demais."
+      marca: "Nos galhos baixos, sangue fresco lambido e camadas finas de pele seca presas na casca, como folhas de livro molhado."
+      aproximacao: "Do alto salta um homem de rosto calmo e olhos dourados, o peito em camadas de placas e pele remendada, atrás do que sangra."
+      rumor: "um curandeiro de margem diz que viu um Hospedeiro que não para de sarar, e que isso é pior que não sarar"
+    contra_jogo: "Bater duas vezes seguidas no mesmo ponto, antes de a camada fechar; golpes espalhados só alimentam as camadas."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  mon_tamandua_de_ponte:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [sx_cidades_hospedeiros]
+      permanencia: [8, 11]
+      presas: [mon_vespa_oleira]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um morador das copas caído no chão da selva, longe embaixo de uma plataforma, com uma mancha pegajosa e rosada no peito."
+      som: null
+      cheiro: "Saliva grossa de bicho e formiga esmagada, ácido, que sobe pelas frestas das tábuas."
+      marca: "Por baixo das plataformas, cupinzeiros e ninhos de barro abertos de baixo para cima, limpos até o fundo."
+      aproximacao: "Pela fresta da borda sobe um chicote rosado e pegajoso, cola em você e puxa, e lá embaixo garras curvas esperam."
+      rumor: "os moradores das copas não andam pela beira das plataformas, nem os que nasceram lá"
+    contra_jogo: "Ficar perto dos outros e longe da borda; cortar a língua quando ela cola, que ele leva uma rodada para enrolar outra vez."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lagarta_da_hora:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [selva_xylos]
+      permanencia: [6, 9]
+      reage:
+        - {quando: "clima:chuva", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma faixa de mata roída até o talo, larga como um barco, que começa do nada e termina de repente numa casca dura."
+      resto: "Um casulo rachado e vazio do tamanho de um barco, duro como couro fervido, e asas de dois metros mortas ao lado."
+      som: "Um mastigar enorme e apressado de galhos, como de tesouras de poda em coro."
+      cheiro: "Folha verde mastigada e pelo urticante, um cheiro que já coça a garganta."
+      marca: "Na mata, pelinhos finos e urticantes espalhados numa área grande, colados nas folhas, que fazem a pele arder ao passar."
+      aproximacao: "Um bicho de anéis do tamanho de um barco, verde e preto de pelo urticante, corta galho como tesoura e vem comendo na sua direção."
+      rumor: "um viajante jura que na selva viu um bicho nascer, crescer e morrer numa tarde só"
+    contra_jogo: "Matar enquanto ainda é lagarta ou esperar o fim da hora longe dela; atacar o casulo é perder golpes."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_preguica_de_pomar:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [sx_cidades_hospedeiros, selva_xylos]
+      permanencia: [10, 12]
+      foge_de: [mon_predador_crescido]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um galho grosso com a casca gasta numa só direção, e embaixo dele um rastro de frutas podres caídas ao longo do dia."
+      resto: "Uma ponte de corda arrebentada por um golpe largo, as tábuas caídas e uma garra do tamanho de uma foice cravada na madeira."
+      som: "Um ranger de galho muito lento sob peso enorme, e frutas caindo de uma árvore que não está no chão."
+      cheiro: "Fruta passada e terra de vaso, adocicado e úmido, como de quintal depois da chuva."
+      marca: "Num galho de travessia, raízes finas penduradas e terra caída, como se um vaso enorme tivesse passado por ali."
+      aproximacao: "No galho, o que parecia um canteiro de árvores frutíferas se mexe devagar: por baixo das árvores pequenas um rosto cansado aparece, e um braço de garras sobe."
+      rumor: "as crianças das copas brincam escondidas num bicho que dorme no galho, e os pais deixam"
+    contra_jogo: "Queimar ou cortar o pomar das costas primeiro, que é o que amortece; e sair de baixo quando a garra sobe."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_coandu_de_rebrota:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [selva_xylos, sx_cidades_hospedeiros]
+      permanencia: [6, 9]
+      foge_de: [enemy_vinha_estranguladora]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas miúdas de bicho noturno entre as raízes, e um rabo enrolado deixado marcado nos galhos baixos."
+      resto: "Um escudo de madeira tratada cravejado de agulhas escuras de quitina, dezenas, todas na mesma direção."
+      som: "Um estalar de músculo como de arco solto, um leque de zunidos finos, e um corre-corre para trás de uma raiz."
+      cheiro: "Quitina fresca e urina de bicho assustado, um cheiro de toca de roedor."
+      marca: "Nas árvores baixas da borda, troncos espetados de agulhas escuras em leque, e agulhas novas caídas por baixo."
+      aproximacao: "Atrás de uma raiz, um porco-espinho do tamanho de um cão vira as costas para você, e as agulhas já estão crescendo de novo."
+      rumor: "os garimpeiros andam calados nas árvores baixas: dizem que o barulho volta em forma de agulha"
+    contra_jogo: "Chegar perto antes de os espinhos rebrotarem; de perto ele só sabe fugir."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vespa_oleira:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      estacoes: {primavera: 1.2, inverno: 0.6}
+      territorio: [sx_cidades_hospedeiros]
+      permanencia: [6, 9]
+      foge_de: [mon_tamandua_de_ponte]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um forasteiro de braço dobrado e preso por potinhos de barro duro na junta do cotovelo, um ovo dentro de cada."
+      som: "Um zumbido fino e paciente, que pousa, molda e voa, pousa, molda e voa."
+      cheiro: "Barro molhado e seiva ácida, um cheiro de olaria no meio das árvores."
+      marca: "Sob os beirais das plataformas, fileiras de potinhos redondos de barro duro como telha, alguns quebrados de dentro."
+      aproximacao: "Um bicho preto de cintura fina, com faixas cor de barro, pousa na junta do seu joelho com uma bolota de lama na boca."
+      rumor: "os moradores das copas quebram com um dedo o que os forasteiros não conseguem quebrar com o martelo"
+    contra_jogo: "Não ficar parado e gastar um movimento para quebrar o pote na batida certa, como os Hospedeiros fazem."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_escavador_das_camaras:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [sx_profundezas, selva_xylos]
+      permanencia: [3, 4]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um rasgo enorme no chão da trilha, de raízes e pedra arrancadas de baixo para cima, como se a terra tivesse vomitado."
+      resto: "Árvores caídas com as raízes para o alto, e embaixo delas escamas brancas do tamanho de escudos."
+      som: "Um ronco de terra rasgando debaixo dos pés, e um tremor que vem do fundo e sobe."
+      cheiro: "Terra de fundo nunca tocada, fria, e um cheiro de fungo morto, branco e seco."
+      marca: "Na selva, uma fileira de buracos fundos e largos como casas, abertos de baixo, que sobem do fundo para a borda."
+      aproximacao: "O chão se abre e sobe um bicho do tamanho de uma casa, coberto de escamas brancas de fungo morto, sem olhos, de garras em pá."
+      rumor: "os da borda dizem que o que mora debaixo da selva está subindo, e que está fugindo de alguma coisa"
+    contra_jogo: "Levar luz forte ou fogo à cara dele para que desenrole, e então bater na barriga; contra a bola, o golpe se perde."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_vinha_estranguladora:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [selva_xylos, sx_cidades_hospedeiros]
+      permanencia: [8, 11]
+      presas: [mon_macaco_esporo, mon_coandu_de_rebrota]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Uma muda de pele parda e fibrosa enrolada nas trepadeiras, comprida como vinte homens deitados, larga como um tronco jovem."
+      som: "Macacos gritando juntos no alto, todos virados para o mesmo ponto, e depois nada."
+      cheiro: null
+      marca: "Num galho de travessia, a casca esmagada em espiral, como se uma corda molhada muito grossa tivesse secado em volta."
+      aproximacao: "Uma das trepadeiras penduradas cai sobre você, grossa como um tronco jovem, e aperta como corda molhada secando."
+      rumor: "os moradores das copas dizem que onde os macacos gritam há uma trepadeira que não é planta"
+    contra_jogo: "Ouvir os macacos e olhar para cima; quem não é pego primeiro pode cortar a cabeça fina dela, que é o único lugar sem músculo grosso."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_viuvo_do_esporo:
+    fonte: ficha
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [sx_cidades_hospedeiros]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de um homem só em que o pé esquerdo pisa sempre um instante antes, deixando a marca mais funda."
+      resto: "Uma flor de casamento seca guardada num nicho da plataforma, ao lado de uma tigela com dois lugares postos."
+      som: "Uma voz baixa conversando de um lado só, e uma resposta que ninguém ouve, do outro."
+      cheiro: "Coral seco e perfume de flor de ritual, como de enxoval guardado no úmido."
+      marca: "Na borda de uma cidade das copas, um tablado separado das casas, com dois desenhos de mão na madeira, um de gente e um de galho."
+      aproximacao: "Um forasteiro de meio rosto coberto de galhos cor de coral, com um olho dourado e outro dele, ergue os dois braços em tempos diferentes."
+      rumor: "uma Hospedeira das copas diz que a cunhada morreu, e que o marido dela ainda fala com ela pela metade"
+    contra_jogo: "Guardar a defesa para o segundo golpe, o dele, que é o mais lento; ou atacar pela direita, onde ela não vê."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_surdo_da_colmeia:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [sx_cidades_hospedeiros, selva_xylos]
+      permanencia: [7, 10]
+      suprime: [enemy_hospedeiro_fungico]
+      foge_de: [mon_sentinela_hospedeiro]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de dedos chatos e calejados subindo e descendo os troncos da cidade, e manchas de orelha encostada na casca."
+      resto: "Crescimentos de fungo arrancados com a mão e jogados no chão de tábua, ainda presos a tiras de pele."
+      som: "Um raspar de unha em carne viva, e um gemido de frustração de quem tenta ouvir e não consegue."
+      cheiro: "Carne viva úmida e casca de árvore, um cheiro de ferida coçada demais."
+      marca: "Nos troncos das plataformas, a casca molhada em forma de orelha e de mãos abertas, várias, na altura de um homem."
+      aproximacao: "Pelo tronco desce um homem de nuca e costas em carne viva, de orelha colada na casca, e vira para quem anda junto com os outros."
+      rumor: "um Hospedeiro das copas diz que um primo voltou de longe tarde demais, e que agora arranca o que nunca mais cresce"
+    contra_jogo: "Lutar longe dos troncos e do tablado, onde ele não sente nada; no chão de terra ele luta às cegas."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mascador_de_nectar:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [selva_xylos, sx_profundezas]
+      permanencia: [8, 11]
+      suprime: [mon_pressa_da_seiva]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota de guerreiro do norte em volta de um tronco oco, pisadas como de sentinela que nunca sai."
+      resto: "Carapaças de besouro abertas e chupadas, jogadas ao pé de um tronco, e dentes soltos no meio delas."
+      som: "Um mastigar grudento e um bufo de fúria, e o raspar de lâminas de quitina amarradas a cotos."
+      cheiro: "Mel de besouro fermentado e sangue velho, doce e azedo, como de taverna depois de briga."
+      marca: "Num tronco onde vivem besouros, cortes de lâmina dupla na casca, fundos, e cuspe preto e grudento pelo chão."
+      aproximacao: "Um guerreiro do norte de dentes soltos em tutano preto ergue dois cotos com lâminas de quitina amarradas, e não pisca."
+      rumor: "os garimpeiros da borda contam de um nortenho que leva golpe de morte e continua de pé mais um pouco"
+    contra_jogo: "Ferir pouco e acabar de uma vez, ou recuar na rodada em que ele devia ter caído."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_enxertadora_da_uniao:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [selva_xylos]
+      permanencia: [7, 10]
+      foge_de: [mon_sentinela_hospedeiro]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de um corpo arrastado da borda para dentro, e ao lado pegadas calmas de quem não tem pressa."
+      resto: "Um viajante com um retalho de pele estranha costurado no braço com fio vegetal, a pele dele inchada em volta de cada ponto."
+      som: "Uma voz de mulher falando baixo, sem parar, sobre a solidão de estar sozinho dentro da própria cabeça."
+      cheiro: "Pele infeccionada e fio vegetal novo, com um fundo de remédio de fungo."
+      marca: "Na beira da trilha, uma agulha de osso quebrada e um retalho de pele de outro jogado fora, como costura que não pegou."
+      aproximacao: "Uma mulher de peito e braços cobertos de placas e retalhos costurados abre um estojo de agulhas e sorri como quem vai fazer um favor."
+      rumor: "um viajante resgatado na borda diz que uma mulher queria libertá-lo da própria cabeça, e que ela tinha agulha"
+    contra_jogo: "Pagar o Ferimento cedo e arrancar o retalho antes de ele crescer, ou acabar com ela antes do segundo ponto."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_pressa_da_seiva:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde]
+      territorio: [selva_xylos]
+      permanencia: [6, 9]
+      foge_de: [mon_mascador_de_nectar, enemy_hospedeiro_fungico]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas que mudam de tamanho no caminho, firmes e leves, depois pesadas e arrastadas, e de novo leves."
+      resto: "Tufos de cabelo de duas cores, preto e branco, caídos no mesmo lugar, e unhas curvas partidas ao lado."
+      som: "Um pular nervoso de galho em galho, e uma risada de rapaz que vira tosse de velho no meio."
+      cheiro: "Resina doce e cabelo cortado, um cheiro de barbearia no meio do mato."
+      marca: "Num tronco de resina, os potes de coleta dos garimpeiros esvaziados e virados, e marcas de garras pequenas na casca."
+      aproximacao: "Um garimpeiro de pele manchada de moço e de velho pula de um lado a outro sem pousar, e o cabelo cai em tufos enquanto ele vem."
+      rumor: "um garimpeiro bebeu o que não devia para fechar um corte, e o filho diz que agora ele envelhece por manhã"
+    contra_jogo: "Guardar os golpes para a rodada em que ele está moço e frágil, e a defesa para a rodada em que está velho."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_provador_de_cores:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [sx_cidades_hospedeiros, selva_xylos]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Uma gaiolinha de trepadeira trançada aberta no chão, vazia, e uma rã pequena e vermelha morta ao lado."
+      som: "Um coaxar miúdo vindo de dentro de um casaco, de várias rãs ao mesmo tempo, e um cuspe que chia."
+      cheiro: "Veneno de pele de rã, amargo e úmido, que adormece a ponta da língua só de cheirar."
+      marca: "No mercado da borda, uma banca de remédios com potes de rã seca etiquetados por tom, e o dono ausente."
+      aproximacao: "Um boticário de pele em manchas fortes de azul, amarelo e vermelho incha as bochechas, e uma das manchas acende antes do cuspe."
+      rumor: "os mercadores da borda dizem que o boticário de pele pintada sabe o que cada rã faz, e que esqueceu algumas"
+    contra_jogo: "Ler a cor que acende antes do cuspe e responder com a defesa certa; errar a leitura sai caro."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_monte_de_alheios:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [sx_cidades_hospedeiros]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto de muitas mãos pequenas e de cordões soltos pelas tábuas, que vai de uma luz apagada à outra."
+      resto: "Uma lanterna das copas quebrada e coberta de lama de propósito, e a chama abafada com terra."
+      som: "Um tilintar de contas e amuletos arrastados, e o chocalhar de crescimentos secos batendo uns nos outros."
+      cheiro: "Couro de colar velho e fungo arrancado, um cheiro de feira de mercado de quinquilharia."
+      marca: "Nas plataformas da borda, lanternas e fungos acesos apagados em fila, e lama esfregada por cima de cada um."
+      aproximacao: "Um bolo de colares emaranhados, cheio de crescimentos coloridos, se arrasta sobre braços de mãos alheias e se inclina para o que brilha em você."
+      rumor: "os mercadores da borda dizem que colar comprado de morto não fica no pescoço de quem compra"
+    contra_jogo: "Lutar com pouco aceso perto dele e acender o reforço maior só depois de derrubá-lo."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_isca_amarrada:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [selva_xylos]
+      permanencia: [9, 12]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de muitos bichos da selva convergindo para baixo de um mesmo galho, e terra encharcada de sangue embaixo."
+      resto: "Uma corda de trepadeira cortada pendurada de um galho alto, com dois laços na ponta do tamanho de tornozelos."
+      som: "Um gemido alto e chamador, de quem está pendurado de cabeça para baixo, e logo os bichos da selva respondendo."
+      cheiro: "Sangue fresco pingando sem parar, um cheiro de matadouro ao ar livre."
+      marca: "Sobre uma trilha de garimpo, um galho com a casca gasta em anéis de corda, e no chão uma poça que nunca seca."
+      aproximacao: "Pendurada pelos tornozelos sobre a trilha, uma trouxa de corda apertada sobre carne viva geme alto, e quatro braços saem das frestas."
+      rumor: "os garimpeiros juram que nunca amarraram ninguém, e mesmo assim não passam embaixo de galho que pinga"
+    contra_jogo: "Cortar a corda do galho de uma vez, sem bater no corpo; no chão ela para de pingar e de chamar."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_oco_da_fronteira:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [selva_xylos]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de raízes grossas arrastadas pela terra, sempre na mesma linha onde a mata seca encontra a úmida."
+      resto: "Lascas compridas de casca morta e escura, curvas como dedos, caídas no meio do verde da selva."
+      som: "Uma voz abafada que fala de dentro da madeira, e diz uma coisa que você não tinha dito a ninguém."
+      cheiro: "Madeira morta de floresta seca, poeirenta, estranha no cheiro molhado da selva."
+      marca: "Na linha onde as duas matas se encontram, folhas secas e folhas molhadas pisadas no mesmo rastro, sem cruzar para nenhum lado."
+      aproximacao: "Um tronco oco mais alto que dois homens anda sobre raízes, e pela racha do peito um olho pisca lá dentro."
+      rumor: "os batedores dizem que há uma árvore morta que anda na divisa e que fala com a voz de quem ela guarda"
+    contra_jogo: "Derrubar o Oco antes, ou abrir a racha com machado; quem estava dentro cai fora, ainda ferido."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_tropel_sem_saida:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [selva_xylos, sx_profundezas]
+      permanencia: [7, 10]
+      foge_de: [mon_escavador_das_camaras]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de anta, de veado, de queixada e de onça misturadas no mesmo rastro, cada uma virada para um lado."
+      resto: "Bichos pequenos pisoteados no chão da trilha que sobe do fundo, achatados por cascos de tamanhos diferentes."
+      som: "Um galopar desencontrado de muitas patas que não combinam, e dois bufos, um em cada ponta."
+      cheiro: "Couro rasgado e suor de bicho em pânico, um cheiro de manada em fuga."
+      marca: "Na trilha que sai do fundo, a mata arrombada para todos os lados ao mesmo tempo, como explosão de passagem."
+      aproximacao: "Um corpo comprido do tamanho de uma carroça, com pernas de bichos diferentes correndo para todo lado e uma cabeça em cada ponta, vem em linha torta."
+      rumor: "os caçadores dizem que os bichos estão fugindo do fundo, e que quem vê a debandada tem vontade de correr junto"
+    contra_jogo: "Ficar firme em vez de correr: quem não se move na rodada do tropel não é arrastado, só pisoteado de raspão."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  enemy_hospedeiro_fungico:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      estacoes: {primavera: 1.3}
+      territorio: [sx_cidades_hospedeiros, selva_xylos]
+      permanencia: [7, 10]
+      suprime: [mon_pressa_da_seiva]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pés descalços cobertos de pó claro, de muitos, que viram e param todos no mesmo instante, como se alguém tivesse dado uma ordem."
+      resto: "Um garimpeiro esmagado contra o tronco por uma pancada só, e uma nuvem fina de pó claro ainda caindo em volta."
+      som: "Muitos passos ao mesmo tempo, sem uma palavra, e um estalo de bolsa que estoura soltando pó."
+      cheiro: "Mofo doce de cogumelo e terra quente, como de despensa fechada no verão."
+      marca: "Nas raízes da borda, montinhos de pó claro em leque, deixados onde alguém soltou uma nuvem de pó contra intrusos."
+      aproximacao: "Um homem de pele tomada por micélio, de olhos parados, vem em silêncio com o grupo dele, e não sente o primeiro golpe."
+      rumor: "os garimpeiros dizem que na primavera a selva tem mais gente do que tinha no inverno, e toda ela calada"
+    contra_jogo: "Não esperar que recue: ele avança no mais próximo e só recua à beira da morte; acabar com ele de pancada, e fugir da nuvem que prende os pés."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_larva_hospedeira:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [selva_xylos, sx_profundezas]
+      permanencia: [6, 9]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco mole e úmido no chão de folhas, que vai de um bicho dormindo a outro, sem parar em nenhum."
+      resto: "Um bicho de caça morto com um corte fino e limpo no pescoço, por onde entrou algo, e o corpo quente demais."
+      som: "Um chiar molhado no chão, como de lesma grande se arrastando depressa, e um coro baixo que responde de longe."
+      cheiro: "Esporo verde e carne quente, um cheiro de pão crescendo dentro de algo vivo."
+      marca: "Num ninho de bicho da selva, a cama de folhas revirada e um casulo mole e branco rasgado no meio."
+      aproximacao: "Do chão se ergue um verme branco e mole do comprimento de um braço, e a ponta dele se abre num corte fino que procura carne."
+      rumor: "os caçadores dizem que bicho que eles matam na selva às vezes chega sozinho às cidades das copas"
+    contra_jogo: "Não ficar isolado nem ferido: ela persegue o mais fraco, prende os pés com a nuvem e chama a colmeia; ferida de morte, foge."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_macaco_esporo:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [sx_cidades_hospedeiros, selva_xylos]
+      permanencia: [6, 9]
+      foge_de: [enemy_vinha_estranguladora, mon_vipera_flora]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de mãos de bicho nos galhos, em bando, que imitam o caminho dos moradores das copas passo por passo."
+      resto: "Uma pedra coberta de musgo branco atirada com força e cravada numa tábua, ao lado de onde alguém estava sentado."
+      som: "Gestos de mão que estalam no alto, como os dos moradores das copas, e um guincho curto de deboche."
+      cheiro: "Pelo úmido e mofo branco, um cheiro de forro de toca de bicho."
+      marca: "Nas plataformas altas, os sinais de mão pintados pelos moradores refeitos por mãos menores e tortas, do jeito errado."
+      aproximacao: "Nas copas, bichos peludos fazem com as mãos os sinais dos moradores, e então atiram pedras mofadas na sua cabeça."
+      rumor: "um forasteiro seguiu sinais de mão nas copas achando que eram de gente, e caiu numa armadilha de bicho"
+    contra_jogo: "Derrubar primeiro o que marca o alvo e não seguir os sinais: o bando concentra no mais ferido, se reposiciona nas copas e, cercado, recua."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mae_micelio:
+    fonte: legado
+    ecologia:
+      horario: [Noite, Amanhecer]
+      territorio: [sx_profundezas]
+      permanencia: [2, 3]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Filamentos brancos grossos como dedos correndo pelo chão do fundo, todos convergindo para um mesmo lugar escuro."
+      resto: "Os calçados de um grupo de moradores enfileirados na entrada do escuro, vazios e amarrados, como se os pés tivessem saído sozinhos."
+      som: "Um pulsar grave debaixo da terra, como de coração enorme, e muitos passos que andam no ritmo dele."
+      cheiro: "Fungo maduro e leite azedo, um cheiro forte de parto em lugar fechado."
+      marca: "No fundo, as marcas da colmeia nos troncos arranhadas e cobertas por outras, desconhecidas, que brilham fraco."
+      aproximacao: "No escuro do fundo, uma massa enorme de filamentos brancos se abre, e de dentro dela saem corpos novos, ainda moles."
+      rumor: "os moradores das copas dizem que a memória deles expulsou uma mãe, e que ela está fazendo filhos por conta própria"
+    contra_jogo: "Colar nela: ela recua para atacar de longe, prende os pés com a nuvem e devolve golpe; cortar os que ela fez antes, e então ela fica exposta."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_predador_crescido:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [selva_xylos, sx_profundezas]
+      permanencia: [6, 9]
+      presas: [mon_ariete_de_medula, mon_preguica_de_pomar]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de felino maiores que um escudo, fundas, com quatro dedos e garras que não recolhem."
+      resto: "Uma queixada enorme aberta pela barriga e comida em uma noite, os ossos quebrados por mandíbula."
+      som: "Um rugido grave que faz os macacos calarem, e o estalar de ossos grandes sendo mastigados."
+      cheiro: "Carne crua em quantidade e almíscar forte de bicho grande, que pesa no ar úmido."
+      marca: "Num tronco grosso, arranhões duplos fundos na altura de dois homens, e restos de pelo de queixada presos nas lascas."
+      aproximacao: "Da mata sai um bicho de caça do tamanho de um cavalo, de dentes que não cabem na boca, e vem direto no mais ferido."
+      rumor: "os caçadores dizem que na selva os bichos crescem tão rápido que a fome não acompanha, e sobra para quem passa"
+    contra_jogo: "Não ficar ferido nem isolado à vista: ele persegue o mais fraco com fúria; acabar rápido, e ele recua quando a caçada vira risco."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_rainha_cipo:
+    fonte: legado
+    ecologia:
+      horario: [Manhã, Tarde]
+      territorio: [selva_xylos]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:limpo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Raízes aéreas recém-crescidas descendo até o chão num círculo largo, todas viradas para uma única clareira de sol."
+      resto: "Um corpo de forasteiro enrolado em trepadeiras, posto de pé num lugar de sol como oferenda, ainda respirando."
+      som: "Um farfalhar que parece conversa, de folhas se mexendo em ritmo de fala, sem vento."
+      cheiro: "Seiva doce e flor aberta ao sol, perfumado demais, como de jardim de casa rica."
+      marca: "Numa clareira de sol, uma trilha de corpos de bicho arrumados em fila, levados até a borda das cidades."
+      aproximacao: "No meio da luz, uma planta enorme de flor aberta ergue um chicote de seiva, e as trepadeiras em volta se mexem como dedos."
+      rumor: "os moradores das copas dizem que há uma planta que conversa e que troca corpos por sol"
+    contra_jogo: "Colar nela: ela recua para lutar de longe, se esconde entre os corpos com o mimetismo e prende os pés com a nuvem; fogo e machado de perto."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_sentinela_hospedeiro:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [sx_cidades_hospedeiros]
+      permanencia: [10, 12]
+      suprime: [mon_enxertadora_da_uniao, mon_surdo_da_colmeia]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas descalças em posto, viradas para fora das cidades, e uma lança de madeira tratada encostada sempre no mesmo lugar."
+      resto: "Um intruso caído no início de uma ponte das copas, atravessado por uma lança de madeira e coberto de pó claro."
+      som: "Um assobio curto que é respondido por outros, iguais, em pontos diferentes da cidade, todos ao mesmo tempo."
+      cheiro: "Madeira tratada com óleo de semente e fungo maduro, um cheiro de posto de guarda nas copas."
+      marca: "Na entrada das cidades das copas, uma tábua riscada com o sinal de parada da colmeia e marcas de lança na borda."
+      aproximacao: "Na entrada da ponte, um guarda de olhos dourados e pele tomada de fungo firma a lança, e outros como ele erguem a cabeça juntos."
+      rumor: "os forasteiros dizem que nas copas um guarda vale por muitos, porque todos pensam junto"
+    contra_jogo: "Não brigar na entrada que ele guarda: ele se fecha em defesa e não persegue além do posto; contornar a ponte, e o grupo dele recua se o custo crescer."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vipera_flora:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [selva_xylos]
+      permanencia: [7, 10]
+      presas: [mon_macaco_esporo]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um bicho de copa pendurado no alto, seco como fruta passada, preso pelo pescoço por um laço verde e grosso."
+      som: null
+      cheiro: "Seiva verde e fluido corporal, um cheiro adocicado e úmido de coisa sendo bebida."
+      marca: "No alto dos galhos, corpos murchos de bichos pendurados pelo pescoço em laços verdes, alguns de dias, outros de semanas."
+      aproximacao: "Um laço verde e musculoso desce do alto, se fecha no seu pescoço e puxa para cima, para as copas."
+      rumor: "os moradores das copas dizem que na selva se olha para cima antes de dormir, para ver o que está pendurado"
+    contra_jogo: "Não esperar que solte: ela avança, esmaga e prende no lugar; cortar o laço de uma vez e acabar com ela de pancada, porque não foge."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
