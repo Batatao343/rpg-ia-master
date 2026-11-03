@@ -12,6 +12,7 @@ import pytest
 
 from services import context_builder as cb
 from services import graph_resolver as gr
+from tests.factories import make_state
 
 
 @pytest.fixture(autouse=True)
@@ -31,7 +32,7 @@ def _state(**over) -> dict:
         "npcs": {},
     }
     base.update(over)
-    return base
+    return make_state(**base)
 
 
 # --------------------------------------------------------------------------- #
