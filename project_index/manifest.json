@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "c9e3efd0d9bcc49214e81b12e11883b51062e11a",
+  "commit_sha": "36356f60d52eefbb7b89182f9d0b13a6516c0d63",
   "edge_counts": {
-    "calls": 37915,
-    "contains": 1247,
-    "defines": 18443,
-    "imports": 3013,
-    "likely_test_for": 2175,
+    "calls": 38011,
+    "contains": 1253,
+    "defines": 18502,
+    "imports": 3037,
+    "likely_test_for": 2199,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,10 +35,11 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:dda69c9772d638fe6bb5f513bc15807f03c0aaf8b820fbff5512c986169008bf",
+  "graph_hash": "sha256:f7ba8aa617afc41da7525371d3f60b33b24c7c677e444a284a3155848538ed63",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
+    ".github/workflows/coverage.yml",
     ".github/workflows/eval-gates.yml",
     ".github/workflows/eval-protected.yml",
     ".github/workflows/post-deploy-smoke.yml",
@@ -253,6 +254,7 @@
     "scripts/cloud_doctor.py",
     "scripts/content_report.py",
     "scripts/dev/agent_stats.py",
+    "scripts/dev/coverage_summary.py",
     "scripts/dev/dup_helpers.py",
     "scripts/dev/eval_publish.py",
     "scripts/dev/ruff_baseline.py",
@@ -536,6 +538,7 @@
     "services/world_validators.py",
     "state.py",
     "tests/conftest.py",
+    "tests/factories.py",
     "tests/fakes/__init__.py",
     "tests/fakes/api_fuzz.py",
     "tests/fakes/fake_image_generator.py",
@@ -543,6 +546,7 @@
     "tests/fakes/local_image_finance.py",
     "tests/fakes/local_portrait.py",
     "tests/fakes/local_pricing.py",
+    "tests/fakes/scripted_llm.py",
     "tests/fakes/two_principals.py",
     "tests/fixtures/spec346_smoke.py",
     "tests/fixtures/spec353_smoke.py",
@@ -701,6 +705,7 @@
     "tests/test_context_prefetch.py",
     "tests/test_context_sources_concurrency.py",
     "tests/test_contracts_llm.py",
+    "tests/test_coverage_summary.py",
     "tests/test_cron_logging.py",
     "tests/test_cutover_audit.py",
     "tests/test_daily_quota_postgres.py",
@@ -742,6 +747,7 @@
     "tests/test_eval_routing.py",
     "tests/test_eval_state_rules.py",
     "tests/test_explorador_loop.py",
+    "tests/test_factories.py",
     "tests/test_fallback_logging.py",
     "tests/test_fase0.py",
     "tests/test_fase10.py",
@@ -925,6 +931,7 @@
     "tests/test_scene_cards_extra.py",
     "tests/test_scene_cards_node.py",
     "tests/test_schema_order.py",
+    "tests/test_scripted_llm.py",
     "tests/test_session_boundary_authfail.py",
     "tests/test_session_hardening.py",
     "tests/test_session_hardening_local.py",
@@ -1518,15 +1525,15 @@
     "typescript_javascript": "file_only"
   },
   "node_counts": {
-    "artifact": 9,
-    "class": 1087,
+    "artifact": 10,
+    "class": 1089,
     "endpoint": 69,
-    "file": 1465,
-    "function": 5798,
+    "file": 1471,
+    "function": 5803,
     "method": 869,
-    "module": 1247,
-    "test": 10688
+    "module": 1253,
+    "test": 10740
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:3035cdcb0574e2c2c56803f11e6e051d656dd214d564ad560274da352b25b421"
+  "source_tree_hash": "sha256:84dc5ab26766ca15d7ad8dd8ef4ffb9a3c6814a16b5bf1fabb93e2119674b498"
 }
