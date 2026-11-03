@@ -1306,7 +1306,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os exilados do Ermo dizem que as patrulhas do clã cortam a cabeça antes de perguntar o nome"
     },
     "rumor_avist_enemy_lobo_invernal": {
       "family": "avistamento",
@@ -1323,7 +1324,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "as crianças das bordas aprendem cedo a não brincar no pó azul perto das saídas de vapor"
     },
     "rumor_avist_enemy_sentinela_ferro": {
       "family": "avistamento",
@@ -1660,7 +1662,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um caçador diz que passou a noite na tundra encostado num bicho quente, e acordou com a pele queimada"
     },
     "rumor_avist_enemy_wyvern_jovem": {
       "family": "avistamento",
@@ -1748,7 +1751,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um coveiro dos Corvos conta que a turfa devolveu um corpo que eles já tinham enterrado duas vezes"
     },
     "rumor_avist_enemy_polvo_esgoto": {
       "family": "avistamento",
@@ -1852,7 +1856,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caçadores dizem que no branco de tempestade não se conta a matilha: espera-se que ela desista"
     },
     "rumor_avist_mon_verme_do_gelo": {
       "family": "avistamento",
@@ -1869,7 +1874,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um pastor perdeu uma rena inteira para um buraco que se abriu e fechou num instante"
     },
     "rumor_avist_enemy_renegado_ermo": {
       "family": "avistamento",
@@ -1886,7 +1892,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma expedição achou o próprio acampamento remexido, e as marcas de quem fez eram da cidade"
     },
     "rumor_avist_mon_sanguessuga_braco": {
       "family": "avistamento",
@@ -1903,7 +1910,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um pescador da borda só entra na água de botas de couro grosso, e mesmo assim volta com elas furadas"
     },
     "rumor_avist_mon_sapo_boi_acido": {
       "family": "avistamento",
@@ -1920,7 +1928,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um coletor perdeu o cantil e meia mão para um mugido que veio da água"
     },
     "rumor_avist_mon_afogado_da_batalha": {
       "family": "avistamento",
@@ -1937,7 +1946,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um velho da coalizão diz que a tropa dele nunca foi dispensada, e que no fundo ainda tem quem marche"
     },
     "rumor_avist_enemy_druida_renegado": {
       "family": "avistamento",
@@ -1954,7 +1964,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma mãe da borda diz que um homem de manto prometeu levar o filho a quem cura, e o levou para o fundo"
     },
     "rumor_avist_mon_urso_de_espinha": {
       "family": "avistamento",
@@ -2211,7 +2222,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mercador diz que a guerra das rotas desceu do mar para as vielas e que agora se cobra pedágio em terra"
     },
     "rumor_avist_mon_capangas_do_poco": {
       "family": "avistamento",
@@ -2228,7 +2240,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma viúva do porto diz que pagou a dívida do marido três vezes e que eles ainda passam toda semana"
     },
     "rumor_avist_enemy_arpoador_osshari": {
       "family": "avistamento",
@@ -2246,7 +2259,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um peixeiro diz que os caçadores do crânio velho perderam o mar e agora caçam o que sobe nas docas"
     },
     "rumor_avist_enemy_orc_saidas_baixas": {
       "family": "avistamento",
@@ -2419,7 +2433,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um coletor diz que, onde a nuvem azul canta, a gota boa está embaixo, e o preço é o sangue"
     },
     "rumor_avist_mon_viuva_lodo": {
       "family": "avistamento",
@@ -2436,7 +2451,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os druidas não tocam nos marcos velhos sem bater três vezes com o cajado antes"
     },
     "rumor_avist_mon_cervo_afogado": {
       "family": "avistamento",
@@ -2453,7 +2469,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma romeira diz que viu as fitas da irmã, que nunca voltou da água, passarem penduradas na cabeça de um bicho"
     },
     "rumor_avist_mon_escaravelho_vidro": {
       "family": "avistamento",
@@ -2623,7 +2640,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma mãe diz que um pássaro do muro cantou a canção de ninar do filho que morreu no inverno"
     },
     "rumor_avist_mon_lobo_aurora": {
       "family": "avistamento",
@@ -2640,7 +2658,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um tecnológico jura que desligou aquilo no céu antes do pai dele nascer, e mesmo assim tranca a porta à noite"
     },
     "rumor_avist_mon_jotun_cinza": {
       "family": "avistamento",
@@ -2657,7 +2676,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um ferreiro do clã reclama que cada ano tem de fazer talas maiores para o mesmo caçador"
     },
     "rumor_avist_mon_faisca_destilacao": {
       "family": "avistamento",
@@ -2929,7 +2949,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um cambista diz que os bichos do porto acham moeda falsa melhor que qualquer balança"
     },
     "rumor_avist_mon_cobrador_gancho": {
       "family": "avistamento",
@@ -2946,7 +2967,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os devedores do porto dizem que ninguém foge do sino pequeno: ele sempre traz quem deve vivo"
     },
     "rumor_avist_mon_capita_corda": {
       "family": "avistamento",
@@ -2963,7 +2985,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os do cais velho dizem que de madrugada o sino de bordo de um navio afundado ainda chama a tripulação"
     },
     "rumor_avist_mon_doador_inacabado": {
       "family": "avistamento",
@@ -3320,7 +3343,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mestre de rampa diz que tem aprendiz que nunca tira folga e que ninguém tem coragem de despedir"
     },
     "rumor_avist_mon_odre_de_oleo": {
       "family": "avistamento",
@@ -3337,7 +3361,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um taverneiro jura que o acendedor da rua dele não envelheceu nada desde que ele era menino"
     },
     "rumor_avist_mon_lavado_da_mare_vermelha": {
       "family": "avistamento",
@@ -3354,7 +3379,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma pescadora conta que o chão do cais velho puxa para a água quando o mar vem tingido"
     },
     "rumor_avist_mon_cardume_coagulado": {
       "family": "avistamento",
@@ -3371,7 +3397,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pescadores das docas velhas falam de uma rede que fecha sozinha, e ninguém quer puxar"
     },
     "rumor_avist_mon_gato_de_lastro": {
       "family": "avistamento",
@@ -3388,7 +3415,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um estivador diz que tem carga que ninguém leva do cais enquanto o bicho de porão estiver sentado nela"
     },
     "rumor_avist_mon_craca_de_amarra": {
       "family": "avistamento",
@@ -3405,7 +3433,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os do cais velho dizem que briga perto dos navios parados nunca termina quando devia"
     },
     "rumor_avist_mon_pescador_de_lanterna": {
       "family": "avistamento",
@@ -3422,7 +3451,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "as mulheres do cais mandam os maridos contarem as luzes antes de voltar para o barco"
     },
     "rumor_avist_mon_tripeiro_de_fundo": {
       "family": "avistamento",
@@ -3439,7 +3469,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um menino do cais aprendeu a nunca chutar o lixo das docas velhas quando a água sobe"
     },
     "rumor_avist_mon_sangria_de_aluguel": {
       "family": "avistamento",
@@ -3456,7 +3487,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mercador de especiarias diz que contratou um guarda que nunca sangra e cobra por isso"
     },
     "rumor_avist_mon_torcido_da_rinha": {
       "family": "avistamento",
@@ -3473,7 +3505,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os apostadores da Boca do Fundo dizem que tem lutador que não sabe a hora de cair e por isso nunca cai"
     },
     "rumor_avist_mon_anzolado_da_casa": {
       "family": "avistamento",
@@ -3490,7 +3523,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma moça do porto diz que um homem andou a noite toda ao lado dela, de mão no ombro, e o ombro sangrou"
     },
     "rumor_avist_mon_tambor_do_ossario": {
       "family": "avistamento",
@@ -3507,7 +3541,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os carregadores dizem que perto do crânio velho as docas cantam, e quem ouve de perto deixa cair a carga"
     },
     "rumor_avist_mon_penhorado_do_poco": {
       "family": "avistamento",
@@ -3524,7 +3559,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um agiota das dívidas ri e diz que tem devedor que ainda paga com o que lhe sobrou do corpo"
     },
     "rumor_avist_mon_sino_de_enlace": {
       "family": "avistamento",
@@ -3541,7 +3577,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma meretriz das Marés diz que um cliente saiu sozinho pela rua e voltou dentro de outra coisa"
     },
     "rumor_avist_mon_carranca_de_proa": {
       "family": "avistamento",
@@ -3558,7 +3595,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um capitão diz que nas tavernas do cais ninguém mais conta vantagem alto, por precaução"
     },
     "rumor_avist_mon_estivador_das_facas": {
       "family": "avistamento",
@@ -3575,7 +3613,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um carregador diz que depois da última noite de guerra os irmãos dele não se falam mais, e nem sabem por quê"
     },
     "rumor_avist_mon_boia_de_bracos": {
       "family": "avistamento",
@@ -3592,7 +3631,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "as crianças do cais velho aprenderam a não descer a escada de pedra sozinhas"
     },
     "rumor_avist_mon_broca_de_costado": {
       "family": "avistamento",
@@ -3609,7 +3649,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um armador diz que, no porto, o barco que vai bem é o que afunda primeiro"
     },
     "rumor_avist_mon_mao_estendida": {
       "family": "avistamento",
@@ -3626,7 +3667,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um corretor do cais diz que só fecha acordo com quem tem os dois braços à vista"
     },
     "rumor_avist_mon_escama_revirada": {
       "family": "avistamento",
@@ -5709,7 +5751,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador jura que lá embaixo os mortos ficam em fila, virados para a porta, como quem espera visita"
     },
     "rumor_avist_mon_romeiro_de_ambar": {
       "family": "avistamento",
@@ -5726,7 +5769,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma vendedora de chá diz que tem freguês de vinte anos que já não paga, só aparece"
     },
     "rumor_avist_mon_banhado_do_centro": {
       "family": "avistamento",
@@ -5743,7 +5787,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador velho diz que há um trecho do fundo onde a lâmina apodrece na mão antes do primeiro golpe"
     },
     "rumor_avist_mon_castor_de_estacas": {
       "family": "avistamento",
@@ -5760,7 +5805,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um druida reclama que a borda medida na segunda amanheceu dez passos mais perto da estrada"
     },
     "rumor_avist_mon_patinador_de_oleo": {
       "family": "avistamento",
@@ -5777,7 +5823,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um coletor diz que nas águas paradas é melhor bater na superfície antes de encher o cantil"
     },
     "rumor_avist_mon_cagado_de_geada": {
       "family": "avistamento",
@@ -5794,7 +5841,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os do fundo dizem que no verão há um buraco d'água onde a beira amanhece com gelo"
     },
     "rumor_avist_mon_fundeiro_da_poca": {
       "family": "avistamento",
@@ -5811,7 +5859,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um coletor perdeu o irmão na beira da água funda: diz que a água mesmo o derrubou"
     },
     "rumor_avist_mon_tritao_de_sobra": {
       "family": "avistamento",
@@ -5828,7 +5877,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador diz que cortou a perna de um bicho do fundo e, dois dias depois, o bicho tinha três"
     },
     "rumor_avist_mon_musaranho_de_dente_vermelho": {
       "family": "avistamento",
@@ -5845,7 +5895,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma menina da borda diz que um bicho comeu as sanguessugas do balde do pai, e o balde também"
     },
     "rumor_avist_mon_podador_do_ciclo": {
       "family": "avistamento",
@@ -5862,7 +5913,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um ferido que fugiu da beira diz que o velho que o achou só queria lhe cortar a perna, e era educado"
     },
     "rumor_avist_mon_jardineiro_de_tumores": {
       "family": "avistamento",
@@ -5879,7 +5931,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um caçador da borda achou um pé de couve brotando de um corte que ele mesmo levou na perna"
     },
     "rumor_avist_mon_mula_de_lagrimas": {
       "family": "avistamento",
@@ -5896,7 +5949,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um guarda do portão diz que tem contrabandista que passa de mãos vazias e barriga acesa"
     },
     "rumor_avist_mon_casaco_de_sanguessugas": {
       "family": "avistamento",
@@ -5913,7 +5967,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os do fundo dizem que há um saqueador que não sai da água fria, e não fica triste, nem com frio, nem com nada"
     },
     "rumor_avist_mon_turno_vencido": {
       "family": "avistamento",
@@ -5930,7 +5985,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um druida jovem diz que o posto do sul ainda está guardado, mas ninguém lembra quem ficou lá"
     },
     "rumor_avist_mon_regaco_da_margem": {
       "family": "avistamento",
@@ -5947,7 +6003,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma viúva da borda diz que o marido escreveu que ia só sentar um pouco, e o bilhete ainda está seco"
     },
     "rumor_avist_mon_cordao_de_medida": {
       "family": "avistamento",
@@ -5964,7 +6021,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os druidas mandam contar os nós da corda antes de atravessar; se tiver um a mais, voltar"
     },
     "rumor_avist_mon_maos_no_rosto": {
       "family": "avistamento",
@@ -5981,7 +6039,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um velho da coalizão não olha para o Pântano quando passa: diz que lá tem quem não quer ser visto, e com razão"
     },
     "rumor_avist_mon_cisne_de_patina": {
       "family": "avistamento",
@@ -5998,7 +6057,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador conta que viu a coisa mais bonita da vida dele no fundo, e o companheiro ficou olhando demais"
     },
     "rumor_avist_mon_arraia_de_lodo": {
       "family": "avistamento",
@@ -6015,7 +6075,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os que descem à Cripta dizem que lá a água turva sozinha, e é quando turva que convém sair"
     },
     "rumor_avist_mon_fardo_de_espolio": {
       "family": "avistamento",
@@ -6032,7 +6093,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador diz que no fundo se paga em moeda ou em dedo, e que ele preferiu a moeda"
     },
     "rumor_avist_mon_vertedor_de_areia": {
       "family": "avistamento",
@@ -6732,7 +6794,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um velho caçador diz que viu o companheiro morto há trinta anos voltando da tundra, e mais moço que ele"
     },
     "rumor_avist_mon_levantado_de_rubi": {
       "family": "avistamento",
@@ -6749,7 +6812,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os da Parede dos Mortos dizem que um nome riscado lá voltou a andar com uma brasa no peito"
     },
     "rumor_avist_mon_queimado_de_breu": {
       "family": "avistamento",
@@ -6766,7 +6830,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "as vigias do Ermo contam que as tochas da estrada apagam uma a uma, de fora para dentro"
     },
     "rumor_avist_mon_parelha_carmesim": {
       "family": "avistamento",
@@ -6783,7 +6848,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma viúva do clã ouve à noite o trenó do marido passando na porta, e ele nunca para"
     },
     "rumor_avist_mon_desfiado_da_aurora": {
       "family": "avistamento",
@@ -6800,7 +6866,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um menino do clã jura que viu um homem se desfazendo em luz no meio da tundra, procurando alguma coisa"
     },
     "rumor_avist_mon_ermitao_de_elmo": {
       "family": "avistamento",
@@ -6817,7 +6884,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um garimpeiro de ferro velho diz que na encosta do degelo não se pega armadura pela abertura"
     },
     "rumor_avist_mon_carrapato_de_mamute": {
       "family": "avistamento",
@@ -6834,7 +6902,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caçadores lavam a carne com neve e fogo antes de levá-la à Sala Fria, e ninguém pergunta por quê duas vezes"
     },
     "rumor_avist_mon_lagarta_sete_invernos": {
       "family": "avistamento",
@@ -6851,7 +6920,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um pastor diz que tropeçou num tronco congelado no pasto de líquen, e o tronco tinha patas"
     },
     "rumor_avist_mon_mandriao_dois_bicos": {
       "family": "avistamento",
@@ -6868,7 +6938,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guardas de Vorr não deixam ferido nenhum subir a escadaria a céu aberto"
     },
     "rumor_avist_mon_montaria_cravada": {
       "family": "avistamento",
@@ -6885,7 +6956,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma mulher do clã diz que o marido não desmonta há anos e que o urso já atende pelo nome dele"
     },
     "rumor_avist_mon_ferreiro_chama_fria": {
       "family": "avistamento",
@@ -6902,7 +6974,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um caçador diz que entrou armado na forja e saiu sem a mão poder largar o cabo"
     },
     "rumor_avist_mon_lascador_morno": {
       "family": "avistamento",
@@ -6919,7 +6992,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um tecnológico jura que comprou no escuro uma lasca vermelha que chora quando a guardam no bolso"
     },
     "rumor_avist_mon_escuta_do_sinal": {
       "family": "avistamento",
@@ -6936,7 +7010,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um leitor da Câmara não dorme há anos: diz que o gelo não para de falar"
     },
     "rumor_avist_mon_caldeira_de_peito": {
       "family": "avistamento",
@@ -6953,7 +7028,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os clãs de combate dizem que os tecnológicos não pegam em arma, mas que um deles virou uma"
     },
     "rumor_avist_mon_andas_de_caribu": {
       "family": "avistamento",
@@ -6970,7 +7046,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma expedição voltou dizendo que algo alto as seguiu pela neve funda o dia inteiro, sem afundar"
     },
     "rumor_avist_mon_ticao_do_juramento": {
       "family": "avistamento",
@@ -6987,7 +7064,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os velhos do Salão dizem que depois da noite da trégua sempre se lembra quem bateu em quem"
     },
     "rumor_avist_mon_feltro_do_ventre": {
       "family": "avistamento",
@@ -7004,7 +7082,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um foguista diz que um trecho dos túneis esfria toda noite, e cada clã jura que é coisa do outro"
     },
     "rumor_avist_mon_aperto_da_tregua": {
       "family": "avistamento",
@@ -7021,7 +7100,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um velho do Salão não aperta mais a mão de ninguém na noite das pazes, nem a do filho"
     },
     "rumor_avist_mon_enegrecido_que_espera": {
       "family": "avistamento",
@@ -7038,7 +7118,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma filha deixou o pai sem pés na borda da cidade no inverno passado, e diz que ele ainda está lá, e maior"
     }
   }
 }

@@ -1,0 +1,728 @@
+# SPEC-370 R1 (lote 1) — bloco de fauna de Skallgard: 23 fichas da SPEC-349 + legado `valoria` da
+# região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# Estação do calendário (R4): enemy_lobo_invernal e enemy_yeti com inverno 1,5 (calendar.json).
+# Revisão de fauna: handoffs/SPEC-370-independent-review.md (lote 1; revisor ≠ autor).
+regiao: skallgard
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_parado_do_sopro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [skallgard]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas desiguais na neve, uma firme e outra arrastada, que andam em círculo e voltam sempre ao mesmo ponto."
+      resto: "Uma luva de caçador caída na neve, quente por dentro de um lado só, e congelada dura do outro."
+      som: "Um passo e um arrasto, um passo e um arrasto, sem pressa nenhuma, e nenhuma respiração junto."
+      cheiro: "Sangue fresco no meio do frio seco, como de corte recém-aberto, sem ferido nenhum à vista."
+      marca: "Num ponto do caminho a geada não pousa: um retângulo de neve mole, do tamanho de um homem deitado de lado."
+      aproximacao: "Um caçador de braço erguido no fim de um golpe vem arrastando a perna, a ferida do antebraço vermelha como de agora."
+      rumor: "um velho caçador diz que viu o companheiro morto há trinta anos voltando da tundra, e mais moço que ele"
+    contra_jogo: "Ficar fora do arco do braço erguido e bater pelo lado vivo, que é lento e velho; o braço parado não gira para trás."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_levantado_de_rubi:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [skallgard]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas cinzentas que pingam: cada passo deixa uma poça de água derretida, e em volta dela pingentes de gelo novo."
+      resto: "Um corpo que estava enterrado na neve, de costelas abertas para fora como porta arrombada, sem nada dentro."
+      som: "Um gotejar ritmado no meio da nevasca, como de telhado em degelo, onde não há telhado nenhum."
+      cheiro: "Pedra quente e sangue velho, um cheiro de forja apagada no meio do frio."
+      marca: "Na neve, um círculo derretido até a terra, do tamanho de uma roda de carroça, com bordas vermelhas."
+      aproximacao: "Um morto de carne cinzenta e mandíbula solta vem até você, e do peito aberto brota uma flor de cristal vermelho que pulsa."
+      rumor: "os da Parede dos Mortos dizem que um nome riscado lá voltou a andar com uma brasa no peito"
+    contra_jogo: "Quebrar o rubi antes de derrubar os outros; um golpe pesado no peito aberto basta, e derrubado o Levantado primeiro, quem cai fica no chão."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_queimado_de_breu:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [sk_farol_chama_negra]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "clima:nevasca", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota que vão de uma tocha apagada à seguinte, sempre em linha reta, sem desviar de nada."
+      resto: "Uma lanterna de viagem fria e intacta, o pavio inteiro e seco, como se a chama tivesse simplesmente desistido."
+      som: null
+      cheiro: "Pavio apagado e fuligem fria, sem calor nenhum, como de lampião que nunca foi aceso."
+      marca: "No caminho para a torre, um trecho de neve que não brilha nem à lua, fosco como pano preto estendido."
+      aproximacao: "Um caçador de rosto e mãos foscos como fuligem vira para a sua luz dois discos pretos e largos no lugar dos olhos."
+      rumor: "as vigias do Ermo contam que as tochas da estrada apagam uma a uma, de fora para dentro"
+    contra_jogo: "Apagar as luzes antes que ele chegue e lutar no escuro, de perto; com uma só luz acesa ele bate uma vez só."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_parelha_carmesim:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [skallgard]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "clima:nevasca", efeito: mais}
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Dois sulcos de esqui de trenó, retos e fundos, e entre eles pegadas de cães que pisam sem dobrar a perna."
+      resto: "Um trenó virado na neve, as rédeas presas a um pedaço de osso de ombro, e nenhum dono por perto."
+      som: "Um galope duro e compassado, de muitas patas que batem juntas como pau, e nenhum latido."
+      cheiro: "Couro de arreio congelado e carne crua, frio e metálico."
+      marca: "Na rota antiga das caçadas, a neve está batida numa faixa estreita, como se alguém passasse todos os dias."
+      aproximacao: "Seis cães de boca aberta e sem língua vêm atrelados a um trenó vazio, os arreios afundados na carne vermelha."
+      rumor: "uma viúva do clã ouve à noite o trenó do marido passando na porta, e ele nunca para"
+    contra_jogo: "Sair da rota e cortar o tirante do cão da frente, que guia os outros; sem guia, a parelha gira em volta do trenó."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_desfiado_da_aurora:
+    fonte: ficha
+    ecologia:
+      horario: [Noite]
+      territorio: [skallgard, sk_farol_chama_negra]
+      permanencia: [6, 9]
+      reage:
+        - {quando: "clima:limpo", efeito: mais}
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco na neve feito por um tronco arrastado nos braços, sem pegada de pé nenhuma, e fiapos verdes acesos nas bordas."
+      resto: "Uma tira de pele que ainda brilha verde, presa num arbusto, queimando a neve em volta sem calor."
+      som: "Um arrastar lento de cotovelos na neve dura e um chiado fino, como de vela que se desfaz."
+      cheiro: "Ar de tempestade, limpo e cortante, com um fundo de carne chamuscada."
+      marca: "Num rochedo, manchas verdes que brilham no escuro, na altura de quem se arrasta, como mãos espalmadas."
+      aproximacao: "Um homem sem pernas se arrasta nos braços, a carne acesa em faixas verdes, e arranca do ombro uma tira que brilha."
+      rumor: "um menino do clã jura que viu um homem se desfazendo em luz no meio da tundra, procurando alguma coisa"
+    contra_jogo: "Apagar a tira rolando na neve; e chegar perto, porque ele se arrasta devagar e não tem com que fugir."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_jotun_cinza:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [skallgard, sk_fortaleza_vorr]
+      permanencia: [8, 11]
+      suprime: [mon_andas_de_caribu]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas do tamanho de um escudo, afundadas até o joelho na neve, com marcas de tala de osso dos dois lados."
+      resto: "Uma tala de osso grosso partida em duas, com correias de couro cru rebentadas e manchadas de sangue."
+      som: "Um chiado curto de peito apertado, repetido, e o estalar de correias encolhendo no frio."
+      cheiro: "Couro cru encharcado e osso de bicho grande, com um fundo de ferida aberta."
+      marca: "Num portal do clã, o umbral foi alargado a machado, e a madeira nova ainda está clara."
+      aproximacao: "Um homem de quatro metros, de osso rompendo a pele em cristas brancas e talas amarradas nos membros, ergue os dois braços."
+      rumor: "um ferreiro do clã reclama que cada ano tem de fazer talas maiores para o mesmo caçador"
+    contra_jogo: "Cortar as correias das talas nos joelhos; sem elas, ele se fere a cada golpe e cansa sozinho."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  mon_ermitao_de_elmo:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      estacoes: {primavera: 1.3, inverno: 0.7}
+      territorio: [skallgard]
+      permanencia: [8, 11]
+      presas: [enemy_lobo_invernal]
+    sinais:
+      antecedencia: cedo
+      rastro: "Rastros miúdos de seis pernas que descem da encosta em bando e param junto às fendas onde sai vapor."
+      resto: "Uma pulseira de couro presa num pulso decepado, apertado por uma tenaz de ferro amassado."
+      som: "Um rangido de ferro velho abrindo e fechando, várias vezes, como viseira enferrujada."
+      cheiro: "Ferrugem molhada de degelo e carne branca, mole, de bicho que mora em concha."
+      marca: "Na encosta do degelo, peças de armadura antiga espalhadas, e todas as de cabeça viradas de boca para baixo."
+      aproximacao: "Uma peça de ferro de guerra amassada anda sobre seis pernas brancas, e pelas fendas da viseira saem duas garras grossas."
+      rumor: "um garimpeiro de ferro velho diz que na encosta do degelo não se pega armadura pela abertura"
+    contra_jogo: "Bater no elmo com coisa pesada antes que ele suba pelo braço; um golpe na crista amassa a viseira e ela não fecha mais."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_carrapato_de_mamute:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [skallgard]
+      permanencia: [6, 9]
+      presas: [enemy_yeti]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma fila de furinhos em gancho na neve, de oito em oito, que vai de um bicho grande a outro."
+      resto: "Uma casca parda e rachada, do tamanho de um gato, estourada e vazia, num anel de sangue escuro."
+      som: "Um estalo úmido de bolha estourando e depois o raspar de muitos ganchinhos no gelo."
+      cheiro: "Sangue grosso de bicho grande e pelo sujo, um cheiro de manada passada."
+      marca: "Num pedaço de carne pendurado para secar, dois furos redondos, um em cada ponta, e a carne sem cor entre eles."
+      aproximacao: "Do pelo de uma carcaça salta um bicho pardo do tamanho de um gato, com uma boca de dentes em cada ponta do corpo."
+      rumor: "os caçadores lavam a carne com neve e fogo antes de levá-la à Sala Fria, e ninguém pergunta por quê duas vezes"
+    contra_jogo: "Arrancá-lo antes de inchar; se já inchou, matá-lo no caminho, porque cheio ele estoura com um golpe só."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lagarta_sete_invernos:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde]
+      estacoes: {inverno: 0.6, verao: 1.3}
+      territorio: [skallgard, sk_fortaleza_vorr]
+      permanencia: [9, 12]
+      foge_de: [mon_verme_do_gelo]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um caminho largo de líquen raspado até a pedra, com marcas de muitas patas curtas em pares e um sulco arrastado no fim."
+      resto: "Um anel de pele preta e pelada, duro como pedra, caído na neve, do tamanho de um barril."
+      som: "Um triturar paciente de líquen e osso, e de vez em quando um estalo de gelo rachando sobre algo grande."
+      cheiro: "Líquen esmagado e pelo molhado, com o cheiro seco de coisa morta que não apodrece."
+      marca: "No campo de líquen, um tronco peludo deitado e coberto de geada, onde ontem não havia árvore nenhuma."
+      aproximacao: "O tronco peludo coberto de geada racha de cima a baixo, e uma cabeça em placa dura com mandíbulas se ergue para você."
+      rumor: "um pastor diz que tropeçou num tronco congelado no pasto de líquen, e o tronco tinha patas"
+    contra_jogo: "Esperar o degelo para bater, ou usar fogo enquanto ela está congelada; nunca ficar colado nela na rodada em que degela."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mandriao_dois_bicos:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [sk_fortaleza_vorr]
+      permanencia: [7, 10]
+      presas: [enemy_lobo_invernal, mon_corvo_gelo]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Uma presa ferida por outro caçador, tomada na metade, com um par de cortes de tesoura na nuca."
+      som: "Um grito rouco de ave, em duas notas ao mesmo tempo, que ecoa nos degraus altos da Fortaleza."
+      cheiro: null
+      marca: "Num degrau da escadaria, um ninho de penas pardas e duras sobre um monte de ossinhos cortados limpo."
+      aproximacao: "Do alto da escadaria desce uma ave parda de asas abertas como braços, a cabeça girando, a boca rachada em duas tesouras."
+      rumor: "os guardas de Vorr não deixam ferido nenhum subir a escadaria a céu aberto"
+    contra_jogo: "Não sangrar à vista dele; derrubar primeiro quem fere, e o Mandrião fica rodando no alto sem descer."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_lobo_invernal:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      estacoes: {inverno: 1.5}
+      territorio: [skallgard]
+      permanencia: [6, 9]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Saltos marcados na neve de dez em dez passos, cada pouso uma pequena cratera cercada de pó azul."
+      resto: "Um couro de rena roído por dentro, com mil mordidinhas e um pó azul grudado nas bordas."
+      som: "Um estalo seco de mola soltando, depois outro mais longe, e outro, como gravetos quebrando em fila."
+      cheiro: "Carne azeda de degelo e um cheiro mineral de pó, como de giz molhado."
+      marca: "Junto às saídas de vapor, a neve está toda azulada e se mexe devagar, como se fervilhasse."
+      aproximacao: "Da neve azulada salta um bicho mole do tamanho de um cão pequeno, a barriga aberta mostrando as tripas, por cima de quem está na frente."
+      rumor: "as crianças das bordas aprendem cedo a não brincar no pó azul perto das saídas de vapor"
+    contra_jogo: "Pisar a forquilha quando ela trava para saltar; no chão, sem a mola, é mole e lenta."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_yeti:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      estacoes: {inverno: 1.5}
+      territorio: [skallgard]
+      permanencia: [7, 10]
+      foge_de: [mon_urso_tita]
+    sinais:
+      antecedencia: cedo
+      rastro: "Cascos largos que derretem a neve onde pisam, deixando poças em fila que congelam de novo atrás."
+      resto: "Um tufo de pelo ruivo e duro preso numa pedra, e embaixo uma mancha de gordura laranja que ainda amolece a neve."
+      som: "Um bufo grosso e longo, e o chiar de neve derretendo, como água jogada em brasa."
+      cheiro: "Sebo quente e pelo de bicho de pasto, gordo e acolhedor no meio do frio."
+      marca: "No campo de líquen, faixas de neve derretida até o chão, largas como um carro de boi, cortando o branco."
+      aproximacao: "Um bisão de cabeça baixa e enorme vem de lado, e a bolsa de gordura sobre os ombros brilha laranja por dentro."
+      rumor: "um caçador diz que passou a noite na tundra encostado num bicho quente, e acordou com a pele queimada"
+    contra_jogo: "Furar a corcova de longe e deixá-lo cansar; quem está colado nele quando ela fura se queima."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_montaria_cravada:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [skallgard, sk_farol_chama_negra]
+      permanencia: [7, 10]
+      presas: [enemy_yeti]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas enormes de urso, fundas demais para o tamanho, como de quem leva peso nas costas que não desce nunca."
+      resto: "Um gancho de osso enfiado na neve, a ponta escura de sangue velho, como se tivesse sido arrancado de alguém."
+      som: "Um rosnado de bicho e, no mesmo fôlego, a voz de um homem, os dois parando ao mesmo tempo."
+      cheiro: "Pelo de urso molhado e suor de cavaleiro, misturados num só cheiro de bicho."
+      marca: "Num pinheiro, arranhões de urso na altura de um homem montado, e acima deles riscos de arpão."
+      aproximacao: "Um urso branco-azulado de presas para fora vem com um cavaleiro sem pernas fundido ao lombo, e o arpão aponta para você."
+      rumor: "uma mulher do clã diz que o marido não desmonta há anos e que o urso já atende pelo nome dele"
+    contra_jogo: "Derrubar o cavaleiro primeiro, de longe ou subindo pelo flanco; sem ele, o urso bate a esmo e se cansa."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ferreiro_chama_fria:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [skallgard]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Uma espada deixada na porta da oficina, azulada e quebradiça, que se parte ao primeiro toque."
+      som: "Um martelar fino em bigorna, e entre as batidas um crepitar estranho, como de gelo rachando no fogo."
+      cheiro: "Metal gelado e geada, sem cheiro de carvão nenhum, onde devia haver forja."
+      marca: "Na entrada da forja, fogos azuis miúdos dançando rente ao chão, e a geada subindo pelos batentes."
+      aproximacao: "Um homem pequeno de cabeça grande e mãos pretas e azuis, de dedos com veios de metal, estende a mão para a sua arma."
+      rumor: "um caçador diz que entrou armado na forja e saiu sem a mão poder largar o cabo"
+    contra_jogo: "Quem foi pego aquece a mão numa chama, a sua ou a de um companheiro; e ele não larga a Fornalha: atraído para longe dela, as chamas dos pulsos se apagam."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lascador_morno:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [skallgard]
+      permanencia: [7, 10]
+      foge_de: [mon_caldeira_de_peito]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas que vão até um afloramento vermelho e voltam pesadas, e ao lado delas tiras secas de pele caídas."
+      resto: "Um alforje rasgado com lascas vermelhas espalhadas, e cada lasca ainda conserva o calor de uma mão."
+      som: "Um gemido curto de gente vindo de dentro da pedra, cada vez que alguém bate uma lasca na outra."
+      cheiro: "Carne viva exposta ao vento e um gosto de moeda na boca, que não sai mesmo depois de cuspir."
+      marca: "No afloramento de cristal vermelho, buracos lascados a mão, sem marca de ferramenta, e sangue seco nas bordas."
+      aproximacao: "Um garimpeiro de braços em carne viva e mãos de cristal vermelho conta sem som, e ergue uma lasca para atirar."
+      rumor: "um tecnológico jura que comprou no escuro uma lasca vermelha que chora quando a guardam no bolso"
+    contra_jogo: "Chegar perto; de perto ele não atira, e as mãos de cristal racham num golpe."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_escuta_do_sinal:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [sk_salao_do_jarl, skallgard]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma marca de corpo deitado de bruços na neve, com dois furos redondos onde a cabeça encostou no chão."
+      resto: "Uma chave grande de latão caída na neve, com sangue numa ponta e cabelo grudado."
+      som: "Um zumbido grave que vem de baixo dos pés, corre pela neve e some longe, como resposta."
+      cheiro: "Latão polido e o azedo de parafuso enferrujando no osso, cheiro de oficina e de enfermaria juntos."
+      marca: "Na beira do gelo, cornetas de latão enfiadas de boca para baixo, em fila, como quem planta ouvidos."
+      aproximacao: "Um homem pequeno de olheiras fundas, com duas cornetas de latão aparafusadas atrás das orelhas, levanta a cabeça do gelo."
+      rumor: "um leitor da Câmara não dorme há anos: diz que o gelo não para de falar"
+    contra_jogo: "Calar o Escuta antes de tudo; é pequeno e não pega em arma, e uma corneta quebrada já corta o chamado."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_caldeira_de_peito:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [skallgard]
+      permanencia: [9, 12]
+      suprime: [mon_lascador_morno]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de ferro do tamanho de pratos na neve, e a neve em volta derretida em halos de vapor."
+      resto: "Um intruso caído de costas na entrada dos túneis, escaldado no rosto e jogado longe da porta."
+      som: "Um chiado de pistão, um bufar de vapor e, de vez em quando, um apito agudo de válvula."
+      cheiro: "Pele cozida e graxa de pistão, um cheiro de panela esquecida no fogo de uma oficina."
+      marca: "Na boca de um túnel aquecido, a neve derretida num semicírculo perfeito, sempre do mesmo tamanho."
+      aproximacao: "Uma armação de ferro movida a vapor, o dobro de um homem, guarda o túnel, e dentro dela um rosto pequeno e vermelho olha você."
+      rumor: "os clãs de combate dizem que os tecnológicos não pegam em arma, mas que um deles virou uma"
+    contra_jogo: "Esperar o apito das válvulas e sair do alcance; depois do jato, a caldeira leva uma rodada para encher, e o homem dentro da armação fica à mostra."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_andas_de_caribu:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [skallgard]
+      permanencia: [6, 9]
+      foge_de: [enemy_guerreiro_bjorn, mon_jotun_cinza]
+      reage:
+        - {quando: "clima:nevasca", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na neve funda, marcas largas como pás, a três passos de homem uma da outra, que nunca afundam."
+      resto: "Um capacete de caçador amassado por cima, como se o golpe tivesse vindo do alto de uma árvore."
+      som: "Um estalo oco de osso batendo em osso, e passos espaçados demais para qualquer homem."
+      cheiro: "Couro cru mal curtido e pele de bicho velha, com um fundo de carne gangrenada."
+      marca: "Numa árvore baixa, um tufo de pelo de rena preso a uma altura que só um gigante alcançaria."
+      aproximacao: "Um vulto da altura de dois homens, de capuz com cabeça de bicho, se equilibra em pernas de osso e ergue uma acima de você."
+      rumor: "uma expedição voltou dizendo que algo alto as seguiu pela neve funda o dia inteiro, sem afundar"
+    contra_jogo: "Derrubar as andas; um golpe nas tiras da canela o põe de joelhos na neve, onde ele não anda."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_ticao_do_juramento:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [sk_salao_do_jarl, sk_farol_chama_negra]
+      permanencia: [6, 9]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma risca preta de carvão no chão do Salão, que serpenteia entre as mesas e volta para a fogueira."
+      resto: "Um osso de caribu roído e carbonizado, ainda com dois pedaços de brasa acesos onde ficavam os olhos."
+      som: "Um sopro curto, como de quem atiça fogo, e logo vozes se levantando de uma mesa para a outra."
+      cheiro: "Gordura de assado queimada e lenha que não vira cinza, um cheiro de festa que azedou."
+      marca: "Nos bancos dos feridos, marcas chamuscadas do tamanho de uma mão pequena, como se algo tivesse subido para soprar."
+      aproximacao: "Da fogueira rasteja de quatro uma coisa curvada de lenha queimada e rachada, com um crânio queimado de olhos de carvão aceso."
+      rumor: "os velhos do Salão dizem que depois da noite da trégua sempre se lembra quem bateu em quem"
+    contra_jogo: "Apagá-lo primeiro, com neve ou água; e não deixar inimigo ferido de pé enquanto ele sopra."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_colecionador_de_poses:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [sk_fortaleza_vorr]
+      permanencia: [3, 4]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de quatro pés diferentes, de tamanhos desencontrados, que tilintam na pedra em vez de afundar."
+      resto: "Uma base de estátua vazia num salão alto de Vorr, com as marcas de pés arrancados e lascas de vidro em volta."
+      som: "Um tilintar de vidro a cada passo, pesado, e às vezes um gemido abafado que vem de dentro dele."
+      cheiro: "Pedra fria e carne preta úmida, como de porão onde se guarda caça há tempo demais."
+      marca: "Nos salões altos, uma fila de estátuas sem braços, sem pernas ou sem cabeça, todas com os olhos ainda se mexendo."
+      aproximacao: "Um corpo enorme de pedaços de estátua de vidro, cada um parado num gesto, vira as cabeças que carrega para você."
+      rumor: "um guarda de Vorr diz que as estátuas do salão alto estão diminuindo, e que elas sabem por quê"
+    contra_jogo: "Jogar uma Carta barata antes da forte, para que a pose guardada seja a barata; e quebrar as pernas de estátua, que são de vidro."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_feltro_do_ventre:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [skallgard]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:nevasca", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um rebite de cobre arrancado do cano, e no lugar dele um furinho de onde o calor sai em fio."
+      som: "Um roçar macio de pano grosso deslizando em cano de ferro, e um chiado de vapor que esfria de repente."
+      cheiro: "Pano de lã chamuscado e cobre gelado, cheiro de forro de caldeira velha."
+      marca: "Nos túneis aquecidos, um cano coberto de geada no meio dos outros quentes, e nenhum bicho pequeno por perto."
+      aproximacao: "Do cano gelado se desenrola uma faixa de pano cinzento do tamanho de um homem, as franjas eriçadas de farpas de cobre."
+      rumor: "um foguista diz que um trecho dos túneis esfria toda noite, e cada clã jura que é coisa do outro"
+    contra_jogo: "Afastar-se de quem está enrolado até soltá-lo, e queimar ou cortar o feltro rente ao corpo; sozinho, o enrolado não tem de quem tirar."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_aperto_da_tregua:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [sk_salao_do_jarl, sk_farol_chama_negra]
+      permanencia: [6, 9]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: imediato
+      rastro: "Marcas de duas solas duras e calosas na neve, lado a lado, puxando cada uma para um lado e nunca se afastando."
+      resto: "Uma luva grossa de caçador e uma fina de tecnológico jogadas juntas na porta do Salão, as duas vazias."
+      som: null
+      cheiro: "Hidromel derramado e suor de duas gentes que não se misturam, um cheiro de mesa de reconciliação."
+      marca: "No umbral do Salão, um entalhe de duas mãos apertadas, e alguém riscou com faca os dedos de uma delas."
+      aproximacao: "Rente ao chão vêm dois braços arrancados de mãos dadas, um grosso e um fino, e entre as palmas se abre uma boca de dentes miúdos."
+      rumor: "um velho do Salão não aperta mais a mão de ninguém na noite das pazes, nem a do filho"
+    contra_jogo: "Um companheiro golpeia o aperto das mãos, de preferência com fogo, que racha a carne; e ninguém aperta a mão que ele estende."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_enegrecido_que_espera:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [skallgard]
+      permanencia: [9, 12]
+      presas: [enemy_lobo_invernal]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco largo de corpo arrastado de bruços na neve, apoiado em quatro tocos que afundam como troncos."
+      resto: "Uma tigela de comida deixada por um parente na borda da cidade, intacta e congelada há dias."
+      som: "Uma respiração calma e funda, quase de quem dorme em paz, onde não deveria haver ninguém."
+      cheiro: "Carne queimada de frio, doce e podre, que o vento traz das bordas da cidade."
+      marca: "Na borda da cidade, um banco de pedra onde se deixam os amputados do frio, vazio e com a pedra gasta."
+      aproximacao: "Deitado de bruços na neve, um corpo inchado do tamanho de um urso ergue devagar a cabeça pequena, de boca aberta."
+      rumor: "uma filha deixou o pai sem pés na borda da cidade no inverno passado, e diz que ele ainda está lá, e maior"
+    contra_jogo: "Atacar em vez de esperar: quem bate nele sacode o torpor. E fogo, que a carne morta de geada não aguenta."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  enemy_gigante_gelo_norte:
+    fonte: legado
+    ecologia:
+      horario: [Noite, Amanhecer]
+      estacoes: {inverno: 1.3}
+      territorio: [skallgard]
+      permanencia: [2, 3]
+      reage:
+        - {quando: "clima:nevasca", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Rachaduras novas no chão congelado da cidade, longas como ruas, que se abrem de dentro para fora."
+      resto: "Uma rocha do tamanho de uma casa caída onde ontem havia uma estrada, ainda coberta de terra do fundo."
+      som: "Um gemido do chão tão grave que as panelas tremem nas paredes, como de algo enorme virando no sono."
+      cheiro: "Ar de caverna funda, frio e velho, que sobe pelas rachaduras como respiração."
+      marca: "Na encosta atrás da cidade, uma forma imensa de ombro e de cabeça sob a neve, que não estava no mapa."
+      aproximacao: "A encosta se levanta: uma figura imensa de pele de geleira se desprende da terra, arrancando uma rocha para atirar."
+      rumor: "os velhos do clã dizem que a cidade foi construída em cima de quem dorme, e que ele já se mexe"
+    contra_jogo: "Esconder e cobrir o curador e o conjurador, que ele abate primeiro, e guardar a defesa forte para o golpe de mestre do fim; à beira da morte, ele recua."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_guerreiro_bjorn:
+    fonte: legado
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [skallgard, sk_salao_do_jarl, sk_fortaleza_vorr]
+      permanencia: [6, 9]
+      suprime: [enemy_renegado_ermo, mon_andas_de_caribu]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de botas forradas de pele em fileira de patrulha, que param em cada marco da cidade e voltam."
+      resto: "Um machado de osso de baleia cravado num tronco, de cabo gasto pela mão, deixado como aviso."
+      som: "Um canto rouco de guerra em coro curto, e batidas de cabo de machado em escudo de couro."
+      cheiro: "Gordura de baleia nas peles, fumaça de foca e cerveja forte, cheiro de casa de clã."
+      marca: "Nos marcos da estrada, ossos de baleia pintados com o sinal de um clã, e as pinturas do outro clã raspadas."
+      aproximacao: "Um bárbaro de peles e ossos de baleia sobre os ombros firma o machado de osso e grita para os seus."
+      rumor: "os exilados do Ermo dizem que as patrulhas do clã cortam a cabeça antes de perguntar o nome"
+    contra_jogo: "Lutar de costas para algo firme e não ficar ferido à vista: eles concentram no mais ferido, usam o terreno e, cercados e feridos, recuam em ordem."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_renegado_ermo:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [skallgard, sk_farol_chama_negra]
+      permanencia: [6, 9]
+      foge_de: [enemy_guerreiro_bjorn]
+      reage:
+        - {quando: "pressao:fome", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de caçador que conhecem a rota melhor que a própria trilha, cortando caminho por onde ninguém passa."
+      resto: "Uma armadilha de caça da cidade desmontada com cuidado, a isca levada e o laço guardado."
+      som: "Um assobio de chamado curto, respondido longe por outro, como de caçadores que se dividem."
+      cheiro: "Fumaça de fogueira escondida e carne crua, cheiro de acampamento de quem não pode ser visto."
+      marca: "Numa pedra da rota, um sinal de caçador da cidade riscado e refeito ao contrário, apontando para o lugar errado."
+      aproximacao: "Um caçador magro de peles remendadas e olhos de bicho surge de trás das pedras, machado numa mão e arpão na outra."
+      rumor: "uma expedição achou o próprio acampamento remexido, e as marcas de quem fez eram da cidade"
+    contra_jogo: "Colar nele e derrubar primeiro os da frente: ele recua para arremessar de longe e foge quando a linha cai."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_corvo_gelo:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [sk_fortaleza_vorr]
+      permanencia: [6, 9]
+      foge_de: [mon_mandriao_dois_bicos]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de três dedos na neve em volta de um morto, em círculo, e nenhuma que se afaste andando."
+      resto: "Um morto deitado na noite com os olhos bicados e o rosto sereno de quem esqueceu tudo."
+      som: "Um grasnar que imita uma voz, repetindo o nome de alguém que ninguém ali conhece."
+      cheiro: null
+      marca: "Num muro, penas pretas com a ponta branca de geada, presas numa crosta que nunca derrete."
+      aproximacao: "Do alto desce uma ave escura de penas duras de geada, falando com a voz de um morto que você conheceu."
+      rumor: "uma mãe diz que um pássaro do muro cantou a canção de ninar do filho que morreu no inverno"
+    contra_jogo: "Ficar junto do grupo e não perder tempo perseguindo: ele só ataca pelas costas ou em bando, foge ferido, e o grito dele corta."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lobo_aurora:
+    fonte: legado
+    ecologia:
+      horario: [Noite]
+      estacoes: {inverno: 1.3}
+      territorio: [sk_farol_chama_negra]
+      permanencia: [6, 9]
+      presas: [enemy_lobo_invernal]
+      reage:
+        - {quando: "clima:limpo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de matilha na neve que brilham verde por um instante e depois apagam, como brasa que esfria."
+      resto: "Uma rena caída de pescoço aberto, e a ferida fria como pedra, sem um fio de vapor."
+      som: "Uivos longos que sobem e descem no mesmo ritmo das luzes do céu, que já não deviam existir."
+      cheiro: "Ar elétrico de noite clara e pelo frio, sem nenhum cheiro de bicho vivo."
+      marca: "No céu sobre o Farol, uma faixa de luz verde e roxa que os tecnológicos juram ter apagado faz décadas."
+      aproximacao: "Sob as luzes do céu chega uma matilha de pelagem que ondula em verde e roxo, e os olhos acompanham as cores."
+      rumor: "um tecnológico jura que desligou aquilo no céu antes do pai dele nascer, e mesmo assim tranca a porta à noite"
+    contra_jogo: "Não ficar isolado nem ferido à vista: eles perseguem quem está sozinho e roubam o calor para se defender; feridos, recuam."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lobo_de_vidro:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer, Manhã]
+      territorio: [skallgard, sk_fortaleza_vorr]
+      permanencia: [6, 9]
+      presas: [enemy_yeti, mon_lagarta_sete_invernos]
+      reage:
+        - {quando: "clima:nevasca", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de matilha que aparecem e somem na neve, como se os bichos ficassem leves de vez em quando."
+      resto: "Um bisão caído de flanco aberto, cercado de pelos finos e transparentes como fio de cristal."
+      som: "Um tilintar baixo e espalhado no meio da neve, como de cristais batendo ao vento, de todos os lados."
+      cheiro: null
+      marca: "Na neve fresca, sombras de bicho sem bicho nenhum por cima, que se mexem quando o sol passa."
+      aproximacao: "A neve à sua volta se mexe em formas de cão, translúcidas, e só os dentes aparecem de verdade."
+      rumor: "os caçadores dizem que no branco de tempestade não se conta a matilha: espera-se que ela desista"
+    contra_jogo: "Derrubar o que marca o alvo e manter o grupo junto: a matilha concentra no mais ferido e, quando quebra, dispersa."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_urso_tita:
+    fonte: legado
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [skallgard]
+      permanencia: [2, 4]
+      presas: [enemy_yeti]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas tão fundas que a neve não as cobre em três dias de nevasca, cada uma do tamanho de um escudo de torre."
+      resto: "Um bisão inteiro partido ao meio por uma só patada, a corcova arrancada e levada embora."
+      som: "Um rugido que rola pela tundra e faz a neve das encostas descer em placas."
+      cheiro: "Pelo velho e almíscar forte, de toca de inverno inteira, que o vento carrega longe."
+      marca: "Num pinheiro grosso, o tronco arranhado até o cerne numa altura de três homens."
+      aproximacao: "Um colosso de pelagem branca sobre músculo antigo se ergue nas patas de trás, mais alto que uma casa de clã."
+      rumor: "os domadores do clã dizem que há um que nenhum gancho segura, e que já matou três que tentaram"
+    contra_jogo: "Proteger o curador e o conjurador, que ele busca primeiro, e guardar a melhor defesa para o golpe de mestre; ferido de morte, recua."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_verme_do_gelo:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      estacoes: {inverno: 1.2}
+      territorio: [skallgard, sk_farol_chama_negra]
+      permanencia: [6, 9]
+      presas: [mon_lagarta_sete_invernos]
+    sinais:
+      antecedencia: imediato
+      rastro: "Uma lombada comprida sob a neve compacta, que corre reta e afunda de repente, sem marca na superfície."
+      resto: "Um buraco redondo na neve batida, com as bordas congeladas por dentro numa crosta azul que não é frio de inverno."
+      som: "Um raspar grave debaixo dos pés, que para quando você para."
+      cheiro: "Um frio sem cheiro de neve, seco e morto, que arde no nariz como metal."
+      marca: null
+      aproximacao: "A neve aos seus pés afunda e de baixo sobe um corpo anelado e pálido, de boca redonda soprando um frio que queima."
+      rumor: "um pastor perdeu uma rena inteira para um buraco que se abriu e fechou num instante"
+    contra_jogo: "Sair da neve compacta para a rocha, onde ele não escava, e não ficar sozinho nem ferido: ele vem de baixo atrás do mais fraco e recua quando a caça vira risco."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente

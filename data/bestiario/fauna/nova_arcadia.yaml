@@ -760,7 +760,7 @@ criaturas:
     sinais:
       antecedencia: cedo
       rastro: "Nenhuma pegada no beco molhado, mas as poças estão todas mexidas, uma depois da outra."
-      resto: "O livro de um agiota aberto no balcão, uma página arrancada e a faca ainda cravada na madeira, sem ninguém ferido."
+      resto: "O livro de um agiota aberto no balcão, uma página arrancada e o tinteiro virado, sem ninguém ferido."
       som: null
       cheiro: "Um perfume barato de taverna, que some antes de se saber de onde veio."
       marca: "Uma ordem dobrada, sem assinatura, presa com faca na porta de um agiota."
