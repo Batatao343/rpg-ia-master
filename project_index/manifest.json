@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "e7bd2bd498b9af811515928b99ee438e7bf9672d",
+  "commit_sha": "284a398a839607247f4b84b8121a095395cd9304",
   "edge_counts": {
-    "calls": 37353,
-    "contains": 1220,
-    "defines": 18109,
-    "imports": 2967,
-    "likely_test_for": 2140,
+    "calls": 37483,
+    "contains": 1230,
+    "defines": 18231,
+    "imports": 2982,
+    "likely_test_for": 2152,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:1cb55e8b069fb8b90bd4f1db6e86be877bd0108083ad242726f91668bbbfe70a",
+  "graph_hash": "sha256:d9ce02343496eb3b3ca3515fadd67c24dbe3e03fbad5253b2dd2a6269b001dc0",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -315,6 +315,7 @@
     "scripts/staging/job_survival.py",
     "scripts/staging/measure.py",
     "scripts/staging/migrations.py",
+    "scripts/staging/ops_pool.py",
     "scripts/staging/preview_isolation.py",
     "scripts/staging/projection_measure.py",
     "scripts/staging/runtime_role.py",
@@ -539,6 +540,7 @@
     "tests/fixtures/spec353_smoke.py",
     "tests/fixtures/spec363_smoke.py",
     "tests/fixtures/spec364_smoke.py",
+    "tests/fixtures/spec367_smoke.py",
     "tests/fixtures/spec368_scenarios.py",
     "tests/fixtures/spec368_seed.py",
     "tests/prompt_capture.py",
@@ -1219,6 +1221,14 @@
     "tests/test_spec364_portrait_debit.py",
     "tests/test_spec364_registry_voice.py",
     "tests/test_spec366_followups.py",
+    "tests/test_spec367_cites_prefix.py",
+    "tests/test_spec367_condition_end.py",
+    "tests/test_spec367_condition_node.py",
+    "tests/test_spec367_fallback_portrait.py",
+    "tests/test_spec367_guards.py",
+    "tests/test_spec367_omen_voice.py",
+    "tests/test_spec367_ops_pool.py",
+    "tests/test_spec367_trade_gold.py",
     "tests/test_spec368_content.py",
     "tests/test_spec368_discard.py",
     "tests/test_spec368_metricas.py",
@@ -1316,6 +1326,7 @@
     "web/e2e/spec363-board.spec.ts",
     "web/e2e/spec364-409.spec.ts",
     "web/e2e/spec364-hidden-target.spec.ts",
+    "web/e2e/spec367-portrait-pending.spec.ts",
     "web/e2e/support-code.spec.ts",
     "web/e2e/touch-targets.spec.ts",
     "web/e2e/turn-wait.spec.ts",
@@ -1490,14 +1501,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1070,
+    "class": 1085,
     "endpoint": 69,
-    "file": 1436,
-    "function": 5716,
+    "file": 1447,
+    "function": 5727,
     "method": 869,
-    "module": 1220,
-    "test": 10453
+    "module": 1230,
+    "test": 10549
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:daa1b6725541d83c0b61ae1dcf412abf002d6d968089c500699c684f8942ae94"
+  "source_tree_hash": "sha256:2c559252cdd35343c2f3ab8bcb1f22c541b1eb2bc6c1e0cc51fe615199266bf0"
 }
