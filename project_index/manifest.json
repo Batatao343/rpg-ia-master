@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "6ccbee6119ca84412e3b3459f8ab4da77578735e",
+  "commit_sha": "606231347020632ce0799c25685ee290e853fc0e",
   "edge_counts": {
-    "calls": 38011,
-    "contains": 1253,
-    "defines": 18502,
-    "imports": 3037,
-    "likely_test_for": 2199,
+    "calls": 38029,
+    "contains": 1251,
+    "defines": 18508,
+    "imports": 3051,
+    "likely_test_for": 2213,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:529ab98b3d6b07d69edfef68343c6b85be297392ef821789e052e4c110993dac",
+  "graph_hash": "sha256:afe787d0ad02d35e5ce4c3de6edaca92d2ef098f5ac28a4dd1d7678873c8fae8",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -779,8 +779,6 @@
     "tests/test_flag_registry.py",
     "tests/test_flee_alert_wiring.py",
     "tests/test_forge.py",
-    "tests/test_frontend_accessibility_contracts.py",
-    "tests/test_frontend_auth_bootstrap.py",
     "tests/test_frontend_visual_contracts.py",
     "tests/test_fuga_progressiva_persistente.py",
     "tests/test_game_delete_purges_blobs.py",
@@ -1306,6 +1304,7 @@
     "web/e2e/a11y-headings.spec.ts",
     "web/e2e/account-lifecycle.spec.ts",
     "web/e2e/account.spec.ts",
+    "web/e2e/auth-bootstrap.spec.ts",
     "web/e2e/card-shop-357.spec.ts",
     "web/e2e/checkout.spec.ts",
     "web/e2e/client-error-dedupe.spec.ts",
@@ -1356,6 +1355,7 @@
     "web/e2e/turn-wait.spec.ts",
     "web/e2e/vertical-journey.spec.ts",
     "web/e2e/vertical-support.ts",
+    "web/e2e/visual-cue.spec.ts",
     "web/e2e/visual-surfaces.spec.ts",
     "web/e2e/voice-input.spec.ts",
     "web/e2e/workspace-shell.spec.ts",
@@ -1531,9 +1531,9 @@
     "file": 1471,
     "function": 5803,
     "method": 869,
-    "module": 1253,
-    "test": 10740
+    "module": 1251,
+    "test": 10746
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:84dc5ab26766ca15d7ad8dd8ef4ffb9a3c6814a16b5bf1fabb93e2119674b498"
+  "source_tree_hash": "sha256:aea4ebd9aa3ffb07188729e71410198208f2023a02ab94d84be302d80d2cdff2"
 }
