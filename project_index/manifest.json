@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "c3ca89bf44bbefd01d8a68d4f34bc1d7e0f23f12",
+  "commit_sha": "92d9c6ef0aa057fbdaf3035eb8306e6bbf645fe7",
   "edge_counts": {
-    "calls": 37569,
-    "contains": 1235,
-    "defines": 18287,
-    "imports": 2982,
-    "likely_test_for": 2152,
+    "calls": 37915,
+    "contains": 1247,
+    "defines": 18443,
+    "imports": 3013,
+    "likely_test_for": 2175,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:a30acc48fc5c96480a8380533518d430eec2391a66bc9dd1f658ef0a5168ee2e",
+  "graph_hash": "sha256:bc7bf839434d939a1a1da2b8ef657dc5fab973db23187e368484d1e34ceac497",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -111,6 +111,8 @@
     "docs/spec362/arena_spec362.py",
     "docs/spec363/measure_classify.py",
     "docs/spec368/metricas_epico.py",
+    "docs/spec371/arena_posturas_reacao_armada.py",
+    "docs/spec371/custo_cpu_saber.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -259,7 +261,9 @@
     "scripts/dev_stack.py",
     "scripts/export_game_audit.py",
     "scripts/export_game_data.py",
+    "scripts/fauna/arena_saber.py",
     "scripts/fauna/build.py",
+    "scripts/fauna/build_saber.py",
     "scripts/fauna/eval.py",
     "scripts/fauna/lint.py",
     "scripts/fauna/rascunho.py",
@@ -431,6 +435,7 @@
     "services/faction_relations.py",
     "services/fauna.py",
     "services/fauna_lint.py",
+    "services/fauna_saber.py",
     "services/file_cache.py",
     "services/finops.py",
     "services/finops_alerts.py",
@@ -1240,6 +1245,13 @@
     "tests/test_spec368_rollback.py",
     "tests/test_spec368_scenarios.py",
     "tests/test_spec368_seed.py",
+    "tests/test_spec371_eval.py",
+    "tests/test_spec371_flags_off.py",
+    "tests/test_spec371_fonte.py",
+    "tests/test_spec371_pressagio.py",
+    "tests/test_spec371_reacao_inicial.py",
+    "tests/test_spec371_saber.py",
+    "tests/test_spec371_view.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1388,6 +1400,7 @@
     "web/src/components/DeathModal.tsx",
     "web/src/components/EmberField.tsx",
     "web/src/components/ErrorBoundary.tsx",
+    "web/src/components/FaunaSaber.tsx",
     "web/src/components/GeneratedArtCard.tsx",
     "web/src/components/GeneratedPortrait.tsx",
     "web/src/components/Hud.tsx",
@@ -1508,12 +1521,12 @@
     "artifact": 9,
     "class": 1087,
     "endpoint": 69,
-    "file": 1452,
-    "function": 5746,
+    "file": 1465,
+    "function": 5798,
     "method": 869,
-    "module": 1235,
-    "test": 10584
+    "module": 1247,
+    "test": 10688
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:77ecb5d6c77fade98d2433dc1ce4905c6ba6021b8edc897bdd18466b84f08714"
+  "source_tree_hash": "sha256:3035cdcb0574e2c2c56803f11e6e051d656dd214d564ad560274da352b25b421"
 }
