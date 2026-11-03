@@ -932,7 +932,8 @@ PAPEL = (
 
 _EIXOS_LINHA = (
     "Eixos: escolha UMA linha de <eixos_livres> e escreva só o número dela em linha_eixos; "
-    "o motor grava os seis eixos. O corpo tem de caber na linha, mas em matéria que se toca e "
+    "o motor grava os seis eixos. O corpo tem de caber na linha: o material da linha é a "
+    "matéria que domina o corpo (corpo de sal exige uma linha com sal_mineral), mas em matéria que se toca e "
     "não em rótulo: o material vira o que a mão sente (cera_sebo é banha que escorre e "
     "endurece; escoria_fuligem é casca de forno que esfarela), a locomoção vira o jeito de "
     "andar e a percepção vira o órgão que sente. Nunca copie as palavras da linha no nome "
@@ -1147,7 +1148,7 @@ def montar_prompt_correcao(
         _bloco("ficha_anterior", _ficha_para_correcao(anterior)),
         _bloco(
             "corrigir",
-            "Erros do gate (U2/U3: troque linha_eixos por outra linha de <eixos_livres> e ajuste "
+            "Erros do gate (U2/U3/U14: troque linha_eixos por outra linha de <eixos_livres> e ajuste "
             "o texto do corpo à nova linha; U1/U4/U5: troque o nome ou a silhueta; R20: tire "
             "número e jargão):\n" + itens,
         ),
@@ -1328,6 +1329,29 @@ def checar_numeros(ficha: dict) -> list[Issue]:
     return out
 
 
+def checar_coerencia_eixos(ficha: dict) -> list[Issue]:
+    """U14 (SPEC-374): eixo declarado × corpo descrito (``services/axis_text``). A mensagem diz
+    o que trocar, porque a correção curta lê o texto do issue."""
+    from services import axis_text
+
+    fid = str(ficha.get("id") or "?")
+    out: list[Issue] = []
+    for eixo, valor, motivo in axis_text.incoerencias(ficha):
+        if eixo == "material":
+            outro = motivo.split(":", 1)[1] if ":" in motivo else "?"
+            msg = (
+                f"{fid}: material={valor} mas o corpo é de {outro}; troque linha_eixos por uma "
+                f"linha com material {outro} ou reescreva o corpo na matéria {valor}"
+            )
+        else:
+            msg = (
+                f"{fid}: locomocao={valor} mas o corpo não nada nem vive na água; troque "
+                "linha_eixos por uma linha com outra locomoção ou descreva o nado"
+            )
+        out.append(Issue("error", "U14", msg))
+    return out
+
+
 def runtime_da_regiao(regiao: str, bestiary: dict) -> list[dict]:
     """Fichas runtime (overlay/pool) da região, vistas pelo bestiário carregado."""
     out = []
@@ -1364,6 +1388,7 @@ def lint_runtime(
         reg += bl.lint_regiao(regiao, [v, ficha], bestiary={}, codex_docs=[], cotas={})
     issues += [i for i in reg if fid in i.message]
     issues += checar_numeros(ficha)
+    issues += checar_coerencia_eixos(ficha)
     return [i for i in issues if i.level == "error"]
 
 
@@ -1624,10 +1649,10 @@ def normalizar_forma(gen: dict, *, nome: str) -> dict:
 
 
 def reparar_eixos(ficha: dict, issues: list[Issue], livres: list[dict], lint) -> dict | None:
-    """R13: se TODO erro é U2/U3 (colisão de eixos com uma criatura da região), tenta as outras
+    """R13: se TODO erro é U2/U3 (colisão de eixos) ou U14 (eixo × corpo), tenta as outras
     linhas de ``livres`` na ordem; a prosa fica. Devolve a 1ª ficha que passa no lint, ou None.
     Reparo depois do lint: não conta no ``lint_primeira``."""
-    if not livres or not issues or any(i.code not in ("U2", "U3") for i in issues):
+    if not livres or not issues or any(i.code not in ("U2", "U3", "U14") for i in issues):
         return None
     atual = ficha.get("anatomia") or {}
     for c in livres:

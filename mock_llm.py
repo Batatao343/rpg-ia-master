@@ -715,7 +715,8 @@ def _ficha_criatura_gerada(model, messages):
     texto = (
         f"Corpo de {anat['material'].replace('_', ' ')} com {p[0][0]} {p[0][1]}. "
         f"Tem {p[1][0]} {p[1][1]} e {p[2][0]} {p[2][1]}. "
-        f"Anda por {anat['locomocao'].replace('_', ' ')} e acha a presa pelo "
+        f"{'Anda por ' + anat['locomocao'].replace('_', ' ') if anat['locomocao'] != 'nada' else 'Vive nadando, de nadadeiras moles'}"
+        " e acha a presa pelo "
         f"{anat['percepcao'].replace('_', ' ')}."
     )
     return _fill(

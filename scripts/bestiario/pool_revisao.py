@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -105,10 +106,34 @@ def exportar(regiao: str | None, maximo: int, out: Path, *, store=None) -> int:
     return len(entradas)
 
 
+_LUGAR = re.compile(
+    r"\b(?:no fundo d[aeo]s?|dentro d[aeo]s?|em|na|no|sob|entre)\s+(?:(?:uma?|o|a|os|as)\s+)?"
+    r"([a-zà-ú]+(?:\s+(?:de|da|do|dos|das)\s+[a-zà-ú]+)*)",
+    re.IGNORECASE,
+)
+
+
+def lugar_do_texto(ficha: dict) -> str:
+    """O lugar que a PRÓPRIA ficha descreve (arte, silhueta, descrição), ou vazio."""
+    arte = ficha.get("arte") or {}
+    for texto in (arte.get("visual"), ficha.get("silhueta"), ficha.get("description")):
+        m = _LUGAR.search(str(texto or ""))
+        if m:
+            return m.group(1).strip()
+    return ""
+
+
 def _composicao(ficha: dict, regiao: str) -> str:
+    # SPEC-374: o lugar vem do texto da ficha; o 1º habitat do mapa só quando o texto não diz
     doc = cg._regiao_doc(regiao)
     habitat = (ficha.get("habitat") or [regiao])[0]
-    lugar = (doc.get("habitat_nome") or {}).get(habitat) or doc.get("nome_regiao") or regiao
+    nome_regiao = doc.get("nome_regiao") or regiao
+    lugar = lugar_do_texto(ficha)
+    lugar = (
+        f"{lugar[:1].upper()}{lugar[1:]} ({nome_regiao})"
+        if lugar
+        else ((doc.get("habitat_nome") or {}).get(habitat) or nome_regiao)
+    )
     return (
         f"{lugar}, luz baixa; a criatura em primeiro plano, de três-quartos, no gesto do "
         "telegrafo; uma figura humana, uma ferramenta ou uma porta ao lado dá a escala."
