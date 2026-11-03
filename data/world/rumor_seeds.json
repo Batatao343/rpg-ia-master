@@ -1380,7 +1380,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador diz que nas criptas tem um estudante que manda os mortos fazerem o trabalho dele"
     },
     "rumor_avist_enemy_esqueleto_legiao_antiga": {
       "family": "avistamento",
@@ -1397,7 +1398,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os nômades dizem que na pradaria o vento ainda recruta, e que quem dorme no mato acorda em fila"
     },
     "rumor_avist_enemy_espectro_lamento": {
       "family": "avistamento",
@@ -1415,7 +1417,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias não deixam ninguém dormir nas casas marcadas com cruz, por mais que a chuva aperte"
     },
     "rumor_avist_enemy_gargula_ferro": {
       "family": "avistamento",
@@ -1451,7 +1454,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um vigia de Solvhen diz que os de baixo não precisam ver para achar quem foi encomendado"
     },
     "rumor_avist_enemy_urso_coruja_mutante": {
       "family": "avistamento",
@@ -1504,7 +1508,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os ferreiros que restam dizem que uma das panelas grandes da forja anda sozinha à noite"
     },
     "rumor_avist_enemy_basilisco_caverna": {
       "family": "avistamento",
@@ -1521,7 +1526,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador diz que deixou a melhor lâmina dele na Boca, presa em pedra, e que a mão quase foi junto"
     },
     "rumor_avist_enemy_troll_ponte": {
       "family": "avistamento",
@@ -1539,7 +1545,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os carregadores dizem que nas Saídas o chão da passagem cobra, e que quem não paga não chega ao outro lado"
     },
     "rumor_avist_enemy_golem_lixo": {
       "family": "avistamento",
@@ -1627,7 +1634,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador diz que nas câmaras secas é melhor andar no escuro: lá a luz volta afiada"
     },
     "rumor_avist_enemy_nomade_canibal": {
       "family": "avistamento",
@@ -1644,7 +1652,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um pastor conta que perdeu dois homens e que achou só as botas, e as botas estavam limpas"
     },
     "rumor_avist_enemy_yeti": {
       "family": "avistamento",
@@ -1681,7 +1690,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os carregadores das trilhas altas atravessam os trechos de paredão de joelhos no verão, e não por cansaço"
     },
     "rumor_avist_enemy_bandido_capitao": {
       "family": "avistamento",
@@ -1699,7 +1709,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mercador diz que o chefe do bando lhe pediu desculpas pela demora antes de levar tudo"
     },
     "rumor_avist_enemy_morcego_vampiro": {
       "family": "avistamento",
@@ -1716,7 +1727,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias amarram os clientes em corda nos trechos de vento, e dizem que não é por causa do vento"
     },
     "rumor_avist_enemy_aranha_lobo": {
       "family": "avistamento",
@@ -1788,7 +1800,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pescadores da margem não entram na água limpa, só na turva, e riem de quem pergunta"
     },
     "rumor_avist_enemy_observador_menor": {
       "family": "avistamento",
@@ -1805,7 +1818,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mercenário diz que o bando da Boca desviou de todos os golpes dele, e que alguém atrás gritava antes"
     },
     "rumor_avist_enemy_minotauro_esqueleto": {
       "family": "avistamento",
@@ -1822,7 +1836,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mineiro diz que nos trilhos velhos dos Anões ainda passa carga, e que é melhor não estar no caminho"
     },
     "rumor_avist_enemy_golem_carne": {
       "family": "avistamento",
@@ -1839,7 +1854,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um contrabandista da margem jura que vendeu um caixote vivo e que o comprador nunca veio buscá-lo"
     },
     "rumor_avist_mon_lobo_de_vidro": {
       "family": "avistamento",
@@ -2067,7 +2083,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pescadores dizem que os mortos do lago patrulham a cidade como se ainda houvesse o que guardar"
     },
     "rumor_avist_mon_mergulhadores_saqueadores": {
       "family": "avistamento",
@@ -2084,7 +2101,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os da margem dizem que caçador de tesouro do lago é valente até ver a primeira sombra errada"
     },
     "rumor_avist_enemy_cultista_destilacao": {
       "family": "avistamento",
@@ -2101,7 +2119,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mergulhador diz que nas câmaras secas tem gente estudando os mortos, e que os vivos servem melhor"
     },
     "rumor_avist_mon_sereia_de_ophidia": {
       "family": "avistamento",
@@ -2277,7 +2296,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os carregadores andam em grupo grande pelas passagens de baixo: dizem que os Orcs contam antes de atacar"
     },
     "rumor_avist_mon_cabra_navalha": {
       "family": "avistamento",
@@ -2294,7 +2314,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pastores dizem que nas encostas altas não se amarra animal com corda, porque os bichos de lá a cortam"
     },
     "rumor_avist_mon_anao_eco": {
       "family": "avistamento",
@@ -2311,7 +2332,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os saqueadores dizem que na Boca ainda se ouve o turno da manhã, e que é melhor não atrapalhar o serviço"
     },
     "rumor_avist_mon_espectro_elfico": {
       "family": "avistamento",
@@ -2328,7 +2350,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um guia de Vaelorn diz que quem ouviu a canção das ruínas não envelhece direito depois"
     },
     "rumor_avist_mon_lobo_da_pradaria": {
       "family": "avistamento",
@@ -2345,7 +2368,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pastores dizem que a matilha não ataca a manada, cansa a manada"
     },
     "rumor_avist_enemy_capturador_groth": {
       "family": "avistamento",
@@ -2362,7 +2386,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um nômade diz que os mercadores de gente chegam ao acampamento como quem vem contar estoque"
     },
     "rumor_avist_mon_rato_caldeira": {
       "family": "avistamento",
@@ -2694,7 +2719,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os velhos dizem que o experimento que afundou a cidade ainda está procurando onde caber"
     },
     "rumor_avist_mon_vigia_caco": {
       "family": "avistamento",
@@ -2711,7 +2737,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os mergulhadores dizem que há corredor nas ruínas onde ainda vale uma ordem que ninguém mais lembra"
     },
     "rumor_avist_mon_quimera_cristal": {
       "family": "avistamento",
@@ -2728,7 +2755,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias de mergulho mandam nunca ficar para trás nas galerias, nem para ver o que brilhou"
     },
     "rumor_avist_mon_caranguejo_cinza": {
       "family": "avistamento",
@@ -2847,7 +2875,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um explorador diz que entrou por um túnel na Boca e que, na volta, o túnel já não estava lá"
     },
     "rumor_avist_mon_cabra_labirinto": {
       "family": "avistamento",
@@ -2864,7 +2893,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias dizem que quem segue bicho de casco pela montanha volta por um caminho que não existe mais"
     },
     "rumor_avist_mon_guardiao_basalto": {
       "family": "avistamento",
@@ -2881,7 +2911,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os Goblins não usam a estrada antiga: dizem que ela ainda tem dono, e que o dono é de pedra"
     },
     "rumor_avist_mon_gafanhoto_runa": {
       "family": "avistamento",
@@ -2898,7 +2929,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um estudioso de Vaelorn diz que copia as inscrições depressa, porque no verão elas somem"
     },
     "rumor_avist_mon_cavaleiro_sem_rosto": {
       "family": "avistamento",
@@ -2915,7 +2947,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os bandidos da estrada não acampam perto dos marcos raspados: dizem que a fronteira ainda é guardada"
     },
     "rumor_avist_mon_auroque_ruinas": {
       "family": "avistamento",
@@ -2932,7 +2965,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pedreiros de Vaelorn dizem que a manada derruba mais muro velho que qualquer guerra"
     },
     "rumor_avist_mon_rato_cais_brekmar": {
       "family": "avistamento",
@@ -3003,7 +3037,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um pescador da margem diz que lá embaixo ainda há quem se ofereça, e que a oferta não acabou"
     },
     "rumor_avist_mon_dentado_de_eras": {
       "family": "avistamento",
@@ -3020,7 +3055,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os mergulhadores velhos dizem que quem desce fundo demais volta falando com a boca de outros"
     },
     "rumor_avist_mon_avesso_de_oghma": {
       "family": "avistamento",
@@ -3037,7 +3073,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias de mergulho não descem as galerias do fundo: dizem que lá a água empurra por dentro"
     },
     "rumor_avist_mon_fervido_da_corrente": {
       "family": "avistamento",
@@ -3054,7 +3091,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os mergulhadores dizem que há corredor no fundo onde a água escalda sozinha, e que não é fonte"
     },
     "rumor_avist_mon_bigua_de_vidro": {
       "family": "avistamento",
@@ -3071,7 +3109,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os nadadores da margem cobrem a cabeça quando o bando sai das estacas para pescar"
     },
     "rumor_avist_mon_aranha_de_bolha": {
       "family": "avistamento",
@@ -3088,7 +3127,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mergulhador conta que achou ar no fundo do lago, e que o ar tinha dono"
     },
     "rumor_avist_mon_lesma_de_penacho": {
       "family": "avistamento",
@@ -3105,7 +3145,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mago de margem jura que perdeu um feitiço inteiro para um bicho que não chegava ao joelho dele"
     },
     "rumor_avist_mon_ourico_de_lajedo": {
       "family": "avistamento",
@@ -3122,7 +3163,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os mergulhadores dizem que nos degraus rasos se pisa devagar e de bota, ou se volta mancando para sempre"
     },
     "rumor_avist_mon_cupinzeiro_de_vidro": {
       "family": "avistamento",
@@ -3139,7 +3181,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador diz que nas câmaras secas as paredes crescem quando se briga perto delas"
     },
     "rumor_avist_mon_camarao_faxineiro": {
       "family": "avistamento",
@@ -3156,7 +3199,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pescadores dizem que os mortos do lago não apodrecem porque têm quem cuide deles"
     },
     "rumor_avist_mon_peito_de_sino": {
       "family": "avistamento",
@@ -3173,7 +3217,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os mergulhadores dizem que há rota no fundo que é de um homem só, e que ele espera lá embaixo"
     },
     "rumor_avist_mon_mao_de_oghma": {
       "family": "avistamento",
@@ -3190,7 +3235,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador diz que achou o maior cristal da vida dele e que o cristal ficou com ele, e não o contrário"
     },
     "rumor_avist_mon_alambique_de_carne": {
       "family": "avistamento",
@@ -3207,7 +3253,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um cultista preso disse que o mais devoto deles não precisa de voluntário, porque usa o próprio sangue"
     },
     "rumor_avist_mon_aspirante_de_coral": {
       "family": "avistamento",
@@ -3224,7 +3271,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mergulhador da superfície pagou ao Povo-Recife para respirar na água, e agora não respira direito em lugar nenhum"
     },
     "rumor_avist_mon_comedor_de_alga": {
       "family": "avistamento",
@@ -3241,7 +3289,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os magos de margem dizem que no escuro do lago tem quem os enxergue antes de serem vistos"
     },
     "rumor_avist_mon_lambedor_de_aboboda": {
       "family": "avistamento",
@@ -3258,7 +3307,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os saqueadores das ruínas dizem que nenhuma sala submersa cai sozinha, e que alguém sempre fica do lado firme"
     },
     "rumor_avist_mon_pernalta_do_conselho": {
       "family": "avistamento",
@@ -3275,7 +3325,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pescadores dizem que sobre o bairro velho ninguém fica de pé no barco, nem para jogar a rede"
     },
     "rumor_avist_mon_veu_faminto": {
       "family": "avistamento",
@@ -3292,7 +3343,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma noiva de margem não deixa o enxoval perto da água: diz que no lago há quem goste de coisas bonitas"
     },
     "rumor_avist_mon_novelo_de_anzois": {
       "family": "avistamento",
@@ -3309,7 +3361,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um pescador diz que perdeu a rede no raso e que, no dia seguinte, ela estava mais pesada e se mexia"
     },
     "rumor_avist_mon_subida_de_cracas": {
       "family": "avistamento",
@@ -3326,7 +3379,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os velhos de margem dizem que na noite da água todos tentaram subir, e que as paredes ainda tentam"
     },
     "rumor_avist_mon_quilhado_do_estaleiro": {
       "family": "avistamento",
@@ -4742,7 +4796,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um explorador jura que nas câmaras que se repetem é preciso olhar para os lados, nunca só para a frente"
     },
     "rumor_avist_mon_geodo_da_praga": {
       "family": "avistamento",
@@ -4759,7 +4814,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os fugidos das Saídas dizem que perto do fogo há quem fique mais perigoso a cada hora"
     },
     "rumor_avist_mon_cauda_de_atalaia": {
       "family": "avistamento",
@@ -4776,7 +4832,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias dizem que na trilha estreita do norte quem passa olhando para cima chega, e quem olha para os pés não"
     },
     "rumor_avist_mon_queimado_de_frio": {
       "family": "avistamento",
@@ -4793,7 +4850,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias mandam nunca descansar sentado na subida, nem quando o corpo pede"
     },
     "rumor_avist_mon_bexiga_de_respiro": {
       "family": "avistamento",
@@ -4810,7 +4868,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mineiro diz que embaixo das ventilações da forja é preciso andar de capuz, mesmo no calor"
     },
     "rumor_avist_mon_saltao_de_galeria": {
       "family": "avistamento",
@@ -4827,7 +4886,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os mineiros da Boca andam leves e devagar pelas passagens altas, e nunca dizem por quê"
     },
     "rumor_avist_mon_rolador_de_escarpa": {
       "family": "avistamento",
@@ -4844,7 +4904,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os carregadores das trilhas dizem que pedra que cai duas vezes do mesmo lugar não é pedra"
     },
     "rumor_avist_mon_chicote_de_fenda": {
       "family": "avistamento",
@@ -4861,7 +4922,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um guia diz que nas trilhas do alto se anda longe da rocha, por mais que o abismo assuste"
     },
     "rumor_avist_mon_ladrao_de_lume": {
       "family": "avistamento",
@@ -4878,7 +4940,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador da Boca diz que perdeu três lanternas numa noite e que o escuro chorava toda vez"
     },
     "rumor_avist_mon_bracos_de_tenaz": {
       "family": "avistamento",
@@ -4895,7 +4958,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mercenário diz que deixou a espada cair na forja de baixo e que, quando voltou, ela estava pendurada na parede"
     },
     "rumor_avist_mon_marco_que_aponta": {
       "family": "avistamento",
@@ -4912,7 +4976,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os da montanha dizem que tem guia que sabe o caminho melhor que qualquer vivo, e que por isso ninguém volta com ele"
     },
     "rumor_avist_mon_armador_de_fosso": {
       "family": "avistamento",
@@ -4929,7 +4994,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os Orcs das Saídas dizem que corredor por onde Goblin passou antes é corredor que não se usa para recuar"
     },
     "rumor_avist_mon_vedado_de_piche": {
       "family": "avistamento",
@@ -4946,7 +5012,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os Orcs das Saídas dizem que quem sangra no escuro já foi achado, só não sabe ainda"
     },
     "rumor_avist_mon_tampao_da_camara": {
       "family": "avistamento",
@@ -4963,7 +5030,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um explorador diz que nas profundezas da Boca a saída é sempre a que já foi usada, e que ela se fecha"
     },
     "rumor_avist_mon_tesoura_de_cordada": {
       "family": "avistamento",
@@ -4980,7 +5048,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "dois grupos subiram a mesma parede na primavera, e cada um jura que a corda do outro partiu sozinha"
     },
     "rumor_avist_mon_mastro_de_trofeus": {
       "family": "avistamento",
@@ -4997,7 +5066,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os Orcs contam toda noite as estacas dos traidores e dizem que sempre sobra uma"
     },
     "rumor_avist_mon_mao_da_borda": {
       "family": "avistamento",
@@ -5014,7 +5084,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um guia velho ensina a nunca puxar mão nenhuma pela beira sem ver de quem é o braço"
     },
     "rumor_avist_mon_lingua_de_lima": {
       "family": "avistamento",
@@ -5031,7 +5102,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os últimos Anões não contam da queda do Reino, e dizem que as paredes também já não contam"
     },
     "rumor_avist_mon_pisador_do_salao": {
       "family": "avistamento",
@@ -5048,7 +5120,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os saqueadores da Boca dizem que nas câmaras altas ninguém sobe em escada, nem para fugir"
     },
     "rumor_avist_mon_arame_vivo": {
       "family": "avistamento",
@@ -6111,7 +6184,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias de Vaelorn dizem que nas ruínas há quem corra como se o dia fosse acabar, e para eles acaba"
     },
     "rumor_avist_mon_vidrado_do_morro": {
       "family": "avistamento",
@@ -6128,7 +6202,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um soldado de guarda velha jura que o posto da encosta queimada ainda tem sentinela, e que ela não pisca"
     },
     "rumor_avist_mon_costas_de_alicerce": {
       "family": "avistamento",
@@ -6145,7 +6220,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador velho nunca dorme encostado em pedra de ruína, e mostra a espinha calejada para explicar"
     },
     "rumor_avist_mon_vestido_de_gafanhotos": {
       "family": "avistamento",
@@ -6162,7 +6238,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma viúva da pradaria diz que o marido voltou do campo na praga, e que ela não abriu a porta"
     },
     "rumor_avist_mon_fucador_da_semente": {
       "family": "avistamento",
@@ -6179,7 +6256,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um caçador da pradaria diz que um corte de presa pequeno lhe custou a perna, depois que o bicho já tinha ido"
     },
     "rumor_avist_mon_nadador_de_pedra": {
       "family": "avistamento",
@@ -6196,7 +6274,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os saqueadores das ruínas pisam no mato, nunca nas lajes, e não explicam por quê"
     },
     "rumor_avist_mon_cobra_de_legua": {
       "family": "avistamento",
@@ -6213,7 +6292,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um nômade conta que seguiu um rastro de escama da manhã até a tarde e voltou sem ver o fim"
     },
     "rumor_avist_mon_rodante_de_espinhos": {
       "family": "avistamento",
@@ -6230,7 +6310,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "as crianças da pradaria aprendem a ficar caladas quando algo rola no mato, e os adultos também"
     },
     "rumor_avist_mon_pernalta_das_colunas": {
       "family": "avistamento",
@@ -6247,7 +6328,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um guia das ruínas conta as hastes de pé entre os escombros toda manhã, e diz que o número muda"
     },
     "rumor_avist_mon_lagarto_de_mudas": {
       "family": "avistamento",
@@ -6264,7 +6346,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um menino de Vaelorn trouxe para casa uma pele transparente de bicho, e ela mordeu o cachorro"
     },
     "rumor_avist_mon_besouro_de_alavanca": {
       "family": "avistamento",
@@ -6281,7 +6364,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um soldado diz que voltou das ruínas com a placa do peito arrancada da junta, e que não foi golpe"
     },
     "rumor_avist_mon_carregador_de_ganchos": {
       "family": "avistamento",
@@ -6298,7 +6382,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mercador diz que, quando um viajante se afasta da caravana, os de Groth já sabem antes dele"
     },
     "rumor_avist_mon_leitor_de_cativos": {
       "family": "avistamento",
@@ -6315,7 +6400,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um soldado diz que os Vrel desviaram do golpe dele antes que ele mesmo soubesse que ia dar"
     },
     "rumor_avist_mon_profanador_cravejado": {
       "family": "avistamento",
@@ -6332,7 +6418,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um joalheiro de Vaelorn recusa peça de sepultura: diz que já viu o dono vir buscá-la grudada no corpo"
     },
     "rumor_avist_mon_cauda_emendada": {
       "family": "avistamento",
@@ -6349,7 +6436,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os carroceiros de Solvhen dizem que bando misto se reconhece pelo tombo antes de se ver a cara"
     },
     "rumor_avist_mon_desfiado_de_vaelorn": {
       "family": "avistamento",
@@ -6366,7 +6454,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mago élfico cobrou caro para tirar a dor de um guarda, e o guarda ainda está de serviço, quebrado"
     },
     "rumor_avist_mon_arqueiro_de_tendao": {
       "family": "avistamento",
@@ -6383,7 +6472,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um bandido aposentado diz que pagar pedágio aos de cinza é mais barato que fugir deles"
     },
     "rumor_avist_mon_egua_de_costas": {
       "family": "avistamento",
@@ -6400,7 +6490,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um pastor diz que há um animal de sela vivo na pradaria que não deixa ninguém tirar o dono de onde caiu"
     },
     "rumor_avist_mon_cabeca_acima": {
       "family": "avistamento",
@@ -6417,7 +6508,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias de Vaelorn dizem que na arena velha ainda se duela, e que quem perde tem de se curvar"
     },
     "rumor_avist_mon_retalho_das_duas_cidades": {
       "family": "avistamento",
@@ -6434,7 +6526,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um carroceiro da estrada jura que dois sócios de raças diferentes se separaram depois de passar por alguém"
     },
     "rumor_avist_mon_lamelas_de_ferrugem": {
       "family": "avistamento",

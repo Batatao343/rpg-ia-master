@@ -45,7 +45,7 @@ criaturas:
       cheiro: "Terra cozida e vidro quente ao sol, um cheiro de forno de vidreiro aberto."
       marca: "Nas pedras da subida, clarões de luz que dançam sem nuvem nem água por perto, sempre virados para quem vem."
       aproximacao: "No topo, um soldado fechado numa crosta verde de garrafa gira o tronco, e o sol do peito dele cega você."
-      rumor: "os pastores não sobem a encosta queimada ao meio-dia: dizem que lá em cima o sol tem dono"
+      rumor: "um soldado de guarda velha jura que o posto da encosta queimada ainda tem sentinela, e que ela não pisca"
     contra_jogo: "Chegar com o sol nas costas, ou lutar à noite e em dia nublado; sem o reflexo, é só uma casca pesada e lenta."
     tramas: []
     autor: opus-370-lote2
@@ -427,7 +427,7 @@ criaturas:
       rastro: "Cascos que rodeiam sempre o mesmo monte de mato, e um chão pisoteado em leque só do lado de trás."
       resto: "Um viajante caído de barriga para cima com a marca de um casco rachado no peito, longe do monte, como quem ia embora."
       som: "Um bufo de cavalo cansado e, de vez em quando, um coice que estala no ar sem acertar nada."
-      cheiro: "Pelo de montaria velha e carne seca ao sol, cheiro de luto que ninguém enterrou."
+      cheiro: "Crina suada e couro de sela apodrecido, um cheiro de luto que ninguém enterrou."
       marca: "No mato, um monte de terra com uma sela podre em cima, e o mato em volta comido até a raiz num círculo."
       aproximacao: "Um animal de montaria cinza, de costelas fundas, está parado junto a um monte, a cabeça torcida sobre o lombo, olhando para trás."
       rumor: "um pastor diz que há um animal de sela vivo na pradaria que não deixa ninguém tirar o dono de onde caiu"
@@ -471,7 +471,7 @@ criaturas:
       rastro: "Duas fileiras de cascos que cavam o chão em sentidos contrários, lado a lado, como uma carroça puxada pelos dois lados."
       resto: "Dois bandos de pastores mortos um sobre o outro no mesmo pasto, de facões cruzados."
       som: "Um mugido duplo, grave e desencontrado, e o estalo surdo de osso forçando osso."
-      cheiro: "Suor de touro e sangue quente, forte, de arena depois de briga."
+      cheiro: "Almíscar de touro bravo e terra revirada, quente, cheiro de curral depois da monta."
       marca: "No pasto, a terra arada em sulcos que se cruzam em X, fundos como valas, e o mato arrancado em volta."
       aproximacao: "Dois touros de cabeças fundidas num nó de osso se empurram sem parar, e o nó vem para o lado de quem está inteiro."
       rumor: "os pastores dizem que há manada na pradaria que ninguém disputa, porque quem disputou se matou antes"

@@ -1,0 +1,667 @@
+# SPEC-370 R1 (lote 2) — bloco de fauna de Aethelgard: 25 fichas da SPEC-349 + legado `valoria`
+# da região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# Revisão de fauna: handoffs/SPEC-370-independent-review.md (lote 2; revisor ≠ autor).
+regiao: aethelgard
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_doador_inacabado:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas, ae_camara_seca]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Dois sulcos finos e secos no limo do chão, como de feixes arrastados, que saem de uma câmara e voltam para a porta."
+      resto: "Uma sandália élfica largada no degrau com o tornozelo de quem a usava marcado de dedos compridos, ainda frio."
+      som: "Um arrasto leve e paciente, e um suspiro de boca aberta que não termina de soltar o ar."
+      cheiro: "Pele seca de pergaminho molhado e um fundo metálico de recipiente vazio."
+      marca: "Na porta de uma câmara de contenção, a lista dos voluntários gravada na pedra, e um nome sem a data do fim."
+      aproximacao: "Pelo chão vem um elfo de pernas que são só tendões, a pele fina como papel, e veias turvas no peito acendem quando ele chega perto."
+      rumor: "um pescador da margem diz que lá embaixo ainda há quem se ofereça, e que a oferta não acabou"
+    contra_jogo: "Não deixá-lo agarrar; manter distância, ou matá-lo enquanto as veias ainda estão apagadas."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_dentado_de_eras:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "No lodo da galeria, pegadas curvadas para a frente, de quem carrega a cabeça como um peso, que vão de um barulho ao outro."
+      resto: "Uma armadura de mergulho mordida até rasgar a placa, e no couro de baixo, só arranhões."
+      som: "Um bater miúdo e constante de dentes uns nos outros, e um murmúrio em línguas que ninguém fala mais."
+      cheiro: "Gengiva inflamada e água velha, como de boca de afogado aberta."
+      marca: "No chão da galeria, dentes soltos de todos os tipos, de leite, de peixe e de bicho sem nome, caídos em fila."
+      aproximacao: "Curvado sob uma cabeça enorme, vem um mergulhador de mandíbula estufada de dentes que descem pelo pescoço em placas."
+      rumor: "os mergulhadores velhos dizem que quem desce fundo demais volta falando com a boca de outros"
+    contra_jogo: "Lutar sem contar com a armadura, ou gastar uma ação para arrancar os dentes cravados; atacar pelos lados, onde a cabeça pesada demora a virar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_avesso_de_oghma:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de mãos e pés virados ao contrário no lodo, em bando, que correm para os pontos onde alguém respirou."
+      resto: "Um mergulhador com a perna presa entre costelas partidas de outra coisa, os ossos fechados como dedos sobre a canela."
+      som: "Estalos secos e rápidos, como de muitos dedos de osso se fechando de uma vez, e um piscar úmido."
+      cheiro: "Carne de dentro para fora, crua e quente, que a água fria não leva."
+      marca: "Nas galerias que descem, rachaduras novas nas paredes de dentro para fora, como se a pedra tivesse sido empurrada."
+      aproximacao: "De barriga para cima e cabeça pendurada, um corpo aberto em gaiola de ossos corre para você e se joga por baixo da sua perna."
+      rumor: "os guias de mergulho não descem as galerias do fundo: dizem que lá a água empurra por dentro"
+    contra_jogo: "Não deixar que ele chegue por baixo, chutando-o de lado; preso, quebrar uma costela da gaiola solta o membro."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_fervido_da_corrente:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas, aethelgard]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um peixe cozido boiando de barriga para cima no meio de uma galeria fria, e a água em volta ainda morna."
+      som: "Um borbulhar constante de panela, que fica mais forte quando alguém se aproxima pelo corredor."
+      cheiro: "Cinza quente molhada e couro cozido, cheiro de chaleira esquecida no fogo."
+      marca: "Na parede de um corredor submerso, uma mancha de lodo cozido e branco, na altura de um homem encostado."
+      aproximacao: "No corredor, um mago de pele esticada e brilhante como couro molhado espera, e o brilho baço sai dos olhos e da boca."
+      rumor: "os mergulhadores dizem que há corredor no fundo onde a água escalda sozinha, e que não é fonte"
+    contra_jogo: "Feri-lo pouco e matá-lo de uma vez, com um golpe grande, ou atraí-lo para fora da água, onde o calor se perde no ar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_esqueleto_mago:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_camara_seca, ae_ruinas_submersas]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas secas de sandália que vão de uma lamparina acesa a outra, sempre parando de frente para a luz."
+      resto: "Um saqueador caído com um corte reto e cauterizado atravessando o peito, como feito por um raio de sol."
+      som: "Um murmúrio de fórmula recitada no ritmo exato, sem voz, e um zumbido fino quando a luz entra."
+      cheiro: "Pó de vidro e ar parado de biblioteca, um cheiro seco de câmara fechada há séculos."
+      marca: "Nas paredes das câmaras secas, riscos de luz queimados em leque, partidos como os de um prisma."
+      aproximacao: "Um estudioso de túnica do conselho, de olhos leitosos, com prismas de seis faces furando os braços e a espinha, ergue os braços para a sua lamparina."
+      rumor: "um saqueador diz que nas câmaras secas é melhor andar no escuro: lá a luz volta afiada"
+    contra_jogo: "Apagar ou tapar a luz, ou pôr-se atrás de pedra quando os prismas acendem; no escuro, ele só tem as mãos."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_fantasma:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [aethelgard, ae_ruinas_submersas]
+      permanencia: [7, 10]
+      presas: [mon_bigua_de_vidro]
+      foge_de: [mon_afogado_de_aethelgard]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um pescador puxado do raso para o fundo, só a rede ficou na margem, molhada e rasgada por dedos de membrana."
+      som: null
+      cheiro: "Água limpa e fria demais, com um fundo leve de lodo escuro que não devia estar ali."
+      marca: "Na água cristalina da borda, uma ossada de peixe grande desenhada no fundo, e no lugar dela, no dia seguinte, nada."
+      aproximacao: "Na água clara da borda nada de lado uma ossada humana, um coração escuro batendo nas costelas, e os braços já se abrem."
+      rumor: "os pescadores da margem não entram na água limpa, só na turva, e riem de quem pergunta"
+    contra_jogo: "Turvar a água ou tirá-lo dela; turvo ou fora da água ele fica opaco e lento. Mirar o coração escuro."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_golem_carne:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [aethelgard]
+      permanencia: [10, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "No cais da margem, uma marca de algo dobrado arrastado para dentro de um caixote, e as ripas de volta no lugar."
+      resto: "Um carregador caído ao lado de um caixote aberto, dobrado ao meio para trás, como se o tivessem embalado."
+      som: "Um ranger de juntas quebradas se dobrando para dentro, e o estalo de ripas pregadas cedendo."
+      cheiro: "Corda alcatroada e afogado velho, um cheiro de porão de navio de contrabando."
+      marca: "Na margem, uma pilha de caixotes de embarque pregados que ninguém veio buscar, um deles com a tampa empurrada de dentro."
+      aproximacao: "De dentro de um caixote se desdobra um corpo costurado com corda, de quatro braços em ângulo e duas cabeças tombadas."
+      rumor: "um contrabandista da margem jura que vendeu um caixote vivo e que o comprador nunca veio buscá-lo"
+    contra_jogo: "Não tocar nos caixotes, ou atraí-lo para longe da margem antes de abri-los; cortar os pontos de corda solta um braço."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  mon_cacao_de_lastro:
+    fonte: ficha
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [aethelgard]
+      permanencia: [3, 4]
+      presas: [mon_ourico_de_lajedo]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "No fundo raso da borda, uma faixa larga sem nenhuma pedra solta, varrida como chão de casa."
+      resto: "Pedras esculpidas das ruínas caídas no raso, lisas e babadas, com marcas de dentes dobrados para trás."
+      som: "Um baque surdo de algo enorme batendo de volta na água, e ondas que chegam à margem sem vento."
+      cheiro: "Sal de mar dentro do lago doce, e couro de peixe grande, áspero e gordo."
+      marca: "Num barco de pesca da borda, o fundo arranhado de fora como por uma lixa do tamanho de um cavalo."
+      aproximacao: "Do fundo raso sobe uma cabeça chata e larga como a de um barco, as fileiras de dentes dobradas para trás, e a barriga cheia de pedras raspa a lama."
+      rumor: "os pescadores dizem que no lago há bicho de mar, e que se o virem pular é para remar para longe"
+    contra_jogo: "Escolher quando abrir a barriga; no fundo ele morde, no ar ele cai. Quem está num barco o prefere no fundo, quem está na água o quer no ar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_bigua_de_vidro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde]
+      territorio: [aethelgard]
+      permanencia: [6, 9]
+      presas: [mon_camarao_faxineiro]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Uma lasca turva e cortante, fina como pena, presa na borda de um barco e tingida de sangue de quem a pegou."
+      som: "Um tilintar de cacos que se sacodem ao vento, e o baque seco de algo pesado mergulhando como pedra."
+      cheiro: "Peixe pescado agora e penas molhadas, com um fundo frio de cristal."
+      marca: "Nas estacas e arcos que despontam da água, manchas brancas de ave e cacos foscos espalhados embaixo."
+      aproximacao: "De uma estaca mergulha uma ave preta de pescoço comprido, as asas cobertas de penas de cristal que cortam o ar."
+      rumor: "os nadadores da margem cobrem a cabeça quando o bando sai das estacas para pescar"
+    contra_jogo: "Arma de arremesso, ou esperar o mergulho e golpear quando ela está na água; molhada e pesada de vidro, demora a levantar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_aranha_de_bolha:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas]
+      permanencia: [8, 11]
+      presas: [mon_camarao_faxineiro]
+    sinais:
+      antecedencia: imediato
+      rastro: "Fios brancos esticados de arco em arco nos corredores submersos, tensos, que vibram quando alguém nada perto."
+      resto: "Um mergulhador enrolado em seda até os joelhos, preso de cabeça para cima num canto onde ainda há ar."
+      som: null
+      cheiro: "Ar velho preso debaixo d'água, abafado como de quarto fechado no fundo do lago."
+      marca: "Entre dois arcos afundados, um volume prateado de seda do tamanho de um quarto, inchado de ar."
+      aproximacao: "Os fios em volta das suas pernas se fecham, e de dentro do volume prateado desce uma coisa marrom do tamanho de um homem."
+      rumor: "um mergulhador conta que achou ar no fundo do lago, e que o ar tinha dono"
+    contra_jogo: "Cortar os fios antes de ir até ela; quem foi puxado deve furar o sino, porque sem ar dentro ela perde a casa e solta."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lesma_de_penacho:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas]
+      permanencia: [7, 10]
+      foge_de: [mon_quimera_cristal]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um rastro que brilha nas paredes das câmaras, fino e úmido, que vai direto até onde há lascas acesas."
+      resto: "Uma bolsa de mergulhador comida por dentro, os cristais roubados e o couro brilhando de baba."
+      som: "Um chupar baixo e úmido na pedra, quase nada, que para quando alguém prepara magia."
+      cheiro: "Maresia doce e Éter, um cheiro de raio que caiu dentro da água."
+      marca: "Nas paredes onde havia cristal, faixas raspadas até a pedra e listras de cor que mudam devagar."
+      aproximacao: "Na parede, um bicho mole e lustroso do tamanho de um gato ergue um tufo de dedos carnudos que brilham na ponta."
+      rumor: "um mago de margem jura que perdeu um feitiço inteiro para um bicho que não chegava ao joelho dele"
+    contra_jogo: "Abrir a luta com aço e deixar a magia para depois, ou gastar nela um feitiço fraco primeiro; com o penacho cheio, não a toque de mão. Sal faz o penacho murchar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ourico_de_lajedo:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [aethelgard, ae_ruinas_submersas]
+      permanencia: [9, 12]
+      foge_de: [mon_cacao_de_lastro]
+    sinais:
+      antecedencia: cedo
+      rastro: "Nas lajes rasas, riscos de raspar em estrela de cinco pontas, de quem come a pedra devagar."
+      resto: "Uma bota de couro furada por um espinho cor de ferrugem que cresceu lá dentro até atravessar a sola."
+      som: "Um raspar miúdo de dentes na pedra debaixo d'água, de centenas ao mesmo tempo."
+      cheiro: "Sal de mar e alga raspada, estranho no lago doce."
+      marca: "Num degrau submerso das ruínas, um tapete escuro de espinhos soltos que ainda estão crescendo, cada dia mais compridos."
+      aproximacao: "A laje sob o seu pé está coberta de bolas escuras de espinhos ocos, e uma delas dispara pela água."
+      rumor: "os mergulhadores dizem que nos degraus rasos se pisa devagar e de bota, ou se volta mancando para sempre"
+    contra_jogo: "Matá-lo logo, antes que a laje feche, ou lutar parado; quem tem de atravessar vai calçado e devagar, porque ele sente o tremor do passo."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cupinzeiro_de_vidro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_camara_seca]
+      permanencia: [10, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Trilhas miúdas e brancas no pó das câmaras, que vão dos cristais apagados até um mesmo canto."
+      resto: "Um cristal de contenção roído até a base, oco, cheio de grãos turvos cuspidos um a um."
+      som: "Um estalar fino e incessante, como de areia caindo em telha quente, que vem de dentro de algo."
+      cheiro: "Pó de cristal e bicho branco de colônia, um cheiro de formigueiro aquecido."
+      marca: "Num corredor seco, uma parede baixa e bolhosa de material turvo que não estava ali, ainda pegajosa nas bordas."
+      aproximacao: "Num canto da câmara ergue-se um monte turvo da altura de um homem, e de todas as bocas dele saem cupins de cabeça grande."
+      rumor: "um saqueador diz que nas câmaras secas as paredes crescem quando se briga perto delas"
+    contra_jogo: "Quebrar o monte até a rainha, ou levar a luta para longe do ninho; as paredes são de vidro e cedem a pancada, não a lâmina."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_camarao_faxineiro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas]
+      permanencia: [7, 10]
+      foge_de: [mon_bigua_de_vidro, mon_aranha_de_bolha]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Uma ferida de morto fechada por uma pele nova, grossa e clara, que não é de gente."
+      som: "Um crepitar baixo na água, como de mil pinças miúdas trabalhando juntas."
+      cheiro: "Carne podre limpa e quitina fresca, um cheiro de peixaria lavada."
+      marca: "Na água em volta de uma patrulha de mortos, uma nuvem clara que guarda a forma de gente mesmo quando eles passam."
+      aproximacao: "Uma nuvem de bichinhos claros listrados de vermelho desce sobre a ferida do morto, e o corte começa a fechar."
+      rumor: "os pescadores dizem que os mortos do lago não apodrecem porque têm quem cuide deles"
+    contra_jogo: "Espantar o enxame primeiro, com luz forte, fogo ou rede fina, ou ferir os Afogados longe dele; sem a nuvem, os Afogados não fecham."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_quimera_cristal:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [aethelgard, ae_ruinas_submersas]
+      permanencia: [7, 10]
+      presas: [mon_lesma_de_penacho]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de patas de membrana larga no lodo da margem, em família, que somem na água de uma vez."
+      resto: "Um mergulhador que ficou para trás do grupo, achado do outro lado da galeria, com uma mordida que quebrou o osso."
+      som: "Um assobio agudo de bicho d'água, respondido por outros, e o zunido de algo atravessando a água rápido demais."
+      cheiro: "Pelo oleoso molhado e peixe meio comido, um cheiro de toca de beira de rio."
+      marca: "Numa pedra da margem, restos de bichos moles roídos e fios finos e turvos partidos, como bigodes quebrados."
+      aproximacao: "Da água sai de repente, rápida demais, uma lontra enorme de pelo escuro e bigodes turvos e duros, com a mancha clara na garganta."
+      rumor: "os guias de mergulho mandam nunca ficar para trás nas galerias, nem para ver o que brilhou"
+    contra_jogo: "Ficar junto, sem deixar ninguém para trás, e lutar longe das Correntes; quebrar os bigodes de cristal a deixa sem saber onde a Corrente está."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_peito_de_sino:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [aethelgard, ae_ruinas_submersas]
+      permanencia: [8, 11]
+      suprime: [mon_mergulhadores_saqueadores]
+    sinais:
+      antecedencia: cedo
+      rastro: "Na margem, pegadas pesadas de pés curtos que entram na água e não voltam por horas."
+      resto: "Um saqueador rival achado no fundo de uma rota funda, afogado com os braços de alguém ainda marcados na cintura."
+      som: "Um fôlego enorme puxado na margem, longo como fole de forja, e depois silêncio na água."
+      cheiro: "Couro de mergulho e fôlego velho, um bafo morno de pulmão grande demais."
+      marca: "Numa rota funda das ruínas, as cordas-guia de outros mergulhadores cortadas e uma só deixada inteira."
+      aproximacao: "Da água sobe um mergulhador de tórax inchado como barril, rachado no couro, e os braços curtos já buscam a sua cintura."
+      rumor: "os mergulhadores dizem que há rota no fundo que é de um homem só, e que ele espera lá embaixo"
+    contra_jogo: "Não deixar que ele chegue à cintura, lutando na margem ou em água rasa; agarrado, golpear as rachas do peito, porque o ar que sai é o que o leva para cima."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mao_de_oghma:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_camara_seca, aethelgard]
+      permanencia: [7, 10]
+      foge_de: [mon_vigia_caco]
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma pegada funda e outra rasa, e entre elas um sulco reto de nós de dedos de pedra arrastados no chão."
+      resto: "Um saqueador com o crânio afundado por um soco do tamanho de uma cabeça, e a bolsa de lascas revirada."
+      som: "Um estalo como de gelo rachando, e um arrastar de algo pesado e duro raspando o chão."
+      cheiro: "Pedra fria e osso exposto, um cheiro mineral de corte que virou rocha."
+      marca: "Nas câmaras secas, cristais arrancados das paredes com a mão, e sangue nas bordas onde a pele ficou."
+      aproximacao: "Curvado para um lado, um saqueador de punho de pedra turva do tamanho de uma cabeça e antebraço transparente vem até você."
+      rumor: "um saqueador diz que achou o maior cristal da vida dele e que o cristal ficou com ele, e não o contrário"
+    contra_jogo: "Evitar a troca de golpes e terminar rápido, ou mirar o cotovelo rachado; partido o braço, o cristal cai, e o homem cai junto."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_alambique_de_carne:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_camara_seca]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Gotas escuras pingadas em linha pelo chão seco, de um ponto de trabalho a outro, cada vez mais espaçadas."
+      resto: "Um frasco rachado jogado num canto, com um resto de líquido escuro que brilha e um tubo de vidro quebrado."
+      som: "Um gotejar lento e regular, como de destilaria, e uma respiração fraca de quem perdeu sangue demais."
+      cheiro: "Sangue fervido e Éter, metálico e doce, de laboratório de feitiçaria."
+      marca: "Numa bancada da câmara seca, tiras de couro de amarrar braço, cortadas na medida, e marcas de agulha na madeira."
+      aproximacao: "Atrás dos cultistas, um homem cinzento de lábios brancos, com tubos de vidro saindo das veias, abre a torneira do frasco no peito."
+      rumor: "um cultista preso disse que o mais devoto deles não precisa de voluntário, porque usa o próprio sangue"
+    contra_jogo: "Quebrar o frasco ou a serpentina, ou só esperar; cada gota que ele dá o deixa mais perto de cair sozinho."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_aspirante_de_coral:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [aethelgard]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de pés de membrana nova que nunca se afastam mais de três passos da água rasa."
+      resto: "Um ramo branco e rosado partido no raso, com um pedaço de pele pálida e mole ainda grudado na base."
+      som: "Um chiado de guelra que puxa água e não consegue, e uma tosse molhada de afogado."
+      cheiro: "Maresia de recife fora do mar e pólipo seco, um cheiro de concha que morreu ao sol."
+      marca: "Na borda rasa, uma pedra arranhada por crostas, gasta na altura de um homem que se encosta para respirar."
+      aproximacao: "Do raso sobe um mergulhador de pescoço coberto de ramos brancos e rosados, puxando ar pelas fendas, com raiva de afogado."
+      rumor: "um mergulhador da superfície pagou ao Povo-Recife para respirar na água, e agora não respira direito em lugar nenhum"
+    contra_jogo: "Revezar quem bate e de que lado, sem repetir o golpe; tirá-lo da água o faz sufocar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_comedor_de_alga:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [ae_camara_seca, ae_ruinas_submersas]
+      permanencia: [7, 10]
+      foge_de: [mon_vigia_caco]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de cabeça baixa que seguem no escuro em linha reta, sem tropeçar, e param onde alguém conjurou."
+      resto: "Uma lamparina de conjurador apagada e úmida, com manchas verdes de mão no vidro."
+      som: "Um mastigar molhado no escuro e uma fungada curta, de quem cheira o ar a cada passo."
+      cheiro: "Planta de água mastigada e hálito verde, um cheiro de tanque esquecido."
+      marca: "Nas galerias sem luz, restos de folhagem luminosa mastigada e cuspida em montinhos que ainda brilham azul."
+      aproximacao: "No escuro, um mergulhador de veias acesas em verde-azulado sob a pele e olhos sem pálpebra vira direto para quem prepara magia."
+      rumor: "os magos de margem dizem que no escuro do lago tem quem os enxergue antes de serem vistos"
+    contra_jogo: "Lutar com aço, e não com feitiço, enquanto ele estiver perto, ou acender uma luz forte; os olhos sem pálpebra não aguentam."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_lambedor_de_aboboda:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas, ae_camara_seca]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Uma pedra de teto caída no meio da sala, com a argamassa das bordas raspada lisa e úmida."
+      som: "Um raspar áspero no alto, contínuo, e de vez em quando o estalo de uma pedra que se solta."
+      cheiro: "Sebo morno e musgo de teto, um cheiro gorduroso de vela de afogado."
+      marca: "No chão das salas que ainda se sustentam, um pó fino de cal caindo do teto sem parar, sempre no mesmo ponto."
+      aproximacao: "Preso de cabeça para baixo no teto, um corpo pálido e ceroso do tamanho de um boi lambe a argamassa mais depressa, e as pedras rangem."
+      rumor: "os saqueadores das ruínas dizem que nenhuma sala submersa cai sozinha, e que alguém sempre fica do lado firme"
+    contra_jogo: "Derrubá-lo do teto com arma de arremesso ou corda, ou levar a luta para fora da sala antes que a abóbada venha."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_pernalta_do_conselho:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [aethelgard]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Dois furos fundos e finos no fundo raso, a passos de gigante, que rodeiam sempre o mesmo bairro afundado."
+      resto: "Um saqueador bem armado achado afogado de pé no raso, com a marca de uma palma enorme no alto da cabeça."
+      som: "Um farfalhar de tecido duro, engomado, vindo de muito acima da água, e passos de pau no fundo."
+      cheiro: "Seda engomada mofada e osso velho, cheiro de guarda-roupa de gente importante."
+      marca: "Na água rasa sobre o bairro antigo, golas rígidas de tecido boiando, rasgadas da roupa de alguém muito alto."
+      aproximacao: "Na água rasa ergue-se, em pernas de osso de três homens, um vulto estreito de golas altas que olha de cima por fendas no tecido."
+      rumor: "os pescadores dizem que sobre o bairro velho ninguém fica de pé no barco, nem para jogar a rede"
+    contra_jogo: "Golpear as pernas finas, que quebram, enquanto ele se ocupa do mais forte; caído na água, fica do tamanho de qualquer um."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_veu_faminto:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [ae_ruinas_submersas]
+      permanencia: [7, 10]
+      presas: [mon_mergulhadores_saqueadores]
+    sinais:
+      antecedencia: cedo
+      rastro: "Na água parada, uma ondulação comprida e lenta que serpenteia entre as colunas, sem vento nem corrente."
+      resto: "Um anel com o dedo dentro, preso num nó de cabelo de muitas cores enganchado numa porta submersa."
+      som: "Um roçar macio de seda e cabelo na água, como de vestido arrastado num corredor."
+      cheiro: "Perfume de enxoval guardado e água parada, doce e triste."
+      marca: "Nas câmaras inundadas, fios de cabelo de cores diferentes trançados com tiras de pele, presos nas fechaduras."
+      aproximacao: "Ondula até você uma trança de dez passos de cabelo, pele e seda, com anéis e dedos presos nos nós, e a ponta se abre em boca."
+      rumor: "uma noiva de margem não deixa o enxoval perto da água: diz que no lago há quem goste de coisas bonitas"
+    contra_jogo: "Não acumular força perto dele, gastando os reforços antes que chegue; cortar o nó onde ele guardou o que tomou devolve o que estava lá."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_novelo_de_anzois:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [aethelgard]
+      permanencia: [8, 11]
+      presas: [mon_aspirante_de_coral]
+    sinais:
+      antecedencia: imediato
+      rastro: "No fundo raso, linhas de pesca desenroladas em leque a partir de um ponto, todas esticadas para onde alguém passou."
+      resto: "Uma rede podre presa a uma pedra com um pé humano dentro, a carne já tomada pelo formato da trama."
+      som: null
+      cheiro: "Linha podre e isca velha, um cheiro de caixa de pescador abandonada."
+      marca: "Onde as redes se perderam, farpas limpas e brilhantes espalhadas no fundo, sem um grão de ferrugem."
+      aproximacao: "Do fundo rola um bolo de linha, rede e farpas do tamanho de um homem encolhido, e as linhas se desenrolam nas suas pernas."
+      rumor: "um pescador diz que perdeu a rede no raso e que, no dia seguinte, ela estava mais pesada e se mexia"
+    contra_jogo: "Soltar o preso antes de bater, cortando a linha ou pondo fogo nela, que a desenrola; ou bater pouco e certeiro enquanto ele estiver lá dentro."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_subida_de_cracas:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas, ae_camara_seca]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma faixa de cascas brancas e pretas grudadas subindo uma parede inteira até uma abertura, e caídas embaixo dela."
+      resto: "Um mergulhador morto encostado na parede, coberto de cascas pelas pernas e pelas costas, de braços para cima."
+      som: "Um estalar miúdo de placas abrindo e fechando e um raspar de patinhas de pena na pedra, sempre para cima."
+      cheiro: "Mexilhão vivo e pedra molhada, um cheiro de quebra-mar na maré baixa."
+      marca: "Debaixo de toda abertura da sala, um monte de cascas quebradas e uma linha de cascas novas subindo outra vez."
+      aproximacao: "Pela parede sobe uma coluna viva de cascas coladas, da altura de dois homens, e as pernas de pena já se agarram nas suas botas."
+      rumor: "os velhos de margem dizem que na noite da água todos tentaram subir, e que as paredes ainda tentam"
+    contra_jogo: "Raspar as cracas de baixo para cima com lâmina ou pá antes que subam aos ombros, ou ficar parado; ela só cresce em quem está indo para algum lugar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  enemy_cultista_destilacao:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [ae_camara_seca, ae_ruinas_submersas]
+      permanencia: [6, 9]
+      suprime: [mon_mergulhadores_saqueadores]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de sandália de estudo e marcas de carrinho de mão carregado, que descem das câmaras secas e voltam leves."
+      resto: "Um mergulhador deitado numa mesa de pedra, aberto com cuidado, com etiquetas de tinta presas aos órgãos."
+      som: "Uma conversa calma sobre medidas e prazos, em voz de professor, e o tinido de instrumentos de vidro."
+      cheiro: "Formol de ervas e Éter, um cheiro de sala de anatomia."
+      marca: "Na parede de uma câmara, uma tabela de nomes, pesos e resultados escrita com letra bonita, e várias linhas riscadas."
+      aproximacao: "Um mago de mãos limpas e olhar curioso ergue uma lâmina de luz e avalia você como quem pesa matéria-prima."
+      rumor: "um mergulhador diz que nas câmaras secas tem gente estudando os mortos, e que os vivos servem melhor"
+    contra_jogo: "Colar nele: ele recua para lutar de longe com a descarga e foge se a linha da frente cair; sem quem o proteja, cai rápido."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_afogado_de_aethelgard:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas, aethelgard]
+      permanencia: [9, 12]
+      suprime: [enemy_fantasma]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de pés descalços em fila de patrulha no fundo das ruas submersas, todas no mesmo compasso."
+      resto: "Um saqueador caído na rua afundada com a pele fria como de quem passou a noite no lago, sem marca de golpe."
+      som: "Uma mesma frase repetida por muitas bocas debaixo da água, em voz que não é de nenhuma delas."
+      cheiro: "Lodo frio de cidade afundada e roupa apodrecida, um cheiro de casa que a água tomou."
+      marca: "Nas esquinas das ruas submersas, marcas de mãos espalmadas na pedra, todas na mesma altura, a cada ronda."
+      aproximacao: "Pela rua afundada vem uma fila de mortos de pele azulada, e todos falam a mesma frase com a mesma voz que não é a deles."
+      rumor: "os pescadores dizem que os mortos do lago patrulham a cidade como se ainda houvesse o que guardar"
+    contra_jogo: "Não esperar que recuem, porque não recuam: golpear com força em vez de ponta, que entra pouco, e aguentar o toque gelado."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_faisca_destilacao:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [ae_camara_seca]
+      permanencia: [6, 9]
+      presas: [mon_doador_inacabado]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um corpo de voluntário antigo com as veias queimadas por dentro, em linhas de luz apagada, como fio de lâmpada."
+      som: "Um estalido elétrico que pula de canto em canto da câmara, e um zumbido que muda de tom perto de gente."
+      cheiro: "Ar queimado de raio e vidro quente, um cheiro de experimento que deu errado."
+      marca: "Nos recipientes de vidro das câmaras secas, todos rachados por dentro, riscos de queimadura que lembram letras."
+      aproximacao: "Pela câmara pula uma centelha viva do tamanho de um punho, e vira para você como quem acha o recipiente certo."
+      rumor: "os velhos dizem que o experimento que afundou a cidade ainda está procurando onde caber"
+    contra_jogo: "Colar nela: recua para atacar de longe, queima com o vazamento que arde depois e marca o alvo; foge se a linha da frente cair."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mergulhadores_saqueadores:
+    fonte: legado
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [aethelgard, ae_ruinas_submersas]
+      permanencia: [6, 9]
+      foge_de: [mon_peito_de_sino, mon_vigia_caco]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota molhada saindo da água em grupo, apressadas, e uma que volta correndo sozinha."
+      resto: "Uma bolsa de lona encharcada largada na margem, cheia de cacos de ruína e uma faca de mergulho."
+      som: "Respirações fundas de quem se prepara para descer, e um grito curto quando alguém vê uma sombra errada."
+      cheiro: "Óleo de pele contra frio e lodo de ruína, cheiro de caçador de tesouro."
+      marca: "Na margem, uma estaca com uma corda-guia amarrada que desce para a água, e nós contados de braço em braço."
+      aproximacao: "Na margem, um caça-tesouros de arpão na mão e roupa de mergulho encharcada mede você e o grupo dele antes de decidir."
+      rumor: "os da margem dizem que caçador de tesouro do lago é valente até ver a primeira sombra errada"
+    contra_jogo: "Não persegui-lo: ele só ataca com vantagem ou pelas costas e foge ao primeiro ferimento; derrubar o primeiro faz o bando hesitar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vigia_caco:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ae_ruinas_submersas]
+      permanencia: [10, 12]
+      suprime: [mon_mergulhadores_saqueadores, mon_comedor_de_alga, mon_mao_de_oghma]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota élfica que percorrem o mesmo corredor quebrado de ponta a ponta, dando meia-volta sempre no mesmo lugar."
+      resto: "Um intruso caído na entrada de um corredor élfico, cortado por uma lâmina que deixou o ferimento brilhando em prisma."
+      som: "Uma voz repetindo a mesma ordem antiga em élfico, firme, e passos que param e recomeçam."
+      cheiro: "Vidro frio e pedra lavada, um cheiro de corredor de palácio afundado."
+      marca: "No corredor guardado, uma linha riscada no chão com pedaços de vidro colorido, que ninguém atravessou e voltou."
+      aproximacao: "No corredor quebrado, uma sentinela de corpo remendado com pedaços de vidro colorido ergue uma lâmina que refrata a luz."
+      rumor: "os mergulhadores dizem que há corredor nas ruínas onde ainda vale uma ordem que ninguém mais lembra"
+    contra_jogo: "Não brigar perto do que ela guarda: ela se fecha em defesa, devolve golpe e não persegue além do posto; contornar ou atraí-la para fora."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
