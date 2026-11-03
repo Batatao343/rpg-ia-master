@@ -14,6 +14,7 @@ import pytest
 from services import graph_resolver as gr
 from services.event_processor import apply_event, process_pending_events
 from services.world_validators import validate_proposal
+from tests.fakes.scripted_llm import story_update_llm
 
 
 @pytest.fixture(autouse=True)
@@ -328,25 +329,13 @@ def test_storyupdate_schema_tem_proposed_events():
     assert su.proposed_events == []
 
 
-class _FakeStoryLLM:
+def _FakeStoryLLM(events):  # noqa: N802 - mantem o nome usado pelos testes
     """Devolve um StoryUpdate com uma proposta de evento (offline)."""
-
-    def __init__(self, events):
-        self._events = events
-
-    def with_structured_output(self, model, *_a, **_k):
-        self._model = model
-        return self
-
-    def with_retry(self, *_a, **_k):
-        return self
-
-    def invoke(self, _msgs):
-        return self._model(
-            narrative="O guarda arregala os olhos ao ouvir a verdade.",
-            introduced_npcs=[],
-            proposed_events=self._events,
-        )
+    return story_update_llm(
+        narrative="O guarda arregala os olhos ao ouvir a verdade.",
+        introduced_npcs=[],
+        proposed_events=events,
+    )
 
 
 def _story_state():

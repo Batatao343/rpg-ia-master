@@ -157,4 +157,16 @@ def patch_get_llm(monkeypatch, llm: ScriptedLLM, *modules: Any) -> ScriptedLLM:
     return llm
 
 
-__all__ = ["ScriptedLLM", "patch_get_llm"]
+def story_update_llm(**fields: Any) -> ScriptedLLM:
+    """ScriptedLLM do storyteller: responde com qualquer variante de `StoryUpdate` pedida,
+    preenchida com `fields` (a variante usada depende de flags do turno)."""
+    import agents.storyteller as stt
+
+    def build(_messages, schema):
+        return schema(**fields)
+
+    variants = (stt.StoryUpdate, stt.StoryUpdateWithRumors, stt.StoryUpdateWithRumorClaims)
+    return ScriptedLLM({v: build for v in variants}, repeat_last=True)
+
+
+__all__ = ["ScriptedLLM", "patch_get_llm", "story_update_llm"]
