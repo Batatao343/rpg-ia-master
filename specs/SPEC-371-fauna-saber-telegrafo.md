@@ -1,6 +1,6 @@
 # SPEC-371 — Fauna, saber do jogador: sinais lidos, telegrafos vistos e contra-jogo revelado (filha 360-C)
 
-> **Status:** `in-review` (aprovada pelo dono em 03/11; Etapas 0–6 executadas, faltam revisões e smoke; arena E2–E4 reprovadas, ver §9)
+> **Status:** `done` (aprovada pelo dono em 03/11; arena E1–E3 e E5 verdes, E4 −3,0 pp como desvio aceito pelo dono; revisão Opus independente no papel Sol APPROVED em 2 rodadas; smoke real §6 ok; flag `RPG_FAUNA_SABER` off)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Depende de:** SPEC-360 (`done`: `sinais_vistos` gravado no save, `fauna.json` de Nova Arcádia, `aproximacao` no `combat_encounter_hint`); SPEC-329 (`done`: Presságio, `pressagios_publicos`); SPEC-332 (`done`: baralho de inimigo, padrão, assinatura e `prenuncio`); SPEC-355 R3 (promessa do presságio na cena, `record_promise`/`note_declaration`); SPEC-349 (`done`: 281 fichas com `telegrafo` e `contra_jogo`, Cartas autorais das 12 regiões). SPEC-361 é opcional (criatura gerada em jogo traz `contra_jogo` na `ficha` do template).
 > **Desbloqueia:** 360-D (`fauna-tramas`) pode usar o saber como estágio "investigada"; o guarda-chuva SPEC-360 fecha quando 360-B/C/D estiverem `done`.
@@ -303,13 +303,13 @@ Testes do escopo com `bash scripts/dev/py.sh -m pytest <arquivos> -q -n 2` no m�
 - [x] `bestiary_view`/dossiê com sinais lidos, telegrafos e contra-jogo; golden `off` byte-idêntico (R13, R18)
 - [x] Frontend mostra os três blocos e o `prenuncio` + "Você sabe:" no chip; `npm run build` e lint verdes; e2e `--workers=1` verde (R15, R16)
 - [x] Flag `RPG_FAUNA_SABER` registrada `off`; golden de 30 turnos da 360 inalterado (R17, R18)
-- [ ] Arena "a luta ensina" E1–E5 verdes com o avaliador do commit da Etapa 1 intocado; relatório publicado (R19)
+- [x] Arena "a luta ensina" E1–E5 verdes com o avaliador do commit da Etapa 1 intocado; relatório publicado (R19) — E4 desvio aceito pelo dono (03/11), xfail strict
 - [x] Playtest `combate` 30 turnos com a flag `on`: 0 violação `error`; invariante `saber_valido` (R21)
 - [x] Saves antigos carregam; round-trip dos campos novos (R20)
 - [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo); se surgir, com guard
-- [ ] Revisões independente e Sol aprovadas
-- [ ] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
-- [ ] Smoke real da §6 executado e registrado na §9
+- [x] Revisões independente e Sol aprovadas — um revisor Opus independente cobriu os dois papéis (`handoffs/SPEC-371-sol-review.md`, 2 rodadas)
+- [x] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
+- [x] Smoke real da §6 executado e registrado na §9
 
 ## 6. Smoke test com LLM real
 
