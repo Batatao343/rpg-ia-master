@@ -12,6 +12,7 @@ import pytest
 
 from services import graph_resolver as gr
 from services import state_views as sv
+from tests.fakes.scripted_llm import story_update_llm
 
 NOVA_ARCADIA = "nova_arcadia"
 LEGIAO = "legiao_ferro"
@@ -261,21 +262,12 @@ def test_pipeline_reputation_changed_completo():
     assert "chronicle" not in out  # não virou milestone
 
 
-class _FakeStoryLLM34:
-    def __init__(self, impacts=None):
-        self._impacts = impacts or []
-
-    def with_structured_output(self, model, *_a, **_k):
-        self._model = model
-        return self
-
-    def with_retry(self, *_a, **_k):
-        return self
-
-    def invoke(self, _msgs):
-        return self._model(
-            narrative="A Legião nota sua ajuda.", introduced_npcs=[], faction_impacts=self._impacts
-        )
+def _FakeStoryLLM34(impacts=None):  # noqa: N802 - mantem o nome usado pelos testes
+    return story_update_llm(
+        narrative="A Legião nota sua ajuda.",
+        introduced_npcs=[],
+        faction_impacts=impacts or [],
+    )
 
 
 def test_storyteller_enfileira_faction_deed(monkeypatch):
