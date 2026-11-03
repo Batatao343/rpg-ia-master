@@ -9,19 +9,20 @@ from langchain_core.messages import HumanMessage
 
 from services import context_prefetch, context_sources
 from services.context_sources import EmbeddedContextQuery
+from tests.factories import make_state
 
 
 def _state(text="sigo pela estrada", turn=4):
-    return {
-        "game_id": "g-prefetch",
-        "messages": [HumanMessage(content=text)],
-        "world": {
+    return make_state(
+        game_id="g-prefetch",
+        messages=[HumanMessage(content=text)],
+        world={
             "current_location": "Brekmar",
             "current_location_id": "brekmar",
             "turn_count": turn,
         },
-        "combat": None,
-    }
+        combat=None,
+    )
 
 
 @pytest.fixture(autouse=True)
