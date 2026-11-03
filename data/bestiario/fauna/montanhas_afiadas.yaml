@@ -1,0 +1,751 @@
+# SPEC-370 R1 (lote 2) — bloco de fauna das Montanhas Afiadas: 27 fichas da SPEC-349 + legado
+# `valoria` da região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# Estação do calendário (R4): enemy_wyvern_jovem com verão 1,5 (calendar.json). E18: 2 `imediato`
+# no hub (Chicote de Fenda e Mão da Borda). Revisão: handoffs/SPEC-370-independent-review.md (lote 2).
+regiao: montanhas_afiadas
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_deitado_na_parede:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: imediato
+      rastro: "Marcas de dedos em garra riscadas de lado na rocha, na altura de um homem, sem nenhuma pegada no chão embaixo."
+      resto: "Uma mochila de explorador caída de lado, as alças esticadas para a esquerda como se ainda pendessem de alguém."
+      som: null
+      cheiro: "Sangue parado e suor velho, um cheiro de quem passou dias sem se mexer de posição."
+      marca: "Numa câmara idêntica às outras, um rastro de cabelo e fios de barba presos na pedra lateral, todos caídos para o mesmo lado."
+      aproximacao: "Da pedra ao seu lado se solta, como porta que abre, um homem tombado de flanco roxo e inchado, os dedos em garra."
+      rumor: "um explorador jura que nas câmaras que se repetem é preciso olhar para os lados, nunca só para a frente"
+    contra_jogo: "Tirá-lo da parede; derrubado no chão, o peso dele puxa para o lado errado e ele não consegue se levantar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_geodo_da_praga:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [ma_saidas_baixas, montanhas_afiadas]
+      permanencia: [7, 10]
+      foge_de: [enemy_orc_saidas_baixas]
+      reage:
+        - {quando: "pressao:praga", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas curvadas que vão de fogueira em fogueira e, ao lado, marcas de punho apoiado no chão."
+      resto: "Cascas duras de um nó partido junto às cinzas, avermelhadas por dentro, e uma pedra suja de sangue onde foram quebradas."
+      som: "Um estalo seco como de noz quebrada perto do fogo, e um gemido curto logo depois."
+      cheiro: "Ferro quente e sangue cozido, cheiro de forja de pobre."
+      marca: "Ao redor de uma fogueira de refugiados, cacos vermelhos cortantes espalhados como vidro quebrado."
+      aproximacao: "Junto ao fogo, um refugiado curvado sobre as mãos abre um punho em cavidade de cristais vermelhos e pontudos."
+      rumor: "os fugidos das Saídas dizem que perto do fogo há quem fique mais perigoso a cada hora"
+    contra_jogo: "Golpear o nó que está inchando antes que amadureça: partido verde, ele só sangra e não vira caco; quem o parte assim tira dele um punho."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cauda_de_atalaia:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [montanhas_afiadas]
+      permanencia: [10, 12]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na trilha estreita, a neve e o cascalho varridos em arcos largos que vêm de cima, sem ninguém que tenha passado."
+      resto: "Um viajante caído com um vergão fundo atravessado no peito, como de chicote enorme, longe de qualquer parede alcançável."
+      som: "Um ranger de osso torcido no alto e um balanço lento, como de corda pesada ao vento."
+      cheiro: "Pele seca de múmia e pedra fria, que só se sente debaixo do penhasco."
+      marca: "Numa ponta de rocha sobre a trilha, a pedra polida em três anéis lisos, como de corda enrolada há séculos."
+      aproximacao: "Do alto pende de cabeça para baixo um morto cinzento de mãos em gancho, e um açoite branco desenrola duas voltas sobre você."
+      rumor: "os guias dizem que na trilha estreita do norte quem passa olhando para cima chega, e quem olha para os pés não"
+    contra_jogo: "Subir até a ponta de pedra e cortar a cauda na volta que a prende, ou passar fora da trilha, rente ao paredão."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_queimado_de_frio:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      estacoes: {inverno: 1.3, verao: 0.6}
+      territorio: [montanhas_afiadas]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "clima:nevasca", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco de joelhos e cotovelos na neve, lento e paciente, que vai sempre na direção de quem acampou."
+      resto: "Um viajante sentado junto ao fogo apagado, as pernas duras como pau e as mãos ainda na guarda que não ergueu."
+      som: "Um raspar lento de gelo contra gelo e um estalo úmido, como de bolha que se rompe."
+      cheiro: "Carne gelada e líquido turvo, adocicado, de bolha de queimadura estourada."
+      marca: "Na neve perto de um acampamento, gotas de líquido turvo congeladas em fila, como contas de um colar."
+      aproximacao: "De joelhos na neve, um viajante de pele branca e translúcida, coberto de bolhas, estica a mão para as suas pernas."
+      rumor: "os guias mandam nunca descansar sentado na subida, nem quando o corpo pede"
+    contra_jogo: "Não parar perto dele e não se defender parado; quem se mexe o deixa para trás, e as bolhas estouram com fogo."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_observador_menor:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca, ma_saidas_baixas]
+      permanencia: [7, 10]
+      foge_de: [mon_guardiao_basalto]
+    sinais:
+      antecedencia: cedo
+      rastro: "No fim de uma fila de pegadas de bando, um par de pés que anda de lado, sem nunca virar a ponta."
+      resto: "Uma navalha de barbear e tufos de cabelo raspado deixados numa pedra, com gotas de sangue na lâmina."
+      som: "Uma voz no fundo do bando avisando o golpe antes do golpe: a mão na faca, o pé que vai firmar."
+      cheiro: "Colírio de ervas e lágrima velha, salgado, como de quem não fecha a vista há dias."
+      marca: "Num acampamento de saqueadores, um trapo molhado usado para umedecer pálpebras, largado junto a uma tigela de água."
+      aproximacao: "No fim do bando, um homem de cabeça raspada coberta de pálpebras abertas, úmidas e vermelhas, vê você de todos os lados."
+      rumor: "um mercenário diz que o bando da Boca desviou de todos os golpes dele, e que alguém atrás gritava antes"
+    contra_jogo: "Derrubá-lo primeiro; uma luz forte e súbita nos olhos que não fecham o cega por um instante."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  enemy_wyvern_jovem:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      estacoes: {verao: 1.5}
+      territorio: [montanhas_afiadas]
+      permanencia: [7, 10]
+      presas: [mon_cabra_navalha, mon_cabra_labirinto]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "No paredão, um contorno de lagarto grande desenhado pela poeira que não pousou, como sombra de algo que se soltou."
+      resto: "Uma cabra das encostas cortada em linha reta na altura do peito, as duas metades caídas na trilha."
+      som: "Um estalo de vela que se abre de uma vez, e um zunido rasante que passa e sobe."
+      cheiro: "Couro de réptil e vento cortante, um cheiro de rocha lavada por tempestade."
+      marca: "Numa saliência do paredão, escamas cor de ardósia raspadas na pedra e riscos finos como de foice afiada na rocha."
+      aproximacao: "Do paredão se solta um lagarto do tamanho de um cavalo magro e abre um arco de lâminas de osso de três metros."
+      rumor: "os pastores das encostas dizem que no verão é preciso descer as cabras ao meio-dia, abaixadas"
+    contra_jogo: "Abaixar-se ou deitar na trilha quando ele abre o leque; pousado, depois da passada, é um lagarto lento."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_minotauro_esqueleto:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca, ma_forja_profunda]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Ao longo dos trilhos dos Anões, cascos largos que pisam sempre entre os dormentes, como quem conhece o caminho de cor."
+      resto: "Um vagonete de mina amassado na frente por um golpe chato e largo, fora dos trilhos."
+      som: "Um mugido baixo e perdido no escuro, e o ferro dos trilhos vibrando sob alguma coisa pesada."
+      cheiro: "Couro pálido de bicho que nunca viu sol e ferro de trilho molhado."
+      marca: "No teto das galerias de transporte, duas faixas lisas raspadas na pedra, da largura de uma cabeça de boi."
+      aproximacao: "Pelos trilhos vem um boi branco de veias azuis e olhos leitosos, a ferragem saindo do couro do pescoço, de cabeça baixa."
+      rumor: "um mineiro diz que nos trilhos velhos dos Anões ainda passa carga, e que é melhor não estar no caminho"
+    contra_jogo: "Sair do trilho e lutar de lado, porque ele sente o ferro e não a pessoa; arrancar um trilho ou travá-lo com pedra o deixa parado."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_mimico_bau:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_forja_profunda]
+      permanencia: [9, 12]
+      presas: [mon_bexiga_de_respiro]
+    sinais:
+      antecedencia: cedo
+      rastro: "Seis patas grossas marcadas na escória do chão, entre um arrasto de ferro pesado que deixa uma linha de brasa apagando."
+      resto: "Uma pele fina e translúcida murcha no chão da forja, rasgada por uma pinça, com fios rosados ainda pendurados."
+      som: "Um chiado de brasa sacudida e o tinido de ferro fundido batendo em bigorna, sem martelo nenhum."
+      cheiro: "Escória quente e carne de marisco cozida, cheiro de panela de beira de mar esquecida no fogo."
+      marca: "Junto às bigornas apagadas, um círculo de pedra avermelhada e quente onde algo grande se encostou e esperou."
+      aproximacao: "Da fumaça da forja sai um vasilhame de ferro rubro do tamanho de uma banheira, sobre seis patas, com duas pinças desiguais na borda."
+      rumor: "os ferreiros que restam dizem que uma das panelas grandes da forja anda sozinha à noite"
+    contra_jogo: "Afastá-lo das bigornas e golpeá-lo de longe ou com haste, sem ficar ao lado dele; frio, o caldeirão escurece e o ventre preso ao fundo fica sem defesa."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_basilisco_caverna:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca]
+      permanencia: [9, 12]
+      presas: [mon_ladrao_de_lume, mon_saltao_de_galeria]
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma faixa larga de gosma endurecida no chão, cheia de ferramentas e lanternas anãs presas de cabo para fora."
+      resto: "Uma espada de viajante cravada numa crosta de pedra branca, sem o dono, e a mão de couro da luva ainda no cabo."
+      som: "Um gotejar constante do teto e, por baixo dele, um arrasto úmido e muito lento."
+      cheiro: "Cal molhada e lodo mineral, como de poço de pedra calcária."
+      marca: "Nas câmaras de gotejo, uma pedra cônica e amarelada a mais entre as outras, com escorridos frescos na base."
+      aproximacao: "Uma das pedras cônicas da câmara anda, e por baixo dela um pé branco e largo coberto de gosma vem até você."
+      rumor: "um saqueador diz que deixou a melhor lâmina dele na Boca, presa em pedra, e que a mão quase foi junto"
+    contra_jogo: "Golpear com pancada ou com haste, nunca com lâmina; a casca é pedra, mas o pé branco é mole e cede ao porrete."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_morcego_vampiro:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [montanhas_afiadas, ma_saidas_baixas]
+      permanencia: [6, 9]
+      presas: [mon_cabra_navalha]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Uma cabra caída no fundo do precipício, a cabeça envolta por uma marca redonda de sucção sobre os olhos."
+      som: "Um bater de pano no vento, como de bandeira solta, que passa rente às bordas da trilha."
+      cheiro: "Couro fino de bicho e neve suja, que o vento traz de repente e leva."
+      marca: "Na beira da trilha, um cachecol de pano preso na pedra e, perto, marcas de mãozinhas de três dedos no gelo."
+      aproximacao: "Do vento desce um trapo comprido cor de neve suja, com mãozinhas nas bordas, e uma boca redonda se fecha sobre os seus olhos."
+      rumor: "os guias amarram os clientes em corda nos trechos de vento, e dizem que não é por causa do vento"
+    contra_jogo: "Ficar parado e deixar um companheiro arrancá-lo pela ponta sem cabeça; andar amarrado em corda tira o risco da queda; fogo o faz soltar na hora."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_bexiga_de_respiro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_forja_profunda, ma_boca]
+      permanencia: [6, 9]
+      foge_de: [enemy_mimico_bau]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um mineiro sentado contra a pedra com o rosto e os braços riscados de vergões finos, os músculos moles demais para se erguer."
+      som: "Um latejar abafado no ar quente, como coração pequeno batendo dentro de um saco."
+      cheiro: "Ar quente de forja com um fundo de urtiga queimada, que arde nos olhos."
+      marca: "Na boca de uma ventilação dos Anões, fios rosados finos como linha presos na grade, ainda pegajosos."
+      aproximacao: "No ar quente sobre a sua cabeça flutua uma bolsa translúcida com um coração batendo dentro, arrastando fios de três metros."
+      rumor: "um mineiro diz que embaixo das ventilações da forja é preciso andar de capuz, mesmo no calor"
+    contra_jogo: "Furá-la de longe, que ela murcha e cai; não passar por baixo dos fios; esfriar o ar do respiro a faz descer."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_saltao_de_galeria:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca]
+      permanencia: [7, 10]
+      foge_de: [enemy_basilisco_caverna]
+    sinais:
+      antecedencia: cedo
+      rastro: "No pó do chão, riscos finos e compridos arrastados, como de linhas de pesca puxadas devagar."
+      resto: "Um explorador derrubado de bruços, com marcas de muitas patinhas espinhosas agarradas nas costas."
+      som: "Um cricrilar grave vindo de cima, de muitos ao mesmo tempo, que para quando alguém pisa forte."
+      cheiro: "Casca de inseto úmida e mofo de teto, um cheiro de porão de grãos."
+      marca: "No teto das passagens de cima, cascas rosadas e vazias de muda presas de cabeça para baixo, em bando."
+      aproximacao: "Do teto caem grilos rosados do tamanho de cães grandes, as antenas arrastando, e o primeiro já se agarra nas suas costas."
+      rumor: "os mineiros da Boca andam leves e devagar pelas passagens altas, e nunca dizem por quê"
+    contra_jogo: "Sacudir ou queimar os que estão agarrados antes do terceiro; andar devagar e leve, longe das antenas que pendem, não os acorda."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_rolador_de_escarpa:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [montanhas_afiadas, ma_saidas_baixas]
+      permanencia: [7, 10]
+      foge_de: [mon_chicote_de_fenda]
+    sinais:
+      antecedencia: cedo
+      rastro: "Na encosta de cascalho, uma vala reta e funda que desce até a trilha e sobe de novo, de novo e de novo."
+      resto: "Uma perneira de couro talhada em vários cortes paralelos, como se tivesse passado numa grade de pederneiras."
+      som: "Um rolar de pedra solta encosta abaixo, que não para no fim: volta a subir em passinhos."
+      cheiro: "Pó de cascalho e formigueiro revirado, ácido e seco."
+      marca: "Nas frestas da encosta, formigueiros de pedra abertos a focinho e lambidos até o fundo."
+      aproximacao: "Encosta abaixo rola uma bola de placas de osso abertas em gume, e vem direto contra as suas pernas."
+      rumor: "os carregadores das trilhas dizem que pedra que cai duas vezes do mesmo lugar não é pedra"
+    contra_jogo: "Sair da linha da encosta ou subir acima dele; desenrolado e de barriga para cima, é mole."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_chicote_de_fenda:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [montanhas_afiadas]
+      permanencia: [8, 11]
+      presas: [mon_cabra_navalha, mon_rolador_de_escarpa]
+    sinais:
+      antecedencia: imediato
+      rastro: "Dois traços finos e compridos na neve da trilha, que saem da rocha e voltam para ela, como de varetas tateando."
+      resto: "Uma cabra puxada pela metade para dentro de uma rachadura estreita, só as patas de trás para fora."
+      som: null
+      cheiro: "Quitina velha e carne guardada na pedra, um cheiro azedo de despensa sem ar."
+      marca: "Numa rachadura vertical da rocha, lascas de casca parda presas nas bordas e espinhos quebrados no chão abaixo."
+      aproximacao: "Da rocha saem de uma vez dois braços cheios de espinhos, e algo chato como tábua se desdobra da rachadura atrás deles."
+      rumor: "um guia diz que nas trilhas do alto se anda longe da rocha, por mais que o abismo assuste"
+    contra_jogo: "Cortar os chicotes quando tocarem, ou passar longe da parede; fora da fenda, achatado, ele vira de costas com uma pancada."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ladrao_de_lume:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca, ma_saidas_baixas]
+      permanencia: [6, 9]
+      foge_de: [enemy_basilisco_caverna]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de mãos de dedos grossos no teto e nas paredes, seguindo de longe o caminho de um grupo."
+      resto: "Uma lanterna anã quebrada no escuro, longe do acampamento, com marcas de abraço amassando o metal."
+      som: "Um choramingo baixo no escuro, como de bicho que sente dor e não para de se aproximar."
+      cheiro: "Pele rosada e úmida e óleo de lanterna derramado, cheiro de quarto de doente com lamparina."
+      marca: "Num canto alto e escuro, uma pilha de tochas, potes de Brasa e lanternas roubadas, todas apagadas e abraçadas."
+      aproximacao: "Do teto desce devagar um bicho pelado do tamanho de um gato, de olhos enormes e úmidos, os braços longos indo para a sua luz."
+      rumor: "um saqueador da Boca diz que perdeu três lanternas numa noite e que o escuro chorava toda vez"
+    contra_jogo: "Guardar a luz no corpo, não no chão, e cobri-la de repente; no escuro súbito ele larga tudo e se encolhe."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  enemy_troll_ponte:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_saidas_baixas]
+      permanencia: [10, 12]
+      suprime: [mon_goblin_eco]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas que chegam à beira da passagem funda, param, e reaparecem do outro lado sem nada entre elas."
+      resto: "Um viajante caído no fundo da passagem, longe, com uma bolsa vazia ao lado e as solas ainda limpas."
+      som: "Uma respiração grossa e lenta que vem do chão da travessia, debaixo dos pés de quem passa."
+      cheiro: "Couro córneo de Orc e pedra suada, um cheiro de degrau de estalagem muito pisado."
+      marca: "Na boca da travessia, um mastro com a tabela de pedágio do bando de Gruumsha e moedas pregadas em fila."
+      aproximacao: "O chão da travessia se mexe: são as costas de um Orc enorme deitado sobre o vão, com o rosto virado para os seus pés."
+      rumor: "os carregadores dizem que nas Saídas o chão da passagem cobra, e que quem não paga não chega ao outro lado"
+    contra_jogo: "Não lutar em cima dele; atravessar por outro lado, ou atacar as mãos e os pés presos nas bordas, onde a pele entrou na pedra."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_bracos_de_tenaz:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_forja_profunda]
+      permanencia: [10, 12]
+      suprime: [mon_armador_de_fosso]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas curtas e largas de bota anã de ferro, que vão da bigorna ao lugar onde alguma coisa caiu e voltam."
+      resto: "Uma espada de intruso largada no chão da forja com o punho derretido, a guarda ainda vermelha de quente."
+      som: "O chiado de ferro em brasa mergulhado na água e, entre um e outro, um silêncio de quem não fala."
+      cheiro: "Borra de fornalha e barba de cobre chamuscada, cheiro de oficina anã antiga."
+      marca: "Numa parede da forja, armas de quem entrou penduradas em fila, todas com o cabo deformado pelo calor."
+      aproximacao: "Um ferreiro anão de barba chamuscada e antebraços de escória preta e vidrada abre duas pinças rubras para a sua arma."
+      rumor: "um mercenário diz que entrou na forja de espada e saiu de mão queimada e mão vazia"
+    contra_jogo: "Lutar com cabo de madeira e escudo de couro, que esquentam devagar; largar o item quente e pegar outro, ou molhar as tenazes, que racham com água fria."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_marco_que_aponta:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [montanhas_afiadas]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de guia e cliente lado a lado que seguem firmes, e só as do guia voltam pelo mesmo caminho."
+      resto: "Uma corda de escalada largada na beira de um deslizamento recente, e a outra ponta perdida lá embaixo."
+      som: "Uma voz calma e segura dando direções na neblina: à esquerda, agora pela fresta, mais um passo."
+      cheiro: "Tinta de tatuagem de Éter, metálica e amarga, que fica no ar onde alguém apontou."
+      marca: "Numa pedra da trilha, uma seta de rota de guia riscada por cima de outra, e de outra, até virar um nó de riscos."
+      aproximacao: "Um guia Cinzéu de braço duro e reto, coberto de cicatriz em cordame, indica a fresta certa com três dedos tortos."
+      rumor: "os da montanha dizem que tem guia que sabe o caminho melhor que qualquer vivo, e que por isso ninguém volta com ele"
+    contra_jogo: "Não seguir o dedo dele e ficar parado no lugar firme; cortar o cordão de cicatriz da mão que aponta faz o mapa parar de latejar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_armador_de_fosso:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca, ma_saidas_baixas]
+      permanencia: [7, 10]
+      foge_de: [enemy_troll_ponte]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas miúdas de Goblin que andam na frente e voltam de costas, apagando os próprios passos com a mão."
+      resto: "Um laço de arame armado num corredor de recuo, com um pedaço de bota preso, e a trava ainda tensa."
+      som: "Um estalo de mola sendo armada e o tilintar de pinos guardados em furos de orelha."
+      cheiro: "Graxa de mecanismo velho e sangue seco em ferro, cheiro de oficina de armadilheiro."
+      marca: "Num corredor da Boca, uma pedra marcada com o sinal anão de perigo raspado e refeito por mão desajeitada."
+      aproximacao: "Longe, curvado sob ferragens, um Goblin de mãos feitas de ganchos e molas costuradas puxa um arame e algo estala perto de você."
+      rumor: "os Orcs das Saídas dizem que corredor por onde Goblin passou antes é corredor que não se usa para recuar"
+    contra_jogo: "Avançar reto e rápido sobre ele, pelo caminho que ele acabou de pisar; sem as mãos de ferragem, ele não arma mais nada."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vedado_de_piche:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca, ma_saidas_baixas]
+      permanencia: [7, 10]
+      suprime: [mon_armador_de_fosso]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas grandes de Orc que seguem gota por gota um rastro de sangue, sem errar uma curva no escuro."
+      resto: "Um fugitivo achado no fundo de uma passagem sem luz, morto a machado, encolhido onde achou que ninguém veria."
+      som: "Um fungar fundo e úmido, de focinho aberto, que para e recomeça, cada vez mais perto."
+      cheiro: "Breu queimado e carne repuxada, como de ferida cauterizada com alcatrão."
+      marca: "Numa parede das passagens fundas, uma faixa de palma grande e suja passada por centenas de metros, sem nunca largar a pedra."
+      aproximacao: "Um Orc enorme de olhos tapados por uma máscara preta e lisa ergue o focinho rasgado, fareja, e vira para você."
+      rumor: "os Orcs das Saídas dizem que quem sangra no escuro já foi achado, só não sabe ainda"
+    contra_jogo: "Estancar o sangue antes de fugir; fumaça forte ou o cheiro de Líquen-de-Brasa queimando deixa o faro dele perdido."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_peso_dos_vencidos:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [ma_saidas_baixas]
+      permanencia: [3, 4]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um rastro de dezenas de mãos e pés pequenos arrastando algo enorme, que vai de uma briga de bandos à seguinte."
+      resto: "Um acampamento de Orcs e outro de Goblins arrasados no mesmo lugar, os mortos dos dois lados misturados."
+      som: "Um socar pesado que faz o chão tremer, e embaixo dele um coro de vozes miúdas xingando."
+      cheiro: "Tendão cru e carne viva, um cheiro de matadouro aberto no frio."
+      marca: "Nas Saídas, pedaços de tendão grosso arrebentados no chão, como pontos de costura que não seguraram."
+      aproximacao: "Sobre um monte de corpos de Goblin costurados que servem de patas vem o tronco de um Orc enorme, socando para baixo."
+      rumor: "os Goblins das Saídas dizem que a guerra com os Orcs ganhou um corpo, e que ele odeia os dois"
+    contra_jogo: "Cortar as patas de Goblin sempre do mesmo lado até o monte tombar, e então bater no Orc caído; quem fica de frente e colado ao vizinho leva o soco e a queda."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_tampao_da_camara:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de muita gente correndo na mesma direção, todas acabando juntas no mesmo vão de porta."
+      resto: "Uma porta de passagem com o batente afundado dos dois lados, a pedra empurrada para fora por um peso inchado."
+      som: "Uma respiração de muitos peitos ao mesmo tempo, apertada, e a pedra rangendo a cada fôlego."
+      cheiro: "Suor de medo velho e ar parado, um cheiro de lugar onde muita gente ficou presa."
+      marca: "No vão por onde se entrou, marcas de dezenas de mãos roxas esfregadas na pedra, para os dois lados."
+      aproximacao: "A porta por onde você entrou está fechada por um bolo de corpos espremidos, e dezenas de mãos inchadas se estendem."
+      rumor: "um explorador diz que nas profundezas da Boca a saída é sempre a que já foi usada, e que ela se fecha"
+    contra_jogo: "Ficar fora do alcance dos braços e bater de longe ou com haste; cortar os braços das bordas faz ele escorregar do vão e parar de inchar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_tesoura_de_cordada:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [montanhas_afiadas]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pontinhos cravados na rocha vertical, em fila de seis, que sobem ao lado do caminho das cordas."
+      resto: "Uma corda de escalada cortada limpa pelo meio, as duas pontas pendendo no paredão, sem desgaste nenhum."
+      som: "Um ranger baixo de osso abrindo e fechando, como lâmina de tosquia, sempre que uma corda vibra perto."
+      cheiro: null
+      marca: "Na parede das subidas, fivelas e alças de escudo cortadas espalhadas pelas saliências, como restos de tosquia."
+      aproximacao: "Na rocha ao lado da sua mão, um bicho de ossos chatos abertos em gume duplo crava seis pontas na pedra e mira a sua corda."
+      rumor: "dois grupos subiram a mesma parede na primavera, e cada um jura que a corda do outro partiu sozinha"
+    contra_jogo: "Não ficar pendurado; esmagá-la contra a pedra com a lâmina fechada, porque as patas de costela quebram com pancada."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mastro_de_trofeus:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_saidas_baixas]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Furos fundos de estaca no chão a cada passo, e entre eles um arrasto de feixe pesado aos trancos."
+      resto: "Um traidor de acordo pregado pelo cinto num mourão, e os dentes dele faltando, arrancados com cuidado."
+      som: "Um bater oco de maxilares e cintos uns nos outros, como cortina de ossos ao vento, sem vento."
+      cheiro: "Tendão seco e couro curtido de despojo, cheiro de tenda de caçador."
+      marca: "Na boca de uma passagem, um buraco de mourão vazio entre as estacas dos traidores, a terra em volta remexida."
+      aproximacao: "Entre as estacas dos traidores, uma delas se crava no chão e se arrasta até você, e no alto um rosto toma a forma do seu ferido."
+      rumor: "os Orcs contam toda noite as estacas dos traidores e dizem que sempre sobra uma"
+    contra_jogo: "Fechar as feridas do copiado, ou tirá-lo de perto, apaga o rosto; os inteiros batem na estaca da base, que é o que o sustenta."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mao_da_borda:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [montanhas_afiadas]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um cliente de guia esperando sentado numa saliência no meio da descida, morto de frio, ainda olhando para cima."
+      som: "Um pedido de socorro fraco que vem de logo abaixo da beira da trilha, sem fôlego."
+      cheiro: "Couro cinzento molhado e ventosa, cheiro de bicho de pedra do mar no alto da montanha."
+      marca: "Sob a beira da trilha mais alta, anéis de ventosa marcados na rocha, cinco raios em volta de um centro."
+      aproximacao: "Na beira da trilha aparece uma mão humana limpa, de unhas aparadas, agarrada à pedra e tremendo, pedindo ajuda."
+      rumor: "um guia velho ensina a nunca puxar mão nenhuma pela beira sem ver de quem é o braço"
+    contra_jogo: "Não segurar mão nenhuma na beira sem ver o braço; pisar na mão contra a pedra faz os braços de ventosa soltarem a rocha."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lingua_de_lima:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca, ma_forja_profunda]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de dedos chatos subindo a pedra registrada, e pó fino de rocha em leque no chão abaixo."
+      resto: "Um saqueador com o braço esfolado em fileiras finas, como raspado por grosa, e a bolsa nova vazia."
+      som: "Um raspar áspero e ritmado, como de grosa em ferro, que vem do alto das paredes escritas."
+      cheiro: "Pó de pedra raspada e saliva grossa, seco e mineral."
+      marca: "Nas câmaras de registro dos Anões, as inscrições da queda raspadas letra por letra até a pedra ficar lisa e úmida."
+      aproximacao: "Do alto de uma parede escrita desce um bicho cinza de pó, a cabeça toda boca, e de dentro dela sai algo comprido e duro como grosa para você."
+      rumor: "os últimos Anões não contam da queda do Reino, e dizem que as paredes também já não contam"
+    contra_jogo: "Pegá-lo no chão, longe da parede; a língua é dura, mas a garganta atrás dela não é."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_pisador_do_salao:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "No chão polido das câmaras altas, marcas redondas e chatas de crânio, a passos de gigante, sempre em volta dos degraus."
+      resto: "Um explorador que caiu de joelhos numa câmara alta e foi esmagado ali, a escada ao lado derrubada."
+      som: "Um bater oco de osso em pedra polida, espaçado, como de alguém muito alto andando devagar."
+      cheiro: "Osso de Anão velho e pó de mármore, cheiro de cripta de família."
+      marca: "Nas câmaras dos capatazes, todos os degraus e escadas de mão quebrados na base, e o chão em volta rachado."
+      aproximacao: "Numa câmara alta, quatro pernas de ossos emendados se erguem até o teto, e lá de cima um crânio largo olha para baixo, para você."
+      rumor: "os saqueadores da Boca dizem que nas câmaras altas ninguém sobe em escada, nem para fugir"
+    contra_jogo: "Ficar de pé e colado às pernas, onde ele não alcança sem se dobrar; as emendas das pernas quebram de lado."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  enemy_orc_saidas_baixas:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [ma_saidas_baixas]
+      permanencia: [6, 9]
+      suprime: [mon_goblin_eco, mon_geodo_da_praga]
+      reage:
+        - {quando: "pressao:fome", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bando pequeno que se escondem atrás das pedras da passagem e saem de uma vez, em leque."
+      resto: "Um grupo de três viajantes caído numa curva estreita, cercados pela frente e por trás, e pedras de arremesso em volta."
+      som: "Um cutelo raspando na rocha e um assobio curto contando quantos vêm."
+      cheiro: "Suor de Orc e fumaça de acampamento escondido, gordura de cabra assada."
+      marca: "Num poste de entrada, o sinal do bando de Gruumsha riscado a cutelo com a contagem de grupos que passaram."
+      aproximacao: "De trás das pedras sai um bando de Orcs de cutelo serrilhado, que mede você e o seu grupo antes de avançar."
+      rumor: "os carregadores andam em grupo grande pelas passagens de baixo: dizem que os Orcs contam antes de atacar"
+    contra_jogo: "Andar em grupo e colar neles: o bando recua para arremessar de longe e foge se a linha da frente cair."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_anao_eco:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca, ma_forja_profunda]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota de mineiro que vão e voltam na mesma galeria, no mesmo número de passos, como turno marcado."
+      resto: "Um intruso caído numa galeria, a cabeça amassada por um martelo e o corpo arrumado ao lado do entulho, como carga."
+      som: "Batidas de martelo em pedra num ritmo de turno, que param na hora certa e recomeçam na outra."
+      cheiro: "Pó de rocha recém-quebrada e cerveja velha, um cheiro de mina que ainda trabalha."
+      marca: "Na parede de uma galeria abandonada, os riscos de contagem de turnos continuam, frescos, depois do último nome."
+      aproximacao: "Na galeria, um mineiro baixo e translúcido de barba trançada ergue o martelo no ritmo do turno, e o próximo golpe é você."
+      rumor: "os saqueadores dizem que na Boca ainda se ouve o turno da manhã, e que é melhor não atrapalhar o serviço"
+    contra_jogo: "Não esperar que ele pare, porque não para: golpear com força em vez de ponta, que entra pouco, e aguentar o toque gelado."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cabra_labirinto:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [montanhas_afiadas]
+      permanencia: [7, 10]
+      foge_de: [enemy_wyvern_jovem]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Cascos fendidos que entram numa fresta da rocha e saem de outra, longe, por um caminho que não existe."
+      resto: "Um viajante perdido sentado numa pedra, com o mapa rasgado em ângulos retos e um furo de chifre na coxa."
+      som: "Um balido que ecoa de três lados ao mesmo tempo, e o eco volta cortante, mais perto."
+      cheiro: "Lã de bicho de pasto e pedra recém-partida, cheiro de deslizamento novo."
+      marca: "Numa parede da trilha, uma passagem que não estava ali de manhã, e marcas de casco na entrada."
+      aproximacao: "De uma fresta onde não havia caminho sai um bicho barbado de chifres em ângulo, e o eco dos passos dela chega antes dela."
+      rumor: "os guias dizem que quem segue bicho de casco pela montanha volta por um caminho que não existe mais"
+    contra_jogo: "Não ficar isolado nem ferido à vista: ela persegue quem está sozinho, corta com o eco e devolve golpe; ferida de morte, recua e foge."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cabra_navalha:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [montanhas_afiadas, ma_saidas_baixas]
+      permanencia: [6, 9]
+      foge_de: [enemy_wyvern_jovem, mon_chicote_de_fenda]
+    sinais:
+      antecedencia: cedo
+      rastro: "Cascos miúdos em degraus impossíveis da encosta, e tufos de pelo preso em cordas cortadas pelo caminho."
+      resto: "Uma corda de amarra cortada em bisel limpo, presa numa pedra onde se pastava, sem marca de faca."
+      som: "Um balido nervoso e o estalo de casco em pedra, que foge assim que alguém se aproxima."
+      cheiro: "Lã crua e capim de altura mastigado, cheiro de curral de montanha."
+      marca: "Nos arbustos da encosta, tiras de couro de alforje rasgadas na altura de um chifre, penduradas como fitas."
+      aproximacao: "Encurralado entre as pedras, um bicho magro de barbicha abaixa a cabeça e mostra dois chifres de gume que cortam couro."
+      rumor: "os pastores dizem que nas encostas altas não se amarra animal com corda, porque os bichos de lá a cortam"
+    contra_jogo: "Não encurralá-la: ela só ataca com vantagem ou pelas costas e foge ao primeiro ferimento; deixar a saída aberta encerra a luta."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_goblin_eco:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ma_boca, ma_saidas_baixas]
+      permanencia: [6, 9]
+      foge_de: [enemy_troll_ponte, mon_guardiao_basalto]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas miúdas que entram num túnel e param diante de uma parede nova de entulho, fechada de dentro."
+      resto: "Uma picareta pequena de cabo curto largada perto de um túnel recém-desmoronado, ainda vibrando."
+      som: "Um tinido agudo de picareta batendo na pedra no ponto certo, e o desmoronar que vem depois."
+      cheiro: "Pó de rocha fina e suor azedo, cheiro de mineiro de toca."
+      marca: "Na entrada de várias galerias, entulho fresco tapando a passagem, cada pilha com uma pedrinha pintada no topo."
+      aproximacao: "Um mineiro miúdo de orelhas grandes bate a picareta na parede, o túnel atrás de você cede, e ele sorri."
+      rumor: "um explorador diz que entrou por um túnel na Boca e que, na volta, o túnel já não estava lá"
+    contra_jogo: "Não deixá-lo marcar o alvo nem ficar sozinho: ele só ataca com vantagem, foge ferido, e a ponta entra pouco; pancada resolve."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_guardiao_basalto:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [montanhas_afiadas, ma_boca]
+      permanencia: [10, 12]
+      suprime: [mon_goblin_eco, mon_armador_de_fosso, enemy_observador_menor]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de pedra enormes que vão até um marco da estrada antiga e voltam, sempre o mesmo trecho."
+      resto: "Um saqueador esmagado contra a parede da estrada, um soco só no peito, a pedra rachada em estrela atrás dele."
+      som: "Um estrondo surdo de punho contra a rocha e o chão que treme até as pernas amolecerem."
+      cheiro: "Pedra vulcânica fria e pó de estrada, um cheiro de forja que se apagou há séculos."
+      marca: "Na estrada para o reino perdido, as runas anãs dos marcos limpas de musgo e de pó, como se alguém as mantivesse."
+      aproximacao: "No meio da estrada antiga, uma sentinela de pedra escura em forma de anão firma os pés e fecha os punhos."
+      rumor: "os Goblins não usam a estrada antiga: dizem que ela ainda tem dono, e que o dono é de pedra"
+    contra_jogo: "Não brigar perto do que ele guarda: ele se fecha em defesa, atordoa com a saliva e não persegue além do posto; contornar ou atraí-lo para fora."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
