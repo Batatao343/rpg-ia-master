@@ -2,7 +2,7 @@
 
 > Nome do arquivo: `handoffs/SPEC-374-astra-review.md`. A spec cita `SPEC-374-prompt-review.md`, mas
 > esse nome reprova no `scripts/check_handoff_names.py`; o coordenador atualiza a referência no pouso.
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 2, `fb1414b8`; o mesmo da rodada 1)
 > **Revisor:** Opus (revisão criativa do texto do prompt; não escreveu o texto) · **Data:** 2026-11-03 · **Commit revisado:** `534a642f`
 
 ## Escopo
@@ -76,4 +76,40 @@ Nenhuma (o revisor não edita produto; aplicar o texto acima pede novas rodadas 
 py.sh (offline, RPG_FORCE_MOCK=1) montar_prompt(costa_negra, eixos_livres, padroes_livres) → 13 603 caracteres; blocos lidos inteiros
 py.sh leitura de docs/spec374/eval-medido-{1,2}.json → 22 fichas nova (nome, anatomia, telegrafo, gancho, códigos)
 py.sh léxico do gate (bl.lexico + card_lint.lexico) → 57 termos, todos sem acento
+```
+
+## Rodada 2 (2026-11-03, texto `80ed7ee2`, medido em `7828e73b`)
+
+**Veredito da rodada 2:** `APPROVED_WITH_FOLLOWUPS`. Os itens P2-1 a P2-5 foram aplicados com o texto
+proposto, com fidelidade. A regra de `padrao` e a lista única de `padroes_livres` também entraram. O
+protocolo passou (16/22), e nada no texto vaza número, segredo ou instrução.
+
+Leitura das 22 fichas `nova` v2 (todas DeepSeek):
+
+- **Rótulo copiado caiu.** "cera de sebo" literal aparece em 2 das 22 fichas, contra cerca de 5 na v1, e
+  nenhum outro rótulo de eixo (`radial`, `escala_paredes`, `medo_emocao`, etc.) aparece no texto.
+  **R20 sumiu** das falhas de 1ª tentativa, inclusive em `costa_negra`. As falhas que sobraram são
+  U13/U5 (padrão e silhueta), que não são de texto. Fichas boas e físicas: *Chupador de Odres*,
+  *Veia que Mastiga* ("a Praga de Ferro o reescreveu em veio"), *Maré Que Sobe*,
+  *Bexiga de Pânico* ("cheio de ar que não é ar"), *Coro Seco*.
+- **Achado novo, e a causa é a minha proposta (R2-P2-1).** Os dois exemplos entre parênteses de
+  `_EIXOS_LINHA` viraram fórmula. "banha … que escorre e endurece" aparece quase igual em 4 fichas
+  (*Escumalha do Cadinho*, *Colo de Turfa Funda* v2, *Guardiã de Cera Fundida*, *Enxame de Cera Mente*),
+  e "pó de forno" vem da imagem dada para `escoria_fuligem` (*Bebedor de Odres* v2). O rótulo saiu, mas
+  a imagem do prompt entrou no lugar. É o clichê que o dono não quer, agora vindo do próprio prompt. E
+  o nome ainda sai do material em *Guardiã de Cera Fundida* e *Enxame de Cera Mente*.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção (texto proposto) |
+|---|---|---|---|---|
+| R2-P2-1 | P2 | `services/creature_gen.py` `_EIXOS_LINHA` | Os exemplos concretos dentro da regra são copiados para a prosa ("banha que escorre e endurece", "pó de forno"). Fichas diferentes passam a soar iguais. | Tirar os dois exemplos e pedir imagem própria: `"Eixos: escolha UMA linha de <eixos_livres> e escreva só o número dela em linha_eixos; o motor grava os seis eixos. O corpo tem de caber na linha, mas em matéria que se toca e não em rótulo: o material vira o que a mão sentiria, a locomoção vira o jeito de andar e a percepção vira o órgão que sente, com imagem tirada do lugar e do pedido. Nunca copie as palavras da linha no nome nem no texto, e o nome não é o material."` |
+| R2-P2-2 | P2 | regra `Nome:` | Dois nomes ainda são "<coisa> de <material>". | Já coberto pela última frase do R2-P2-1 ("o nome não é o material"). |
+
+Como na rodada 1: aplicar este texto pede novas rodadas medidas (D6). Não bloqueia o pouso. Fica como
+follow-up numa spec de texto ou junto do smoke §6, a critério do coordenador.
+
+Comandos da rodada 2:
+
+```text
+git diff 1026cfcd..HEAD -- services/creature_gen.py → texto aplicado conforme o parecer
+py.sh leitura de eval-medido-v2-{1,2}.json → 22 fichas nova; busca de rótulos de eixo nos textos → só "cera de sebo" ×2
 ```

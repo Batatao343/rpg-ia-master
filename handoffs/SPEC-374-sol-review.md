@@ -1,7 +1,7 @@
 # SPEC-374 — revisão sol (review)
 
 > Nome do arquivo: `handoffs/SPEC-374-sol-review.md` (lint `scripts/check_handoff_names.py`).
-> **Veredito:** `CHANGES_REQUIRED`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 2, `fb1414b8`; rodada 1 foi `CHANGES_REQUIRED` em `534a642f`)
 > **Revisor:** Opus (papel Sol, revisão técnica independente; não escreveu o produto) · **Data:** 2026-11-03 · **Commit revisado:** `534a642f`
 
 ## Escopo
@@ -98,4 +98,54 @@ py.sh -m pytest -q tests/test_spec374_*.py tests/test_spec361_*.py tests/test_fl
 py.sh -m pytest -q tests/test_spec300_values.py tests/test_fase25.py tests/test_spec348_canon.py tests/test_bug_memoria_resiliencia.py tests/test_fase71.py tests/test_fase72.py tests/test_fase73.py → 1 failed (test_hook_mundo_vivo_em_entities: 0 == 36), resto verde
 py.sh scripts/validate_content.py → 0 ERRO, 29 AVISO
 py.sh (sondas offline) _limpar_forma / normalizar_forma / montar_prompt(costa_negra) → ver P2-2, P2-4
+```
+
+## Rodada 2 (2026-11-03, commits `e1829a8f`..`fb1414b8`)
+
+**Veredito da rodada 2:** `APPROVED_WITH_FOLLOWUPS`. Os dois P1 estão fechados no source, e as medidas v2 são íntegras.
+
+- **P1-1 fechado.** O gerador (`scripts/gen_world_living_npcs.py:327`, `:341-344`) escreve em `extra[npc_id]` e
+  tira o id do canônico (`entities.pop`). O migrate só regera `entities.json`. Agora há um só dono, e os
+  dois concordam: o canônico nunca tem `npc_mv_`. `test_roundtrip_gerador_migrate_um_dono` roda o
+  gerador (via `RPG_ROOT`, conferido em `:18`, então escreve na cópia e não no worktree) e depois o
+  migrate. Resultado: 36 ids na união, nenhum em `entities.json`, `base & extra` vazio, doc público
+  preservado. `validate_faction_membership` (`content_validator.py:1716`) passou a ler `_merged_entities`.
+  `test_spec300_values` lê a união e mantém `== 36` e a checagem do gancho. O invariante é o mesmo,
+  agora sobre o dono certo, então não houve afrouxamento. O que ainda lê só `entities.json`
+  (`creature_gen._faccoes_validas`, `shared_pool_validators._secret_names`, `curadoria.py:234`) procura
+  facções e segredos, que não incluem `npc_mv_`. Sem impacto.
+- **P1-2 fechado.** `janela_minima_s()` tem default `prazo_s() + 3` (33 s), e a flag foi atualizada em
+  `config/flags.yaml`. `test_drain_real_com_defaults_adia_o_job` usa o `drain_jobs` real com os defaults
+  e orçamento de 20 s: `deferred == 1`, LLM não chamado, `attempt == 0`. O §6.6 fica coerente com o
+  código. O corte `min(prazo, janela − 3)` só vale com a env baixada, e esse caso está testado.
+- **P2 de código fechados:** aspas internas (`t[0] not in t[1:-1]`); nome limpo no `{nome}` e no id;
+  `padroes_livres` em lista única; `ValueError` em `reindex_global`; `info["lint_primeira_msgs"]`
+  gravado junto do `lint_primeira` e antes do reparo, sem mudar a medida. Também saiu o teste do enum
+  dos seis eixos no schema saturado e a §9 foi corrigida.
+- **Testes da 361 ajustados (`tests/test_spec361_prompt.py`):** não enfraquecem o que importa.
+  (a) `REGRAS+PAPEL ≤ LIM_REGRAS + 1100`: hoje dá 3 388 com linha e 3 262 saturado, para um teto de 3 600.
+  O limiar duro da spec (`prompt_chars ≤ 14 000`) segue assertado, e as medidas v2 registram 13 915.
+  (b) "≥ 1 exemplo" vale só no caso de `montar_prompt(feedback=...)` com 8 × 900 caracteres. Nenhum
+  chamador de produção passa `feedback=` (busca em `services/agents/scripts/workers`), porque a 2ª
+  tentativa usa `montar_prompt_correcao`. O caso normal da maior região continua `== 2` exemplos.
+- **Integridade das medidas v2:** os dois JSON têm `commit: 7828e73be680`, `real: true`, `mock: false`
+  e `pedidos_sha256 = baf38310…db6dbc`. Entre `7828e73b` e `fb1414b8` só entram os 3 arquivos de
+  medida e a §9 (`git diff --stat`), então não houve retune entre as rodadas. Nada mudou no avaliador
+  (o `git log` dos caminhos protegidos segue só com `d3019102`). `--protocolo` dá 16/22 com piso 7/11
+  respeitado (7 e 9). Os outros limiares passam em cada rodada, mas a rodada 1 fica no limite:
+  `lint_final` 0,9091 (≥ 0,9) e `fallback` 0,0909 (≤ 0,1).
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R2-P2-1 | P2 | spec §9 / D6 | A mudança de texto (`80ed7ee2`) foi motivada por fichas do **set medido** (rodadas v1 da 361), o que contamina de leve o R2, que manda iterar só no set de ajuste. As mudanças são gerais (acento, rótulo, ruído de lista), não específicas de pedido, e o resultado caiu (17 → 16/22), então não há sinal de overfitting. A v2 é a medida que vale para o código final; o critério passou no mínimo exato. | O coordenador registra na §9 que a v2 é a oficial e que a margem é zero. O smoke §6 e a D11 item 3 devem tratar 16/22 como "passou sem folga". Opcional: 1 rodada no set de ajuste com o texto novo, só para registro. |
+| R2-P2-2 | P2 | `docs/spec374/eval-medido-v2-1.json` | Rodada 1 teve um fallback (`deserto_zhur`: SCHEMA + PRAZO). `fallback` = 9,1 % e `lint_final` = 90,9 % ficam exatamente no limite. | Olhar no smoke §6 (provider por chamada, latência). Nenhuma ação nesta spec. |
+
+Comandos da rodada 2:
+
+```text
+py.sh -m pytest -q tests/test_spec374_*.py tests/test_spec361_*.py tests/test_flag_registry.py tests/test_job_logging.py tests/test_spec192_cron_endpoints.py tests/test_spec300_values.py tests/test_fase25.py tests/test_spec348_canon.py tests/test_fase71.py tests/test_fase72.py tests/test_fase73.py → 340 passed, exit 0 (sem -n)
+py.sh scripts/validate_content.py → 0 ERRO, 29 AVISO
+grep '"commit"|"mock"|"pedidos_sha256"' eval-medido-v2-{1,2}.json → 7828e73be680 / false / baf38310…
+git diff 7828e73b fb1414b8 --stat → só eval-medido-v2-* e a spec
+git status --short (depois dos testes) → limpo
 ```
