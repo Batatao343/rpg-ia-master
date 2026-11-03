@@ -80,5 +80,5 @@ entradas:
     nome: Lambedor de Hálito
     eixos_iguais: 2
   avisos: []
-  veredito: ''
-  motivo: ''
+  veredito: rejeitada
+  motivo: "Eixos não batem com o corpo: locomoção 'nada' (nadar) num caroço preso por raízes em cisterna seca, material carne num corpo de sal, percepção respiração num bicho que ouve eco. Ajuste = rejeitada."
