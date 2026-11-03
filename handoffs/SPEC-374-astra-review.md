@@ -2,7 +2,7 @@
 
 > Nome do arquivo: `handoffs/SPEC-374-astra-review.md`. A spec cita `SPEC-374-prompt-review.md`, mas
 > esse nome reprova no `scripts/check_handoff_names.py`; o coordenador atualiza a referência no pouso.
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 3, `c7ff5e1d`; o mesmo das rodadas 1 e 2)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 4, `1ce2fd12`; o mesmo das rodadas 1 a 3)
 > **Revisor:** Opus (revisão criativa do texto do prompt; não escreveu o texto) · **Data:** 2026-11-03 · **Commit revisado:** `534a642f`
 
 ## Escopo
@@ -136,3 +136,14 @@ Comandos da rodada 3:
 git diff 7cc69618..HEAD -- services/creature_gen.py → só a frase de material e "U2/U3/U14" na correção
 py.sh (offline) lugar_do_texto sobre fichas_aprovadas() → 277/281 com "lugar"; amostra com azul/lábios/que/S
 ```
+
+## Rodada 4 (2026-11-03, `a3ee74f8`)
+
+**Veredito da rodada 4:** `APPROVED_WITH_FOLLOWUPS`. O texto do R3-P2-1 entrou igual ao proposto: a
+sintaxe está corrigida e a metade da U14 sobre nadar foi incluída. Também não vaza número nem segredo.
+
+A v5 (informativa) deu 12/22, contra 13/22 da v4. Pela variância já vista com n = 11, é empate, e o
+`lint_final` (1,0) e o `fallback` (0) melhoraram nas duas rodadas. Manter a frase é razoável. A
+Composição da arte agora só usa lugar de verdade (ver o parecer Sol, rodada 4), o que fecha o R3-P2-2
+deste parecer. Os follow-ups de texto que restam são os já registrados: a fórmula "banha que escorre" e
+o nome tirado do material, a vigiar na revisão Opus do pool.

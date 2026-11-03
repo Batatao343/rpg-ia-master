@@ -1,7 +1,7 @@
 # SPEC-374 — revisão sol (review)
 
 > Nome do arquivo: `handoffs/SPEC-374-sol-review.md` (lint `scripts/check_handoff_names.py`).
-> **Veredito:** `CHANGES_REQUIRED` (rodada 3, `c7ff5e1d`: R3-P1-1 na Composição da arte; rodada 2 foi `APPROVED_WITH_FOLLOWUPS`, rodada 1 `CHANGES_REQUIRED`)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 4, `1ce2fd12`; rodadas 1 e 3 foram `CHANGES_REQUIRED`, rodada 2 `APPROVED_WITH_FOLLOWUPS`)
 > **Revisor:** Opus (papel Sol, revisão técnica independente; não escreveu o produto) · **Data:** 2026-11-03 · **Commit revisado:** `534a642f`
 
 ## Escopo
@@ -186,4 +186,36 @@ py.sh (offline) axis_text.incoerencias em casos sintéticos → regex de água e
 py.sh (offline) pool_revisao.lugar_do_texto sobre as 281 aprovadas → 277 com "lugar"; amostra: azul, placas, lábios, que, S, pescoço (R3-P1-1)
 grep commit/mock/sha em eval-medido-v4-{1,2}.json → 32086220a00e / false / baf38310…
 git diff a8d19167 32086220 --stat → só eval-ajuste-6.json; git log dos caminhos protegidos 534a642f..HEAD → vazio
+```
+
+## Rodada 4 (2026-11-03, commits `24090b3f`, `a3ee74f8`, `1ce2fd12`)
+
+**Veredito da rodada 4:** `APPROVED_WITH_FOLLOWUPS`. O R3-P1-1 está fechado.
+
+- **R3-P1-1 fechado.** `lugar_do_texto` percorre todos os casamentos (`finditer`) e só aceita o sintagma
+  cujo núcleo, sem acento, está em `SUBSTANTIVOS_DE_LUGAR` (lista fechada). Fora dela, a Composição volta
+  para o habitat do mapa. Rodei de novo sobre as 281 aprovadas: 19 lugares extraídos, todos lugares de
+  verdade (ponte, margem, Poço das Dívidas, porto, duna, trilha, Forja, Catedral, Pântano, Pradaria,
+  ruína, selva). Os casos ruins de antes (azul, lábios, que, S) sumiram. O "Ouvido de Sal" mantém
+  "Cisterna de pedra (Deserto de Zhur)", e há teste sobre as 281.
+- **R3-P2-1 fechado.** O reparo por U14 grava `U14-eixos-reparados`, e o de U2/U3 continua com o código
+  antigo.
+- **R3-P2-2 fechado.** O gatilho de staging está na §9: `fallback` > 10 % ou `lint_final` < 90 % com a
+  flag `on` em jogo real reabre a spec.
+- **Integridade da v5 (informativa):** os dois JSON têm `commit: a3ee74f87574`, `mock: false` e
+  `pedidos_sha256 = baf38310…`. Entre `a3ee74f8` e `1ce2fd12` só entram as medidas e a §9, então não
+  houve retune. Nenhum caminho protegido mudou depois de `534a642f`. O protocolo dá `passou: false`
+  (12/22, 6 + 6), com `lint_final` 1,0 e `fallback` 0 nas duas rodadas. A §9 registra isso como
+  informativo, sob o desvio que o dono já aceitou.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R4-P2-1 | P2 | `scripts/bestiario/pool_revisao.py` (`SUBSTANTIVOS_DE_LUGAR`) | "caminho" é figurado na maioria dos 4 casos ("caminho da luta"). Além disso, "farol" e "gruta" estão duplicados na lista, o que é inócuo num `frozenset`. | Tirar "caminho" (e, se preferir, "passagem") da lista. Não bloqueia. |
+
+Comandos da rodada 4:
+
+```text
+py.sh -m pytest -q tests/test_spec374_u14.py tests/test_spec374_eixos.py tests/test_spec374_forma.py tests/test_spec361_prompt.py tests/test_spec361_gate.py → 80 passed, exit 0 (sem -n)
+py.sh (offline) lugar_do_texto sobre as 281 aprovadas → 19 lugares, todos substantivos de lugar
+grep commit/mock/sha em eval-medido-v5-{1,2}.json → a3ee74f87574 / false / baf38310…; git diff a3ee74f8 1ce2fd12 --stat → só medidas + spec
 ```
