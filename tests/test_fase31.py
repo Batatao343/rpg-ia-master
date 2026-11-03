@@ -171,7 +171,7 @@ def _state_events(**over) -> dict:
         "pending_world_events": [],
     }
     base.update(over)
-    return base
+    return make_state(**base)
 
 
 def test_evento_aplicado_gera_milestone():
@@ -235,6 +235,7 @@ def test_cascata_gera_milestone():
 
 from agents.archivist import archive_node  # noqa: E402
 from agents.campaign_manager import campaign_manager_node  # noqa: E402
+from tests.factories import make_state  # noqa: E402
 
 
 def _arch_state(**over) -> dict:
