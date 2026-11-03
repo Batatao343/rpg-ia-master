@@ -129,13 +129,29 @@ def test_leitor_cai_para_guardar_sem_reacao_disponivel(monkeypatch):
     for k, v in m.FLAGS_ON.items():
         monkeypatch.setenv(k, v)
     player = m._arena().hero("Sangromante", m.LEVEL)
-    player["card_usage"] = {"san_esquiva": {"used_this_turn": 1, "used_this_scene": 1}}
+    player["entropy"] = 0
     assert not m.reacao_disponivel(player, "san_esquiva")
     decl = m.leitor_decl(player, "e1", _GATILHO)
     assert decl.reaction_card_id is None
     assert decl.acao.kind == "maneuver" and decl.acao.maneuver == "guardar"
-    sem_entropia = m._arena().hero("Sangromante", m.LEVEL)
-    sem_entropia["entropy"] = 0
-    assert not m.reacao_disponivel(sem_entropia, "san_esquiva")
     # Carta ativa nunca conta como reacao
     assert not m.reacao_disponivel(player, "san_passo")
+
+
+def test_reacao_por_turno_volta_na_rodada_seguinte(monkeypatch):
+    """`run_round` zera o uso `turno` antes da janela de reacao: usada na rodada anterior, a
+    reacao `turno` segue disponivel; uma reacao `cena` ja usada nao."""
+    m = _load()
+    for k, v in m.FLAGS_ON.items():
+        monkeypatch.setenv(k, v)
+    from services import cards
+
+    player = m._arena().hero("Sangromante", m.LEVEL)
+    assert cards.get_card("san_esquiva")["frequencia"] == "turno"
+    player["card_usage"] = {"san_esquiva": {"used_this_turn": 1, "used_this_scene": 1}}
+    assert m.reacao_disponivel(player, "san_esquiva")
+    assert m.leitor_decl(player, "e1", _GATILHO).reaction_card_id == "san_esquiva"
+    devoto = m._arena().hero("Devoto do Abismo", m.LEVEL)
+    assert cards.get_card("dev_ombro_porta")["frequencia"] == "cena"
+    devoto["card_usage"] = {"dev_ombro_porta": {"used_this_turn": 1, "used_this_scene": 1}}
+    assert not m.reacao_disponivel(devoto, "dev_ombro_porta")

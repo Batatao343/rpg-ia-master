@@ -123,6 +123,11 @@ def reacao_disponivel(player: dict, cid: str) -> bool:
     if card.get("tipo") != "reacao" or cid not in set(player.get("prepared_cards") or []):
         return False
     counter = cards.FREQ_COUNTER.get(str(card.get("frequencia", "livre")))
+    # A decisao e tomada ANTES de `run_round`, que zera o uso `turno` no inicio da rodada
+    # (services/conflict_orchestrator.py:2804) antes da janela de reacao; o contador `turno`
+    # da rodada anterior nao vale para esta.
+    if counter in cards._RESET_CASCADE["turno"]:
+        counter = None
     usage = ((player.get("card_usage") or {}).get(cid) or {}).get(counter, 0) if counter else 0
     if int(usage or 0) >= 1:
         return False
