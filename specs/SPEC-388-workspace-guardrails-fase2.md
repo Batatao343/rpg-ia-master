@@ -1,0 +1,75 @@
+# SPEC-388 — Workspace, fase 2: guardrails que esperam a onda 375–378
+
+> **Status:** `draft`
+> **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
+> **Origem:** SPEC-386 § Fora de escopo · [auditoria do workspace](../docs/auditorias/auditoria-workspace-2026-11-03.md) §8
+> **Depende de:** **por etapa** (cada etapa só começa quando a spec dela estiver `done` na `main`):
+> Etapa A ← SPEC-375 · Etapa B ← SPEC-376 · Etapa C ← SPEC-378. As etapas são independentes entre si.
+> **Desbloqueia:** nada obrigatório (a onda roda sem esta spec; esta só fecha a porta atrás dela)
+> **Risco:** `baixo` (tooling e docs; B muda o lint de código novo) · **REVIEW_REQUIRED:** `true` só na Etapa B
+> **Evidência:** A: `tests/test_agents_contract.py` + `test_dev_tooling.py` verdes e `AGENTS.md` < 200 linhas;
+> B: `ruff check .` e `ruff_baseline.py --check` verdes com as regras novas; C: teste novo falha com um `def _fold` sintético fora de `services/text.py`
+> **EVAL_AUTHORING_REQUIRED:** `false`
+
+## 1. Contexto & Objetivo
+
+A SPEC-386 armou hooks e gates, mas adiou três itens que esbarram em arquivos da onda de
+refatoração (regra W1 da auditoria de código §6.2). Esta spec guarda os três, cada um preso à
+spec que libera o terreno, para que quem orquestra a onda veja quando cada um pode rodar.
+Não é refatoração de produto.
+
+## 2. Requisitos
+
+- **R1 (Etapa A, após 375)** — `AGENTS.md` com < 200 linhas. Arquitetura, tiers de LLM, RAG,
+  persistência, GameState e árvore de pastas viram 1 linha + link para `REFERENCE.md` ou
+  `docs/guias/ARQUITETURA.md`. Mantém todas as strings exigidas por
+  `tests/test_agents_contract.py` e a § "Qualidade, revisão e evidência".
+- **R2 (Etapa B, após 376)** — `pyproject.toml` `[tool.ruff.lint].select` ganha `C90`
+  (`max-complexity = 15`), `SIM`, `PERF`, `C4`, `PIE`, `RET`, `ERA`, `BLE`. Uma rodada de
+  `scripts/dev/ruff_baseline.py` congela o legado (commit próprio, W4), e código novo nasce sob
+  as regras. Os `# noqa: BLE001` existentes passam a valer. `E501`, `PLR2004`, `T20`, `ARG`,
+  `PLR0913` e `N` ficam fora.
+- **R3 (Etapa C, após 378)** — `tests/test_no_new_fold.py`: falha se um `def _fold*`/`_norm*`
+  novo aparecer fora de `services/text.py`, com uma baseline do que a 378 deixou por
+  decisão (aliases/variantes).
+
+### Fora de escopo
+
+Qualquer mudança de comportamento; mexer em `evals/` protegido; refatorar além do que o lint
+exige (violação nova em legado vai para a baseline, não é corrigida aqui).
+
+## 3. Design técnico
+
+- A: `AGENTS.md`, `REFERENCE.md` (ou `docs/guias/ARQUITETURA.md`), `CLAUDE.md` se citar seção movida.
+- B: `pyproject.toml`, `ruff-baseline.toml` (gerado), `docs/guias/TESTES.md` § lint (1 linha).
+- C: `tests/test_no_new_fold.py`, `tests/data/fold_allowlist.txt`.
+
+## 4. Plano passo a passo
+
+### Etapa A — AGENTS.md enxuto (pode começar quando: SPEC-375 `done`)
+1. Testes: rodar `test_agents_contract.py`/`test_dev_tooling.py` antes (verdes) e depois.
+2. Mover seções; conferir que nenhum `@import`/link quebrou (`spec_index.py check`).
+
+### Etapa B — Ruff mais estrito para código novo (pode começar quando: SPEC-376 `done`)
+1. `ruff check --select <novas> --statistics` para registrar o tamanho do legado.
+2. Ligar as regras; `ruff_baseline.py`; `ruff_baseline.py --check` e `ruff check .` verdes.
+3. Revisor confere que o diff da baseline só acrescenta códigos novos (não some dívida antiga).
+
+### Etapa C — Anti-`_fold` (pode começar quando: SPEC-378 `done`)
+1. Teste com fixture sintética que falha; allowlist com o que a 378 manteve.
+
+## 5. Critérios de aceite
+
+- [ ] Etapa A pousada (ou registrada como pendente com o motivo)
+- [ ] Etapa B pousada, baseline com diff só aditivo
+- [ ] Etapa C pousada
+- [ ] `uv run pytest` verde a cada pouso de etapa
+
+## 6. Smoke test com LLM real
+
+Não se aplica (tooling).
+
+## 7. Riscos & compatibilidade
+
+- B pode reprovar specs em voo que tragam código novo complexo: avisar no ESTADO no dia do pouso.
+- Cada etapa pousa sozinha; o status fica `in-progress` até a última, e `done` com as três.

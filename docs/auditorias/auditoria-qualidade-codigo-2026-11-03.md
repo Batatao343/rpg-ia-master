@@ -248,6 +248,7 @@ spec cita a regra pelo código (W1…W8).
 | — | 380 | 370 e 374 pousadas (tocam `protected-paths.txt`) | `evals/protected-paths.txt` (370, 374) |
 | — | 384 | por decisão sua, item a item | `config/flags.yaml` (371) |
 | — | 385 | após 381 e 383; opcional | — |
+| — | 388 | por etapa: A após 375, B após 376, C após 378 (guardrails de workspace adiados da SPEC-386) | `AGENTS.md`, `pyproject.toml`, `ruff-baseline.toml` |
 
 ### 6.4 Itens do §4 que **saíram** depois da verificação crítica
 

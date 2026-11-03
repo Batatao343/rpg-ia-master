@@ -4,7 +4,7 @@
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03 (revisão independente aplicada, ver §9)
 > **Origem:** [auditoria 03/11](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md) §4.4 itens 1, 2, 6 · regras da onda §6.2 (W1 revisada, W2–W8) · correções §6.5
 > **Depende de:** nenhuma sessão ativa usando `scripts/dev/reindex.sh` ou `scripts/dev/wt.sh` no checkout principal no momento do pouso (a SPEC-367 roda `reindex.sh` direto na `main`: commits `4b03a430`, `b278f6af`, `2a6e0945`). A antiga dependência "SPEC-368 pousada" já está cumprida: os commits da 368 estão na `main` e não há mais branch `spec-367`/`spec-368`.
-> **Desbloqueia:** pousos mais leves para as specs seguintes (sem 26,8 MB por sync); SPEC-380 (`eval-gates.yml`)
+> **Desbloqueia:** pousos mais leves para as specs seguintes (sem 26,8 MB por sync); SPEC-380 (`eval-gates.yml`) · **SPEC-388 Etapa A** (guardrail de workspace que espera esta spec)
 > **EXECUTOR_MODEL:** `Terra` (≡ Sonnet) · **REVIEW_MODEL:** `Sol` (≡ Opus) · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `false` (não toca caminho protegido; `eval-gates.yml` não está em `evals/protected-paths.txt`)
 

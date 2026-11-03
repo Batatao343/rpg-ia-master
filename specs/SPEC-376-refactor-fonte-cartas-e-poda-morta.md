@@ -4,7 +4,7 @@
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11 ([relatório](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md)): §3 R1, §4.2 itens 4 e 6, §4.3 item 5, §4.4 itens 3–4; plano da onda §6 (regras **W1–W8**, ordem §6.3, itens que saíram §6.4). Letra **B** do §5 mais a parte "sem chamador" de D/§4.
 > **Depende de:** nenhuma spec para começar (§6.3: "já"). Cada etapa obedece à **W1 revisada** (R1). A SPEC-368 já pousou (`dff4c27c`, `061c330b`), então a C5 (opcional, D5) não espera mais por ela, só pela W1. A etapa A4 (`_meta` dos JSON de classe) espera a SPEC-367, que commita **direto na `main`** (`b278f6af`, `4b03a430`), e a SPEC-369 (`draft`, balanço de Cartas). A etapa A3 espera a SPEC-374, que hoje trava `docs/guias/AUTORIA.md`. A C2 tem ordem com a SPEC-377 item 1 (mesmo `services/world_engine.py`, R19).
-> **Desbloqueia:** SPEC-378 (helpers comuns), que começa depois de 376/377 (§6.3).
+> **Desbloqueia:** SPEC-378 (helpers comuns), que começa depois de 376/377 (§6.3). · **SPEC-388 Etapa B** (guardrail de workspace que espera esta spec)
 > **EXECUTOR_MODEL:** `Terra` (Sonnet), uma etapa por vez (**W6**) · **REVIEW_MODEL:** `Sol` (`spec-reviewer`, Opus), que refaz por conta própria o W2 de pelo menos um item de C e a medição da Etapa 0 de pelo menos um gerador (**W7**) · **REVIEW_REQUIRED:** `true`. Motivo: apaga fonte de dados e código do motor, e a SPEC-273 já foi julgada UNSAFE por isso uma vez.
 > **EVAL_AUTHORING_REQUIRED:** `false`. Nenhum evaluator, expected, dataset, baseline ou caminho protegido de `evals/` é tocado (**W5**).
 
