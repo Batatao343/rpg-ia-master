@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "40d898d36e1977062ca99e6aa236e7da674a083a",
+  "commit_sha": "cb1b36aeed3456f56606d8974405afa4ea2adc52",
   "edge_counts": {
-    "calls": 37092,
-    "contains": 1210,
-    "defines": 17985,
-    "imports": 2947,
-    "likely_test_for": 2125,
+    "calls": 37353,
+    "contains": 1220,
+    "defines": 18109,
+    "imports": 2967,
+    "likely_test_for": 2140,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:b96dfb7fa42b1fee843553371de9b5b8e81369a7227be62e79ec3111c6414352",
+  "graph_hash": "sha256:b6393916ad789857c801ec1a245da1d47c7e7854c909ba0c12dbbf7eece1865d",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -110,6 +110,7 @@
     "docs/spec358/gerar_golden_v1.py",
     "docs/spec362/arena_spec362.py",
     "docs/spec363/measure_classify.py",
+    "docs/spec368/metricas_epico.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -538,6 +539,8 @@
     "tests/fixtures/spec353_smoke.py",
     "tests/fixtures/spec363_smoke.py",
     "tests/fixtures/spec364_smoke.py",
+    "tests/fixtures/spec368_scenarios.py",
+    "tests/fixtures/spec368_seed.py",
     "tests/prompt_capture.py",
     "tests/silent_except_scan.py",
     "tests/spec215_helpers.py",
@@ -1216,6 +1219,13 @@
     "tests/test_spec364_portrait_debit.py",
     "tests/test_spec364_registry_voice.py",
     "tests/test_spec366_followups.py",
+    "tests/test_spec368_content.py",
+    "tests/test_spec368_discard.py",
+    "tests/test_spec368_metricas.py",
+    "tests/test_spec368_replace.py",
+    "tests/test_spec368_rollback.py",
+    "tests/test_spec368_scenarios.py",
+    "tests/test_spec368_seed.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1480,14 +1490,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1068,
+    "class": 1070,
     "endpoint": 69,
-    "file": 1426,
-    "function": 5698,
+    "file": 1436,
+    "function": 5716,
     "method": 869,
-    "module": 1210,
-    "test": 10349
+    "module": 1220,
+    "test": 10453
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:0a48185ed5c43f3c2d8319a64d0bf4a36b8ce887968160aaab4ea14162020dee"
+  "source_tree_hash": "sha256:0cc3e734111d127acd03dcfd7b0a4a5b0d52d8c2d2172cd6dd54c39365cc21bb"
 }
