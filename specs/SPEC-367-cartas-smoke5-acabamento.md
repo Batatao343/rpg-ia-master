@@ -484,3 +484,12 @@ Evento de log novo (`loot.trade_prose_rejected`) registrado em `observability/ev
 **Fica para o smoke §6 (coordenador):** retirada de `tipo:fallback_criatura_hostil` no staging (`--dry-run` e
 real), 3 execuções de `list`/`art_preflight` sem `PoolTimeout`, cotação por nome parcial e narração da compra
 com LLM real, presságio com "você" no chip, chip "Gerando retrato…" no staging.
+
+**Smoke §6, operação (03/11, coordenador):** `--env-file .env.staging` sozinho não serve fora da Vercel (o
+`build_runtime` hosted exige perfil, DSN `rpg_runtime` e bind que só existem lá; caía no `FileGameStore`, sem
+apagar nada). Correção: `--dsn-env RPG_STAGING_DB_URL` usa o pool de operação (`ops_pool`) e o bucket
+`rpg-shared-art` com `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY`, fecha o pool no fim; teste
+`test_retire_dsn_env_uses_ops_pool_and_closes_it`. A chave real do retrato de fallback no pool é
+`tipo:gen:criatura-hostil` (rótulo de espécie), não `tipo:fallback_criatura_hostil`; o inimigo continua com id
+`fallback_criatura_hostil_1`, então o guarda de R10 vale. Retirada feita: dry-run `ready` com 2 objetos →
+`status: retired`, `objects_deleted: 2`, `objects_failed: []`.

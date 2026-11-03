@@ -144,6 +144,43 @@ def test_quote_refuses_fallback_409(monkeypatch):
     assert store.keys == []
 
 
+def test_retire_dsn_env_uses_ops_pool_and_closes_it(monkeypatch, tmp_path, capsys):
+    env = tmp_path / "e.env"
+    env.write_text(
+        "SPEC367_DSN=postgresql://x\nSUPABASE_URL=https://s\nSUPABASE_SERVICE_ROLE_KEY=k\n",
+        encoding="utf-8",
+    )
+    for k in ("SPEC367_DSN", "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"):
+        monkeypatch.delenv(k, raising=False)
+    shared = _Shared()
+    reg = _Reg()
+    closed = []
+
+    class _Pool:
+        def close(self):
+            closed.append(True)
+
+    def fake_ops(dsn, values):
+        from types import SimpleNamespace
+
+        assert dsn == "postgresql://x" and values["SUPABASE_URL"] == "https://s"
+        return SimpleNamespace(game_store=SimpleNamespace(pool=_Pool()), shared_blob_store=shared)
+
+    monkeypatch.setattr(
+        rcp, "build_runtime", lambda: (_ for _ in ()).throw(AssertionError("não deve construir"))
+    )
+    monkeypatch.setattr(rcp, "_ops_runtime", fake_ops)
+    monkeypatch.setattr(rcp, "PostgresPortraitRegistry", lambda pool: reg)
+    monkeypatch.setattr(
+        "sys.argv",
+        ["r", "tipo:x", "--reason", "m", "--env-file", str(env), "--dsn-env", "SPEC367_DSN"],
+    )
+    assert rcp.main() == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["status"] == "retired" and closed == [True]
+    assert "postgresql://x" not in json.dumps(out)
+
+
 def test_retire_missing_env_file_is_error(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(
         rcp, "build_runtime", lambda: (_ for _ in ()).throw(AssertionError("não deve construir"))
