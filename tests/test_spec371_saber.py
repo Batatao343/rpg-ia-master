@@ -239,3 +239,27 @@ def test_save_antigo_sem_campos():
     fs.stamp_actor(enemy, bk)
     assert enemy["saber_jogador"] == {"contra_jogo": None, "assinaturas": []}
     assert disc.knowledge_tier(bk[CID]) == 2
+
+
+def test_round_trip_save_game_state_load_game_state():
+    """P2-4 (Sol): os três campos e `combat.scene.saber_obs` passam por save/load reais."""
+    from tests.test_spec360_saves import _roundtrip
+    from tests.test_spec360_sinais import sim_with, state_at
+
+    bk = _bk(
+        sinais_vistos=["rastro", "som"],
+        telegrafos_vistos=["O arame abre os ganchos."],
+        assinaturas_sobrevividas=2,
+        saber_revelado={"motivo": "sobreviveu", "turn": 7},
+    )
+    scene = _scene(telegrafos=["a"], cumpridas=[3])
+    st = state_at(sim=sim_with())
+    st["bestiary_knowledge"] = bk
+    st["combat"] = {"active": True, "round": 2, "scene": scene}
+    loaded = _roundtrip(st)
+    assert loaded["bestiary_knowledge"] == bk
+    assert loaded["combat"]["scene"]["saber_obs"] == scene["saber_obs"]
+    # o turno seguinte absorve a observação guardada, uma vez só
+    cena = loaded["combat"]["scene"]
+    novo, _ = fs.absorb(loaded["bestiary_knowledge"], cena, {IID: _enemy()}, True, 9)
+    assert novo[CID]["assinaturas_sobrevividas"] == 3 and "saber_obs" not in cena

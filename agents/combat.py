@@ -2707,6 +2707,12 @@ def _combat_node(state: GameState):
             )
             logs += _saber_logs
             bk_changed = True
+            if _saber_logs:  # P2-5: revelado no meio da luta -> o chip já mostra "Você sabe:"
+                for _enemy in enemies:
+                    if not _enemy.get("dead"):
+                        _fauna_saber.stamp_actor(_enemy, bestiary_knowledge)
+        elif is_simulation and isinstance(scene, dict):  # P2-7: a simulação não deixa lixo na cena
+            scene.pop("saber_obs", None)
         # Gasto BRUTO da economia da Carta. O delta líquido antes/depois era
         # incorreto para classes cujo próprio uso repõe Entropia no mesmo turno.
         player_cards = [

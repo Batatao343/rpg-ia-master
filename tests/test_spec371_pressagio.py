@@ -194,7 +194,7 @@ def test_prep_prompt_off_byte_identico():
     assert com.replace("Saber do herói: O herói leu antes: som.\n", "") == base
 
 
-def _drive(monkeypatch, saber: str, max_rounds: int = 6) -> dict:
+def _drive(monkeypatch, saber: str, max_rounds: int = 6, bk: dict | None = None) -> dict:
     import agents.combat as combat
     import mock_llm
     from playtest.runner import _build_initial_state
@@ -222,6 +222,8 @@ def _drive(monkeypatch, saber: str, max_rounds: int = 6) -> dict:
         enemies.append(orch.ensure_combat_sheet(t))
     state["enemies"] = enemies
     state["combat_target"] = "Arame Vivo"
+    if bk:
+        state["bestiary_knowledge"] = bk
     state["messages"] = list(state.get("messages") or []) + [
         AIMessage(content="Algo surge."),
         SystemMessage(content="SYSTEM: COMBAT START. TARGET_HINT: Arame Vivo"),
@@ -315,3 +317,13 @@ def test_prompt_de_preparacao_leva_a_linha_quando_on(monkeypatch):
     monkeypatch.setenv("RPG_FAUNA_SABER", "off")
     combat._prepare_scene(state, [e], state["player"], [])
     assert not any("Saber do herói" in p for p in prompts)
+
+
+def test_revelacao_no_meio_da_luta_recarimba_os_inimigos(monkeypatch):
+    """P2-5 (Sol): a regra `rastreada` dispara no 1o `absorb`; o ator ganha o contra-jogo na hora."""
+    bk = {CID: {"seen": 1, "fought": 0, "sinais_vistos": ["rastro", "som"]}}
+    res = _drive(monkeypatch, "on", max_rounds=1, bk=bk)
+    state = res["state"]
+    assert state["bestiary_knowledge"][CID]["saber_revelado"]["motivo"] == "rastreada"
+    vivos = [e for e in state["enemies"] if not e.get("dead")]
+    assert vivos and all(e["saber_jogador"]["contra_jogo"] for e in vivos)

@@ -92,7 +92,7 @@ O pilar 4 da SPEC-360 ("telegrafo e contra-jogo visíveis; a luta ensina") ficou
 ### D. Flag, métrica, compatibilidade
 
 - **R17 — Flag.** `RPG_FAUNA_SABER` em `config/flags.yaml`: `kind: release`, `default: "off"`, `spec: SPEC-371`, `expires: 2027-03-01`, `note: "fauna viva: saber do jogador (sinais lidos, telegrafos vistos, contra-jogo revelado)"`. Valores `off|on`. Independe de `RPG_FAUNA`/`RPG_FAUNA_SINAIS` (sem fauna, só `sinais_vistos` fica vazio e a regra `rastreada` nunca dispara); telegrafos exigem `RPG_ENEMY_DECKS=on` na prática (sem assinatura não há `prenuncio`).
-- **R18 — `off` byte-idêntico.** Com a flag `off`: golden de 30 turnos da 360 (`tests/fixtures/spec360_flags_off_golden.json`) inalterado; `bestiary_view`, `public_round`, `_prep_prompt` e a cena (`scene` sem `saber_obs`) byte-idênticos em fixture fixa; nenhum campo novo em `bestiary_knowledge`.
+- **R18 — `off` byte-idêntico.** Com a flag `off`: golden de 30 turnos da 360 (`tests/fixtures/spec360_flags_off_golden.json`) inalterado; `bestiary_view`, `public_round`, `_prep_prompt` e a cena (`scene` sem `saber_obs`) byte-idênticos em fixture fixa; nenhum campo novo em `bestiary_knowledge`. **Exceção (decisão do dono, 03/11, "Reação p/ toda Postura"; revisão Sol P2-1):** as Cartas de reação inicial (`arc1_ini_cinza_nos_olhos`, `med1_ini_pinca_no_tendao`, `dev1_ini_dor_devolvida`, `cor_membrana` marcada `reacao_inicial`) e a nova Preparação inicial NÃO ficam atrás de flag: no deploy, todo herói NOVO de Arcanista, Médico, Devoto e Corruptor nasce com outro Acervo/Preparadas mesmo com `RPG_FAUNA_SABER=off` (herói já criado não muda; não há migração). O staging muda já no deploy.
 - **R19 — Métrica "a luta ensina" (arena).** `scripts/fauna/arena_saber.py` (offline, MockLLM, seeded; reusa `docs/spec332/arena_familias.py` e `docs/spec285/arena_lethality.py` como `scripts/bestiario/arena.py:32-37`), `RPG_ENEMY_DECKS=on`, `RPG_ENEMY_INTENT=on`, `RPG_FAUNA_SABER=on`:
   - **população:** criaturas não-chefe de Nova Arcádia com assinatura e `contra_jogo_of` não vazio (Etapa 0 lista; esperado ~22 das 27 fichas), 5 Posturas, `--seeds 20`, nível 3, tamanho de grupo de `A.group_size`;
   - **par por (criatura, Postura, seed):** luta 1 com `bestiary_knowledge` vazio; o `bk` resultante (pelo `absorb` real e o fim de combate real, R3/R4) entra na luta 2, **mesma seed**, com o ator carimbado por R8;
@@ -114,7 +114,7 @@ O pilar 4 da SPEC-360 ("telegrafo e contra-jogo visíveis; a luta ensina") ficou
 - Reescrever o `contra_jogo` do legado como conselho tático (X-02): conteúdo, decisão D3.
 - Testemunha NPC que conta o contra-jogo (D2); compra de saber (livro, mestre caçador).
 - Bônus numérico por saber (Esquiva, dano, iniciativa): o saber só **informa** nesta spec (D6).
-- Mudar números de combate, Cartas, `bestiary.json`, `fauna.json`, fichas YAML, `lore_nova/`.
+- Mudar números de combate, Cartas (exceto as 4 reações iniciais por decisão do dono, ver R18), `bestiary.json`, `fauna.json`, fichas YAML, `lore_nova/`.
 - Mudar o catálogo runtime `services/bestiary_knowledge.py` (Cartas/resistências reveladas por arquétipo).
 - Narrar o contra-jogo pela LLM ou pôr o contra-jogo no prompt da abertura/narração (só a preparação da cena recebe a linha de R11, e sem contra-jogo).
 - Ligar a flag em staging ou produção (coordenador, depois do smoke).
@@ -326,7 +326,7 @@ Coordenador, com chave (`ROUTES` de hoje), API local, `RPG_FAUNA_SABER=on`, `RPG
 ## 7. Riscos & compatibilidade
 
 - **Saves antigos.** Todos os campos novos são opcionais; ausência = comportamento de hoje. `saber_obs` só existe na cena durante o combate.
-- **Flag `off`.** Backend byte-idêntico (golden da 360 + fixtures desta spec). A única mudança visível com `off` é o chip mostrar um `prenuncio` que o backend já envia (D5).
+- **Flag `off`.** Backend byte-idêntico (golden da 360 + fixtures desta spec). Mudanças visíveis com `off`: o chip mostra um `prenuncio` que o backend já envia (D5) e as Cartas de reação inicial/Preparação de herói novo (exceção do R18, sem flag).
 - **Bot `leitor` como modelo de jogador.** A métrica mede o valor da informação para um jogador que age sobre ela; não prova que um humano age. Os limiares são modestos (+3 pp, −8 % de Vitalidade) e o E4 impede que o saber trivialize o encontro.
 - **Contra-jogo sem mecânica que o bot use.** Se E2/E3 falharem, a causa provável é conteúdo (contra-jogo autoral que não corresponde a nenhuma ação defensiva do herói). Não se ajusta limiar: vai ao dono (§9).
 - **Vazamento.** Nenhum texto novo é escrito; todos vêm de fichas/fauna já linted. A linha da preparação usa só tipos de sinal e a aproximação (já lintada, sem nome).
@@ -381,3 +381,18 @@ Coordenador, com chave (`ROUTES` de hoje), API local, `RPG_FAUNA_SABER=on`, `RPG
 - Causa: política congelada do bot, não conteúdo. (1) `_triggers` defende sempre que a linha tem `contra_jogo`. A assinatura da Gralha é fraca (3 de dano, `a_cada_n` 2, bando de lacaios), então na luta 1 o valor estimado nunca passa de 30 % e o bot só ataca. Na luta 2 ele defende em toda rodada contra um lacaio covarde de 12 de Vitalidade que recua 3 zonas, e a luta estoura o limite de 20 rodadas. (2) `reacao_disponivel` lê `card_usage` antes de `run_round` zerar o uso `turno` (`services/conflict_orchestrator.py:2804`), então uma reação usada na rodada anterior aparece gasta e o bot cai no Guardar uma rodada sim, outra não. O conteúdo está certo: o `contra_jogo` da Gralha já manda o oposto ("Matá-la antes de ela sair do alcance ou não preparar nada enquanto ela ronda"). O Lençol (−4 pp, Médico 14 → 12) está no ruído de 20 seeds, e a 2ª parte da assinatura é dano em área condicional que nenhuma reação evita. Nada foi mudado no avaliador nem nas fichas. Correção possível só por nova spec de avaliador: defender só quando o valor estimado pede, e ler o uso depois do reset da rodada.
 
 **2ª correção do harness e decisão do dono (coordenador, 03/11).** Autor de eval independente corrigiu a leitura do uso `turno` antes do reset da rodada (`6c32b683`; relatório `7265ed1e`; parecer `handoffs/SPEC-371-eval-authoring.md` §2). Arena com a mesma configuração: E1 34,4 % OK, E2 +10,06 pp OK, E3 0,842× OK, E4 67,5 % OK mas pior criatura −3,0 pp (`enemy_elemental_fogo_poluido`, `mon_lencol_de_chamine`, ambas puxadas pelo Médico −10) contra o limiar −2 pp. **Dono (03/11): "Aceitar o desvio"** — 3 lutas em 100 por criatura, dentro do ruído de 20 seeds; limiar e avaliador intocados; `test_arena_a_luta_ensina[E4]` fica vermelho como desvio aceito e documentado. Política `_triggers` (defender sempre que há `contra_jogo`) não foi mudada; observação registrada no parecer de eval.
+
+**Follow-ups da revisão Sol (P2-1..P2-7), aplicados em 03/11.**
+- P2-1: exceção sem flag registrada em R18, §7 e Fora de escopo. P2-2: `cor_membrana` marcada `reacao_inicial`; Corruptor nível 1 prepara `[cor_toque, cor_esporos, cor_carne_docil, cor_membrana]` (toma a vaga de `cor_farejar`); o teste que congelava o contrário foi trocado por `test_corruptor_nivel_1_prepara_a_membrana` (dono: "Reação p/ toda Postura" vale no nível 1). Atenção: o gatilho de `cor_membrana` é `ao_ser_alvo_distancia` (só projétil), logo é a mais situacional das cinco.
+- P2-4: `test_round_trip_save_game_state_load_game_state` (3 campos + `combat.scene.saber_obs` por `save_game_state`/`load_game_state`). P2-5: `agents/combat.py` recarimba os inimigos vivos quando `absorb` revela no meio da luta (teste `test_revelacao_no_meio_da_luta_recarimba_os_inimigos`). P2-6: docstring de `starting_reaction_id`. P2-7: a simulação limpa `scene["saber_obs"]`.
+- P2-3 (sonda informativa, NÃO é avaliador): `docs/spec371/arena_posturas_reacao_armada.py` → `arena-posturas-reacao-armada.json` (80 seeds 180:260, `todas` as subclasses, níveis 1/3/5, padrão+elite, mesmo herói e bot de baralho da 341). `antes` = baralho sem as 3 Cartas `*1_ini_*`, reação nunca armada; `depois_sem_armar` = reação inicial garantida no baralho (`extra`), bot oficial; `depois_armada` = idem + bot arma a reação em mão (`reaction_card_id`).
+
+| Postura | antes | depois sem armar | depois ARMADA |
+|---|---|---|---|
+| Devoto do Abismo | 61,0 % | 58,8 % | 65,0 % |
+| Sangromante | 61,4 % | 59,9 % | 60,8 % |
+| Corruptor | 47,7 % | 48,9 % | 48,7 % |
+| Arcanista Cinzento | 49,2 % | 49,6 % | 54,5 % |
+| Médico de Campo | 46,7 % | 44,0 % | 47,5 % |
+
+  Todas as Posturas armadas ficam em 45–85 %. Único valor abaixo do piso: Médico `depois_sem_armar` 44,0 % (jogador que ensina a reação ao baralho e nunca a arma; o ganho de armar é +3,5 pp). O Corruptor é o mais perto do piso (48,7 %) e quase não ganha por armar (gatilho só de projétil).

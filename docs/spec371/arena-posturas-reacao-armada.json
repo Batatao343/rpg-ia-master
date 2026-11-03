@@ -1,0 +1,483 @@
+{
+ "seeds": [
+  180,
+  260
+ ],
+ "posturas": {
+  "Devoto do Abismo": {
+   "antes": {
+    "total": 0.61,
+    "padrao": 0.641,
+    "elite": 0.58,
+    "celulas": {
+     "L1 padrao": [
+      260,
+      320
+     ],
+     "L1 elite": [
+      231,
+      320
+     ],
+     "L3 padrao": [
+      278,
+      320
+     ],
+     "L3 elite": [
+      264,
+      320
+     ],
+     "L5 padrao": [
+      77,
+      320
+     ],
+     "L5 elite": [
+      62,
+      320
+     ]
+    }
+   },
+   "depois_sem_armar": {
+    "total": 0.588,
+    "padrao": 0.626,
+    "elite": 0.55,
+    "celulas": {
+     "L1 padrao": [
+      244,
+      320
+     ],
+     "L1 elite": [
+      211,
+      320
+     ],
+     "L3 padrao": [
+      279,
+      320
+     ],
+     "L3 elite": [
+      257,
+      320
+     ],
+     "L5 padrao": [
+      78,
+      320
+     ],
+     "L5 elite": [
+      60,
+      320
+     ]
+    }
+   },
+   "depois_armada": {
+    "total": 0.65,
+    "padrao": 0.692,
+    "elite": 0.608,
+    "celulas": {
+     "L1 padrao": [
+      265,
+      320
+     ],
+     "L1 elite": [
+      223,
+      320
+     ],
+     "L3 padrao": [
+      287,
+      320
+     ],
+     "L3 elite": [
+      263,
+      320
+     ],
+     "L5 padrao": [
+      112,
+      320
+     ],
+     "L5 elite": [
+      98,
+      320
+     ]
+    }
+   }
+  },
+  "Sangromante": {
+   "antes": {
+    "total": 0.614,
+    "padrao": 0.666,
+    "elite": 0.562,
+    "celulas": {
+     "L1 padrao": [
+      275,
+      320
+     ],
+     "L1 elite": [
+      247,
+      320
+     ],
+     "L3 padrao": [
+      269,
+      320
+     ],
+     "L3 elite": [
+      232,
+      320
+     ],
+     "L5 padrao": [
+      95,
+      320
+     ],
+     "L5 elite": [
+      61,
+      320
+     ]
+    }
+   },
+   "depois_sem_armar": {
+    "total": 0.599,
+    "padrao": 0.65,
+    "elite": 0.549,
+    "celulas": {
+     "L1 padrao": [
+      273,
+      320
+     ],
+     "L1 elite": [
+      246,
+      320
+     ],
+     "L3 padrao": [
+      264,
+      320
+     ],
+     "L3 elite": [
+      225,
+      320
+     ],
+     "L5 padrao": [
+      87,
+      320
+     ],
+     "L5 elite": [
+      56,
+      320
+     ]
+    }
+   },
+   "depois_armada": {
+    "total": 0.608,
+    "padrao": 0.662,
+    "elite": 0.554,
+    "celulas": {
+     "L1 padrao": [
+      279,
+      320
+     ],
+     "L1 elite": [
+      247,
+      320
+     ],
+     "L3 padrao": [
+      269,
+      320
+     ],
+     "L3 elite": [
+      226,
+      320
+     ],
+     "L5 padrao": [
+      88,
+      320
+     ],
+     "L5 elite": [
+      59,
+      320
+     ]
+    }
+   }
+  },
+  "Corruptor": {
+   "antes": {
+    "total": 0.477,
+    "padrao": 0.51,
+    "elite": 0.444,
+    "celulas": {
+     "L1 padrao": [
+      240,
+      320
+     ],
+     "L1 elite": [
+      216,
+      320
+     ],
+     "L3 padrao": [
+      220,
+      320
+     ],
+     "L3 elite": [
+      187,
+      320
+     ],
+     "L5 padrao": [
+      30,
+      320
+     ],
+     "L5 elite": [
+      23,
+      320
+     ]
+    }
+   },
+   "depois_sem_armar": {
+    "total": 0.489,
+    "padrao": 0.525,
+    "elite": 0.452,
+    "celulas": {
+     "L1 padrao": [
+      248,
+      320
+     ],
+     "L1 elite": [
+      217,
+      320
+     ],
+     "L3 padrao": [
+      222,
+      320
+     ],
+     "L3 elite": [
+      196,
+      320
+     ],
+     "L5 padrao": [
+      34,
+      320
+     ],
+     "L5 elite": [
+      21,
+      320
+     ]
+    }
+   },
+   "depois_armada": {
+    "total": 0.487,
+    "padrao": 0.521,
+    "elite": 0.453,
+    "celulas": {
+     "L1 padrao": [
+      248,
+      320
+     ],
+     "L1 elite": [
+      217,
+      320
+     ],
+     "L3 padrao": [
+      222,
+      320
+     ],
+     "L3 elite": [
+      196,
+      320
+     ],
+     "L5 padrao": [
+      30,
+      320
+     ],
+     "L5 elite": [
+      22,
+      320
+     ]
+    }
+   }
+  },
+  "Arcanista Cinzento": {
+   "antes": {
+    "total": 0.492,
+    "padrao": 0.54,
+    "elite": 0.445,
+    "celulas": {
+     "L1 padrao": [
+      250,
+      320
+     ],
+     "L1 elite": [
+      232,
+      320
+     ],
+     "L3 padrao": [
+      213,
+      320
+     ],
+     "L3 elite": [
+      158,
+      320
+     ],
+     "L5 padrao": [
+      55,
+      320
+     ],
+     "L5 elite": [
+      37,
+      320
+     ]
+    }
+   },
+   "depois_sem_armar": {
+    "total": 0.496,
+    "padrao": 0.549,
+    "elite": 0.444,
+    "celulas": {
+     "L1 padrao": [
+      257,
+      320
+     ],
+     "L1 elite": [
+      214,
+      320
+     ],
+     "L3 padrao": [
+      213,
+      320
+     ],
+     "L3 elite": [
+      168,
+      320
+     ],
+     "L5 padrao": [
+      57,
+      320
+     ],
+     "L5 elite": [
+      44,
+      320
+     ]
+    }
+   },
+   "depois_armada": {
+    "total": 0.545,
+    "padrao": 0.592,
+    "elite": 0.498,
+    "celulas": {
+     "L1 padrao": [
+      263,
+      320
+     ],
+     "L1 elite": [
+      224,
+      320
+     ],
+     "L3 padrao": [
+      244,
+      320
+     ],
+     "L3 elite": [
+      205,
+      320
+     ],
+     "L5 padrao": [
+      61,
+      320
+     ],
+     "L5 elite": [
+      49,
+      320
+     ]
+    }
+   }
+  },
+  "Médico de Campo": {
+   "antes": {
+    "total": 0.467,
+    "padrao": 0.498,
+    "elite": 0.435,
+    "celulas": {
+     "L1 padrao": [
+      236,
+      320
+     ],
+     "L1 elite": [
+      201,
+      320
+     ],
+     "L3 padrao": [
+      209,
+      320
+     ],
+     "L3 elite": [
+      199,
+      320
+     ],
+     "L5 padrao": [
+      33,
+      320
+     ],
+     "L5 elite": [
+      18,
+      320
+     ]
+    }
+   },
+   "depois_sem_armar": {
+    "total": 0.44,
+    "padrao": 0.467,
+    "elite": 0.414,
+    "celulas": {
+     "L1 padrao": [
+      217,
+      320
+     ],
+     "L1 elite": [
+      193,
+      320
+     ],
+     "L3 padrao": [
+      207,
+      320
+     ],
+     "L3 elite": [
+      187,
+      320
+     ],
+     "L5 padrao": [
+      24,
+      320
+     ],
+     "L5 elite": [
+      17,
+      320
+     ]
+    }
+   },
+   "depois_armada": {
+    "total": 0.475,
+    "padrao": 0.512,
+    "elite": 0.438,
+    "celulas": {
+     "L1 padrao": [
+      241,
+      320
+     ],
+     "L1 elite": [
+      203,
+      320
+     ],
+     "L3 padrao": [
+      227,
+      320
+     ],
+     "L3 elite": [
+      195,
+      320
+     ],
+     "L5 padrao": [
+      24,
+      320
+     ],
+     "L5 elite": [
+      22,
+      320
+     ]
+    }
+   }
+  }
+ }
+}
