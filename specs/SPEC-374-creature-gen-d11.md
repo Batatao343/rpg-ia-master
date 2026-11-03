@@ -1,6 +1,6 @@
 # SPEC-374 — Criatura gerada em jogo: fechar a D11 da SPEC-361 (eval corrigido, eixos fechados, prazo do job) + higiene do Codex e do índice de regras
 
-> **Status:** `in-review` (dono, 03/11: "transforme em spec e execute agora" e "tente melhorar" o `lint_primeira`; dono, 02/11: substituta enquanto gera, job fora do turno. Decisões do autor em §8 valem como aprovadas e são revogáveis)
+> **Status:** `done` (dono 03/11: "execute agora", "tente melhorar" e "Aceitar e ligar" com a U14; revisão Sol + astra APPROVED_WITH_FOLLOWUPS em 4 rodadas; smoke §6 ok; `RPG_CREATURE_GEN` liga no staging após smoke; gatilho de reabertura: fallback > 10 % ou `lint_final` < 90 %)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Épico:** SPEC-360 (criaturas vivas) · SPEC-349 (bestiário)
 > **Depende de:** SPEC-361 (`done` com `RPG_CREATURE_GEN=legacy`; D11 com as pré-condições 2–4 abertas), SPEC-356 (`done`: backoff 429 da Jina), SPEC-350 (`done`: docs de segredo dos NPCs de trama)
@@ -133,22 +133,29 @@ Rótulos: **[F]** fato com evidência · **[H]** hipótese a confirmar na Etapa 
 **Schema (R10)**
 ```python
 class FichaCriaturaGerada(BaseModel):
-    ...                                    # campos de texto e enums de família/origem como hoje
-    linha_eixos: int = Field(ge=1, le=8)   # índice em <eixos_livres>; o Python escreve os 6 eixos
+    ...  # campos de texto e enums de família/origem como hoje
+    linha_eixos: int = Field(ge=1, le=8)  # índice em <eixos_livres>; o Python escreve os 6 eixos
     # plano_corporal/material/escala/locomocao/percepcao/papel_tatico saem do schema do LLM
 
-class FichaCriaturaGeradaEixosLivres(FichaCriaturaGerada):   # só com eixos_livres vazio
-    plano_corporal: PlanoCorporal; material: Material; escala: Escala
-    locomocao: Locomocao; percepcao: Percepcao; papel_tatico: PapelTatico
+
+class FichaCriaturaGeradaEixosLivres(FichaCriaturaGerada):  # só com eixos_livres vazio
+    plano_corporal: PlanoCorporal
+    material: Material
+    escala: Escala
+    locomocao: Locomocao
+    percepcao: Percepcao
+    papel_tatico: PapelTatico
 ```
 O guard `isinstance` em `_invocar` (`creature_gen.py:1405-1408`) passa a aceitar as duas classes e `CorrecaoFicha`. A ficha runtime gravada (template, pool) continua com os seis eixos, como hoje.
 
 **Assinaturas**
 ```python
-def normalizar_forma(gen: dict, *, nome: str) -> dict: ...                                         # R11
-def reparar_eixos(ficha: dict, issues: list[Issue], livres: list[dict], lint) -> dict | None: ...  # R13
+def normalizar_forma(gen: dict, *, nome: str) -> dict: ...  # R11
+def reparar_eixos(
+    ficha: dict, issues: list[Issue], livres: list[dict], lint
+) -> dict | None: ...  # R13
 # workers/drain.py
-def job_window_remaining() -> float | None: ...                                                     # R14
+def job_window_remaining() -> float | None: ...  # R14
 ```
 
 **Formato da lista no prompt (R10/R12):** uma linha numerada por candidato, no formato de `_linha_eixos_livres` (`creature_gen.py:841-842`: os 5 eixos de `bl.EIXOS_PADRAO_ENUM` + `papel_tatico`, separados por ` / `), com valores reais de `bl.ENUMS`.
@@ -225,22 +232,22 @@ Python sempre por `bash scripts/dev/py.sh …`. Testes do escopo com `-n 2` no m
 
 ## 5. Critérios de aceite
 
-- [ ] R1: Etapa E em commit(s) próprio(s), de outro agente, antes do 1º commit de produto
-- [ ] R2: sha do set da 361 igual; set do R7 congelado com sha em §9
-- [ ] R4: `idioma_pt` sem "a"/"as" no `_EN`; re-pontuação publicada
-- [ ] R5/R6: limiar do job e protocolo de 2 rodadas no avaliador, antes da medição
-- [ ] R8: avaliador em `evals/protected-paths.txt` (ou `EVAL_AUTHORING_REQUIRED` registrado no hand-back)
-- [ ] R10–R13: eixos fechados, forma, prompt e reparo com testes; prompt revisado por Opus
-- [ ] R6: `lint_primeira` agregado ≥ 16/22 e nenhuma rodada < 7/11; demais limiares em cada rodada; ou registro do desvio para o dono
-- [ ] R14: job adia com janela curta, sem LLM e sem virar `dead`
-- [ ] R16/R17: migrate na cópia não apaga nada; validador cobre o segredo de entidade curada
-- [ ] R18: `rag.py --only rules` com teste; reindex real feito (§6.3)
-- [ ] R3: `legacy` byte-idêntico; testes da 361 verdes sem mudar expected
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (`isinstance` com as duas classes de ficha e `CorrecaoFicha`)
-- [ ] Saves antigos continuam carregando (fichas runtime antigas, com os seis eixos, seguem válidas)
-- [ ] Flags novas registradas em `config/flags.yaml` (gate da SPEC-340)
-- [ ] `uv run pytest` verde (suíte completa, pelo coordenador, no pouso)
-- [ ] §6 itens 1–3 executados e registrados em §9
+- [x] R1: Etapa E em commit(s) próprio(s), de outro agente, antes do 1º commit de produto
+- [x] R2: sha do set da 361 igual; set do R7 congelado com sha em §9
+- [x] R4: `idioma_pt` sem "a"/"as" no `_EN`; re-pontuação publicada
+- [x] R5/R6: limiar do job e protocolo de 2 rodadas no avaliador, antes da medição
+- [x] R8: avaliador em `evals/protected-paths.txt` (ou `EVAL_AUTHORING_REQUIRED` registrado no hand-back)
+- [x] R10–R13: eixos fechados, forma, prompt e reparo com testes; prompt revisado por Opus
+- [x] R6: `lint_primeira` agregado ≥ 16/22 e nenhuma rodada < 7/11; demais limiares em cada rodada; ou registro do desvio para o dono — v2 16/22 passou; com a U14 v4 13/22 e v5 12/22: desvio aceito pelo dono ("Aceitar e ligar", 03/11)
+- [x] R14: job adia com janela curta, sem LLM e sem virar `dead`
+- [x] R16/R17: migrate na cópia não apaga nada; validador cobre o segredo de entidade curada
+- [x] R18: `rag.py --only rules` com teste; reindex real feito (§6.3)
+- [x] R3: `legacy` byte-idêntico; testes da 361 verdes sem mudar expected — exceções revisadas pela Sol (entrada do gate, +1100 no limite REGRAS+PAPEL, "≥ 1 exemplo" no caso extremo): não enfraquecem; ver §9
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo (`isinstance` com as duas classes de ficha e `CorrecaoFicha`)
+- [x] Saves antigos continuam carregando (fichas runtime antigas, com os seis eixos, seguem válidas)
+- [x] Flags novas registradas em `config/flags.yaml` (gate da SPEC-340)
+- [x] `uv run pytest` verde (suíte completa, pelo coordenador, no pouso)
+- [x] §6 itens 1–3 executados e registrados em §9
 
 ## 6. Smoke test com LLM real
 
