@@ -1,7 +1,7 @@
 # SPEC-374 — revisão sol (review)
 
 > Nome do arquivo: `handoffs/SPEC-374-sol-review.md` (lint `scripts/check_handoff_names.py`).
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 2, `fb1414b8`; rodada 1 foi `CHANGES_REQUIRED` em `534a642f`)
+> **Veredito:** `CHANGES_REQUIRED` (rodada 3, `c7ff5e1d`: R3-P1-1 na Composição da arte; rodada 2 foi `APPROVED_WITH_FOLLOWUPS`, rodada 1 `CHANGES_REQUIRED`)
 > **Revisor:** Opus (papel Sol, revisão técnica independente; não escreveu o produto) · **Data:** 2026-11-03 · **Commit revisado:** `534a642f`
 
 ## Escopo
@@ -148,4 +148,42 @@ py.sh scripts/validate_content.py → 0 ERRO, 29 AVISO
 grep '"commit"|"mock"|"pedidos_sha256"' eval-medido-v2-{1,2}.json → 7828e73be680 / false / baf38310…
 git diff 7828e73b fb1414b8 --stat → só eval-medido-v2-* e a spec
 git status --short (depois dos testes) → limpo
+```
+
+## Rodada 3 (2026-11-03, commits `cf710d21`..`c7ff5e1d`: v3 revertida, U14 `a8d19167`, ajuste 6, medidas v4, decisão do dono)
+
+**Veredito da rodada 3:** `CHANGES_REQUIRED`. A U14 está correta, é determinística e não afrouxa o U13. As medidas v4 são íntegras. Fica um P1 novo na Composição da arte.
+
+- **U14, correção:** `services/axis_text.py` tem duas regras.
+  - Material por dominância: o material declarado tem ≤ 1 raiz distinta no léxico amplo, e outro material tem ≥ 3 raízes do léxico forte e ≥ h + 2.
+  - Locomoção `nada` por ausência de qualquer raiz de água ou nado.
+  - Sondei offline: `(?:na|sob a|…) agua` sobrevive ao `_fold` (só tira acento); `\b` no início evita "possui" casar "oss"; o "Ouvido de Sal" reprova nos dois eixos.
+  - As raízes são cobradas no texto inteiro (inclui gancho e contra_jogo), o que é conservador no sentido certo: mais texto só aumenta o h do declarado.
+- **U14, determinismo:** não há aleatoriedade nem chamada a LLM, e o cache de regex é por chave. O empate em `max(fortes, ...)` desempata pela ordem de inserção de `FORTE`, que é fixa.
+- **U14, falso positivo:** 7/281 = 2,5 %, travado em teste com teto de 4 % sobre `fichas_aprovadas()`. As 7 marcadas são mistura real de matérias (lista em `docs/spec374/u14-falso-positivo.md`).
+  - Limite assumido e registrado: percepção, plano e escala não são cobrados. A 3ª contradição do curador (`respiracao`) passa. Não é achado: a versão de três eixos reprovava 45,6 %.
+- **U13 não fica mais fraco.** A U14 só acrescenta erros. `reparar_padrao` segue exigindo só U13, e `reparar_eixos` só U2/U3/U14. Uma ficha com U13 e U14 juntos não é reparada por nenhum dos dois e vai para a correção curta: o gate ficou mais duro, não mais frouxo.
+  - O reparo da U14 troca a linha e mantém a prosa. Só aceita linha que passa no lint inteiro, então só cai numa linha coerente com o corpo.
+- **Mock dos testes da 361 (`mock_llm.py:718`):** escrever "Vive nadando, de nadadeiras moles" quando a locomoção é `nada` só mantém a prosa sintética coerente com o gate, que é o mesmo papel de antes ("Corpo de {material}"). Não mascara bug da U14: ela tem oráculo próprio com prosa real (o "Ouvido de Sal") e a medida de falso positivo sobre 281 fichas reais. O mock nunca foi oráculo do gate. Os `test_spec361_*` não mudaram nesta rodada.
+- **Medidas v4:** os dois JSON têm `commit: 32086220a00e`, `real: true`, `mock: false` e `pedidos_sha256 = baf38310…`.
+  - Entre `a8d19167` e `32086220` só entra o registro do ajuste 6; entre `32086220` e `65d785a9`, só as medidas e a §9. Não houve retune entre as rodadas.
+  - O avaliador segue intocado: o `git log` dos caminhos protegidos continua só com `d3019102`.
+  - `--protocolo` dá `passou: false` (13/22; rodada 2 com 5/11). A §9 registra isso sem maquiar, e registra a decisão do dono "Aceitar e ligar" (desvio da D11 item 3).
+  - A v3 (texto sem exemplos, 13/22) foi revertida conforme o R2. Certo.
+- **Leitura da integridade:** a U14 entra no `lint_primeira` porque roda na 1ª leitura, como manda a D3. Isso deixa o gate mais duro, então a v4 não é comparável com a v2. A §9 deixa claro que a v2 (16/22) mede o código **sem** U14 e que o código que pousa é o da v4. É honesto. O dono aceitou com esse quadro.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R3-P1-1 | P1 | `scripts/bestiario/pool_revisao.py:109-137` (`_LUGAR`, `lugar_do_texto`, `_composicao`) | **A Composição da arte quase sempre recebe um "lugar" que não é lugar.** A regex pega o primeiro `em/na/no/sob/entre/dentro de` seguido de qualquer palavra. Rodei `lugar_do_texto` sobre as 281 aprovadas: devolve algo em 277, e as 20 primeiras incluem `azul`, `placas`, `lábios`, `tecido`, `costelas`, `que`, `meia`, `S`, `listras`, `ombro de um`, `peso do braço`, `pele`, `pescoço`. A Composição vira "Lábios (Costa Negra), luz baixa; …", que vai para o doc de arte e daí para o retrato pago. Antes ela usava o nome do habitat do mapa. É regressão para quase toda ficha importada. O teste só cobre o "Ouvido de Sal" e um caso sem lugar. | Aceitar o lugar do texto só se o núcleo for um **substantivo de lugar** de uma lista fechada (cisterna, poço, gruta, caverna, galeria, mina, margem, praia, poça, pântano, brejo, ruína, cripta, porão, esgoto, doca, cais, ponte, estrada, floresta, mata, duna, deserto, campo, forja, oficina, torre, farol, câmara, túnel, salão, beco…). Fora da lista, volta para `habitat_nome`. Teste sobre `fichas_aprovadas()`: todo lugar extraído tem núcleo na lista, ou vem vazio. Manter `"Cisterna de pedra (Deserto de Zhur)"` para o "Ouvido de Sal". |
+| R3-P2-1 | P2 | `services/creature_gen.py` (`gerar_nova`, código `"U2U3-eixos-reparados"`) | O reparo da U14 grava o mesmo código do reparo de colisão, e o relatório não distingue os dois. | Gravar `"U14-eixos-reparados"` quando o issue reparado for U14 (o eval só conta códigos, então isso não mexe em métrica). |
+| R3-P2-2 | P2 | spec §9 | A medida oficial do D6 (v2) não mede o código que pousa (v4, com U14). O aceite do dono cobre isso. Falta registrar o que observar no staging. | O coordenador registra um gatilho de revisão: `fallback` > 10 % ou `lint_final` < 90 % em jogo real com a flag `on` → reabrir. A rodada 2 da v4 ficou no limite dos dois. |
+
+Comandos da rodada 3:
+
+```text
+py.sh -m pytest -q tests/test_spec374_*.py (inclui test_spec374_u14.py) tests/test_spec361_*.py tests/test_flag_registry.py tests/test_spec300_values.py → 198 passed, exit 0 (sem -n)
+py.sh (offline) axis_text.incoerencias em casos sintéticos → regex de água e \b ok; Ouvido de Sal reprova
+py.sh (offline) pool_revisao.lugar_do_texto sobre as 281 aprovadas → 277 com "lugar"; amostra: azul, placas, lábios, que, S, pescoço (R3-P1-1)
+grep commit/mock/sha em eval-medido-v4-{1,2}.json → 32086220a00e / false / baf38310…
+git diff a8d19167 32086220 --stat → só eval-ajuste-6.json; git log dos caminhos protegidos 534a642f..HEAD → vazio
 ```

@@ -2,7 +2,7 @@
 
 > Nome do arquivo: `handoffs/SPEC-374-astra-review.md`. A spec cita `SPEC-374-prompt-review.md`, mas
 > esse nome reprova no `scripts/check_handoff_names.py`; o coordenador atualiza a referência no pouso.
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 2, `fb1414b8`; o mesmo da rodada 1)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 3, `c7ff5e1d`; o mesmo das rodadas 1 e 2)
 > **Revisor:** Opus (revisão criativa do texto do prompt; não escreveu o texto) · **Data:** 2026-11-03 · **Commit revisado:** `534a642f`
 
 ## Escopo
@@ -112,4 +112,27 @@ Comandos da rodada 2:
 ```text
 git diff 1026cfcd..HEAD -- services/creature_gen.py → texto aplicado conforme o parecer
 py.sh leitura de eval-medido-v2-{1,2}.json → 22 fichas nova; busca de rótulos de eixo nos textos → só "cera de sebo" ×2
+```
+
+## Rodada 3 (2026-11-03, v3 revertida `b30a5bdc`; frase nova de `_EIXOS_LINHA` em `a8d19167`)
+
+**Veredito da rodada 3:** `APPROVED_WITH_FOLLOWUPS`.
+
+- **A minha proposta R2-P2-1 foi medida e perdeu.** O texto sem exemplos (`cf710d21`) deu 13/22 na v3, e o executor reverteu conforme o R2. Com rodadas de n = 11, a diferença para a v2 (16/22) está dentro da variância já vista (o ajuste oscilou de 7 a 10 de 11), então a conclusão não é firme. Mesmo assim, retiro a proposta como está: os exemplos ficam, e a repetição "banha que escorre e endurece" passa a ser custo aceito, a vigiar na revisão Opus do pool.
+- **Frase nova:** "o material da linha é a matéria que domina o corpo (corpo de sal exige uma linha com sal_mineral)".
+  - O conteúdo está certo. Diz ao LLM a mesma coisa que a U14 cobra, que é a ligação certa entre prompt e gate.
+  - Citar `sal_mineral` como valor de linha não fere o "nunca copie as palavras da linha": é instrução de escolha, não de prosa.
+  - Mas a costura deixou a frase torta. Ficou "O corpo tem de caber na linha: o material da linha é … (…), mas em matéria que se toca e não em rótulo: o material vira …", com três dois-pontos, e o "mas em matéria" não se liga a nada. A locomoção `nada`, a outra metade da U14, não é dita.
+  - Não muda número nem abre brecha. É P2.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção (texto proposto) |
+|---|---|---|---|---|
+| R3-P2-1 | P2 | `services/creature_gen.py:933-941` (`_EIXOS_LINHA`) | Sintaxe quebrada depois da inserção, e a metade da U14 sobre locomoção não aparece. | `"Eixos: escolha UMA linha de <eixos_livres> e escreva só o número dela em linha_eixos; o motor grava os seis eixos. Escolha a linha pelo corpo que você vai descrever: o material da linha é a matéria que domina o corpo (um corpo de sal pede uma linha com sal_mineral), e locomoção nada quer dizer que ela vive e se move na água. No texto, essa matéria vira o que a mão sente (cera_sebo é banha que escorre e endurece; escoria_fuligem é casca de forno que esfarela), a locomoção vira o jeito de andar e a percepção vira o órgão que sente. Nunca copie as palavras da linha no nome nem no texto."` Como antes, aplicar pede novas rodadas medidas, então fica como follow-up. |
+| R3-P2-2 | P2 | `scripts/bestiario/pool_revisao.py` (Composição) | Visto pelo lado do texto da arte: a Composição com "Lábios (Costa Negra), luz baixa" põe o ilustrador num lugar sem sentido. Detalhe e correção no R3-P1-1 do parecer Sol. | Ver o parecer Sol. |
+
+Comandos da rodada 3:
+
+```text
+git diff 7cc69618..HEAD -- services/creature_gen.py → só a frase de material e "U2/U3/U14" na correção
+py.sh (offline) lugar_do_texto sobre fichas_aprovadas() → 277/281 com "lugar"; amostra com azul/lábios/que/S
 ```
