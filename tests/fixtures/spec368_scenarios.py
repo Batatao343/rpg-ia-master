@@ -522,7 +522,7 @@ def s6_10_router_esgotado() -> Scenario:
     routes = json.dumps(
         {
             "classify": [["groq", "openai/gpt-oss-20b"]],
-            "fast": [["groq", "llama-3.3-70b-versatile"]],
+            "fast": [["groq", "openai/gpt-oss-120b"]],
             "smart": [["groq", "openai/gpt-oss-120b"]],
         }
     )

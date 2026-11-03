@@ -35,6 +35,7 @@ from services import discovery as disc
 from services import encounter_preparation as prep
 from services import enemy_intent as _enemy_intent
 from services import fauna_saber as _fauna_saber
+from services import generic_spawn as _gs
 from services import graph_resolver as gr
 from services import scene_cards as _scene_cards
 from services.conflict_turn import _SUPPORT_EFFECTS, TurnDeclaration, TurnStep
@@ -717,7 +718,11 @@ def _grounded_template(
             sanitize_entity_name(name) or "Criatura"
         ):
             return template
-    _log_event("combat", "spawn_identity_mismatch", level="warning")
+    _log_event(
+        "combat",
+        "spawn_generic_name" if _gs.is_contentless_name(name) else "spawn_identity_mismatch",
+        level="warning",
+    )
     from agents.bestiary import _slug, materialize_enemy_concept
 
     # SPEC-346 R24: o nome materializado e o nucleo da dica (<= 3 palavras), nunca a frase.
@@ -872,9 +877,16 @@ def _spawn_v4_enemies(
                         (_display_enemy_name(target_hint), em.hint_count(target_hint))
                     ]
                 meta["requested_total"] = sum(int(c) for _n, c in groups)  # SPEC-346 R29
+                regional = False
                 for name, count in groups:
                     name = _name_without_generic_head(name, messages)  # SPEC-363 R30
-                    template = _grounded_template(name, mechanical_context, encounter_level, state)
+                    template = _gs.regional_template(  # SPEC-387 R10: nome vazio -> fauna da região
+                        name, state, target_hint, encounter_level
+                    )
+                    regional = regional or template is not None
+                    template = template or _grounded_template(
+                        name, mechanical_context, encounter_level, state
+                    )
                     from services.creature_variants import contagem_min as _cmin
 
                     if _cmin(template) > count:  # SPEC-361 R7: piso do grupo da variante
@@ -882,7 +894,10 @@ def _spawn_v4_enemies(
                         protected.add(str(template.get("id")))
                     enemies += _instances(template, count, next_instance_by_template, _deck_seed)
                 if enemies:
-                    meta.update(source="scanner", target_ref=str(target_hint or ""))
+                    meta.update(source="regional_generic" if regional else "scanner")
+                    meta["target_ref"] = str(target_hint or "")
+                    if regional:
+                        flavor = f"{enemies[0].get('name', 'Algo')} avança contra você."
         except Exception as e:
             _log_event("combat", "spawn_failed", level="warning", error=type(e).__name__)
 

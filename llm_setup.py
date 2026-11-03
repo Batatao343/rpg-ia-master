@@ -35,7 +35,10 @@ from pydantic import BaseModel
 if TYPE_CHECKING:
     from langchain_core.language_models import BaseLanguageModel
 
-load_dotenv(override=True)  # .env é a fonte canônica das keys (sobrepõe env var do SO)
+# .env é a fonte canônica das keys: sobrepõe a variável do SO (uma chave antiga no Windows não pode
+# vencer em silêncio; SPEC-387 R15). Para SIMULAR falha de provider use `RPG_ROUTES` com um modelo
+# inexistente, nunca uma chave inválida (o .env a sobrescreveria).
+load_dotenv(override=True)
 
 _LOG = logging.getLogger("rpg.llm")
 
@@ -373,6 +376,8 @@ _PROVIDER_GENERATION_FAILURES = frozenset({"tool_use_failed", "json_validate_fai
 ROUTES = {
     ModelTier.CLASSIFY: [
         ("deepseek", "deepseek-v4-flash"),
+        # SPEC-387 R13: o 120b faz tool call no router (o 20b deu 400 `tool_use_failed` no smoke 6).
+        ("groq", "openai/gpt-oss-120b"),
         ("groq", "openai/gpt-oss-20b"),
         ("gemini", "gemini-flash-lite-latest"),
     ],

@@ -132,7 +132,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.spawn_failed` | `error` |
 | `combat.spawn_fallback` | — |
 | `combat.spawn_from_narration` | — |
-| `combat.spawn_identity_mismatch` | — |
+| `combat.spawn_generic_regional` | — |
 | `combat.spawn_scanner_discarded` | — |
 | `combat.started` | `enemies` |
 | `combat.summary` | `death_stage_reached`, `enemy_damage_dealt`, `player_damage_taken`, `reactions`, `rounds`, `target_redirects` |

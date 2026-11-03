@@ -154,8 +154,8 @@ o guard de `FallbackLLM` (`isinstance`/`try`) segue **obrigatório**.
 
 | Tier | Uso | Candidatos default `ROUTES` (ordem = preferência → fallback) |
 |---|---|---|
-| `ModelTier.CLASSIFY` | router, combat (parse/spawn), loot (TradeIntent), librarian — classificação/parse temp 0 | **DeepSeek** → Groq `openai/gpt-oss-20b` → Gemini flash-lite |
-| `ModelTier.FAST` | storyteller, combat (narração), npc_actor, loot (narração), world_simulator, bestiary | **DeepSeek** → MiniMax → Qwen → Groq llama-3.3-70b → Gemini flash |
+| `ModelTier.CLASSIFY` | router, combat (parse/spawn), loot (TradeIntent), librarian — classificação/parse temp 0 | **DeepSeek** → Groq `openai/gpt-oss-120b` → Groq `openai/gpt-oss-20b` → Gemini flash-lite |
+| `ModelTier.FAST` | storyteller, combat (narração), npc_actor, loot (narração), world_simulator, bestiary | **DeepSeek** → Groq gpt-oss-120b → MiniMax → Qwen → Gemini flash |
 | `ModelTier.SMART` | archivist, campaign_manager, character_creator | **DeepSeek** → Groq gpt-oss-120b → Anthropic → Gemini pro |
 
 > **DeepSeek é o primário em TODOS os tiers** (2026-07-16, pós-playtest longo).
@@ -167,7 +167,7 @@ o guard de `FallbackLLM` (`isinstance`/`try`) segue **obrigatório**.
 >   **`method="function_calling"`** (tool calling) p/ todo provider OpenAI-compat
 >   (`_OPENAI_COMPAT_PROVIDERS`) — com isso o Groq parseia QUALQUER schema. Logo há
 >   um candidato **Groq grátis em todos os tiers**: o jogo roda 100% no free tier
->   do Groq (`llama-3.3-70b`/`gpt-oss-20b`/`gpt-oss-120b`) sem provider pago.
+>   do Groq (`gpt-oss-20b`/`gpt-oss-120b`) sem provider pago.
 > - **Anthropic (Claude 5):** não aceita `temperature` (omitido no
 >   `_build_anthropic`) nem **prefill** (falha se o prompt termina em `AIMessage`,
 >   ex.: archivist → cai no fallback). OK em nós que terminam com humano.
