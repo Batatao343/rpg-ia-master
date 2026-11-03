@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 
 import pytest
 from fastapi import HTTPException
@@ -62,6 +63,11 @@ def test_portrait_for_regular_enemy_still_offers(monkeypatch):
     )
 
 
+def _isolate_env(monkeypatch) -> None:
+    """load_dotenv grava em os.environ: o teste trabalha numa cópia, nada vaza para o worker."""
+    monkeypatch.setattr(os, "environ", os.environ.copy())
+
+
 class _Reg:
     def __init__(self):
         self.calls = []
@@ -83,7 +89,7 @@ class _Shared:
 def test_retire_env_file_and_dry_run(monkeypatch, tmp_path, capsys):
     env = tmp_path / "e.env"
     env.write_text("SPEC367_ONLY_HERE=zzz-secret\n", encoding="utf-8")
-    monkeypatch.delenv("SPEC367_ONLY_HERE", raising=False)
+    _isolate_env(monkeypatch)
     seen = {}
     shared = _Shared()
     reg = _Reg()
@@ -115,7 +121,6 @@ def test_retire_env_file_and_dry_run(monkeypatch, tmp_path, capsys):
     assert "zzz-secret" not in out
     assert json.loads(out)["status_atual"] == "ready"
     assert reg.calls == [] and shared.deleted == []
-    monkeypatch.delenv("SPEC367_ONLY_HERE", raising=False)
 
 
 class _Store:
@@ -150,8 +155,9 @@ def test_retire_dsn_env_uses_ops_pool_and_closes_it(monkeypatch, tmp_path, capsy
         "SPEC367_DSN=postgresql://x\nSUPABASE_URL=https://s\nSUPABASE_SERVICE_ROLE_KEY=k\n",
         encoding="utf-8",
     )
+    _isolate_env(monkeypatch)
     for k in ("SPEC367_DSN", "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"):
-        monkeypatch.delenv(k, raising=False)
+        os.environ.pop(k, None)
     shared = _Shared()
     reg = _Reg()
     closed = []
@@ -179,6 +185,43 @@ def test_retire_dsn_env_uses_ops_pool_and_closes_it(monkeypatch, tmp_path, capsy
     out = json.loads(capsys.readouterr().out)
     assert out["status"] == "retired" and closed == [True]
     assert "postgresql://x" not in json.dumps(out)
+
+
+@pytest.mark.parametrize("dry", [False, True])
+def test_retire_dsn_env_without_bucket(monkeypatch, tmp_path, capsys, dry):
+    """Sem SUPABASE_URL/chave: retirada falha fechada (nada no banco); dry-run só lê e termina 0."""
+    env = tmp_path / "e.env"
+    env.write_text("SPEC367_DSN=postgresql://x\n", encoding="utf-8")
+    _isolate_env(monkeypatch)
+    for k in ("SPEC367_DSN", "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"):
+        os.environ.pop(k, None)
+    reg = _Reg()
+    closed = []
+
+    class _Pool:
+        def close(self):
+            closed.append(True)
+
+    def fake_ops(dsn, values):
+        from types import SimpleNamespace
+
+        assert not values["SUPABASE_URL"] and not values["SUPABASE_SERVICE_ROLE_KEY"]
+        return SimpleNamespace(game_store=SimpleNamespace(pool=_Pool()), shared_blob_store=None)
+
+    monkeypatch.setattr(rcp, "_ops_runtime", fake_ops)
+    monkeypatch.setattr(rcp, "PostgresPortraitRegistry", lambda pool: reg)
+    monkeypatch.setattr(
+        rcp, "_dry_report", lambda runtime, key: {"portrait_key": key, "status_atual": "ready"}
+    )
+    argv = ["r", "tipo:x", "--reason", "m", "--env-file", str(env), "--dsn-env", "SPEC367_DSN"]
+    monkeypatch.setattr("sys.argv", argv + (["--dry-run"] if dry else []))
+    if dry:
+        assert rcp.main() == 0
+    else:
+        with pytest.raises(SystemExit) as exc:
+            rcp.main()
+        assert exc.value.code != 0
+    assert reg.calls == [] and closed == [True]
 
 
 def test_retire_missing_env_file_is_error(monkeypatch, tmp_path, capsys):
