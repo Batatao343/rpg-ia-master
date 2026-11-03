@@ -31,6 +31,7 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `creature_portrait_curated` | Este retrato já existe no bestiário. |
 | `creature_portrait_exists` | Este retrato já existe ou está sendo gerado. |
 | `creature_portrait_in_progress` | Outro jogador já está gerando este retrato. |
+| `creature_portrait_not_offered` | Esta criatura não tem retrato disponível para geração. |
 | `credentials_invalid` | E-mail/senha incorretos. |
 | `cron_not_configured` | Segredo do cron ausente (fail closed). |
 | `cron_task_failed` | Tarefa de cron falhou. |

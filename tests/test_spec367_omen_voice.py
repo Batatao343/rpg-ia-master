@@ -10,7 +10,6 @@ import pytest
 
 import api
 from services import enemy_intent as ei
-from tests.test_enemy_intent_node import _rounds
 
 CATALOG = Path(__file__).resolve().parents[1] / "data" / "combat" / "pressagio_sinais.json"
 HERO = "Smoke5A"
@@ -69,24 +68,59 @@ def test_every_phrase_formats_with_name_and_voce(alvo):
     assert n > 20
 
 
-@pytest.mark.parametrize("fam", ["fera", "morto_inquieto"])
-def test_state_view_omens_without_hero_name(monkeypatch, fam):
+def _rounds_with(monkeypatch, enemy_id, hint, hero, n=2, danger=3):
+    """Combate real pelo nó, com herói nomeado e o encontro da família pedida."""
+    import json
+    import random
+
+    import agents.combat as combat
+    from tests.test_encounter_identity_repro import _install_llm, _start_state
+    from tests.test_encounter_lifecycle_reload import _decl, _merge, _reload
+
+    random.seed(9)
+    _install_llm(monkeypatch)
+    state0 = _start_state(hint=hint)
+    state0["player"]["name"] = hero
+    state = _decl(
+        _start_state(
+            hint=hint,
+            player=state0["player"],
+            combat_encounter_hint={"enemy_id": enemy_id, "reason": "random", "hint": hint},
+            world={**state0["world"], "danger_level": danger},
+            continuity={"session_action_count": 4, "timeline_epoch": 0},
+        )
+    )
+    metas = []
+    for _ in range(n):
+        out = combat.combat_node(state)
+        state = _reload(_merge(state, out))
+        metas.append(json.loads(json.dumps(state["combat"], default=str)))
+        if not state["combat"].get("active"):
+            break
+        _decl(state)
+    return state, metas
+
+
+@pytest.mark.parametrize(
+    ("fam", "enemy_id", "hint", "hero"),
+    [
+        ("fera", "enemy_lobo_sombrio", "Lobo Sombrio", "Smoke5A"),
+        ("morto_inquieto", "enemy_esqueleto", "Esqueleto", "Mirela5"),
+    ],
+)
+def test_state_view_omens_without_hero_name(monkeypatch, fam, enemy_id, hint, hero):
     monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
-    state, metas = _rounds(monkeypatch, 2)
-    hero = state["player"]["name"]
+    state, metas = _rounds_with(monkeypatch, enemy_id, hint, hero)
+    assert state["player"]["name"] == hero
+    rows = []
     for meta in metas:
         view = api._combat_block({"combat": meta, "enemies": [], "player": {}})
-        for row in view.get("pressagios_publicos", []):
-            assert hero not in row["sinal"], row
-            assert hero not in str(row.get("prenuncio") or "")
-    # a família é exercida pelo unitário: ambas leem "você" sem o nome
-    for tipo in ("ataque", "controle", "dreno"):
-        s = ei.sinal_for(tipo, {"id": "x", "name": "X", "family": fam}, "você", key=tipo)
-        assert HERO not in s
-
-
-def test_real_round_sinal_says_voce(monkeypatch):
-    monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
-    _state, metas = _rounds(monkeypatch, 2)
-    sinais = [r["sinal"] for m in metas for r in m.get("pressagios_publicos", [])]
-    assert sinais and any("você" in s for s in sinais), sinais
+        rows += view.get("pressagios_publicos", [])
+    assert rows, "nenhum presságio chegou à view"
+    actors = {r["actor_id"] for r in rows}
+    assert len(actors) >= 2, f"esperava 2 inimigos presságiando, veio {actors}"
+    assert any(ei.family_of({"id": a}) == fam for a in actors), (fam, actors)
+    for row in rows:
+        assert hero not in row["sinal"], row
+        assert hero not in str(row.get("prenuncio") or "")
+    assert any("você" in r["sinal"] for r in rows)

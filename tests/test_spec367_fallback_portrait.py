@@ -142,3 +142,15 @@ def test_quote_refuses_fallback_409(monkeypatch):
     assert exc.value.status_code == 409
     assert exc.value.detail == "creature_portrait_not_offered"
     assert store.keys == []
+
+
+def test_retire_missing_env_file_is_error(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(
+        rcp, "build_runtime", lambda: (_ for _ in ()).throw(AssertionError("não deve construir"))
+    )
+    monkeypatch.setattr(
+        "sys.argv", ["r", "tipo:x", "--reason", "m", "--env-file", str(tmp_path / "nao.env")]
+    )
+    with pytest.raises(SystemExit) as exc:
+        rcp.main()
+    assert exc.value.code != 0

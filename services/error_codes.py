@@ -108,6 +108,7 @@ CODE_DOCS: dict[str, str] = {
     "enemy_not_in_conflict": "Inimigo fora do conflito atual.",
     "creature_portrait_curated": "Este retrato já existe no bestiário.",
     "creature_portrait_exists": "Este retrato já existe ou está sendo gerado.",
+    "creature_portrait_not_offered": "Esta criatura não tem retrato disponível para geração.",
     "creature_portrait_in_progress": "Outro jogador já está gerando este retrato.",
     "quality_not_applicable": "Retrato compartilhado não é avaliado por jogador.",
     # voz

@@ -21,6 +21,9 @@ export function portraitErrorBanner(status: number | undefined, code: string | u
   if (status === 409 && code === "creature_portrait_curated") {
     return { msg: "Este retrato já existe no bestiário.", kind: "info" };
   }
+  if (status === 409 && code === "creature_portrait_not_offered") {
+    return { msg: "Esta criatura não tem retrato disponível para geração.", kind: "info" };
+  }
   if (status === 402) return { msg: "Estilhas insuficientes.", kind: "warn" };
   if (status === 503) return { msg: "Geração de imagem indisponível agora.", kind: "warn" };
   return { msg: fallback, kind: "warn" };
@@ -28,6 +31,7 @@ export function portraitErrorBanner(status: number | undefined, code: string | u
 
 /** SPEC-363 R4: a cotação recusou (503) — esconde a oferta DAQUELE inimigo até o próximo estado do servidor. */
 export function shouldHidePortraitOffer(status: number | undefined, code: string | undefined): boolean {
+  if (status === 409 && code === "creature_portrait_not_offered") return true; // SPEC-367 R11
   return status === 503 && (code === "image_generation_disabled" || code === "image_pricing_unavailable" || code === undefined);
 }
 

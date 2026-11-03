@@ -35,8 +35,12 @@ def test_partial_name_question_quotes(no_llm):
     st = _faca("Posso vender a Faca de pedra-sabão?")
     before = _snap(st)
     body = loot.loot_node(st)["messages"][0].content
-    assert body.startswith("[SISTEMA] Faca de pedra-sabão usada em sacrifícios…: o mercador paga ")
-    assert body.endswith("moedas. Diga claramente que vende para confirmar; nada mudou.")
+    snap = loot.economy.public_market_snapshot(st)
+    n = next(q["sell_price"] for q in snap["quotes"] if q["item_name"] == FACA)
+    assert body == (
+        f"[SISTEMA] Faca de pedra-sabão usada em sacrifícios…: o mercador paga {int(n)} moedas. "
+        "Diga claramente que vende para confirmar; nada mudou."
+    )
     assert _snap(st) == before
 
 

@@ -51,10 +51,13 @@ def test_no_retry_after_execute_error():
 def test_retry_operational_error_at_checkout():
     calls = []
 
+    def getconn():
+        raise OperationalError("connect failed")
+
     def fn():
         calls.append(1)
         if len(calls) < 3:
-            raise OperationalError("connect failed")
+            getconn()
         return 1
 
     assert ops_pool.with_checkout_retry(fn) == 1 and len(calls) == 3
@@ -173,3 +176,24 @@ def test_no_dsn_in_output(monkeypatch, tmp_path, capsys):
     assert "pw@h" not in captured.out + captured.err
     assert "error: db_unavailable" in captured.err
     assert pool.closed == 1
+
+
+def test_no_retry_on_commit_error():
+    """P2-1: falha no commit (depois do insert) não é repetida: 1 única escrita."""
+    writes = []
+
+    class Tx:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            raise OperationalError("server closed the connection after commit")
+
+    def store_set():
+        writes.append(1)  # o insert já foi enviado
+        with Tx():
+            pass
+
+    with pytest.raises(OperationalError):
+        ops_pool.with_checkout_retry(store_set)
+    assert len(writes) == 1

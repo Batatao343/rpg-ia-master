@@ -206,11 +206,12 @@ def is_fallback_enemy(enemy: dict[str, Any]) -> bool:
     if not isinstance(enemy, dict):
         return False
     raw = str(enemy.get("id") or "")
-    candidates = {raw, _ID_SUFFIX_RE.sub("", raw), str(enemy.get("bestiary_id") or "")}
-    try:
-        candidates.add(str(normalize_bestiary_id(enemy) or ""))
-    except Exception:  # silent-ok: a checagem nunca derruba a view
-        pass
+    candidates = {
+        raw,
+        _ID_SUFFIX_RE.sub("", raw),
+        str(enemy.get("bestiary_id") or ""),
+        str(normalize_bestiary_id(enemy) or ""),
+    }
     return any(c.startswith("fallback_") for c in candidates)
 
 

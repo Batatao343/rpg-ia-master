@@ -472,6 +472,15 @@ fallback e retirada; (5) R4-R6 front; (6) R18-R19 pool de operação; (7) guarda
 - R5 e R4: a trava `portraitInFlight` (useRef) e `withPortraitPending` estão em `App.tsx`/`portraitOrder.ts`;
   o e2e novo cobre duplo clique (`dblclick`) = 1 cotação e 1 confirmação, a 390 e 1440.
 
+**Correções da revisão Sol (9 achados, todos tratados).** P1-1: código `creature_portrait_not_offered` no catálogo
+(+ `CODIGOS_DE_ERRO.md`, `errorCodes.json`, `errorMessages.ts`; o front esconde a oferta e avisa). P1-2: guarda
+`test_spec367_guards.py` só na branch `spec-367` (`merge-base main HEAD`; `skip` fora). P2-1: `OperationalError` só é
+repetido com detecção positiva de checkout (`getconn`/`connection`) e nenhum frame de comando/commit; teste de 1 escrita
+no commit. P2-2: V-G pega número por extenso após "últimas" e "sem moedas". P2-3: R9 com Smoke5A/Mirela5, famílias
+fera/morto_inquieto, ≥2 inimigos e asserção de lista não vazia. P3-1: cotação exata no teste. P3-2: `test_spec367_condition_node.py`
+(API real: mech_log, registro, mensagem e Livro). P3-3: sem `except` em `is_fallback_enemy`. P3-4: `--env-file` inexistente é erro.
+Evento de log novo (`loot.trade_prose_rejected`) registrado em `observability/events.py` e `EVENTOS_DE_LOG.md`.
+
 **Fica para o smoke §6 (coordenador):** retirada de `tipo:fallback_criatura_hostil` no staging (`--dry-run` e
 real), 3 execuções de `list`/`art_preflight` sem `PoolTimeout`, cotação por nome parcial e narração da compra
 com LLM real, presságio com "você" no chip, chip "Gerando retrato…" no staging.

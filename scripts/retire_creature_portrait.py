@@ -64,6 +64,10 @@ def main() -> int:
     if not args.reason.strip():
         parser.error("--reason não pode ser vazio")
     if args.env_file:
+        from pathlib import Path
+
+        if not Path(args.env_file).is_file():
+            parser.error("--env-file não encontrado")
         from dotenv import load_dotenv
 
         load_dotenv(args.env_file, override=False)

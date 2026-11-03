@@ -291,6 +291,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "loot.resolve_item_ref_failed": ("error",),
     "loot.trade_intent_skipped_classify": ("mode",),
     "loot.trade_parse_failed": ("error",),
+    "loot.trade_prose_rejected": (),
     "lore_query.fallback": (),
     "lore_quests.fallback": (),
     "narrative.rejected": ("count", "kind", "reason_code"),

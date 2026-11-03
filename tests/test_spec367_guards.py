@@ -12,19 +12,23 @@ ROOT = Path(__file__).resolve().parents[1]
 GIT = shutil.which("git")
 
 
+def _git(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run([GIT or "git", *args], cwd=ROOT, capture_output=True, text=True)
+
+
 def _diff_names(*paths: str, filt: str | None = None) -> list[str]:
+    """Guarda de pouso: só vale na branch da spec (fora dela, depois do pouso, `skip`)."""
     if GIT is None or not (ROOT / ".git").exists():
         pytest.skip("sem git")
-    base = subprocess.run(
-        [GIT, "merge-base", "HEAD", "9efc97a9"], cwd=ROOT, capture_output=True, text=True
-    )
-    if base.returncode != 0:
-        pytest.skip("base da spec indisponível")
-    cmd = [GIT, "diff", "--name-only"]
+    if _git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip() != "spec-367":
+        pytest.skip("guarda da SPEC-367: só na branch spec-367")
+    base = _git("merge-base", "main", "HEAD").stdout.strip()
+    if not base:
+        pytest.skip("merge-base com a main indisponível")
+    cmd = ["diff", "--name-only"]
     if filt:
         cmd.append(f"--diff-filter={filt}")
-    cmd += [base.stdout.strip(), "HEAD", "--", *paths]
-    out = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    out = _git(*cmd, f"{base}", "HEAD", "--", *paths)
     return [x for x in out.stdout.splitlines() if x.strip()]
 
 

@@ -24,6 +24,7 @@
   "creature_portrait_curated",
   "creature_portrait_exists",
   "creature_portrait_in_progress",
+  "creature_portrait_not_offered",
   "credentials_invalid",
   "cron_not_configured",
   "cron_task_failed",

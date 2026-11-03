@@ -508,9 +508,10 @@ _GOLD_NUM_RE = re.compile(
 _GOLD_NOUN_RE = re.compile(r"^(?:\s+[a-z]+){0,2}?\s+(?:moedas?|ouro|coroas?)\b")
 _GOLD_ADJ_RE = re.compile(r"^\s+(?:moedas?|ouro|coroas?)\b")
 _GOLD_EXHAUST_RE = re.compile(
-    r"\b(?:ultimas? (?:\d+ )?moedas?|todas as (?:suas )?moedas|todo o (?:seu )?ouro|"
+    rf"\b(?:ultimas? (?:(?:\d+|{_GOLD_WORD_NUM})(?: e [a-z]+)? )?moedas?|"
+    r"todas as (?:suas )?moedas|todo o (?:seu )?ouro|"
     r"bolsa (?:\w+ )?vazia|"
-    r"sem (?:nenhuma )?moeda|nenhuma moeda)\b"
+    r"sem (?:nenhuma )?moedas?|nenhuma moeda)\b"
 )
 
 

@@ -12,7 +12,11 @@ import time
 from collections.abc import Callable, Sequence
 from typing import Any
 
-_COMMAND_FRAMES = {"execute", "executemany", "fetchone", "fetchall", "fetchmany", "copy"}
+_COMMAND_FRAMES = {
+    "execute", "executemany", "fetchone", "fetchall", "fetchmany", "copy",
+    "commit", "rollback", "__exit__", "wait", "_commit_gen", "_exit_gen",
+}  # fmt: skip
+_CHECKOUT_FRAMES = {"getconn", "connection", "_connect", "connect"}
 
 
 def open_ops_pool(dsn: str):
@@ -22,7 +26,7 @@ def open_ops_pool(dsn: str):
 
 
 def _is_checkout_failure(exc: BaseException) -> bool:
-    """PoolTimeout é sempre de checkout; OperationalError só se nenhum comando rodou antes."""
+    """PoolTimeout é sempre de checkout; OperationalError só se veio do checkout/connect (nunca de comando ou commit)."""
     try:
         from psycopg import OperationalError
         from psycopg_pool import PoolTimeout
@@ -32,12 +36,13 @@ def _is_checkout_failure(exc: BaseException) -> bool:
         return True
     if not isinstance(exc, OperationalError):
         return False
+    names: list[str] = []
     tb = exc.__traceback__
     while tb is not None:
-        if tb.tb_frame.f_code.co_name in _COMMAND_FRAMES:
-            return False
+        names.append(tb.tb_frame.f_code.co_name)
         tb = tb.tb_next
-    return True
+    # detecção POSITIVA: passou pelo checkout/connect e por nenhum comando nem commit
+    return bool(_CHECKOUT_FRAMES & set(names)) and not (_COMMAND_FRAMES & set(names))
 
 
 class DbUnavailable(RuntimeError):

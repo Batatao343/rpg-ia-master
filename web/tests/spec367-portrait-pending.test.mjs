@@ -51,3 +51,10 @@ test('mesmo_objeto_quando_nada_muda', async () => {
   const none = { combat: null };
   assert.equal(withPortraitPending(none, 'e1'), none);
 });
+
+test('409_not_offered_esconde_a_oferta_e_avisa_sem_custo', async () => {
+  const { shouldHidePortraitOffer, portraitErrorBanner } = await load('../src/lib/portraitOrder.ts');
+  assert.equal(shouldHidePortraitOffer(409, 'creature_portrait_not_offered'), true);
+  assert.equal(shouldHidePortraitOffer(409, 'creature_portrait_exists'), false);
+  assert.equal(portraitErrorBanner(409, 'creature_portrait_not_offered', 'x').kind, 'info');
+});

@@ -39,6 +39,8 @@ def test_vg_all_coins_ok_when_zero():
         "A bolsa fica vazia depois do trato.",
         "Você não deixa nenhuma moeda para trás... sem moeda alguma.",
         "Você gasta todo o seu ouro na Carta.",
+        "Você entrega as últimas quarenta e cinco moedas ao mercador.",
+        "Você fica sem moedas depois do trato.",
     ],
 )
 def test_vg_number_words(text):
