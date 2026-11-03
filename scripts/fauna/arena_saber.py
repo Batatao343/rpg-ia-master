@@ -111,6 +111,24 @@ def _triggers(rows: list[dict], player: dict) -> bool:
     return False
 
 
+def reacao_disponivel(player: dict, cid: str) -> bool:
+    """Consulta pura da economia que ``cards.use_card`` cobra de uma Carta de reacao preparada.
+
+    Correcao de harness (handoffs/SPEC-371-eval-authoring.md): ``cards.can_use_card`` responde
+    so por Cartas ``ativa`` (reacoes entram por gatilho) e devolvia False para toda reacao, entao
+    o ``leitor`` nunca as escolhia. Aqui: preparada, frequencia livre e Entropia suficiente."""
+    from services import cards
+
+    card = cards.get_card(cid) or {}
+    if card.get("tipo") != "reacao" or cid not in set(player.get("prepared_cards") or []):
+        return False
+    counter = cards.FREQ_COUNTER.get(str(card.get("frequencia", "livre")))
+    usage = ((player.get("card_usage") or {}).get(cid) or {}).get(counter, 0) if counter else 0
+    if int(usage or 0) >= 1:
+        return False
+    return cards._entropy_cost(player, card) <= int(player.get("entropy", 0) or 0)
+
+
 def leitor_decl(player: dict, target_id: str, rows: list[dict]):
     """Defensiva so quando a linha publica pede: reacao preparada > Guardar > (nada mais)."""
     from services import cards
@@ -122,7 +140,7 @@ def leitor_decl(player: dict, target_id: str, rows: list[dict]):
         return base
     for cid in player.get("prepared_cards") or []:
         card = cards.get_card(cid) or {}
-        if card.get("tipo") == "reacao" and cards.can_use_card(player, cid):
+        if card.get("tipo") == "reacao" and reacao_disponivel(player, cid):
             base.reaction_card_id = cid
             return base
     return ct.TurnDeclaration(
@@ -173,6 +191,9 @@ def fight(bid: str, n: int, cls: str, seed: int, bk: dict, turn: int) -> dict:
             outcome = "win"
             break
         decl = leitor_decl(player, alive[0]["id"], rows)
+        # Escolha de reacao e transitoria por rodada, como em agents/combat.py (round_state novo
+        # a cada rodada): sem isso o orquestrador a deixaria armada nas rodadas seguintes.
+        state = {"player": player}
         out = orch.run_round(
             scene,
             actors,

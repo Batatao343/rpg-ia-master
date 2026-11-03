@@ -106,3 +106,36 @@ def test_arena_a_luta_ensina(metric):
     m = _load()
     # recalcula o veredito pelo avaliador congelado (nao confia no campo gravado)
     assert m.verdict(rep["agregado"])[metric], rep["agregado"]
+
+
+# --- Correcao do harness (handoffs/SPEC-371-eval-authoring.md) ---------------------------------
+_GATILHO = [{"prenuncio": True, "contra_jogo": "x", "actor_id": "e1"}]
+
+
+def test_leitor_escolhe_reacao_preparada_quando_a_linha_pede(monkeypatch):
+    m = _load()
+    for k, v in m.FLAGS_ON.items():
+        monkeypatch.setenv(k, v)
+    player = m._arena().hero("Sangromante", m.LEVEL)
+    assert "san_esquiva" in player["prepared_cards"]
+    assert m.reacao_disponivel(player, "san_esquiva")
+    decl = m.leitor_decl(player, "e1", _GATILHO)
+    assert decl.reaction_card_id == "san_esquiva"
+    assert decl.acao.kind != "maneuver"  # a reacao nao gasta a Acao
+
+
+def test_leitor_cai_para_guardar_sem_reacao_disponivel(monkeypatch):
+    m = _load()
+    for k, v in m.FLAGS_ON.items():
+        monkeypatch.setenv(k, v)
+    player = m._arena().hero("Sangromante", m.LEVEL)
+    player["card_usage"] = {"san_esquiva": {"used_this_turn": 1, "used_this_scene": 1}}
+    assert not m.reacao_disponivel(player, "san_esquiva")
+    decl = m.leitor_decl(player, "e1", _GATILHO)
+    assert decl.reaction_card_id is None
+    assert decl.acao.kind == "maneuver" and decl.acao.maneuver == "guardar"
+    sem_entropia = m._arena().hero("Sangromante", m.LEVEL)
+    sem_entropia["entropy"] = 0
+    assert not m.reacao_disponivel(sem_entropia, "san_esquiva")
+    # Carta ativa nunca conta como reacao
+    assert not m.reacao_disponivel(player, "san_passo")
