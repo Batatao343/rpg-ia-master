@@ -219,8 +219,8 @@ def apply_racial_traits(sheet: dict[str, Any], race: str) -> dict[str, Any]:
 
 def starting_reaction_id(class_name: str) -> str | None:
     """SPEC-371 (dono 03/11, "Reação p/ toda Postura"): a Carta de reação de tronco marcada
-    `reacao_inicial` da Postura. None = a Postura não tem uma (Devoto, Sangromante e
-    Corruptor já nascem com reação no Acervo inicial)."""
+    `reacao_inicial` da Postura. None = a Postura não tem uma (só o Sangromante, que já
+    nasce com `san_esquiva` entre as Preparadas; Arcanista, Médico, Devoto e Corruptor têm)."""
     from services import cards as cards_svc
 
     for card in cards_svc.cards_for_class(class_name):

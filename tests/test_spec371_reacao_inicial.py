@@ -23,7 +23,6 @@ CONDICAO = {c: v for c, v in NOVAS.items() if v[1]}
 # Posturas que já nasciam com reação no Acervo: preparação congelada (nada muda nelas).
 SEM_REACAO_INICIAL = {
     "Sangromante": ["san_corte_troca", "san_finta", "san_esquiva", "san_pacto"],
-    "Corruptor": ["cor_toque", "cor_esporos", "cor_carne_docil", "cor_farejar"],
 }
 
 
@@ -56,6 +55,17 @@ def test_criacao_prepara_a_reacao_inicial(cls):
     # toma a vaga de uma Carta que não é ativa: os golpes e curas iniciais continuam
     ativas = [c for c in out["known_cards"][:4] if cards.get_card(c)["tipo"] == "ativa"]
     assert set(ativas) <= set(out["prepared_cards"])
+
+
+def test_corruptor_nivel_1_prepara_a_membrana():
+    """Dono 03/11 ("Reação p/ toda Postura") vale já no nível 1: `cor_membrana` (já no Acervo)
+    é marcada `reacao_inicial` e toma a vaga de `cor_farejar` (utilitária). Antes deste teste o
+    comportamento congelado era o contrário (Corruptor sem reação preparada no nível 1); só no
+    nível 3 da arena as 5 Posturas tinham reação (achado P2-2 da revisão Sol)."""
+    assert cc.starting_reaction_id("Corruptor") == "cor_membrana"
+    out = cc._resolve_starting_cards({}, "Corruptor", {})
+    assert out["prepared_cards"] == ["cor_toque", "cor_esporos", "cor_carne_docil", "cor_membrana"]
+    assert "cor_membrana" in out["known_cards"]
 
 
 @pytest.mark.parametrize("cls", sorted(SEM_REACAO_INICIAL))

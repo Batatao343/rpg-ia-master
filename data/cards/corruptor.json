@@ -711,6 +711,7 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
+      "reacao_inicial": true,
       "momento": "Melhor jogada quando um projétil vem na direção do Corruptor e a película pode fechar antes da ponta tocar a pele.",
       "raridade": "comum"
     },
