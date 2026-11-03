@@ -201,3 +201,17 @@ o mod não carregou (`claude -p`, CI).
   Read: confirmar com `/hooks`).
 - "Toast" como superfície de mod não consta na doc oficial; a skill local oferece `$.ui.toast`;
   `$.ui.log` é a alternativa documentada.
+
+## 8. Execução (03/11, aprovada pelo dono)
+
+- **Feito (SPEC-386, `done`):** itens 1–7, 10 (allowlist), 9 (gate de tamanho), radar de
+  duplicação (`scripts/dev/dup_helpers.py`), medição (`scripts/dev/agent_stats.py`), revisão por
+  risco + campo `Evidência` no TEMPLATE, aviso de contexto (hook) e instruções de compactação.
+- **Feito fora do repo:** 13 skills globais → `~/.claude/skills-disabled/global-2026-11-03/`;
+  7 plugins synced desligados só neste projeto; `pyright-lsp` instalado (escopo local);
+  mod `~/.claude/mods/rpg-cockpit` (painel) validado e com `tsc` limpo.
+- **Adiado por conflito com a onda:** enxugar AGENTS.md (após 375), regras C901/SIM/PERF/BLE001
+  no ruff (após 376), teste anti-`_fold` (após 378). `taste`/`impeccable` mantidas (escolha do dono).
+- **Mod guard:** não feito; os hooks clássicos cobrem o mesmo e valem também em `claude -p`.
+- **Baseline para comparar:** subagentes 27/10–03/11 = 45 M chars de tool_result, 239 `cat`
+  inteiro, 104 Edit sem Read, 43 Read > 40 KB sem limit.
