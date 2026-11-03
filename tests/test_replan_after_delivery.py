@@ -10,6 +10,7 @@ from langchain_core.messages import HumanMessage
 import persistence
 from agents import campaign_manager as cm
 from agents import enrich
+from tests.factories import make_state
 
 
 def _plan(**kw):
@@ -37,7 +38,7 @@ def _state(**kw):
         "needs_replan": False,
     }
     st.update(kw)
-    return st
+    return make_state(**st)
 
 
 def _stream_nodes(graph, state):
