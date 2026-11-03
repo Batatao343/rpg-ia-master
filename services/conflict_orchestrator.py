@@ -1863,6 +1863,22 @@ _ABSORB_RE = re.compile(r"(?:Proteção(?: \(efeito\))?|Vigília) -(\d+)")
 _PCT_RE = re.compile(r"Rachadura/Torpor ([+-]\d+)%")  # SPEC-387 R28
 
 
+def _extra_mark(out: dict) -> tuple[int, int, int]:
+    return len(out["logs"]), len(out.get("attacks") or []), len(out.get("cards_used") or [])
+
+
+def _close_extra_action(out: dict, actor: dict, mark: tuple[int, int, int]) -> None:
+    """SPEC-387 R29: "X age de novo." só se a ação extra resolveu algo; sem alvo válido não deixa
+    linha para o jogador (telemetria `enemy_extra_action_skipped`)."""
+    new = out["logs"][mark[0] :]
+    did = (len(out.get("attacks") or []), len(out.get("cards_used") or [])) != mark[1:]
+    if did or any(ln != "Ataque sem alvo válido." for ln in new):
+        out["logs"].insert(mark[0], f"{_name(actor)} age de novo.")
+    else:
+        del out["logs"][mark[0] :]
+        _log_event("combat", "enemy_extra_action_skipped", level="info")
+
+
 def _annotate_absorbed(sub: dict) -> None:
     """SPEC-353 R20: quanto a Proteção do alvo tirou de cada golpe que acertou, lido do registro
     do próprio pipeline de dano (uma linha com "(excedente" por golpe com dano, na mesma ordem)."""
@@ -2885,20 +2901,10 @@ def _run_round(
                     if _it is not None and _it.get("interrompido_por"):
                         _frustrate(actor_id, _it, "incapaz")  # SPEC-330 Interromper
                 continue
-            _mark = (
-                len(out["logs"]),
-                len(out.get("attacks") or []),
-                len(out.get("cards_used") or []),
-            )
+            _mark = _extra_mark(out)
             decl = _enemy_decl(actor_id, actor)
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
-            _new = out["logs"][_mark[0] :]
-            _did = (len(out.get("attacks") or []), len(out.get("cards_used") or [])) != _mark[1:]
-            if _did or any(ln != "Ataque sem alvo válido." for ln in _new):
-                out["logs"].insert(_mark[0], f"{_name(actor)} age de novo.")  # SPEC-387 R29
-            else:  # ação extra sem alvo válido: nenhuma linha para o jogador
-                del out["logs"][_mark[0] :]
-                _log_event("combat", "enemy_extra_action_skipped", level="info")
+            _close_extra_action(out, actor, _mark)  # SPEC-387 R29
             _spend_taunt(actor_id, actor)
             _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
             _mark_fresh_conditions(

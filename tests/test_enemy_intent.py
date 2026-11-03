@@ -214,7 +214,7 @@ def test_on_executes_frozen_intent(monkeypatch):
         pressagios=frozen,
     )
     assert out["pressagios_cumpridos"] == [
-        {"actor_id": "lobo", "tipo": "ataque", "alvo_id": "player"}
+        {"actor_id": "lobo", "tipo": "ataque", "alvo_id": "player", "carta_id": None}
     ]
     assert not out.get("pressagios_frustrados")
 

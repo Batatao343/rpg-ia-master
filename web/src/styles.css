@@ -69,6 +69,7 @@
   --z-hud: 40; --z-toast: 45; --z-banner: 50; --z-overlay: 60;
   /* SPEC-321 R9: bases dos elementos fixos acima do compositor (altura medida em --composer-h). */
   --tabbar-h: 0px;
+  --play-end-h: 0px; /* SPEC-387 R32: altura medida da barra de envio (PlayQueue) */
 }
 
 * { box-sizing: border-box; }

@@ -75,7 +75,7 @@ from persistence import (
 )
 from services import combat_flags
 from services.checkout_retry import retry_once
-from services.portrait_offer_log import offer_omitted
+from services.portrait_offer_log import log_offer_omitted
 from services import enemy_intent as _enemy_intent
 from services import npc_world as _npc_world
 from services import quest_log
@@ -2886,13 +2886,13 @@ def _image_effect_open() -> bool:
         switches = get_switches()
         if not switches.is_enabled(IMAGE):
             if switches.unreadable:
-                offer_omitted("switches_unreadable")
+                log_offer_omitted("switches_unreadable")
             return False
         require_paid_effect("image")
     except PricingUnavailable:
         return False
     except Exception as exc:  # leitura do store falhou: sem oferta (fail-closed)
-        offer_omitted("image_gate_failed", exc)
+        log_offer_omitted("image_gate_failed", exc)
         return False
     return True
 
@@ -2919,7 +2919,7 @@ def _portrait_price_estilhas() -> int | None:
         value = -(-int(milli) // 1000) if milli else None
         _PORTRAIT_PRICE_CACHE["milli"] = int(milli) if milli else None
     except Exception as exc:
-        offer_omitted("price_peek_failed", exc)
+        log_offer_omitted("price_peek_failed", exc)
         return None  # SPEC-387 R5: falha nunca vai para o cache (a próxima view tenta de novo)
     _PORTRAIT_PRICE_CACHE.update(at=now, value=value)
     return value
@@ -2997,7 +2997,7 @@ def _portrait_registry(state: dict, meta: dict, enemies: list[dict]):
         store = _portrait_store()
         rows = retry_once(lambda: store.get_many(keys, game_id=game_id, npc_known=known))
     except Exception as exc:
-        offer_omitted("registry_read_failed", exc)
+        log_offer_omitted("registry_read_failed", exc)
         return None
     return SnapshotRegistry(rows, sign=_portrait_sign)
 

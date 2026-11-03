@@ -1,6 +1,6 @@
 # SPEC-387 — Cartas: achados do 6º smoke (Carta de cena sem cache de processo, oferta de retrato estável, chip otimista, "Criatura hostil" de fallback, rota Groq, jogada inelegível explicada, escolta, seeds dos §6 não verificados, `draft.py` e 8 arestas de texto/UI)
 
-> **Status:** `approved` (03/11, coordenador, autorização do dono "manda bala"; D-387-1..11 pelas recomendações do §8, veto do dono possível)
+> **Status:** `in-progress` (implementado em 03/11, aguarda revisão Sol e o smoke §6; aprovada em 03/11, coordenador, autorização do dono "manda bala"; D-387-1..11 pelas recomendações do §8, veto do dono possível)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Épico:** SPEC-327
 > **Origem:** 6º smoke real (03/11, `main` `2a6e0945` local e `9e5f43d9` no staging). Achados S6-1..S6-4 em
@@ -554,4 +554,61 @@ vetar até a aprovação.
 
 ## 9. Registro de implementação
 
-(vazio)
+Branch `spec-387`, 6 commits de executor (ver `git log`). Testes novos: `tests/test_spec387_*.py` (10 arquivos),
+`tests/fixtures/spec387_{rounds,smoke}.py`, `web/tests/spec387-portrait-optimistic.test.mjs`,
+`web/e2e/spec387-{portrait-optimistic,omen-390}.spec.ts` (verdes a 390 e 1440, `--workers=1`).
+
+**Etapa 0 (sem acesso à Vercel/logs do staging; o que deu para confirmar no source):**
+- S6-1: o teste `test_cold_instance_*` reproduz o `name == id` com `_TEMP_CARDS` limpo (id órfão do catálogo).
+- S6-2: **não confirmado** qual das 3 leituras disparou no staging (sem logs). A correção cobre as três (R5, R6) e
+  `creature_portrait.offer_omitted` passa a medir a causa (`price_peek_failed | registry_read_failed | image_gate_failed |
+  switches_unreadable`) para o §6 item 2.
+- S6-4: confirmado no source (`name_tokens("Criatura hostil") == []`). Narração/flavor das 3 aberturas: **não verificado**.
+- L1: o save do item 10 não está aqui; R16 virou só teste (a regra 355 R5 se mostrou intacta nos dois sentidos).
+- R10 (item 6 da Etapa 0): `fauna._region_candidates` **não depende de `RPG_FAUNA`**, mas `data/world/fauna.json` só cobre
+  `nova_arcadia` (38 criaturas). Para as outras 11 regiões `services/generic_spawn.py` usa o MESMO filtro sobre o bestiário
+  (`regions` ∋ região, sem chefe, `fauna._fits_danger`), preferindo as de `familia_valoria` (criaturas físicas) quando a região as tem.
+- L5: o goblin a 1 de Vitalidade previa `fugir`; a `13 reacao` agora prevê o ataque ANTES de baixar a Vitalidade
+  (`late_vitality`). L8: a ordem da Rachadura confirmada (linha vinha depois do ataque do inimigo). L9: a ação extra de
+  Valerius resolve um ataque básico (não é "sem alvo") na seed `5 chefe_fase`; a limpeza de R29(b) vale quando de fato não resolve.
+
+**Desvios / decisões do executor (todos pequenos):**
+1. R6: o critério de falha de checkout foi MOVIDO para `services/checkout_retry.py` (a 367 tinha em `scripts/staging/ops_pool.py`,
+   que agora importa de lá; mesmo critério, uma só fonte).
+2. R7: o helper se chama `log_offer_omitted` (o guarda `test_no_silent_except` só aceita nomes com "log"). O evento é `creature_portrait.offer_omitted`.
+3. R8: `snapshotPortraits` (helper extra) devolve o `retrato` anterior por id; `withPortraitRestored(data, enemyId, snapshot)` só desfaz os
+   inimigos ainda "gerando". `--play-end-h` foi declarado em `styles.css` (o teste `deck-tokens-342` exige token definido).
+4. R10/R11: `_grounded_template` só troca o EVENTO (`spawn_generic_name`) quando o nome é vazio e não há candidato regional; com candidato
+   o spawn nem chega lá. `meta.source = "regional_generic"` e a narração de entrada usa o nome da criatura.
+5. R19: `check_objective` com alvo não-ator também troca `scene["objetivo"]` por `derrotar_todos` (para o evento não repetir por rodada).
+6. R20: `out["objetivo"]` ganhou `motivo` (aditivo) e o rótulo `objective_failed` só existe dentro de `_narrate_outcome`/`round_log`.
+7. R21/R23: seeds. `15 vg_ouro` grava saldo = preço da Carta mais barata + 30 (preço 50 hoje → saldo 80, final 30, como no §2). `13 armadura`
+   usa o Soldado da Legião de Ferro + `evolved_cards["cor_ino_fadiga"]="B"` (a Ruptura A é dano; só a B aplica Armadura Comprometida).
+   `13 condicao_carta` usa a Carta neutra `neu1_er_lanca_de_gancho` (única Carta ativa de herói com condição de 1 rodada que serve a
+   Devoto); a condição "terminou" só aparece na rodada seguinte (o §6 item 8 cobre). `2 frustrar` usa `arc1_des_estouro_contido`
+   (Arcanista; Atordoado frustra o presságio: confirmado em `pressagios_frustrados`).
+8. R22: Esquiva baixa por `esquiva_penalidade = 30` (acerto certo), presságio por busca de semente em `forecast_round` (`want_alvo`).
+9. R27: `to_card`/vocabulário não mudam; `alvo` ganhou só `enum` no JSON schema (parse tolerante: uma Carta fora do vocabulário NÃO derruba o lote).
+10. R28: a linha "ganha a condição X" agora vem logo depois da jogada que a aplicou (lida da ordem de `logs`). Isso também move
+    "Defesa Instintiva" etc. para depois do ataque do próprio inimigo que a aplicou.
+11. R29(b): feito na ORIGEM (a ação extra sem efeito não emite "age de novo." nem "Ataque sem alvo válido."); a regex de `_HUMAN_LINE_RES`
+    não mudou (o texto genérico continua humano para o herói).
+12. Achados extras que apareceram ao montar as seeds e foram corrigidos pequeno: Provocação que NÃO desvia agora diz
+    "X resiste à provocação de Y." (§6 item 8 espera "muda de alvo"/"resiste"); "Armadura_comprometida" vinha cru no registro
+    (`_cap_cond` usa o rótulo do glossário); `Carta '<id>' desconhecida.` (com id) virou "Essa Carta não existe mais.".
+13. R18: o catálogo de recusas ganhou regex para `já foi usada (`, `Entropia insuficiente`, `só pode ser jogada 1× por rodada.`, Fardo,
+    descarte e silenciado, além das duas frases novas.
+
+**Testes antigos alterados (motivo):** `tests/test_spec368_seed.py::test_every_combat_item_has_a_seed` (item 15 novo);
+`tests/test_enemy_intent.py::test_on_executes_frozen_intent` (`pressagios_cumpridos` ganhou `carta_id`, R30);
+`tests/test_spec363_golden_guard.py::test_engine_modules_untouched_by_spec363` (guarda de pouso da 363 passa a valer só na branch
+`spec-363`, como a da 367; a R30 muda o orquestrador de propósito). `tests/size_budget.json`: baseline atualizada (arquivos de motor
+que a spec manda tocar; o código novo grande foi para módulos novos).
+
+**Observações fora do escopo (não corrigidas):** (a) o registro não mostra a linha do presságio frustrado ("O golpe de X morreu no ar.")
+nem o `pressagios_frustrados` aparece no chip: a seed `2 frustrar` prova o evento no motor; (b) um inimigo derrubado pela Reação
+ainda resolve o ataque dele na mesma rodada (visto nos logs da seed `13 reacao`); (c) `ruff format --check .` na raiz acusa 3 specs `.md`
+(377–379, blocos de código) que não são desta spec.
+
+**Fica para o smoke §6 (coordenador):** itens 1–16 inteiros — nenhum foi rodado com LLM/staging reais aqui. Em especial 2 (causa de
+`offer_omitted`), 3 (latência do chip ao vivo), 4 (aberturas no Pântano/Floresta), 12 (Groq 120b faz tool call no router) e 14 (`draft.py` real).

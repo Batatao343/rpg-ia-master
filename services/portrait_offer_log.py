@@ -7,7 +7,7 @@ from observability.telemetry import log_event, log_fallback
 CAUSES = ("price_peek_failed", "registry_read_failed", "image_gate_failed", "switches_unreadable")
 
 
-def offer_omitted(cause: str, exc: BaseException | None = None) -> None:
+def log_offer_omitted(cause: str, exc: BaseException | None = None) -> None:
     """Registra a degradação (`creature_portrait.fallback`) e `creature_portrait.offer_omitted`."""
     if exc is not None:
         log_fallback("creature_portrait", cause, exc)

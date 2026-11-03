@@ -593,6 +593,22 @@ def step_folego(step: Any, get_card: Callable[[str], dict | None] = cards.get_ca
     return 1
 
 
+def _refuse(total: dict, motivo: str) -> dict:
+    return {"ok": False, "motivo": motivo, **total}
+
+
+def _batch_motivo(motivo: str, plays: list[Any], piles: dict, get_card: Callable) -> str:
+    """SPEC-387 R34: a recusa por Fôlego conta o LOTE ("custam 5, você tem 2…"), não a última jogada."""
+    if not motivo.startswith("Fôlego insuficiente"):
+        return motivo
+    batch = sum(step_folego(s, get_card) for s in plays)
+    return (
+        f"Fôlego insuficiente: estas jogadas custam {batch}, você tem "
+        f"{int(piles.get('folego', 0) or 0)} e o Pacto do Abismo empresta no máximo "
+        f"{PACTO_MAX_FOLEGO} por rodada."
+    )
+
+
 def plan_plays(
     piles: dict,
     player: dict,
@@ -654,11 +670,7 @@ def plan_plays(
                     **total,
                 }
             if cid not in playable:  # SPEC-387 R17: mesma regra do `use_card`, antes de gastar
-                return {
-                    "ok": False,
-                    "motivo": f"{card.get('name', cid)} não está no seu baralho.",
-                    **total,
-                }
+                return _refuse(total, f"{card.get('name', cid)} não está no seu baralho.")
             freq = str(card.get("frequencia", "livre"))
             counter = cards.FREQ_COUNTER.get(freq)
             if counter == "used_this_turn":
@@ -683,15 +695,7 @@ def plan_plays(
             entropy_cost,
         )
         if not plan["ok"]:
-            motivo = plan["motivo"]
-            if motivo.startswith("Fôlego insuficiente"):  # SPEC-387 R34: a recusa conta o LOTE
-                batch = sum(step_folego(s, get_card) for s in plays)
-                motivo = (
-                    f"Fôlego insuficiente: estas jogadas custam {batch}, você tem "
-                    f"{int(piles.get('folego', 0) or 0)} e o Pacto do Abismo empresta no máximo "
-                    f"{PACTO_MAX_FOLEGO} por rodada."
-                )
-            return {"ok": False, "motivo": motivo, **total}
+            return _refuse(total, _batch_motivo(plan["motivo"], plays, piles, get_card))
         sim["folego"] = max(0, int(sim["folego"]) - plan["folego"])
         sim["folego_emprestado"] = int(sim["folego_emprestado"]) + plan["emprestado"]
         entropy -= entropy_cost + plan["entropia_extra"]

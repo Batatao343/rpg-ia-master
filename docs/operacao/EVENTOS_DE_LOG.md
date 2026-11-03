@@ -92,12 +92,14 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.companion_order_ignored` | — |
 | `combat.companion_order_refused` | `verb` |
 | `combat.companion_orders_shadow` | `verb` |
+| `combat.enemy_extra_action_skipped` | — |
 | `combat.enemy_knowledge_failed` | — |
 | `combat.entrance_count_reconciled` | `species` |
 | `combat.fast_text_failed` | `error`, `where` |
 | `combat.freetext_refused` | — |
 | `combat.mechanics` | `step_count`, `steps`, `truncated` |
 | `combat.narrate_failed` | `error` |
+| `combat.narration_hero_name` | — |
 | `combat.narration_numbers_stripped` | `count` |
 | `combat.nonlethal` | `target` |
 | `combat.nonlethal_shadow` | `target` |
@@ -228,7 +230,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `loot.resolve_item_ref_failed` | `error` |
 | `loot.trade_intent_skipped_classify` | `mode` |
 | `loot.trade_parse_failed` | `error` |
-| `loot.trade_prose_rejected` | — |
+| `loot.trade_prose_rejected` | `reason` |
 | `lore_query.fallback` | — |
 | `lore_quests.fallback` | — |
 | `narrative.rejected` | `count`, `kind`, `reason_code` |
