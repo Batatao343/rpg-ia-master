@@ -122,7 +122,7 @@ SUBSTANTIVOS_DE_LUGAR = frozenset(
     colina serra montanha penhasco canyon rio lago mar costa porto vila cidade aldeia taverna
     estalagem mercado praca rua viela telhado muralha castelo fortaleza celeiro estabulo curral
     moinho fabrica fundicao armazem deposito biblioteca mausoleu tumulo ossuario catacumba labirinto
-    corredor patio jardim horta pomar bosque clareira trilha caminho encruzilhada passagem desfiladeiro
+    corredor patio jardim horta pomar bosque clareira trilha encruzilhada passagem desfiladeiro
     abismo cratera vulcao geleira tundra savana selva jungla charco lodacal manguezal recife ilha
     ilhota farol cabana choupana casebre abrigo toca ninho covil salina areal planicie pradaria
     descampado barranco falesia gruta mirante""".split()
