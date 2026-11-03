@@ -24,7 +24,7 @@ import { AuthScreen, hasEmailActionLink } from "./components/AuthScreen";
 import { authErrorMessage } from "./lib/authErrors";
 import { errMsg, errRequestId } from "./lib/errorMessages";
 import { publishRejectedPlay } from "./lib/rejectedPlay";
-import { portraitErrorBanner, shouldHidePortraitOffer, withinShownPrice, withoutPortraitOffer } from "./lib/portraitOrder";
+import { portraitErrorBanner, shouldHidePortraitOffer, withinShownPrice, withoutPortraitOffer, withPortraitPending } from "./lib/portraitOrder";
 import { AccountScreen } from "./components/AccountScreen";
 import { estilhasLabel } from "./lib/estilhas";
 
@@ -79,7 +79,8 @@ export function App() {
   const [authNotice, setAuthNotice] = useState("");
   const [authConfig, setAuthConfig] = useState<api.AuthConfig>();
   const [authRequired, setAuthRequired] = useState(false);
-  const [imageQuote, setImageQuote] = useState<{ quote: api.ImageQuote; gameId: string; session: number; actionId: string } | null>(null);
+  const [imageQuote, setImageQuote] = useState<{ quote: api.ImageQuote; gameId: string; session: number; actionId: string; enemyId?: string } | null>(null);
+  const portraitInFlight = useRef(false); // SPEC-367 R5: trava síncrona (React state não pega 2 cliques no mesmo tick)
   const [imageBusy, setImageBusy] = useState(false);
   const [imageError, setImageError] = useState("");
 
@@ -390,13 +391,14 @@ export function App() {
    *  do preço mostrado, confirma direto (sem 2º modal). Cotação maior abre o diálogo da 326 com o preço real. */
   async function handleGeneratePortrait(enemyId: string, shownShards: number, shownMilli?: string) {
     const gameId = data?.game_id;
-    if (!gameId || imageBusy) return;
+    if (!gameId || imageBusy || portraitInFlight.current) return;
+    portraitInFlight.current = true;
     const generation = session.current;
     setImageBusy(true); setImageError("");
     try {
       const quote = await api.requestImageQuote(gameId, "monster", false, undefined, enemyId);
       if (session.current !== generation) return;
-      const current = { quote, gameId, session: generation, actionId: crypto.randomUUID() };
+      const current = { quote, gameId, session: generation, actionId: crypto.randomUUID(), enemyId };
       if (withinShownPrice(quote.credits_milli, shownShards, shownMilli)) await confirmImageQuote(current, true);
       else setImageQuote(current);
     } catch (error) {
@@ -406,7 +408,7 @@ export function App() {
         if (shouldHidePortraitOffer(status, code)) setData(prev => (prev?.game_id === gameId ? withoutPortraitOffer(prev, enemyId) : prev));
         setBanner({ ...portraitErrorBanner(status, code, "Cotação indisponível: " + errMsg(error)), requestId: errRequestId(error) });
       }
-    } finally { if (session.current === generation) setImageBusy(false); }
+    } finally { portraitInFlight.current = false; if (session.current === generation) setImageBusy(false); }
   }
 
   async function confirmImageQuote(direct?: typeof imageQuote, inline = false) {
@@ -416,6 +418,8 @@ export function App() {
     try {
       const art = await api.confirmPlayerArt(current.gameId, current.actionId, current.quote.quote_id);
       if (session.current !== current.session) return;
+      setData(prev => prev?.game_id === current.gameId ? (current.quote.type === "monster" && current.enemyId
+        ? withPortraitPending(prev, current.enemyId) : prev) : prev);
       setData(prev => prev?.game_id === current.gameId ? {
         ...prev,
         portrait_generation_id: art.generation_id && current.quote.type === "player"

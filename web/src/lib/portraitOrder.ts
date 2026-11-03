@@ -45,3 +45,27 @@ export function withoutPortraitOffer<T extends WithEnemies>(data: T, enemyId: st
     },
   };
 }
+
+interface PendingEnemy { id: string; name?: string; retrato?: { estado?: string; gerar?: { escopo?: string } | null } | null }
+interface WithPendingEnemies { combat?: { enemies?: PendingEnemy[] } | null }
+
+const baseName = (name: string | undefined) => (name ?? "").replace(/\s+\d+$/, "").trim().toLowerCase();
+
+/** SPEC-367 R4: a confirmação deu certo — o inimigo clicado (e os de mesmo tipo, escopo "tipo") passam a
+ *  "gerando" e perdem a oferta. Imutável; devolve o mesmo objeto quando nada muda. */
+export function withPortraitPending<T extends WithPendingEnemies>(data: T, enemyId: string): T {
+  const enemies = data.combat?.enemies;
+  const clicked = enemies?.find((e) => e.id === enemyId);
+  if (!enemies || !clicked) return data;
+  const sameType = (e: PendingEnemy) =>
+    clicked.retrato?.gerar?.escopo === "tipo" && e.retrato?.gerar?.escopo === "tipo" && baseName(e.name) === baseName(clicked.name);
+  const hit = (e: PendingEnemy) => !!e.retrato?.gerar && (e.id === enemyId || sameType(e));
+  if (!enemies.some(hit)) return data;
+  return {
+    ...data,
+    combat: {
+      ...data.combat,
+      enemies: enemies.map((e) => (hit(e) && e.retrato ? { ...e, retrato: { ...e.retrato, estado: "gerando", gerar: null } } : e)),
+    },
+  };
+}
