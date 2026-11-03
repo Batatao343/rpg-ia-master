@@ -471,7 +471,7 @@ criaturas:
       permanencia: [8, 11]
     sinais:
       antecedencia: cedo
-      rastro: "Na água rasa sobre o bairro velho, redemoinhos de lodo espaçados demais para passo de homem, que dão sempre a volta no mesmo quarteirão."
+      rastro: "Na água rasa sobre o bairro velho, redemoinhos de lodo espaçados demais para passo de homem, sempre em volta do mesmo quarteirão."
       resto: "Um saqueador bem armado achado afogado de pé no raso, com a marca de uma palma enorme no alto da cabeça."
       som: "Um farfalhar de tecido duro, engomado, vindo de muito acima da água, e passos de pau no fundo."
       cheiro: "Seda engomada mofada e osso velho, cheiro de guarda-roupa de gente importante."

@@ -1220,7 +1220,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros dizem que a tribo do deserto caça ao amanhecer e que, depois do meio-dia, caça gente"
     },
     "rumor_avist_enemy_escorpiao_cristal": {
       "family": "avistamento",
@@ -1237,7 +1238,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros chacoalham as botas toda manhã no verão, e às vezes cai uma coisa que brilha"
     },
     "rumor_avist_enemy_mumia_de_po": {
       "family": "avistamento",
@@ -1254,7 +1256,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador diz que vendeu a taça de um rei engolido em três cidades, e que o servo dele passou nas três"
     },
     "rumor_avist_enemy_hospedeiro_fungico": {
       "family": "avistamento",
@@ -1271,7 +1274,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os garimpeiros dizem que na primavera a selva tem mais gente do que tinha no inverno, e toda ela calada"
     },
     "rumor_avist_enemy_vinha_estranguladora": {
       "family": "avistamento",
@@ -1289,7 +1293,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os moradores das copas dizem que onde os macacos gritam há uma trepadeira que não é planta"
     },
     "rumor_avist_enemy_guerreiro_bjorn": {
       "family": "avistamento",
@@ -1472,7 +1477,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os batedores da borda ficam parados quando ouvem o ronco, e quem corre é quem volta mancando"
     },
     "rumor_avist_enemy_elemental_fogo_poluido": {
       "family": "avistamento",
@@ -1582,7 +1588,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias da floresta olham para cima antes de pisar numa faixa escura: se não há galho, não pisam"
     },
     "rumor_avist_enemy_verme_areia_jovem": {
       "family": "avistamento",
@@ -1599,7 +1606,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros dizem que no verão não se anda no deserto, se para, e se espera o guincho passar"
     },
     "rumor_avist_enemy_djinn_menor": {
       "family": "avistamento",
@@ -1616,7 +1624,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros esperam o vento parar antes de atravessar perto da borda sul, nem que esperem o dia todo"
     },
     "rumor_avist_enemy_esqueleto_mago": {
       "family": "avistamento",
@@ -1745,7 +1754,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os lenhadores encostam as costas num tronco antes de descansar, para não serem mordidos de trás"
     },
     "rumor_avist_enemy_zumbi_blindado": {
       "family": "avistamento",
@@ -1998,7 +2008,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um lenhador diz que levou uma patada de raspão no verão e que a ferida ainda não fechou"
     },
     "rumor_avist_mon_serpente_raiz": {
       "family": "avistamento",
@@ -2015,7 +2026,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os lenhadores dizem que no fundo da floresta é melhor não pisar no que parece madeira"
     },
     "rumor_avist_mon_vipera_flora": {
       "family": "avistamento",
@@ -2032,7 +2044,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os moradores das copas dizem que na selva se olha para cima antes de dormir, para ver o que está pendurado"
     },
     "rumor_avist_mon_predador_crescido": {
       "family": "avistamento",
@@ -2049,7 +2062,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caçadores dizem que na selva os bichos crescem tão rápido que a fome não acompanha, e sobra para quem passa"
     },
     "rumor_avist_mon_sentinela_hospedeiro": {
       "family": "avistamento",
@@ -2066,7 +2080,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os forasteiros dizem que nas copas um guarda vale por muitos, porque todos pensam junto"
     },
     "rumor_avist_mon_afogado_de_aethelgard": {
       "family": "avistamento",
@@ -2512,7 +2527,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os saqueadores dizem que depois de cada tempestade há quem junte os cacos antes deles, e que não gosta de dividir"
     },
     "rumor_avist_mon_hiena_sol": {
       "family": "avistamento",
@@ -2529,7 +2545,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros dizem que a última sombra do dia tem quem espere por ela"
     },
     "rumor_avist_mon_colosso_duna": {
       "family": "avistamento",
@@ -2546,7 +2563,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os Devoradores dizem que na borda sul o vento veste armadura de gente morta para andar"
     },
     "rumor_avist_mon_mariposa_sussurro": {
       "family": "avistamento",
@@ -2563,7 +2581,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mago diz que leu nas asas de um bicho da floresta uma frase que ninguém pronunciou ainda"
     },
     "rumor_avist_mon_cacador_casca": {
       "family": "avistamento",
@@ -2580,7 +2599,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os batedores dizem que a floresta decide quem atravessa, e que quem não foi aceito não volta"
     },
     "rumor_avist_mon_ent_dormindo": {
       "family": "avistamento",
@@ -2597,7 +2617,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os velhos dizem que na floresta há um caminho de antes das árvores, e que ainda tem quem o use"
     },
     "rumor_avist_mon_larva_hospedeira": {
       "family": "avistamento",
@@ -2614,7 +2635,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caçadores dizem que bicho que eles matam na selva às vezes chega sozinho às cidades das copas"
     },
     "rumor_avist_mon_macaco_esporo": {
       "family": "avistamento",
@@ -2631,7 +2653,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um forasteiro seguiu sinais de mão nas copas achando que eram de gente, e caiu numa armadilha de bicho"
     },
     "rumor_avist_mon_rainha_cipo": {
       "family": "avistamento",
@@ -2648,7 +2671,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os moradores das copas dizem que há uma planta que conversa e que troca corpos por sol"
     },
     "rumor_avist_mon_corvo_gelo": {
       "family": "avistamento",
@@ -4096,7 +4120,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um caravaneiro diz que perdeu dez anos numa noite no deserto e que o filho ganhou de volta os dele"
     },
     "rumor_avist_mon_esfolado_da_tempestade": {
       "family": "avistamento",
@@ -4113,7 +4138,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros dizem que tem gente que vive dentro do vento de navalhas, e que sai quando sente cheiro de comida"
     },
     "rumor_avist_mon_provador_da_borda": {
       "family": "avistamento",
@@ -4130,7 +4156,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os da beira sul dizem que lá o som tem gosto, e que há quem saiba o que você vai fazer pelo sabor"
     },
     "rumor_avist_mon_peito_de_geodo": {
       "family": "avistamento",
@@ -4147,7 +4174,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um saqueador acordou com um amigo crescido em pedra violeta por dentro, e agora dorme de pé"
     },
     "rumor_avist_mon_fervente_de_ferrugem": {
       "family": "avistamento",
@@ -4164,7 +4192,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os saqueadores levam doentes para cavar no sol, e dizem que os doentes não reclamam do calor"
     },
     "rumor_avist_mon_varano_vidrado": {
       "family": "avistamento",
@@ -4181,7 +4210,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caçadores do deserto só caçam ao amanhecer, quando o bicho grande ainda está frio"
     },
     "rumor_avist_mon_tatu_de_navalha": {
       "family": "avistamento",
@@ -4198,7 +4228,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros dizem que no deserto não se para no pé da duna quando o vento sopra de cima"
     },
     "rumor_avist_mon_lambedor_de_halito": {
       "family": "avistamento",
@@ -4215,7 +4246,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros dormem com um pano molhado no rosto, e não é por causa do calor"
     },
     "rumor_avist_mon_lastreiro_da_cratera": {
       "family": "avistamento",
@@ -4232,7 +4264,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros ensinam a nunca acampar debaixo de estrela que não pisca"
     },
     "rumor_avist_mon_cavador_de_funil": {
       "family": "avistamento",
@@ -4249,7 +4282,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias das dunas dizem que cova perfeita no deserto não se pisa, nem para olhar o fundo"
     },
     "rumor_avist_mon_saltador_de_palafita": {
       "family": "avistamento",
@@ -4266,7 +4300,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os carregadores enfaixam as canelas no deserto: dizem que lá os bichos pequenos mordem baixo"
     },
     "rumor_avist_mon_costurado_de_lentes": {
       "family": "avistamento",
@@ -4283,7 +4318,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os saqueadores dizem que os vigias do deserto não têm costas, e que por isso ninguém chega por trás"
     },
     "rumor_avist_mon_couro_pegado": {
       "family": "avistamento",
@@ -4300,7 +4336,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um Devorador conta que o maior caçador da tribo troca de pele uma vez por ano e se esconde nesses dias"
     },
     "rumor_avist_mon_maos_de_cinzel": {
       "family": "avistamento",
@@ -4317,7 +4354,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os saqueadores dizem que o melhor deles escuta onde a pedra quer quebrar, e que faz o mesmo com gente"
     },
     "rumor_avist_mon_aguadeiro_de_bucho": {
       "family": "avistamento",
@@ -4334,7 +4372,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um cativo que fugiu diz que a tribo bebia dele pelos braços de outro homem"
     },
     "rumor_avist_mon_cacador_sem_calor": {
       "family": "avistamento",
@@ -4351,7 +4390,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros tocam as miragens com a ponta da lança, uma por uma, antes de passar"
     },
     "rumor_avist_mon_altivo_do_vidro": {
       "family": "avistamento",
@@ -4368,7 +4408,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os Devoradores contam de um cativo que não quis se ajoelhar e que agora não consegue olhar para baixo"
     },
     "rumor_avist_mon_despenseiro_de_espinhos": {
       "family": "avistamento",
@@ -4385,7 +4426,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um caravaneiro achou o próprio cantil num acampamento de Devoradores, e eles juram que o acharam no chão"
     },
     "rumor_avist_mon_lacrador_de_saidas": {
       "family": "avistamento",
@@ -4402,7 +4444,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um viajante da borda diz que entrou num lugar com três caminhos e saiu por nenhum, cavando"
     },
     "rumor_avist_mon_furador_de_odres": {
       "family": "avistamento",
@@ -4419,7 +4462,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros carregam a água em cabaça dura no deserto, e riem de quem leva couro"
     },
     "rumor_avist_mon_guia_avesso": {
       "family": "avistamento",
@@ -4436,7 +4480,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caravaneiros não seguem quem chama de noite, nem quando conhecem a voz"
     },
     "rumor_avist_mon_lixado_da_fronteira": {
       "family": "avistamento",
@@ -4453,7 +4498,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um lenhador conta que depois da névoa da borda o machado do irmão virou poeira na mão dele"
     },
     "rumor_avist_mon_abafador_de_candeias": {
       "family": "avistamento",
@@ -4470,7 +4516,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os carvoeiros da floresta acendem fogo só no chão aberto, e com duas tochas, nunca uma"
     },
     "rumor_avist_mon_fechado_de_escapulas": {
       "family": "avistamento",
@@ -4487,7 +4534,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um caçador diz que mirou num bicho ferido e a flecha bateu numa pedra que antes não estava ali"
     },
     "rumor_avist_mon_virado_do_avesso": {
       "family": "avistamento",
@@ -4504,7 +4552,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma colhedora jura que viu um colega comer da mancha escura e, no dia seguinte, ele estava com a carne para fora"
     },
     "rumor_avist_mon_calado_das_guelras": {
       "family": "avistamento",
@@ -4521,7 +4570,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias da floresta mandam respirar devagar nas subidas: dizem que lá tem quem escute o cansaço"
     },
     "rumor_avist_mon_morcego_rasteiro": {
       "family": "avistamento",
@@ -4538,7 +4588,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caçadores da floresta enrolam as fivelas em pano: dizem que lá dentro o metal batendo chama coisa"
     },
     "rumor_avist_mon_besouro_do_estalo": {
       "family": "avistamento",
@@ -4555,7 +4606,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um colhedor diz que na floresta é preciso sair de onde se ouviu o estouro, e não de onde veio o vapor"
     },
     "rumor_avist_mon_onca_vazada": {
       "family": "avistamento",
@@ -4572,7 +4624,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os batedores da borda dizem que onde a luz cai em pedaços a sombra também caça"
     },
     "rumor_avist_mon_lagarta_de_visgo": {
       "family": "avistamento",
@@ -4589,7 +4642,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os lenhadores andam espaçados no mato baixo: dizem que lá dentro quem anda junto fica junto"
     },
     "rumor_avist_mon_vespa_coveira": {
       "family": "avistamento",
@@ -4607,6 +4661,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
+      "sinal_rumor": "um caçador diz que achou o companheiro enterrado vivo, mole, e com uma coisa crescendo dentro",
       "public_names": [
         "Vespa"
       ]
@@ -4626,7 +4681,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guias põem o mais forte no fim da fila na floresta: dizem que é por lá que somem os viajantes"
     },
     "rumor_avist_mon_dedos_de_colheita": {
       "family": "avistamento",
@@ -4643,7 +4699,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os compradores de Pó dizem que o melhor colhedor é o que já não tem unha nenhuma"
     },
     "rumor_avist_mon_olho_de_petala": {
       "family": "avistamento",
@@ -4660,7 +4717,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mercador de curiosidades paga caro por bicho raro da floresta e não pergunta como o caçador enxerga no escuro"
     },
     "rumor_avist_mon_mapa_de_cicatrizes": {
       "family": "avistamento",
@@ -4677,7 +4735,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um cartógrafo de Nova Arcádia desistiu de mapear a floresta: diz que o ajudante dele continuou, na própria pele"
     },
     "rumor_avist_mon_ressecado_da_travessia": {
       "family": "avistamento",
@@ -4694,7 +4753,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os batedores da borda dizem que a selva manda gente para o lado seco e não a chama de volta"
     },
     "rumor_avist_mon_mascador_de_raiz": {
       "family": "avistamento",
@@ -4711,7 +4771,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mago de revelação foi mascar na floresta o que só funciona fresco, e o grupo dele diz que ele ainda está mascando"
     },
     "rumor_avist_mon_ermitao_de_carcaca": {
       "family": "avistamento",
@@ -4728,7 +4789,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um caçador da floresta queima o que mata: diz que bicho morto lá dentro às vezes levanta"
     },
     "rumor_avist_mon_desafiante_rubro": {
       "family": "avistamento",
@@ -4745,7 +4807,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os batedores da borda mandam o mais forte andar no meio: dizem que lá tem quem só briga com o melhor"
     },
     "rumor_avist_mon_enrolado_da_clareira": {
       "family": "avistamento",
@@ -4762,7 +4825,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os carvoeiros dizem que na floresta a luz pode trazer coisa rolando, e que é preciso saber para que lado ela foge"
     },
     "rumor_avist_mon_picanco_de_espinheiro": {
       "family": "avistamento",
@@ -4779,7 +4843,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma caçadora diz que achou o irmão vivo, espetado no alto de um arbusto, e que o pássaro voltava toda vez que ele gemia"
     },
     "rumor_avist_mon_deitado_na_parede": {
       "family": "avistamento",
@@ -6544,7 +6609,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um doente da Praga subiu atrás da cura na selva, e o irmão diz que ele achou outra coisa"
     },
     "rumor_avist_mon_ariete_de_medula": {
       "family": "avistamento",
@@ -6561,7 +6627,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caçadores da borda dizem que tem bicho no fundo que derruba árvore tentando quebrar a própria cara"
     },
     "rumor_avist_mon_lacado_de_hifas": {
       "family": "avistamento",
@@ -6578,7 +6645,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um garimpeiro diz que acertou um homem de raspão na selva e que o homem o seguiu três dias"
     },
     "rumor_avist_mon_recusado_do_ciclo": {
       "family": "avistamento",
@@ -6595,7 +6663,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os da borda dizem que no fundo há lugares onde a selva não cresce, e que quem chega lá não cresce mais"
     },
     "rumor_avist_mon_remendado_de_osso": {
       "family": "avistamento",
@@ -6612,7 +6681,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um curandeiro de margem diz que viu um Hospedeiro que não para de sarar, e que isso é pior que não sarar"
     },
     "rumor_avist_mon_tamandua_de_ponte": {
       "family": "avistamento",
@@ -6629,7 +6699,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os moradores das copas não andam pela beira das plataformas, nem os que nasceram lá"
     },
     "rumor_avist_mon_lagarta_da_hora": {
       "family": "avistamento",
@@ -6646,7 +6717,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um viajante jura que na selva viu um bicho nascer, crescer e morrer numa tarde só"
     },
     "rumor_avist_mon_preguica_de_pomar": {
       "family": "avistamento",
@@ -6663,7 +6735,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "as crianças das copas brincam escondidas num bicho que dorme no galho, e os pais deixam"
     },
     "rumor_avist_mon_coandu_de_rebrota": {
       "family": "avistamento",
@@ -6680,7 +6753,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os garimpeiros andam calados nas árvores baixas: dizem que o barulho volta em forma de agulha"
     },
     "rumor_avist_mon_vespa_oleira": {
       "family": "avistamento",
@@ -6698,6 +6772,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
+      "sinal_rumor": "os moradores das copas quebram com um dedo o que os forasteiros não conseguem quebrar com o martelo",
       "public_names": [
         "Vespa"
       ]
@@ -6717,7 +6792,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma Hospedeira das copas diz que a cunhada morreu, e que o marido dela ainda fala com ela pela metade"
     },
     "rumor_avist_mon_surdo_da_colmeia": {
       "family": "avistamento",
@@ -6734,7 +6810,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um Hospedeiro das copas diz que um primo voltou de longe tarde demais, e que agora arranca o que nunca mais cresce"
     },
     "rumor_avist_mon_mascador_de_nectar": {
       "family": "avistamento",
@@ -6751,7 +6828,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os garimpeiros da borda contam de um nortenho que leva golpe de morte e continua de pé mais um pouco"
     },
     "rumor_avist_mon_enxertadora_da_uniao": {
       "family": "avistamento",
@@ -6768,7 +6846,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um viajante resgatado na borda diz que uma mulher queria libertá-lo da própria cabeça, e que ela tinha agulha"
     },
     "rumor_avist_mon_pressa_da_seiva": {
       "family": "avistamento",
@@ -6785,7 +6864,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um garimpeiro bebeu o que não devia para fechar um corte, e o filho diz que agora ele envelhece por manhã"
     },
     "rumor_avist_mon_provador_de_cores": {
       "family": "avistamento",
@@ -6802,7 +6882,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os mercadores da borda dizem que o boticário de pele pintada sabe o que cada rã faz, e que esqueceu algumas"
     },
     "rumor_avist_mon_monte_de_alheios": {
       "family": "avistamento",
@@ -6819,7 +6900,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os mercadores da borda dizem que colar comprado de morto não fica no pescoço de quem compra"
     },
     "rumor_avist_mon_isca_amarrada": {
       "family": "avistamento",
@@ -6836,7 +6918,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os garimpeiros juram que nunca amarraram ninguém, e mesmo assim não passam embaixo de galho que pinga"
     },
     "rumor_avist_mon_oco_da_fronteira": {
       "family": "avistamento",
@@ -6853,7 +6936,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os batedores dizem que há uma árvore morta que anda na divisa e que fala com a voz de quem ela guarda"
     },
     "rumor_avist_mon_tropel_sem_saida": {
       "family": "avistamento",
@@ -6870,7 +6954,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os caçadores dizem que os bichos estão fugindo do fundo, e que quem vê a debandada tem vontade de correr junto"
     },
     "rumor_avist_mon_parado_do_sopro": {
       "family": "avistamento",

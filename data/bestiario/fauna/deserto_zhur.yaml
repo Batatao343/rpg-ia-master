@@ -1,0 +1,727 @@
+# SPEC-370 R1 (lote 3) — bloco de fauna do Deserto de Zhur: 26 fichas da SPEC-349 + legado `valoria`
+# da região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# Estação do calendário (R4): enemy_verme_areia_jovem verão 1,5; enemy_escorpiao_cristal verão 1,3.
+# E18: 2 `imediato` no hub (Verme de Vidro e Caçador Sem Calor).
+# Revisão de fauna: handoffs/SPEC-370-independent-review.md (lote 3; revisor ≠ autor).
+regiao: deserto_zhur
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_andarilho_de_duas_idades:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [deserto_zhur]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco de braço comprido arrastado no chão vidrado e, ao lado, pegadas pequenas de pé de criança, do mesmo corpo."
+      resto: "Um viajante deitado entre as dobras do chão, de cabelo branco e mãos de velho, que ontem era moço segundo os papéis que levava."
+      som: "Um arrasto seco de unhas compridas no chão duro e uma voz de criança cantarolando baixo, no mesmo fôlego."
+      cheiro: "Pele velha de pergaminho e leite de bebê azedo, os dois juntos."
+      marca: "Nas dobras do chão vidrado, marcas de mão pequena e macia apertadas com força nas bordas, como de quem segurou para não cair."
+      aproximacao: "Arrastando-se num braço de velho que vai até o chão, vem um corpo de metade criança, e a mão pequena se estende para a sua."
+      rumor: "um caravaneiro diz que perdeu dez anos numa noite no deserto e que o filho ganhou de volta os dele"
+    contra_jogo: "Cortar a mão pequena, que é a que segura; o braço velho bate forte e devagar, e sem a mão de criança ele não toma nada."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_esfolado_da_tempestade:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [deserto_zhur]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas que saem de dentro do vento cortante, onde nada anda, e seguem direto para o cheiro de uma caravana."
+      resto: "Um alforje de couro raspado até a trama, e a malha de ferro por baixo dele lixada em fios brilhantes."
+      som: "Um chiado de lixa grossa raspando couro, e o tilintar de cacos finos batendo uns nos outros."
+      cheiro: "Músculo exposto ao vento quente e um pó de caco que arranha a garganta."
+      marca: "Num poste de caravana, a madeira lixada de um lado só, com lascas finas e brilhantes cravadas todas na mesma direção."
+      aproximacao: "Do vento sai um homem sem pele, de músculo vermelho e seco, as costas cobertas de lascas deitadas como escamas, e abre os braços."
+      rumor: "os caravaneiros dizem que tem gente que vive dentro do vento de navalhas, e que sai quando sente cheiro de comida"
+    contra_jogo: "As lascas só cortam num sentido; golpear de baixo para cima, contra elas, quebra as escamas sem se cortar. Óleo nas costas faz os cacos escorregarem."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_provador_da_borda:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [dz_borda_do_vazio]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de cócoras à beira da queda, de quem fica muito tempo agachado, e um rastro de saliva cinza secando no chão."
+      resto: "Um viajante calado com a garganta rasgada até o queixo, como se alguém tivesse provado antes de comer."
+      som: "Um estalar úmido de língua no vento, e um silêncio que parece escutar cada passo que você dá."
+      cheiro: "Saliva espessa e um gosto metálico no ar, como se o vento tivesse sabor."
+      marca: "Na beira da queda, papilas grossas e cinzentas grudadas nas pedras, como pele de língua arrancada pelo vento."
+      aproximacao: "De cócoras na beira da queda, um homem de mandíbula partida em duas pinças estica para você uma língua do tamanho de um braço."
+      rumor: "os da beira sul dizem que lá o som tem gosto, e que há quem saiba o que você vai fazer pelo sabor"
+    contra_jogo: "Calar o próprio corpo; quem fica parado, ou luta coberto pelo barulho de outro, não tem gosto. A língua é mole e é por ela que se começa."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_peito_de_geodo:
+    fonte: ficha
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [deserto_zhur, dz_borda_do_vazio]
+      permanencia: [8, 11]
+      foge_de: [mon_costurado_de_lentes]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas curvadas e pesadas que levam a um afloramento violeta e ficam ali, viradas para o poente."
+      resto: "Uma lanterna de saqueador cravada de pontas violeta, como se um feixe de pregos tivesse saído do escuro."
+      som: "Um estalo de pedra rachando ao meio, e um zunido de pontas voando como flechas curtas."
+      cheiro: "Pedra quebrada fresca e um ar ozonado, de cristal que pulsa."
+      marca: "Encostado num afloramento violeta, o desenho de costas humanas marcado no pó, e o cristal crescido para dentro dele."
+      aproximacao: "Um saqueador curvado abre as costelas com as duas mãos, como portas, e do tórax forrado de cristais violeta sai a luz."
+      rumor: "um saqueador acordou com um amigo crescido em pedra violeta por dentro, e agora dorme de pé"
+    contra_jogo: "Depois do disparo o peito fica vazio e o coração à mostra; é a hora de chegar perto. Quem fica de lado, fora da boca do peito, não leva as pontas."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_fervente_de_ferrugem:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde]
+      territorio: [deserto_zhur]
+      permanencia: [6, 9]
+      foge_de: [mon_cacador_sem_calor]
+      reage:
+        - {quando: "pressao:praga", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de trabalhador arrastando os pés no sol do meio-dia, e entre elas contas escuras de metal caídas na areia."
+      resto: "Uma picareta de cavar largada no sol, o cabo manchado de sangue que secou em grãos duros."
+      som: "Um chiado de chaleira no peito de alguém, rápido, e o estalo de bolhas que estouram."
+      cheiro: "Sangue fervido e óxido, metálico, que deixa gosto de moeda na boca."
+      marca: "Na escavação dos saqueadores, uma pá de cavar enfiada no chão quente com o cabo preto de mãos que suaram ferro."
+      aproximacao: "Do sol do meio-dia corre um homem de veias saltadas como cordas cor de tijolo, os dentes pretos, e abre os braços para abraçar."
+      rumor: "os saqueadores levam doentes para cavar no sol, e dizem que os doentes não reclamam do calor"
+    contra_jogo: "Não deixar que chegue; de longe é só um homem doente e curto de fôlego. Quem o derruba antes do abraço fica com um cadáver morno."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_mumia_de_po:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [deserto_zhur]
+      permanencia: [9, 12]
+      suprime: [mon_maos_de_cinzel]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas lentas e pesadas que saem de uma câmara enterrada e seguem a trilha de um saqueador, dias depois dele."
+      resto: "Um saqueador morto no acampamento, de mãos vazias, e a peça que ele levou da câmara já não está lá."
+      som: "Um ranger de madeira seca sob peso, e passos que não aceleram nem param, noite após noite."
+      cheiro: "Madeira de sândalo velho e resina de embalsamar, um cheiro de templo fechado."
+      marca: "Na porta de uma câmara do rei engolido, duas marcas de varais arrastados para fora e uma coleira de cobre rompida no chão."
+      aproximacao: "Curvado sob um peso que não está ali, um servo de pele seca e escura vem até você, os varais de madeira crescendo dos ombros."
+      rumor: "um saqueador diz que vendeu a taça de um rei engolido em três cidades, e que o servo dele passou nas três"
+    contra_jogo: "Largar o que foi tirado; ele para, pega e volta para baixo. Os varais dos ombros são o ponto fraco, e madeira seca quebra."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  mon_varano_vidrado:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      estacoes: {verao: 1.2}
+      territorio: [deserto_zhur]
+      permanencia: [7, 10]
+      presas: [mon_saltador_de_palafita]
+      foge_de: [enemy_devorador_sol_zhur]
+      reage:
+        - {quando: "clima:limpo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto largo de barriga e cauda, como de duas carroças em fila, com pegadas de garras abertas dos lados."
+      resto: "Um bicho saltador do deserto mordido ao meio, a ferida queimada como se tivessem posto ferro em brasa."
+      som: "Um sibilo longo e úmido, e a saliva fervendo na areia quente com chiado de frigideira."
+      cheiro: "Couro de réptil assado e saliva ácida, um cheiro de churrasco estragado."
+      marca: "Na areia quente, a forma de um corpo enorme deitado ao sol, a areia fundida em crosta lisa onde ele se esquentou."
+      aproximacao: "Sai do sol um lagarto do comprimento de duas carroças, de dorso branco de calor e rachado nos ombros, babando saliva que ferve."
+      rumor: "os caçadores do deserto só caçam ao amanhecer, quando o bicho grande ainda está frio"
+    contra_jogo: "Lutar com ele ao amanhecer ou na sombra; água fria nas costas quentes trinca o vidro. As rachaduras dos ombros são carne."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_tatu_de_navalha:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [deserto_zhur]
+      permanencia: [6, 9]
+      foge_de: [enemy_escorpiao_cristal]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Sulcos retos de bolas rolando duna abaixo, a favor do vento, e no pé da duna marcas de garras chatas subindo de novo."
+      resto: "Uma perneira de caravaneiro cortada em fatias paralelas, como se tivesse passado por um moinho de cacos."
+      som: "Um rolar chocalhado e tilintante descendo a duna, de várias coisas ao mesmo tempo."
+      cheiro: "Terra cavada e formigueiro aberto, um cheiro seco de toca de bicho."
+      marca: "No pé de uma duna, formigueiros cavados a garra e cascas em cinta trocadas, cheias de cacos cravados."
+      aproximacao: "Do alto da duna rolam bolas de casco em cintas eriçadas de cacos, a favor do vento, direto para as suas pernas."
+      rumor: "os caravaneiros dizem que no deserto não se para no pé da duna quando o vento sopra de cima"
+    contra_jogo: "Aberto, a barriga é mole; quem sai do caminho da rolada e espera ele se abrir no pé da duna o mata com um golpe."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lambedor_de_halito:
+    fonte: ficha
+    ecologia:
+      horario: [Noite, Amanhecer]
+      territorio: [deserto_zhur]
+      permanencia: [6, 9]
+      foge_de: [mon_cavador_de_funil]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas finas de pernas compridas subindo a duna à noite, e no topo um ponto onde a areia está úmida."
+      resto: "Um viajante acordado de madrugada roxo e sem ar, com uma marca redonda e mole em volta da boca."
+      som: "Um sugar leve e úmido no silêncio do acampamento, e um tique de pernas finas no tecido da tenda."
+      cheiro: "Bafo velho de quem dorme e umidade de orvalho, estranho no seco do deserto."
+      marca: "No acampamento de madrugada, as bordas dos cobertores marcadas por dezenas de patinhas finas, todas indo para as cabeças."
+      aproximacao: "Sobre o peito de quem dorme, um besouro de pernas finas e costas de calombos pretos encaixa uma tromba mole na boca dele."
+      rumor: "os caravaneiros dormem com um pano molhado no rosto, e não é por causa do calor"
+    contra_jogo: "Pano molhado na boca ou prender a respiração tira o rumo deles; pesados de água, ficam lentos e estouram com um tapa."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lastreiro_da_cratera:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [deserto_zhur]
+      permanencia: [7, 10]
+      presas: [mon_hiena_sol]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um risco fino arrastado na areia, de pedra pendurada que roça o chão, que vai e volta sem pegada nenhuma."
+      resto: "Uma pedra redonda e lisa caída sobre um corpo esmagado, e nenhuma encosta de onde ela possa ter vindo."
+      som: "Um ranger de pedra raspando areia e, muito acima, um sopro de ar saindo de algo enorme."
+      cheiro: "Pó fino de estrela e tripa crua, um cheiro de couro de odre ao sol."
+      marca: "Na areia em volta de um acampamento, buracos redondos do tamanho de uma cabeça, como de pedra largada do alto, sem pedra dentro."
+      aproximacao: "Uma pedra cai do céu ao seu lado, presa a uma tripa grossa que já puxa para cima, para uma bexiga do tamanho de uma tenda."
+      rumor: "os caravaneiros ensinam a nunca acampar debaixo de estrela que não pisca"
+    contra_jogo: "Furar a bexiga de longe; ou cortar a tripa do lastro, e ele sobe e não volta. Não acampar debaixo de estrela que não pisca."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cavador_de_funil:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [deserto_zhur]
+      permanencia: [9, 12]
+      presas: [mon_lambedor_de_halito, mon_escaravelho_vidro]
+    sinais:
+      antecedencia: cedo
+      rastro: "Na duna fofa, um rastro de quem escorregou para o centro de um buraco e não deixou marca de subida."
+      resto: "Cascas de besouro chupadas e vazias jogadas para fora de um buraco, numa pilha em volta da borda."
+      som: "Um chiar de areia escorrendo em cone, e um estalo de duas foices de casca fechando lá embaixo."
+      cheiro: "Areia revirada e casca de inseto seca, um cheiro de cova fresca."
+      marca: "No meio da duna, uma cova em cone de paredes lisas e escorregadias, perfeita demais para ser do vento."
+      aproximacao: "A borda da cova cede sob o seu pé, a areia corre para o centro, e lá embaixo duas foices curvas abrem para você."
+      rumor: "os guias das dunas dizem que cova perfeita no deserto não se pisa, nem para olhar o fundo"
+    contra_jogo: "Não pisar a borda; de cima, com lança ou corda, as mandíbulas não alcançam. Areia molhada não escorre."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_saltador_de_palafita:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [deserto_zhur]
+      permanencia: [6, 9]
+      foge_de: [mon_varano_vidrado, mon_hiena_sol]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pares de furinhos na areia a dez passos uns dos outros, como de alguém pulando em pernas de pau."
+      resto: "Varetas finas e translúcidas quebradas na areia, com um osso escuro dentro de cada uma."
+      som: "Um grito fino e agudo de bicho pequeno, e logo um bando de pulos leves vindo de todos os lados."
+      cheiro: "Calo queimado de pé e capim seco roído, um cheiro de ninho no calor."
+      marca: "No chão perto de um acampamento, canelas de bota mordidas em muitos pontos, todas na mesma altura."
+      aproximacao: "Pulando dez passos de cada vez, chega um bando de bichos de orelhas enormes sobre pernas finas e translúcidas, e mordem as canelas."
+      rumor: "os carregadores enfaixam as canelas no deserto: dizem que lá os bichos pequenos mordem baixo"
+    contra_jogo: "Calar primeiro o que grita; as varetas quebram com qualquer pancada, e um saltador sem perna só morde o chão."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_verme_areia_jovem:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      estacoes: {verao: 1.5}
+      territorio: [deserto_zhur]
+      permanencia: [7, 10]
+      presas: [mon_tatu_de_navalha]
+    sinais:
+      antecedencia: imediato
+      rastro: "Uma faixa reta de chão liso e brilhante, recém-fundido, que atravessa a duna e some de repente para baixo."
+      resto: "Uma bota sozinha em pé no meio da duna, e em volta dela o chão derretido em anéis, ainda quente."
+      som: "Um guincho de atrito subindo por baixo dos pés, agudo como roda sem graxa, que chega tarde."
+      cheiro: "Pedra fundida e calor de forno, um cheiro de oficina de vidreiro."
+      marca: null
+      aproximacao: "O chão sob você se abre em três abas de dentes brilhantes virados para dentro, e um corpo de anéis polidos sobe."
+      rumor: "os caravaneiros dizem que no verão não se anda no deserto, se para, e se espera o guincho passar"
+    contra_jogo: "Ficar parado, porque ele sente o peso que anda; pedra ou vidro sólido não o deixam subir, e o rastro de vidro novo mostra onde está."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_djinn_menor:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [dz_borda_do_vazio, deserto_zhur]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+        - {quando: "clima:limpo", efeito: menos}
+    sinais:
+      antecedencia: cedo
+      rastro: "Riscos rentes ao topo das dunas, como de pano arrastado pelo vento, e a areia do alto da duna faltando."
+      resto: "Uma tenda furada de cima em dezenas de pontos, como se uma chuva de grãos de pedra tivesse caído com força de funda."
+      som: "Um bater de pele esticada no vento, como de vela solta, e uma rajada de grãos batendo em lona."
+      cheiro: "Pó de grão moído no papo e um azedo de couro esticado ao sol."
+      marca: "Nas pedras altas perto da borda sul, tiras de pele fina e escura rasgadas presas nas pontas, balançando ao vento."
+      aproximacao: "No vento sobe uma pele escura esticada entre varetas de osso, enche o papo rente à duna, e cospe uma rajada sobre você."
+      rumor: "os caravaneiros esperam o vento parar antes de atravessar perto da borda sul, nem que esperem o dia todo"
+    contra_jogo: "Esperar o vento parar ou lutar abrigado dele, porque sem vento ela não sobe. Furar a pele entre as costelas a derruba."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_aranha_de_cristal:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [dz_borda_do_vazio]
+      permanencia: [3, 4]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um pedaço da beirada da queda partido e caído, e na pedra que ficou, marcas de dedos largos e chatos como remos."
+      som: "Um bater surdo e pesado na pedra por baixo da beirada, como de punhos enormes testando o chão."
+      cheiro: "Calo grosso de pele e pedra úmida de paredão, que sobe da queda."
+      marca: "Na beirada sul, unhas grossas como telhas cravadas na pedra e quebradas, e rachaduras novas em leque."
+      aproximacao: "Da queda sobem duas mãos enormes de dedos chatos, em braços compridos como mastros, e agarram a beirada onde você está."
+      rumor: "os Devoradores nunca olham por cima da beirada sul, e dizem que é por respeito"
+    contra_jogo: "Longe da beirada ele só tem os braços, e cada cotovelo é uma junta que se quebra; cortar os dedos é cortar o que segura. Silêncio perto da borda o deixa parado."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_costurado_de_lentes:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [deserto_zhur]
+      permanencia: [8, 11]
+      suprime: [mon_peito_de_geodo]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de mãos calejadas subindo um cristal alto ao anoitecer, e nenhuma descendo até de manhã."
+      resto: "Um saqueador caído com flechas de todos os lados, como se alguém tivesse apontado para ele de cima."
+      som: "Estalos pequenos de discos girando na pele, como unha em vidro, vindos do alto de um cristal."
+      cheiro: "Obsidiana quente e linha de tendão, um cheiro de oficina de curtidor."
+      marca: "No topo de um cristal alto, um pedaço de linha de tendão rompida e um disco preto de obsidiana caído, ainda com pele presa."
+      aproximacao: "No alto de um cristal, um vigia de corpo cravejado de discos de obsidiana vira para você sem virar as costas, e aponta a palma."
+      rumor: "os saqueadores dizem que os vigias do deserto não têm costas, e que por isso ninguém chega por trás"
+    contra_jogo: "Areia nas lentes, fumaça ou noite sem lua; ele vê pela obsidiana e ela precisa de alguma luz. Derrubado do cristal, é um homem magro."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_couro_pegado:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [deserto_zhur]
+      permanencia: [8, 11]
+      suprime: [mon_maos_de_cinzel]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas pesadas à frente de um grupo de caça, paradas como linha de muro, e as dos outros atrás delas."
+      resto: "Uma pele inteira de escamas trocada e largada atrás de uma pedra, com o formato de um homem grande, ainda úmida por dentro."
+      som: "Um raspar de escamas grossas e o baque de flechas batendo num anteparo que não é escudo."
+      cheiro: "Pele de lagarto curtida e suor de guerreiro, cheiro de tenda de caça."
+      marca: "Na linha de uma caçada antiga, flechas inimigas cravadas no chão em fila, todas paradas no mesmo ponto."
+      aproximacao: "Na frente do grupo de caça, um guerreiro de pele fundida em escamas ergue um braço largo como porta, e os outros miram por trás."
+      rumor: "um Devorador conta que o maior caçador da tribo troca de pele uma vez por ano e se esconde nesses dias"
+    contra_jogo: "O couro é grosso mas não sente; quem o rodeia acha as costas dos outros. Fogo nas escamas faz o couro encolher e puxar a carne dele."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_maos_de_cinzel:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [deserto_zhur]
+      permanencia: [7, 10]
+      foge_de: [enemy_mumia_de_po, mon_couro_pegado]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de joelhos grossos agachados no chão vidrado, e entre elas a orelha encostada deixou uma mancha de suor."
+      resto: "Uma placa de armadura partida certinho numa linha só, como pedra lascada no veio."
+      som: "Um silêncio de quem escuta, e então uma batida seca que faz o chão vidrado estalar numa linha."
+      cheiro: "Pó de pedra azulada e suor de quem cava agachado, um cheiro de mina de sal."
+      marca: "Nas camadas do chão vidrado, escavações em cunha perfeitas, cortadas como se a pedra tivesse aberto sozinha."
+      aproximacao: "Um saqueador magro e torto, de dedos que viraram duas cunhas azuladas, encosta a orelha no chão e depois a ergue para você."
+      rumor: "os saqueadores dizem que o melhor deles escuta onde a pedra quer quebrar, e que faz o mesmo com gente"
+    contra_jogo: "Barulho tira o ouvido dele, e quem luta batendo metal nunca o deixa achar a linha. As cunhas são cristal, e cristal quebra de lado."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_aguadeiro_de_bucho:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [deserto_zhur]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de alguém pesado nos braços que anda sempre atrás de uma caçada, e gotas de água e sangue entre elas."
+      resto: "Um tubo de tripa seca com uma rolha de osso largado na areia, e o chão em volta molhado de vermelho."
+      som: "Um balançar líquido e pesado, como de odres cheios batendo nas pernas, e um gole longo."
+      cheiro: "Sangue misturado com água morna, salgado, como de bebida de cativo."
+      marca: "Num acampamento de caça, um corpo levantado do chão depois de ferido, e marcas de joelho de quem deu de beber."
+      aproximacao: "Atrás da caçada vem um homem de antebraços inchados como dois odres moles, e ele tira a rolha do pulso para o caído beber."
+      rumor: "um cativo que fugiu diz que a tribo bebia dele pelos braços de outro homem"
+    contra_jogo: "Furar um dos odres derruba a água e o sangue no chão, e aquele braço não dá mais de beber. Ele não luta; matá-lo primeiro encurta a caçada inteira."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cacador_sem_calor:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [deserto_zhur]
+      permanencia: [7, 10]
+      suprime: [mon_fervente_de_ferrugem]
+      reage:
+        - {quando: "clima:limpo", efeito: mais}
+    sinais:
+      antecedencia: imediato
+      rastro: "Entre as miragens, pegadas de pés descalços e frios, que miragem nenhuma deixaria."
+      resto: "Lascas de barro molhado rachado caídas no chão quente, ainda úmidas, com cinza misturada."
+      som: null
+      cheiro: "Barro molhado e cinza fria, um cheiro de fogueira apagada com água no meio do sol."
+      marca: "Num lugar de miragens, uma pedra com marcas de mãos sem unha, frias ao toque mesmo ao meio-dia."
+      aproximacao: "Uma das miragens não tremula: é um homem coberto de barro e cinza, de olhos de obsidiana, que se ergue pelas suas costas."
+      rumor: "os caravaneiros tocam as miragens com a ponta da lança, uma por uma, antes de passar"
+    contra_jogo: "Tocar as miragens ou jogar água; o barro molhado escorre e ele aparece. Quem olha o chão vê as pegadas que miragem não deixa."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_altivo_do_vidro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [deserto_zhur]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de joelhos travados em linha reta, que não desviam de nada e passam por cima de buracos e de corpos."
+      resto: "Um viajante caído aos pés de alguém, com o golpe dado de cima para baixo, como castigo, e a lâmina dele devolvida torta."
+      som: "Passos duros de joelho que não dobra, e um respirar de quem está de rosto virado para o céu."
+      cheiro: "Osso branco esquentado ao sol e um suor de orgulho, azedo, de quem não se abaixa nem para beber."
+      marca: "No chão vidrado, uma trilha de cativos ajoelhados que se levantaram depois que algo passou, e um só que não caiu."
+      aproximacao: "De queixo erguido para o céu e peito estufado numa placa de osso branco, um homem vem em linha reta e não ergue o braço."
+      rumor: "os Devoradores contam de um cativo que não quis se ajoelhar e que agora não consegue olhar para baixo"
+    contra_jogo: "Não bater na placa do peito, que devolve; rasteiras e golpes nos joelhos travados o pegam por baixo, onde ele não olha, e quem bate de cima recebe de volta."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_despenseiro_de_espinhos:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [dz_borda_do_vazio, deserto_zhur]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas grandes de três dedos de ave corredora, que vêm de um acampamento e seguem direto para a borda sul."
+      resto: "A faca de um viajante achada na mão de outro, que jura nunca tê-la visto, e um odre furado de bico no caminho."
+      som: "Um tilintar de muitos objetos pendurados balançando, como de mascate correndo."
+      cheiro: "Couro de arreio e pena seca quente, um cheiro de feira de beira de estrada."
+      marca: "Na beira do acampamento, correias e fivelas arrancadas da carga, cada uma com um furo de ponta curva."
+      aproximacao: "Mais alta que um homem a cavalo, uma ave de pescoço pelado e sela de pontas cheias de coisas espetadas arranca o seu odre."
+      rumor: "um caravaneiro achou o próprio cantil num acampamento de Devoradores, e eles juram que o acharam no chão"
+    contra_jogo: "Não levar nada valioso à mão perto dela, ou derrubá-la pelas pernas grossas, que não têm espinho, antes que ela passe adiante o que tomou."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lacrador_de_saidas:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [dz_borda_do_vazio]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto largo e sem patas, de pele áspera, que dá voltas em torno de um lugar como quem cerca."
+      resto: "Uma passagem estreita entre pedras tapada por um cordão de pedra derretida e endurecida, com pegadas do lado de dentro."
+      som: "Um borbulhar laranja de papo cheio e o chiado de algo mole endurecendo no ar."
+      cheiro: "Escória de forno e areia queimada, cheiro de fundição ao ar livre."
+      marca: "Perto da borda sul, paredes finas de pedra vidrada que fecham passagens, novas, com as bordas ainda lisas como cera."
+      aproximacao: "Rodeando você, um bicho comprido e sem patas, de pele de escória, cospe cordões laranja que viram parede na passagem."
+      rumor: "um viajante da borda diz que entrou num lugar com três caminhos e saiu por nenhum, cavando"
+    contra_jogo: "O vidro cuspido é mole na primeira rodada e quebra com o ombro; quem vai para a parede logo, sai. O papo aceso queima se furado."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_furador_de_odres:
+    fonte: ficha
+    ecologia:
+      horario: [Noite, Amanhecer]
+      territorio: [deserto_zhur]
+      permanencia: [6, 9]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas macias de almofada que entram no acampamento, vão de carga em carga e saem pela fresta mais estreita."
+      resto: "O cantil mais cheio da caravana furado por um furo redondo e fino, e a areia em volta molhada sem ninguém ter bebido."
+      som: "Um roer baixinho de couro de correia, e o pingar de água caindo de algo furado."
+      cheiro: "Couro roído e água derramada na areia, cheiro de poço seco que choveu."
+      marca: "Nas cargas da caravana, correias roídas até romper, e o peso caído no chão de manhã."
+      aproximacao: "Entre as cargas, um bicho chato e pelado de pregas caídas, com um dente único e comprido como sovela, vira os olhos úmidos para o seu cantil."
+      rumor: "os caravaneiros carregam a água em cabaça dura no deserto, e riem de quem leva couro"
+    contra_jogo: "Água em cabaça dura ou vidro grosso não fura; quem carrega pouco não interessa a ele. A sovela é fina e quebra num golpe de lado."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_guia_avesso:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [deserto_zhur]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas que apontam para o lado de onde vêm, como se alguém andasse de costas a noite toda, à frente de outras."
+      resto: "Dois companheiros de caravana caídos lado a lado, um com a marca da mão do outro no rosto, os dois sem entender."
+      som: "Uma voz amiga chamando na noite, de frente para você, e o estalar de crosta de sal a cada passo."
+      cheiro: "Sal seco e carne úmida por baixo, um cheiro de peixe salgado esquecido."
+      marca: "Na beira da rota das caravanas, marcos de pedra virados para o lado errado, e sal grudado nas bordas."
+      aproximacao: "Na noite, um homem de crosta de sal branca vem de cabeça virada para trás, joelhos dobrando ao contrário, de mão aberta convidando."
+      rumor: "os caravaneiros não seguem quem chama de noite, nem quando conhecem a voz"
+    contra_jogo: "Não deixar que toque: quem recua quando a mão vem, ou luta longe dele, não é virado. Tocado, jogar defesa em vez de ataque na rodada seguinte; e os joelhos dobram para trás, então um golpe de frente nas canelas o derruba."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_boss_general_escorpiao:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde]
+      territorio: [deserto_zhur]
+      permanencia: [3, 4]
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma trilha larga de testas e joelhos marcados no chão vidrado, como de procissão que andou de quatro."
+      resto: "Viajantes de joelhos no meio do deserto, mortos com a testa no chão e uma mão marcada na nuca."
+      som: "Um respirar de muitos peitos baixos ao mesmo tempo, e um silêncio de reverência que ninguém pediu."
+      cheiro: "Suor de quem se ajoelhou ao sol e cristal violeta quente, um cheiro de templo em ruína."
+      marca: "No chão vidrado, marcas de testas em fila, fundas, como se o chão tivesse sido saudado mil vezes."
+      aproximacao: "Um monte de gente de costas fundidas avança de testa no chão, e no alto um corpo ereto de gola violeta aponta para você."
+      rumor: "um caravaneiro diz que sentiu as pernas pedirem para dobrar no deserto, e que não sabe diante de quem"
+    contra_jogo: "Os de baixo protegem o de cima com as costas; matá-lo exige subir ou derrubar o monte pelas pernas da frente. Quem não olha para ele dobra menos."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  enemy_devorador_sol_zhur:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [deserto_zhur]
+      permanencia: [6, 9]
+      presas: [mon_varano_vidrado]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bando nômade em leque, e um lagarto enorme arrastado de cauda pelo chão até um acampamento."
+      resto: "Um couro de lagarto grande esticado ao sol em varais, e lanças de osso encostadas ao lado."
+      som: "Um canto de caça ao amanhecer, e o zunido de arcos compostos soltos todos juntos."
+      cheiro: "Gordura de lagarto derretida e esterco seco queimando, defumado e pesado."
+      marca: "Nas pedras do deserto, discos de obsidiana quebrados e pele franzida caída, de quem costurou lentes em si."
+      aproximacao: "Do brilho do deserto sai um nômade de lentes pretas costuradas na pele, que mede a distância e ergue o arco composto."
+      rumor: "os caravaneiros dizem que a tribo do deserto caça ao amanhecer e que, depois do meio-dia, caça gente"
+    contra_jogo: "Colar neles: o bando recua para atirar de longe com o arco e foge se a linha da frente cair."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_escorpiao_cristal:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      estacoes: {verao: 1.3}
+      territorio: [deserto_zhur, dz_borda_do_vazio]
+      permanencia: [7, 10]
+      presas: [mon_tatu_de_navalha, mon_lambedor_de_halito]
+    sinais:
+      antecedencia: cedo
+      rastro: "Oito patas finas em fila na areia e, no meio delas, um risco de cauda levantada que só toca o chão de vez em quando."
+      resto: "Um bicho de casco em cintas aberto ao meio por uma pinça, e a carne em volta da picada endurecida como pedra."
+      som: "Um tilintar de casca dura raspando pedra, e um estalo de pinça que fecha no vazio."
+      cheiro: "Casca dura aquecida ao sol e um travo de metal, como de faca de pedra recém-afiada."
+      marca: "Debaixo de uma pedra grande, uma muda de casca transparente que refrata a luz em arco-íris, do tamanho de um cão."
+      aproximacao: "Da sombra de uma pedra sai um bicho de pinças e cauda erguida, do tamanho de um cão grande, de casca que quebra a luz em cores, e a cauda já desce."
+      rumor: "os caravaneiros chacoalham as botas toda manhã no verão, e às vezes cai uma coisa que brilha"
+    contra_jogo: "Não ficar ferido nem isolado à vista: ele persegue o mais fraco com fúria e corte não entra bem na casca; pancada, e ele recua quando a caçada vira risco."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_colosso_duna:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [dz_borda_do_vazio]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+        - {quando: "clima:limpo", efeito: menos}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas enormes de bota de ferro que só aparecem quando o vento sopra da borda sul, e param quando ele para."
+      resto: "Um viajante esmagado por um punho enorme, e em cima dele areia em monte, como se o golpe fosse de areia."
+      som: "Um assobio grave de vento passando por dentro de metal oco, como de flauta enorme."
+      cheiro: "Ferro velho quente e areia levantada, sem nenhum cheiro de corpo."
+      marca: "No chão da borda, a areia varrida em redemoinho com o desenho de botas enormes no centro, e nenhum rastro chegando ou saindo."
+      aproximacao: "Com o vento da borda, uma armadura enorme e vazia se ergue cheia de areia, e o punho de areia desce sobre você."
+      rumor: "os Devoradores dizem que na borda sul o vento veste armadura de gente morta para andar"
+    contra_jogo: "Não esperar que recue: ele avança no mais próximo, esmaga e empurra a linha; quebrá-lo de pancada e não ficar onde o empurrão joga para a queda."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_eclipse_caminhante:
+    fonte: legado
+    ecologia:
+      horario: [Manhã, Tarde]
+      territorio: [dz_borda_do_vazio]
+      permanencia: [2, 3]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma faixa de chão escuro no meio do dia claro, do tamanho de uma sombra de nuvem, que anda contra o vento."
+      resto: "Uma caravana inteira parada na rota, os animais deitados e os homens de olhos abertos para o céu, sem ferida."
+      som: "Um silêncio repentino no meio do dia, como se o sol tivesse parado de fazer barulho, e um zumbido de colmeia."
+      cheiro: "Ar frio de noite no meio do dia e pedra que esfriou de repente."
+      marca: "No deserto, um círculo de areia fria e escura ao meio-dia, onde nada vivo se aproxima, e os Devoradores deixam oferendas na beira."
+      aproximacao: "O sol escurece no meio do dia e de dentro da sombra sai um vulto alto de luz apagada, que os Devoradores chamam de profecia."
+      rumor: "os Devoradores esperam alguém que traz a noite ao meio-dia, e as caravanas chamam isso de fim da rota"
+    contra_jogo: "Colar nele: recua para lutar de longe com a descarga e o estilhaço, e foge se a linha da frente cair; não deixar o bando dele crescer."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_escaravelho_vidro:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [deserto_zhur, dz_borda_do_vazio]
+      permanencia: [7, 10]
+      foge_de: [mon_cavador_de_funil]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas miúdas de patas em volta de um monte de cacos, como de bicho que guarda o que juntou."
+      resto: "Uma bola de cacos rolada e deixada na duna, perfeita, cada lasca encaixada na outra."
+      som: "Um chiado agudo e cortante, como de caco riscado em caco, que dói nos ouvidos de perto."
+      cheiro: "Pó de cacos quentes e um cheiro mineral de areia queimada."
+      marca: "Nas dunas depois da tempestade, montinhos de cacos vitrificados arrumados em fila, guardados de um lado só."
+      aproximacao: "De cima de um monte de cacos, um besouro de casco feito de lascas soldadas se vira e abre pinças que brilham ao sol."
+      rumor: "os saqueadores dizem que depois de cada tempestade há quem junte os cacos antes deles, e que não gosta de dividir"
+    contra_jogo: "Não chegar perto do monte que ele guarda: ele se fecha em defesa, corta com o estilhaço e não persegue além do posto; contornar."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_hiena_sol:
+    fonte: legado
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [deserto_zhur]
+      permanencia: [6, 9]
+      presas: [mon_saltador_de_palafita]
+      foge_de: [mon_lastreiro_da_cratera]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bando que seguem uma caravana a meio dia de distância, sem nunca chegar perto antes de anoitecer."
+      resto: "Ossos de animal de carga roídos e espalhados num círculo, e o chão em volta todo pisado por patas manchadas."
+      som: "Uma risada aguda e quebrada de bicho, respondida por outras, que ri mais alto quando alguém cai."
+      cheiro: "Carniça e pelo sujo de bicho que come o que sobra, forte no vento da tarde."
+      marca: "Nas pedras perto da rota, marcas de dentes que quebraram osso grosso e fezes brancas de cálcio."
+      aproximacao: "Rindo alto, um bando de bichos de pelo manchado e mandíbula larga cerca o mais fraco, e o líder aponta com o focinho."
+      rumor: "os caravaneiros dizem que a última sombra do dia tem quem espere por ela"
+    contra_jogo: "Derrubar quem lidera: o bando concentra no mais frágil e rouba calor para se defender; quebrada a matilha, recua ou foge."
+    tramas: []
+    autor: opus-370-lote3
+    revisor_fauna: pendente
+    revisao: pendente
