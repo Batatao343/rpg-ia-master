@@ -13,6 +13,7 @@ import pytest
 from langchain_core.messages import AIMessage
 
 from services import npc_knowledge as nk
+from tests.factories import make_state
 
 KILL = {
     "event_id": "ev_kill_1",
@@ -73,7 +74,7 @@ def _state(**over) -> dict:
         "location_heard": {},
     }
     base.update(over)
-    return base
+    return make_state(**base)
 
 
 def _merge(state: dict, upd: dict) -> dict:
