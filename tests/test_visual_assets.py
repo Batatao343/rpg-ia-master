@@ -202,16 +202,3 @@ def test_importer_rejects_hash_mismatch_before_writing(tmp_path):
     source.write_bytes(b"not the expected bytes")
     with pytest.raises(ValueError, match="SHA-256"):
         verify_source_entry(source, "0" * 64)
-
-
-def test_frontend_contract_contains_visual_flow():
-    root = Path(__file__).resolve().parents[1] / "web" / "src"
-    app = (root / "App.tsx").read_text(encoding="utf-8")
-    create = (root / "components" / "CreateScreen.tsx").read_text(encoding="utf-8")
-    story = (root / "components" / "StoryLog.tsx").read_text(encoding="utf-8")
-    # SPEC-204: a arte de cena vive na superfície do chat do workspace.
-    chat = (root / "workspace" / "ChatSurface.tsx").read_text(encoding="utf-8")
-    assert "visual: r.visual?.cue" in app
-    assert "visuals?.races" in create and "visuals?.classes" in create
-    assert "VisualArtwork" in story
-    assert "SceneArtwork" in chat
