@@ -1737,8 +1737,12 @@ def ingest_file(file_path: str, index_name: str):
     _log_event("rag", "ingest_done", level="info", index=index_name)
 
 
-def reindex_global() -> None:
+def reindex_global(only: str = "all") -> None:
     """Re-gera os índices globais (lore do Codex + regras).
+
+    SPEC-374 R18: ``only`` = ``all`` (default, comportamento de sempre), ``rules`` (só
+    ``data/rules.txt``; não chama ``ingest_codex``) ou ``lore`` (só o Codex). O lint de conteúdo
+    roda nos três casos.
 
     Fase 7.2: roda o lint de conteúdo ANTES de ingerir — qualquer ERRO aborta
     com exit 1 sem tocar nos índices FAISS. Só este caminho valida; `query_rag`
@@ -1765,14 +1769,29 @@ def reindex_global() -> None:
 
     # Fase 2.5: lore vem do Codex (data/codex/); world_lore.txt foi removido na 2.5b (R5).
     _log_event("rag", "reindex_started", level="info")
-    from services.codex_loader import ingest_codex
+    if only in ("all", "lore"):
+        from services.codex_loader import ingest_codex
 
-    ingest_codex()
-    rules_path = os.path.join("data", "rules.txt")
-    if os.path.exists(rules_path):
-        ingest_file(rules_path, "rules")
-    else:
-        _log_event("rag", "rules_missing", level="error")
+        ingest_codex()
+    if only in ("all", "rules"):
+        rules_path = os.path.join("data", "rules.txt")
+        if os.path.exists(rules_path):
+            ingest_file(rules_path, "rules")
+        else:
+            _log_event("rag", "rules_missing", level="error")
+
+
+def parse_args(argv: list[str] | None = None):
+    import argparse
+
+    ap = argparse.ArgumentParser(description="Re-indexa os índices globais do RAG.")
+    ap.add_argument(
+        "--only",
+        choices=("all", "rules", "lore"),
+        default="all",
+        help="all (default): lore do Codex + regras; rules: só data/rules.txt; lore: só o Codex",
+    )
+    return ap.parse_args(argv)
 
 
 if __name__ == "__main__":
@@ -1793,4 +1812,4 @@ if __name__ == "__main__":
         except Exception:
             pass
 
-    reindex_global()
+    reindex_global(parse_args().only)
