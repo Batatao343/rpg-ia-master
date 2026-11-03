@@ -4949,6 +4949,8 @@ def _monster_quote_inputs(state: dict, req: ArtQuoteRequest, runtime) -> tuple[A
     )
     if enemy is None or not meta.get("active"):
         raise HTTPException(422, "enemy_not_in_conflict")
+    if _art.is_fallback_enemy(enemy):  # SPEC-367 R11: criatura de fallback não tem retrato pago
+        raise HTTPException(409, "creature_portrait_not_offered")
     game_id = str(state.get("game_id") or "")
     manifest, npc_entity_id = _portrait_manifest_ctx(state, meta)
     key = _art.portrait_key(enemy, manifest, game_id=game_id, npc_entity_id=npc_entity_id)

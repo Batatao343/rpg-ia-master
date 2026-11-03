@@ -197,6 +197,23 @@ def _registry_src(
     return None, row.get("status") == "pending"
 
 
+_ID_SUFFIX_RE = re.compile(r"_r?\d+$")
+
+
+def is_fallback_enemy(enemy: dict[str, Any]) -> bool:
+    """SPEC-367 R10: inimigo materializado pelo fallback (`fallback_<slug>`): sem arte paga nem
+    reaproveitamento de uma linha `tipo:fallback_*` do pool."""
+    if not isinstance(enemy, dict):
+        return False
+    raw = str(enemy.get("id") or "")
+    candidates = {raw, _ID_SUFFIX_RE.sub("", raw), str(enemy.get("bestiary_id") or "")}
+    try:
+        candidates.add(str(normalize_bestiary_id(enemy) or ""))
+    except Exception:  # silent-ok: a checagem nunca derruba a view
+        pass
+    return any(c.startswith("fallback_") for c in candidates)
+
+
 def portrait_for(
     enemy: dict[str, Any],
     manifest: dict[str, Any] | None,
@@ -212,6 +229,18 @@ def portrait_for(
     (d) curada da família -> (e) marcador. `gerar` só com a flag `on`, preço conhecido (hosted) e sem
     arte própria da chave nem geração pendente."""
     registry = registry or EmptyRegistry()
+    if is_fallback_enemy(enemy):  # SPEC-367 R10: nunca lê o registro nem oferece geração
+        family = family_of(enemy)
+        src = _curated("creature_family", family)
+        return {
+            "estado": "pronto" if src else "marcador",
+            "src": src,
+            "familia": family,
+            "icone": FAMILY_ICON.get(family, "dark"),
+            "alt": f"Retrato de {enemy.get('name') or 'criatura'}",
+            "proprio": False,
+            "gerar": None,
+        }
     important, _why = is_important(enemy, manifest)
     key = portrait_key(enemy, manifest, game_id=game_id, npc_entity_id=npc_entity_id)
     family = family_of(enemy)
