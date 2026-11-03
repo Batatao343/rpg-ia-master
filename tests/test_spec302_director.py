@@ -23,6 +23,7 @@ def _mode_on(monkeypatch):
     monkeypatch.setenv("RPG_WORLD_ENGINE", "on")
 
 
+# id(sim) -> (sim, projection): guardar o sim impede o GC de reciclar o id para outro sim.
 _PROJ: dict = {}
 
 
@@ -30,7 +31,7 @@ def step(sim, day, projection=None, factions=None):
     """Um dia do diretor; os eventos do motor sao aplicados a projection (como o arquivista)."""
     from services.event_processor import apply_event
 
-    proj = _PROJ.setdefault(id(sim), {})
+    proj = _PROJ.setdefault(id(sim), (sim, {}))[1]
     out = wd.step_crises(
         sim,
         day,
