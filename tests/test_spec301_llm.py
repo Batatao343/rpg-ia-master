@@ -14,21 +14,28 @@ import mock_llm
 import world_utils as wu
 from services import faction_membership as fm
 from services.chronicle import render_milestone
+from tests.fakes.scripted_llm import ScriptedLLM
 from tests.spec301_support import add_npc, at, joined, make_state, merge, mission_quest
 
 
-class _FakeLLM:
-    def __init__(self, result):
-        self._result = result
+def _fake_llm(result, spy=None):
+    """ScriptedLLM que devolve `result` para toda saída estruturada do storyteller/NPC.
 
-    def with_structured_output(self, *_a, **_k):
-        return self
+    `spy(messages)` (opcional) recebe o prompt enviado ao LLM antes da resposta.
+    """
 
-    def with_retry(self, *_a, **_k):
-        return self
+    def respond(messages, _schema):
+        if spy is not None:
+            spy(messages)
+        return result
 
-    def invoke(self, _msgs):
-        return self._result
+    schemas = (
+        st_mod.StoryUpdate,
+        st_mod.StoryUpdateWithRumors,
+        st_mod.StoryUpdateWithRumorClaims,
+        npc.NPCResponse,
+    )
+    return ScriptedLLM({schema: respond for schema in schemas}, repeat_last=True)
 
 
 def _story_state(text: str, *, location: str = "na_anel_ferro", **over) -> dict:
@@ -44,7 +51,7 @@ def _story_state(text: str, *, location: str = "na_anel_ferro", **over) -> dict:
 
 
 def _run_story(monkeypatch, update, state):
-    monkeypatch.setattr(st_mod, "get_llm", lambda *a, **k: _FakeLLM(update))
+    monkeypatch.setattr(st_mod, "get_llm", lambda *a, **k: _fake_llm(update))
     return st_mod.storyteller_node(state)
 
 
@@ -143,12 +150,12 @@ def test_bloco_faccao_sem_numeros():
 def test_bloco_entra_no_prompt_do_storyteller(monkeypatch):
     captured = {}
 
-    class _Spy(_FakeLLM):
-        def invoke(self, msgs):
-            captured["prompt"] = str(msgs[0].content)
-            return super().invoke(msgs)
+    def spy(msgs):
+        captured["prompt"] = str(msgs[0].content)
 
-    monkeypatch.setattr(st_mod, "get_llm", lambda *a, **k: _Spy(st_mod.StoryUpdate(narrative="ok")))
+    monkeypatch.setattr(
+        st_mod, "get_llm", lambda *a, **k: _fake_llm(st_mod.StoryUpdate(narrative="ok"), spy)
+    )
     st = joined(_story_state("Observo o pátio."), "legiao_ferro")
     st_mod.storyteller_node(st)
     assert "<FAÇÃO_DO_JOGADOR>" in captured["prompt"] and "Recruta" in captured["prompt"]
@@ -177,7 +184,7 @@ def _npc_state(location="na_anel_dourado", **over):
 
 
 def _run_npc(monkeypatch, response, state):
-    monkeypatch.setattr(npc, "get_llm", lambda *a, **k: _FakeLLM(response))
+    monkeypatch.setattr(npc, "get_llm", lambda *a, **k: _fake_llm(response))
     monkeypatch.setattr(npc, "RAG_AVAILABLE", False)
     return npc.npc_actor_node(state)
 
