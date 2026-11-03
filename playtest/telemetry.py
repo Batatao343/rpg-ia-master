@@ -903,7 +903,23 @@ def _world_summary(state: dict) -> dict:
         from services import fauna
 
         out["fauna"] = fauna.summary(sim)
+    saber = _saber_summary(state)
+    if saber:
+        out["saber"] = saber
     return out
+
+
+def _saber_summary(state: dict) -> dict:
+    """SPEC-371 R21: telegrafos vistos, assinaturas sobrevividas e revelacoes (so contagens)."""
+    rows = [
+        r for r in ((state or {}).get("bestiary_knowledge") or {}).values() if isinstance(r, dict)
+    ]
+    out = {
+        "telegrafos": sum(len(r.get("telegrafos_vistos") or []) for r in rows),
+        "sobrevividas": sum(int(r.get("assinaturas_sobrevividas", 0) or 0) for r in rows),
+        "reveladas": sum(1 for r in rows if r.get("saber_revelado")),
+    }
+    return out if any(out.values()) else {}
 
 
 def _rumor_summary(sim: dict) -> dict:

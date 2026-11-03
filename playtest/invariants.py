@@ -2233,6 +2233,35 @@ def check_fauna(state: dict, prev: dict | None, turn: int) -> list[Violation]:
     return out
 
 
+def check_saber(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-371 R21 ``saber_valido``: `sinais_vistos` so de tipos conhecidos, contadores sem
+    sinal, no maximo 4 telegrafos, motivo da revelacao fechado e revelacao so com fonte."""
+    from services import fauna_saber
+
+    out: list[Violation] = []
+    for cid, rec in ((state or {}).get("bestiary_knowledge") or {}).items():
+        if not isinstance(rec, dict):
+            continue
+
+        def bad(msg: str, cid: str = cid) -> None:
+            out.append(_V("saber_valido", "error", turn, msg, creature=cid))
+
+        if not set(rec.get("sinais_vistos") or []) <= set(fauna_saber.SINAL_TIPOS):
+            bad("sinal_vistos fora dos tipos")
+        survived = rec.get("assinaturas_sobrevividas", 0)
+        if not isinstance(survived, int) or isinstance(survived, bool) or survived < 0:
+            bad("assinaturas_sobrevividas invalido")
+        if len(rec.get("telegrafos_vistos") or []) > fauna_saber.MAX_TELEGRAFOS:
+            bad("telegrafos_vistos acima do cap")
+        revealed = rec.get("saber_revelado")
+        if revealed is not None:
+            if not isinstance(revealed, dict) or revealed.get("motivo") not in fauna_saber.MOTIVOS:
+                bad("motivo de revelacao invalido")
+            elif not fauna_saber.contra_jogo_of(str(cid)):
+                bad("revelado sem contra-jogo")
+    return out
+
+
 def check_world_quests(state: dict, prev: dict | None, turn: int) -> list[Violation]:
     """SPEC-305 R6/R9/R16/R2 (R27): quests de mundo — so do que foi percebido, teto de 3,
     nunca falham antes do prazo e o prazo nunca encurta."""
@@ -2923,6 +2952,7 @@ CHECKS: list[Check] = [
     check_companions,
     check_law,
     check_fauna,
+    check_saber,
     check_reputation,
     check_faction_membership,
     check_vitals,
