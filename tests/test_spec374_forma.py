@@ -101,3 +101,28 @@ def test_prompt_ate_14000(regiao, loc):
     assert cg.prompt_chars(msgs) <= cg.PROMPT_MAX_CHARS
     corr = cg.montar_prompt_correcao(p, {"nome": "x"}, [], ocupados=oc, eixos=livres)
     assert cg.prompt_chars(corr) <= cg.PROMPT_MAX_CHARS
+
+
+def test_linha_nucleos_lista_a_primeira_palavra_das_listadas():
+    oc = cg.eixos_ocupados("deserto_zhur", [])
+    linha = cg.linha_nucleos(oc)
+    assert linha.startswith("Primeira palavra do nome JÁ USADA")
+    primeiro = oc.splitlines()[0].split(" — ")[0]
+    assert cg.bl.nucleo_nome(primeiro) in linha
+    assert cg.linha_nucleos("") == ""
+
+
+def test_padroes_livres_nao_repetem_os_da_regiao():
+    linha = cg.padroes_livres("deserto_zhur", [], "x|g")
+    assert linha.startswith("lacaio ou padrao: ") and "elite ou chefe: " in linha
+    usados = {
+        (tuple(f.get("padrao") or []), f.get("a_cada_n"))
+        for f in cg.fichas_da_regiao("deserto_zhur")
+    }
+    for rotulo, cad in (("lacaio ou padrao: ", 3), ("elite ou chefe: ", 2)):
+        trecho = linha.split(rotulo)[1].split(";")[0]
+        for pad in trecho.split(" | "):
+            slots = tuple(pad.split(","))
+            assert (slots, cad) not in usados
+            assert {"ataque", "ataque_multiplo"} & set(slots)
+    assert linha == cg.padroes_livres("deserto_zhur", [], "x|g")  # determinístico

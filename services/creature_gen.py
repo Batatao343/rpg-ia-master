@@ -873,6 +873,41 @@ def eixos_livres(
     return out
 
 
+def padroes_livres(
+    regiao: str,
+    runtime: list[dict],
+    semente: str,
+    n: int = 4,
+    *,
+    fichas: dict[str, dict] | None = None,
+) -> str:
+    """SPEC-374 R12: o U13 (padrão + cadência iguais) era o erro mais comum depois dos eixos.
+    Mostra ``n`` padrões que NINGUÉM usa na região, por cadência (lacaio/padrão = a cada 3;
+    elite/chefe = a cada 2), em ordem fixa pela ``semente``. Só sugere: o gate segue sendo o juiz."""
+    import itertools
+
+    usados = {
+        (tuple(f.get("padrao") or []), f.get("a_cada_n"))
+        for f in fichas_da_regiao(regiao, fichas)
+        + [r for r in runtime if r.get("regiao") == regiao]
+    }
+    slots = sorted(enemy_decks._SLOT_LABEL)
+    ofensivos = {"ataque", "ataque_multiplo"}  # ela precisa atacar em algum momento
+    cands = [
+        list(c)
+        for k in (2, 3)
+        for c in itertools.product(slots, repeat=k)
+        if len(set(c)) > 1 and ofensivos & set(c)
+    ]
+    cands.sort(key=lambda c: hashlib.sha256(f"{regiao}|{semente}|{c}".encode()).hexdigest())
+    partes: list[str] = []
+    for rotulo, cad in (("lacaio ou padrao", 3), ("elite ou chefe", 2)):
+        livres = [c for c in cands if (tuple(c), cad) not in usados][:n]
+        if livres:
+            partes.append(f"{rotulo}: " + " | ".join(",".join(c) for c in livres))
+    return "; ".join(partes)
+
+
 def _linha_eixos_livres(c: dict) -> str:
     return " / ".join(str(c[e]) for e in (*bl.EIXOS_PADRAO_ENUM, "papel_tatico"))
 
@@ -917,7 +952,7 @@ telegrafo: uma frase no presente com {nome} como sujeito, o gesto visível uma r
 contra_jogo: o que um herói atento faz, usando o corpo e o hábito dela.
 gancho: uma frase que a prende ao lugar e ao que está acontecendo agora.
 aparencia e arte_visual: só o que se vê. arte_evitar: o clichê em que um ilustrador cairia, descrito pela forma, sem citar nome de monstro de manual.
-padrao: de duas a quatro intenções na ordem em que ela age.
+padrao: de duas a quatro intenções na ordem em que ela age; prefira um de <padroes_livres>.
 Sem inglês de jogo e sem a palavra "dragão" em nenhum campo (gancho e arte incluídos).
 Português do Brasil, frases curtas e concretas, tom seco e sombrio, sem adjetivo vazio (terrível, aterrorizante, sinistro). Respeite o tamanho de cada campo: a ficha inteira cabe numa página de caderno. Só os campos da ficha, nenhum a mais.
 </regras>"""
@@ -941,6 +976,25 @@ def linha_proibidas() -> str:
         set(bl.lexico().get("proibidos_nome", [])) | set(card_lint.lexico().get("proibidos", []))
     )
     return "Palavras que reprovam a ficha em QUALQUER texto: " + ", ".join(termos) + "."
+
+
+def linha_nucleos(ocupados: str) -> str:
+    """SPEC-374 R12: a 1ª palavra do nome (U1/U4) das criaturas listadas, para o LLM não repetir.
+    Sai das linhas de ``<ja_existem_na_regiao>`` (``nome — família / ...``); sem lista, vazio."""
+    nucleos: list[str] = []
+    for linha in ocupados.splitlines():
+        if " — " not in linha:
+            continue
+        n = bl.nucleo_nome(linha.split(" — ", 1)[0])
+        if n and n not in nucleos:
+            nucleos.append(n)
+    if not nucleos:
+        return ""
+    return (
+        "Primeira palavra do nome JÁ USADA na região (não repita, nem com outro artigo): "
+        + ", ".join(sorted(nucleos))
+        + "."
+    )
 
 
 def _linha_demonios() -> str:
@@ -982,6 +1036,7 @@ def montar_prompt(
     anterior: dict | None = None,
     modificador: dict | None = None,
     eixos: list[dict] | None = None,
+    padroes: str = "",
 ):
     from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -1022,11 +1077,13 @@ def montar_prompt(
             PAPEL,
             regras(bool(eixos)),
             linha_proibidas(),
+            linha_nucleos(ocupados),
             PLAYER_INPUT_RULE,
             _bloco("regiao", _regiao_bloco(p.regiao, p.location_id)),
             _bloco("lore_publica", cortar_frase(lore, lore_lim) if lore_lim > 0 else ""),
             _bloco("ja_existem_na_regiao", ocupados),
             _bloco("eixos_livres", livres),
+            _bloco("padroes_livres", padroes),
             _bloco("por_que_agora", cortar_frase(p.motivo_trama, LIM_MOTIVO)),
             *extras,
         ]
@@ -1609,6 +1666,7 @@ def gerar_nova(
     )
     ocupados = eixos_ocupados(p.regiao, runtime, fichas=fichas)
     livres = eixos_livres(p.regiao, runtime, f"{p.pedido}|{p.game_id}", fichas=fichas)
+    padroes = padroes_livres(p.regiao, runtime, f"{p.pedido}|{p.game_id}", fichas=fichas)
     mod = (
         cv.modificador_por_id(decisao.modificador_id)
         if decisao.modificador_id
@@ -1627,7 +1685,13 @@ def gerar_nova(
             break
         if tentativa == 1 or gen_anterior is None:
             msgs = montar_prompt(
-                p, exemplos, lore=lore, ocupados=ocupados, modificador=mod, eixos=livres
+                p,
+                exemplos,
+                lore=lore,
+                ocupados=ocupados,
+                modificador=mod,
+                eixos=livres,
+                padroes=padroes,
             )
             schema: type = FichaCriaturaGerada if livres else FichaCriaturaGeradaEixosLivres
         else:
