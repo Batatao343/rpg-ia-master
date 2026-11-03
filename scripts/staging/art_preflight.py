@@ -18,6 +18,8 @@ import argparse
 import json
 from collections.abc import Mapping, Sequence
 
+from scripts.staging.ops_pool import DbUnavailable, open_ops_pool, with_checkout_retry
+
 _TRUE = {"1", "true", "yes", "on"}
 
 
@@ -86,17 +88,27 @@ def main(argv: Sequence[str] | None = None, *, store=None, price: int | None = N
             print(f"error: {args.dsn_env} is empty", file=sys.stderr)
             return 2
         from infrastructure.kill_switch_store import PostgresSwitchStore
-        from infrastructure.postgres import PostgresPool
 
-        pool = PostgresPool(dsn, max_size=2)
+        pool = open_ops_pool(dsn)
         store = PostgresSwitchStore(pool)
         try:
             from services.image_quotes import ImageQuoteRepository
 
-            milli = ImageQuoteRepository(pool).peek_ceiling("monster")
+            milli = with_checkout_retry(lambda: ImageQuoteRepository(pool).peek_ceiling("monster"))
             price = -(-int(milli) // 1000) if milli else None
         except Exception:  # noqa: BLE001 - leitura best-effort; None => causa no_price
             price = None
+    try:
+        return _report(store, price, env)
+    except DbUnavailable:
+        print("error: db_unavailable", file=sys.stderr)
+        return 3
+    finally:
+        if pool is not None:
+            pool.close()
+
+
+def _report(store, price, env) -> int:
     from services.finops_alerts import require_paid_effect
     from services.shard_pricing import PricingUnavailable
 
@@ -106,14 +118,12 @@ def main(argv: Sequence[str] | None = None, *, store=None, price: int | None = N
     except PricingUnavailable:
         fresh = False
     report = evaluate(
-        switches=store.load(),
-        audit=store.audit(20),
+        switches=with_checkout_retry(store.load),
+        audit=with_checkout_retry(lambda: store.audit(20)),
         pricing_fresh=fresh,
         env=env,
         price_estilhas=price,
     )
-    if pool is not None:
-        pool.close()
     print(json.dumps(report, indent=2))
     return 0 if report["ok"] else 1
 

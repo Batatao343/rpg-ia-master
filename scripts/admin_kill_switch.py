@@ -22,6 +22,7 @@ import json
 import sys
 from collections.abc import Sequence
 
+from scripts.staging.ops_pool import DbUnavailable, with_checkout_retry
 from services.kill_switches import KEY_RE, validate_change
 
 
@@ -45,6 +46,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None, *, store=None) -> int:
     args = build_parser().parse_args(argv)
+    pool = None
     if store is None:
         from infrastructure.kill_switch_store import PostgresSwitchStore
 
@@ -59,18 +61,32 @@ def main(argv: Sequence[str] | None = None, *, store=None) -> int:
             if not dsn:
                 print(f"error: {args.dsn_env} is empty", file=sys.stderr)
                 return 2
-            from infrastructure.postgres import PostgresPool
+            from scripts.staging.ops_pool import open_ops_pool
 
-            store = PostgresSwitchStore(PostgresPool(dsn, max_size=2))
+            pool = open_ops_pool(dsn)
+            store = PostgresSwitchStore(pool)
         else:
             from infrastructure.runtime import get_runtime
 
             store = PostgresSwitchStore(get_runtime().game_store.pool)
+    try:
+        return _run(args, store)
+    except DbUnavailable:
+        print("error: db_unavailable", file=sys.stderr)
+        return 3
+    finally:
+        if pool is not None:
+            pool.close()
+
+
+def _run(args: argparse.Namespace, store) -> int:
+    # SPEC-367 R19: retry só de checkout (nada chegou ao banco), então `set` não duplica a auditoria.
     if args.cmd == "list":
-        print(json.dumps(store.load(), indent=2, sort_keys=True))
+        print(json.dumps(with_checkout_retry(store.load), indent=2, sort_keys=True))
         return 0
     if args.cmd == "audit":
-        print(json.dumps(store.audit(args.limit), indent=2, default=str))
+        rows = with_checkout_retry(lambda: store.audit(args.limit))
+        print(json.dumps(rows, indent=2, default=str))
         return 0
     enabled = args.cmd == "on"
     try:
@@ -88,7 +104,9 @@ def main(argv: Sequence[str] | None = None, *, store=None) -> int:
         "mode": "apply" if args.apply else "dry-run",
     }
     if args.apply:
-        store.set(args.key, enabled, actor_id=args.actor, reason=args.reason)
+        with_checkout_retry(
+            lambda: store.set(args.key, enabled, actor_id=args.actor, reason=args.reason)
+        )
     print(json.dumps(plan, indent=2))
     return 0
 
