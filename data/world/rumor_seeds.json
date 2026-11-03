@@ -2152,7 +2152,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os marinheiros da rota não contam o canto que ouviram, porque nunca é o mesmo duas vezes"
     },
     "rumor_avist_mon_fumaca_de_cor_errada": {
       "family": "avistamento",
@@ -2169,7 +2170,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pescadores das ilhas não descrevem a cor do vapor: dizem que é falta de educação com ele"
     },
     "rumor_avist_mon_os_que_voltaram_e_nao_eram_eles": {
       "family": "avistamento",
@@ -2187,7 +2189,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um velho das ilhas diz que o filho sumido voltou sem um arranhão, e que o cachorro não o reconheceu"
     },
     "rumor_avist_mon_tubarao_de_casco": {
       "family": "avistamento",
@@ -2204,7 +2207,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores saem da água assim que alguém se corta, sem esperar para saber se foi fundo"
     },
     "rumor_avist_mon_caranguejo_mare": {
       "family": "avistamento",
@@ -2221,7 +2225,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores dizem que cada crânio da costa tem dono, e que o dono tem garras"
     },
     "rumor_avist_mon_gaivota_ladra": {
       "family": "avistamento",
@@ -2238,7 +2243,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores dizem que basta bater o pé com força para a ave grande da costa ir embora"
     },
     "rumor_avist_enemy_pirata_brekmar": {
       "family": "avistamento",
@@ -2797,7 +2803,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os náufragos dizem que nas ilhas até os bichos da praia guardam a casa como soldado"
     },
     "rumor_avist_mon_moreia_vulcanica": {
       "family": "avistamento",
@@ -2814,7 +2821,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os barqueiros remam devagar sobre os tubos de lava da enseada, e às vezes param de remar"
     },
     "rumor_avist_mon_oraculo_coral": {
       "family": "avistamento",
@@ -2831,7 +2839,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pescadores das ilhas dizem que o recife responde, mas que a resposta custa o fôlego"
     },
     "rumor_avist_mon_carrapato_osso": {
       "family": "avistamento",
@@ -2848,7 +2857,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um coletor diz que as ossadas da costa estão ocas por dentro, e que algo mora no oco"
     },
     "rumor_avist_mon_saqueador_marfim": {
       "family": "avistamento",
@@ -2865,7 +2875,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um Osshari jura que nunca vendeu mapa nenhum, e que mesmo assim tem gente seguindo os da família dele"
     },
     "rumor_avist_mon_baleia_ossario": {
       "family": "avistamento",
@@ -2882,7 +2893,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os Osshari dizem que quando a água recua sem motivo algo novo está nadando nos ossos velhos"
     },
     "rumor_avist_mon_goblin_eco": {
       "family": "avistamento",
@@ -3763,7 +3775,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores dizem que há quem saia do raso pelado e volte uma semana depois coberto de novo"
     },
     "rumor_avist_mon_ferida_de_coral": {
       "family": "avistamento",
@@ -3780,7 +3793,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores lavam cada corte com água doce na hora, mesmo que seja a última do cantil"
     },
     "rumor_avist_mon_compassado_do_trono": {
       "family": "avistamento",
@@ -3797,7 +3811,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um explorador que voltou de dentro diz que lá se conta as batidas, e que entre elas se passa"
     },
     "rumor_avist_mon_forrado_de_leviata": {
       "family": "avistamento",
@@ -3814,7 +3829,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um coletor diz que costurou osso no couro para entrar nas carcaças e que o osso não quer mais sair"
     },
     "rumor_avist_mon_barata_das_costelas": {
       "family": "avistamento",
@@ -3831,7 +3847,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores não andam pesado perto das encostas de vértebras, nem quando carregam muito"
     },
     "rumor_avist_mon_estrela_de_alavanca": {
       "family": "avistamento",
@@ -3848,7 +3865,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um coletor diz que perdeu o escudo para um bicho que só queria abrir o que tinha dentro"
     },
     "rumor_avist_mon_andarilho_de_cracas": {
       "family": "avistamento",
@@ -3865,7 +3883,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores dizem que na arrebentação há um bicho que outros bichos levam, e que ele não vê há anos"
     },
     "rumor_avist_mon_touro_de_banha": {
       "family": "avistamento",
@@ -3882,7 +3901,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores rodeiam o trecho de praia do macho grande, mesmo que seja o caminho mais curto"
     },
     "rumor_avist_mon_saltador_de_poca": {
       "family": "avistamento",
@@ -3899,7 +3919,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "as crianças dos coletores pulam a água parada da maré em vez de passar pela beira, e riem disso"
     },
     "rumor_avist_mon_bruxa_de_carcaca": {
       "family": "avistamento",
@@ -3916,7 +3937,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores não cortam ossada fresca sem bater nela antes com o cabo da faca"
     },
     "rumor_avist_mon_petrel_de_papo_cheio": {
       "family": "avistamento",
@@ -3933,7 +3955,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores usam chapéu de couro largo no Cemitério, e não é por causa do sol"
     },
     "rumor_avist_mon_esfolado_de_sal": {
       "family": "avistamento",
@@ -3950,7 +3973,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um Osshari velho diz que um dos seus arrancou as escamas para sentir o mar, e que agora sente tudo"
     },
     "rumor_avist_mon_contrabandista_vitreo": {
       "family": "avistamento",
@@ -3967,7 +3991,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um curandeiro do porto diz que tem ferida da costa que nenhum remédio dele consegue fechar"
     },
     "rumor_avist_mon_caldeireiro_de_oleo": {
       "family": "avistamento",
@@ -3984,7 +4009,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os compradores de sebo da costa dizem que quem tenta levar barril sem pagar sai sem as pernas"
     },
     "rumor_avist_mon_acendedor_de_naufragios": {
       "family": "avistamento",
@@ -4001,7 +4027,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os barqueiros de Brekmar dizem que na costa negra luz na névoa não é porto"
     },
     "rumor_avist_mon_remo_acorrentado": {
       "family": "avistamento",
@@ -4018,7 +4045,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores dizem que na praia da galé ainda se ouve o tambor, e que ele acelera"
     },
     "rumor_avist_mon_ventre_partilhado": {
       "family": "avistamento",
@@ -4035,7 +4063,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma viúva de Brekmar diz que a maré trouxe o marido abraçado a outro, e que os dois andam"
     },
     "rumor_avist_mon_balsa_de_ultimo_dia": {
       "family": "avistamento",
@@ -4052,7 +4081,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores dizem que onde alguém se desespera na costa a maré traz uma jangada que não flutua"
     },
     "rumor_avist_mon_gancho_de_esfola": {
       "family": "avistamento",
@@ -4069,7 +4099,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os esfoladores velhos da costa dizem que os ferros deles sumiram de noite e que hoje andam sozinhos"
     },
     "rumor_avist_mon_raspadeira_de_barbatana": {
       "family": "avistamento",
@@ -4086,7 +4117,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um coletor diz que o melhor achado da vida dele virou sucata na mesma noite"
     },
     "rumor_avist_mon_rancor_de_pincas": {
       "family": "avistamento",
@@ -4103,7 +4135,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os Caranguejeiros não se aproximam de uma das ossadas da costa, e nem os coletores"
     },
     "rumor_avist_mon_andarilho_de_duas_idades": {
       "family": "avistamento",
@@ -5563,7 +5596,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os barqueiros não encostam nas enseadas que fumegam: dizem que lá a água devolve gente sem pele"
     },
     "rumor_avist_mon_ossada_de_pomes": {
       "family": "avistamento",
@@ -5580,7 +5614,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pescadores dizem que perto das ilhas o vento assobia dentro de gente"
     },
     "rumor_avist_mon_cabeleira_de_vidro": {
       "family": "avistamento",
@@ -5597,7 +5632,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os náufragos das ilhas dizem que não se deita nas encostas ao vento, por cansado que se esteja"
     },
     "rumor_avist_mon_vazado_da_mare": {
       "family": "avistamento",
@@ -5614,7 +5650,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um pescador diz que viu o irmão sumido voltar pela praia, furado como peneira, e de pé"
     },
     "rumor_avist_mon_desbotado_da_nevoa": {
       "family": "avistamento",
@@ -5632,6 +5669,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
+      "sinal_rumor": "os barqueiros não descem para buscar bote perdido no raso das ilhas, por mais caro que seja",
       "public_names": [
         "Névoa"
       ]
@@ -5651,7 +5689,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os barqueiros dizem que perto das ilhas barco não afunda: é comido até não sobrar o que afundar"
     },
     "rumor_avist_mon_vela_sem_barco": {
       "family": "avistamento",
@@ -5668,7 +5707,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os barqueiros dizem que quem rema para socorrer uma embarcação perto das ilhas não volta para contar"
     },
     "rumor_avist_mon_lagarto_espirrador": {
       "family": "avistamento",
@@ -5685,7 +5725,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os náufragos aprendem a não se encostar nas pedras pretas onde os bichos se aquecem"
     },
     "rumor_avist_mon_bucho_de_praia": {
       "family": "avistamento",
@@ -5702,7 +5743,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os náufragos das ilhas dizem que corda viva se solta sozinha se a gente parar de lutar"
     },
     "rumor_avist_mon_cobra_de_sangria": {
       "family": "avistamento",
@@ -5719,7 +5761,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os pescadores de Brekmar acham bichos do mar listrados com o pescoço cheio de sangue, e ninguém sabe de quem"
     },
     "rumor_avist_mon_escorpena_de_basalto": {
       "family": "avistamento",
@@ -5736,7 +5779,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os náufragos andam calçados nas pedras da costa: dizem que lá tem pedra que morde de cores diferentes"
     },
     "rumor_avist_mon_tatuzinho_de_afogado": {
       "family": "avistamento",
@@ -5753,7 +5797,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores das ilhas saem da praia quando alguém sangra, antes que a água traga os outros"
     },
     "rumor_avist_mon_doente_de_encomenda": {
       "family": "avistamento",
@@ -5770,7 +5815,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um marinheiro diz que o sindicato manda enfermo para as ilhas como quem manda vinho caro"
     },
     "rumor_avist_mon_puxado_do_oeste": {
       "family": "avistamento",
@@ -5787,7 +5833,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mercador de seis dedos vende o caminho das ilhas a quem paga, e os que pagaram não voltam"
     },
     "rumor_avist_mon_vigia_de_cor_errada": {
       "family": "avistamento",
@@ -5804,7 +5851,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os piratas da rota dizem que o homem do alto vê pela cor do vapor onde não ir, e que não desce há anos"
     },
     "rumor_avist_mon_trepano_de_borda": {
       "family": "avistamento",
@@ -5821,7 +5869,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os marinheiros da rota dizem que tem gente comprando pedaços de quem passa, e etiquetando"
     },
     "rumor_avist_mon_arpeu_de_bracos": {
       "family": "avistamento",
@@ -5838,7 +5887,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os marujos da rota dizem que briga no convés perto das ilhas sempre acaba com alguém amarrado"
     },
     "rumor_avist_mon_ninho_dos_mergulhadores": {
       "family": "avistamento",
@@ -5855,7 +5905,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os coletores de Brekmar dizem que a pedra mais bonita do recife é a que ninguém trouxe de volta"
     },
     "rumor_avist_mon_remora_de_conves": {
       "family": "avistamento",
@@ -5872,7 +5923,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "as expedições que disputam a rota das ilhas dizem que a outra trouxe azar a bordo"
     },
     "rumor_avist_mon_estaqueiro_afogado": {
       "family": "avistamento",

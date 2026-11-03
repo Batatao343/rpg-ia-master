@@ -1,0 +1,620 @@
+# SPEC-370 R1 (lote 4) — bloco de fauna de Ophidia: 20 fichas da SPEC-349 + legado `valoria` da
+# região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# Um nó raiz só (cap 1 presença, M4 N/A): todo território é o hub, então E18 limita a 2 `imediato`
+# na região inteira (Desbotado da Névoa e Escorpena de Basalto).
+# Revisão de fauna: handoffs/SPEC-370-independent-review.md (lote 4; revisor ≠ autor).
+regiao: ophidia
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_nadador_escaldado:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [ophidia]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas molhadas e mornas que saem de uma enseada fumegante e voltam a ela antes de secar."
+      resto: "Folhas de pele inteiras boiando na água quente da enseada, como roupa tirada e esquecida."
+      som: "Um chapinhar pesado no vapor, e a carne que estala em gomos quando o vento bate."
+      cheiro: "Músculo cozido e água sulfurosa, um vapor que gruda na garganta."
+      marca: "Na beira de uma fonte quente, pedras manchadas de branco fibroso, onde algo cozido se encostou."
+      aproximacao: "Do vapor de uma enseada sai um homem de músculo branco e cozido, olhos leitosos, que avança sem sentir nada."
+      rumor: "os barqueiros não encostam nas enseadas que fumegam: dizem que lá a água devolve gente sem pele"
+    contra_jogo: "Levá-lo para a pedra seca e aguentar o começo; seco, ele racha e bate como qualquer um."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ossada_de_pomes:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [6, 9]
+      foge_de: [mon_vela_sem_barco]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Pedaços cinzentos e furados de osso leve boiando no raso, que não afundam nem quando chutados."
+      som: "Um assobio de vento passando por costelas ocas, vindo pela água antes de qualquer vulto."
+      cheiro: "Pele furada e salgada e um nada de carne, como de esqueleto lavado na praia."
+      marca: "No raso, pedrinhas porosas presas em fila nas algas, todas leves demais para estar ali."
+      aproximacao: "Boiando de pé na água pela cintura, vêm tripulantes de rosto furado por onde passa a luz, e o assobio vem junto."
+      rumor: "os pescadores dizem que perto das ilhas o vento assobia dentro de gente"
+    contra_jogo: "Esperar o assobio e responder com um golpe só, firme; ele não consegue afundar para fugir."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cabeleira_de_vidro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [9, 12]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto lateral, devagar, nas encostas das fumarolas, sempre de costas para o vento."
+      resto: "Um náufrago cravado de agulhas finas e duras de um lado só, o lado para onde o vento sopra."
+      som: "Um tilintar de fios duros batendo uns nos outros ao vento, como sinos de vento quebrados."
+      cheiro: "Enxofre de fumarola e ferida que não fecha, um azedo quente."
+      marca: "Na encosta, uma chuva de pontas finas cravadas no chão, todas apontando para o mesmo lado."
+      aproximacao: "Firmado contra o vento, um homem de crina dura que chega ao chão anda de lado para pôr você na linha das agulhas."
+      rumor: "os náufragos das ilhas dizem que não se deita nas encostas ao vento, por cansado que se esteja"
+    contra_jogo: "Ficar do lado de onde o vento vem e chegar por ali; de perto e a favor do vento, a crina voa para longe e o corpo fica descoberto."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vazado_da_mare:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de marinheiro que param na frente de um grupo e ficam, firmes, viradas para quem chega."
+      resto: "Uma lâmina presa numa borda de carne lisa como seixo, arrancada da mão de quem a enfiou."
+      som: "Uma respiração lenta de peito furado, que assobia de leve pelo buraco."
+      cheiro: "Um frio de carne lisa e polida, sem cheiro de sangue, como de seixo tirado do rio."
+      marca: "Na proa de um barco sumido, encalhado, um buraco redondo e limpo atravessando o casco de lado a lado."
+      aproximacao: "Na frente dos outros, um marinheiro de peito furado de lado a lado espera o golpe, e pelo furo você vê o mar."
+      rumor: "um pescador diz que viu o irmão sumido voltar pela praia, furado como peneira, e de pé"
+    contra_jogo: "Não mirar o peito; os furos não têm carne, a borda tem. Golpe baixo, nas pernas, ou contorná-lo."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_desbotado_da_nevoa:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um bote de resgate largado no raso, o remo partido e a corda afrouxada como laço."
+      som: null
+      cheiro: "Pão encharcado e carne mole de água, um cheiro de afogado de dias."
+      marca: "No fundo do raso, a areia branqueada numa faixa larga, sem uma alga, onde algo mole e sem cor passou dias."
+      aproximacao: "O tronco claro no fundo do raso se mexe: dedos grossos e frouxos se fecham como laço no seu tornozelo."
+      rumor: "os barqueiros não descem para buscar bote perdido no raso das ilhas, por mais caro que seja"
+    contra_jogo: "Andar pela areia seca em vez do raso; se alguém for preso, outro herói gasta a ação puxando junto, ou corta os dedos frouxos, que soltam como massa."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  mon_turu_de_casco:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [8, 11]
+      foge_de: [mon_caranguejo_cinza]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um bote encostado que range e cede como pão velho ao toque, sem nenhum furo à vista por fora."
+      resto: "Um escudo de madeira oco por dentro, leve como cortiça, que se desfaz na mão sem uma serragem."
+      som: "Um rangido de broca girando dentro da madeira, sob os pés, e o tremor dos remos parado."
+      cheiro: "Lona e couro sumindo sem cheiro de podre nenhum, só um sal limpo, estranho num barco velho."
+      marca: "Na praia, a carcaça de um barco oca por dentro, inteira por fora, que cede ao primeiro toque."
+      aproximacao: "De dentro do seu próprio escudo rompe uma cabeça de conchas girando, e um corpo branco e mole vem atrás."
+      rumor: "os barqueiros dizem que perto das ilhas barco não afunda: é comido até não sobrar o que afundar"
+    contra_jogo: "Metal e pedra o atrasam; arrancá-lo antes que entre inteiro, porque dentro do furo ele tampa a entrada com a cauda."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vela_sem_barco:
+    fonte: ficha
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [7, 10]
+      presas: [mon_cobra_de_sangria, mon_ossada_de_pomes]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na água, uma esteira reta que segue contra o vento, como de embarcação bem governada, sem embarcação."
+      resto: "Um peixe grande boiando com faixas vermelhas de queimadura em volta do corpo, como de corda em brasa."
+      som: "Um bater de pele esticada ao vento e um borbulhar de cordões que puxam alguma coisa para cima."
+      cheiro: "Fumaça das ilhas e água-viva queimada, um cheiro de rede de pesca no fogo."
+      marca: "Na praia, cordões finos e transparentes enrolados, ainda queimando a mão de quem os toca."
+      aproximacao: "O que parecia uma embarcação vindo contra o vento é uma bolsa de pele colorida, e cordões de ferrões sobem na água."
+      rumor: "os barqueiros dizem que quem rema para socorrer uma embarcação perto das ilhas não volta para contar"
+    contra_jogo: "Cortar os cordões perto da bolsa, não perto de si; furada a bolsa, ela tomba e para de puxar. À noite, apagar as lanternas."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lagarto_espirrador:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [ophidia]
+      permanencia: [6, 9]
+      foge_de: [mon_moreia_vulcanica]
+      reage:
+        - {quando: "clima:limpo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de garras longas nas pedras molhadas da costa, em bando, e a crosta colorida raspada."
+      resto: "Um náufrago esfregando os olhos vermelhos ao pé das pedras, de cara coberta de pó salgado."
+      som: "Um espirro forte e chiado, como de fole entupido, e um correr de patas nas frestas."
+      cheiro: "Cal viva e sal, que arde no nariz e nos olhos antes de qualquer coisa."
+      marca: "Junto às pedras da costa, uma cortina de pó parada no ar que não assenta, mesmo sem vento."
+      aproximacao: "Nas pedras, um bicho preto de crista de sal vira o focinho para você e espirra uma nuvem quente."
+      rumor: "os náufragos aprendem a não se encostar nas pedras pretas onde os bichos se aquecem"
+    contra_jogo: "Dar a volta pela cortina, não atravessá-la, ou cobrir os olhos e passar de uma vez; de perto eles fogem pelas frestas em vez de lutar."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_bucho_de_praia:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Na areia preta, sulcos moles de bichos parados, e a areia peneirada em montinhos em volta deles."
+      resto: "Um coletor amarrado na areia por fios brancos e grudentos, mais apertado quanto mais se debate."
+      som: "Um chiar de areia sendo peneirada por muitas bocas, e um estalo úmido de anel se fechando."
+      cheiro: "Areia preta e tripa de bicho do mar, um cheiro de feira de pescado no sol."
+      marca: "Na beira da água, sacos de couro pardo murchos e vazios largados aos montes, com verrugas."
+      aproximacao: "O volume pardo em que você pisou se contrai e solta pela ponta de trás fios brancos que se enrolam em você."
+      rumor: "os náufragos das ilhas dizem que corda viva se solta sozinha se a gente parar de lutar"
+    contra_jogo: "Preso, não lutar contra os fios; ficar quieto uma rodada e eles soltam. Não bater na ponta de trás, ou fazê-lo gastar as tripas em outra coisa."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cobra_de_sangria:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [ophidia]
+      permanencia: [6, 9]
+      foge_de: [mon_moreia_vulcanica, mon_vela_sem_barco]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Rastros de nado ondulado na superfície, em grupo, todos na direção de onde a água ficou vermelha."
+      resto: "Um nadador de braço mordido com dois furos ocos, pálido como quem doou sangue demais."
+      som: "Um chapinhar leve de cauda achatada e um sugar rápido, que para de repente."
+      cheiro: "Sangue fresco na água e escama lisa, um cheiro de peixaria lavada às pressas."
+      marca: "Na beira das ilhas, peles trocadas listradas de cinza e de um amarelo que cansa os olhos."
+      aproximacao: "Na água, bichos compridos listrados de amarelo e cinza vêm em grupo, e uma delas crava as presas e começa a puxar."
+      rumor: "os pescadores de Brekmar acham bichos do mar listrados com o pescoço cheio de sangue, e ninguém sabe de quem"
+    contra_jogo: "Furar a bolsa do pescoço; furada, a cobra fica e luta até morrer, mas não leva nada."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_escorpena_de_basalto:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [8, 11]
+      presas: [mon_tatuzinho_de_afogado]
+    sinais:
+      antecedencia: imediato
+      rastro: "Marcas de quatro nadadeiras grossas arrastadas pelas pedras, de uma água parada para outra."
+      resto: "Um pé descalço inchado com furos de espinho, cada furo de uma cor de baba diferente."
+      som: null
+      cheiro: "Baba amarga de cores diferentes, que muda de cheiro de uma pedra para a outra."
+      marca: "Nas pedras da costa, espinhos ocos e coloridos quebrados, presos nas fendas da lava."
+      aproximacao: "A pedra em que você ia pisar ergue uma fileira de espinhos ocos, e cada um pinga uma cor."
+      rumor: "os náufragos andam calçados nas pedras da costa: dizem que lá tem pedra que morde de cores diferentes"
+    contra_jogo: "Olhar onde pisa e tocar as pedras com a ponta da lança antes de avançar; descoberto, ele é lento e mole por baixo."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_tatuzinho_de_afogado:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [ophidia]
+      permanencia: [6, 9]
+      presas: [mon_bucho_de_praia]
+      foge_de: [mon_caranguejo_cinza, mon_escorpena_de_basalto]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Milhares de patinhas subindo a praia contra a maré, numa faixa escura que vai direto ao sangue."
+      resto: "Um peixe grande na areia raspado até o osso, e o osso raspado até o meio, numa noite."
+      som: "Um crepitar de milhares de cascas miúdas rolando praia acima, como granizo ao contrário."
+      cheiro: "Casca de bicho miúdo e sangue velho, um cheiro de cesto de pescador esquecido."
+      marca: "Na praia, bolas de casca do tamanho de um punho espalhadas mais acima da linha da maré do que deviam."
+      aproximacao: "Da água sobe uma maré de bichos de casca cinzenta do tamanho de um pão, e todos vêm para a sua ferida."
+      rumor: "os coletores das ilhas saem da praia quando alguém sangra, antes que a água traga os outros"
+    contra_jogo: "Estancar o sangue apaga o rastro; fogo ou água doce os dispersa, e fechados em bola eles não mordem."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_doente_de_encomenda:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [ophidia]
+      permanencia: [7, 10]
+      foge_de: [mon_vigia_de_cor_errada]
+      reage:
+        - {quando: "pressao:praga", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas lentas de quem é levado como carga, entre duas botas de guarda, do barco até a praia."
+      resto: "Uma torneira de latão verde de azinhavre caída no convés, ainda pingando um sangue cor de tijolo."
+      som: "Uma respiração pela boca, curta e chiada, e o rangido de uma torneira se abrindo."
+      cheiro: "Azinhavre e sangue de febre, metálico, um cheiro de fundo de caldeirão de cobre."
+      marca: "No porão de um barco da rota, uma argola de prender gente com o nome de um sindicato de Brekmar."
+      aproximacao: "Um homem magro de veias duras como cordões cor de tijolo aponta para você os punhos com torneiras de latão."
+      rumor: "um marinheiro diz que o sindicato manda enfermo para as ilhas como quem manda vinho caro"
+    contra_jogo: "Fechar a distância e torcer as torneiras; ele não luta de perto, e cada espirro custa o sangue dele."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_puxado_do_oeste:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [ophidia]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas inclinadas, de pés virados para o mesmo lado, que vão em linha reta até a beira da água e param."
+      resto: "Uma bússola de viajante quebrada e jogada fora, a agulha arrancada, no fim de um rastro."
+      som: "Um passo arrastado e firme, de quem empurra uma porta pesada, e um zunido fino de ferro que treme."
+      cheiro: "Ferrugem de agulha e suor de quem anda sem parar, sempre virado para o poente."
+      marca: "Na beira da água, uma pedra gasta numa só face, a que dá para o poente, onde alguém fica parado há dias."
+      aproximacao: "Inclinado como quem empurra uma porta, um homem de peito furado por uma agulha de ferro avança para o poente, e você está no caminho."
+      rumor: "um mercador de seis dedos vende o caminho das ilhas a quem paga, e os que pagaram não voltam"
+    contra_jogo: "Ficar a leste dele e de lado, nunca entre ele e a água; quebrar a agulha não o mata, mas o deixa parado, sem saber para onde ir."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vigia_de_cor_errada:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [ophidia]
+      permanencia: [7, 10]
+      suprime: [mon_trepano_de_borda, mon_doente_de_encomenda]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um intermediário caído no convés com dois arpões curtos cravados de cima, um no ombro e outro na coxa."
+      som: "Um grito agudo do alto do cordame, avisando onde a água esquenta e onde alguém se esconde."
+      cheiro: "Alcatrão de cordame e pele de quem não desce do alto, um cheiro de gaiola de pássaro."
+      marca: "No alto do mastro de um barco pirata, restos de comida e uma rede de dormir amarrada pelos pés."
+      aproximacao: "Pendurado pelos pés no cordame, um marujo de pescoço comprido e olhos inchados de cores girando aponta para você."
+      rumor: "os piratas da rota dizem que o homem do alto vê pela cor do vapor onde não ir, e que não desce há anos"
+    contra_jogo: "Derrubá-lo primeiro, cortando o cordame onde os pés se prendem; no chão, ele vê demais e não sabe para onde olhar."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_trepano_de_borda:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [ophidia]
+      permanencia: [7, 10]
+      suprime: [mon_doente_de_encomenda]
+      foge_de: [mon_vigia_de_cor_errada]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota com geada em volta, no meio do calor das ilhas, que andam sempre atrás de alguém."
+      resto: "Um viajante com um furo redondo e limpo no braço, do tamanho de um dedo, de onde tiraram um cilindro."
+      som: "O girar de uma serra pequena e redonda, e o tilintar de frascos de vidro batendo no peito de alguém."
+      cheiro: "Frio de Éter e sangue guardado, um cheiro de botica refrigerada."
+      marca: "No convés, uma etiqueta de pano costurada com o nome de uma região, caída de um frasco quebrado."
+      aproximacao: "De lábios roxos e geada nas sobrancelhas, um homem de peito furado em fileiras de frascos ergue uma serra redonda para você."
+      rumor: "os marinheiros da rota dizem que tem gente comprando pedaços de quem passa, e etiquetando"
+    contra_jogo: "Quebrar os frascos do peito; cada um que quebra devolve o frio para ele, e com poucos inteiros ele não aguenta o próprio Éter."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_arpeu_de_bracos:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um cabo de cânhamo coberto de pele arrastado pelo fundo da rota, enrolado e esticado como cobra."
+      resto: "Um marinheiro preso pela cintura por quatro mãos de dedos em gancho, o cabo encurtado até o osso."
+      som: "Um bater surdo de algo pesado caindo no convés e o rangido de uma corda que se encolhe sozinha."
+      cheiro: "Corda de abordagem molhada e sangue de briga recente, um cheiro de convés tomado."
+      marca: "No fundo da rota disputada, cabos de abordagem velhos cortados, e um deles sem ponta, crescido de carne."
+      aproximacao: "Da água salta uma cruz de quatro antebraços soldados pelos cotovelos, e as mãos em gancho cravam no mais exaltado."
+      rumor: "os marujos da rota dizem que briga no convés perto das ilhas sempre acaba com alguém amarrado"
+    contra_jogo: "Cortar o cabo encarnado antes das mãos; sem ele, as mãos se soltam sozinhas. Não bater com raiva no que está preso."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ninho_dos_mergulhadores:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [10, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um saco de coletor de pedras cheio, largado no recife, e o dono sem ar boiando ao lado."
+      som: "Bolhas grandes subindo do recife em rajadas, como de alguém soltando o ar por medo."
+      cheiro: "Ar viciado e pele rosada, um cheiro de quarto fechado no fundo do mar."
+      marca: "No recife raso, uma pedra de cor errada brilhando no fundo, à vista, e nenhum peixe perto dela."
+      aproximacao: "Ao estender o braço para a pedra brilhante, dezenas de sacos rosados se fecham sobre ele como muitos lábios."
+      rumor: "os coletores de Brekmar dizem que a pedra mais bonita do recife é a que ninguém trouxe de volta"
+    contra_jogo: "Não meter a mão; se preso, largar o que tem e sair, ou entrar já de mãos vazias. Para levar a pedra, furar os pulmões de fora, pela borda, um por um."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mastro_dos_ultimos:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [3, 4]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de um corpo enorme caído de comprido na praia, de novo mais adiante, e de novo, em linha."
+      resto: "Corpos soltos na areia agarrados a pedras e algas, de unhas quebradas, como quem não larga mais nada."
+      som: "Um arquejo único de muitos peitos ao mesmo tempo, e o baque de algo alto tombando."
+      cheiro: "Sal encrostado e carne de náufrago, um cheiro de praia depois de tempestade."
+      marca: "Num paredão da costa, marcas de mãos de dezenas de pessoas subindo umas sobre as outras até o alto."
+      aproximacao: "Na praia balança uma coluna de gente agarrada nos tornozelos uns dos outros, alta como a vela de um navio, e tomba sobre você."
+      rumor: "os barqueiros dizem que onde os barcos sumiram nas ilhas a tripulação ainda está de pé"
+    contra_jogo: "Cortar a base, não o topo; os de baixo sustentam, e sem eles a coluna não se levanta depois de cair. Sair da linha da queda."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_remora_de_conves:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [ophidia]
+      permanencia: [6, 9]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas molhadas de algo chato que pulou da água e escorregou pelo tablado até um baú."
+      resto: "Um marinheiro bem armado que acordou fraco, frio e sem fôlego, com uma marca de palato nas costas."
+      som: "Um plaf molhado de peixe batendo no tablado, e um sugar lento que pulsa."
+      cheiro: "Peixe frio e saliva de boca humana, um cheiro errado no meio do mar."
+      marca: "No barco de uma expedição rival, curativos que não pegaram e equipamento bom caído sem dono."
+      aproximacao: "Um peixe chato e cinzento pula da água e gruda nas suas costas pelo céu de uma boca humana virado para fora."
+      rumor: "as expedições que disputam a rota das ilhas dizem que a outra trouxe azar a bordo"
+    contra_jogo: "Arrancá-la com lâmina por baixo do palato, ou encostar as costas em brasa; quem luta de costas para um companheiro não é escolhido."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  mon_caranguejo_cinza:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [8, 11]
+      presas: [mon_tatuzinho_de_afogado, mon_turu_de_casco]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de lado na areia preta, que vão de uma toca a outra, e nenhuma se afasta delas."
+      resto: "Cascas de bichos miúdos abertas e roídas na boca de uma toca, como lixo de despensa."
+      som: "Um clicar de garras quentes e um chiado de vapor quando a casca encosta na água."
+      cheiro: "Pó de vulcão morno e vapor de água salgada, um cheiro de fogueira apagada na beira do mar."
+      marca: "Na encosta, tocas cercadas por muretas de pó vulcânico empilhado com cuidado, como trincheira."
+      aproximacao: "Da toca sai um bicho de casca coberta de pó vulcânico, e ergue garras que soltam vapor."
+      rumor: "os náufragos dizem que nas ilhas até os bichos da praia guardam a casa como soldado"
+    contra_jogo: "Não brigar perto da toca que ele guarda: ele se fecha em defesa, empurra com a maré e não persegue além do posto; contornar."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_fumaca_de_cor_errada:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+        - {quando: "clima:vendaval", efeito: menos}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um barqueiro sufocado no convés, de rosto tingido de uma cor que não se sabe dizer qual é."
+      som: "Um silêncio abafado, como de cobertor grosso caído sobre o mar, sem nenhum barulho de onda."
+      cheiro: "Enxofre e alguma coisa doce sem nome, que faz a cabeça doer."
+      marca: "Nos rochedos das ilhas, manchas de cores que não têm nome em lugar nenhum, que mudam ao olhar de lado."
+      aproximacao: "A névoa colorida das ilhas se fecha em volta de você como um abraço, e aperta."
+      rumor: "os pescadores das ilhas não descrevem a cor do vapor: dizem que é falta de educação com ele"
+    contra_jogo: "Não esperar que recue, porque não recua: ela avança no mais próximo e amedronta com o grito; acabar rápido com força bruta."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_leviata_caldeira:
+    fonte: legado
+    ecologia:
+      horario: [Noite]
+      territorio: [ophidia]
+      permanencia: [2, 3]
+      presas: [mon_nadador_escaldado]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na encosta do vulcão, um sulco enorme de algo que subiu da água até a boca da cratera e voltou."
+      resto: "Um barco partido em dois perto da costa, a madeira chamuscada de um fogo frio."
+      som: "Um ronco que vem de dentro da montanha, fundo, e a água da enseada tremendo em círculos."
+      cheiro: "Enxofre forte vindo da montanha e um vento morno que sobe da água de repente."
+      marca: "No alto da ilha, a chama da cratera mudou de cor durante a noite, e o mar em volta ferve."
+      aproximacao: "Da água fervente sobe uma cabeça do tamanho de um barco, e a mandíbula de maré se abre sob a luz da chama."
+      rumor: "os barqueiros das ilhas olham a cor da chama do vulcão toda noite antes de sair"
+    contra_jogo: "Proteger o curador e o conjurador, que ele abate primeiro, e guardar a melhor defesa para o golpe de mestre; à beira da morte, recua."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_moreia_vulcanica:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [ophidia]
+      permanencia: [7, 10]
+      presas: [mon_cobra_de_sangria, mon_lagarto_espirrador]
+    sinais:
+      antecedencia: cedo
+      rastro: "Na água rasa sobre os tubos de lava, um rastro de bolhas quentes que segue o barulho dos remos."
+      resto: "Um remo de barco com a pá arrancada por uma mordida, cheirando a enxofre."
+      som: "Um sibilo de água fervendo saindo de um buraco na rocha, e um estalo de mandíbula."
+      cheiro: "Enxofre e lodo escuro de tubo de pedra, que sobe em bolhas quando o remo bate."
+      marca: "Na rocha da enseada, a boca de um tubo de lava com as bordas lisas e babadas de lodo escuro."
+      aproximacao: "Da boca de um tubo de lava sai uma enguia enorme de couro manchado, e o bote vem direto no calor do seu remo."
+      rumor: "os barqueiros remam devagar sobre os tubos de lava da enseada, e às vezes param de remar"
+    contra_jogo: "Não remar nem ficar perto do tubo de lava com a guarda baixa: ela ataca da ocultação, empurra com a maré e foge ferida; cercar o tubo."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_oraculo_coral:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [ophidia]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um consulente afogado ao pé de um recife, as mãos ainda unidas em pergunta, e oferendas boiando."
+      som: "Uma corrente que fala, baixo e úmido, em frases que respondem a perguntas que ninguém fez em voz alta."
+      cheiro: "Recife vivo e incenso molhado, um cheiro de templo inundado."
+      marca: "Num recife das ilhas, oferendas presas nos galhos e uma pedra lisa onde alguém se ajoelha."
+      aproximacao: "O recife se mexe como se respirasse, e uma corrente começa a puxar você para perto dele, falando."
+      rumor: "os pescadores das ilhas dizem que o recife responde, mas que a resposta custa o fôlego"
+    contra_jogo: "Colar nele: recua para atacar de longe, se esconde entre os mortos com o mimetismo e empurra com a maré; foge se a linha cair."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_os_que_voltaram_e_nao_eram_eles:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [ophidia]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de marinheiro que saem da água em fila e entram direto na vila, conhecendo cada rua."
+      resto: "Uma família sentada à mesa com um parente de volta, e ninguém tocou na comida que o parente serviu."
+      som: "Vozes conhecidas chamando pelo nome, certas demais, sem nenhum erro de pronúncia."
+      cheiro: "Maré fria e roupa limpa demais, de quem não esteve no mar tanto tempo."
+      marca: "No porto, um barco sumido de volta, amarrado no lugar certo, com o nó feito de um jeito que ninguém usa."
+      aproximacao: "Da praia vem um marinheiro de quem você se lembra, igual em tudo, e os olhos dele olham o horizonte."
+      rumor: "um velho das ilhas diz que o filho sumido voltou sem um arranhão, e que o cachorro não o reconheceu"
+    contra_jogo: "Não esperar que recuem, porque não recuam: golpear com força em vez de ponta, que entra pouco, e aguentar o toque gelado."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_sereia_de_ophidia:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [ophidia]
+      permanencia: [7, 10]
+      presas: [mon_ossada_de_pomes]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um tripulante amarrado ao mastro pelos próprios companheiros, com sangue nos pulsos de tanto querer se soltar."
+      som: "Um canto na água que cada um ouve de um jeito, e ninguém concorda sobre o que ouviu."
+      cheiro: "Recife morto e flor que não existe, doce e frio ao mesmo tempo."
+      marca: "Nos rochedos das ilhas, unhas humanas cravadas na pedra, de quem tentou subir para ouvir melhor."
+      aproximacao: "Da água ergue-se uma figura de garras de recife, e o canto que você ouve não é o que o companheiro ouve."
+      rumor: "os marinheiros da rota não contam o canto que ouviram, porque nunca é o mesmo duas vezes"
+    contra_jogo: "Não esperar que recue, porque não recua: golpear com força em vez de ponta, que entra pouco, e tirar de perto quem está ouvindo o canto."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
