@@ -98,3 +98,13 @@ Piores criaturas (−3,0 pp cada; 100 pares, ou seja 3 lutas):
 `enemy_elemental_fogo_poluido` (Devoto −5, Médico −10, demais 0) e `mon_lencol_de_chamine`
 (Arcanista −5, Médico −10, demais 0). E4 reprova só pela parte "pior criatura": −3 pp contra o
 teto de −2 pp, dentro do ruído de 20 seeds por célula; a vitória agregada (67,5 %) passa.
+
+---
+
+## 3. Desvio do E4 aceito pelo dono (03/11)
+
+O dono aceitou o E4 em −3,0 pp contra o limite de −2 pp (registrado na §9, commit `7fbc5af3`).
+Em `tests/test_spec371_eval.py`, só o caso `test_arena_a_luta_ensina[E4]` virou
+`xfail(strict=True)` com essa razão. O strict faz o teste acusar (XPASS → falha) se um dia o E4
+passar, para a marca ser retirada. Não mudaram: o limiar `E4_MAX_PIOR_PP = 2.0`, o veredito
+gravado no relatório (E4 = FALHA), `scripts/fauna/arena_saber.py`, nem os casos E1–E3.

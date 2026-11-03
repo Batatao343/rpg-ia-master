@@ -100,7 +100,21 @@ def _report():
     return json.loads(REPORT.read_text(encoding="utf-8"))
 
 
-@pytest.mark.parametrize("metric", ["E1", "E2", "E3", "E4"])
+@pytest.mark.parametrize(
+    "metric",
+    [
+        "E1",
+        "E2",
+        "E3",
+        pytest.param(
+            "E4",
+            marks=pytest.mark.xfail(
+                strict=True,
+                reason="SPEC-371 §9: desvio do E4 aceito pelo dono em 03/11 (−3,0 pp, ruído de 20 seeds)",
+            ),
+        ),
+    ],
+)
 def test_arena_a_luta_ensina(metric):
     rep = _report()
     m = _load()
