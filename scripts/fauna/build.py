@@ -26,6 +26,7 @@ def build_doc() -> dict:
     import yaml
 
     from services import fauna_lint as fl
+    from services.fauna_lint_tramas import normalize_tramas
 
     criaturas: dict[str, dict] = {}
     for region in fl.covered_regions():
@@ -52,7 +53,7 @@ def build_doc() -> dict:
                 },
                 "sinais": sinais,
                 "contra_jogo": str(e.get("contra_jogo") or "").strip(),
-                "tramas": list(e.get("tramas") or []),
+                "tramas": normalize_tramas(e.get("tramas")),
                 "predadores": [],
             }
             if eco.get("suprime"):  # SPEC-370 R11: so emite quando ha (diff minimo)

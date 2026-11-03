@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from services.encounter_manifest import _fold, _singular
+from services.fauna_lint_tramas import lint_tramas, tramas_form_ok
 
 ROOT = Path(__file__).resolve().parent.parent
 FAUNA_DIR = ROOT / "data" / "bestiario" / "fauna"
@@ -169,10 +170,8 @@ def _e1_entry(cid: str, e: Any, refs: Refs) -> list[str]:
         errs.append(f"E1 {cid}: fonte {fonte!r} nao bate com a ficha")
     if e.get("revisao") not in REVISAO:
         errs.append(f"E1 {cid}: revisao {e.get('revisao')!r} fora de {REVISAO}")
-    if not isinstance(e.get("tramas", []), list) or not all(
-        isinstance(t, str) for t in e.get("tramas") or []
-    ):
-        errs.append(f"E1 {cid}: tramas deve ser lista de ids")
+    if not tramas_form_ok(e.get("tramas")):
+        errs.append(f"E1 {cid}: tramas deve ser lista de ids ou de {{id, desde}}")
     eco = e.get("ecologia")
     if not isinstance(eco, dict):
         errs.append(f"E1 {cid}: ecologia ausente")
@@ -379,6 +378,7 @@ def lint_region(doc: Any, refs: Refs) -> list[str]:
                     f"E18: {len(at_hub)} imediato no no de chegada {refs.hub} "
                     f"(max {MAX_IMEDIATO_HUB}): {sorted(at_hub)}"
                 )
+    errs += lint_tramas(entries, refs)  # E19-E22 (SPEC-372)
     return errs
 
 
