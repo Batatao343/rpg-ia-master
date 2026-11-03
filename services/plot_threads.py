@@ -407,3 +407,87 @@ def cast_npc_row(npc_id: str, *, game_id: str, home_location_id: str = "") -> di
         "combat_stats": {"hp": 10, "ac": 10, "attacks": []},
     }
     return npc_layers.ensure_npc_fields(row, str(game_id), home_location_id=home)
+
+
+# --------------------------------------------------------------------------- #
+# Estágio derivado da trama (SPEC-372 R1-R3) — leitura pura, sem estado novo
+# --------------------------------------------------------------------------- #
+Stage = Literal["dormente", "tocada", "investigada", "revelada"]
+STAGES: tuple[Stage, ...] = ("dormente", "tocada", "investigada", "revelada")
+_QUEST_LIVE = ("active", "completed")  # `failed`/abandonada não conta (R2)
+
+
+def _thread_seeds(thr: PlotThread) -> set[str]:
+    seeds = set(thr.rumor_ids)
+    for door in thr.portas:
+        seeds.update(door.rumor_ids)
+    return seeds
+
+
+def _stage_signals(state: dict) -> dict[str, Any]:
+    """Uma passada por rumores, quests e event_log (R3). Não muta o estado."""
+    from services.memory_provenance import accepted_secret_ids
+
+    rumors = [r for r in ((state.get("world_sim") or {}).get("rumors") or []) if isinstance(r, dict)]
+    seed_of = {str(r.get("rumor_id")): str(r.get("seed_id") or "") for r in rumors}
+    quest_seeds: set[str] = set()
+    for q in state.get("quests") or []:
+        if not isinstance(q, dict) or q.get("world_kind") != "investigar_rumor":
+            continue
+        if q.get("status") not in _QUEST_LIVE:
+            continue
+        anchor = str((q.get("lore_anchor") or {}).get("id") or "")
+        quest_seeds.add(seed_of.get(anchor) or anchor)
+    opening = (state.get("campaign_plan") or {}).get("opening_thread") or {}
+    return {
+        "perceived": {
+            str(r.get("seed_id") or "") for r in rumors if int(r.get("perceived_day") or 0) > 0
+        },
+        "confirmed": {
+            str(r.get("seed_id") or "")
+            for r in rumors
+            if int(r.get("perceived_day") or 0) > 0 and r.get("resolution") == "confirmado"
+        },
+        "quest": quest_seeds,
+        "refs": {str(x) for x in (opening.get("thread_refs") or [])},
+        "secrets": {s.casefold() for s in accepted_secret_ids(state)},
+    }
+
+
+def _npc_known(state: dict, thr: PlotThread) -> bool:
+    from services import npc_world as nw
+
+    for door in thr.portas:
+        _key, row = nw._row_for(state, door.anchor_npc_id)
+        if row and (row.get("known_by_player") is True or row.get("knowledge_source") == "met"):
+            return True
+    return False
+
+
+def _stage_of(state: dict, thr: PlotThread, sig: dict[str, Any]) -> Stage:
+    if any(s.casefold() in sig["secrets"] for s in thr.secret_ids):
+        return "revelada"
+    seeds = _thread_seeds(thr)
+    if (seeds & sig["quest"]) or (seeds & sig["confirmed"]):
+        return "investigada"
+    refs = {thr.id, *(d.id for d in thr.portas)}
+    if (seeds & sig["perceived"]) or (refs & sig["refs"]) or _npc_known(state, thr):
+        return "tocada"
+    return "dormente"
+
+
+def plot_stage(state: dict, thread_id: str) -> Stage:
+    """Maior estágio aplicável da trama; trama inexistente -> `dormente`. Puro."""
+    thr = thread(thread_id)
+    if thr is None or not isinstance(state, dict):
+        return "dormente"
+    return _stage_of(state, thr, _stage_signals(state))
+
+
+def plot_stages(state: dict, region_id: str) -> dict[str, Stage]:
+    """Estágio de todas as tramas da região numa passada (R3). Puro."""
+    threads = threads_for_region(region_id)
+    if not threads or not isinstance(state, dict):
+        return {t.id: "dormente" for t in threads}
+    sig = _stage_signals(state)
+    return {t.id: _stage_of(state, t, sig) for t in threads}
