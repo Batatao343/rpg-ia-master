@@ -3,12 +3,12 @@
 > **Status:** `draft`
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11 ([relatório](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md)): §3 R1, §4.2 itens 4 e 6, §4.3 item 5, §4.4 itens 3–4; plano da onda §6 (regras **W1–W8**, ordem §6.3, itens que saíram §6.4). Letra **B** do §5 mais a parte "sem chamador" de D/§4.
-> **Depende de:** nenhuma spec para começar (§6.3: "já"). Cada etapa obedece à **W1**. Só a etapa C5 (opcional, D5) espera a SPEC-368 pousar, porque `services/cards.py` e `services/card_effects.py` estão sendo editados na branch dela. A etapa A4 (`_meta` dos JSON de classe) espera as branches que mexem em `data/cards/` (367/368/369).
+> **Depende de:** nenhuma spec para começar (§6.3: "já"). Cada etapa obedece à **W1 revisada** (R1). A SPEC-368 já pousou (`dff4c27c`, `061c330b`), então a C5 (opcional, D5) não espera mais por ela, só pela W1. A etapa A4 (`_meta` dos JSON de classe) espera a SPEC-367, que commita **direto na `main`** (`b278f6af`, `4b03a430`), e a SPEC-369 (`draft`, balanço de Cartas). A etapa A3 espera a SPEC-374, que hoje trava `docs/guias/AUTORIA.md`. A C2 tem ordem com a SPEC-377 item 1 (mesmo `services/world_engine.py`, R19).
 > **Desbloqueia:** SPEC-378 (helpers comuns), que começa depois de 376/377 (§6.3).
 > **EXECUTOR_MODEL:** `Terra` (Sonnet), uma etapa por vez (**W6**) · **REVIEW_MODEL:** `Sol` (`spec-reviewer`, Opus), que refaz por conta própria o W2 de pelo menos um item de C e a medição da Etapa 0 de pelo menos um gerador (**W7**) · **REVIEW_REQUIRED:** `true`. Motivo: apaga fonte de dados e código do motor, e a SPEC-273 já foi julgada UNSAFE por isso uma vez.
 > **EVAL_AUTHORING_REQUIRED:** `false`. Nenhum evaluator, expected, dataset, baseline ou caminho protegido de `evals/` é tocado (**W5**).
 
-Rótulos: **[F]** fato no source (checkout principal, `main` em `5fd2e920`, lido em 03/11) · **[H]** hipótese com evidência, que a Etapa 0 ou o primeiro teste confirma ou derruba · **[D]** decisão do dono (§8).
+Rótulos: **[F]** fato no source (checkout principal, `main` em `5fd2e920`, lido em 03/11; a revisão independente reconferiu tudo em `b278f6af`, [handoff](../handoffs/SPEC-376-independent-review.md)) · **[H]** hipótese com evidência, que a Etapa 0 ou o primeiro teste confirma ou derruba · **[D]** decisão do dono (§8).
 
 ---
 
@@ -48,9 +48,15 @@ Princípio: o source é a verdade e o git guarda o histórico (**W8**, nada de r
 
 ### Transversais
 
-- **R1 — W1 antes de cada etapa.** O executor roda o script da W1 (auditoria §6.2) com a lista de arquivos da
-  etapa (§4) e grava a saída no log da etapa, em `docs/spec376/README.md`. Se a interseção não for vazia, a
-  etapa **espera**. Não começa e não "resolve no rebase". As outras etapas podem seguir.
+- **R1 — W1 revisada antes de cada etapa.** O executor roda o script da **W1 revisada** (auditoria §6.2) com
+  a lista de arquivos da etapa (§4). O script junta três fontes: (1) branches vivas (à frente da `main` e com
+  commit nos últimos 7 dias); (2) `git -C <wt> status --porcelain` de **todos** os worktrees, inclusive o
+  checkout principal; (3) `git log --since=2.days --name-only main`, que cobre specs como a 367, que commitam
+  direto na `main`. O executor também roda `git log --oneline <sha da main no início da etapa>..main --
+  <arquivos>`, que tem que sair vazio na hora do commit. A saída vai para o log da etapa, em
+  `docs/spec376/README.md`. Se a interseção não for vazia, a etapa **espera**: não começa e não "resolve no
+  rebase". As outras etapas podem seguir. As branches paradas que a W1 exclui (ex.: `spec-349-pre-sync`, 401
+  arquivos, 30 h sem commit) são listadas no log para o coordenador arquivar.
 - **R2 — W4.** Um commit por mudança mecânica: um gerador, um grupo de scripts ou uma função com seus testes.
   Cada commit tem que poder ser revertido sozinho com `git revert <sha>`.
 - **R3 — Re-grep antes de apagar.** Para cada símbolo ou arquivo, rodar `git grep -n -w <nome>` no repo
@@ -59,41 +65,62 @@ Princípio: o source é a verdade e o git guarda o histórico (**W8**, nada de r
   use `git grep` ou `rg --hidden`. Também procurar o nome como string (`"nome"`, `'nome'`), em `getattr`, em
   alvo de `monkeypatch` e em registros (`HANDLED_KINDS`, `SURVIVING_FUNCTIONS`). A saída vai para
   `docs/spec376/README.md`. Qualquer referência nova fora de `specs/`, `handoffs/`, `docs/specNNN/` e
-  `docs/historico/` ⇒ **não apaga** e registra.
+  `docs/historico/` ⇒ **não apaga** e registra. Os hits em `project_index/` são esperados: o índice é
+  regenerado no `wt.sh sync` e não bloqueia.
 - **R4 — Adendo na spec de origem** (precedente da SPEC-272 R5). Toda função apagada que foi requisito de uma
   spec `done` ganha uma linha datada na spec de origem: "removida pela SPEC-376 (sem chamador)". Os casos
   estão listados por item no §2.C.
 
 ### A. Geradores-armadilha
 
-- **R5 — Etapa 0: medir a deriva (só leitura no repo).** Num worktree descartável
-  (`git worktree add --detach <fora do OneDrive>/rpg-spec376-deriva main`), rodar separadamente, cada um
-  partindo de `data/` limpo:
-  1. `RPG_ROOT=. bash scripts/dev/py.sh scripts/gen_cards_v4.py`
-  2. `RPG_ROOT=. bash scripts/dev/py.sh scripts/gen_classes_v2.py`
-  3. `bash scripts/dev/py.sh scripts/gen_tiers_5_plus.py`, **sem** `--write`. O default é `--check`
-     (`scripts/gen_tiers_5_plus.py:3-6,233-311`). Só relatório.
-  4. `RPG_ROOT=. bash scripts/dev/py.sh scripts/migrate_bestiary_v4.py`. Só análise (R11).
+- **R5 — Etapa 0: medir a deriva num diretório temporário fora de qualquer repo.** Revisão P0-1: `RPG_ROOT`
+  **não** protege nada. `scripts/dev/env.sh:6,17` sobrescreve `RPG_ROOT` com o toplevel git do cwd e faz `cd`
+  para lá, e o cwd do subagente volta ao checkout principal a cada chamada de Bash. O `gen_classes_v2` grava
+  **ao ser importado** (`:1605-1608`). Por isso a Etapa 0 **não usa** `py.sh`, `uv run` nem worktree git
+  para rodar geradores. O procedimento é:
+  1. **Snapshot antes**, no checkout principal: `git status --porcelain -- data/` e `git stash list`, gravados
+     no log. `$MAIN` é o caminho do checkout principal.
+  2. **Diretório temporário** `$TMP/spec376-deriva/` (scratchpad, fora do OneDrive e de qualquer repo), com
+     `data/` copiado do `git archive main data` (não do disco do principal) e as **cópias** dos 4 scripts em
+     `$TMP/spec376-deriva/scripts/`. O `gen_tiers_5_plus` resolve a raiz por `Path(__file__).parents[1]`
+     (`:15-17`); o `migrate_bestiary_v4` faz `import gamedata`, então copiar também `gamedata.py` e o que ele
+     importa, ou rodar o `migrate` só no modo (b) abaixo. Faça uma cópia limpa (`data.orig/`) para comparar.
+  3. **Cada comando numa única chamada de Bash**, com `cd "$TMP/spec376-deriva" && test ! -d .git &&
+     RPG_ROOT="$PWD" "$MAIN/.venv/Scripts/python.exe" -I scripts/<gerador>.py …`. Os geradores de Cartas e
+     classes só importam `json`/`os`. Depois de cada rodada, `git diff --no-index --stat data.orig/ data/` e as
+     contagens do R6.
+  4. **Medições (i), cada gerador sozinho**, partindo de `data/` restaurado de `data.orig/`:
+     `gen_cards_v4.py`; `gen_classes_v2.py`; `gen_tiers_5_plus.py` (default `--check`, só relatório,
+     `:3-6,233-311`); `migrate_bestiary_v4.py` (só análise, R11).
+  5. **Medição (ii), a cadeia completa** documentada na SPEC-273 R2, na ordem e partindo de `data.orig/`:
+     `gen_classes_v2.py` → `gen_cards_v4.py` → `gen_tiers_5_plus.py --write`. O `--write` só é permitido
+     **aqui**, no diretório temporário (revisão P1-1).
+  6. **Testes que ficariam vermelhos** (revisão P2-4): por leitura, registrar as asserções que dependem dos
+     campos ou arquivos perdidos (no mínimo `tests/test_cutover_audit.py:78` para o `player_abilities.json` e
+     as de `momento`/`raridade` em `tests/test_conflito_autoria_cartas.py`). Opcionalmente, copiar o `data/`
+     da cadeia (ii) para dentro de um worktree descartável e rodar lá
+     `tests/test_cutover_audit.py tests/test_conflito_autoria_cartas.py -q` (sem `-n`), com
+     `cd "$WT" && test "$(git rev-parse --show-toplevel)" = "$WT" && …` na **mesma** chamada.
+  7. **Snapshot depois** no principal, igual ao do item 1 (assert do log). Apagar `$TMP/spec376-deriva/`.
+- **R6 — `docs/spec376/deriva.md`.** Uma seção por medição (i) e uma para a cadeia (ii), cada uma com o
+  comando, o `diff --stat` e, para cada arquivo escrito, as Cartas (ou classes) antes e depois e os campos
+  removidos com contagem. A lista mínima de campos tem dois grupos:
+  - **"da cadeia"**, que o `gen_tiers_5_plus --write` devolve (`:248-288`): `tier`, `level_req`, `apex`,
+    `late_entropy_curve`, `playstyle`, `tradeoff` e `preview_card_ids`;
+  - **"curados fora da cadeia"**: `momento`, `raridade`, `onda`, `descricao`, `contrapartida`,
+    `vitalidade_bonus`, qualquer Carta ou classe a mais ou a menos e arquivos recriados (`player_abilities.json`).
 
-  Depois de cada um: `git diff --stat -- data/`, `git status --porcelain -- data/` (arquivos novos, como
-  `player_abilities.json`) e as contagens do R6. Depois dos itens 1 e 2, rodar também
-  `tests/test_cutover_audit.py tests/test_conflito_autoria_cartas.py` (`-q`, sem `-n`) para registrar o que
-  ficaria vermelho. Depois de tudo, `git checkout -- data && git clean -fdq -- data` e conferir
-  `git status --porcelain` vazio. Ao fim, `git worktree remove` do descartável. **No checkout principal e no
-  worktree da spec, `git status -- data/` continua idêntico antes e depois** (assert do log).
-- **R6 — `docs/spec376/deriva.md`.** Uma seção por gerador com: comando; `diff --stat`; para cada arquivo
-  escrito, as Cartas (ou classes) antes e depois e os campos removidos com contagem. O conjunto mínimo é
-  `momento`, `raridade`, `apex`, `tier`, `level_req`, `onda`, `descricao`, `contrapartida`,
-  `late_entropy_curve`, `playstyle`, `tradeoff`, `preview_card_ids` e `vitalidade_bonus`. Também entram os
-  arquivos recriados e os testes que ficariam vermelhos. A seção termina com um veredito, aplicado gerador a
-  gerador:
-  - **diff vazio**, ou só cosmético (ordem de chaves, espaço, `_meta`): o gerador **ainda é fonte**. Não
-    apaga; só corrige a doc para apontar a ordem correta;
-  - **diff que remove campo curado, Carta ou classe, ou que recria arquivo removido**: o gerador sai (R7).
+  **O veredito sai da cadeia (ii)**, gerador a gerador. Um campo que a cadeia devolve não conta como
+  destrutivo, porque esse foi o erro que tornou a SPEC-273 UNSAFE. As medições (i) são só contexto.
+  - **Diff da cadeia vazio**, ou só cosmético (ordem de chaves, espaço, `_meta`): o gerador **ainda é
+    fonte**. Não apaga; só corrige a doc para apontar a ordem correta.
+  - **A cadeia remove campo "curado fora da cadeia", Carta ou classe, ou recria arquivo removido**: o
+    gerador responsável sai (R7). A atribuição é feita pelas medições (i).
 - **R7 — Apagar o gerador com deriva destrutiva** (só com o veredito do R6 e a D1):
   `git rm scripts/gen_cards_v4.py` e/ou `git rm scripts/gen_classes_v2.py`, em commits separados. **[F]**
   Nenhum teste nem módulo importa os dois. Os únicos hits fora de `specs/`, `handoffs/` e `docs/` são o
-  docstring `tests/test_conflito_autoria_cartas.py:3-4` e o `_meta` dos 5 JSON de classe.
+  docstring `tests/test_conflito_autoria_cartas.py:3-4`, o `_meta` dos 5 JSON de classe e o `project_index/`
+  (gerado, R3).
 - **R8 — Docs passam a declarar `data/` como fonte** (só para o gerador apagado):
   - `docs/design/CARTAS.md:4-7`: a fonte é `data/cards/{classe}.json`, curado à mão. As ondas por Postura
     ficam em `data/cards/posturas/`, alimentadas pela esteira da SPEC-336 (`scripts/cards/draft.py` →
@@ -113,7 +140,7 @@ Princípio: o source é a verdade e o git guarda o histórico (**W8**, nada de r
 - **R9 — `virtude_sugeridas.json` continua como dado.** É lido por `cards.suggested_virtue_cards`
   (mantido pela SPEC-272 (c)) e testado por `test_conflito_autoria_cartas.py`. Não é apagado nem regravado.
 - **R10 — `_meta` "Gerado por scripts/gen_cards_v4.py"** nos 5 JSON de classe: só se a D2 aprovar, numa
-  etapa própria (A4) com W1 limpo. **[F]** Nenhum teste ou módulo lê o `_meta` desses arquivos (o grep de
+  etapa própria (A4) com W1 limpo e depois da 367 (que commita direto na `main`) e da 369. **[F]** Nenhum teste ou módulo lê o `_meta` desses arquivos (o grep de
   `["_meta"]`/`get("_meta")` só acha `docs/spec358/*`, `scripts/cards/*`, `scripts/bestiario/*` e
   `tests/test_card_sim_v2.py:64`, que lê o `_meta` do golden). Efeito colateral conhecido: o `motor_hash`
   (`docs/spec358/gerar_golden_v1.py:84-112`) inclui `data/cards/**/*.json`, então
@@ -128,13 +155,17 @@ Princípio: o source é a verdade e o git guarda o histórico (**W8**, nada de r
   for destrutivo: aviso no docstring (⚠️ "não é passo da pipeline; sobrescreve curadoria das SPEC-335/349") e,
   pela D3, `main()` passa a exigir `--write` (default: imprime o aviso e sai 2), no mesmo padrão do
   `gen_tiers_5_plus` (SPEC-355 R6). Corrigir também `docs/HANDOFF-PROXIMA-SESSAO.md:40` ("dados só pelos
-  geradores oficiais (`migrate_bestiary_v4.py`)"). **[F]** O teste 287 usa só a constante
-  `SOBREVIVENCIA_POR_NIVEL_ENCONTRO` (`tests/test_spec287_encounter_scale.py:114-130`). Os testes 290 e 295
-  também carregam o módulo (`test_spec290_chefe_sobrevivencia.py:29`, `test_spec295_chefe_no_topo.py:23`).
-  **[H]** Eles usam só constantes; o executor confirma que nenhum chama `main()`. Os comentários em
-  `agents/bestiary.py:360` e `scripts/bestiario/gerar_mecanica.py:51` não mudam (descrevem origem de campo).
+  geradores oficiais (`migrate_bestiary_v4.py`)"). **[F]** Três testes carregam o módulo. O 287 usa só a
+  constante `SOBREVIVENCIA_POR_NIVEL_ENCONTRO` (`tests/test_spec287_encounter_scale.py:114-130`). O 290
+  carrega em `test_spec290_chefe_sobrevivencia.py:29`. O 295 **chama `gen.migrate_creature`**
+  (`test_spec295_chefe_no_topo.py:87-88`, teste de idempotência; correção da revisão P2-3). Nenhum chama
+  `main()`. Por isso a A5 **não** muda `migrate_creature`, `NEW_CREATURES`, `ENEMY_CARDS` nem nenhuma
+  constante do módulo: só o docstring (incluindo a linha "Uso:" em `:15`, que passa a mostrar `--write`) e
+  `main()`/`__main__`. Os comentários em `agents/bestiary.py:360` e `scripts/bestiario/gerar_mecanica.py:51`
+  não mudam (descrevem origem de campo).
 - **R12 — `gen_tiers_5_plus.py` fica.** É testado (`tests/test_spec355_conteudo.py:11,40-82`) e já é seguro
-  por default. A saída do `--check` vai para o `deriva.md` só como relatório. **[F]** O próprio docstring
+  por default. A saída do `--check` vai para o `deriva.md` como relatório, e o `--write` roda só dentro da
+  cadeia (ii) no diretório temporário (R5). **[F]** O próprio docstring
   diz que ele já sai 1 na `main` (`basicas.json`, `tiers_5_plus.json`). Corrigir essa deriva fica fora de
   escopo.
 
@@ -159,7 +190,12 @@ Princípio: o source é a verdade e o git guarda o histórico (**W8**, nada de r
 
 - **R14 — Apagar só B1 e o que a D4 liberar de B2**, um commit por script (W4). Junto, regenerar
   `ruff-baseline.toml` com `bash scripts/dev/py.sh scripts/dev/ruff_baseline.py` (as linhas 82-83 apontam
-  para os scripts de B1). Rodar `--check` verde.
+  para os scripts de B1). Rodar `--check` verde. **Trava (revisão P2-2):** regerar a baseline inteira
+  absorveria em silêncio dívida de lint nova que outra sessão tenha posto na `main`. Por isso
+  `git diff ruff-baseline.toml` tem que mostrar **só** a remoção das linhas dos scripts apagados. Se aparecer
+  qualquer outra linha, a etapa para e reporta, sem commitar a baseline. O `ruff_baseline.py` (inclusive o
+  `--check`) reescreve o arquivo por um instante (`scripts/dev/ruff_baseline.py:40-54`), então rode-o só no
+  worktree da spec. Alternativa equivalente: apagar à mão só as linhas 82-83 e conferir com `--check`.
 - **R15 — Sem cascata.** Módulos que ficam sem importador depois de B (ex.: `jev_shadow_measure`,
   `projection_measure`, importados por `jev_primary_measure.py:20-21`) **não** saem nesta spec. Eles são
   listados no `docs/spec376/README.md` como candidatos.
@@ -185,32 +221,48 @@ Princípio: o source é a verdade e o git guarda o histórico (**W8**, nada de r
   **`faction_relations.faction_relation`/`relation_label`** (`services/faction_relations.py:63-77`). **[F]**
   0 referências fora de specs, nem em teste, nem no próprio módulo. São leitores prometidos pela SPEC-302 §3
   "para specs consumidoras" (`specs/SPEC-302…:344,499,515-516`) que nunca ganharam consumidor. Apagar depende
-  da D6. Adendo: SPEC-302.
+  da D6. Adendo: SPEC-302. **Ordem com a SPEC-377:** o item 1 da 377 edita `services/world_engine.py:729-738`
+  (`register_day_hook` de `law`). A W6 serializa as duas specs, mas os números de linha citados mudam: quem
+  vier depois relocaliza por `git grep -n`, não pela linha.
 - **R20 — `agents/bestiary.py:_overlay_path`** (`:193-196`) e **`agents/npc.py:_npc_db_path`** (`:260-263`).
   **[F]** 0 referências no repo, nem em teste nem em alvo de `monkeypatch`.
 - **R21 — `_infer_tier_from_name` vira constante.** **[F]** As duas cópias fazem `del name` e devolvem
   `ModelTier.FAST` (`agents/bestiary.py:321-324`, `agents/npc.py:438-442`; decisão da SPEC-223 R7). Os
   chamadores ficam `get_llm(..., tier=ModelTier.FAST)` (`agents/bestiary.py:663`, `agents/npc.py:539`), com
-  um comentário de uma linha citando a SPEC-223 R7. **[F]** Nenhum teste referencia o nome.
+  um comentário de uma linha citando a SPEC-223 R7. **[F]** Nenhum teste referencia o nome. A SPEC-378:203
+  deixa `_infer_tier_from_name` e os stubs `ImportError` explicitamente de fora; a 376 é a dona dos dois. O
+  coordenador registra essa nota na 378.
 - **R22 — Stubs `try/except ImportError` para módulos do repo**, em `agents/bestiary.py:20-25` (`rag`),
   `agents/npc.py:52-67` (`rag`) e `:120-126` (`agents.librarian`) e `agents/world_simulator.py:22-30` (`rag`).
   Saem **só** depois da prova do R23. **Os nomes `RAG_AVAILABLE` continuam como constante de módulo**
-  (`RAG_AVAILABLE = True`): **[F]** 10 testes fazem `monkeypatch.setattr(npc, "RAG_AVAILABLE", False)` (ex.:
-  `tests/test_context_npc_gate.py:182`, `test_spec350_npc_prompt.py:118`), e `agents/npc.py:1400,1403` e
-  `agents/world_simulator.py:190` leem a flag. Sem o atributo, `setattr` quebra. **Fora deste requisito**:
+  (`RAG_AVAILABLE = True`). **[F]** São 8 linhas em 7 arquivos com `monkeypatch.setattr(npc, "RAG_AVAILABLE", False)`
+  (contagem corrigida pela revisão P2-3): `tests/test_context_npc_gate.py:182,225`, `test_spec301_llm.py:181`,
+  `test_spec310_npc_prompt.py:47`, `test_spec311_integration.py:82`, `test_spec314_no_leak.py:49`,
+  `test_spec314_npc_proposals.py:36` e `test_spec350_npc_prompt.py:118`. Os outros `setattr` são em `cb`
+  (`context_builder`, fora do escopo), e nenhum teste faz `setattr` em `world_simulator.RAG_AVAILABLE`.
+  `agents/npc.py:1400,1403` e `agents/world_simulator.py:190` leem a flag. Sem o atributo, `setattr` quebra. **Fora deste requisito**:
   `character_creator.py:20-24` e `services/context_builder.py:33-37`, que têm o mesmo padrão. O
   `context_builder` é alvo de `evals/core/adapters.py:1058` (W5).
-- **R23 — Prova de que nenhum stub evita um ciclo de import.** Para cada módulo de `{agents.bestiary,
-  agents.npc, agents.world_simulator, agents.librarian, rag, main, api}`, rodar
-  `bash scripts/dev/py.sh -c "import <m>"` num **subprocess novo**, isolado, antes e depois da mudança. Rodar
-  também nas ordens `import rag; import agents.npc` e `import agents.npc; import rag`. Os resultados de antes
-  e depois têm que ser iguais (0 erro). Saída em `docs/spec376/README.md`. Evidência estática **[F]**:
+- **R23 — Prova de que nenhum stub evita um ciclo de import.** Rodar tudo num **subprocess novo** por
+  combinação, com `RPG_FORCE_MOCK=1`, antes e depois da mudança, no worktree da spec. Ordens de import
+  (primeiro módulo carregado): `∅`, `rag`, `main`, `api` e `agents.librarian`; em seguida, `agents.bestiary`,
+  `agents.npc` e `agents.world_simulator`. Os imports soltos dão 0 erro antes e depois. Isso **não basta**
+  (revisão P1-2): se houvesse ciclo, o stub o engoliria e o "antes" também daria 0 erro. Por isso, em cada
+  ordem, **antes** da mudança:
+  - `agents.npc.RAG_AVAILABLE is True` e `agents.world_simulator.RAG_AVAILABLE is True`;
+  - `agents.npc.query_rag is rag.query_rag` e `agents.bestiary.query_rag is rag.query_rag`;
+  - `agents.world_simulator.add_memory_to_session is rag.add_memory_to_session`;
+  - `agents.npc.find_existing_entity is agents.librarian.find_existing_entity`.
+
+  Todas têm que ser `True`, o que prova que o stub nunca é usado. A revisão sondou 4 dessas ordens em
+  `b278f6af` e todas deram `True`. **Depois** da mudança, as mesmas asserções continuam `True`. Saída em
+  `docs/spec376/README.md`. Evidência estática **[F]**:
   `rag.py` não importa `agents.*` no topo (imports de topo `:17-41`); `agents/librarian.py:6-13` só importa
   `llm_setup`, `observability` e libs; `agents/bestiary.py:28` já importa `agents.librarian` **sem**
   guarda. `faiss-cpu` e `langchain-community` são dependências obrigatórias (`pyproject.toml:9,12`) e estão em
   `requirements.txt:45,99` (bundle da Vercel), então o `except ImportError` também não protege contra
-  dependência opcional ausente. **[H]** Não há ciclo. Se aparecer erro em qualquer combinação, o stub daquele
-  módulo **fica**, com um comentário dizendo por quê.
+  dependência opcional ausente. **[H]** Não há ciclo. Se alguma identidade der `False` ou algum import der
+  erro em qualquer combinação, o stub daquele módulo **fica**, com um comentário dizendo por quê.
 - **R24 — Itens que saem da lista C** depois da verificação (eram da auditoria ou do brief):
   - `card_effects.glossary_for_prompt` (`services/card_effects.py:1276`): **vivo**. **[F]**
     `scripts/cards/draft.py:113` o chama na esteira da SPEC-336. Não apagar.
@@ -220,8 +272,8 @@ Princípio: o source é a verdade e o git guarda o histórico (**W8**, nada de r
   - `card_effects.resolve_card` (`services/card_effects.py:1085-1097`): interface declarada da SPEC-330 §3
     (`specs/SPEC-330…:58`). O teste `tests/test_card_effects_grammar.py:279` exercita a **ordem da gramática**
     (custos → efeitos → gatilhos, `se`) por ela, não "só a função". Recomendação: manter (D5). Se a D5 mandar
-    apagar, vira a etapa C5, que espera a 368 e exige reescrever o teste sobre o caminho vivo (deixa de ser
-    pura).
+    apagar, vira a etapa C5 (a 368 já pousou; só a W1 vale), que exige reescrever o teste sobre o caminho vivo
+    (deixa de ser pura).
   - Seams de teste (`reload_*`, `reset_*`, `card_shop.reload_config`), `RAG_AVAILABLE`, tudo da SPEC-272 (c),
     `gameplay_oracles`, `cards.set_deck`, `law.daily_tick` e `evals/`.
 - **R25 — Oráculo W2** em cada etapa C. Antes da primeira etapa C, capturar A
@@ -253,8 +305,10 @@ Princípio: o source é a verdade e o git guarda o histórico (**W8**, nada de r
   import e W2 A/B) e `tests/test_spec376_fonte_dados.py` (só para A e B, que não são refatoração pura de
   runtime). Os testes são:
   - `test_geradores_apagados_nao_existem`: os arquivos apagados pelo R7 não existem;
-  - `test_docs_nao_mandam_rodar_gerador_apagado`: `CARTAS.md`, `CLASSES.md` e `AUTORIA.md` não contêm
-    `gen_cards_v4.py` nem `gen_classes_v2.py` como passo a rodar;
+  - `test_docs_nao_mandam_rodar_gerador_apagado`: em `CARTAS.md`, `CLASSES.md` e `AUTORIA.md`, nenhuma linha
+    casa `python\S*\s+scripts/gen_(cards_v4|classes_v2)\.py` (comando de rodar) nem
+    `\]\((\.\./)*scripts/gen_(cards_v4|classes_v2)\.py\)` (link para o arquivo). A frase "o gerador
+    `gen_classes_v2.py` foi removido pela SPEC-376" continua permitida (revisão P2-1);
   - `test_migrate_bestiary_sem_write_nao_grava` (se a D3 aprovar): com `RPG_ROOT=tmp_path` (cópia de
     `data/bestiary.json` e `data/cards/bestiario.json`), carrega o módulo via `importlib` depois do
     `monkeypatch.setenv`, chama `main([])` e verifica `rc != 0` e os bytes dos dois arquivos iguais.
@@ -270,8 +324,9 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
 (W1) com a lista "Arquivos" dela.
 
 ### Etapa 0 — Medir a deriva (sem commit em `data/`)
-- **Arquivos:** `docs/spec376/deriva.md`, `docs/spec376/README.md`.
-- R5/R6 completos. O hand-back da etapa traz o veredito por gerador. **Para aqui** até a D1 ser respondida
+- **Arquivos:** `docs/spec376/deriva.md`, `docs/spec376/README.md`. Geradores só no diretório temporário do
+  R5. **Nunca** via `py.sh`/`uv run`, e nunca com o cwd num repo.
+- R5/R6 completos, com as medições (i) e a cadeia (ii). O hand-back da etapa traz o veredito por gerador. **Para aqui** até a D1 ser respondida
   com o `deriva.md` na mão.
 
 ### Etapa A1 — `gen_cards_v4.py` (se o veredito for "sai")
@@ -288,9 +343,10 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
 
 ### Etapa A3 — Guia de autoria e adendo da 273
 - **Arquivos:** `docs/guias/AUTORIA.md`, `specs/SPEC-273-scripts-geradores-avulsos.md` (só uma linha no
-  cabeçalho). Testes: `test_docs_nao_mandam…`.
+  cabeçalho). Testes: `test_docs_nao_mandam…`. **Espera a SPEC-374**, que hoje trava `docs/guias/AUTORIA.md`
+  (W1 da revisão: única interseção em 03/11).
 
-### Etapa A4 — `_meta` dos 5 JSON de classe (só com a D2 aprovada; espera 367/368/369 pela W1)
+### Etapa A4 — `_meta` dos 5 JSON de classe (só com a D2 aprovada; espera a 367, que commita na `main`, e a 369)
 - **Arquivos:** `data/cards/{devoto,sangromante,corruptor,arcanista,medico}.json` (só a string `_meta`).
 - Rodar `tests/test_conflito_autoria_cartas.py tests/test_card_sim_v2.py tests/test_spec362_arcanista.py -q`.
   O `test_card_sim_v2` cai no ramo estrutural (R10), e isso não conta como falha.
@@ -299,13 +355,15 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
 - **Arquivos:** `scripts/migrate_bestiary_v4.py` (docstring e, com a D3, o `--write`),
   `docs/HANDOFF-PROXIMA-SESSAO.md`, `tests/test_spec376_fonte_dados.py`.
 1. **Teste:** `test_migrate_bestiary_sem_write_nao_grava` vermelho.
-2. Aviso no docstring e o `--write` (D3). Corrigir o `HANDOFF-PROXIMA-SESSAO.md:40`.
+2. Aviso no docstring, a linha "Uso:" (`:15`) e o `--write` (D3), só em `main()`/`__main__`.
+   `migrate_creature` e as constantes ficam byte-iguais (o 295 os usa). Corrigir o `HANDOFF-PROXIMA-SESSAO.md:40`.
 3. Rodar `tests/test_spec287_encounter_scale.py tests/test_spec290_chefe_sobrevivencia.py tests/test_spec295_chefe_no_topo.py tests/test_conflito_autoria_bestiario.py tests/test_spec376_fonte_dados.py -q`.
 
 ### Etapa B1 — Scripts de evidência (lista final da D4)
 - **Arquivos:** os scripts liberados (R13) e `ruff-baseline.toml`.
 1. R3 de novo para cada script, e um commit por script.
-2. `ruff_baseline.py`, depois `ruff_baseline.py --check` e `ruff check .` verdes. Rodar
+2. `ruff_baseline.py`, depois `ruff_baseline.py --check` e `ruff check .` verdes. `git diff ruff-baseline.toml`
+   mostra só as linhas dos scripts apagados (R14). Rodar
    `tests/test_spec192_staging_scripts.py tests/test_spec191_staging_tools.py tests/test_session_hardening.py -q`.
 
 ### Etapa C0 — Linha de base W2 (A)
@@ -321,7 +379,7 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
 - **Arquivos:** `services/npc_world.py`, `services/world_engine.py`, `services/faction_relations.py`, adendos
   em `specs/SPEC-313-…md` e `specs/SPEC-302-…md`.
 - Rodar os testes de `npc_world`, `world_engine` e `faction_relations` (`tests/test_spec302*`,
-  `tests/test_spec313*`, `tests/test_spec304*`). W2 B.
+  `tests/test_spec313*`, `tests/test_spec304*`). W2 B. Ordem com a SPEC-377 item 1 em `world_engine.py` (R19).
 
 ### Etapa C3 — Helpers de agentes (R20, R21)
 - **Arquivos:** `agents/bestiary.py`, `agents/npc.py`. **[H]** As branches de fauna e bestiário (370–373)
@@ -334,10 +392,12 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
   F401 mudar).
 1. Matriz de import "antes" (já da C0).
 2. Remover os stubs, mantendo `RAG_AVAILABLE = True`.
-3. Matriz "depois" igual à de antes. Rodar os 10 testes que fazem monkeypatch de `RAG_AVAILABLE`
-   (lista do R22) e os testes de `world_simulator`. W2 B.
+3. Matriz "depois", com as asserções de identidade do R23, igual à de antes. Rodar os 7 arquivos que fazem
+   monkeypatch de `npc.RAG_AVAILABLE` (`tests/test_context_npc_gate.py`, `test_spec301_llm.py`,
+   `test_spec310_npc_prompt.py`, `test_spec311_integration.py`, `test_spec314_no_leak.py`,
+   `test_spec314_npc_proposals.py`, `test_spec350_npc_prompt.py`) e os testes de `world_simulator`. W2 B.
 
-### Etapa C5 — Opcional (só se a D5 mandar apagar `resolve_card`/`valid_effect_kind`; espera a 368)
+### Etapa C5 — Opcional (só se a D5 mandar apagar `resolve_card`/`valid_effect_kind`; a 368 já pousou, vale só a W1)
 - **Arquivos:** `services/card_effects.py`, `services/cards.py` e os testes do R24. **Não é pura** (W3):
   exige a revisão `Sol` antes do commit.
 
@@ -347,16 +407,17 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
 
 ## 5. Critérios de aceite
 
-- [ ] `docs/spec376/deriva.md` com os 4 geradores medidos e um veredito por gerador (R5/R6). `git status` do
-      checkout principal e do worktree da spec intactos em `data/`.
+- [ ] `docs/spec376/deriva.md` com as medições (i) e a cadeia (ii), e um veredito por gerador tirado da
+      cadeia (R5/R6). Snapshot de `git status --porcelain -- data/` e `git stash list` do principal igual
+      antes e depois.
 - [ ] Só saiu gerador com deriva destrutiva provada (R7), com a D1 registrada.
 - [ ] `CARTAS.md`, `CLASSES.md`, `AUTORIA.md` e o docstring do teste declaram `data/` como fonte (R8). Adendo
       na SPEC-273.
 - [ ] `migrate_bestiary_v4.py` analisado; aviso e `--write` conforme a D3 (R11).
 - [ ] Scripts de B apagados só da lista final da D4. Re-grep registrado (R3). `ruff-baseline.toml`
-      regenerado e `--check` verde (R14).
+      regenerado, com diff só das linhas apagadas, e `--check` verde (R14).
 - [ ] C1–C4 com W1 registrado, re-grep registrado e W2 sem diferença (evals compare vazio, playtest com as
-      mesmas violações e desfechos). Matriz de import igual antes e depois (R23).
+      mesmas violações e desfechos). Matriz de import com as identidades `True` antes e depois (R23).
 - [ ] Testes alterados só nos casos do R17. Nenhuma outra asserção mudou (W3).
 - [ ] Adendos datados nas SPEC-012, 074, 302 e 313 para o que saiu (R4).
 - [ ] Um commit por mudança mecânica (W4); nenhum force-push (W8).
@@ -388,20 +449,28 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
   o rollback é `git revert` de um commit só (W4). Risco residual: uma sessão paralela com o guia antigo
   aberto roda o gerador antes do pouso. Por isso a A1/A2 corrigem a doc **no mesmo commit** do `git rm`.
 - **O próprio teste de deriva estragar dados.** O `gen_classes_v2.py` grava ao ser importado
-  (`:1605-1608`, sem `main`), e `RPG_ROOT` cai em `"."` quando ausente. Mitigação: rodar só no worktree
-  descartável, com `RPG_ROOT=.` explícito e o cwd conferido; `git checkout -- data && git clean -fdq -- data`
-  e assert de `git status` limpo no checkout principal (R5). Nunca rodar `gen_tiers_5_plus --write`.
+  (`:1605-1608`, sem `main`). **`RPG_ROOT` não protege:** `scripts/dev/env.sh:6,17` o sobrescreve com o
+  toplevel do cwd, e o cwd do subagente volta ao checkout principal a cada chamada de Bash, onde a 367 trabalha
+  direto na `main` (revisão P0-1). Mitigação (R5): rodar no diretório temporário fora de qualquer repo, com o
+  python do venv chamado direto (`-I`), `test ! -d .git` na mesma chamada e snapshot de
+  `git status`/`git stash list` do principal antes e depois. O `gen_tiers_5_plus --write` só roda na cadeia
+  (ii), dentro do diretório temporário.
 - **Chamada dinâmica que escapa do grep** (`getattr`, nome em YAML/JSON, alvo de `monkeypatch` em string).
   Mitigação: o R3 cobre string, `getattr` e registros, e o W2 (evals + playtest) pega caminhos de runtime
   que o grep não vê. A auditoria admite que não descartou chamadas dinâmicas (Anexo); esta spec descartou
   para os itens de C (0 hits do nome em qualquer forma), mas o executor refaz isso no dia (o código muda).
-- **Stub de import que evitava ciclo.** Mitigação: a matriz de subprocess do R23, isolada e nas duas ordens,
-  antes e depois; em caso de dúvida, o stub fica. A seam `RAG_AVAILABLE` é preservada (R22), porque sem ela
-  10 testes quebram por `setattr` em atributo inexistente.
+- **Medir a deriva da forma errada** (o erro da SPEC-273). Mitigação: o veredito sai da cadeia completa
+  (ii); campo que o `gen_tiers_5_plus` devolve não conta como destrutivo (R6).
+- **Stub de import que evitava ciclo.** Mitigação: a matriz de subprocess do R23, em 5 ordens, com
+  asserções de **identidade** stub × real (um ciclo mascarado pelo stub também daria 0 erro); em caso de
+  dúvida, o stub fica. A seam `RAG_AVAILABLE` é preservada (R22), porque sem ela 7 arquivos de teste (8
+  `setattr`) quebram por atributo inexistente.
 - **Apagar o intervalo errado de `combat_mechanics.py`.** O intervalo da auditoria (`535-645`) inclui
   `HANDLED_KINDS`, que está vivo. O R17 fixa `535-579`, e `test_mecanica_orfa` está no escopo da C1.
-- **Conflito com as sessões paralelas** (367/368 Cartas, 370–374 fauna e bestiário). Mitigação: W1 por etapa;
-  C5 e A4 esperam explicitamente.
+- **Conflito com as sessões paralelas** (a 367 commita direto na `main`; 369 Cartas; 370–374 fauna e
+  bestiário; 374 em `AUTORIA.md`; 377 em `world_engine.py`; 379 em `test_mvp.py`; 381/384 regeneram
+  `ruff-baseline.toml`). Mitigação: a W1 revisada, com as três fontes (R1); A3, A4 e C2 esperam
+  explicitamente; diff restrito da baseline (R14).
 - **`motor_hash` muda** com qualquer edição em `services/**` ou `data/cards/**`. O
   `tests/test_card_sim_v2.py` cai no ramo estrutural por desenho, e isso não é regressão (R10).
 - **Saves, MockLLM e FallbackLLM:** sem impacto. Nenhum campo de estado, guard de structured output ou
@@ -424,12 +493,13 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
   O histórico git guarda o script (W8), e (b) mantém 4 K linhas que ninguém pode rodar. Se a Etapa 0 der diff
   vazio para algum gerador, ele **fica**, e esta D não se aplica a ele.
 - **D2 — Trocar o `_meta` "Gerado por scripts/gen_cards_v4.py" nos 5 JSON de classe?** **Recomendação: sim,
-  na etapa A4**, depois que 367/368/369 pousarem (W1). Nenhum teste lê esse campo, e deixá-lo mente sobre a
+  na etapa A4**, depois que a 367 (que commita direto na `main`) e a 369 pousarem (W1; a 368 já pousou). Nenhum teste lê esse campo, e deixá-lo mente sobre a
   fonte. Se as branches de Cartas não pousarem nesta onda, a A4 é cancelada sem prejuízo (o `CARTAS.md` já
   diz a verdade).
 - **D3 — `migrate_bestiary_v4.py` passa a exigir `--write`?** (só se a Etapa 0 provar que ele é destrutivo.)
   **Recomendação: sim.** É o mesmo padrão do `gen_tiers_5_plus` (SPEC-355 R6, depois de um incidente que
-  reescreveu 10 arquivos). Os testes que importam o módulo usam só constantes. Alternativa mínima: só o
+  reescreveu 10 arquivos). Nenhum dos testes que importam o módulo chama `main()`; o 295 usa `migrate_creature`,
+  que não muda. Alternativa mínima: só o
   aviso no docstring.
 - **D4 — Lista final de B.** **Recomendação:** apagar B1 (`spec236_daily_cap`, `spec279_usage_survives_delete`,
   `jev_primary_measure`). **Manter B2** (`security_wave_smoke`, `browser_voice_smoke`, `stt_fallback_smoke`,
@@ -438,7 +508,7 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
   R13. Se você disser "apaga B2 também", são mais −720 linhas.
 - **D5 — `resolve_card` e `valid_effect_kind`.** **Recomendação: manter os dois.** O primeiro é interface
   declarada da SPEC-330 e é por onde o teste da gramática prova a ordem dos efeitos. O segundo é o oráculo do
-  teste de conteúdo. Apagar qualquer um muda asserção (W3) e mexe em arquivo da 368. São 18 linhas.
+  teste de conteúdo. Apagar qualquer um muda asserção (W3), e o ganho é de 18 linhas.
 - **D6 — Leitores da SPEC-302 sem consumidor** (`region_pressure`, `faction_relation`, `relation_label`).
   **Recomendação: apagar, com adendo na SPEC-302.** São 4 a 10 linhas cada, sem teste, e quem precisar
   reescreve em 1 minuto. Não há spec aberta (370–385) que os cite.
@@ -458,6 +528,26 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
    tem `vitalidade_bonus: 8` (`scripts/gen_classes_v2.py:1509`). O risco real do `gen_classes_v2` é recriar
    `data/player_abilities.json` (quebra `test_cutover_audit.py:78`) e o que a Etapa 0 medir.
 5. Segundo arquivo do `gen_classes_v2`: `data/player_abilities.json`.
-6. `migrate_bestiary_v4` é importado por 3 testes (287, 290, 295), não só pelo 287.
+6. `migrate_bestiary_v4` é importado por 3 testes (287, 290, 295), não só pelo 287. O 295 chama
+   `migrate_creature`.
 7. Dos 11 scripts de B, 4 não são órfãos (`spec222_art_purge`, `spec351_opening`, `migrate_embedding_profile`
    e, de forma plausível, `arena_todas.sh`). O total é 1.915 linhas, não ~2.000 em "17 scripts".
+
+---
+
+## Resposta à revisão
+
+Revisão: [handoffs/SPEC-376-independent-review.md](../handoffs/SPEC-376-independent-review.md) (Opus,
+03/11, `main` em `b278f6af`, SAFE-WITH-CHANGES). **Todos os achados foram aceitos; nenhum foi rejeitado.**
+
+| ID | Onde foi aplicado |
+|---|---|
+| P0-1 (`RPG_ROOT` sobrescrito por `env.sh`; risco de gravar no principal) | R5 reescrito: diretório temporário fora de repo, python do venv direto com `-I`, `test ! -d .git` na mesma chamada, snapshot antes e depois. §4 Etapa 0 e §7 atualizados |
+| P1-1 (medir gerador sozinho conta como perda o que a cadeia devolve) | R5 itens 4–5 (medições (i) e cadeia (ii)); R6 com os campos em dois grupos e o veredito pela cadeia; risco novo no §7 |
+| P1-2 (a matriz de import não detecta ciclo mascarado) | R23 com 5 ordens, `RPG_FORCE_MOCK=1` e asserções de identidade stub × real; C4 e §5 |
+| P1-3 (W1 cega a commits direto na `main` e a worktrees sujos; branch morta) | R1 passa a usar a W1 revisada da auditoria §6.2 (3 fontes) + `git log <sha>..main -- <arquivos>`; `spec-349-pre-sync` registrada para o coordenador arquivar |
+| P2-1 (critério do teste de docs) | §3: regex de comando e de link; a frase "foi removido" é permitida |
+| P2-2 (baseline do ruff absorve dívida alheia) | R14 e B1: `git diff ruff-baseline.toml` só com as linhas apagadas, ou parar |
+| P2-3 (fatos errados) | R11 (295 chama `migrate_creature`; a A5 não toca nele nem nas constantes; linha "Uso:"), R22 (8 linhas em 7 arquivos, listados), cabeçalho (368 já pousou) |
+| P2-4 (testes não rodam no diretório temporário) | R5 item 6: registro por leitura, ou cópia do `data/` da cadeia para um worktree descartável com guarda de toplevel |
+| Notas da tabela (R3 `project_index/`; R19 ordem com a 377; R21 nota na 378; C5 sem trava da 368; A3 espera a 374) | Aplicadas. A nota na SPEC-378 fica com o coordenador (esta spec não edita outro arquivo) |

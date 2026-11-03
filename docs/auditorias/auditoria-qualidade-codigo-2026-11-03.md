@@ -175,7 +175,7 @@ spec cita a regra pelo código (W1…W8).
 
 | Letra do §5 | Spec | Observação |
 |---|---|---|
-| A | SPEC-375 higiene do repo (índice, CI, lixo local) | sem mídia (ver 6.4) |
+| A | SPEC-375 higiene do repo (índice, CI, lixo local) | sem mídia (ver 6.4); `.tmp/` tem dumps de staging (revisão) |
 | B + parte de D/§4 "sem chamador" | SPEC-376 fonte de cartas/classes + poda morta | exclusões da SPEC-272 obrigatórias |
 | C | SPEC-377 divergências (lei, fôlego, `_alive`, facção) | **muda comportamento de propósito** |
 | D | SPEC-378 helpers comuns | só cópias **equivalentes**; sem `file_cache`, sem tabela de `persistence` |
@@ -189,16 +189,30 @@ spec cita a regra pelo código (W1…W8).
 
 ### 6.2 Regras da onda
 
-- **W1 — Trava de arquivos (anti-conflito com outras sessões).** Antes de **cada etapa**, o executor
-  lista os arquivos tocados por qualquer branch aberta e cruza com os arquivos da etapa. Interseção
-  não vazia ⇒ a etapa **espera** (não começa e não "resolve no rebase"). Outras etapas da mesma spec
-  podem seguir.
+- **W1 — Trava de arquivos (anti-conflito com outras sessões).** *(Revisada após as revisões
+  independentes de 03/11: a versão só-branches não via sessões que commitam direto na `main` e travava
+  para sempre por branches mortas.)* Antes de **cada etapa**, o executor junta três fontes e cruza com os
+  arquivos da etapa; interseção não vazia ⇒ a etapa **espera** (não começa e não "resolve no rebase"):
+  1. **Branches vivas:** branches com commit à frente da `main` **e** com commit nos últimos 7 dias
+     (branches paradas, ex.: `spec-214`, `spec-349-pre-sync`, `feat/*` antigas, ficam fora e são listadas
+     para o dono arquivar);
+  2. **Mudanças não commitadas** em todos os worktrees, **inclusive o checkout principal**
+     (`git -C <wt> status --porcelain` para cada linha de `git worktree list`);
+  3. **Specs `in-progress` que trabalham direto na `main`** (sem branch): arquivos citados na §3 da spec
+     e arquivos dos commits recentes delas (`git log --since=2.days --name-only main`).
   ```bash
-  for b in $(git for-each-ref --format='%(refname:short)' refs/heads | grep -vE '^(main|backup/)'); do
-    [ "$(git rev-list --count main..$b)" -gt 0 ] && git diff --name-only main...$b
-  done | sort -u > /tmp/travados.txt
+  { for b in $(git for-each-ref --format='%(refname:short)' refs/heads | grep -vE '^(main|backup/)'); do
+      [ "$(git rev-list --count main..$b)" -gt 0 ] && [ -n "$(git log -1 --since=7.days --format=%h $b)" ]         && git diff --name-only main...$b
+    done
+    git worktree list --porcelain | sed -n 's/^worktree //p' | while read -r wt; do
+      git -C "$wt" status --porcelain | cut -c4-
+    done
+    git log --since=2.days --name-only --format= main
+  } | sort -u > /tmp/travados.txt
   comm -12 /tmp/travados.txt <(sort -u etapa_arquivos.txt)   # tem que sair vazio
   ```
+  A fonte 3 é conservadora de propósito (trava por arquivo tocado recentemente na `main`); o executor pode
+  liberar um arquivo se a spec que o tocou estiver `done` e a sessão dela ociosa (`ListAgents`).
 - **W2 — Oráculo de equivalência** (toda etapa marcada "refatoração pura"). Antes e depois:
   1. `uv run pytest` completo verde (coordenador, 1×, no pouso);
   2. `uv run python -m evals run` nas 12 suítes do `eval-gates.yml` com `--seed 7` → saída A (antes) e B
@@ -281,6 +295,30 @@ A escrita das specs reverificou cada achado. O que mudou em relação aos §3–
 **Saldo revisado da onda:** bem menor que o −17.000 do §1. Código de produto ≈ −2.000 a −3.000 linhas
 (375 a 384, sem contar flags de D1 ainda não medidas); testes crescem no curto prazo. O ganho principal é
 estrutural: `api.py`, nós de agente e `App.tsx` em pedaços com dono, e helpers únicos onde eram equivalentes.
+
+### 6.6 Revisão independente das specs (03/11, noite)
+
+Onze revisores Opus que não escreveram as specs refizeram as buscas com terminal, rodaram sondas só de
+leitura e testes focados. Pareceres em `handoffs/SPEC-NNN-independent-review.md`; cada spec tem uma seção
+"Resposta à revisão" mapeando achado → mudança. Todos os P0/P1 foram aplicados.
+
+| Spec | Veredito | P0 que a revisão pegou (já corrigido na spec) |
+|---|---|---|
+| 375 | seguro com mudanças | `.tmp/` tem dumps do banco de staging e insumos de experimentos congelados; `--theirs` da skill re-rastreia o índice; corrida da fixture com `-n auto` |
+| 376 | seguro com mudanças | `env.sh` troca o `RPG_ROOT` → medir os geradores regravaria `data/` no checkout principal; medir a **cadeia** de geradores |
+| 377 | seguro com mudanças | bugs da lei e do rendido **confirmados**; storyteller sobrescreve `law_state`; `lote-v2` usa a regra do lint (vira eval authoring) |
+| 378 | seguro com mudanças | `invoke_structured` chamava `_log_event` inexistente (guard de FallbackLLM viraria crash); teste de empacotamento Vercel conta literal |
+| 379 | seguro com mudanças | paridade com `/game/new` falharia (calendário deriva do `game_id`) |
+| 380 | seguro com mudanças | baseline de 688 KB barrada pelo hook de 500 KB; fonte dos `expected` fechada |
+| 381 | seguro com mudanças | `include_router` deixa rotas opacas → métrica `route_label` e 3 testes passariam vazios; montar com `routes.extend` |
+| 382 | seguro com mudanças | guard da 363 compara o orquestrador com a `main` (D6 do dono); `getsource` de uma linha |
+| 383 | seguro com mudanças | lint `react-hooks/refs` reprovaria o desenho; Context com ref recusaria clique rápido |
+| 384 | seguro com mudanças | fórmula mudaria o modo do calendário com o motor em `shadow`; staging real é `cc31a6c1` |
+| 385 | **adiada** | forma MockLLM instável sem seed; duplicaria a 381; nenhum bug de contrato real até hoje |
+
+Lições que viraram regra: a W1 (§6.2) agora vê commits diretos na `main` e mudanças não commitadas e
+ignora branches paradas; nome de parecer de spec é `-independent-review.md` (`tests/test_handoff_names.py`).
+Para arquivar (dono): branches paradas `spec-214`, `spec-349-pre-sync`.
 
 ---
 

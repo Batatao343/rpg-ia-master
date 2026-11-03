@@ -4,10 +4,17 @@
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11 (`docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md`
 > §4.2 itens 1–2, §5 letra F, §6 regras W1–W8, §6.3 ordem 7)
-> **Depende de:** SPEC-371 **pousada** (só para a parte de combate, Etapas 4.x: ela edita
-> `agents/combat.py` e `playtest/*` agora). SPEC-378 (helpers comuns) **recomendada antes**: ela
-> mexe em `_last_human_text`, `_fold` e nos guards `isinstance` destes mesmos arquivos (§4.2 itens 3 e 6).
-> **Desbloqueia:** SPEC-384 item N (tirar o caminho de combate sem tabuleiro fica localizado em
+> **Depende de:** por etapa (§4):
+> - Etapa 1 (golden): `mock_llm.py` livre no W1 (a SPEC-374 o edita agora) e helpers de teste
+>   importados pelo golden livres (a SPEC-379 R4.4 pode mexer neles).
+> - Etapa 3 (`_run_round`): **D6** decidida (guard da 363) **e** SPEC-377 item 3 (`_alive`/declarações,
+>   `conflict_orchestrator.py:694,2750`, muda comportamento de propósito) pousada ou descartada.
+> - Etapa 4 (combate): SPEC-371 **pousada** (edita `agents/combat.py` e `playtest/*` agora) **e**
+>   SPEC-384 D3 decidida (apaga `_advance_reinforcements`, chamado em `combat.py:2732`, dentro de
+>   `_combat_resolve_round`/`_combat_aftermath`).
+> - SPEC-378 (helpers comuns) **recomendada antes** de tudo: mexe em `_last_human_text`, `_fold` e nos
+>   guards `isinstance` destes mesmos arquivos (auditoria §4.2 itens 3 e 6). Ver D2.
+> **Desbloqueia:** SPEC-384 D4 (tirar o caminho de combate sem tabuleiro fica localizado em
 > `_combat_narrate`/`_combat_resolve_round`); follow-up futuro "nós em pacote" (fora de escopo).
 > **EXECUTOR_MODEL:** `Terra` · **REVIEW_MODEL:** `Sol` · **REVIEW_REQUIRED:** `true`
 > **EVAL_AUTHORING_REQUIRED:** `false`
@@ -32,10 +39,12 @@ consegue ler e alterar com segurança:
 - [F] `_combat_node`: `agents/combat.py:2206-3215` = **1.010 linhas** (a auditoria contou 1.012 até a
   linha em branco 3217). Sem closures; ~60 variáveis locais compartilhadas entre preparação, rodada,
   narração e montagem do resultado; 5 saídas antecipadas (l.2209, 2234, 2267, 2415, 2455).
-- [F] `_run_round`: `services/conflict_orchestrator.py:2517-2999` = **483 linhas**, com 6 closures que
-  compartilham estado mutável da rodada (`_next_intent` l.2623, `_frustrate` l.2629, `_spend_taunt`
-  l.2651, `_taunt_same_round` l.2667 com `swap` aninhado l.2699, `_enemy_decl`/`_enemy_decl_inner`
-  l.2716/2726 com `late` aninhado l.2727, `_tf_acted` l.2864).
+- [F] `_run_round`: `services/conflict_orchestrator.py:2517-2999` = **483 linhas**, com **7 closures
+  de 1º nível** que compartilham estado mutável da rodada (`_next_intent` l.2623, `_frustrate` l.2629,
+  `_spend_taunt` l.2651, `_taunt_same_round` l.2667 com `swap` aninhado l.2699, `_enemy_decl` l.2716,
+  `_enemy_decl_inner` l.2726 com `late` aninhado l.2727, `_tf_acted` l.2864). `_enemy_decl` chama
+  `_enemy_decl_inner` por nome antes de ele ser definido (ligação tardia); `acted` (lido por
+  `_tf_acted`) só nasce em l.2862. Sem `nonlocal`. Só 2 saídas: l.2581 (recusa) e l.2999.
 
 O objetivo é transformar cada uma num **orquestrador curto** que chama helpers privados nomeados por
 fase, **sem mudar nenhum efeito**: mesmo dict parcial de `GameState` devolvido, mesma ordem de mutação,
@@ -60,8 +69,8 @@ Todos verificáveis pelo oráculo da §3.4 (golden novo + W2).
 - **R2 — Helpers por fase, mesmo módulo.** Cada helper novo é função privada (prefixo `_`) definida no
   mesmo arquivo do nó: `agents/storyteller.py`, `agents/combat.py`, `services/conflict_orchestrator.py`.
   Nenhum arquivo `.py` novo de produto.
-- **R3 — Closures viram parâmetros explícitos.** `_fm_view`/`_fm_apply` (storyteller) e as 6 closures
-  de `_run_round` saem do corpo do nó e passam a receber o estado compartilhado por parâmetro (objeto de
+- **R3 — Closures viram parâmetros explícitos.** `_fm_view`/`_fm_apply` (storyteller) e as 7 closures
+  de 1º nível de `_run_round` saem do corpo do nó e passam a receber o estado compartilhado por parâmetro (objeto de
   contexto privado, §3.2). As closures pequenas que não reatribuem nada do nó (`_describe_track`,
   `_stream_view`, `late`, `swap`) podem ficar como closures dentro do helper que as usa.
 - **R4 — Retorno idêntico.** Para todo caso do golden (§3.4), o dict devolvido por `storyteller_node`,
@@ -90,12 +99,30 @@ Todos verificáveis pelo oráculo da §3.4 (golden novo + W2).
   trecho). Nada sobe para o topo do módulo.
 - **R9 — Testes intocados.** Nenhum arquivo de teste existente muda (W3). A única adição em `tests/` é
   o golden da Etapa 1. Se algum teste existente exigir mudança, a etapa para e é reportada (não é pura).
+  **Única exceção possível:** [F] `tests/test_spec363_golden_guard.py:23-25`
+  (`test_engine_modules_untouched_by_spec363`) faz `git diff --quiet main -- services/conflict_orchestrator.py`
+  **sem gate de branch**; qualquer branch que mude o orquestrador falha nele, inclusive na suíte do pouso.
+  A Etapa 3 só acontece com a decisão **D6** do dono, aplicada num commit `test:` próprio antes dela.
 - **R10 — Um commit por extração** (W4), cada um revertível sozinho com `git revert <sha>`, com o
   golden e os testes de escopo verdes em cada commit.
 - **R11 — W2 completo** antes (baseline A, Etapa 0) e depois (B, Etapa 5): suíte completa verde;
-  `evals compare --current B --baseline A` sem diferença; `playtest run --all --turns 10` com
-  `--seed 0` e `--seed 1` com mesma contagem de violações por perfil e mesmo desfecho
-  (vivo/morto/turnos); `playtest.invariants.check_reproducibility()` → `True`.
+  `evals compare --current B --baseline A` sem diferença. O **oráculo A/B real é o golden** (§3.4):
+  `playtest run --all --turns 10` (`--seed 0` e `--seed 1`, mesma contagem de violações e mesmo
+  desfecho) e `playtest.invariants.check_reproducibility()` → `True` entram só como **sanidade**, porque
+  comparam o código consigo mesmo ou só contagens e não pegam mudança de ordem do RNG. Além disso, o
+  hash do `last_mech_log` e da sequência de `record_step` por campanha é gravado em A e comparado em B.
+- **R12 — Travas de texto-fonte.** Testes que leem o código como texto continuam verdes sem mudança:
+  - [F] `tests/test_spec297_review_fixes.py:186` faz `inspect.getsource(st.storyteller_node)` e exige
+    `[m for m in messages if isinstance(m, HumanMessage)][-3:]` **dentro do nó** (hoje
+    `agents/storyteller.py:2378`): essa linha (`_recent_player_inputs`) **fica no orquestrador**, com a
+    variável local chamada `messages`, e o valor é passado ao helper.
+  - [F] Leem o módulo inteiro (sobrevivem porque o código fica no mesmo arquivo, desde que o texto
+    não mude): `tests/test_spec304_review.py:216-219` (`if k != "npcs"` presente e
+    `updates.update(sim_updates)\n` ausente), `tests/test_spec303_passes.py:84`
+    (`world_calendar.CROSSING_NOTE`), `tests/test_spec298_faccao_eventos.py:78-80` (`_POS_CUES`/
+    `_revert_reputation` ausentes).
+  - Antes de cada etapa: `git grep -n "getsource\|read_text" tests` e confirmar que nenhum alvo novo
+    aponta para os 3 arquivos.
 
 ### Fora de escopo
 
@@ -107,7 +134,7 @@ Todos verificáveis pelo oráculo da §3.4 (golden novo + W2).
   Ver **D1**.
 - Qualquer mudança de comportamento, inclusive "bug óbvio" visto de passagem: vai para nota no
   hand-back (o ex.: SPEC-377 cuida das divergências conhecidas).
-- Os helpers da SPEC-378 (`invoke_structured`, `text.fold`, `flags.mode`): se a 378 não tiver pousado,
+- Os helpers da SPEC-378 (`invoke_structured`, `text.fold`, `env.env_choice`): se a 378 não tiver pousado,
   esta spec **não** os antecipa.
 - Remover o caminho de combate sem tabuleiro (`board_on` falso) ou o modo `shadow`: é a SPEC-384 N.
 - Editar `playtest/*`, `evals/` protegido, goldens existentes (`tests/fixtures/spec330_legacy_golden.json`,
@@ -169,8 +196,11 @@ devolver tuplas de 15-25 valores entre helpers é onde a extração erra. Por is
   só são lidos sob a mesma condição que os define (l.2722), então o default não muda nada.
 - `services/conflict_orchestrator.py`: `class _RoundIntents` (privada) com `frozen`, `intent_mode`,
   `intent_cursor`, `taunt_spend`, `acted`, e referências a `scene`, `actors_by_id`, `sides`, `out`,
-  `rng`, `scene_state`; as 6 closures viram métodos (`next_intent`, `frustrate`, `spend_taunt`,
-  `taunt_same_round`, `enemy_decl`, `tf_acted`) com o mesmo corpo. `swap` e `late` continuam aninhadas.
+  `rng`, `scene_state`; as 7 closures viram métodos (`next_intent`, `frustrate`, `spend_taunt`,
+  `taunt_same_round`, `enemy_decl`, `enemy_decl_inner`, `tf_acted`) com o mesmo corpo; `enemy_decl`
+  chama `self.enemy_decl_inner`. `swap` e `late` continuam aninhadas. `acted` é criado no mesmo ponto
+  de hoje (l.2862) e atribuído ao objeto ali (`intents.acted = acted`, mesma identidade do `set` que o
+  laço muta); antes disso o campo é `None` e nenhum método o lê (hoje só `_tf_acted` o lê, dentro do laço).
 
 Regra de identidade: o objeto de contexto guarda **as mesmas referências** que os locais guardavam
 (nada de `deepcopy`/`dict(...)` novo). Comparações por identidade que existem hoje dependem disso:
@@ -195,11 +225,15 @@ Regra de identidade: o objeto de contexto guarda **as mesmas referências** que 
 | dentro do `try`: `_story_narrate(t, llm, sys)` → `StoryUpdate` | 2123-2179 | `narrate_structured` + guard `isinstance(update, StoryUpdate)` (l.2169-2179) intacto |
 | dentro do `try`: `_story_guard_narrative(t, update)` | 2181-2278 | pré-validação, quarentena, sanitização, mediação |
 | dentro do `try`: `_story_engine_proposals(t, update)` | 2280-2332 | `faction_deed`, `apply_claims` (com seu `try` l.2313-2321), `membership_action` via `_fm_apply` |
-| dentro do `try`: `_story_beat_and_npcs(t, update)` | 2334-2401 | XP de beat, `campaign_plan`, `introduced_npcs`/`npcs_left_scene` |
+| dentro do `try`: `_story_beat_and_npcs(t, update, recent_player_inputs)` | 2334-2401 | XP de beat, `campaign_plan`, `introduced_npcs`/`npcs_left_scene`. **Exceção (R12):** l.2377-2379 (`_recent_player_inputs = tuple(... [m for m in messages if isinstance(m, HumanMessage)][-3:])`) fica no orquestrador, dentro do `try`, no mesmo ponto relativo, e entra como parâmetro |
 | dentro do `try`: `_story_assemble_updates(t, update)` → `dict` | 2403-2652 | itens narrados (2433-2513 pode virar `_story_narrated_items`), recibo, eventos, quests, rumores, `archive_low` |
 | no `except`: `_story_exception_fallback(t)` → `dict` | 2655-2720 | o `except Exception as e:` e o `_log_event("storyteller", "failed", …)` ficam no orquestrador; só o corpo da montagem do fallback vira helper |
 
-**`_combat_node`** (o wrapper `combat_node` l.2185-2203, com `mechanics_trace.scope()` e o
+Texto que precisa sobreviver byte a byte no módulo (R12): `if k != "npcs"` (l.1708),
+`world_calendar.CROSSING_NOTE` (l.1333), a list comprehension de l.2378.
+
+**`_combat_node`** — faixas na numeração **pré-371** da `main` de 03/11; a 371 desloca até ~+30
+linhas (blocos em ≈2314, ≈2695, ≈2782) e a Etapa 4.0 refaz esta tabela. (O wrapper `combat_node` l.2185-2203, com `mechanics_trace.scope()` e o
 `ContextVar` da SPEC-361, não muda; todos os helpers rodam dentro desse escopo porque são chamados por
 `_combat_node`).
 
@@ -226,7 +260,7 @@ Regra de identidade: o objeto de contexto guarda **as mesmas referências** que 
 | `_round_new_out(actors_by_id)` → `dict` | 2539-2563 |
 | `_round_refusal(...)` → `bool` (o orquestrador faz `return out`) | 2564-2581 |
 | `_round_scene_start(...)` | 2582-2608 (marcadores, `advance_tactical_state`, impasse, Cartas de Cena, fases de chefe, promessas) |
-| `_RoundIntents(...)` + `freeze()` | 2609-2621 e closures 2623-2763 |
+| `_RoundIntents(...)` + `freeze()` | 2609-2621 e closures 2623-2763 (+ `_tf_acted` 2864; `acted` ligado em 2862) |
 | `_round_start_of_round(...)` → `(player, player_id, player_decl)` | 2765-2828 |
 | `_round_sequence(...)` → `(seq, side_actors)` | 2830-2860 |
 | `_round_actor_loop(...)` | 2861-2936 |
@@ -255,23 +289,48 @@ Regra de identidade: o objeto de contexto guarda **as mesmas referências** que 
   - `_run_round` (≥ 6), além do `spec330_legacy_golden.json` que já existe: recusa de item; presságio
     `on` congelado; `shadow`; Provocação na mesma rodada (`_taunt_same_round`); ações extras de chefe;
     Interromper (`interrompido_por`).
+  - **stream (≥ 2):** com `services.narrative_sink.bind(coletor)` e o modo de stream ligado, um turno de
+    história (`narrate_structured` com `stream=_stream_ok`/`finalize=_stream_view`, l.2130-2166) e um
+    desfecho de combate (`narrate_text`, combate l.1786/1878), gravando a lista ordenada de chunks
+    emitidos. Sem isso o caminho do stream fica fora do oráculo.
+  - **fauna (≥ 1, só na Etapa 4.0):** combate com `RPG_FAUNA` ligado (ramo de saber de fauna que a
+    SPEC-371 acrescenta).
 - **Casos de campanha:** fingerprint no formato de `tests/test_spec360_flags_off.py:27-52` para os 4
   perfis vitais (`explorador`, `combate`, `diplomatico`, `secret_rusher`), 10 turnos, `seed=0`, com
-  `RPG_CARD_DECK` `off` e `on`, mais hash do estado final inteiro normalizado.
-- **O que se grava por caso:** hash e (em falha) diff legível de: (a) dict devolvido normalizado
-  (mensagens → `(tipo, content)`, `sort_keys`, `default=str`); (b) estado de entrada **após** a
-  chamada (pega mutação in-place); (c) sequência ordenada de eventos capturados por patch em
-  `agents.storyteller._log_event`, `agents.combat._log_event`, `observability.telemetry.log_fallback`,
-  `services.intent_guard.log_intent_guard` e `services.mechanics_trace.record_step`.
-- **Estabilidade:** na Etapa 1 o teste roda 2× seguidas e 1× com `-p no:randomly`/ordem diferente
-  antes do commit; campo instável (uuid, timestamp, latência) vai para uma lista `VOLATILE` explícita
-  **nessa etapa**. Depois da Etapa 1 a lista e o fixture não mudam (W3). [H] Os caches globais de
-  conteúdo gerado (`playtest/invariants.py:1763`) podem tornar os casos de campanha não byte-estáveis
-  entre execuções; se isso acontecer, os casos de campanha passam a comparar só a parte estável
-  (turnos/rota/local/vitalidade/ouro/nível/flags de combate), decidido e registrado na Etapa 1.
+  `RPG_CARD_DECK` `off` e `on`, mais hash do estado final inteiro normalizado, do `last_mech_log` e da
+  sequência de `record_step`. **Byte-idêntico**: o golden da 360 (30 turnos) já prova que é viável.
+- **O que se grava por caso:** hash e (em falha) diff legível de:
+  - (a) dict devolvido normalizado (mensagens → `(tipo, content)`, `sort_keys`, `default=str`);
+  - (b) estado de entrada **após** a chamada (pega mutação in-place, inclusive de objetos aninhados
+    como o `world` mutado em l.1599/1621 antes do rebind);
+  - (c) eventos de observabilidade capturados **no sink**, não por binding: `caplog.set_level(DEBUG)`
+    nos loggers `rpg.*`, gravando `(logger, level, msg, extras ordenados)`. `log_event` sempre passa por
+    `logging.getLogger(f"rpg.{area}")` (`observability/telemetry.py:136`); isso cobre
+    `_log_event` de storyteller, combate e orquestrador, `log_fallback` importado no topo por serviços,
+    e `logging.getLogger("rpg.conflict")` (`conflict_orchestrator.py:2402`, `pressagio_frustrado`).
+    Mais o patch em `services.mechanics_trace.record_step` (tipo, ator, motivo);
+  - (d) lista ordenada de arquivos criados/alterados no `tmp_path` isolado pelo conftest (nome + sha do
+    conteúdo): pega escritas de `npc_database.json`/bestiário por `generate_new_npc` e
+    `_sync_enemy_knowledge(load_persisted=True)` (`combat.py:754-776`).
+- **Determinismo:** o `rng` do combate é o módulo `random` **global** (`combat.py:2518`), e o MockLLM
+  também consome `random` global (`mock_llm.py`); é uma fita única, e qualquer troca na ordem das
+  chamadas (fala × rolagem × spawn) muda o resultado, o que o golden precisa pegar. Por isso:
+  `random.seed(...)` **por caso**; casos parametrizados, cada um com isolamento próprio de cache/
+  `tmp_path`; `_OUTCOME_BUDGET_S` (`combat.py:2017`, 6 s, thread com `copy_context`) fixado alto nos
+  casos (monkeypatch de atributo do módulo, já usado em `tests/test_spec353_misc.py`), para que
+  lentidão da máquina não dispare o fallback de orçamento e consuma `random` noutra ordem.
+- **Estabilidade (Etapa 1, antes do commit):** rodar o golden em 3 processos (`PYTHONHASHSEED=0`, `1`,
+  `random`) e 1× com `-n 2`; campo instável (uuid, timestamp, latência) vai para uma lista `VOLATILE`
+  explícita **nessa etapa**. Depois da Etapa 1 a lista e o fixture não mudam (W3). Degradar um caso de
+  campanha para a parte estável só com evidência de instabilidade anotada no handoff.
+- **Cobertura das faixas (Etapa 1):** `pytest-cov` não está instalado; um script one-shot com o `trace`
+  da stdlib (ou `sys.monitoring`), só sobre o golden, lista as linhas **não executadas** de cada uma
+  das 3 funções. Cada faixa das tabelas da §3.3 precisa de ≥ 1 linha executada; ramo relevante sem
+  cobertura (ex.: `beat_completed`, que o MockLLM sorteia em ~30 %) ⇒ caso novo com seed que o dispare,
+  ou a extração daquela faixa espera. As linhas não cobertas ficam anotadas no handoff.
 - **W2** (auditoria §6.2) roda em A (Etapa 0) e B (Etapa 5): suíte completa (coordenador), evals das 12
-  suítes do `eval-gates.yml` com `--seed 7` + `evals compare` sem diferença, `playtest run --all
-  --turns 10` com `--seed 0` e `--seed 1`, `check_reproducibility()`.
+  suítes do `eval-gates.yml` com `--seed 7` + `evals compare` sem diferença; playtest
+  `--all --turns 10` (`--seed 0` e `--seed 1`) e `check_reproducibility()` como sanidade (R11).
 
 ### 3.5 Arquivos
 
@@ -279,29 +338,45 @@ Regra de identidade: o objeto de contexto guarda **as mesmas referências** que 
   `services/conflict_orchestrator.py` (só reorganização interna; R2/R7/R8).
 - **Novos (teste):** os 3 da §3.4. Evidência de A/B em `handoffs/SPEC-382-equivalence.md` (tabela de
   violações/desfechos por perfil e seed, saída do `evals compare`).
-- **Não tocados:** `playtest/*`, `evals/*`, testes existentes, goldens existentes, `main.py`, `state.py`.
+- **Não tocados:** `playtest/*`, `evals/*`, testes existentes (exceto o commit da D6, se aprovada),
+  goldens existentes, `main.py`, `state.py`, `mock_llm.py`.
 
 ## 4. Plano passo a passo
 
-Antes de **cada** etapa: W1 (auditoria §6.2) com a lista de arquivos da etapa; interseção não vazia ⇒
-a etapa espera. W6: só esta spec de refatoração em voo; RAM < 3 GB ⇒ não dispara. Testes de escopo com
-no máximo `-n 2`; a suíte completa é do coordenador.
+Antes de **cada** etapa: W1 **revisada** (auditoria §6.2), com as três fontes: (1) branches vivas
+(commit à frente da `main` e com commit nos últimos 7 dias); (2) mudanças não commitadas em todos os
+worktrees, inclusive o checkout principal; (3) arquivos de specs `in-progress` que trabalham direto na
+`main` (§3 delas + `git log --since=2.days --name-only main`). Interseção não vazia ⇒ a etapa espera.
+A lista de arquivos de **toda** etapa inclui, além do arquivo de produto da etapa, os que invalidam o
+fixture: `mock_llm.py`, `tests/spec304_helpers.py`, `tests/spec325_helpers.py`,
+`tests/spec325_chase_helpers.py`, `tests/prompt_capture.py`, `playtest/runner.py`. Também antes de
+cada etapa: `git grep -n "getsource\|read_text" tests` (R12). W6: só esta spec de refatoração em voo;
+RAM < 3 GB ⇒ não dispara. Testes de escopo com no máximo `-n 2`; a suíte completa é do coordenador.
+
+**Regra de rebase:** se o golden quebrar depois de um rebase sobre a `main`, a etapa **para** e quem
+pousou no meio é investigado (vale para qualquer spec, não só a 378). O fixture não é regravado para
+"acompanhar"; a única regravação permitida é a da Etapa 4.0.
 
 ### Etapa 0 — Baseline A e travas
 
-1. W1 para `agents/storyteller.py`, `services/conflict_orchestrator.py` e `agents/combat.py`. [H] Em
-   03/11 só `combat.py` estava quente (SPEC-371, auditoria §6.3); storyteller e orquestrador estavam
-   livres. Confirmar com o comando do W1 no dia.
-2. Rodar W2-A e gravar em `handoffs/SPEC-382-equivalence.md`.
+1. W1 para `agents/storyteller.py`, `services/conflict_orchestrator.py`, `agents/combat.py` e a lista
+   comum acima. [F] No W1 do revisor em 03/11: `spec-371` toca `agents/combat.py` e
+   `playtest/{invariants,runner,telemetry}.py`; `spec-374` toca `mock_llm.py`; `spec-214` toca
+   `playtest/latency_llm.py` (branch parada pela regra de 7 dias, a listar para o dono arquivar).
+2. Rodar W2-A e gravar em `handoffs/SPEC-382-equivalence.md`, inclusive o hash de `last_mech_log` e da
+   sequência de `record_step` por campanha.
 3. Registrar o SHA da `main` usado como A.
 
-### Etapa 1 — Golden de nós (antes de qualquer extração)
+### Etapa 1 — Golden de nós (antes de qualquer extração; `mock_llm.py` e helpers de teste livres no W1)
 
 1. **Testes:** `tests/test_spec382_node_golden.py::test_storyteller_cases`,
-   `::test_combat_cases`, `::test_run_round_cases`, `::test_campaign_fingerprints` assertam igualdade
-   com o fixture; `::test_golden_is_stable` roda 2 casos 2× e asserta hashes iguais.
+   `::test_combat_cases`, `::test_run_round_cases`, `::test_stream_cases`,
+   `::test_campaign_fingerprints` assertam igualdade com o fixture (casos parametrizados, seed por
+   caso).
 2. **Implementação:** só os arquivos de teste da §3.4; código de produto intocado.
-3. **Verificação:** verde no código intacto, 2× seguidas. Commit único `test: add SPEC-382 node golden`.
+3. **Verificação:** verde no código intacto em 3 processos (`PYTHONHASHSEED=0`, `1`, `random`) e 1×
+   com `-n 2`; relatório de cobertura por faixa (`trace` da stdlib) anotado no handoff, com toda faixa
+   da §3.3 coberta. Commit único `test: add SPEC-382 node golden`.
 
 ### Etapa 2 — `storyteller_node` (W1 livre)
 
@@ -321,24 +396,32 @@ tests/test_stream_structured.py tests/test_streaming.py tests/test_mediation_sec
    `_story_beat_and_npcs`, `_story_assemble_updates`), um commit cada.
 8. `_story_exception_fallback`.
 
-### Etapa 3 — `_run_round` (W1 livre)
+### Etapa 3 — `_run_round` (W1 livre + D6 aplicada + SPEC-377 item 3 pousado ou descartado)
+
+0. Aplicar a D6 num commit `test:` próprio (gate de branch em
+   `tests/test_spec363_golden_guard.py::test_engine_modules_untouched_by_spec363`, no padrão de
+   `tests/test_spec364_golden_guard.py:30-36`, ou apagar o teste, conforme o dono). Sem D6 a Etapa 3
+   não começa.
 
 Após cada linha: golden + `tests/test_card_effects_grammar.py` (usa `spec330_legacy_golden.json`) +
 `tests/test_spec339_duracao_condicoes.py tests/test_spec346_mech_log.py tests/test_enemy_intent_node.py
-tests/test_spec355_*.py tests/test_spec295_chefe_no_topo.py`.
+tests/test_spec355_*.py tests/test_spec295_chefe_no_topo.py tests/test_spec353_golden_guard.py
+tests/test_spec363_golden_guard.py tests/test_spec364_golden_guard.py`.
 
-1. `_RoundIntents` (6 closures → métodos).
+1. `_RoundIntents` (7 closures → métodos; `acted` ligado em l.2862).
 2. `_round_new_out` + `_round_refusal` + `_round_scene_start`.
 3. `_round_start_of_round` + `_round_sequence`.
 4. `_round_actor_loop`.
 5. `_round_end`.
 
-### Etapa 4 — `_combat_node` (só depois da SPEC-371 pousada + W1 livre + golden reconferido)
+### Etapa 4 — `_combat_node` (só depois da SPEC-371 pousada + SPEC-384 D3 decidida + W1 livre + golden reconferido)
 
-0. Se a 371 mudou `combat.py`/`playtest/*` depois da Etapa 1, o golden de combate e de campanha foi
-   gravado sobre código antigo: **regravar só os casos de combate/campanha** sobre a `main` com a 371,
-   num commit próprio `test: refresh SPEC-382 combat golden after SPEC-371`, antes de qualquer
-   extração de combate, e anotar no handoff. É a única regravação permitida.
+0. Se a 371 (ou a 384 D3) mudou `combat.py`/`playtest/*` depois da Etapa 1, o golden de combate e de
+   campanha foi gravado sobre código antigo: **regravar só os casos de combate/campanha** sobre a
+   `main` atual, num commit próprio `test: refresh SPEC-382 combat golden after SPEC-371`, acrescentar
+   o caso com `RPG_FAUNA` ligado, **refazer a tabela de faixas de `_combat_node` da §3.3** sobre essa
+   `main` (atualizando a spec no mesmo commit) e refazer o relatório de cobertura por faixa. Anotar no
+   handoff. É a única regravação permitida.
 1. `_CombatTurn` + `_combat_turn_from_state`.
 2. `_combat_unconscious_refusal` + `_combat_freetext_refusal` + `_combat_no_active_result`.
 3. `_combat_prepare_encounter`.
@@ -366,17 +449,19 @@ tests/test_api_jogadas.py tests/test_spec361_integracao.py tests/test_combat_lif
 
 - [ ] R1: `storyteller_node` ≤ 250, `_combat_node` ≤ 250, `_run_round` ≤ 150 linhas; nenhum helper novo > 220
 - [ ] R2/R7/R8: nenhum `.py` novo de produto; nenhum nome existente removido; nenhum import local promovido ao topo
-- [ ] R3: sem `nonlocal` em `storyteller.py`; sem as 6 closures dentro de `_run_round`
-- [ ] R4/R5: `tests/test_spec382_node_golden.py` verde em **todos** os commits da série (provado commit a commit no handoff)
+- [ ] R3: sem `nonlocal` em `storyteller.py`; sem as 7 closures de 1º nível dentro de `_run_round`
+- [ ] R4/R5: `tests/test_spec382_node_golden.py` verde em **todos** os commits da série (provado commit a commit no handoff), estável em 3 processos e com `-n 2`, com toda faixa da §3.3 coberta
 - [ ] R6: revisor confirma, por commit, que o `try` principal do storyteller cobre o mesmo bloco e o fallback lê os mesmos valores
-- [ ] R9: nenhum teste existente alterado
+- [ ] R9: nenhum teste existente alterado, salvo o commit da D6 (se o dono aprovar)
 - [ ] R10: um commit por extração; cada um revertível sozinho
-- [ ] R11: W2 A = B (evals sem diferença; violações/desfechos iguais em `--seed 0` e `--seed 1`; `check_reproducibility()` `True`)
+- [ ] R11: W2 A = B (evals sem diferença; hashes de `last_mech_log`/`record_step` iguais); sanidade: violações/desfechos iguais em `--seed 0` e `--seed 1` e `check_reproducibility()` `True`
+- [ ] R12: `test_spec297_review_fixes`, `test_spec304_review`, `test_spec303_passes`, `test_spec298_faccao_eventos` verdes sem mudança
 - [ ] `uv run pytest` verde (suíte completa offline, coordenador)
 - [ ] Guard de FallbackLLM preservado (`isinstance(update, StoryUpdate)` segue antes de qualquer acesso a campo)
 - [ ] Saves antigos continuam carregando (nada de schema muda; coberto pela suíte)
 - [ ] Smoke §6 com LLM real executado e anotado
-- [ ] Revisão independente Sol aprovada (`handoffs/SPEC-382-independent-review.md`)
+- [ ] Revisão independente Sol do código aprovada (`handoffs/SPEC-382-sol-independent-review.md`; o
+      `handoffs/SPEC-382-independent-review.md` é a revisão desta spec, de 03/11)
 
 ## 6. Smoke test com LLM real
 
@@ -423,9 +508,16 @@ Etapa 5:
   `record_step` (SPEC-251, `combat_node` l.2192-2194). O golden (c) cobre.
 - **Ordem de import**: imports locais com efeito colateral (ex.: `services.fauna` l.1506,
   `services.faction_membership` l.1233) rodam na mesma ordem relativa (R8).
-- **Conflito com sessões paralelas**: W1 por etapa; combate só após a 371; se a 378 pousar no meio,
-  rebase antes da próxima etapa e regolden **não** é permitido para storyteller/orquestrador (a 378 é
-  "só cópias equivalentes"; se o golden quebrar após o rebase, quem quebrou foi a 378 e a etapa para).
+- **Conflito com sessões paralelas**: W1 revisada por etapa (§4), incluindo `mock_llm.py`, helpers de
+  teste e `playtest/runner.py`. Specs que mudam **comportamento** nos mesmos trechos: 377 item 3
+  (`_alive`/declarações no `_run_round`) trava a Etapa 3; 384 D3 (`_advance_reinforcements`) e 371
+  travam a Etapa 4; 374 (`mock_llm.py`) e 379 R4.4 (helpers de teste) travam a Etapa 1. Golden quebrou
+  depois de rebase ⇒ a etapa para (regra geral da §4).
+- **Guards de outras specs**: `tests/test_spec363_golden_guard.py:23-25` não tem gate de branch e
+  reprova qualquer diff do orquestrador (D6); os guards 353/364/367 só comparam goldens ou têm gate de
+  branch e não travam esta spec.
+- **Testes que leem código como texto** (R12): mover a linha 2378 para um helper quebraria
+  `test_spec297_review_fixes.py:186`; ela fica no orquestrador.
 - **Saves antigos**: nenhum campo de `GameState` muda; sem risco de round-trip.
 - **MockLLM / FallbackLLM**: guard de `StoryUpdate` (l.2169-2179) e caminho de exceção entram como
   casos do golden.
@@ -448,3 +540,35 @@ Etapa 5:
   apagá-lo numa spec futura (é andaime da refatoração); alternativa: manter como regressão permanente.
 - **D5 — Smoke real §6** custa ~10–20 requisições no DeepSeek (centavos). Recomendação: rodar local, não
   no staging.
+- **D6 — Exceção W3 para `tests/test_spec363_golden_guard.py::test_engine_modules_untouched_by_spec363`**
+  (P0-1 da revisão). O teste faz `git diff --quiet main -- services/conflict_orchestrator.py
+  services/conflict_turn.py` sem gate de branch e reprova a Etapa 3, e também a SPEC-377. Opções:
+  (a) dar a ele o gate de branch `spec-363` (padrão de `test_spec364_golden_guard.py:30-36`), num commit
+  `test:` próprio antes da Etapa 3 (a 363 consta `in-progress` no ESTADO de 02/11; o gate mantém a
+  proteção enquanto a branch dela estiver checada); (b) apagá-lo (o golden da 330 continua protegido
+  por `test_golden_files_have_no_diff_against_main` no mesmo arquivo e pelo guard da 353); (c) não
+  fazer a Etapa 3. **Recomendação: (a)**, uma vez só, servindo também à 377. Quem aplica: o
+  coordenador ou o executor da 382, com o dono de acordo, porque o teste é de outra spec.
+
+## Resposta à revisão (`handoffs/SPEC-382-independent-review.md`, 03/11)
+
+| ID | Resposta |
+|---|---|
+| P0-1 | **Aceito, depende do dono** → D6; R9 ganha a exceção nomeada; Etapa 3.0 aplica antes de qualquer extração do orquestrador. |
+| P0-2 | **Aceito pelo desenho, sem exceção W3**: a linha 2378 fica no orquestrador (R12, §3.3); travas de texto dos testes 304/303/298 citadas; varredura `getsource\|read_text` antes de cada etapa. |
+| P1-1 | **Aceito**: captura no sink (`caplog` `rpg.*`) + `record_step` (§3.4 c). |
+| P1-2 | **Aceito**: ≥ 2 casos de stream com `narrative_sink.bind`. |
+| P1-3 | **Aceito**: seed por caso, isolamento por caso, 3 processos + `-n 2`, `_OUTCOME_BUDGET_S` alto; campanha byte-idêntica, degradação só com evidência. |
+| P1-4 | **Aceito**: playtest e `check_reproducibility()` rebaixados a sanidade (R11); hash de `last_mech_log`/`record_step` por campanha em A e B. |
+| P1-5 | **Aceito**: cobertura por faixa via `trace` da stdlib na Etapa 1 (e de novo na 4.0). |
+| P1-6 | **Aceito**: travas 377 item 3 (Etapa 3), 384 D3 (Etapa 4, D7), 374 e 379 (Etapa 1); lista comum do W1 com `mock_llm.py`, helpers de teste e `playtest/runner.py`; regra geral de rebase. |
+| P2-1 | **Aceito**: 7 closures; `acted` ligado em l.2862; `enemy_decl` → `self.enemy_decl_inner`. |
+| P2-2 | **Aceito**: Etapa 4.0 refaz a tabela de faixas sobre a `main` com a 371 e acrescenta caso com `RPG_FAUNA`. |
+| P2-3 | **Aceito**: "SPEC-384 D4". |
+| P2-4 | **Aceito**: arquivos do `tmp_path` (nome + sha) entram no golden (§3.4 d). |
+| P2-5 | **Aceito**: revisão de código futura em `handoffs/SPEC-382-sol-independent-review.md`. |
+
+Nenhum achado rejeitado. Ajuste factual em relação ao texto da revisão: na D6 (b) não afirmo que a 363
+pousou, porque o ESTADO de 02/11 a lista como `in-progress`.
+- **D7 — Ordem com a SPEC-384 D3** (apagar `_advance_reinforcements`). Recomendação: decidir a D3 antes
+  da Etapa 4; se for "apagar", a 384 pousa antes e a Etapa 4.0 regrava o golden de combate sobre ela.
