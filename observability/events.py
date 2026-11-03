@@ -166,7 +166,9 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "combat.spawn_failed": ("error",),
     "combat.spawn_fallback": (),
     "combat.spawn_from_narration": (),
+    "combat.spawn_generic_name": (),
     "combat.spawn_generic_regional": (),
+    "combat.spawn_identity_mismatch": (),
     "combat.spawn_scanner_discarded": (),
     "combat.started": ("enemies",),
     "combat.summary": (

@@ -718,11 +718,10 @@ def _grounded_template(
             sanitize_entity_name(name) or "Criatura"
         ):
             return template
-    _log_event(
-        "combat",
-        "spawn_generic_name" if _gs.is_contentless_name(name) else "spawn_identity_mismatch",
-        level="warning",
-    )
+    if _gs.is_contentless_name(name):
+        _log_event("combat", "spawn_generic_name", level="warning")
+    else:
+        _log_event("combat", "spawn_identity_mismatch", level="warning")
     from agents.bestiary import _slug, materialize_enemy_concept
 
     # SPEC-346 R24: o nome materializado e o nucleo da dica (<= 3 palavras), nunca a frase.
