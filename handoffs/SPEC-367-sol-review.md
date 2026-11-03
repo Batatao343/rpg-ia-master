@@ -1,7 +1,7 @@
 # SPEC-367 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Sol (Opus) · **Data:** 2026-11-03 · **Commit revisado:** `5f05a60c`
+> **Veredito:** `APPROVED` (rodada 2, `505b41bd`; rodada 1 `5f05a60c`: `CHANGES_REQUIRED`)
+> **Revisor:** Sol (Opus) · **Data:** 2026-11-03 · **Commit revisado:** `5f05a60c` (rodada 1), `505b41bd` (rodada 2)
 
 ## Escopo
 
@@ -48,11 +48,27 @@ Conferido e sem achado:
 
 ## Correções aplicadas
 
-(vazio: 1ª rodada)
+Rodada 2: commit `505b41bd`. Revisei `git diff 7ef7862b..spec-367` contra os 9 achados e todos estão fechados.
+
+| ID | Status | Verificação |
+|---|---|---|
+| P1-1 | fechado | `creature_portrait_not_offered` está em `services/error_codes.py`, `CODIGOS_DE_ERRO.md`, `errorCodes.json` e `errorMessages.ts`. O front esconde a oferta e mostra um aviso `info` sem custo (`portraitOrder.ts`, com teste unitário). `test_error_envelope` está verde |
+| P1-2 | fechado | O guarda roda só com `HEAD == spec-367`, contra `merge-base main HEAD`, e faz `skip` fora da branch. Na branch ele roda de fato (sem skip) e passa |
+| P2-1 | fechado | Detecção positiva: o erro só conta como checkout se houver frame `getconn`/`connection`/`connect` e nenhum frame de comando ou commit (`__exit__`, `wait`, `commit`, `_commit_gen`, `_exit_gen`). `test_no_retry_on_commit_error` dá 1 escrita. Uma falha no corpo do `with` passa por `__exit__` do contextmanager e não é repetida. O efeito colateral possível é um falso negativo, ou seja, deixar de repetir uma falha de checkout, o que é seguro |
+| P2-2 | fechado | A regra (b) aceita número por extenso com "e unidade" depois de "últimas" e aceita `sem moedas?`. As duas frases da sonda entram em `test_vg_number_words` como rejeitadas. O corpus benigno segue verde |
+| P2-3 | fechado (com desvio aceito) | O teste roda um combate real pelo nó, com heróis "Smoke5A" (`enemy_lobo_sombrio`, fera) e "Mirela5" (`enemy_esqueleto`, morto_inquieto), 2 rodadas. Ele exige que a lista da view não venha vazia, que haja ≥ 2 atores, que algum ator seja da família pedida, que nenhum `sinal`/`prenuncio` traga o nome e que apareça "você". **Desvio:** o encontro do esqueleto sai misturado, então o teste exige só "ao menos um" da família. **Aceito.** O requisito de R9 é a invariante de voz (nome do herói ausente em toda a view, 2 inimigos, 2 rodadas), e ela vale para **todas** as linhas, de qualquer família. As duas famílias do smoke estão representadas, uma em cada caso, e o `random.seed(9)` torna o encontro determinístico (verde em `-n 2` e em série). Forçar um encontro 100 % de uma família só para o teste não dá cobertura de voz a mais. O catálogo das duas famílias já é coberto frase a frase com nome e com "você" (`test_every_phrase_formats_with_name_and_voce`) |
+| P3-1 | fechado | Afirma a string exata, com N igual ao `sell_price` da entrada em `public_market_snapshot` |
+| P3-2 | fechado | `test_spec367_condition_node.py` passa pela API real (`/game/action` + `/game/history`). Em `mech_log`, registro, mensagem e Livro: nenhuma linha crua `X: y terminou`, e a frase de R13 aparece no máximo 1 vez por superfície e em pelo menos uma delas. Observação, sem achado: a linha "terminou" é injetada no `run_round`, porque não dá para semear a expiração natural sem mexer no motor (R24). Por isso o teste prova a apresentação, que é o escopo de A5 |
+| P3-3 | fechado | O `try/except` saiu de `is_fallback_enemy`; `normalize_bestiary_id` é chamado direto |
+| P3-4 | fechado | Um `--env-file` inexistente dá `parser.error` antes de `build_runtime` (`test_retire_missing_env_file_is_error`) |
+
+Regressão nova: nenhuma encontrada. O evento `loot.trade_prose_rejected` agora está registrado em
+`observability/events.py` e `EVENTOS_DE_LOG.md` (`test_log_event_registry` verde). Continua sem diff em
+`evals/`, no golden 330, nos specs existentes de `web/e2e`, em `config/flags.yaml` e no motor.
 
 ## Pendências
 
-Nenhuma aceita como follow-up. Pela política do dono (zero pendência), todos os itens acima são para esta spec.
+Nenhuma. Veredito final da rodada 2: **APPROVED**.
 
 ## Comandos rodados
 
@@ -64,4 +80,7 @@ node --test web/tests/spec367-portrait-pending.test.mjs → 3/3 pass
 sonda gold_claims_ok (scratchpad) → "últimas quarenta e cinco moedas" e "sem moedas" aceitas com depois=5 (P2-2)
 sonda with_checkout_retry com OperationalError no __exit__ do commit → store.set chamado 3x (P2-1)
 git diff main...spec-367 -- evals/ web/e2e/contracts golden-330 flags orquestrador scene_cards combat card_piles data/cards → vazio
+[rodada 2] py.sh -m pytest -n 2 test_error_envelope test_no_silent_except test_log_event_registry test_spec367_*.py test_spec363_ids test_spec364_market test_spec352_creature_quote_api test_spec196_finops test_spec363_portrait_offer test_enemy_intent test_enemy_intent_node → 263 passed, 1 skipped (fora da 367)
+[rodada 2] py.sh -m pytest (em série) test_spec367_guards test_spec367_omen_voice test_spec367_condition_node → 12 passed (guarda executado, sem skip)
+[rodada 2] node --test web/tests/spec367-portrait-pending.test.mjs → 4/4 pass
 ```
