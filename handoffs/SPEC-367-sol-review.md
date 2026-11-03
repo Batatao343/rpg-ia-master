@@ -107,3 +107,15 @@ Comandos (rodada 3):
 git show 848a63cb → 3 arquivos (+94/−9): script, teste, §9 da spec
 py.sh -m pytest -s tests/test_spec367_fallback_portrait.py tests/test_no_silent_except.py + sonda de ambiente (scratchpad) → todos verdes; sonda: "LEAK https://s True True" (R3-P2-1)
 ```
+
+## Rodada 4: `b278f6af` (isolamento de ambiente e `--dsn-env` sem bucket, na `main`)
+
+**Veredito da rodada 4:** `APPROVED`. R3-P2-1 e R3-P3-1 estão fechados; sem achado novo.
+
+- **R3-P2-1 fechado.** `_isolate_env` troca `os.environ` por uma cópia via `monkeypatch.setattr`, e a troca é desfeita no teardown. É usado nos testes de retire que chamam `load_dotenv`: `test_retire_env_file_and_dry_run`, `test_retire_dsn_env_uses_ops_pool_and_closes_it` e `test_retire_dsn_env_without_bucket`. O `load_dotenv` e o `os.getenv` do script leem `os.environ` em tempo de execução, então gravam e leem na cópia; nada chega ao ambiente real do processo. Rodei uma sonda no mesmo processo, logo depois do arquivo de teste: `os.environ` voltou a ser `_Environ`, e `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SPEC367_DSN` e `SPEC367_ONLY_HERE` estão todas ausentes.
+- **R3-P3-1 fechado.** `test_retire_dsn_env_without_bucket[False]` cobre a retirada sem bucket: dá `SystemExit != 0`, `reg.calls == []` e o pool é fechado 1 vez. `[True]` cobre o dry-run sem bucket: termina com 0, `reg.calls == []` e o pool é fechado 1 vez.
+
+```text
+git show b278f6af → 1 arquivo de teste (+46/−3), sem mudança de produto
+py.sh -m pytest -s tests/test_spec367_fallback_portrait.py tests/test_no_silent_except.py + sonda de ambiente → exit 0; sonda: _Environ, nenhuma variável vazada
+```
