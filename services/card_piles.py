@@ -605,6 +605,7 @@ def plan_plays(
     entropy = int(player.get("entropy", 0) or 0)
     usage = player.get("card_usage") or {}
     played_turn: set[str] = set()
+    playable = cards.playable_ids({"player": player, "_piles": piles})
     total = {"folego_total": 0, "emprestado": 0, "entropia_extra": 0}
     for step in plays:
         kind = str(getattr(step, "kind", "pass") or "pass").lower()
@@ -637,7 +638,7 @@ def plan_plays(
             card = FARDO_CARD if cid == FARDO_ID else get_card(cid)
             virtue = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
             if card is None:
-                return {"ok": False, "motivo": f"Carta '{cid}' desconhecida.", **total}
+                return {"ok": False, "motivo": "Essa Carta não existe mais.", **total}
             if is_fardo(card):
                 return {
                     "ok": False,
@@ -650,6 +651,12 @@ def plan_plays(
                 return {
                     "ok": False,
                     "motivo": f"{card.get('name', cid)} não está na sua mão.",
+                    **total,
+                }
+            if cid not in playable:  # SPEC-387 R17: mesma regra do `use_card`, antes de gastar
+                return {
+                    "ok": False,
+                    "motivo": f"{card.get('name', cid)} não está no seu baralho.",
                     **total,
                 }
             freq = str(card.get("frequencia", "livre"))

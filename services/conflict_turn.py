@@ -388,7 +388,7 @@ def _resolve_attack_step(
 
         card = cards.effective_card(actor, step.card_id, ruptura=ruptura)
         if not card:
-            out["logs"].append(f"Carta '{step.card_id}' desconhecida.")
+            out["logs"].append("Essa Carta não existe mais.")
             return
         if card.get("tipo") != "ativa":
             out["logs"].append(f"{card.get('name', step.card_id)} não é uma Carta ativa.")

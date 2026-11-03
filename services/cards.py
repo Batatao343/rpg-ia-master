@@ -564,6 +564,22 @@ def _in_scene_hand(state: dict | None, card_id: str) -> bool:
     return scene_cards.in_hand(piles, card_id) and card_id in _TEMP_CARDS
 
 
+def playable_ids(state: dict | None) -> set[str]:
+    """SPEC-387 R17: ids que `use_card` aceita jogar (Preparadas, objeto de cena na mão, baralho
+    com cartas `on`, Sussurro do Abismo e Cartas de Virtude). UM predicado para o motor e o plano."""
+    player = (state or {}).get("player") or {}
+    ids = {str(c) for c in (player.get("prepared_cards") or [])}
+    piles = (state or {}).get("_piles") or ((state or {}).get("combat") or {}).get("pilhas") or {}
+    ids |= {str(c) for c in piles.get("mao") or [] if _in_scene_hand(state, str(c))}
+    if player.get("deck"):  # SPEC-328: com o baralho `on`, basicas e cartas do baralho valem
+        from services import card_piles
+
+        if card_piles.mode() == "on":
+            ids |= {str(c) for c in player["deck"]}
+    ids |= {str(vc.get("card_id")) for vc in (player.get("virtue_cards") or [])}
+    return ids | scene_card_ids(player)  # SPEC-333 R9: Sussurro do Abismo (so no conflito)
+
+
 def use_card(state: dict, card_id: str) -> dict:
     """Gasta uma Carta preparada/de Virtude: checa frequência + custo de Entropia,
     debita Entropia e incrementa os contadores de uso (R6). NÃO resolve efeito."""
@@ -571,17 +587,7 @@ def use_card(state: dict, card_id: str) -> dict:
     card = get_card(card_id)
     if not card:
         return {"ok": False, "error": "Essa Carta não existe mais.", "log": ""}
-    prepared = set(player.get("prepared_cards") or [])
-    if _in_scene_hand(state, card_id):  # SPEC-353 R1: objeto de cena na mão é jogável
-        prepared.add(card_id)
-    if player.get("deck"):  # SPEC-328: com o baralho `on`, basicas e cartas do baralho valem
-        from services import card_piles
-
-        if card_piles.mode() == "on":
-            prepared |= set(player["deck"])
-    virtude_ids = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
-    prepared |= scene_card_ids(player)  # SPEC-333 R9: Sussurro do Abismo (so no conflito)
-    if card_id not in prepared and card_id not in virtude_ids:
+    if card_id not in playable_ids(state):  # SPEC-353 R1 / SPEC-387 R17: predicado único
         return {
             "ok": False,
             "error": f"{card.get('name', 'Essa Carta')} não pôde ser jogada.",

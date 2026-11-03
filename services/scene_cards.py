@@ -234,9 +234,8 @@ def sanitize_objective(raw: Any, scene: dict) -> dict:
     n = data.get("n")
     n = n if isinstance(n, int) and not isinstance(n, bool) else None
     enemy_ids = [str(e.get("id") or e.get("name")) for e in scene.get("enemies") or []]
-    ally_ids = [str(a.get("id") or a.get("name")) for a in (scene.get("npcs") or [])] + [
-        str(p) for p in (scene.get("allies") or [])
-    ]
+    # SPEC-387 R19: `proteger` só vale para quem vira ATOR (aliado do conflito), nunca um NPC só da cena.
+    ally_ids = [str(p) for p in (scene.get("allies") or [])]
     zone_ids = [str(z.get("id")) for z in scene.get("zones") or []]
     object_ids = [str(o.get("id")) for o in scene.get("objects") or []]
     if tipo == "sobreviver_n_rodadas":
@@ -256,7 +255,8 @@ def sanitize_objective(raw: Any, scene: dict) -> dict:
             return {"tipo": tipo, "alvo": target, "n": min(6, max(2, n or 4))}
     elif tipo == "capturar_vivo":
         return {"tipo": tipo}
-    _log_event("combat", "scene_objective_dropped", level="warning", reason="invalid_target")
+    reason = "target_not_actor" if tipo == "proteger" and alvo else "invalid_target"
+    _log_event("combat", "scene_objective_dropped", level="warning", reason=reason)
     return default
 
 
@@ -601,7 +601,13 @@ def check_objective(ctx, rnd: int | None = None) -> str | None:
             return done(True, "Os inimigos se foram antes do tempo.")
     elif tipo == "proteger":
         target = actors.get(str(alvo))
-        if target is None or _inactive(target):
+        if target is None:  # SPEC-387 R19: alvo que não é ator (save antigo) — objetivo ignorado
+            _log_event(
+                "combat", "scene_objective_dropped", level="warning", reason="target_not_actor"
+            )
+            scene["objetivo"] = {"tipo": "derrotar_todos"}
+            return None
+        if _inactive(target):
             return done(False, f"{_name(target, 'O protegido')} não resistiu.")
         if all_down:
             return done(True, f"{_name(target, 'O protegido')} está a salvo.")

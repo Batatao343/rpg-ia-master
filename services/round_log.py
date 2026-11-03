@@ -43,6 +43,11 @@ _HUMAN_LINE_RES = tuple(
         r"não pode mirar direto\.$",
         r"^Pacto do Abismo:",
         r"não está na sua mão|não está preparada|Fôlego insuficiente",
+        # SPEC-387 R18: toda recusa de jogador (cards.use_card / plan_plays / conflict_turn) é legível
+        r"não pôde ser jogada\.$|não está no seu baralho\.$|não existe mais\.$",
+        r"já foi usada \(|^Entropia insuficiente|só pode ser jogada 1× por rodada\.$",
+        r"é um Fardo e não pode ser jogada\.$|^Falta Fôlego para descartar |não pode ser descartada\.$",
+        r"não é uma Carta ativa\.$|está silenciado — sem Cartas\.$",
     )
 )
 
@@ -450,7 +455,13 @@ _OUTCOME_PT = {
     "surrendered_enemy": "o inimigo se rendeu",
     "expired": "os inimigos perderam o rastro",
     "incapacitated": "o herói perdeu os sentidos",
+    "objective_failed": "o objetivo falhou",  # SPEC-387 R20 (o `outcome` salvo segue `defeat`)
 }
+
+
+def objective_reason(last_out: dict | None) -> str:
+    """SPEC-387 R20: motivo do motor para o objetivo falho ("" sem objetivo), sem ponto final."""
+    return str(((last_out or {}).get("objetivo") or {}).get("motivo") or "").strip().rstrip(".")
 
 
 def _fact_names(
@@ -627,6 +638,8 @@ def outcome_facts(
     decisivas" soltas; o golpe final vem explícito."""
     last_out = last_out or {}
     facts = [f"Desfecho: {_OUTCOME_PT.get(outcome, outcome)}."]
+    if outcome == "objective_failed" and objective_reason(last_out):
+        facts.append(f"Objetivo: {objective_reason(last_out)}.")
     summ = conflict_summary or {}
     nm_all = _fact_names(player, enemies, names)
     now_names, earlier_all = fall_partition(summ, last_out, nm_all, str(player.get("name") or ""))
@@ -791,6 +804,9 @@ def deterministic_outcome_text(
         "expired": "Os inimigos perdem o seu rastro e o confronto se desfaz.",
         "incapacitated": "A escuridão fecha sobre você: os sentidos se apagam.",
     }.get(outcome, "A luta termina.")
+    if outcome == "objective_failed":  # SPEC-387 R20: o herói segue de pé
+        why = objective_reason(last)
+        lead = f"O objetivo se perdeu: {why}. Você segue de pé." if why else "O objetivo se perdeu."
     if outcome == "death":  # R14: quem derrubou o herói (golpe final), não o 1º inimigo
         for b in last.get("final_blows") or []:
             if str(b.get("target_id")) != "player":

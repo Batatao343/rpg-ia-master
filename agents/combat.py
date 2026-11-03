@@ -2032,6 +2032,19 @@ _OUTCOME_FECHO = {
 }
 
 
+def _fecho(label: str, last_out: dict | None) -> str:
+    """Instrução de fecho do resumo; `objective_failed` (SPEC-387 R20) leva o motivo do motor."""
+    if label == "objective_failed":
+        from services import round_log
+
+        why = round_log.objective_reason(last_out)
+        return (
+            f"O objetivo se perdeu{': ' + why if why else ''}. O herói segue de pé; "
+            "não narre queda nem desmaio."
+        )
+    return _OUTCOME_FECHO.get(label, _OUTCOME_FECHO["victory"])
+
+
 _OUTCOME_BUDGET_S = 6.0  # SPEC-353 D7/R39c: orçamento só do resumo final (sem env/flag)
 
 
@@ -2054,6 +2067,12 @@ def _narrate_outcome(
     from services import prose_guard, round_log
 
     label = "incapacitated" if (player.get("post_combat_state") == "inconsciente") else outcome
+    if (  # SPEC-387 R20: objetivo falho com o herói de pé não é "derrota"/desmaio
+        label == "defeat"
+        and ((last_out or {}).get("objetivo") or {}).get("resultado") == "falhou"
+        and player.get("conscious", True)
+    ):
+        label = "objective_failed"
     facts = round_log.outcome_facts(
         label,
         conflict_sum,
@@ -2091,7 +2110,7 @@ def _narrate_outcome(
     {world_ctx}
     {PLAYER_INPUT_RULE}
     {withhold}
-    {_OUTCOME_FECHO.get(label, _OUTCOME_FECHO["victory"])}
+    {_fecho(label, last_out)}
     """
     )
     text = _fast_text(

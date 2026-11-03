@@ -2994,6 +2994,7 @@ def _run_round(
             out["objetivo"] = {
                 "tipo": (scene.get("objetivo") or {}).get("tipo"),
                 "resultado": scene.get("objetivo_resultado"),
+                "motivo": _why,  # SPEC-387 R20: o fecho conta a causa
             }
             out["logs"].append(_why)
     return out
