@@ -96,9 +96,14 @@ def _load(gid: str) -> dict:
     return state
 
 
-def _level_up(state: dict, level: int) -> None:
-    """Nivel do heroi por Python (mesmo ponto do arena `hero`): preserva Acervo/Preparadas legais."""
-    state["player"]["level"] = level
+def _force_hand(piles: dict, hand: list[str]) -> None:
+    """Mao forcada sem encolher o baralho: tira 1 copia por Carta de mao+compra e devolve o resto a compra."""
+    pool = list(piles["mao"]) + list(piles["compra"])
+    for cid in hand:
+        if cid in pool:
+            pool.remove(cid)
+    piles["mao"] = list(hand)
+    piles["compra"] = pool
 
 
 def _reseed(state, creature_id, n=1, *, hand=None, folego=None, enemy_vitality=None, seed=7):
@@ -148,8 +153,7 @@ def _reseed(state, creature_id, n=1, *, hand=None, folego=None, enemy_vitality=N
     player = state["player"]
     piles = card_piles.start_piles(player, seed)
     if hand is not None:
-        piles["mao"] = list(hand)
-        piles["compra"] = [c for c in piles["compra"] if c not in hand]
+        _force_hand(piles, hand)
     if folego is not None:
         piles["folego"] = folego
     meta["pilhas"] = piles

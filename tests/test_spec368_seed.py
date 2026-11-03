@@ -36,6 +36,26 @@ def test_item1_pacto_hand_and_short_folego(tmp_path):
     assert v["combat"]["pilhas"]["folego"] == 1 and v["combat"]["round"] == 0
 
 
+def test_forced_hand_keeps_the_deck_size():
+    """P3-7: mao forcada tira 1 copia por Carta; o resto volta a compra."""
+    piles = {"mao": ["a", "b", "c"], "compra": ["a", "a", "d", "e"]}
+    sd._force_hand(piles, ["a", "a", "d"])
+    assert piles["mao"] == ["a", "a", "d"]
+    assert sorted(piles["compra"]) == ["a", "b", "c", "e"]
+
+
+@pytest.mark.parametrize("item", [1, 12])
+def test_seeded_hand_plus_draw_matches_the_real_deck(tmp_path, item):
+    from services import card_piles
+
+    gid, _ = _seed(tmp_path, item)
+    st = _state(tmp_path, gid)
+    p = st["combat"]["pilhas"]
+    with sd._legacy(str(tmp_path)):
+        real = card_piles.start_piles(st["player"], 7)
+    assert len(p["mao"]) + len(p["compra"]) == len(real["mao"]) + len(real["compra"])
+
+
 def test_item1_rollback_save_is_restored_when_the_flag_goes_off(tmp_path):
     gid, _ = _seed(tmp_path, 1, "rollback")
     state = _state(tmp_path, gid)
