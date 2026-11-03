@@ -7,6 +7,7 @@ import json
 import gamedata
 import world_utils
 from services import map_view
+from tests.factories import make_state
 
 
 def _all_locations() -> list:
@@ -20,14 +21,14 @@ def _state(visited=None, current="nova_arcadia", **world_extra) -> dict:
     world["current_location"] = gamedata.get_location(current)["name"]
     world["visited"] = list(visited or [current])
     world.update(world_extra)
-    return {
-        "game_id": "g",
-        "world": world,
-        "world_projection": {},
-        "event_log": [],
-        "quests": [],
-        "combat": None,
-    }
+    return make_state(
+        game_id="g",
+        world=world,
+        world_projection={},
+        event_log=[],
+        quests=[],
+        combat=None,
+    )
 
 
 def _by_id(view):
