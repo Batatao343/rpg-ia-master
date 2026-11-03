@@ -2705,7 +2705,7 @@ def _combat_node(state: GameState):
             bestiary_knowledge, _saber_logs = _fauna_saber.absorb(
                 bestiary_knowledge, scene, actors_by_id, _alive_now, turn
             )
-            logs += _saber_logs
+            status_logs += _saber_logs  # R14: texto fixo no REGISTRO/mech_log, não na prosa
             bk_changed = True
             if _saber_logs:  # P2-5: revelado no meio da luta -> o chip já mostra "Você sabe:"
                 for _enemy in enemies:
@@ -2792,7 +2792,7 @@ def _combat_node(state: GameState):
         bestiary_knowledge, _saber_logs = _fauna_saber.finish_combat(
             bestiary_knowledge, enemies, turn
         )
-        logs += _saber_logs
+        status_logs += _saber_logs  # R14
         bk_changed = True
     if combat_over and not player_dead:
         for participant in [player] + allies:

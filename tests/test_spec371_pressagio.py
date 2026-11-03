@@ -327,3 +327,21 @@ def test_revelacao_no_meio_da_luta_recarimba_os_inimigos(monkeypatch):
     assert state["bestiary_knowledge"][CID]["saber_revelado"]["motivo"] == "rastreada"
     vivos = [e for e in state["enemies"] if not e.get("dead")]
     assert vivos and all(e["saber_jogador"]["contra_jogo"] for e in vivos)
+
+
+LINHA_R14 = "Você aprendeu como enfrentar Arame Vivo"
+
+
+def test_r14_linha_chega_ao_registro_do_jogador(monkeypatch):
+    """Smoke real (03/11): a linha da revelação tem de sair no `last_mech_log` (o REGISTRO), uma vez."""
+    bk = {CID: {"seen": 1, "fought": 0, "sinais_vistos": ["rastro", "som"]}}
+    res = _drive(monkeypatch, "on", max_rounds=3, bk=bk)
+    log = (res["state"].get("combat") or {}).get("last_mech_log") or []
+    assert sum(LINHA_R14 in str(x) for x in log) == 1, log
+
+
+def test_r14_flag_off_sem_linha(monkeypatch):
+    bk = {CID: {"seen": 1, "fought": 0, "sinais_vistos": ["rastro", "som"]}}
+    res = _drive(monkeypatch, "off", max_rounds=3, bk=bk)
+    assert "aprendeu" not in str((res["state"].get("combat") or {}).get("last_mech_log"))
+    assert "saber_revelado" not in res["state"]["bestiary_knowledge"][CID]
