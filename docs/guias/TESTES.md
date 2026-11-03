@@ -27,10 +27,43 @@ Regras: executor **não** roda a camada 2; comando > 2 min vai para background c
 - Teste que grava em diretório fixo precisa de `tmp_path`/monkeypatch (o
   `conftest.py` já isola saves, memória, cache de runtime e `saves_playtest/`).
 - Markers `infra_local`/`security_local`/`browser_local`/`chaos_local` pulam sem a
-- Fuzz da API (SPEC-338, `api_fuzz`, fora do default): `uv sync --group fuzz` e `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider` (~20 s; `RPG_API_FUZZ_MAX_EXAMPLES=5` para iterar). Job `api-fuzz` do CI é bloqueante.
   stack local; com stack, rode-os **sem** `-n` (compartilham Postgres/porta).
+- Fuzz da API (SPEC-338, `api_fuzz`, fora do default): `uv sync --group fuzz` e `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider` (~20 s; `RPG_API_FUZZ_MAX_EXAMPLES=5` para iterar). Job `api-fuzz` do CI é bloqueante.
 - `tests/test_project_index.py` acusa "stale" com arquivo **rastreado** editado e
   não commitado; arquivo não rastreado não conta mais.
+
+## Cobertura (SPEC-379)
+
+Cobertura real da suíte roda **semanal no CI** (`.github/workflows/coverage.yml`, também
+`workflow_dispatch`), sem gate de porcentagem: é medida, não trava. O artefato traz
+`coverage.xml`/`coverage.json`/log e o resumo (20 módulos menos cobertos) vai no
+`$GITHUB_STEP_SUMMARY`. Resumo local de um `coverage.json`:
+`bash scripts/dev/py.sh scripts/dev/coverage_summary.py coverage.json --top 20`.
+
+Local, **sempre com escopo** (cobertura da suíte completa é do coordenador ou do CI,
+nunca de subagente — regra de RAM):
+
+```bash
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 --cov=<pacote> --cov-branch --cov-report=term-missing:skip-covered tests/test_<escopo>*.py
+```
+
+Limites conhecidos: subprocessos não são medidos (D5); testes de tempo (ex.:
+`test_spec361_integracao.py`) podem falhar só sob o tracer, que custa 1,5 a 3x.
+A baseline fica em `docs/spec379/coverage-baseline.md`.
+
+## Onde mora um teste novo (SPEC-379)
+
+- Teste novo vai para `tests/test_<modulo>.py` (ex.: `tests/test_conflict_orchestrator.py`)
+  ou para um arquivo de **feature** (`tests/test_<feature>.py`) — nunca para um
+  `tests/test_specNNN_*.py` novo.
+- O número da spec vai na docstring do teste (`"""SPEC-379 R2.3: ..."""`).
+- Estado vem de `tests/factories.py` (`make_state`/`make_player`/`make_world`, compostos
+  das peças canônicas do produto) e LLM vem de `tests/fakes/scripted_llm.py`
+  (`ScriptedLLM`, `patch_get_llm`).
+- Helper local só entra quando a fábrica não serve, com uma linha de comentário dizendo por quê.
+- Teste que lê código-fonte só entra no caso (c) de `docs/spec379/fonte_inventario.md`
+  (proibição de import/chamada, segurança/RLS, CSP, integridade de eval, contrato entre
+  linguagens), com a justificativa no docstring. Comportamento se testa por comportamento.
 
 ## Ruff (incremental)
 

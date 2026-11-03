@@ -45,6 +45,9 @@ Os tipos em `.claude/agents/` já embutem o papel; este arquivo é a regra comum
 - Iteração: `bash scripts/dev/pt.sh <testes> [--lf]` (`-n 2`, `-x`, só falhas + resumo; log
   completo em arquivo). Antes do hand-back: só os arquivos de teste do seu escopo.
 - **Não** rode a suíte completa: o coordenador roda 1× no `/spec-land`.
+- Teste novo: `tests/test_<modulo>.py` ou de feature, nunca `test_specNNN_*.py` novo (spec na docstring).
+- Estado de jogo via `tests/factories.py` (`make_state`) e LLM via `tests/fakes/scripted_llm.py` (`ScriptedLLM`); helper local só com justificativa.
+- Teste que lê código-fonte só no caso (c) do inventário. Regra completa: `docs/guias/TESTES.md` § "Onde mora um teste novo".
 - **Nunca** `-n auto`; no máximo `-n 2` (**o hook nega** em subagente). Vários agentes rodam ao mesmo tempo numa
   máquina de 16 GB: em 24/10 cinco suítes `-n auto` paralelas esgotaram a RAM e
   derrubaram a sessão. Não deixe `pytest` em background ao entregar o hand-back.
