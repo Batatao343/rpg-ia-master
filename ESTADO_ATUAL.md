@@ -37,7 +37,6 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 | Logs externos (Axiom) | token Axiom no `.env.staging` | "faz" → envio do app |
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera" → certificação |
 | Auth staging/prod (343) | confirmar e-mail obrigatório + captcha na Vercel | "confirmei" → fechar enumeração |
-| Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | Decisões abertas | D-363-1 (crítico em dupla abaixo da defesa), D-363-2 (teto diário R$ 5), D-364-2 ("até 0,015 Estilhas"), D-367-2 (8 frases do Presságio em "você") | dono responde → registrar na spec |
 | Flags novas (350/360/361) | decidir quando ligar `RPG_PLOT_THREADS` / `RPG_FAUNA` / `RPG_CREATURE_GEN` | "liga X" → staging_flags + smoke real |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
@@ -49,7 +48,7 @@ Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os
 
 <!-- recent:start -->
 - 2026-11-03 · SPEC-387 `draft` — cartas-smoke6-serverless
-- 2026-11-03 · SPEC-386 `approved` — Workspace: guardrails de qualidade e de tokens para os agentes
+- 2026-11-03 · SPEC-386 `done` — Workspace: guardrails de qualidade e de tokens para os agentes
 - 2026-11-03 · SPEC-385 `draft` — Contrato front↔back: forma real das respostas × backend falso do e2e
 - 2026-11-03 · SPEC-384 `draft` — Poda que depende do dono: flags aposentáveis, reforços, combate sem tabuleiro, perfis portable/hosted, CLI, `set_deck`, aliases e métrica antiga
 - 2026-11-03 · SPEC-383 `draft` — Front: hooks do `App.tsx`, `GameActionsContext`, `Hud.tsx` por aba e poda de e2e de prints
