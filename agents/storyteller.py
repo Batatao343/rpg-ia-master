@@ -1330,8 +1330,6 @@ def storyteller_node(state: GameState):
     t.travel_note = t.rest_note = t.faction_note = ""
     t.rested_player = None
     # SPEC-226 R10: ganhos individuais do turno (guard narrativo aceita o bruto).
-    from services.turn_outcome import record_gain
-
     t.turn_bl = t.state.get("turn_baseline")
     t.factions = ensure_factions(t.state.get("factions"))
     t.intel = ensure_faction_intel(t.state.get("faction_intel"))
@@ -1358,8 +1356,6 @@ def storyteller_node(state: GameState):
 
     # SPEC-301: vínculo do jogador com fações (dono: services.faction_membership). O motor
     # decide; `fm_extra` leva os updates parciais e `fm_events` as propostas source=engine.
-    from services import faction_membership as fm
-
     t.fm_events: list = []
     t.fm_post_notes: list = []
     t.fm_extra: dict = {}
@@ -1881,8 +1877,6 @@ def _story_encounter_kind(t: _StoryTurn) -> None:
     from world_utils import (
         detection_check,
         light_level,
-        resolve_track,
-        resolve_trap,
         roll_encounter_type,
         weather_effects,
     )

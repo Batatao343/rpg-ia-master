@@ -2321,8 +2321,6 @@ class _CombatTurn:
 
 
 def _combat_node(state: GameState):
-    from services import prose_guard
-
     t = _CombatTurn(state=state)
     t.messages = t.state.get("messages", [])
     if not t.messages:
