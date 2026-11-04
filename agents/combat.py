@@ -954,6 +954,7 @@ def _apply_encounter_budget(
         import party as party_mod
         from gamedata import get_location
         from services import encounter_manifest as em
+        from services import fauna_tramas
 
         if protected is None:
             bid = em.resolve_bestiary_name(str(state.get("combat_target") or ""))
@@ -984,6 +985,7 @@ def _apply_encounter_budget(
             make_instance=lambda t, i: orch.ensure_combat_sheet(
                 {**t, "id": f"{t.get('id', 'enemy')}_{i}"}
             ),
+            trama_stages=fauna_tramas.stages_for(state, world),  # SPEC-372
         )
         report["cut_ids"] = [i for i in before_ids if i not in kept_ids]
         report["joined_ids"] = [

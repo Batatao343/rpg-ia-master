@@ -12,6 +12,9 @@ DESDE = ("tocada", "investigada", "revelada")
 DEFAULT_DESDE = "tocada"  # string solta (D2)
 MAX_TRAMAS = 2
 MAX_LIGADAS = 0.25  # D4: fracao das nao-BOSS da regiao
+# E22: palavra comum que e parte de nome do nucleo (ex.: "Conta" de "Oswin Conta de Ouro") nao
+# vale como vazamento; o nome inteiro e os demais tokens continuam proibidos.
+COMMON_NAME_WORDS = frozenset({"conta", "senhor", "senhora", "mestre", "velho", "velha", "sangue"})
 
 
 def normalize_tramas(raw: Any) -> list[dict]:
@@ -47,8 +50,16 @@ def _forbidden_tokens(thr: Any) -> set[str]:
     for sid in thr.secret_ids:
         out |= fl.name_tokens(*sigs.get(str(sid).casefold(), []))
     for npc in thr.core:
-        out |= fl.name_tokens(*pt.cast_names(npc))
+        out |= fl.name_tokens(*pt.cast_names(npc)) - COMMON_NAME_WORDS
     return out
+
+
+def _secret_phrases(thr: Any) -> list[str]:
+    """Frases (fold) dos segredos da trama em `leak_phrases.json` (E22, por frase)."""
+    from services.leak_phrases import leak_phrases
+
+    table = {k.casefold(): v for k, v in leak_phrases().items()}
+    return [p for sid in thr.secret_ids for p in table.get(str(sid).casefold(), []) if p]
 
 
 def _entry_errs(cid: str, e: dict, refs: Any, threads: dict[str, Any]) -> list[str]:
@@ -71,11 +82,15 @@ def _entry_errs(cid: str, e: dict, refs: Any, threads: dict[str, Any]) -> list[s
             errs.append(f"E20 {cid}: desde {desde!r} fora de {DESDE}")
         if not terr & set(thr.locations):
             errs.append(f"E21 {cid}: territorio nao cruza os locais da trama {tid}")
-        forb = _forbidden_tokens(thr)
+        forb, phrases = _forbidden_tokens(thr), _secret_phrases(thr)
         for k in fl.TEXT_KINDS:
-            leaked = fl.leaked_tokens((e.get("sinais") or {}).get(k), forb)
+            text = (e.get("sinais") or {}).get(k)
+            leaked = fl.leaked_tokens(text, forb)
             if leaked:
                 errs.append(f"E22 {cid}: {k} contem token de segredo/nucleo de {tid} {leaked}")
+            hit = next((p for p in phrases if p in fl.fold(text)), None)
+            if hit:
+                errs.append(f"E22 {cid}: {k} contem frase de segredo de {tid} ({hit!r})")
     return errs
 
 

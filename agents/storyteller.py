@@ -1787,6 +1787,7 @@ def storyteller_node(state: GameState):
                     turn,
                     hunt_anchor=_lq.active_hunt_anchor({**state, "world": world}),  # SPEC-313 R26
                     describe=_describe_track if _fauna.sinais_mode() == "on" else None,
+                    trama_stages=_fauna.fauna_tramas.stages_for(state, world),  # SPEC-372
                 )
                 if hint:
                     world["treasure_hint"] = True

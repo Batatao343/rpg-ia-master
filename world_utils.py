@@ -978,14 +978,14 @@ def pick_encounter_enemy(
         if entry:
             return entry
 
+    from services import fauna_tramas
+
     prep = _encounter_pool(loc, danger, theme)
     if prep is None:
         return None
     pool, regional, themed = prep
     if bestiary_knowledge is None and projection is None:
         if trama_stages:  # SPEC-372 R8: o portão vale também no ramo legado
-            from services import fauna_tramas
-
             pool = fauna_tramas.open_pool(pool, trama_stages)
             if not pool:
                 return None
@@ -1012,7 +1012,9 @@ def pick_encounter_enemy(
                 f"{clock.get('period')}"
             )
             rng = _random.Random(int(_hl.sha256(key.encode()).hexdigest()[:12], 16))
-        return eco3.weighted_pick(cands, weights, rng)
+        picked = eco3.weighted_pick(cands, weights, rng)
+        fauna_tramas.log_pull(picked, trama_stages, (loc or {}).get("id", ""))  # SPEC-372 R14
+        return picked
     cands, weights, _why = _weighted_pool(*args, season, world, world_sim, fauna_on=False)
     picked = eco3.weighted_pick(cands, weights, rng)
     if fmode == "shadow":  # SPEC-360 R12: escolhe o legado, registra o que a fauna escolheria
@@ -1178,7 +1180,7 @@ def _weighted_pool(
             m = sorted(migrants, key=lambda e: e.get("id", ""))[int(turn) % len(migrants)]
             pool = pool + [m]
             weights = weights + [eco3.MIGRANT_WEIGHT * (neutral if fauna_on else 1.0)]
-    if fauna_on and trama_stages:  # SPEC-372 R8: portão por último (legado e migrantes)
+    if trama_stages:  # SPEC-372 R8: portão por último (legado e migrantes)
         from services import fauna_tramas
 
         weights = fauna_tramas.apply_gate(pool, weights, trama_stages)
@@ -1320,7 +1322,7 @@ def check_encounter(
 
     season_id = world_calendar.active_season(world)  # SPEC-303 R14b (neutro sem calendário)
     fauna_world = world if world_sim is not None else None  # SPEC-360: ecologia só com o sim
-    presence = _fauna_presence(world, world_sim, loc_id)
+    presence = _fauna_presence(world, world_sim, loc_id, trama_stages)
     ptheme = hunt_theme(presence["creature_id"]) if presence else None
 
     # SPEC-233 R5: só carimba quando devolve um encontro (ver _stamp).
@@ -1462,7 +1464,9 @@ def check_encounter(
     return None
 
 
-def _fauna_presence(world: dict, world_sim: dict | None, loc_id: str) -> dict | None:
+def _fauna_presence(
+    world: dict, world_sim: dict | None, loc_id: str, trama_stages: dict | None = None
+) -> dict | None:
     """SPEC-360 R15: presença ativa no local (só com `RPG_FAUNA_SINAIS=on` e `world_sim`)."""
     if world_sim is None or not loc_id:
         return None
@@ -1471,7 +1475,11 @@ def _fauna_presence(world: dict, world_sim: dict | None, loc_id: str) -> dict | 
     if fauna.sinais_mode() != "on":
         return None
     day = int((world.get("world_clock") or {}).get("day", 1) or 1)
-    return fauna.presence_at(world_sim, loc_id, day)
+    pres = fauna.presence_at(world_sim, loc_id, day)
+    if pres and trama_stages:  # SPEC-372: presença de criatura atrás do portão não decide nada
+        if fauna.fauna_tramas.gate_closed(fauna.entry(pres["creature_id"]), trama_stages):
+            return None
+    return pres
 
 
 def _presence_entry(entry: dict | None, presence: dict | None, loc: dict, eff: int):
@@ -1905,6 +1913,7 @@ def resolve_track(
     rng=None,
     hunt_anchor: str = "",
     describe=None,
+    trama_stages: dict | None = None,
 ) -> tuple:
     """Fase 6.4 (R4): rastro — revela criatura regional no Codex (grau rumor, 3.2)
     e/ou marca pista de tesouro (próximo TREASURE da região rola banda alta).
@@ -1913,7 +1922,9 @@ def resolve_track(
     Retorna (bestiary_knowledge, note, treasure_hint: bool)."""
     from services import discovery as disc
 
-    entry = pick_encounter_enemy(loc, danger, turn, theme=hunt_theme(hunt_anchor))
+    entry = pick_encounter_enemy(
+        loc, danger, turn, theme=hunt_theme(hunt_anchor), trama_stages=trama_stages
+    )
     note = "Você encontra rastros antigos, ilegíveis."
     bk = state_bk or {}
     if entry:

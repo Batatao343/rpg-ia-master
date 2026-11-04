@@ -135,6 +135,18 @@ def birth(
     return (out, tid) if out else ([], "")
 
 
+def log_pull(picked: dict | None, stages: Mapping[str, str] | None, location_id: str) -> None:
+    """R14: `trama_puxao` quando a criatura sorteada pesou `TRAMA_MULT` neste local."""
+    if not picked or not stages or mode() != "on":
+        return
+    from services import fauna
+
+    e = fauna.entry(str(picked.get("id") or ""))
+    f, why = factor(e, location_id, stages)
+    if f > 1.0 and why:
+        fauna._log("trama_puxao", creature=picked.get("id"), thread=why.split(":", 1)[1])
+
+
 def log_gates(cands: list[dict], stages: Mapping[str, str] | None) -> None:
     from services import fauna
 

@@ -613,6 +613,7 @@ def encounter_hint(
     """`rumor_hint` de `check_encounter` (forma do `law_hint`). A forca vem de
     `forced_encounter_danger` (escala pelo nivel; apex nao). Sem criatura valida -> None."""
     import gamedata
+    from services import fauna_tramas
     from world_utils import effective_danger, forced_encounter_danger, pick_encounter_enemy
 
     c = inst.get("claim") or {}
@@ -636,6 +637,7 @@ def encounter_hint(
             bestiary_knowledge=(state or {}).get("bestiary_knowledge"),
             projection=(state or {}).get("world_projection"),
             rng=rng,
+            trama_stages=fauna_tramas.stages_for(state or {}, world),  # SPEC-372
         )
     if not entry:
         return None

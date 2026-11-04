@@ -132,7 +132,13 @@ def clamp_encounter(
 
 
 def fill_encounter(
-    enemies: list[dict], budget: int, loc: dict, danger: int, turn: int = 0, make_instance=None
+    enemies: list[dict],
+    budget: int,
+    loc: dict,
+    danger: int,
+    turn: int = 0,
+    make_instance=None,
+    trama_stages: dict | None = None,
 ) -> tuple[list[dict], list[str]]:
     """PISO (budget/2): local perigoso reforça encontro fraco com criatura regional.
     `make_instance(entry, i)` transforma a entrada do bestiário em instância de
@@ -148,7 +154,7 @@ def fill_encounter(
     i = 0
     while spent < floor and i < 4:
         i += 1
-        entry = wu.pick_encounter_enemy(loc, danger, turn)
+        entry = wu.pick_encounter_enemy(loc, danger, turn, trama_stages=trama_stages)
         if not entry or make_instance is None:
             break
         inst = make_instance(entry, len(kept) + i)

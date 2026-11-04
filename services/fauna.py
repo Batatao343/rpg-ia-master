@@ -598,7 +598,7 @@ def day_hook(ctx: Any):
         total = sum(weights)
         if total <= 0:
             continue
-        acc, chosen = 0.0, cands[-1]
+        acc, chosen = 0.0, next(e for e, w in reversed(list(zip(cands, weights))) if w > 0)
         for e, w in zip(cands, weights):
             acc += w
             if pick * total < acc:

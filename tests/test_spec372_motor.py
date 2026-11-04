@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from scripts.fauna import eval as ev360
@@ -252,3 +254,94 @@ def test_invariante_trama_id_exige_ligacao(flags):
     assert inv._trama_presence_errors({**ok, "locais": ["na_fora"]}, e, 1)
     assert inv._trama_presence_errors({**ok, "trama_id": "tr_na_nada"}, e, 1)
     assert inv._trama_presence_errors({"creature_id": cid}, e, 1) == []
+
+
+def test_track_respeita_portao(flags):
+    """P1-1: `resolve_track` (rastro em jogo) nao sorteia criatura atras do portao."""
+    import gamedata
+    import world_utils as wu
+
+    cid, loc_id = _pick(list(pt.thread(CORPOS).locations))
+    _link(flags, cid)
+    loc = gamedata.get_location(loc_id)
+    pool = [e["id"] for e in wu._encounter_pool(loc, 3, None)[0]]
+    assert cid in pool
+    seen_dorm, seen_open = set(), set()
+    for turn in range(len(pool) * 2):
+        _bk, note, _t = wu.resolve_track({}, loc, 3, turn, trama_stages=DORM)
+        entry = wu.pick_encounter_enemy(loc, 3, turn, trama_stages=DORM)
+        seen_dorm.add(entry["id"])
+        seen_open.add(wu.pick_encounter_enemy(loc, 3, turn, trama_stages=TOCADA)["id"])
+        assert _bk.get(cid) is None
+    assert cid not in seen_dorm and cid in seen_open
+
+
+def test_presenca_atras_do_portao_nao_decide_encontro(flags):
+    import world_utils as wu
+
+    cid, loc_id = _pick(list(pt.thread(CORPOS).locations))
+    _link(flags, cid)
+    sim = {
+        "fauna": {
+            "presencas": [
+                {
+                    "pid": "p",
+                    "creature_id": cid,
+                    "region_id": "nova_arcadia",
+                    "locais": [loc_id],
+                    "born_day": 1,
+                    "expires_day": 9,
+                    "sinais_mostrados": [],
+                    "origem": "rastro",
+                    "status": "ativa",
+                }
+            ]
+        }
+    }
+    world = {"world_clock": {"day": 2}}
+    assert wu._fauna_presence(world, sim, loc_id) is not None
+    assert wu._fauna_presence(world, sim, loc_id, DORM) is None
+    assert wu._fauna_presence(world, sim, loc_id, TOCADA) is not None
+
+
+def test_encounter_budget_e_rumor_respeitam_portao(flags):
+    import encounter_budget as eb
+    import gamedata
+
+    cid, loc_id = _pick(list(pt.thread(CORPOS).locations))
+    _link(flags, cid)
+    loc = gamedata.get_location(loc_id)
+    got = set()
+
+    def make(entry, i):
+        got.add(entry["id"])
+        return {"id": entry["id"], "name": "x", "type": "minion"}
+
+    for turn in range(40):
+        eb.fill_encounter([], 40, loc, 3, turn=turn, make_instance=make, trama_stages=DORM)
+    assert got and cid not in got
+
+
+def test_puxao_telemetria(flags):
+    seen = []
+    flags.setattr(fauna, "_log", lambda name, **kw: seen.append((name, kw)))
+    cid, loc = _pick(list(pt.thread(CORPOS).locations))
+    _link(flags, cid)
+    fauna_tramas.log_pull({"id": cid}, TOCADA, loc)
+    fauna_tramas.log_pull({"id": cid}, TOCADA, "na_fora")
+    assert [n for n, _ in seen] == ["trama_puxao"] and seen[0][1]["thread"] == CORPOS
+
+
+def test_save_load_preserva_trama_id(flags, tmp_path):
+    """P2-5: round-trip da presenca com `trama_id`; save antigo (sem a chave) segue igual."""
+    cid, _loc = _pick(list(pt.thread(CORPOS).locations))
+    raw = {
+        "presencas": [
+            {"pid": "a", "creature_id": cid, "trama_id": CORPOS},
+            {"pid": "b", "creature_id": cid},
+        ]
+    }
+    once = fauna.normalize_fauna_sim(raw)
+    twice = fauna.normalize_fauna_sim(json.loads(json.dumps(once)))
+    assert once == twice
+    assert twice["presencas"][0]["trama_id"] == CORPOS and "trama_id" not in twice["presencas"][1]

@@ -461,7 +461,8 @@ def _npc_known(state: dict, thr: PlotThread) -> bool:
 
     for door in thr.portas:
         _key, row = nw._row_for(state, door.anchor_npc_id)
-        if row and (row.get("known_by_player") is True or row.get("knowledge_source") == "met"):
+        known = row.get("known_by_player")
+        if known is True or (row.get("knowledge_source") == "met" and known is not False):
             return True
     return False
 
