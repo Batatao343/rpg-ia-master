@@ -1,6 +1,6 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "fb3516e6040554c315e40e67582245191fafba9d",
+  "commit_sha": "a1b3c81bc038859243849219484c1e78fb0f4354",
   "edge_counts": {
     "calls": 38902,
     "contains": 1285,
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:6a47988a0f934498f6f6bfeeabd2c4b8f03597d6ed8a94cea18a4466e3fa329c",
+  "graph_hash": "sha256:ecf1eec7b5b264668a0e22af3a276b9a86a9b72ed0a7626cf4e870bdcfecbd6d",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
