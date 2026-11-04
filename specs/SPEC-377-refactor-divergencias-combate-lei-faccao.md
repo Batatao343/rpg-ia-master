@@ -481,3 +481,17 @@ pedidas foram aplicadas:
 | P3-2 | "Depende de", R23 e D5: a 368 pousou; W1 revisada; única interseção é `world_utils.py` (só leitura). |
 
 Nenhum achado foi rejeitado.
+
+## 10. Execução e revisão do pouso (03/11 noite)
+
+Revisão Sol do pouso: [`handoffs/SPEC-377-sol-review.md`](../handoffs/SPEC-377-sol-review.md) (`CHANGES_REQUIRED` → corrigido).
+
+| Achado | Tratamento |
+|---|---|
+| P1-1 | `tests/test_spec363_golden_guard.py::test_engine_modules_untouched_by_spec363` passou a valer só na branch `spec-363` (padrão da SPEC-364). Mudança de teste declarada (W3): fora da branch ele travava toda spec que toque o motor e, na `main`, comparava a `main` consigo. O golden da 330 segue protegido pelo próprio guard. |
+| P2-1 | Docstring dupla de `_turn_side` (`conflict_turn.py`) unida. |
+| P2-2 | **Desvio:** a correção do R15 ficou em `_opponents`/`_allies`, não em `_alive`. Mudar `_alive` faria o rendido contar como caído em `is_down`. Docstrings de `card_effects.py` foram encurtadas para caber no orçamento de tamanho (SPEC-386). |
+| P2-3 | **Desvio:** a matriz de facção vive em `tests/test_faction_visibility.py` (sem `faccao_matriz.py/.md`); a lista de consumidores de "vivo" fica no §2 Item 3/4 desta spec (sem `alive_consumidores.md`); o playtest curto de `law.*` não rodou (a spec o trata como guarda de regressão; os 14 testes de `tests/test_law_prune.py` cobrem o R7). |
+| P2-4 | Nota: arena idêntica antes/depois porque o bot não se rende (não-regressão, não prova do R15). Médico 45,8 %, perto do piso. |
+
+Pendente: **item 2 (custo de Fôlego)**, que depende de o dono publicar `lote-v2` via `/eval-publish`.

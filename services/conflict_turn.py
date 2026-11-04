@@ -289,9 +289,10 @@ def _damage_from(card: dict | None, actor: dict, step) -> tuple:
 
 
 def _turn_side(actor_id: str, sides) -> str | None:
-    """Lado de turno declarado: `hero`/`ally` colapsam em `hero`."""
-    """Lado declarado pelo orquestrador; None quando o chamador não informou
-    `sides` (motor puro/testes) — aí a hostilidade não é inferida."""
+    """Lado de turno declarado pelo orquestrador: `hero`/`ally` colapsam em `hero`.
+
+    None quando o chamador não informou `sides` (motor puro/testes): aí a hostilidade
+    não é inferida."""
     if not sides:
         return None
     if actor_id in set(sides.get("hero", [])) | set(sides.get("ally", [])):
