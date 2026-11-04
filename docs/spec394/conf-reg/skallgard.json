@@ -1,0 +1,28 @@
+{
+ "regiao": "skallgard",
+ "seeds": 80,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 21.0,
+ "criaturas": {
+  "mon_escuta_do_sinal": {
+   "nome": "Escuta do Sinal",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.427,
+    "L3|on": 0.82
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 43% fora de 45-85%"
+   ]
+  }
+ },
+ "seed_inicio": 40
+}

@@ -1,0 +1,57 @@
+{
+ "seed_inicio": 40,
+ "seeds": 80,
+ "criaturas": {
+  "mon_anzolado_da_casa": {
+   "nome": "Anzolado da Casa",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.568,
+    "L3|on": 0.71
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_armador_de_fosso": {
+   "nome": "Armador de Fosso",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.417,
+    "L3|on": 0.795
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 42% fora de 45-85%"
+   ]
+  },
+  "mon_portao_que_morde": {
+   "nome": "Port\u00e3o que Morde",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.907,
+    "L3|on": 0.91
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 91% fora de 45-85%",
+    "L3|on 91% fora de 45-85%"
+   ]
+  },
+  "mon_escuta_do_sinal": {
+   "nome": "Escuta do Sinal",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.427,
+    "L3|on": 0.82
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 43% fora de 45-85%"
+   ]
+  }
+ }
+}

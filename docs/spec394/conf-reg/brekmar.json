@@ -1,0 +1,26 @@
+{
+ "regiao": "brekmar",
+ "seeds": 80,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 19.7,
+ "criaturas": {
+  "mon_anzolado_da_casa": {
+   "nome": "Anzolado da Casa",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.568,
+    "L3|on": 0.71
+   },
+   "ok": true,
+   "motivos": []
+  }
+ },
+ "seed_inicio": 40
+}

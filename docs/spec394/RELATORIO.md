@@ -55,3 +55,15 @@ EXCECAO mon_portao_que_morde
 ## R6 - as outras criaturas
 
 `base-snapshot.json` x `final-snapshot.json` (369 ids, hash off + baralho on, sementes 0-11): identicos.
+
+## R7 - confirmacao (sementes 40-119, uma rodada, sem reajuste)
+
+| criatura | off / on | ok |
+|---|---|---|
+| mon_anzolado_da_casa | 56,8 / 71 | sim |
+| mon_armador_de_fosso | 41,7 / 79,5 | nao (off 3,3 pp abaixo do piso; `on` entrou) |
+| mon_escuta_do_sinal | 42,7 / 82 | nao (off 2,3 pp abaixo do piso) |
+| mon_portao_que_morde | 90,7 / 91 | nao (bug de motor, spec propria) |
+
+Veredito cheio: `N_373 + 1` (so o anzolado voltou). Armador e escuta estao a 2-3 pp da faixa em
+sementes novas; o ajuste em 0-39 sobreajustou o `off`. Sem reajuste (D5).

@@ -1,0 +1,28 @@
+{
+ "regiao": "montanhas_afiadas",
+ "seeds": 80,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 18.8,
+ "criaturas": {
+  "mon_armador_de_fosso": {
+   "nome": "Armador de Fosso",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.417,
+    "L3|on": 0.795
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 42% fora de 45-85%"
+   ]
+  }
+ },
+ "seed_inicio": 40
+}

@@ -1,6 +1,6 @@
 # SPEC-394 — Bestiário: recalibrar as 7 criaturas que derivaram depois da SPEC-387
 
-> **Status:** `approved` — dono, 03–04/11: "transforme em spec e execute agora" (follow-ups do bestiário); D1–D5 nos defaults. Após SPEC-373 pousar (`b50e8fb3`).
+> **Status:** `in-review` — dono, 03–04/11: "transforme em spec e execute agora" (follow-ups do bestiário); D1–D5 nos defaults. Após SPEC-373 pousar (`b50e8fb3`).
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** SPEC-373 pousada (`approved`, em voo no worktree `rpg-spec-373`: o R9 dela muda o `on` destas criaturas e ela congela `arena.py`), SPEC-349 `done` (esteira, `calibrar.py`, `_ajustes.yaml`), SPEC-387 `done` (mudanças de motor que causaram a deriva)
@@ -119,4 +119,10 @@ Sem LLM: rodadas de Cartas não chamam IA (`combat-cartas-sem-ia`) e a arena é 
 
 ## 9. Resultado
 
-(preenchido pelo executor)
+Detalhe e tabelas em `docs/spec394/RELATORIO.md`.
+
+- **F** (base pos-373, `docs/spec394/base.json`): anzolado, armador, portao, escuta (lacrador, bracos e carregador voltaram com a 373).
+- **Causa (R3):** nao e a 387. `e208f189` (02/11) registrou `abissal: muito_ferido -> flee` em `_ENEMY_ARCHETYPE_ACTIONS`; a tabela ignora `resistance: absoluta`/`nao_foge`, e as 5 criaturas `abissal` passaram a fugir (fuga conta como vitoria). Sem esse `flee` o portao volta a 61/63,5. Pela D3: defeito de motor, spec propria (Risco alto); portao fica sem dials.
+- **Recalibrado:** anzolado 72,5/91 -> 57,5/76 (c2 d2 f1 s1), `ok`; confirmacao 40-119: 56,8/71 `ok`.
+- **Excecoes nominais (D2/D3):** armador (49,5/86; conf. 41,7/79,5), escuta (41,5/87,5; conf. 42,7/82), portao (91/90, intocado). Duas execucoes do `calibrar.py`, melhor ajuste mantido.
+- **R6:** 369 ids fora de F com hashes `off`/`on` identicos. R1: avaliador congelado intocado.
