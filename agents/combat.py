@@ -2604,6 +2604,20 @@ def _combat_node(state: GameState):
             t.narrative, t.aberturas[0] if t.aberturas else "", where="combate"
         )
 
+    _combat_close_round_meta(t)
+    _combat_close_round_log(t)
+    _combat_close_encounter(t)
+    _combat_result_base(t)
+
+    _combat_result_quests(t)
+
+    _combat_result_events(t)
+
+    return t.result
+
+
+def _combat_close_round_meta(t: _CombatTurn) -> None:
+    """Presságio seguinte, pilhas do baralho e snapshot de aliados."""
     # ---- Montagem do resultado (contrato preservado) ----
     # SPEC-231 R4: o snapshot de aliados transitórios carrega as fichas PÓS-rodada.
     if t.scene_tr:
@@ -2665,15 +2679,6 @@ def _combat_node(state: GameState):
                     t.combat_meta["pilhas"], t.player, drawn_now
                 )
             _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
-    _combat_close_round_log(t)
-    _combat_close_encounter(t)
-    _combat_result_base(t)
-
-    _combat_result_quests(t)
-
-    _combat_result_events(t)
-
-    return t.result
 
 
 def _combat_close_round_log(t: _CombatTurn) -> None:
