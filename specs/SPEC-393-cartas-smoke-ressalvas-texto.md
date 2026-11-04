@@ -48,7 +48,7 @@ Balanço (SPEC-369), roteiro do smoke da 387 (o texto do roteiro é doc), chefe 
 - [x] R4: "Compro a <Carta> com minhas últimas moedas" compra; V-G intacto.
 - [x] R5: aviso e `--strict`.
 - [x] R6: causa registrada (e corrigida, se for bug).
-- [ ] R7: guardas verdes; suíte completa verde no pouso.
+- [x] R7: guardas verdes; suíte completa verde no pouso.
 
 ## 6. Smoke real (curto, local)
 
