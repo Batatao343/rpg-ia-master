@@ -95,9 +95,9 @@ def _dump(out: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
 
     def write(name: str, data: object) -> None:
-        (out / name).write_text(
-            json.dumps(data, sort_keys=False, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
-        )
+        text = json.dumps(data, sort_keys=False, ensure_ascii=False, indent=1) + "
+"
+        (out / name).write_bytes(text.encode("utf-8"))  # LF fixo (byte-igual entre SOs)
 
     write("openapi.json", app.openapi())
     write("routes.json", [_route_entry(r) for r in app.routes])
