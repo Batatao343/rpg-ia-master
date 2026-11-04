@@ -1,0 +1,46 @@
+{
+ "cor_toque": {
+  "vitoria_sem": 0.825,
+  "vitoria_ref": 0.925,
+  "vitoria_com": 0.95,
+  "delta_pp": 2.5,
+  "delta_base": "substituicao",
+  "bandeiras": [],
+  "avisos": [],
+  "ref_custo_folego": {
+   "id": "cor_toque~ref",
+   "efeito": {
+    "kind": "dano",
+    "dano_base": 3
+   },
+   "power_score": 3.0,
+   "faixa": [
+    0.0,
+    7.0
+   ]
+  }
+ },
+ "toque_corrosivo": {
+  "vitoria_sem": 0.825,
+  "vitoria_ref": 0.875,
+  "vitoria_com": 0.887,
+  "delta_pp": 1.2,
+  "delta_base": "substituicao",
+  "bandeiras": [],
+  "avisos": [
+   "uso_baixo"
+  ],
+  "ref_custo_folego": {
+   "id": "toque_corrosivo~ref",
+   "efeito": {
+    "kind": "dano",
+    "dano_base": 3
+   },
+   "power_score": 3.0,
+   "faixa": [
+    0.0,
+    7.0
+   ]
+  }
+ }
+}

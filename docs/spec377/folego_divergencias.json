@@ -1,0 +1,35 @@
+{
+ "bruto": [
+  {
+   "id": "cor_toque",
+   "arquivo": "corruptor.json",
+   "jogo": 1,
+   "lint": 0
+  },
+  {
+   "id": "toque_corrosivo",
+   "arquivo": "exemplos.json",
+   "jogo": 1,
+   "lint": 0
+  }
+ ],
+ "catalogo": {
+  "cartas": 1508,
+  "divergentes": [
+   {
+    "id": "cor_toque",
+    "jogo": 1,
+    "lint": 0
+   },
+   {
+    "id": "toque_corrosivo",
+    "jogo": 1,
+    "lint": 0
+   }
+  ]
+ },
+ "efetivas": {
+  "cartas_com_ruptura_ou_evolucao": 16,
+  "divergentes": []
+ }
+}
