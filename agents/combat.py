@@ -2885,98 +2885,7 @@ def _combat_node(state: GameState):
             "resolved_turns": [_PLAYER_ID],
         }
 
-    t.last_player_action = _canonical_player_action(
-        t.resolved_decl,
-        t.out,
-        attempted=(
-            t.hero_fled or t.flee_requested or _PLAYER_ID in (t.out.get("resolved_turns") or [])
-        ),
-        flee_requested=t.flee_requested,
-        hero_fled=t.hero_fled,
-        flee_destination_id=t.flee_dest_id,
-        chase_state=t.chase_state if t.flee_requested else None,
-    )
-
-    # ---- Espelho de vitais + Cicatrizes obrigatórias ----
-    _mirror_vitals(t.player)
-    for e in t.enemies:
-        _mirror_vitals(e)
-    for ally in t.allies:
-        _mirror_vitals(ally)
-    if not (t.is_simulation or t.out.get("ended") or t.hero_fled or t.out.get("player_dead")):
-        _advance_reinforcements(t.scene, t.enemies, t.actors_by_id, t.sides, t.combat_meta, t.logs)
-    for sid in t.out.get("scars_pending", []):
-        if sid == _PLAYER_ID and death_flow.check_scar_required(t.player):
-            # SPEC-346 R2/D11: no `on` a rodada não chama LLM; a Cicatriz é a determinística.
-            llm = (
-                None if _deck_mode_now() == "on" else get_llm(temperature=0.6, tier=ModelTier.SMART)
-            )
-            death_flow.generate_scar(t.player, llm)
-
-    t.dead = [e for e in t.enemies if e.get("dead") or e.get("status") == "morto"]
-    # SPEC-226 R1: só quem transitou para morto NESTA rodada gera XP/kill/evento.
-    t.newly_dead = [
-        e
-        for e in t.dead
-        if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in t.dead_before
-    ]
-    # SPEC-325 R9/D2: inimigo derrubado sem matar rende o mesmo XP/loot do abate.
-    t.downed = [e for e in t.enemies if e.get("incapacitated") and e.get("nonlethal_by")]
-    newly_downed = [
-        e
-        for e in t.downed
-        if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in t.dead_before
-    ]
-    for e in t.newly_dead + newly_downed:
-        e["xp_awarded"] = True
-    for e in t.dead + t.downed:
-        e["xp_awarded"] = True
-    t.fauna_sim = None
-    if t.newly_dead:
-        t.bestiary_knowledge = disc.record_kills(t.bestiary_knowledge, t.newly_dead, t.turn)
-        t.bk_changed = True
-        t.fauna_sim = _fauna_carcasses(t.state, t.newly_dead)  # SPEC-360 R11
-
-    t.player_dead = bool(t.out.get("player_dead")) or bool(t.player.get("dead"))
-    t.combat_over = bool(t.out.get("ended")) or t.hero_fled or t.player_dead
-    # SPEC-371 R4: fim de combate (texto-fonte vigiado: test_spec371_saber)
-    combat_over, is_simulation = t.combat_over, t.is_simulation
-    if combat_over and not is_simulation and _fauna_saber.active():
-        t.bestiary_knowledge, _saber_logs = _fauna_saber.finish_combat(
-            t.bestiary_knowledge, t.enemies, t.turn
-        )
-        t.status_logs += _saber_logs  # R14
-        t.bk_changed = True
-    if t.combat_over and not t.player_dead:
-        for participant in [t.player] + t.allies:
-            if (
-                not participant.get("dead")
-                and not participant.get("estado_terminal")
-                and not death_flow.critical_spaces_full(participant)
-            ):
-                death_flow.reset_terminal_episode(participant)  # SPEC-231 R6
-            recovery_state = death_flow.post_combat_consciousness(participant)
-            participant["post_combat_state"] = recovery_state
-            if recovery_state == "inconsciente":
-                participant["conscious"] = False
-            elif recovery_state == "acordado":
-                participant["conscious"] = True
-    t.victory = t.combat_over and not t.player_dead and not t.hero_fled and bool(t.dead or t.downed)
-    if t.scene.get("objetivo_resultado") == "falhou":  # SPEC-331 P2-1: objetivo falho = sem espólio
-        t.victory = False
-
-    # ---- XP determinístico (fugitivo/queda letal não contam) ----
-    t.level_up_events: list[dict] = []
-    t.kill_xp = 0  # SPEC-226 R10: ganho individual p/ o guard narrativo
-    if (t.newly_dead or newly_downed) and not t.player_dead and not t.is_simulation:
-        import progression as pg
-
-        xp = pg.xp_for_kills(t.newly_dead + newly_downed)
-        if xp:
-            t.player, t.level_up_events = pg.grant_xp(t.player, xp)
-            t.kill_xp = xp
-            # SPEC-199 R1: XP/nível NÃO entram em `logs` (nem na prosa/fallbacks);
-            # chegam à UI por `last_turn_outcome` -> `turn_outcome`.
+    _combat_aftermath(t)
 
     _combat_outcome_summary(t)
     t.narrative = ""
@@ -3382,6 +3291,102 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_aftermath(t: _CombatTurn) -> None:
+    """Espelho de vitais, Cicatriz, mortos/derrubados, XP e vitória."""
+    t.last_player_action = _canonical_player_action(
+        t.resolved_decl,
+        t.out,
+        attempted=(
+            t.hero_fled or t.flee_requested or _PLAYER_ID in (t.out.get("resolved_turns") or [])
+        ),
+        flee_requested=t.flee_requested,
+        hero_fled=t.hero_fled,
+        flee_destination_id=t.flee_dest_id,
+        chase_state=t.chase_state if t.flee_requested else None,
+    )
+
+    # ---- Espelho de vitais + Cicatrizes obrigatórias ----
+    _mirror_vitals(t.player)
+    for e in t.enemies:
+        _mirror_vitals(e)
+    for ally in t.allies:
+        _mirror_vitals(ally)
+    if not (t.is_simulation or t.out.get("ended") or t.hero_fled or t.out.get("player_dead")):
+        _advance_reinforcements(t.scene, t.enemies, t.actors_by_id, t.sides, t.combat_meta, t.logs)
+    for sid in t.out.get("scars_pending", []):
+        if sid == _PLAYER_ID and death_flow.check_scar_required(t.player):
+            # SPEC-346 R2/D11: no `on` a rodada não chama LLM; a Cicatriz é a determinística.
+            llm = (
+                None if _deck_mode_now() == "on" else get_llm(temperature=0.6, tier=ModelTier.SMART)
+            )
+            death_flow.generate_scar(t.player, llm)
+
+    t.dead = [e for e in t.enemies if e.get("dead") or e.get("status") == "morto"]
+    # SPEC-226 R1: só quem transitou para morto NESTA rodada gera XP/kill/evento.
+    t.newly_dead = [
+        e
+        for e in t.dead
+        if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in t.dead_before
+    ]
+    # SPEC-325 R9/D2: inimigo derrubado sem matar rende o mesmo XP/loot do abate.
+    t.downed = [e for e in t.enemies if e.get("incapacitated") and e.get("nonlethal_by")]
+    newly_downed = [
+        e
+        for e in t.downed
+        if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in t.dead_before
+    ]
+    for e in t.newly_dead + newly_downed:
+        e["xp_awarded"] = True
+    for e in t.dead + t.downed:
+        e["xp_awarded"] = True
+    t.fauna_sim = None
+    if t.newly_dead:
+        t.bestiary_knowledge = disc.record_kills(t.bestiary_knowledge, t.newly_dead, t.turn)
+        t.bk_changed = True
+        t.fauna_sim = _fauna_carcasses(t.state, t.newly_dead)  # SPEC-360 R11
+
+    t.player_dead = bool(t.out.get("player_dead")) or bool(t.player.get("dead"))
+    t.combat_over = bool(t.out.get("ended")) or t.hero_fled or t.player_dead
+    # SPEC-371 R4: fim de combate (texto-fonte vigiado: test_spec371_saber)
+    combat_over, is_simulation = t.combat_over, t.is_simulation
+    if combat_over and not is_simulation and _fauna_saber.active():
+        t.bestiary_knowledge, _saber_logs = _fauna_saber.finish_combat(
+            t.bestiary_knowledge, t.enemies, t.turn
+        )
+        t.status_logs += _saber_logs  # R14
+        t.bk_changed = True
+    if t.combat_over and not t.player_dead:
+        for participant in [t.player] + t.allies:
+            if (
+                not participant.get("dead")
+                and not participant.get("estado_terminal")
+                and not death_flow.critical_spaces_full(participant)
+            ):
+                death_flow.reset_terminal_episode(participant)  # SPEC-231 R6
+            recovery_state = death_flow.post_combat_consciousness(participant)
+            participant["post_combat_state"] = recovery_state
+            if recovery_state == "inconsciente":
+                participant["conscious"] = False
+            elif recovery_state == "acordado":
+                participant["conscious"] = True
+    t.victory = t.combat_over and not t.player_dead and not t.hero_fled and bool(t.dead or t.downed)
+    if t.scene.get("objetivo_resultado") == "falhou":  # SPEC-331 P2-1: objetivo falho = sem espólio
+        t.victory = False
+
+    # ---- XP determinístico (fugitivo/queda letal não contam) ----
+    t.level_up_events: list[dict] = []
+    t.kill_xp = 0  # SPEC-226 R10: ganho individual p/ o guard narrativo
+    if (t.newly_dead or newly_downed) and not t.player_dead and not t.is_simulation:
+        import progression as pg
+
+        xp = pg.xp_for_kills(t.newly_dead + newly_downed)
+        if xp:
+            t.player, t.level_up_events = pg.grant_xp(t.player, xp)
+            t.kill_xp = xp
+            # SPEC-199 R1: XP/nível NÃO entram em `logs` (nem na prosa/fallbacks);
+            # chegam à UI por `last_turn_outcome` -> `turn_outcome`.
 
 
 def _combat_outcome_summary(t: _CombatTurn) -> None:
