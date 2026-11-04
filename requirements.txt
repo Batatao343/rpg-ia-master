@@ -137,7 +137,7 @@ langsmith==0.14.11
     #   langchain-classic
     #   langchain-community
     #   langchain-core
-multidict==6.9.1
+multidict==7.1.0
     # via
     #   aiohttp
     #   yarl
