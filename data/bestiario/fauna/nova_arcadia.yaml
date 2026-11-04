@@ -73,7 +73,8 @@ criaturas:
       aproximacao: "A água do canal se ergue em gomos: uma corrente de juntas cinzentas, com um crânio de dentes dobrados na ponta."
       rumor: "um barqueiro conta que algo mordeu a perna do filho na margem e a ferida ainda puxa para o rio"
     contra_jogo: "Arrancar a farpa (gastar a ação) ou sair da água, onde ele é lento e as vértebras expõem as juntas."
-    tramas: []
+    tramas:
+      - {id: tr_na_corpos_marcados, desde: tocada}
     autor: opus
     revisor_fauna: opus-spec-reviewer
     revisao: aprovada
@@ -139,7 +140,8 @@ criaturas:
       aproximacao: "Um homem branco como papel cai do muro num salto, a pele aberta em centenas de cortes que não sangram."
       rumor: "um vizinho da Rua das Chaminés diz que um paciente que saiu curado volta toda noite pedindo desculpa"
     contra_jogo: "Feri-lo toda rodada, mesmo de raspão; sem o fôlego dos cortes fechados, é um homem seco de pernas trêmulas."
-    tramas: []
+    tramas:
+      - {id: tr_na_corpos_marcados, desde: investigada}
     autor: opus
     revisor_fauna: opus-spec-reviewer
     revisao: aprovada
@@ -280,7 +282,8 @@ criaturas:
       aproximacao: "Um corpo do tamanho de um boi, de lama endurecida sobre pernas curtas, vem em linha reta e o chão afunda à frente dele."
       rumor: "no Beco dizem que onde ela deita o chão não volta mais, e que viciado que dorme ali acorda pesado"
     contra_jogo: "Atacar de longe e nunca de frente; ela não vira depressa e o flanco de lama racha onde já secou."
-    tramas: []
+    tramas:
+      - {id: tr_na_po_de_sonho, desde: tocada}
     autor: opus
     revisor_fauna: opus-spec-reviewer
     revisao: aprovada
@@ -401,7 +404,8 @@ criaturas:
       aproximacao: "Um inquisidor de farda rasgada no peito vira para você os olhos brancos, e o funil cravado no esterno puxa o ar."
       rumor: "um curandeiro de esquina fechou as portas depois que um inquisidor cego passou recitando na rua dele"
     contra_jogo: "Chegar sem Entropia acumulada ou descarregá-la antes; sem o que sugar, o funil engasga e a crosta racha fácil."
-    tramas: []
+    tramas:
+      - {id: tr_na_lista_de_fornalha, desde: tocada}
     autor: opus
     revisor_fauna: opus-spec-reviewer
     revisao: aprovada
@@ -422,7 +426,8 @@ criaturas:
       aproximacao: "Um carregador curvado põe no chão uma gaiola em forma de berço, e o homem rebitado lá dentro vira a cabeça vendada para você."
       rumor: "os da Rua das Chaminés contam que um mago condenado passa toda manhã nas costas de alguém, gritando"
     contra_jogo: "Deixar que ele se gaste, ou derrubar o carregador: com a gaiola de lado no chão o mago não acha o Éter de ninguém."
-    tramas: []
+    tramas:
+      - {id: tr_na_lista_de_fornalha, desde: investigada}
     autor: opus
     revisor_fauna: opus-spec-reviewer
     revisao: aprovada
@@ -444,7 +449,8 @@ criaturas:
       aproximacao: "Um encapuzado de ombro aberto avança puxado por uma lâmina que nasce da carne, e o braço esquerdo tenta segurá-la."
       rumor: "um aprendiz da forja diz que um dos encapuzados treina sozinho de madrugada e geme mais que a lâmina"
     contra_jogo: "Esperar o puxão com o lado esquerdo dele à frente (não há lâmina ali) e deixá-lo sangrar pelo ombro; a peça rachada se troca, o ombro não."
-    tramas: []
+    tramas:
+      - {id: tr_na_aco_que_lembra, desde: investigada}
     autor: opus
     revisor_fauna: opus-spec-reviewer
     revisao: aprovada
@@ -463,9 +469,11 @@ criaturas:
       cheiro: "Pó adocicado de flor seca no ar de um salão fechado."
       marca: "Uma cadeira de veludo virada para a janela, com marcas finas de unha de vidro no braço."
       aproximacao: "Numa cadeira de exposição, um elfo de pele rachada cheia de veios de vidro se levanta, e a luz atravessa o rosto dele."
-      rumor: "um vidraceiro chamado a uma casa do Anel Dourado conta que a janela rachou com o canto de alguém lá dentro"
+      rumor: "um vidraceiro chamado a uma casa do Anel Dourado jura que a janela rachou com o canto de alguém lá dentro"
     contra_jogo: "Apagar a luz ou derrubá-lo primeiro; sentado e sem veios para perder, ele é a peça mais frágil da sala."
-    tramas: []
+    tramas:
+      - {id: tr_na_a_colecao, desde: tocada}
+      - {id: tr_na_po_de_sonho, desde: tocada}
     autor: opus
     revisor_fauna: opus-spec-reviewer
     revisao: aprovada
@@ -575,11 +583,12 @@ criaturas:
       resto: "Um selo de cera vermelha do Mercado partido ao meio, com marca de dentes humanos por baixo."
       som: "Um farfalhar de papel enrolando e desenrolando e, no meio, uma voz lendo cláusulas baixinho."
       cheiro: "Cheiro de couro curtido e de tinta velha, mais forte perto das mãos."
-      marca: "Num livro de contas aberto, as assinaturas da última página escorridas para fora da folha."
+      marca: "Num livro de dívidas aberto, as assinaturas da última página escorridas para fora da folha."
       aproximacao: "Do arquivo se desenrola, farfalhando, um rolo de pele curtida comprido como dois homens, com um selo vermelho à frente lendo em voz baixa."
       rumor: "um devedor do Mercado de Carne garante que o contrato dele foi lido em voz alta sem ninguém segurar o papel"
     contra_jogo: "Rasgar o rolo pelo selo antes da terceira cláusula, ou gastar a Carta mais cara de uma vez enquanto só a primeira foi lida; nunca pegar o rolo com a mão."
-    tramas: []
+    tramas:
+      - {id: tr_na_a_colecao, desde: investigada}
     autor: opus
     revisor_fauna: opus-spec-reviewer
     revisao: aprovada
