@@ -1,6 +1,6 @@
 # SPEC-395 — Tabela tática respeita `resistance: absoluta` (abissal e outras que não fogem)
 
-> **Status:** `in-review` — dono, 04/11: "Executar com padrões" (D1–D4 nos defaults); Lençol de Chaminé deixa de fugir (ajuste de texto em spec futura).
+> **Status:** `done` — dono, 04/11: "Executar com padrões" (D1–D4 nos defaults); Lençol de Chaminé deixa de fugir (ajuste de texto em spec futura).
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** SPEC-394 (`in-review`; diagnóstico em `rpg-spec-394/docs/spec394/RELATORIO.md:7-35`, dials atuais do `_ajustes.yaml`), SPEC-373 `done` (congela `arena.py`)
@@ -139,3 +139,4 @@ desconta): mon_portao_que_morde, mon_odre_de_oleo, mon_fervente_de_ferrugem, mon
   - P2-5: um ator sem arquétipo tabelado, com prioridade `absoluta` e dica "foge", ainda foge pelo legado `move afastar` (`conflict_orchestrator.py:702-705`). Hoje nenhuma criatura curada cai nesse caso; vira follow-up.
   - P2-6: a citação das 4 ids de `fichas` na §9 foi escrita pelo autor de eval; conteúdo conferido pelo coordenador.
 - **Smoke de integracao (04/11, §6):** `docs/spec395/smoke.md`. Portao (3/10) atacou ate morrer, sem fuga; lacrador (5/16) fugiu na rodada 2 (`final_status: fugiu`). MockLLM, save editado so para pôr a criatura ferida (declarado no arquivo).
+- **Revisão Sol rodada 2 (945dc8fd):** APPROVED_WITH_FOLLOWUPS. P2-7 (a guarda `ficha_vs_base` aceita qualquer chave não-fuga em vez de exigir a de `sempre`) fica de follow-up, junto com os outros P2.
