@@ -2405,88 +2405,7 @@ def _combat_node(state: GameState):
     # distribuída, nenhuma rodada resolvida.
     opening_board = bool(t.is_start and _deck_mode_now() == "on" and not t.is_simulation)
     if t.is_start or not t.scene:
-        import party as party_mod
-
-        t.party = party_mod.backfill_party(t.state.get("party") or [])
-        if not [e for e in t.enemies if e.get("status") == "ativo" and not e.get("dead")]:
-            t.enemies, t.spawned_flavor = _spawn_v4_enemies(
-                t.messages, t.combat_target, t.state, t.spawn_meta
-            )
-        t.enemy_refs = [
-            str(value)
-            for enemy in t.enemies
-            for value in (enemy.get("id"), enemy.get("name"))
-            if value
-        ]
-        if t.combat_target:
-            t.enemy_refs.append(str(t.combat_target))
-        t.allies = [
-            orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.party if a.get("active")
-        ] + [
-            orch.ensure_combat_sheet(dict(a), is_ally=True)
-            for a in party_mod.scene_allies(t.state, excluded=t.enemy_refs)
-        ]
-        # SPEC-353 R22: o aliado de cena tem nome já na rodada 0; R54: conflito novo limpa o registro
-        opening_allies = party_mod.scene_allies(t.state, excluded=t.enemy_refs)
-        t.scene = _prepare_scene(t.state, t.enemies, t.player, t.allies)
-        _sync_enemy_knowledge(t.enemies, load_persisted=True)
-        t.bestiary_knowledge = disc.record_encounter(t.bestiary_knowledge, t.enemies, t.turn)
-        t.bk_changed = True
-        for _enemy in t.enemies:  # SPEC-371 R8: o saber do herói entra no ator (flag on)
-            _fauna_saber.stamp_actor(_enemy, t.bestiary_knowledge)
-        from services.combat_origin import materialize
-
-        continuity = t.state.get("continuity") or {}
-        conflict_instance_id = ":".join(
-            (
-                str(t.state.get("game_id") or "game"),
-                str(int(continuity.get("timeline_epoch", 0) or 0)),
-                str(int(continuity.get("session_action_count", t.turn) or t.turn)),
-            )
-        )
-        t.combat_meta = {
-            "round": 0,
-            "active": True,
-            "scene": t.scene,
-            "idle_turns": 0,
-            "origin": materialize(t.combat_meta, t.state.get("combat_origin_hint")),
-            "instance_id": conflict_instance_id,
-            "encounter_level": t.scene.get("encounter_level", 1),
-            # SPEC-353 R22: nome do aliado de cena já na rodada 0. R54/R51: o dict novo também
-            # zera last_round_board/last_mech_log/fontes_condicao do conflito anterior.
-            "scene_allies": opening_allies,
-        }
-        # SPEC-328 R5/R16: Baralho de Conflito (semente derivada do conflito → replay).
-        from services import card_piles
-
-        if card_piles.mode() == "on":
-            card_piles.activate_deck(t.player)  # P1-3: guarda a Preparação original p/ rollback
-        if card_piles.mode() != "off":
-            t.combat_meta["pilhas"] = card_piles.start_piles(
-                t.player, zlib.crc32(conflict_instance_id.encode("utf-8"))
-            )
-            _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
-            t.status_logs += card_status.on_start(t.combat_meta["pilhas"], t.player)  # SPEC-333 R9
-        if card_rewards.mode() == "on":
-            card_rewards.expire_pending(t.player)  # SPEC-333 R3: espolio nao decidido expira
-        if _scene_cards.active():  # SPEC-331 R3: presságio de cena da rodada 1
-            t.combat_meta["pressagios_cena"] = _scene_cards.forecast(t.scene, 1)
-        # SPEC-203 R1/R5: manifesto congelado no spawn → fase `entering`.
-        t.combat_meta = em.safe_transition(t.combat_meta, "entering")
-        t.combat_meta["encounter"] = em.build_manifest(
-            t.enemies,
-            source=(
-                t.spawn_meta.get("source")
-                or ("simulation" if t.is_simulation else "legacy_migrated")
-            ),
-            origin=t.combat_meta["origin"],
-            encounter_id=conflict_instance_id,
-            target_ref=t.spawn_meta.get("target_ref") or str(t.combat_target or ""),
-            scene=t.scene,
-            joined_ids=t.spawn_meta.get("joined_ids") or (),
-            cut_ids=t.spawn_meta.get("cut_ids") or (),
-        )
-        _log_event("combat", "started", level="info", enemies=len(t.enemies))
+        _combat_open_scene(t)
     else:
         # R2: leitura por rodada — manifesto é a verdade; nunca reclassifica.
         if not em.is_valid_manifest(t.combat_meta.get("encounter")):
@@ -3033,6 +2952,89 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_open_scene(t: _CombatTurn) -> None:
+    """Preparação (1x): spawn, cena, manifesto, pilhas e Presságio de cena."""
+    import party as party_mod
+    from services import encounter_manifest as em
+
+    t.party = party_mod.backfill_party(t.state.get("party") or [])
+    if not [e for e in t.enemies if e.get("status") == "ativo" and not e.get("dead")]:
+        t.enemies, t.spawned_flavor = _spawn_v4_enemies(
+            t.messages, t.combat_target, t.state, t.spawn_meta
+        )
+    t.enemy_refs = [
+        str(value) for enemy in t.enemies for value in (enemy.get("id"), enemy.get("name")) if value
+    ]
+    if t.combat_target:
+        t.enemy_refs.append(str(t.combat_target))
+    t.allies = [
+        orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.party if a.get("active")
+    ] + [
+        orch.ensure_combat_sheet(dict(a), is_ally=True)
+        for a in party_mod.scene_allies(t.state, excluded=t.enemy_refs)
+    ]
+    # SPEC-353 R22: o aliado de cena tem nome já na rodada 0; R54: conflito novo limpa o registro
+    opening_allies = party_mod.scene_allies(t.state, excluded=t.enemy_refs)
+    t.scene = _prepare_scene(t.state, t.enemies, t.player, t.allies)
+    _sync_enemy_knowledge(t.enemies, load_persisted=True)
+    t.bestiary_knowledge = disc.record_encounter(t.bestiary_knowledge, t.enemies, t.turn)
+    t.bk_changed = True
+    for _enemy in t.enemies:  # SPEC-371 R8: o saber do herói entra no ator (flag on)
+        _fauna_saber.stamp_actor(_enemy, t.bestiary_knowledge)
+    from services.combat_origin import materialize
+
+    continuity = t.state.get("continuity") or {}
+    conflict_instance_id = ":".join(
+        (
+            str(t.state.get("game_id") or "game"),
+            str(int(continuity.get("timeline_epoch", 0) or 0)),
+            str(int(continuity.get("session_action_count", t.turn) or t.turn)),
+        )
+    )
+    t.combat_meta = {
+        "round": 0,
+        "active": True,
+        "scene": t.scene,
+        "idle_turns": 0,
+        "origin": materialize(t.combat_meta, t.state.get("combat_origin_hint")),
+        "instance_id": conflict_instance_id,
+        "encounter_level": t.scene.get("encounter_level", 1),
+        # SPEC-353 R22: nome do aliado de cena já na rodada 0. R54/R51: o dict novo também
+        # zera last_round_board/last_mech_log/fontes_condicao do conflito anterior.
+        "scene_allies": opening_allies,
+    }
+    # SPEC-328 R5/R16: Baralho de Conflito (semente derivada do conflito → replay).
+    from services import card_piles
+
+    if card_piles.mode() == "on":
+        card_piles.activate_deck(t.player)  # P1-3: guarda a Preparação original p/ rollback
+    if card_piles.mode() != "off":
+        t.combat_meta["pilhas"] = card_piles.start_piles(
+            t.player, zlib.crc32(conflict_instance_id.encode("utf-8"))
+        )
+        _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
+        t.status_logs += card_status.on_start(t.combat_meta["pilhas"], t.player)  # SPEC-333 R9
+    if card_rewards.mode() == "on":
+        card_rewards.expire_pending(t.player)  # SPEC-333 R3: espolio nao decidido expira
+    if _scene_cards.active():  # SPEC-331 R3: presságio de cena da rodada 1
+        t.combat_meta["pressagios_cena"] = _scene_cards.forecast(t.scene, 1)
+    # SPEC-203 R1/R5: manifesto congelado no spawn → fase `entering`.
+    t.combat_meta = em.safe_transition(t.combat_meta, "entering")
+    t.combat_meta["encounter"] = em.build_manifest(
+        t.enemies,
+        source=(
+            t.spawn_meta.get("source") or ("simulation" if t.is_simulation else "legacy_migrated")
+        ),
+        origin=t.combat_meta["origin"],
+        encounter_id=conflict_instance_id,
+        target_ref=t.spawn_meta.get("target_ref") or str(t.combat_target or ""),
+        scene=t.scene,
+        joined_ids=t.spawn_meta.get("joined_ids") or (),
+        cut_ids=t.spawn_meta.get("cut_ids") or (),
+    )
+    _log_event("combat", "started", level="info", enemies=len(t.enemies))
 
 
 def _combat_flee_request(t: _CombatTurn) -> None:
