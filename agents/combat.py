@@ -17,7 +17,8 @@ Fluxo de 1 chamada = 1 RODADA:
 import random
 import re
 import zlib
-from typing import Dict, List, NamedTuple, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, List, NamedTuple, Optional
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, ConfigDict, Field
@@ -2246,34 +2247,108 @@ def combat_node(state: GameState):
     return result
 
 
+@dataclass
+class _CombatTurn:
+    """Estado mutavel de um turno do combate (SPEC-382): o que antes eram locais compartilhados entre
+    as fases de `_combat_node`. Mesmas referencias, nunca copias."""
+
+    aberturas: Any = None
+    active: Any = None
+    actors_by_id: Any = None
+    allies: Any = None
+    ally_ids: Any = None
+    bestiary_knowledge: Any = None
+    bk_changed: Any = None
+    board_on: Any = None
+    chase_refusal: Any = None
+    chase_state: Any = None
+    choices: Any = None
+    combat_meta: Any = None
+    combat_over: Any = None
+    combat_target: Any = None
+    conflict_sum: Any = None
+    dead: Any = None
+    dead_before: Any = None
+    decl: Any = None
+    declaration: Any = None
+    downed: Any = None
+    enemies: Any = None
+    enemy_refs: Any = None
+    fauna_sim: Any = None
+    flee_dest_id: Any = None
+    flee_lines: Any = None
+    flee_requested: Any = None
+    flee_roll: Any = None
+    hero_fled: Any = None
+    initiator: Any = None
+    intent: Any = None
+    is_simulation: Any = None
+    is_start: Any = None
+    kill_xp: Any = None
+    last_player_action: Any = None
+    level_up_events: Any = None
+    loc: Any = None
+    logs: Any = None
+    logs_pre_flee: Any = None
+    messages: Any = None
+    narrative: Any = None
+    newly_dead: Any = None
+    order_decls: Any = None
+    order_logs: Any = None
+    out: Any = None
+    outcome_now: Any = None
+    party: Any = None
+    player: Any = None
+    player_dead: Any = None
+    prior_flee_attempts: Any = None
+    resolved_decl: Any = None
+    result: Any = None
+    rng: Any = None
+    round_state: Any = None
+    scene: Any = None
+    scene_tr: Any = None
+    sides: Any = None
+    spawn_meta: Any = None
+    spawned_flavor: Any = None
+    state: Any = None
+    status_logs: Any = None
+    turn: Any = None
+    victory: Any = None
+    weather_logs: Any = None
+    world: Any = None
+    world_out: Any = None
+    wounds_before: Any = None
+
+
 def _combat_node(state: GameState):
-    messages = state.get("messages", [])
-    if not messages:
+    t = _CombatTurn(state=state)
+    t.messages = t.state.get("messages", [])
+    if not t.messages:
         return {"next": "dm_router"}
 
-    player = dict(state["player"])
-    if _deck_mode_now() == "off" and "prepared_cards_pre_deck" in player:
+    t.player = dict(t.state["player"])
+    if _deck_mode_now() == "off" and "prepared_cards_pre_deck" in t.player:
         from services import card_piles as _cp
 
-        _cp.deactivate_deck(player)  # SPEC-328 P1-3: flag voltou a `off` → Preparação de antes
-    orch.ensure_combat_sheet(player, is_player=True)
-    enemies = [orch.ensure_combat_sheet(dict(e)) for e in (state.get("enemies") or [])]
-    combat_meta = dict(state.get("combat") or {})
-    combat_target = state.get("combat_target", "Inimigos")
-    turn = int(state.get("world", {}).get("turn_count", 0) or 0)
-    bestiary_knowledge = dict(state.get("bestiary_knowledge") or {})
-    bk_changed = False
-    is_simulation = bool((state.get("combat_simulation") or {}).get("enabled"))
-    wounds_before: dict[str, int] = {}  # SPEC-333 R7: Ferimentos antes da rodada
-    status_logs: list[str] = []  # SPEC-333: por que o jogador perdeu Fôlego/ficou Cego
+        _cp.deactivate_deck(t.player)  # SPEC-328 P1-3: flag voltou a `off` → Preparação de antes
+    orch.ensure_combat_sheet(t.player, is_player=True)
+    t.enemies = [orch.ensure_combat_sheet(dict(e)) for e in (t.state.get("enemies") or [])]
+    t.combat_meta = dict(t.state.get("combat") or {})
+    t.combat_target = t.state.get("combat_target", "Inimigos")
+    t.turn = int(t.state.get("world", {}).get("turn_count", 0) or 0)
+    t.bestiary_knowledge = dict(t.state.get("bestiary_knowledge") or {})
+    t.bk_changed = False
+    t.is_simulation = bool((t.state.get("combat_simulation") or {}).get("enabled"))
+    t.wounds_before: dict[str, int] = {}  # SPEC-333 R7: Ferimentos antes da rodada
+    t.status_logs: list[str] = []  # SPEC-333: por que o jogador perdeu Fôlego/ficou Cego
     # SPEC-226 R1: mortos que já constavam no estado de entrada não rendem de novo.
-    dead_before = {
+    t.dead_before = {
         str(e.get("id") or e.get("name"))
-        for e in (state.get("enemies") or [])
+        for e in (t.state.get("enemies") or [])
         if e.get("dead") or e.get("status") == "morto" or e.get("xp_awarded")
     }
 
-    if not player.get("conscious", True) and not combat_meta.get("active"):
+    if not t.player.get("conscious", True) and not t.combat_meta.get("active"):
         return {
             "messages": [
                 AIMessage(
@@ -2283,33 +2358,33 @@ def _combat_node(state: GameState):
                     )
                 )
             ],
-            "player": player,
+            "player": t.player,
             "enemies": [],
-            "combat": {**combat_meta, "active": False, "scene": None},
+            "combat": {**t.combat_meta, "active": False, "scene": None},
             "combat_target": None,
             "next": None,
             "archive_due": False,
             "combat_declaration": None,
         }
 
-    last_msg = messages[-1]
-    is_start = isinstance(last_msg, SystemMessage) and "COMBAT START" in str(last_msg.content)
-    scene = combat_meta.get("scene")
-    spawned_flavor = None
+    last_msg = t.messages[-1]
+    t.is_start = isinstance(last_msg, SystemMessage) and "COMBAT START" in str(last_msg.content)
+    t.scene = t.combat_meta.get("scene")
+    t.spawned_flavor = None
 
     # ---- SPEC-346 R3/D5: com o tabuleiro aberto (`on`) NÃO existe texto livre, nem fuga por texto ----
     if (
-        not is_start
-        and scene
-        and combat_meta.get("active")
-        and not is_simulation
+        not t.is_start
+        and t.scene
+        and t.combat_meta.get("active")
+        and not t.is_simulation
         and _deck_mode_now() == "on"
-        and state.get("combat_declaration") is None
+        and t.state.get("combat_declaration") is None
     ):
         _log_event("combat", "freetext_refused", level="info")
         return {
             "messages": [AIMessage(content=BOARD_FREETEXT_REFUSAL)],
-            "combat": {**dict(state.get("combat") or {}), "idle_turns": 0},
+            "combat": {**dict(t.state.get("combat") or {}), "idle_turns": 0},
             "next": None,
             "archive_due": False,
             "combat_declaration": None,
@@ -2323,56 +2398,58 @@ def _combat_node(state: GameState):
     # cena ausente; só pedimos spawn quando não há inimigo ativo.
     from services import encounter_manifest as em
 
-    spawn_meta: dict = {}
+    t.spawn_meta: dict = {}
     # SPEC-346 R1: com o Baralho `on` a história ABRE o tabuleiro: entrada narrada, mão
     # distribuída, nenhuma rodada resolvida.
-    opening_board = bool(is_start and _deck_mode_now() == "on" and not is_simulation)
-    if is_start or not scene:
+    opening_board = bool(t.is_start and _deck_mode_now() == "on" and not t.is_simulation)
+    if t.is_start or not t.scene:
         import party as party_mod
 
-        party = party_mod.backfill_party(state.get("party") or [])
-        if not [e for e in enemies if e.get("status") == "ativo" and not e.get("dead")]:
-            enemies, spawned_flavor = _spawn_v4_enemies(messages, combat_target, state, spawn_meta)
-        enemy_refs = [
+        t.party = party_mod.backfill_party(t.state.get("party") or [])
+        if not [e for e in t.enemies if e.get("status") == "ativo" and not e.get("dead")]:
+            t.enemies, t.spawned_flavor = _spawn_v4_enemies(
+                t.messages, t.combat_target, t.state, t.spawn_meta
+            )
+        t.enemy_refs = [
             str(value)
-            for enemy in enemies
+            for enemy in t.enemies
             for value in (enemy.get("id"), enemy.get("name"))
             if value
         ]
-        if combat_target:
-            enemy_refs.append(str(combat_target))
-        allies = [
-            orch.ensure_combat_sheet(dict(a), is_ally=True) for a in party if a.get("active")
+        if t.combat_target:
+            t.enemy_refs.append(str(t.combat_target))
+        t.allies = [
+            orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.party if a.get("active")
         ] + [
             orch.ensure_combat_sheet(dict(a), is_ally=True)
-            for a in party_mod.scene_allies(state, excluded=enemy_refs)
+            for a in party_mod.scene_allies(t.state, excluded=t.enemy_refs)
         ]
         # SPEC-353 R22: o aliado de cena tem nome já na rodada 0; R54: conflito novo limpa o registro
-        opening_allies = party_mod.scene_allies(state, excluded=enemy_refs)
-        scene = _prepare_scene(state, enemies, player, allies)
-        _sync_enemy_knowledge(enemies, load_persisted=True)
-        bestiary_knowledge = disc.record_encounter(bestiary_knowledge, enemies, turn)
-        bk_changed = True
-        for _enemy in enemies:  # SPEC-371 R8: o saber do herói entra no ator (flag on)
-            _fauna_saber.stamp_actor(_enemy, bestiary_knowledge)
+        opening_allies = party_mod.scene_allies(t.state, excluded=t.enemy_refs)
+        t.scene = _prepare_scene(t.state, t.enemies, t.player, t.allies)
+        _sync_enemy_knowledge(t.enemies, load_persisted=True)
+        t.bestiary_knowledge = disc.record_encounter(t.bestiary_knowledge, t.enemies, t.turn)
+        t.bk_changed = True
+        for _enemy in t.enemies:  # SPEC-371 R8: o saber do herói entra no ator (flag on)
+            _fauna_saber.stamp_actor(_enemy, t.bestiary_knowledge)
         from services.combat_origin import materialize
 
-        continuity = state.get("continuity") or {}
+        continuity = t.state.get("continuity") or {}
         conflict_instance_id = ":".join(
             (
-                str(state.get("game_id") or "game"),
+                str(t.state.get("game_id") or "game"),
                 str(int(continuity.get("timeline_epoch", 0) or 0)),
-                str(int(continuity.get("session_action_count", turn) or turn)),
+                str(int(continuity.get("session_action_count", t.turn) or t.turn)),
             )
         )
-        combat_meta = {
+        t.combat_meta = {
             "round": 0,
             "active": True,
-            "scene": scene,
+            "scene": t.scene,
             "idle_turns": 0,
-            "origin": materialize(combat_meta, state.get("combat_origin_hint")),
+            "origin": materialize(t.combat_meta, t.state.get("combat_origin_hint")),
             "instance_id": conflict_instance_id,
-            "encounter_level": scene.get("encounter_level", 1),
+            "encounter_level": t.scene.get("encounter_level", 1),
             # SPEC-353 R22: nome do aliado de cena já na rodada 0. R54/R51: o dict novo também
             # zera last_round_board/last_mech_log/fontes_condicao do conflito anterior.
             "scene_allies": opening_allies,
@@ -2381,64 +2458,65 @@ def _combat_node(state: GameState):
         from services import card_piles
 
         if card_piles.mode() == "on":
-            card_piles.activate_deck(player)  # P1-3: guarda a Preparação original p/ rollback
+            card_piles.activate_deck(t.player)  # P1-3: guarda a Preparação original p/ rollback
         if card_piles.mode() != "off":
-            combat_meta["pilhas"] = card_piles.start_piles(
-                player, zlib.crc32(conflict_instance_id.encode("utf-8"))
+            t.combat_meta["pilhas"] = card_piles.start_piles(
+                t.player, zlib.crc32(conflict_instance_id.encode("utf-8"))
             )
-            _scene_cards.sync_hand(scene, combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
-            status_logs += card_status.on_start(combat_meta["pilhas"], player)  # SPEC-333 R9
+            _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
+            t.status_logs += card_status.on_start(t.combat_meta["pilhas"], t.player)  # SPEC-333 R9
         if card_rewards.mode() == "on":
-            card_rewards.expire_pending(player)  # SPEC-333 R3: espolio nao decidido expira
+            card_rewards.expire_pending(t.player)  # SPEC-333 R3: espolio nao decidido expira
         if _scene_cards.active():  # SPEC-331 R3: presságio de cena da rodada 1
-            combat_meta["pressagios_cena"] = _scene_cards.forecast(scene, 1)
+            t.combat_meta["pressagios_cena"] = _scene_cards.forecast(t.scene, 1)
         # SPEC-203 R1/R5: manifesto congelado no spawn → fase `entering`.
-        combat_meta = em.safe_transition(combat_meta, "entering")
-        combat_meta["encounter"] = em.build_manifest(
-            enemies,
+        t.combat_meta = em.safe_transition(t.combat_meta, "entering")
+        t.combat_meta["encounter"] = em.build_manifest(
+            t.enemies,
             source=(
-                spawn_meta.get("source") or ("simulation" if is_simulation else "legacy_migrated")
+                t.spawn_meta.get("source")
+                or ("simulation" if t.is_simulation else "legacy_migrated")
             ),
-            origin=combat_meta["origin"],
+            origin=t.combat_meta["origin"],
             encounter_id=conflict_instance_id,
-            target_ref=spawn_meta.get("target_ref") or str(combat_target or ""),
-            scene=scene,
-            joined_ids=spawn_meta.get("joined_ids") or (),
-            cut_ids=spawn_meta.get("cut_ids") or (),
+            target_ref=t.spawn_meta.get("target_ref") or str(t.combat_target or ""),
+            scene=t.scene,
+            joined_ids=t.spawn_meta.get("joined_ids") or (),
+            cut_ids=t.spawn_meta.get("cut_ids") or (),
         )
-        _log_event("combat", "started", level="info", enemies=len(enemies))
+        _log_event("combat", "started", level="info", enemies=len(t.enemies))
     else:
         # R2: leitura por rodada — manifesto é a verdade; nunca reclassifica.
-        if not em.is_valid_manifest(combat_meta.get("encounter")):
-            combat_meta["encounter"] = em.manifest_from_legacy(
-                enemies, combat_meta, game_id=str(state.get("game_id") or "game")
+        if not em.is_valid_manifest(t.combat_meta.get("encounter")):
+            t.combat_meta["encounter"] = em.manifest_from_legacy(
+                t.enemies, t.combat_meta, game_id=str(t.state.get("game_id") or "game")
             )
-        if combat_meta.get("phase") not in ("active",):
-            combat_meta["phase"], combat_meta["outcome"] = "active", None
-        combat_meta["encounter"], enemies, _violations = em.reconcile_roster(
-            combat_meta["encounter"], enemies, int(combat_meta.get("round", 0) or 0)
+        if t.combat_meta.get("phase") not in ("active",):
+            t.combat_meta["phase"], t.combat_meta["outcome"] = "active", None
+        t.combat_meta["encounter"], t.enemies, _violations = em.reconcile_roster(
+            t.combat_meta["encounter"], t.enemies, int(t.combat_meta.get("round", 0) or 0)
         )
 
-    active = [e for e in enemies if e.get("status") == "ativo" and not e.get("dead")]
-    if not active:
+    t.active = [e for e in t.enemies if e.get("status") == "ativo" and not e.get("dead")]
+    if not t.active:
         import party as party_mod
 
-        party = party_mod.backfill_party(state.get("party") or [])
-        enemy_refs = [
+        t.party = party_mod.backfill_party(t.state.get("party") or [])
+        t.enemy_refs = [
             str(value)
-            for enemy in enemies
+            for enemy in t.enemies
             for value in (enemy.get("id"), enemy.get("name"))
             if value
         ]
-        scene_tr = combat_meta.get("scene_allies") or party_mod.scene_allies(
-            state, excluded=enemy_refs
+        t.scene_tr = t.combat_meta.get("scene_allies") or party_mod.scene_allies(
+            t.state, excluded=t.enemy_refs
         )
-        allies = [
-            orch.ensure_combat_sheet(dict(a), is_ally=True) for a in party if a.get("active")
-        ] + [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in scene_tr]
+        t.allies = [
+            orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.party if a.get("active")
+        ] + [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.scene_tr]
         # Saves legados podem ter somente o status textual. O summary precisa das
         # flags canônicas usadas por build_summary.
-        for participant in enemies + allies:
+        for participant in t.enemies + t.allies:
             status = str(participant.get("status") or "").lower()
             if status == "morto":
                 participant["dead"] = True
@@ -2447,26 +2525,28 @@ def _combat_node(state: GameState):
                 participant["fled"] = True
             elif status == "rendido":
                 participant["surrendered"] = True
-        conflict_sum = summ.build_summary(
-            [player] + enemies + allies,
-            scene=scene,
-            extras={"turn": turn, "conflict_id": combat_meta.get("instance_id")},
+        t.conflict_sum = summ.build_summary(
+            [t.player] + t.enemies + t.allies,
+            scene=t.scene,
+            extras={"turn": t.turn, "conflict_id": t.combat_meta.get("instance_id")},
         )
-        combat_meta["last_player_action"] = _canonical_player_action(None, {}, attempted=False)
+        t.combat_meta["last_player_action"] = _canonical_player_action(None, {}, attempted=False)
         early_outcome = _encounter_outcome(
-            player=player, enemies=enemies, hero_fled=False, player_dead=False
+            player=t.player, enemies=t.enemies, hero_fled=False, player_dead=False
         )
-        combat_meta = _finish_encounter(combat_meta, enemies, early_outcome, loot=not is_simulation)
+        t.combat_meta = _finish_encounter(
+            t.combat_meta, t.enemies, early_outcome, loot=not t.is_simulation
+        )
         return {
             "messages": [AIMessage(content="O silêncio retorna ao campo. Vitória.")],
             "next": "loot",
             "combat_target": None,
             "enemies": [],
-            "conflict_summary": conflict_sum,
+            "conflict_summary": t.conflict_sum,
             "combat": {
-                **combat_meta,
+                **t.combat_meta,
                 "active": False,
-                "round": combat_meta.get("round", 0),
+                "round": t.combat_meta.get("round", 0),
                 "scene": None,
             },
             "archive_due": True,
@@ -2475,295 +2555,323 @@ def _combat_node(state: GameState):
     # ---- Montagem dos lados + declaração do jogador ----
     import party as party_mod
 
-    party = party_mod.backfill_party(state.get("party") or [])
-    enemy_refs = [
-        str(value) for enemy in enemies for value in (enemy.get("id"), enemy.get("name")) if value
+    t.party = party_mod.backfill_party(t.state.get("party") or [])
+    t.enemy_refs = [
+        str(value) for enemy in t.enemies for value in (enemy.get("id"), enemy.get("name")) if value
     ]
-    scene_tr = combat_meta.get("scene_allies") or party_mod.scene_allies(state, excluded=enemy_refs)
-    allies = [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in party if a.get("active")] + [
+    t.scene_tr = t.combat_meta.get("scene_allies") or party_mod.scene_allies(
+        t.state, excluded=t.enemy_refs
+    )
+    t.allies = [
+        orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.party if a.get("active")
+    ] + [
         orch.ensure_combat_sheet(dict(a), is_ally=True)
-        for a in scene_tr
+        for a in t.scene_tr
         if not (a.get("dead") or a.get("status") == "morto")
     ]
-    player["_party_active"] = bool(allies)
-    ally_ids = [a.get("id") or a.get("name") for a in allies]
+    t.player["_party_active"] = bool(t.allies)
+    t.ally_ids = [a.get("id") or a.get("name") for a in t.allies]
 
-    actors_by_id: dict[str, dict] = {_PLAYER_ID: player}
-    for e in enemies:
-        actors_by_id[e["id"]] = e
-    for a in allies:
-        actors_by_id[a.get("id") or a.get("name")] = a
-    sides = {"hero": [_PLAYER_ID], "ally": ally_ids, "enemy": [e["id"] for e in active]}
+    t.actors_by_id: dict[str, dict] = {_PLAYER_ID: t.player}
+    for e in t.enemies:
+        t.actors_by_id[e["id"]] = e
+    for a in t.allies:
+        t.actors_by_id[a.get("id") or a.get("name")] = a
+    t.sides = {"hero": [_PLAYER_ID], "ally": t.ally_ids, "enemy": [e["id"] for e in t.active]}
 
-    intent = _last_human_text(messages)
+    t.intent = _last_human_text(t.messages)
     if opening_board:
         return _board_opening_result(
-            state,
-            messages,
-            player=player,
-            enemies=enemies,
-            allies=allies,
-            party=party,
-            scene=scene,
-            combat_meta=combat_meta,
-            combat_target=combat_target,
-            actors_by_id=actors_by_id,
-            sides=sides,
-            spawn_meta=spawn_meta,
-            spawned_flavor=spawned_flavor,
-            status_logs=status_logs,
-            intent=intent,
-            bestiary_knowledge=bestiary_knowledge,
-            bk_changed=bk_changed,
+            t.state,
+            t.messages,
+            player=t.player,
+            enemies=t.enemies,
+            allies=t.allies,
+            party=t.party,
+            scene=t.scene,
+            combat_meta=t.combat_meta,
+            combat_target=t.combat_target,
+            actors_by_id=t.actors_by_id,
+            sides=t.sides,
+            spawn_meta=t.spawn_meta,
+            spawned_flavor=t.spawned_flavor,
+            status_logs=t.status_logs,
+            intent=t.intent,
+            bestiary_knowledge=t.bestiary_knowledge,
+            bk_changed=t.bk_changed,
         )
-    declaration = state.get("combat_declaration")  # harness passa estruturado
-    if declaration is not None and not isinstance(declaration, TurnDeclaration):
-        declaration = TurnDeclaration(**declaration)
+    t.declaration = t.state.get("combat_declaration")  # harness passa estruturado
+    if t.declaration is not None and not isinstance(t.declaration, TurnDeclaration):
+        t.declaration = TurnDeclaration(**t.declaration)
 
     # ---- Fuga: chase determinístico (conflito-09) ----
-    flee_dest_id = None
+    t.flee_dest_id = None
     from services.chase import FLEE_RE
 
     # SPEC-325 C-P2-1: "Brunna, recuar." é ordem ao aliado, nunca a fuga do herói.
-    flee_text, _order_only = _player_text_without_order(intent, enemies, actors_by_id, sides)
-    flee_requested = bool(FLEE_RE.search(flee_text.lower()))
-    if flee_requested:
+    flee_text, _order_only = _player_text_without_order(
+        t.intent, t.enemies, t.actors_by_id, t.sides
+    )
+    t.flee_requested = bool(FLEE_RE.search(flee_text.lower()))
+    if t.flee_requested:
         from services.intent_guard import log_intent_guard
 
-        log_intent_guard("flee_regex", "FLEE_RE", intent)
-    if declaration is not None and declaration.acao is not None and declaration.acao.kind == "flee":
-        flee_requested = True
-        flee_dest_id = declaration.acao.params.get("destination_id")
-    if state.get("combat_flee_attempt"):
-        flee_requested = True
-        flee_dest_id = state.get("combat_flee_destination")
+        log_intent_guard("flee_regex", "FLEE_RE", t.intent)
+    if (
+        t.declaration is not None
+        and t.declaration.acao is not None
+        and t.declaration.acao.kind == "flee"
+    ):
+        t.flee_requested = True
+        t.flee_dest_id = t.declaration.acao.params.get("destination_id")
+    if t.state.get("combat_flee_attempt"):
+        t.flee_requested = True
+        t.flee_dest_id = t.state.get("combat_flee_destination")
 
     # SPEC-325 R12/R13: abandono/sacrifício durante a perseguição (`off`/sem fuga = nada muda).
-    choices = _chase_party_choices(
-        state, combat_meta, party, allies, ally_ids, actors_by_id, sides, player, intent, active
+    t.choices = _chase_party_choices(
+        t.state,
+        t.combat_meta,
+        t.party,
+        t.allies,
+        t.ally_ids,
+        t.actors_by_id,
+        t.sides,
+        t.player,
+        t.intent,
+        t.active,
     )
-    if choices["flee"]:
-        flee_requested = True
-        logs_pre_flee = list(choices["logs"])
+    if t.choices["flee"]:
+        t.flee_requested = True
+        t.logs_pre_flee = list(t.choices["logs"])
     else:
-        logs_pre_flee = []
+        t.logs_pre_flee = []
 
-    prior_flee_attempts = combat_meta.get("flee_attempts")
-    if flee_requested:
-        combat_meta["flee_attempts"] = int(combat_meta.get("flee_attempts", 0) or 0) + 1
+    t.prior_flee_attempts = t.combat_meta.get("flee_attempts")
+    if t.flee_requested:
+        t.combat_meta["flee_attempts"] = int(t.combat_meta.get("flee_attempts", 0) or 0) + 1
     else:
         # O teto mede tentativas consecutivas dentro deste conflito.
-        combat_meta.pop("flee_attempts", None)
+        t.combat_meta.pop("flee_attempts", None)
 
-    combat_meta["round"] = int(combat_meta.get("round", 0)) + 1
-    combat_meta["active"] = True
-    combat_meta["idle_turns"] = 0
-    combat_meta["scene_allies"] = scene_tr
+    t.combat_meta["round"] = int(t.combat_meta.get("round", 0)) + 1
+    t.combat_meta["active"] = True
+    t.combat_meta["idle_turns"] = 0
+    t.combat_meta["scene_allies"] = t.scene_tr
     # RNG = módulo global (semeado pelo harness/persistência) → reprodutível por seed.
-    rng = random
+    t.rng = random
 
-    hero_fled = False
-    logs: list[str] = []
-    flee_lines: list[str] = []  # SPEC-346: linhas humanas da fuga para o registro
-    flee_roll: dict | None = None  # SPEC-353 R39b: dado da fuga desta rodada, para o mech_log
-    order_logs: list[str] = []
-    weather_logs: list[str] = []
-    world_out = None
-    world = state.get("world") or {}
+    t.hero_fled = False
+    t.logs: list[str] = []
+    t.flee_lines: list[str] = []  # SPEC-346: linhas humanas da fuga para o registro
+    t.flee_roll: dict | None = None  # SPEC-353 R39b: dado da fuga desta rodada, para o mech_log
+    t.order_logs: list[str] = []
+    t.weather_logs: list[str] = []
+    t.world_out = None
+    t.world = t.state.get("world") or {}
     from world_utils import DARK_COMBAT_PENALTY, light_level, weather_effects
 
-    weather_fx = weather_effects(world)
-    light_fx = light_level(world, player)
+    weather_fx = weather_effects(t.world)
+    light_fx = light_level(t.world, t.player)
     weather_attack = int(weather_fx.get("combat_attack_mod", 0) or 0)
     hero_light_attack = int(light_fx.get("combat_mod", 0) or 0)
     enemy_light_attack = DARK_COMBAT_PENALTY if light_fx.get("natural_dark") else 0
-    player["_env_attack_mod"] = weather_attack + hero_light_attack
-    for ally in allies:
+    t.player["_env_attack_mod"] = weather_attack + hero_light_attack
+    for ally in t.allies:
         ally["_env_attack_mod"] = weather_attack + hero_light_attack
-    for enemy in active:
+    for enemy in t.active:
         enemy["_env_attack_mod"] = weather_attack + enemy_light_attack
-    surprise = world.get("encounter_surprise")
-    initiator = "heroes" if surprise == "player" else ("enemy" if surprise == "enemy" else None)
-    if int(combat_meta.get("round", 0) or 0) == 1 and "initiator_reason" in combat_meta:
+    surprise = t.world.get("encounter_surprise")
+    t.initiator = "heroes" if surprise == "player" else ("enemy" if surprise == "enemy" else None)
+    if int(t.combat_meta.get("round", 0) or 0) == 1 and "initiator_reason" in t.combat_meta:
         # SPEC-346 D4: a abertura já decidiu pela cena (inclusive "anulada pela vigília" = None);
         # a surpresa crua do mundo não vale de novo.
-        initiator = combat_meta.get("initiator")
-    initiator = _early_game_reaction_initiator(
-        state, player, initiator, combat_round=int(combat_meta.get("round", 1) or 1)
+        t.initiator = t.combat_meta.get("initiator")
+    t.initiator = _early_game_reaction_initiator(
+        t.state, t.player, t.initiator, combat_round=int(t.combat_meta.get("round", 1) or 1)
     )
-    locked = combat_meta.get("initiator") if int(combat_meta.get("round", 0) or 0) == 1 else None
+    locked = (
+        t.combat_meta.get("initiator") if int(t.combat_meta.get("round", 0) or 0) == 1 else None
+    )
     if locked in ("enemy", "heroes"):  # SPEC-346 D4: a cena decidiu quem age primeiro
-        initiator = locked
-    if "encounter_surprise" in world:
-        world_out = dict(world)
-        world_out.pop("encounter_surprise", None)
-    weather_logs = _apply_weather_hazard(player, world, rng=rng)
-    _register_environmental_damage_terminal(player, weather_logs)
-    if isinstance(combat_meta.get("pilhas"), dict):  # SPEC-331 P1-1: cartas de objeto no turno
-        _scene_cards.sync_hand(scene, combat_meta["pilhas"], _PLAYER_ID)
-    resolved_decl: TurnDeclaration | None = declaration
-    flee_allowed = _can_attempt_flee(player)
-    if flee_requested and flee_allowed:
-        _prev_track = str((combat_meta.get("chase") or {}).get("trilha") or "pressionado")
-        hero_fled, flee_logs, chase_state = _attempt_flee(
-            scene,
-            player,
-            active,
-            sides,
-            rng,
-            existing_chase=combat_meta.get("chase"),
-            intent=intent,
-            force_escape=bool(choices["sacrificed"]),
+        t.initiator = locked
+    if "encounter_surprise" in t.world:
+        t.world_out = dict(t.world)
+        t.world_out.pop("encounter_surprise", None)
+    t.weather_logs = _apply_weather_hazard(t.player, t.world, rng=t.rng)
+    _register_environmental_damage_terminal(t.player, t.weather_logs)
+    if isinstance(t.combat_meta.get("pilhas"), dict):  # SPEC-331 P1-1: cartas de objeto no turno
+        _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)
+    t.resolved_decl: TurnDeclaration | None = t.declaration
+    flee_allowed = _can_attempt_flee(t.player)
+    if t.flee_requested and flee_allowed:
+        _prev_track = str((t.combat_meta.get("chase") or {}).get("trilha") or "pressionado")
+        t.hero_fled, flee_logs, t.chase_state = _attempt_flee(
+            t.scene,
+            t.player,
+            t.active,
+            t.sides,
+            t.rng,
+            existing_chase=t.combat_meta.get("chase"),
+            intent=t.intent,
+            force_escape=bool(t.choices["sacrificed"]),
         )
-        if not hero_fled and _is_valid_flee_destination(state, flee_dest_id):
-            hero_fled, chase_state = _enforce_flee_attempt_limit(
-                chase_state,
-                attempts=int(combat_meta.get("flee_attempts", 0) or 0),
+        if not t.hero_fled and _is_valid_flee_destination(t.state, t.flee_dest_id):
+            t.hero_fled, t.chase_state = _enforce_flee_attempt_limit(
+                t.chase_state,
+                attempts=int(t.combat_meta.get("flee_attempts", 0) or 0),
             )
-            if hero_fled:
+            if t.hero_fled:
                 flee_logs.append("Após uma perseguição prolongada, os inimigos perdem o rastro.")
-        _publish_sacrifice_offer(state, party, chase_state, hero_fled=hero_fled, logs=flee_logs)
-        combat_meta["chase"] = chase_state
-        flee_roll = _flee_roll_payload(chase_state, _prev_track, hero_fled) or flee_roll
-        logs += weather_logs + logs_pre_flee + flee_logs
-        flee_lines = list(logs_pre_flee) + list(flee_logs)
-    elif flee_requested:
-        chase_state = {
-            **dict(combat_meta.get("chase") or {}),
+        _publish_sacrifice_offer(
+            t.state, t.party, t.chase_state, hero_fled=t.hero_fled, logs=flee_logs
+        )
+        t.combat_meta["chase"] = t.chase_state
+        t.flee_roll = _flee_roll_payload(t.chase_state, _prev_track, t.hero_fled) or t.flee_roll
+        t.logs += t.weather_logs + t.logs_pre_flee + flee_logs
+        t.flee_lines = list(t.logs_pre_flee) + list(flee_logs)
+    elif t.flee_requested:
+        t.chase_state = {
+            **dict(t.combat_meta.get("chase") or {}),
             "eligible": False,
             "blocked_reason": "lifecycle",
         }
-        combat_meta["chase"] = chase_state
-        logs += weather_logs + [
+        t.combat_meta["chase"] = t.chase_state
+        t.logs += t.weather_logs + [
             "Sua condição atual impede iniciar a fuga; a rodada resolve sua recuperação."
         ]
-    if not hero_fled:
-        if flee_requested:
+    if not t.hero_fled:
+        if t.flee_requested:
             # A tentativa falhou, mas consumiu a Ação do protagonista. Inimigos
             # ainda resolvem a rodada; não há parse secundário nem ataque oculto.
-            decl = TurnDeclaration(
+            t.decl = TurnDeclaration(
                 actor_id=_PLAYER_ID,
                 acao=TurnStep(kind="pass"),
             )
         else:
-            if declaration is not None and declaration.acao is not None:
-                decl = declaration
+            if t.declaration is not None and t.declaration.acao is not None:
+                t.decl = t.declaration
             else:
                 parse_text, order_only = _player_text_without_order(
-                    intent, enemies, actors_by_id, sides
+                    t.intent, t.enemies, t.actors_by_id, t.sides
                 )
                 if order_only:  # só a ordem: o herói ataca o 1º inimigo, sem gastar CLASSIFY
-                    decl = TurnDeclaration(
-                        actor_id=_PLAYER_ID, acao=TurnStep(kind="attack", target_id=active[0]["id"])
+                    t.decl = TurnDeclaration(
+                        actor_id=_PLAYER_ID,
+                        acao=TurnStep(kind="attack", target_id=t.active[0]["id"]),
                     )
                 else:
-                    decl = _parse_turn_declaration(
-                        player,
-                        active,
+                    t.decl = _parse_turn_declaration(
+                        t.player,
+                        t.active,
                         parse_text,
-                        scene,
-                        piles=combat_meta.get("pilhas") if _deck_mode_now() == "on" else None,
+                        t.scene,
+                        piles=t.combat_meta.get("pilhas") if _deck_mode_now() == "on" else None,
                     )
-        _mark_nonlethal(decl, intent)
-        resolved_decl = decl
-        chase_refusal = _chase_attack_gate(combat_meta, decl)  # SPEC-325 R11
-        if not chase_refusal:  # SPEC-325 R14: objeto inválido/ofensivo contra os seus
-            chase_refusal = _guard_object_step(decl, scene, active, sides)
-        order_decls, order_logs = _companion_orders(
-            state, intent, party, enemies, scene, actors_by_id, sides
+        _mark_nonlethal(t.decl, t.intent)
+        t.resolved_decl = t.decl
+        t.chase_refusal = _chase_attack_gate(t.combat_meta, t.decl)  # SPEC-325 R11
+        if not t.chase_refusal:  # SPEC-325 R14: objeto inválido/ofensivo contra os seus
+            t.chase_refusal = _guard_object_step(t.decl, t.scene, t.active, t.sides)
+        t.order_decls, t.order_logs = _companion_orders(
+            t.state, t.intent, t.party, t.enemies, t.scene, t.actors_by_id, t.sides
         )  # SPEC-325 R15
         # alvo inválido (inimigo já caiu / declaração pré-computada) → 1º inimigo ativo
         if (
-            decl.acao
-            and decl.acao.kind == "attack"
-            and decl.acao.target_id not in {e["id"] for e in active}
+            t.decl.acao
+            and t.decl.acao.kind == "attack"
+            and t.decl.acao.target_id not in {e["id"] for e in t.active}
         ):
             from services import mechanics_trace as _mt
 
             _mt.record_step(
                 "target_redirect",
                 actor=_PLAYER_ID,
-                target=active[0]["id"],
+                target=t.active[0]["id"],
                 reason="target_not_active",
             )
-            decl.acao.target_id = active[0]["id"]
-        elif decl.acao and decl.acao.kind == "card":
+            t.decl.acao.target_id = t.active[0]["id"]
+        elif t.decl.acao and t.decl.acao.kind == "card":
             from services import cards
 
-            declared_card = cards.get_card(decl.acao.card_id or "") or {}
-            decl.acao.target_id = _card_target_for(
+            declared_card = cards.get_card(t.decl.acao.card_id or "") or {}
+            t.decl.acao.target_id = _card_target_for(
                 declared_card,
-                decl.acao.target_id,
-                active_ids=[e["id"] for e in active],
-                friendly_ids=[_PLAYER_ID] + [aid for aid in ally_ids if aid],
+                t.decl.acao.target_id,
+                active_ids=[e["id"] for e in t.active],
+                friendly_ids=[_PLAYER_ID] + [aid for aid in t.ally_ids if aid],
             )
-        for extra_step in decl.jogadas[1:]:  # SPEC-328 R13: mesmas regras de alvo p/ a lista
-            _normalize_extra_play(extra_step, active, ally_ids)
-        round_state = {
-            "player": player,
-            "_player_reaction_card_id": state.get("player_reaction_card_id"),
+        for extra_step in t.decl.jogadas[1:]:  # SPEC-328 R13: mesmas regras de alvo p/ a lista
+            _normalize_extra_play(extra_step, t.active, t.ally_ids)
+        t.round_state = {
+            "player": t.player,
+            "_player_reaction_card_id": t.state.get("player_reaction_card_id"),
         }
         deck_mode = _deck_mode_now()
-        if deck_mode != "off" and isinstance(combat_meta.get("pilhas"), dict):
+        if deck_mode != "off" and isinstance(t.combat_meta.get("pilhas"), dict):
             import copy as _copy
 
-            combat_meta["pilhas"] = _copy.deepcopy(combat_meta["pilhas"])
-            round_state["_piles"] = combat_meta["pilhas"]
-            round_state["_deck_mode"] = deck_mode
-        wounds_before = card_status.wound_counts(player)
-        out = orch.run_round(
-            scene,
-            actors_by_id,
-            sides,
-            round_state,
-            declarations={**order_decls, _PLAYER_ID: decl},
-            prepared_abyss=scene.get("abyss_events"),
-            initiator=initiator,
-            rng=rng,
-            **({"refusal": chase_refusal} if chase_refusal else {}),
+            t.combat_meta["pilhas"] = _copy.deepcopy(t.combat_meta["pilhas"])
+            t.round_state["_piles"] = t.combat_meta["pilhas"]
+            t.round_state["_deck_mode"] = deck_mode
+        t.wounds_before = card_status.wound_counts(t.player)
+        t.out = orch.run_round(
+            t.scene,
+            t.actors_by_id,
+            t.sides,
+            t.round_state,
+            declarations={**t.order_decls, _PLAYER_ID: t.decl},
+            prepared_abyss=t.scene.get("abyss_events"),
+            initiator=t.initiator,
+            rng=t.rng,
+            **({"refusal": t.chase_refusal} if t.chase_refusal else {}),
             **(
-                {"pressagios": combat_meta["pressagios"]}
-                if _enemy_intent.active() and isinstance(combat_meta.get("pressagios"), dict)
+                {"pressagios": t.combat_meta["pressagios"]}
+                if _enemy_intent.active() and isinstance(t.combat_meta.get("pressagios"), dict)
                 else {}
             ),
         )
-        if chase_refusal or out.get("deck_refused"):
-            combat_meta["round"] = max(0, int(combat_meta.get("round", 1) or 1) - 1)
-            if prior_flee_attempts is not None:  # recusa não gasta nada: preserva o teto de fuga
-                combat_meta["flee_attempts"] = prior_flee_attempts
-        _sync_enemy_knowledge(enemies)
-        _reveal_resistances(out.get("attacks") or [], enemies, sides)
-        logs += weather_logs + order_logs + out["logs"]
-        if not is_simulation and _fauna_saber.active():  # SPEC-371 R3: telegrafo/assinatura -> save
+        if t.chase_refusal or t.out.get("deck_refused"):
+            t.combat_meta["round"] = max(0, int(t.combat_meta.get("round", 1) or 1) - 1)
+            if t.prior_flee_attempts is not None:  # recusa não gasta nada: preserva o teto de fuga
+                t.combat_meta["flee_attempts"] = t.prior_flee_attempts
+        _sync_enemy_knowledge(t.enemies)
+        _reveal_resistances(t.out.get("attacks") or [], t.enemies, t.sides)
+        t.logs += t.weather_logs + t.order_logs + t.out["logs"]
+        # SPEC-371 R3: telegrafo/assinatura -> save (texto-fonte vigiado: test_spec371_saber)
+        is_simulation = t.is_simulation
+        if not is_simulation and _fauna_saber.active():
             _alive_now = not (
-                out.get("player_dead")
-                or player.get("dead")
-                or player.get("estado_terminal")
-                or int(player.get("vitalidade", 0) or 0) <= 0
+                t.out.get("player_dead")
+                or t.player.get("dead")
+                or t.player.get("estado_terminal")
+                or int(t.player.get("vitalidade", 0) or 0) <= 0
             )
-            bestiary_knowledge, _saber_logs = _fauna_saber.absorb(
-                bestiary_knowledge, scene, actors_by_id, _alive_now, turn
+            t.bestiary_knowledge, _saber_logs = _fauna_saber.absorb(
+                t.bestiary_knowledge, t.scene, t.actors_by_id, _alive_now, t.turn
             )
-            status_logs += _saber_logs  # R14: texto fixo no REGISTRO/mech_log, não na prosa
-            bk_changed = True
+            t.status_logs += _saber_logs  # R14: texto fixo no REGISTRO/mech_log, não na prosa
+            t.bk_changed = True
             if _saber_logs:  # P2-5: revelado no meio da luta -> o chip já mostra "Você sabe:"
-                for _enemy in enemies:
+                for _enemy in t.enemies:
                     if not _enemy.get("dead"):
-                        _fauna_saber.stamp_actor(_enemy, bestiary_knowledge)
-        elif is_simulation and isinstance(scene, dict):  # P2-7: a simulação não deixa lixo na cena
-            scene.pop("saber_obs", None)
+                        _fauna_saber.stamp_actor(_enemy, t.bestiary_knowledge)
+        elif t.is_simulation and isinstance(
+            t.scene, dict
+        ):  # P2-7: a simulação não deixa lixo na cena
+            t.scene.pop("saber_obs", None)
         # Gasto BRUTO da economia da Carta. O delta líquido antes/depois era
         # incorreto para classes cujo próprio uso repõe Entropia no mesmo turno.
         player_cards = [
-            used for used in (out.get("cards_used") or []) if used.get("actor_id") == _PLAYER_ID
+            used for used in (t.out.get("cards_used") or []) if used.get("actor_id") == _PLAYER_ID
         ]
-        player["_last_entropy_spent"] = sum(
+        t.player["_last_entropy_spent"] = sum(
             int((used.get("economy") or {}).get("cost", 0) or 0) for used in player_cards
         )
-        player["_last_used_active"] = bool(player_cards)
-        player["_last_ability_id"] = player_cards[-1].get("card_id") if player_cards else None
+        t.player["_last_used_active"] = bool(player_cards)
+        t.player["_last_ability_id"] = player_cards[-1].get("card_id") if player_cards else None
     else:
-        out = {
+        t.out = {
             "deaths": [],
             "ended": True,
             "player_dead": False,
@@ -2775,66 +2883,70 @@ def _combat_node(state: GameState):
             "resolved_turns": [_PLAYER_ID],
         }
 
-    last_player_action = _canonical_player_action(
-        resolved_decl,
-        out,
-        attempted=(hero_fled or flee_requested or _PLAYER_ID in (out.get("resolved_turns") or [])),
-        flee_requested=flee_requested,
-        hero_fled=hero_fled,
-        flee_destination_id=flee_dest_id,
-        chase_state=chase_state if flee_requested else None,
+    t.last_player_action = _canonical_player_action(
+        t.resolved_decl,
+        t.out,
+        attempted=(
+            t.hero_fled or t.flee_requested or _PLAYER_ID in (t.out.get("resolved_turns") or [])
+        ),
+        flee_requested=t.flee_requested,
+        hero_fled=t.hero_fled,
+        flee_destination_id=t.flee_dest_id,
+        chase_state=t.chase_state if t.flee_requested else None,
     )
 
     # ---- Espelho de vitais + Cicatrizes obrigatórias ----
-    _mirror_vitals(player)
-    for e in enemies:
+    _mirror_vitals(t.player)
+    for e in t.enemies:
         _mirror_vitals(e)
-    for ally in allies:
+    for ally in t.allies:
         _mirror_vitals(ally)
-    if not (is_simulation or out.get("ended") or hero_fled or out.get("player_dead")):
-        _advance_reinforcements(scene, enemies, actors_by_id, sides, combat_meta, logs)
-    for sid in out.get("scars_pending", []):
-        if sid == _PLAYER_ID and death_flow.check_scar_required(player):
+    if not (t.is_simulation or t.out.get("ended") or t.hero_fled or t.out.get("player_dead")):
+        _advance_reinforcements(t.scene, t.enemies, t.actors_by_id, t.sides, t.combat_meta, t.logs)
+    for sid in t.out.get("scars_pending", []):
+        if sid == _PLAYER_ID and death_flow.check_scar_required(t.player):
             # SPEC-346 R2/D11: no `on` a rodada não chama LLM; a Cicatriz é a determinística.
             llm = (
                 None if _deck_mode_now() == "on" else get_llm(temperature=0.6, tier=ModelTier.SMART)
             )
-            death_flow.generate_scar(player, llm)
+            death_flow.generate_scar(t.player, llm)
 
-    dead = [e for e in enemies if e.get("dead") or e.get("status") == "morto"]
+    t.dead = [e for e in t.enemies if e.get("dead") or e.get("status") == "morto"]
     # SPEC-226 R1: só quem transitou para morto NESTA rodada gera XP/kill/evento.
-    newly_dead = [
+    t.newly_dead = [
         e
-        for e in dead
-        if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in dead_before
+        for e in t.dead
+        if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in t.dead_before
     ]
     # SPEC-325 R9/D2: inimigo derrubado sem matar rende o mesmo XP/loot do abate.
-    downed = [e for e in enemies if e.get("incapacitated") and e.get("nonlethal_by")]
+    t.downed = [e for e in t.enemies if e.get("incapacitated") and e.get("nonlethal_by")]
     newly_downed = [
         e
-        for e in downed
-        if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in dead_before
+        for e in t.downed
+        if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in t.dead_before
     ]
-    for e in newly_dead + newly_downed:
+    for e in t.newly_dead + newly_downed:
         e["xp_awarded"] = True
-    for e in dead + downed:
+    for e in t.dead + t.downed:
         e["xp_awarded"] = True
-    fauna_sim = None
-    if newly_dead:
-        bestiary_knowledge = disc.record_kills(bestiary_knowledge, newly_dead, turn)
-        bk_changed = True
-        fauna_sim = _fauna_carcasses(state, newly_dead)  # SPEC-360 R11
+    t.fauna_sim = None
+    if t.newly_dead:
+        t.bestiary_knowledge = disc.record_kills(t.bestiary_knowledge, t.newly_dead, t.turn)
+        t.bk_changed = True
+        t.fauna_sim = _fauna_carcasses(t.state, t.newly_dead)  # SPEC-360 R11
 
-    player_dead = bool(out.get("player_dead")) or bool(player.get("dead"))
-    combat_over = bool(out.get("ended")) or hero_fled or player_dead
-    if combat_over and not is_simulation and _fauna_saber.active():  # SPEC-371 R4: fim de combate
-        bestiary_knowledge, _saber_logs = _fauna_saber.finish_combat(
-            bestiary_knowledge, enemies, turn
+    t.player_dead = bool(t.out.get("player_dead")) or bool(t.player.get("dead"))
+    t.combat_over = bool(t.out.get("ended")) or t.hero_fled or t.player_dead
+    # SPEC-371 R4: fim de combate (texto-fonte vigiado: test_spec371_saber)
+    combat_over, is_simulation = t.combat_over, t.is_simulation
+    if combat_over and not is_simulation and _fauna_saber.active():
+        t.bestiary_knowledge, _saber_logs = _fauna_saber.finish_combat(
+            t.bestiary_knowledge, t.enemies, t.turn
         )
-        status_logs += _saber_logs  # R14
-        bk_changed = True
-    if combat_over and not player_dead:
-        for participant in [player] + allies:
+        t.status_logs += _saber_logs  # R14
+        t.bk_changed = True
+    if t.combat_over and not t.player_dead:
+        for participant in [t.player] + t.allies:
             if (
                 not participant.get("dead")
                 and not participant.get("estado_terminal")
@@ -2847,308 +2959,324 @@ def _combat_node(state: GameState):
                 participant["conscious"] = False
             elif recovery_state == "acordado":
                 participant["conscious"] = True
-    victory = combat_over and not player_dead and not hero_fled and bool(dead or downed)
-    if scene.get("objetivo_resultado") == "falhou":  # SPEC-331 P2-1: objetivo falho = sem espólio
-        victory = False
+    t.victory = t.combat_over and not t.player_dead and not t.hero_fled and bool(t.dead or t.downed)
+    if t.scene.get("objetivo_resultado") == "falhou":  # SPEC-331 P2-1: objetivo falho = sem espólio
+        t.victory = False
 
     # ---- XP determinístico (fugitivo/queda letal não contam) ----
-    level_up_events: list[dict] = []
-    kill_xp = 0  # SPEC-226 R10: ganho individual p/ o guard narrativo
-    if (newly_dead or newly_downed) and not player_dead and not is_simulation:
+    t.level_up_events: list[dict] = []
+    t.kill_xp = 0  # SPEC-226 R10: ganho individual p/ o guard narrativo
+    if (t.newly_dead or newly_downed) and not t.player_dead and not t.is_simulation:
         import progression as pg
 
-        xp = pg.xp_for_kills(newly_dead + newly_downed)
+        xp = pg.xp_for_kills(t.newly_dead + newly_downed)
         if xp:
-            player, level_up_events = pg.grant_xp(player, xp)
-            kill_xp = xp
+            t.player, t.level_up_events = pg.grant_xp(t.player, xp)
+            t.kill_xp = xp
             # SPEC-199 R1: XP/nível NÃO entram em `logs` (nem na prosa/fallbacks);
             # chegam à UI por `last_turn_outcome` -> `turn_outcome`.
 
     # ---- Narração ----
     from services import prose_guard
 
-    aberturas = prose_guard.ultimas_aberturas(messages)
-    loc = state.get("world", {}).get("current_location", "")
-    board_on = _deck_mode_now() == "on" and not is_simulation  # SPEC-346: `on` não narra rodada
-    outcome_now = (
+    t.aberturas = prose_guard.ultimas_aberturas(t.messages)
+    t.loc = t.state.get("world", {}).get("current_location", "")
+    t.board_on = _deck_mode_now() == "on" and not t.is_simulation  # SPEC-346: `on` não narra rodada
+    t.outcome_now = (
         _encounter_outcome(
-            player=player,
-            enemies=enemies,
-            hero_fled=hero_fled,
-            player_dead=player_dead,
-            objective_result=scene.get("objetivo_resultado"),
+            player=t.player,
+            enemies=t.enemies,
+            hero_fled=t.hero_fled,
+            player_dead=t.player_dead,
+            objective_result=t.scene.get("objetivo_resultado"),
         )
-        if combat_over
+        if t.combat_over
         else None
     )
     # ---- Resumo canônico do conflito (conflito-12): antes da narração (o fallback o usa) ----
-    conflict_sum = None
-    if combat_over:
-        participants = [player] + enemies + allies
-        conflict_sum = summ.build_summary(
+    t.conflict_sum = None
+    if t.combat_over:
+        participants = [t.player] + t.enemies + t.allies
+        t.conflict_sum = summ.build_summary(
             participants,
-            scene=scene,
+            scene=t.scene,
             extras={
-                "turn": turn,
-                "conflict_id": combat_meta.get("instance_id"),
+                "turn": t.turn,
+                "conflict_id": t.combat_meta.get("instance_id"),
                 # Player saves historically do not persist ``id``. Carry both
                 # the canonical role and the runtime display identity so the
                 # summary cannot downgrade a recoverable fall into death.
-                "downed_ids": (_downed_identity_tokens(player) if player_dead else []),
+                "downed_ids": (_downed_identity_tokens(t.player) if t.player_dead else []),
             },
         )
-    narrative = ""
-    if board_on:
+    t.narrative = ""
+    if t.board_on:
         pass  # compõe o REGISTRO depois que `status_logs` fecha (SPEC-346 R4/R5)
-    elif player_dead and not is_simulation:
+    elif t.player_dead and not t.is_simulation:
         # SPEC-346 R16: a queda é narrada pelo `_narrate` (fecho de queda) e fecha com a Roda.
         from services import round_log
 
-        killer = _killer_identity(active, out, enemies)[0]
+        killer = _killer_identity(t.active, t.out, t.enemies)[0]
         world_pack = build_context_pack(
-            state,
-            query=f"{loc} {intent}",
+            t.state,
+            query=f"{t.loc} {t.intent}",
             purpose="combat_narration",
             token_budget=1200,
             include_lore=False,
         )
-        narrative = _narrate(
-            player,
-            enemies,
-            logs,
-            spawned_flavor,
-            intent,
+        t.narrative = _narrate(
+            t.player,
+            t.enemies,
+            t.logs,
+            t.spawned_flavor,
+            t.intent,
             False,
             world_pack.world_state_block
             + "\n"
-            + _ambient_for_combat(state.get("world") or {}, player)
-            + _perceived_for_combat(state),
-            aberturas,
-            manifest=combat_meta.get("encounter"),
+            + _ambient_for_combat(t.state.get("world") or {}, t.player)
+            + _perceived_for_combat(t.state),
+            t.aberturas,
+            manifest=t.combat_meta.get("encounter"),
             withhold=_faction_withhold_clause(
-                combat_meta.get("encounter"), state.get("factions"), state.get("faction_intel")
+                t.combat_meta.get("encounter"),
+                t.state.get("factions"),
+                t.state.get("faction_intel"),
             ),
             fecho_override=_OUTCOME_FECHO["death"],
-            fallback_text=_narrate_fall(player, logs, killer),
+            fallback_text=_narrate_fall(t.player, t.logs, killer),
         )
-        if round_log.WHEEL_TEXT not in narrative:
-            narrative = narrative.rstrip() + "\n\n" + round_log.WHEEL_TEXT
-    elif player_dead:
-        narrative = _narrate_fall(player, logs, _killer_identity(active, out, enemies)[0])
-    elif is_simulation:
-        suffix = "\n\nVitória no laboratório." if victory else "\n\nEscolha a próxima ação."
-        narrative = "⚔️ " + "\n".join(f"• {line}" for line in logs if line) + suffix
+        if round_log.WHEEL_TEXT not in t.narrative:
+            t.narrative = t.narrative.rstrip() + "\n\n" + round_log.WHEEL_TEXT
+    elif t.player_dead:
+        t.narrative = _narrate_fall(
+            t.player, t.logs, _killer_identity(t.active, t.out, t.enemies)[0]
+        )
+    elif t.is_simulation:
+        suffix = "\n\nVitória no laboratório." if t.victory else "\n\nEscolha a próxima ação."
+        t.narrative = "⚔️ " + "\n".join(f"• {line}" for line in t.logs if line) + suffix
     else:
         world_pack = build_context_pack(
-            state,
-            query=f"{loc} {intent}",
+            t.state,
+            query=f"{t.loc} {t.intent}",
             purpose="combat_narration",
             token_budget=1200,
             include_lore=False,  # SPEC-317 R8: so world_state_block e usado
         )
-        narrative = _narrate(
-            player,
-            enemies,
-            logs,
-            spawned_flavor,
-            intent,
-            victory,
+        t.narrative = _narrate(
+            t.player,
+            t.enemies,
+            t.logs,
+            t.spawned_flavor,
+            t.intent,
+            t.victory,
             world_pack.world_state_block
             + "\n"
-            + _ambient_for_combat(state.get("world") or {}, player)
-            + _perceived_for_combat(state),
-            aberturas,
-            manifest=combat_meta.get("encounter"),
+            + _ambient_for_combat(t.state.get("world") or {}, t.player)
+            + _perceived_for_combat(t.state),
+            t.aberturas,
+            manifest=t.combat_meta.get("encounter"),
             withhold=_faction_withhold_clause(
-                combat_meta.get("encounter"), state.get("factions"), state.get("faction_intel")
+                t.combat_meta.get("encounter"),
+                t.state.get("factions"),
+                t.state.get("faction_intel"),
             ),
-            off_ctx=_off_text.context_from(out, actors_by_id),  # Sol R3-P1-1
+            off_ctx=_off_text.context_from(t.out, t.actors_by_id),  # Sol R3-P1-1
         )
-    if combat_over and not board_on:
-        narrative = summ.narrative_or_fallback(conflict_sum, narrative, player_facing=True)
-        if player_dead:  # SPEC-346 R11: a Roda do Abismo fecha a queda, mesmo no fallback
+    if t.combat_over and not t.board_on:
+        t.narrative = summ.narrative_or_fallback(t.conflict_sum, t.narrative, player_facing=True)
+        if t.player_dead:  # SPEC-346 R11: a Roda do Abismo fecha a queda, mesmo no fallback
             from services import round_log
 
-            if round_log.WHEEL_TEXT not in narrative:
-                narrative = narrative.rstrip() + "\n\n" + round_log.WHEEL_TEXT
-    if not board_on:
-        narrative = prose_guard.sanitize_meta_preamble(narrative)
-        prose_guard.log_if_repeats(narrative, aberturas[0] if aberturas else "", where="combate")
+            if round_log.WHEEL_TEXT not in t.narrative:
+                t.narrative = t.narrative.rstrip() + "\n\n" + round_log.WHEEL_TEXT
+    if not t.board_on:
+        t.narrative = prose_guard.sanitize_meta_preamble(t.narrative)
+        prose_guard.log_if_repeats(
+            t.narrative, t.aberturas[0] if t.aberturas else "", where="combate"
+        )
 
     # ---- Montagem do resultado (contrato preservado) ----
     # SPEC-231 R4: o snapshot de aliados transitórios carrega as fichas PÓS-rodada.
-    if scene_tr:
-        live_tr = {str(a.get("id") or a.get("name")): a for a in allies if a.get("transient")}
-        scene_tr = [live_tr.get(str(a.get("id") or a.get("name")), a) for a in scene_tr]
-        combat_meta["scene_allies"] = scene_tr
-    combat_meta["active"] = not combat_over
+    if t.scene_tr:
+        live_tr = {str(a.get("id") or a.get("name")): a for a in t.allies if a.get("transient")}
+        t.scene_tr = [live_tr.get(str(a.get("id") or a.get("name")), a) for a in t.scene_tr]
+        t.combat_meta["scene_allies"] = t.scene_tr
+    t.combat_meta["active"] = not t.combat_over
     # SPEC-329 R1: congela o Presságio da PRÓXIMA rodada (a UI o mostra antes da jogada).
-    refused = bool(out.get("action_refused"))  # SPEC-328 R-2: recusa não rerrola o Presságio
+    refused = bool(t.out.get("action_refused"))  # SPEC-328 R-2: recusa não rerrola o Presságio
     if not refused:
-        combat_meta.pop("pressagios", None)
-        combat_meta.pop("pressagios_publicos", None)
-    if _enemy_intent.active() and not combat_over and not is_simulation and not refused:
+        t.combat_meta.pop("pressagios", None)
+        t.combat_meta.pop("pressagios_publicos", None)
+    if _enemy_intent.active() and not t.combat_over and not t.is_simulation and not refused:
         try:
             from services import enemy_decks as _enemy_decks
 
-            _exec_round = cs.tactical_round(scene) + 1  # rodada em que estas intenções valem
+            _exec_round = cs.tactical_round(t.scene) + 1  # rodada em que estas intenções valem
             _next_round = _enemy_intent.forecast_round(
-                scene,
-                actors_by_id,
-                sides,
-                rng,
+                t.scene,
+                t.actors_by_id,
+                t.sides,
+                t.rng,
                 scene_state=({"_rodada_decisao": _exec_round} if _enemy_decks.active() else None),
             )
-            combat_meta["pressagios"] = _next_round
-            combat_meta["pressagios_publicos"] = _enemy_intent.public_round(
-                _next_round, actors_by_id, _exec_round
+            t.combat_meta["pressagios"] = _next_round
+            t.combat_meta["pressagios_publicos"] = _enemy_intent.public_round(
+                _next_round, t.actors_by_id, _exec_round
             )
             if _enemy_decks.active():  # SPEC-355 R3: a promessa pública fica na cena
-                for _row in combat_meta["pressagios_publicos"]:
-                    if _row.get("prenuncio") and _row.get("actor_id") in actors_by_id:
+                for _row in t.combat_meta["pressagios_publicos"]:
+                    if _row.get("prenuncio") and _row.get("actor_id") in t.actors_by_id:
                         _enemy_decks.record_promise(
-                            scene, actors_by_id[_row["actor_id"]], _exec_round
+                            t.scene, t.actors_by_id[_row["actor_id"]], _exec_round
                         )
         except Exception:  # cosmético: nunca derruba o turno
             _log_event("combat", "pressagio_forecast_failed", level="warning")
     if _scene_cards.active():  # SPEC-331 R3: o que dispara na PRÓXIMA rodada
-        if combat_over:
-            combat_meta.pop("pressagios_cena", None)
+        if t.combat_over:
+            t.combat_meta.pop("pressagios_cena", None)
         elif not refused:
-            combat_meta["pressagios_cena"] = _scene_cards.forecast(
-                scene, cs.tactical_round(scene) + 1
+            t.combat_meta["pressagios_cena"] = _scene_cards.forecast(
+                t.scene, cs.tactical_round(t.scene) + 1
             )
-    if isinstance(combat_meta.get("pilhas"), dict):  # SPEC-328: pilhas vivem só no conflito
-        if combat_over:
-            combat_meta.pop("pilhas", None)
-        elif not out.get("action_refused") and _deck_mode_now() != "off":
+    if isinstance(t.combat_meta.get("pilhas"), dict):  # SPEC-328: pilhas vivem só no conflito
+        if t.combat_over:
+            t.combat_meta.pop("pilhas", None)
+        elif not t.out.get("action_refused") and _deck_mode_now() != "off":
             from services import card_piles
 
-            status_logs += card_status.on_round_end(combat_meta["pilhas"], player, wounds_before)
+            t.status_logs += card_status.on_round_end(
+                t.combat_meta["pilhas"], t.player, t.wounds_before
+            )
             drawn_now: list[str] = []
             card_piles.begin_round(
-                combat_meta["pilhas"], drawn_out=drawn_now
+                t.combat_meta["pilhas"], drawn_out=drawn_now
             )  # mão da PRÓXIMA rodada
             if card_status.active():
-                status_logs += card_status.on_hand_drawn(combat_meta["pilhas"], player, drawn_now)
-            _scene_cards.sync_hand(scene, combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
-    combat_meta["initiative"] = list(out.get("initiative") or [])
-    combat_meta["last_player_action"] = last_player_action
-    combat_meta["last_reactions"] = list(out.get("reactions") or [])
+                t.status_logs += card_status.on_hand_drawn(
+                    t.combat_meta["pilhas"], t.player, drawn_now
+                )
+            _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
+    t.combat_meta["initiative"] = list(t.out.get("initiative") or [])
+    t.combat_meta["last_player_action"] = t.last_player_action
+    t.combat_meta["last_reactions"] = list(t.out.get("reactions") or [])
     from services import combat_preview as _preview
 
-    if flee_roll:
-        out["fuga"] = flee_roll
-    avisados = set(combat_meta.get("sem_vitalidade_avisados") or [])  # SPEC-353 R27: 1× por inimigo
-    out["sem_vitalidade"] = [
-        x for x in out.get("sem_vitalidade") or [] if x["actor_id"] not in avisados
+    if t.flee_roll:
+        t.out["fuga"] = t.flee_roll
+    avisados = set(
+        t.combat_meta.get("sem_vitalidade_avisados") or []
+    )  # SPEC-353 R27: 1× por inimigo
+    t.out["sem_vitalidade"] = [
+        x for x in t.out.get("sem_vitalidade") or [] if x["actor_id"] not in avisados
     ]
-    combat_meta["sem_vitalidade_avisados"] = sorted(
-        avisados | {x["actor_id"] for x in out["sem_vitalidade"]}
+    t.combat_meta["sem_vitalidade_avisados"] = sorted(
+        avisados | {x["actor_id"] for x in t.out["sem_vitalidade"]}
     )
-    fontes = combat_meta.setdefault("fontes_condicao", {})  # SPEC-353 R51
-    for novo in out.get("condicoes_novas") or []:
+    fontes = t.combat_meta.setdefault("fontes_condicao", {})  # SPEC-353 R51
+    for novo in t.out.get("condicoes_novas") or []:
         if not novo.get("source_id"):
             fontes.get(novo["victim_id"], {}).pop(novo["condition"], None)  # fonte desconhecida
             continue
         fontes.setdefault(novo["victim_id"], {})[novo["condition"]] = novo["source_id"]
     _preview.store_mech_log(
-        combat_meta,
-        out,
-        [player, *enemies, *allies],
-        {str(e.get("id") or e.get("name")) for e in enemies},
+        t.combat_meta,
+        t.out,
+        [t.player, *t.enemies, *t.allies],
+        {str(e.get("id") or e.get("name")) for e in t.enemies},
     )  # SPEC-334 R6 (só deck on)
-    status_logs = _normalize_status_logs(status_logs, player)  # SPEC-363 R26
-    if status_logs:  # SPEC-333: o jogador sabe por que a carta de status pesou
-        combat_meta["last_mech_log"] = list(combat_meta.get("last_mech_log") or []) + status_logs
-        # SPEC-346 R5: as linhas de status vão ao REGISTRO/mech_log, nunca coladas à prosa.
-    if board_on:
-        narrative = _compose_board_narrative(
-            state,
-            out,
-            actors_by_id,
-            status_logs,
-            extra_lines=weather_logs + order_logs + flee_lines,
-            combat_over=combat_over,
-            outcome=outcome_now,
-            conflict_sum=conflict_sum,
-            player=player,
-            enemies=enemies,
-            player_dead=player_dead,
-            intent=intent,
-            manifest=combat_meta.get("encounter"),
-            source_sink=combat_meta,
+    t.status_logs = _normalize_status_logs(t.status_logs, t.player)  # SPEC-363 R26
+    if t.status_logs:  # SPEC-333: o jogador sabe por que a carta de status pesou
+        t.combat_meta["last_mech_log"] = (
+            list(t.combat_meta.get("last_mech_log") or []) + t.status_logs
         )
-    combat_meta["last_tactics"] = list(out.get("tactics") or [])
-    if combat_over:
+        # SPEC-346 R5: as linhas de status vão ao REGISTRO/mech_log, nunca coladas à prosa.
+    if t.board_on:
+        t.narrative = _compose_board_narrative(
+            t.state,
+            t.out,
+            t.actors_by_id,
+            t.status_logs,
+            extra_lines=t.weather_logs + t.order_logs + t.flee_lines,
+            combat_over=t.combat_over,
+            outcome=t.outcome_now,
+            conflict_sum=t.conflict_sum,
+            player=t.player,
+            enemies=t.enemies,
+            player_dead=t.player_dead,
+            intent=t.intent,
+            manifest=t.combat_meta.get("encounter"),
+            source_sink=t.combat_meta,
+        )
+    t.combat_meta["last_tactics"] = list(t.out.get("tactics") or [])
+    if t.combat_over:
         from services import cards
 
-        cards.reset_card_usage({"player": player}, "cena")
-        card_status.cleanup(player)  # SPEC-333: Cartas temporarias saem com o conflito
+        cards.reset_card_usage({"player": t.player}, "cena")
+        card_status.cleanup(t.player)  # SPEC-333: Cartas temporarias saem com o conflito
         if (
-            (victory or scene.get("objetivo_resultado") == "cumprido")
-            and not (player_dead or is_simulation)
+            (t.victory or t.scene.get("objetivo_resultado") == "cumprido")
+            and not (t.player_dead or t.is_simulation)
             # objetivo cumprido vale mesmo saindo da cena (ex.: alcancar_zona); fuga comum não
-            and not (hero_fled and scene.get("objetivo_resultado") != "cumprido")
+            and not (t.hero_fled and t.scene.get("objetivo_resultado") != "cumprido")
             and card_rewards.mode() != "off"
         ):
             # SPEC-333 R1/R3: espolio so em vitoria real ou objetivo cumprido (SPEC-331).
             card_rewards.grant_after_conflict(
-                state,
-                player,
-                conflict_id=str(combat_meta.get("instance_id") or ""),
-                seed=zlib.crc32(f"{combat_meta.get('instance_id')}:espolio".encode()),
-                defeated=dead + downed,
-                objective_result=scene.get("objetivo_resultado"),
-                turn=turn,
+                t.state,
+                t.player,
+                conflict_id=str(t.combat_meta.get("instance_id") or ""),
+                seed=zlib.crc32(f"{t.combat_meta.get('instance_id')}:espolio".encode()),
+                defeated=t.dead + t.downed,
+                objective_result=t.scene.get("objetivo_resultado"),
+                turn=t.turn,
             )
-        combat_meta["scene"] = None
-        combat_meta.pop("scene_allies", None)
+        t.combat_meta["scene"] = None
+        t.combat_meta.pop("scene_allies", None)
         # SPEC-203 R5/R7: resolving → ended + snapshot do desfecho.
-        _outcome = outcome_now
-        combat_meta = _finish_encounter(
-            combat_meta,
-            enemies,
+        _outcome = t.outcome_now
+        t.combat_meta = _finish_encounter(
+            t.combat_meta,
+            t.enemies,
             _outcome,
-            loot=bool(victory) and not is_simulation,
+            loot=bool(t.victory) and not t.is_simulation,
         )
         # SPEC-296 R2: inimigo que fugiu pode voltar com reforços (1 alerta/encontro).
-        if not is_simulation:
-            _alerted = _flee_alert_world(world_out or world, enemies, _outcome)
+        if not t.is_simulation:
+            _alerted = _flee_alert_world(t.world_out or t.world, t.enemies, _outcome)
             if _alerted is not None:
-                world_out = _alerted
+                t.world_out = _alerted
     else:
         # Narração de entrada enviada → encontro confirmado (entering→active).
-        if combat_meta.get("phase") == "entering":
-            combat_meta = em.safe_transition(combat_meta, "active")
-        if em.is_valid_manifest(combat_meta.get("encounter")):
-            combat_meta["encounter"] = em.sync_statuses(
-                combat_meta["encounter"], enemies, int(combat_meta.get("round", 0) or 0)
+        if t.combat_meta.get("phase") == "entering":
+            t.combat_meta = em.safe_transition(t.combat_meta, "active")
+        if em.is_valid_manifest(t.combat_meta.get("encounter")):
+            t.combat_meta["encounter"] = em.sync_statuses(
+                t.combat_meta["encounter"], t.enemies, int(t.combat_meta.get("round", 0) or 0)
             )
-    result = {
-        "messages": [AIMessage(content=narrative)],
-        "player": player,
-        "enemies": [] if combat_over else enemies,
-        "combat": combat_meta,
-        "combat_target": None if combat_over else combat_target,
-        "next": "loot" if victory and not is_simulation else None,
-        "archive_due": combat_over and not is_simulation,
-        "party": _merge_formal_party(party, allies),
+    t.result = {
+        "messages": [AIMessage(content=t.narrative)],
+        "player": t.player,
+        "enemies": [] if t.combat_over else t.enemies,
+        "combat": t.combat_meta,
+        "combat_target": None if t.combat_over else t.combat_target,
+        "next": "loot" if t.victory and not t.is_simulation else None,
+        "archive_due": t.combat_over and not t.is_simulation,
+        "party": _merge_formal_party(t.party, t.allies),
         "combat_declaration": None,  # consumida (não vaza para o próximo turno)
         "combat_origin_hint": None,
         "combat_encounter_hint": None,  # SPEC-203: one-shot consumido
         "combat_target_ref": None,
     }
-    if conflict_sum is not None:
-        result["conflict_summary"] = conflict_sum
-    if choices["events"]:
+    if t.conflict_sum is not None:
+        t.result["conflict_summary"] = t.conflict_sum
+    if t.choices["events"]:
         # SPEC-325 R12: `companion_abandoned` (sem o destino: ele fica selado na party).
-        result["event_log"] = list(state.get("event_log") or []) + choices["events"]
+        t.result["event_log"] = list(t.state.get("event_log") or []) + t.choices["events"]
         from services import chronicle as _chron
 
-        _chronicle = list(state.get("chronicle") or [])
-        for _ev in choices["events"]:
-            _text = _chron.render_milestone(_ev, state.get("world_projection") or {})
+        _chronicle = list(t.state.get("chronicle") or [])
+        for _ev in t.choices["events"]:
+            _text = _chron.render_milestone(_ev, t.state.get("world_projection") or {})
             if _text:
                 _chronicle = _chron.append_entry(
                     _chronicle,
@@ -3157,132 +3285,133 @@ def _combat_node(state: GameState):
                     kind="milestone",
                     event_id=_ev["event_id"],
                 )
-        if _chronicle != list(state.get("chronicle") or []):
-            result["chronicle"] = _chronicle
-    if world_out is not None:
-        result["world"] = world_out
-    if bk_changed:
-        result["bestiary_knowledge"] = bestiary_knowledge
-    if fauna_sim is not None:
-        result["world_sim"] = fauna_sim
-    if kill_xp:
+        if _chronicle != list(t.state.get("chronicle") or []):
+            t.result["chronicle"] = _chronicle
+    if t.world_out is not None:
+        t.result["world"] = t.world_out
+    if t.bk_changed:
+        t.result["bestiary_knowledge"] = t.bestiary_knowledge
+    if t.fauna_sim is not None:
+        t.result["world_sim"] = t.fauna_sim
+    if t.kill_xp:
         from services.turn_outcome import record_gain
 
-        _bl = record_gain(state.get("turn_baseline"), "xp", kill_xp, "combat")
-        if _bl is not state.get("turn_baseline"):
-            result["turn_baseline"] = _bl
+        _bl = record_gain(t.state.get("turn_baseline"), "xp", t.kill_xp, "combat")
+        if _bl is not t.state.get("turn_baseline"):
+            t.result["turn_baseline"] = _bl
 
     # SPEC-305 R11: vitoria no alvo de quest de mundo (cerco/ocupacao/ascensao/objeto) = 1
     # evidencia `combat_won` por combate.
     if (
-        victory
-        and not is_simulation
-        and any(q.get("world_kind") for q in state.get("quests") or [])
+        t.victory
+        and not t.is_simulation
+        and any(q.get("world_kind") for q in t.state.get("quests") or [])
     ):
         from services import quest_log as _quest_log
 
-        _wstate = state.get("world") or {}
+        _wstate = t.state.get("world") or {}
         _synced = _quest_log.sync_combat_progress(
-            state.get("quests") or [],
+            t.state.get("quests") or [],
             str(_wstate.get("current_location_id") or ""),
             turn=int(_wstate.get("turn_count", 0) or 0),
         )
-        if _synced != list(state.get("quests") or []):
-            result["quests"] = _synced
+        if _synced != list(t.state.get("quests") or []):
+            t.result["quests"] = _synced
 
     # SPEC-313 R20: a morte da criatura-ancora numa quest `cacar_criatura` e a unica prova da
     # caca (inimigo que fugiu e combate simulado nao contam).
     if (
-        victory
-        and not is_simulation
-        and any(q.get("world_kind") == "cacar_criatura" for q in state.get("quests") or [])
+        t.victory
+        and not t.is_simulation
+        and any(q.get("world_kind") == "cacar_criatura" for q in t.state.get("quests") or [])
     ):
         from services import quest_log as _quest_log
         from services import world_pressures as _wp
         from services.discovery import normalize_bestiary_id as _normalize_bestiary_id
 
-        _w = state.get("world") or {}
+        _w = t.state.get("world") or {}
         _hunted = _quest_log.sync_hunt_progress(
-            result.get("quests", state.get("quests") or []),
-            [_normalize_bestiary_id(e) for e in dead + downed],
+            t.result.get("quests", t.state.get("quests") or []),
+            [_normalize_bestiary_id(e) for e in t.dead + t.downed],
             _wp.region_of(str(_w.get("current_location_id") or "")),
             turn=int(_w.get("turn_count", 0) or 0),
         )
-        if _hunted != list(result.get("quests", state.get("quests") or [])):
-            result["quests"] = _hunted
+        if _hunted != list(t.result.get("quests", t.state.get("quests") or [])):
+            t.result["quests"] = _hunted
 
     # ---- Reflexo dos aliados transitórios no NPC de origem ----
-    if scene_tr:
-        result["npcs"] = _reflect_scene_allies(state, scene_tr, allies, combat_over)
+    if t.scene_tr:
+        t.result["npcs"] = _reflect_scene_allies(t.state, t.scene_tr, t.allies, t.combat_over)
 
     # ---- Eventos de mundo (kills canônicas + level up + morte do jogador) ----
-    engine_events = [] if is_simulation else _kill_events(newly_dead) + level_up_events
-    if out.get("recidiva_event"):
-        engine_events.append(out["recidiva_event"])
+    engine_events = [] if t.is_simulation else _kill_events(t.newly_dead) + t.level_up_events
+    if t.out.get("recidiva_event"):
+        engine_events.append(t.out["recidiva_event"])
 
     death_events = []
-    if player_dead:
+    if t.player_dead:
         stabilization = next(
             (
                 entry
-                for entry in reversed(out.get("stabilizations") or [])
+                for entry in reversed(t.out.get("stabilizations") or [])
                 if entry.get("actor_id") == _PLAYER_ID
             ),
             {},
         )
-        combat_meta["death_context"] = {
-            "last_action": last_player_action,
+        t.combat_meta["death_context"] = {
+            "last_action": t.last_player_action,
             "entered_terminal": bool(
-                _PLAYER_ID in (out.get("terminal") or [])
-                or _PLAYER_ID in (out.get("last_stands") or [])
+                _PLAYER_ID in (t.out.get("terminal") or [])
+                or _PLAYER_ID in (t.out.get("last_stands") or [])
             ),
             "stabilization": stabilization.get("cause") or stabilization.get("log", ""),
             "stabilization_attempts": int(
-                stabilization.get("attempts", player.get("stabilization_attempts", 0)) or 0
+                stabilization.get("attempts", t.player.get("stabilization_attempts", 0)) or 0
             ),
-            "killer": _killer_identity(active, out, enemies)[0],
+            "killer": _killer_identity(t.active, t.out, t.enemies)[0],
         }
-        result["death_pending"] = True
-        result["combat"] = {**combat_meta, "active": False, "scene": None}
-        result["enemies"] = []
-        result["combat_target"] = None
-        result["next"] = None
-        result["archive_due"] = not is_simulation
-        killer, killer_id = _killer_identity(active, out, enemies)
+        t.result["death_pending"] = True
+        t.result["combat"] = {**t.combat_meta, "active": False, "scene": None}
+        t.result["enemies"] = []
+        t.result["combat_target"] = None
+        t.result["next"] = None
+        t.result["archive_due"] = not t.is_simulation
+        killer, killer_id = _killer_identity(t.active, t.out, t.enemies)
         death_events.append(
             {
                 "type": "player_downed",
                 "actor_id": "player",
                 "target_id": "player",
-                "detail": f"{player.get('name', 'O herói')} tombou em combate"
+                "detail": f"{t.player.get('name', 'O herói')} tombou em combate"
                 + (f" {_diante_de(killer)}" if killer else ""),
                 "payload": {
                     "killer": killer,
                     "killer_id": killer_id,
-                    "location": loc,
+                    "location": t.loc,
                     "boss_present": any(
-                        str(e.get("categoria", "")).lower() in ("chefe", "nomeado") for e in enemies
+                        str(e.get("categoria", "")).lower() in ("chefe", "nomeado")
+                        for e in t.enemies
                     ),
                 },
                 "source": "combat",
             }
         )
-    if not is_simulation:
+    if not t.is_simulation:
         engine_events += death_events
     if engine_events:
-        result["pending_world_events"] = (
-            state.get("pending_world_events", []) or []
+        t.result["pending_world_events"] = (
+            t.state.get("pending_world_events", []) or []
         ) + engine_events
 
     # ---- Fuga bem-sucedida → viagem no mesmo turno + reset de cena ----
-    if hero_fled and flee_dest_id:
-        _apply_flee_travel(state, result, flee_dest_id, player, logs)
-    if state.get("combat_flee_attempt"):
-        result["combat_flee_attempt"] = False
-        result["combat_flee_destination"] = None
-    result["player_reaction_card_id"] = None
+    if t.hero_fled and t.flee_dest_id:
+        _apply_flee_travel(t.state, t.result, t.flee_dest_id, t.player, t.logs)
+    if t.state.get("combat_flee_attempt"):
+        t.result["combat_flee_attempt"] = False
+        t.result["combat_flee_destination"] = None
+    t.result["player_reaction_card_id"] = None
 
-    return result
+    return t.result
 
 
 def _compose_board_narrative(
