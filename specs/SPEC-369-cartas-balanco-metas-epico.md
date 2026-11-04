@@ -506,7 +506,7 @@ A tolerância da D-369-11 continua igual. A Fase C confirma.
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
 
-**`<sha-A>` = `1e5f8814`** (último commit de autor da régua: P3-9 da Astra, rodada 6, só no teste). `test_d369_10_limites_registrados_nao_podem_piorar` agora confere que o limite é igual ao medido também para os 3 tetos de uso do R14(a) (`arc1_cal_pulso_medido`, `bas_cor_mofo`, `med1_fer_garra_de_protese`) e para o `on` e o Δ do `conjurador` L5. Nenhum limite mudou. Régua e metas: 28 passed e 7 xfailed (todos do R22).
+**`<sha-A>` = `61a54b00`** (sha na `main` após o rebase do pouso; na branch era `1e5f8814`) (último commit de autor da régua: P3-9 da Astra, rodada 6, só no teste). `test_d369_10_limites_registrados_nao_podem_piorar` agora confere que o limite é igual ao medido também para os 3 tetos de uso do R14(a) (`arc1_cal_pulso_medido`, `bas_cor_mofo`, `med1_fer_garra_de_protese`) e para o `on` e o Δ do `conjurador` L5. Nenhum limite mudou. Régua e metas: 28 passed e 7 xfailed (todos do R22).
 
 Antes: **`<sha-A>` = `4aa0baea`** (limites da D-369-10 com os valores da D-369-13, medidos no `final-0-19.json` de `9acb4c82`).
 
