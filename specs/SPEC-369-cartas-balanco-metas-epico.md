@@ -612,3 +612,9 @@ Cada Carta recebeu `versao` + 1 (as básicas sem `versao` passaram a 2). `bas_me
 
 **Teste de produto tocado:** `tests/test_card_piles.py::test_basicas_tres_por_postura_e_lint_limpo` exigia "todas as básicas a Fôlego 1"; agora exige exatamente `bas_dev_voto`, `bas_arc_vazao` e `bas_cor_guarda` a 0 (R18b).
 
+### Fase B, B5 (Presságio, R16; condicional)
+
+A primária falhou na base (1,034) e segue falhando: **1,026** (`on-faixa` 12,77 × `on-cego` 12,45; vitória de `on-faixa` 58,7 %, dentro de 45-85). O B3 já soltou o Fôlego de 3 básicas, e ainda assim a razão só passou de 1,034 para 1,026.
+- Passo tentado: `protecao` 2 -> 3 em `bas_dev_guarda`, `bas_arc_guarda` e `bas_med_guarda` (R18b). Medido num único braço com as 3 juntas (desvio de "um passo por vez": cada medição de `pressagio` leva cerca de 10 minutos). Razão 1,026 -> 1,026: não move, **revertido** e contado no limite (3 Cartas, que com as 5 do B3 chegam a 8).
+- Sondagem anterior, descartada: as 4 guardas a Fôlego 0 dão 0,997. Nenhuma combinação dentro do R18 chega a 0,95, e as Cartas já estão no teto de 8. **R16 não fecha; devolvido sem forçar.**
+
