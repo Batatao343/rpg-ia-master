@@ -2374,25 +2374,9 @@ def _combat_node(state: GameState):
     t.scene = t.combat_meta.get("scene")
     t.spawned_flavor = None
 
-    # ---- SPEC-346 R3/D5: com o tabuleiro aberto (`on`) NÃO existe texto livre, nem fuga por texto ----
-    if (
-        not t.is_start
-        and t.scene
-        and t.combat_meta.get("active")
-        and not t.is_simulation
-        and _deck_mode_now() == "on"
-        and t.state.get("combat_declaration") is None
-    ):
-        _log_event("combat", "freetext_refused", level="info")
-        return {
-            "messages": [AIMessage(content=BOARD_FREETEXT_REFUSAL)],
-            "combat": {**dict(t.state.get("combat") or {}), "idle_turns": 0},
-            "next": None,
-            "archive_due": False,
-            "combat_declaration": None,
-            "combat_flee_attempt": False,
-            "combat_flee_destination": None,
-        }
+    _early = _combat_freetext_refusal(t)
+    if _early is not None:
+        return _early
 
     # ---- Preparação (1x): identifica inimigos + monta cena jogável + congela ----
     # Um encontro pode chegar aqui já com `enemies` preenchido (router, save v4,
@@ -2952,6 +2936,30 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_freetext_refusal(t: _CombatTurn) -> dict | None:
+    """Com o tabuleiro aberto não existe texto livre."""
+    # ---- SPEC-346 R3/D5: com o tabuleiro aberto (`on`) NÃO existe texto livre, nem fuga por texto ----
+    if (
+        not t.is_start
+        and t.scene
+        and t.combat_meta.get("active")
+        and not t.is_simulation
+        and _deck_mode_now() == "on"
+        and t.state.get("combat_declaration") is None
+    ):
+        _log_event("combat", "freetext_refused", level="info")
+        return {
+            "messages": [AIMessage(content=BOARD_FREETEXT_REFUSAL)],
+            "combat": {**dict(t.state.get("combat") or {}), "idle_turns": 0},
+            "next": None,
+            "archive_due": False,
+            "combat_declaration": None,
+            "combat_flee_attempt": False,
+            "combat_flee_destination": None,
+        }
+    return None
 
 
 def _combat_open_scene(t: _CombatTurn) -> None:
