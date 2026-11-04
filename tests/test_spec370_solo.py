@@ -37,9 +37,9 @@ def _first(antecedencia: str, region: str) -> str:
 
 
 def test_anuncia_so_em_regiao_de_1_no():
-    assert fauna.anuncia_presenca_nova("ophidia") is True
-    assert fauna.anuncia_presenca_nova("nova_arcadia") is False
-    assert fauna.anuncia_presenca_nova("skallgard") is False
+    assert fauna.solo_region("ophidia") is True
+    assert fauna.solo_region("nova_arcadia") is False
+    assert fauna.solo_region("skallgard") is False
 
 
 @pytest.mark.parametrize("ante", ["cedo", "imediato"])
@@ -69,3 +69,15 @@ def test_e9_mede_o_bloco_inteiro():
     e["sinais"] = {"antecedencia": "cedo", "rastro": longo.strip()}
     crit = {"A": e, "B": _entry(), "C": _entry(), "D": _entry()}
     assert any("tokens no bloco" in x for x in _errs(crit, _refs(), "E9"))
+
+
+@pytest.mark.parametrize("ante", ["cedo", "imediato"])
+def test_regra_solo_vale_com_anuncia_global_ligado(on, monkeypatch, ante):
+    """P2-3 (Sol): ligar `ANUNCIA_PRESENCA_NOVA` nao pode exigir `cedo` em Ophidia."""
+    monkeypatch.setitem(fauna._config(), "ANUNCIA_PRESENCA_NOVA", True)
+    cid = _first(ante, "ophidia")
+    assert _res(cid, _presence("ophidia", cid)).get("fauna_convert") is True
+    # nas outras regioes a constante global continua valendo so para `cedo`
+    na_cedo, na_imed = _first("cedo", "nova_arcadia"), _first("imediato", "nova_arcadia")
+    assert _res(na_cedo, _presence("nova_arcadia", na_cedo)).get("fauna_convert") is True
+    assert not _res(na_imed, _presence("nova_arcadia", na_imed)).get("fauna_convert")

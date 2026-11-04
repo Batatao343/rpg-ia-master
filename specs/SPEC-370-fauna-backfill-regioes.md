@@ -311,3 +311,12 @@ Contagens do HEAD (fichas = `status` nova/reinventada/adotada; legado = `classe:
 - Rebase em `main` (371 incluída): `build.py --check` fresco.
 - **Playtest e smoke (04/11):** `explorador` 50 turnos, `on`, seeds 0 e 1 (mock): 0 erro, 0 violação, eventos `fauna.sinal` (5 e 7), `fauna.conversao`, 1 `fauna.encontro`. Smoke real §6 (DeepSeek, em processo) em Skallgard e Ophidia: sinal antes da luta, sem nome na narração, caça com aproximação, `sinais_vistos` igual aos mostrados; evidência e limites (presença injetada; passos 6–7 parciais) em `docs/spec370/smoke-real.md`. `eval-nova_arcadia.md` regenerado (M1 0,7366).
 - **Smoke real, rodada 2 (04/11):** presença nascida pelo `day_hook` (Brekmar, dia 4), viagem para Ophidia com presença que já chega com 1 sinal e teto de 1, e custo `on` = `off` (29 = 29 chamadas, idênticas por turno, 0 da fauna). Detalhe em `docs/spec370/smoke-real.md`. Lacunas do smoke fechadas.
+
+### Correções da revisão Sol (04/11, executor)
+
+- **P2-1:** `test_zero_chamada_llm_nova` com tolerância de 1,05× por rota (história e combate) e conferência do roteador por turno; a igualdade estrita mora no lockstep.
+- **P2-3:** `fauna.solo_region()` (substitui `anuncia_presenca_nova`): região de 1 nó raiz converte **qualquer** presença sem sinal, mesmo com `ANUNCIA_PRESENCA_NOVA` ligada; a constante global segue valendo só para `cedo` nas demais (teste novo). Custo aceito da decisão do dono: Ophidia perde ~1/3 das lutas (M5 da região −37 %, só alerta).
+- **P2-4/P2-5:** `_cap_presences(protect=)` removido. `_add_presence` (conversão e rastro) respeita `region_cap` (sai a ativa mais antiga ainda não lida da região) e o cap global (sai a ativa mais antiga não lida; nunca uma lida). Sem vaga, não cria presença e não devolve sinal órfão (turno calmo). Testes em `test_spec370_caps.py`.
+- **P2-6:** com pesos legados em uso (fauna zerou), o migrante não multiplica por um neutro 0 (teste novo).
+- **P2-7:** a spec diz "mais frequentada"; o motor só guarda o último dia por região, então vale "visitada mais recente" (comentário e docstring ajustados).
+- **P2-2 (risco, sem mexer no limiar):** M5 global −19,41 % depois destes ajustes (antes −19,51 %); folga de ~0,6 pp. Qualquer conteúdo novo que troque luta por sinal (`cedo`/presença, `P_PRESENCA`, `ANUNCIA`) deve recalcular o M5 global no PR; se a folga ficar < 1 pp, o coordenador decide entre devolver luta (Ophidia anunciar só `cedo`) e reabrir a faixa com o autor de eval. Relatórios de todas as regiões regenerados.

@@ -137,7 +137,7 @@ def _empty() -> FaunaSim:
     return {"v": SIM_VERSION, "presencas": [], "carcacas": []}
 
 
-def _cap_presences(rows: list[dict], protect: str | None = None) -> list[dict]:
+def _cap_presences(rows: list[dict]) -> list[dict]:
     cap = int(const("MAX_PRESENCAS"))
     if len(rows) <= cap:
         return rows
@@ -147,12 +147,6 @@ def _cap_presences(rows: list[dict], protect: str | None = None) -> list[dict]:
         key=lambda r: (-int(r.get("born_day", 0)), str(r.get("pid"))),
     )
     keep = {id(r) for r in (active + rest)[:cap]}
-    if protect:  # SPEC-370 R10: a recem-nascida nunca sai pelo cap (cede a ativa mais antiga)
-        mine = [r for r in rows if r.get("pid") == protect]
-        if mine and id(mine[0]) not in keep:
-            others = [r for r in active + rest if id(r) in keep and r.get("pid") != protect]
-            keep.discard(id(others[-1]))
-            keep.add(id(mine[0]))
     return [r for r in rows if id(r) in keep]
 
 
@@ -178,10 +172,25 @@ def region_cap(region_id: str) -> int:
     return max(1, min(top, nodes * int(const("PRESENCAS_POR_NO"))))
 
 
-def anuncia_presenca_nova(region_id: str) -> bool:
-    """SPEC-370 (dono, 03/11): em regiao de 1 no raiz (Ophidia) toda presenca nova deixa 1
-    sinal antes de poder virar luta; nas demais vale `ANUNCIA_PRESENCA_NOVA`."""
-    return bool(const("ANUNCIA_PRESENCA_NOVA")) or _root_counts().get(region_id, 0) == 1
+def solo_region(region_id: str) -> bool:
+    """SPEC-370 (dono, 03/11): regiao de 1 no raiz (Ophidia). Nela toda presenca nova deixa 1
+    sinal antes de poder virar luta, qualquer que seja `ANUNCIA_PRESENCA_NOVA` (P2-3 do Sol)."""
+    return _root_counts().get(region_id, 0) == 1
+
+
+def _drop_oldest_unread(rows: list[dict], day: int, region: str | None = None) -> bool:
+    """Tira a ativa mais antiga SEM sinal mostrado (da regiao, se dada). False se nao ha."""
+    pool = [
+        r
+        for r in rows
+        if _active(r, day)
+        and not r.get("sinais_mostrados")
+        and (region is None or r.get("region_id") == region)
+    ]
+    if not pool:
+        return False
+    rows.remove(min(pool, key=lambda r: (int(r.get("born_day", 0)), str(r.get("pid")))))
+    return True
 
 
 def _make_room(
@@ -189,7 +198,8 @@ def _make_room(
 ) -> bool:
     """SPEC-370 R10: abre vaga no cap global ANTES de criar a presenca. Sai primeiro a nao
     ativa mais antiga; depois a ativa mais antiga de regiao que nao e a atual nem a mais
-    frequentada (`frequented[0]`). Nunca descarta a presenca ja lida da regiao atual."""
+    visitada mais recente (`frequented[0]`; o motor so guarda o ultimo dia por regiao, entao
+    "mais frequentada" da spec = "mais recente": P2-7 do Sol). Nunca descarta a presenca ja lida da regiao atual."""
     cap = int(const("MAX_PRESENCAS"))
     rows = list(fauna["presencas"])
     protected = {here_region, *(frequented[:1])}
@@ -523,7 +533,7 @@ def day_hook(ctx: Any):
     if here:
         regions.add(here)
     seen = (sim or {}).get("region_presence") or {}
-    frequented = sorted(  # mais recente primeiro (R10: a mais frequentada nunca perde vaga)
+    frequented = sorted(  # mais recente primeiro (R10: a mais recente nunca perde vaga)
         (r for r in regions if r in seen), key=lambda r: (-int(seen.get(r) or 0), r)
     )
     state = ctx.state or {}
@@ -648,7 +658,7 @@ def scene_block(state: dict) -> tuple[str, dict]:
 
 def _add_presence(
     state: dict, e: dict, location_id: str, day: int, origem: str, first: str | None
-) -> tuple[dict, dict]:
+) -> tuple[dict, dict | None]:
     import gamedata
 
     sim = state.get("world_sim") or {}
@@ -661,10 +671,18 @@ def _add_presence(
     )
     if first:
         pres["sinais_mostrados"] = [first]
-    if _make_room(fauna, region, region, [region], day):
-        fauna["presencas"].append(pres)
-    else:
-        fauna["presencas"] = _cap_presences([*fauna["presencas"], pres], protect=pres["pid"])
+    # P2-5 (Sol): conversao e rastro tambem respeitam o teto da regiao; no teto sai a ativa
+    # mais antiga ainda nao lida da regiao, e sem ela nao ha presenca nova.
+    rows = fauna["presencas"]
+    n_here = sum(1 for p in rows if p["region_id"] == region and _active(p, day))
+    if n_here >= region_cap(region) and not _drop_oldest_unread(rows, day, region):
+        return _with_fauna(sim, fauna), None
+    if not _make_room(fauna, region, region, [region], day):
+        rows = fauna["presencas"]
+        if not _drop_oldest_unread(rows, day):  # P2-4: nunca uma presenca ja lida
+            return _with_fauna(sim, fauna), None
+        fauna["presencas"] = rows
+    fauna["presencas"].append(pres)
     _log("presenca_nasce", creature=e["id"], region=region, origem=origem)
     return _with_fauna(sim, fauna), pres
 
@@ -688,6 +706,8 @@ def convert_to_signal(state: dict, entry: dict, location_id: str, day: int) -> t
     if not kind:
         return "", {}
     sim, _pres = _add_presence(state, entry, location_id, day, "conversao", kind)
+    if _pres is None:  # teto da regiao/global sem vaga: turno calmo, sem sinal orfao
+        return "", {}
     _log("conversao", creature=entry.get("id"), tipo=kind)
     return str(entry["sinais"][kind]), {"world_sim": sim}
 
@@ -711,6 +731,8 @@ def track_signal(state: dict, entry: dict, location_id: str, day: int) -> tuple[
             _log("sinal", creature=entry["id"], tipo="rastro", origem="rastro")
             return text, {"world_sim": _with_fauna(sim, fauna)}
     new_sim, _pres = _add_presence(state, entry, location_id, day, "rastro", "rastro")
+    if _pres is None:
+        return "", {}
     _log("sinal", creature=entry["id"], tipo="rastro", origem="rastro")
     return text, {"world_sim": new_sim}
 

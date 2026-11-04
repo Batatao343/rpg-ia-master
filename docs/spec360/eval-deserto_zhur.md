@@ -7,13 +7,13 @@ Gerado por `scripts/fauna/eval.py` (avaliador congelado na Etapa 1; não editar 
 
 | Métrica | Valor | Limiar | Resultado |
 |---|---|---|---|
-| M1 sinal antes (precedidos) | 0.8336 | ≥ 0.7 | ok |
+| M1 sinal antes (precedidos) | 0.8230 | ≥ 0.7 | ok |
 | M1 aproximação | 1.0000 | ≥ 1.0 | ok |
 | M2 horário (pior razão fora/dentro) | 0.2487 | ≤ 0.35 | ok |
 | M3 presa sobe (mínimo) | 1.7833 | ≥ 1.5 | ok |
 | M3 predador cai (máximo) | 0.4841 | ≤ 0.6 | ok |
 | M4 território | 0.9406 | ≥ 0.8 | ok |
-| M5 combates por 100 ações (Δ on vs off) | -0.1770 | -0.2 a +0.05 | ok |
+| M5 combates por 100 ações (Δ on vs off) | -0.1715 | -0.2 a +0.05 | ok |
 | M6 vazamento de nome | 0 | ≤ 0 | ok |
 
 ## Contagens
@@ -21,9 +21,9 @@ Gerado por `scripts/fauna/eval.py` (avaliador congelado na Etapa 1; não editar 
 | Modo | Chegadas | Descansos | Gatilhos | Combates de fauna | Conversões | Sinais em cena |
 |---|---|---|---|---|---|---|
 | off | 3600 | 1200 | 1200 | 723 | 0 | 0 |
-| on | 3600 | 1200 | 1200 | 595 | 205 | 1087 |
+| on | 3600 | 1200 | 1200 | 599 | 205 | 1091 |
 
-Combates por 100 ações: off 15.062 · on 12.396.
+Combates por 100 ações: off 15.062 · on 12.479.
 
 ## Distribuição (contexto neutro, exata)
 
@@ -38,21 +38,21 @@ Combates por 100 ações: off 15.062 · on 12.396.
 
 | Métrica | Valor | Limiar | Resultado |
 |---|---|---|---|
-| M1 precedidos (oráculo próprio, R18) | 0.8185 | ≥ 0.7 | ok |
-| M1 precedidos (oráculo antigo, `sinais_mostrados`) | 0.8336 | informativo | — |
+| M1 precedidos (oráculo próprio, R18) | 0.8114 | ≥ 0.7 | ok |
+| M1 precedidos (oráculo antigo, `sinais_mostrados`) | 0.8230 | informativo | — |
 | M1 aproximação | 1.0000 | ≥ 1.0 | ok |
 | M2 horário | 0.2487 | ≤ 0.35 | ok |
 | M3 cadeia alimentar | sobe 1.7833 · cai 0.4841 | ≥ 1.5 / ≤ 0.6 | ok |
 | M4 território | 0.9406 | ≥ 0.8 | ok |
-| M5 por região (informativo, D5) | -0.1770 | alerta fora de -0.3 a +0.1 | ok |
+| M5 por região (informativo, D5) | -0.1715 | alerta fora de -0.3 a +0.1 | ok |
 | M6 vazamento de nome | 0 | ≤ 0 | ok |
-| M7 determinismo (20 × 60) | `2a4cf52fddc19b16` × `2a4cf52fddc19b16` | hashes iguais | ok |
-| M8 densidade de sinal novo | 0.2913 | ≤ 0.4 | ok |
+| M7 determinismo (20 × 60) | `9ad322b93702d86c` × `9ad322b93702d86c` | hashes iguais | ok |
+| M8 densidade de sinal novo | 0.2885 | ≤ 0.4 | ok |
 
 ### Oráculo do M1
 
-- Combates de fauna com entrada (on): 595 · precedidos (oráculo próprio): 487 · (antigo): 496.
-- Divergências: só o antigo conta 9 · só o próprio conta 0.
-- Textos de sinal emitidos: 1398 · sem dono no arquivo de dados: 0 · com mais de um dono: 0.
-- Ações com sinal novo (M8): 1398 de 4800.
+- Combates de fauna com entrada (on): 599 · precedidos (oráculo próprio): 486 · (antigo): 493.
+- Divergências: só o antigo conta 7 · só o próprio conta 0.
+- Textos de sinal emitidos: 1385 · sem dono no arquivo de dados: 0 · com mais de um dono: 0.
+- Ações com sinal novo (M8): 1385 de 4800.
 - Gatilhos off = on (R9 da 360): ok.

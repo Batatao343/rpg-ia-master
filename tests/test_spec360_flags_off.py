@@ -133,12 +133,13 @@ def test_zero_chamada_llm_nova(monkeypatch):
     historia) e a contagem TOTAL de invoke nao e comparavel (off 64, on 70: as 6 a mais sao
     narracao/arquivista dos turnos de historia extras, nenhuma da fauna). A garantia e
     medida assim: (1) nenhuma chamada nasce em `services/fauna.py`; (2) o custo por turno de
-    historia e por turno de combate fica igual ao do `off` (tolerancia de 15 %). O teste de
+    historia e por turno de combate fica igual ao do `off` (tolerancia de 5 %, P2-1 do Sol); (3) as chamadas do roteador por turno nao crescem. O teste de
     lockstep `test_campanha_na_lama_exercita_fauna_sem_chamada_extra` (mesmo estado e acaso) cobre a igualdade turno a turno."""
     calls = _count_invokes(monkeypatch)
     _flags(monkeypatch, "off", "off")
     off_res = _run()
     off = (calls[0], dict(calls[2]))
+    off_router = calls[1]
     calls[0], calls[1] = 0, 0
     calls[2].clear()
     _flags(monkeypatch, "on", "on")
@@ -150,13 +151,15 @@ def test_zero_chamada_llm_nova(monkeypatch):
         n = sum(1 for r in hist if (r.route == "combat_agent") == (route == "combat"))
         return total / max(1, n)
 
+    n_off, n_on = max(1, len(off_res.history)), max(1, len(result.history))
+    assert calls[1] / n_on <= 1.05 * off_router / n_off + 1e-9, (calls[1], off_router)
     story_off = off[0] - off[1].get("agents/combat", 0)
     story_on = calls[0] - calls[2]["agents/combat"]
-    assert _rate(story_on, result.history, "story") <= 1.15 * _rate(
+    assert _rate(story_on, result.history, "story") <= 1.05 * _rate(
         story_off, off_res.history, "story"
     )
     if off[1].get("agents/combat") and calls[2]["agents/combat"]:
-        assert _rate(calls[2]["agents/combat"], result.history, "combat") <= 1.15 * _rate(
+        assert _rate(calls[2]["agents/combat"], result.history, "combat") <= 1.05 * _rate(
             off[1]["agents/combat"], off_res.history, "combat"
         )
 

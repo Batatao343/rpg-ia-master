@@ -1154,6 +1154,8 @@ def _weighted_pool(
         ]
         if sum(eco_weights) > 0:
             weights = eco_weights
+        else:
+            neutral = 1.0  # P2-6: pesos legados em uso, o migrante não escala por um 0
 
     # fauna local rareada -> no máx. 1 migrante entra no sorteio (peso 0.5); a decisão olha os
     # pesos sem a ecologia da SPEC-360 (o migrante não depende de horário nem de território)
@@ -1479,9 +1481,11 @@ def _fauna_encounter(res: dict, entry: dict | None, presence: dict | None, world
     if presence and presence.get("creature_id") == cid:
         res["presence_id"] = presence["pid"]
         if not presence.get("sinais_mostrados"):
-            solo = fauna.anuncia_presenca_nova(str(presence.get("region_id") or ""))
-            if solo and (cedo or not fauna.const("ANUNCIA_PRESENCA_NOVA")):
-                res["fauna_convert"] = True  # R16 (§9): presença ainda sem sinal anuncia antes
+            # R16 (§9): presença ainda sem sinal anuncia antes: `cedo` com a constante global,
+            # ou qualquer criatura em região de 1 nó raiz (dono, 03/11; independe da constante)
+            solo = fauna.solo_region(str(presence.get("region_id") or ""))
+            if solo or (cedo and fauna.const("ANUNCIA_PRESENCA_NOVA")):
+                res["fauna_convert"] = True
     elif cedo:
         # R16: sem presença no local (ou com a de OUTRA criatura, P2-6 do Sol) a criatura
         # sorteada não foi anunciada: o encontro vira o 1º sinal dela.

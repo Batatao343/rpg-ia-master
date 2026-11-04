@@ -102,3 +102,50 @@ def test_cap_global_sem_log_fantasma(on, monkeypatch):
     fauna.day_hook(_ctx(20, sim))
     assert "presenca_nasce" not in logs
     assert not [p for p in sim["fauna"]["presencas"] if p["region_id"] == "nova_arcadia"]
+
+
+# ----------------------------------------------------------------- P2-4 / P2-5 (Sol)
+
+
+def _state(sim: dict) -> dict:
+    return {
+        "game_id": "g1",
+        "world": {"current_location_id": "ophidia", "world_clock": {"day": 5}},
+        "world_sim": sim,
+    }
+
+
+def _cids(region: str, ante: str = "cedo") -> list[str]:
+    return [
+        c
+        for c, e in sorted(fauna.load().items())
+        if e["regiao"] == region and (e.get("sinais") or {}).get("antecedencia") == ante
+    ]
+
+
+def test_conversao_respeita_teto_da_regiao(monkeypatch):
+    """P2-5: Ophidia (teto 1) com uma presenca nao lida: a conversao a substitui, nunca vira 2."""
+    monkeypatch.setenv("RPG_FAUNA", "on")
+    monkeypatch.setenv("RPG_FAUNA_SINAIS", "on")
+    a, b = _cids("ophidia")[:2]
+    old = {**_row(0, "ophidia"), "creature_id": a, "locais": ["ophidia"], "expires_day": 99}
+    sim = {"fauna": {"v": 1, "presencas": [old], "carcacas": []}}
+    note, upd = fauna.convert_to_signal(_state(sim), fauna.entry(b), "ophidia", 5)
+    assert note
+    rows = [p for p in upd["world_sim"]["fauna"]["presencas"] if p["status"] == "ativa"]
+    assert len(rows) == 1 and rows[0]["creature_id"] == b
+
+
+def test_conversao_sem_vaga_nao_cria_nem_sinal_orfao(monkeypatch):
+    """P2-4/P2-5: a unica presenca da regiao ja foi lida: nao se descarta, nao ha sinal solto."""
+    monkeypatch.setenv("RPG_FAUNA", "on")
+    monkeypatch.setenv("RPG_FAUNA_SINAIS", "on")
+    a, b = _cids("ophidia")[:2]
+    lida = {
+        **_row(0, "ophidia", sinais=["rastro"]),
+        "creature_id": a,
+        "locais": ["ophidia"],
+    }
+    sim = {"fauna": {"v": 1, "presencas": [lida], "carcacas": []}}
+    note, upd = fauna.convert_to_signal(_state(sim), fauna.entry(b), "ophidia", 5)
+    assert note == "" and upd == {}

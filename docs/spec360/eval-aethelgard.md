@@ -21,7 +21,7 @@ Gerado por `scripts/fauna/eval.py` (avaliador congelado na Etapa 1; não editar 
 | Modo | Chegadas | Descansos | Gatilhos | Combates de fauna | Conversões | Sinais em cena |
 |---|---|---|---|---|---|---|
 | off | 3600 | 1200 | 1200 | 723 | 0 | 0 |
-| on | 3600 | 1200 | 1200 | 605 | 186 | 1070 |
+| on | 3600 | 1200 | 1200 | 605 | 184 | 1057 |
 
 Combates por 100 ações: off 15.062 · on 12.604.
 
@@ -46,13 +46,13 @@ Combates por 100 ações: off 15.062 · on 12.604.
 | M4 território | 0.9522 | ≥ 0.8 | ok |
 | M5 por região (informativo, D5) | -0.1632 | alerta fora de -0.3 a +0.1 | ok |
 | M6 vazamento de nome | 0 | ≤ 0 | ok |
-| M7 determinismo (20 × 60) | `c07e3bc7a973faf4` × `c07e3bc7a973faf4` | hashes iguais | ok |
-| M8 densidade de sinal novo | 0.2781 | ≤ 0.4 | ok |
+| M7 determinismo (20 × 60) | `60ddc5c2a53a4941` × `60ddc5c2a53a4941` | hashes iguais | ok |
+| M8 densidade de sinal novo | 0.2746 | ≤ 0.4 | ok |
 
 ### Oráculo do M1
 
 - Combates de fauna com entrada (on): 605 · precedidos (oráculo próprio): 487 · (antigo): 490.
 - Divergências: só o antigo conta 3 · só o próprio conta 0.
-- Textos de sinal emitidos: 1335 · sem dono no arquivo de dados: 0 · com mais de um dono: 0.
-- Ações com sinal novo (M8): 1335 de 4800.
+- Textos de sinal emitidos: 1318 · sem dono no arquivo de dados: 0 · com mais de um dono: 0.
+- Ações com sinal novo (M8): 1318 de 4800.
 - Gatilhos off = on (R9 da 360): ok.

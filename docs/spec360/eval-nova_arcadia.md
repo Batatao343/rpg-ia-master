@@ -7,7 +7,7 @@ Gerado por `scripts/fauna/eval.py` (avaliador congelado na Etapa 1; não editar 
 
 | Métrica | Valor | Limiar | Resultado |
 |---|---|---|---|
-| M1 sinal antes (precedidos) | 0.7433 | ≥ 0.7 | ok |
+| M1 sinal antes (precedidos) | 0.7500 | ≥ 0.7 | ok |
 | M1 aproximação | 1.0000 | ≥ 1.0 | ok |
 | M2 horário (pior razão fora/dentro) | 0.2891 | ≤ 0.35 | ok |
 | M3 presa sobe (mínimo) | 1.75 | ≥ 1.5 | ok |
@@ -21,7 +21,7 @@ Gerado por `scripts/fauna/eval.py` (avaliador congelado na Etapa 1; não editar 
 | Modo | Chegadas | Descansos | Gatilhos | Combates de fauna | Conversões | Sinais em cena |
 |---|---|---|---|---|---|---|
 | off | 3600 | 1200 | 1200 | 723 | 0 | 0 |
-| on | 3600 | 1200 | 1200 | 596 | 218 | 1189 |
+| on | 3600 | 1200 | 1200 | 596 | 225 | 1176 |
 
 Combates por 100 ações: off 15.062 · on 12.417.
 
@@ -38,21 +38,21 @@ Combates por 100 ações: off 15.062 · on 12.417.
 
 | Métrica | Valor | Limiar | Resultado |
 |---|---|---|---|
-| M1 precedidos (oráculo próprio, R18) | 0.7366 | ≥ 0.7 | ok |
-| M1 precedidos (oráculo antigo, `sinais_mostrados`) | 0.7433 | informativo | — |
+| M1 precedidos (oráculo próprio, R18) | 0.7433 | ≥ 0.7 | ok |
+| M1 precedidos (oráculo antigo, `sinais_mostrados`) | 0.7500 | informativo | — |
 | M1 aproximação | 1.0000 | ≥ 1.0 | ok |
 | M2 horário | 0.2891 | ≤ 0.35 | ok |
 | M3 cadeia alimentar | sobe 1.75 · cai 0.5543 | ≥ 1.5 / ≤ 0.6 | ok |
 | M4 território | 0.875 | ≥ 0.8 | ok |
 | M5 por região (informativo, D5) | -0.1757 | alerta fora de -0.3 a +0.1 | ok |
 | M6 vazamento de nome | 0 | ≤ 0 | ok |
-| M7 determinismo (20 × 60) | `c2ae68a744a9212d` × `c2ae68a744a9212d` | hashes iguais | ok |
-| M8 densidade de sinal novo | 0.3127 | ≤ 0.4 | ok |
+| M7 determinismo (20 × 60) | `b8ecf6e04c66a7d2` × `b8ecf6e04c66a7d2` | hashes iguais | ok |
+| M8 densidade de sinal novo | 0.3102 | ≤ 0.4 | ok |
 
 ### Oráculo do M1
 
-- Combates de fauna com entrada (on): 596 · precedidos (oráculo próprio): 439 · (antigo): 443.
+- Combates de fauna com entrada (on): 596 · precedidos (oráculo próprio): 443 · (antigo): 447.
 - Divergências: só o antigo conta 4 · só o próprio conta 0.
-- Textos de sinal emitidos: 1501 · sem dono no arquivo de dados: 0 · com mais de um dono: 0.
-- Ações com sinal novo (M8): 1501 de 4800.
+- Textos de sinal emitidos: 1489 · sem dono no arquivo de dados: 0 · com mais de um dono: 0.
+- Ações com sinal novo (M8): 1489 de 4800.
 - Gatilhos off = on (R9 da 360): ok.

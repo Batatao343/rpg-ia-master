@@ -52,3 +52,15 @@ def test_migrante_peso_vira_neutro_no_on(monkeypatch):
     on = {e["id"]: w for e, w in _rows("Manhã") if "nova_arcadia" not in (e.get("regions") or [])}
     assert off and on
     assert max(on.values()) <= max(off.values()) + 1e-9  # neutro <= 1 aqui; nunca acima do fixo
+
+
+def test_migrante_nao_some_quando_a_fauna_zera(monkeypatch):
+    """P2-6 (Sol): se todos os fatores de fauna dão 0, os pesos legados valem e o migrante
+    mantém o peso fixo (nao multiplica por um neutro 0)."""
+    from services import fauna
+
+    monkeypatch.setenv("RPG_FAUNA", "on")
+    monkeypatch.setattr(fauna, "eco_multiplier", lambda e, ctx: (0.0, ["horario"]))
+    rows = _rows("Manhã")
+    mig = [w for e, w in rows if "nova_arcadia" not in (e.get("regions") or [])]
+    assert mig and all(w > 0 for w in mig)
