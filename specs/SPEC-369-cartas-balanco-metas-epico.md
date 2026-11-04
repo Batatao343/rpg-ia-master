@@ -465,7 +465,33 @@ Os limiares de `tests/test_spec369_metas.py` que mudam por estas respostas (isen
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
 
-**`<sha-A>` = `33b08981`** (último commit de autor da régua, depois do gate R9c, na branch `spec-369`; a Fase B3+ prova o R1 contra este sha).
+**`<sha-A>` = `6ed6815d`** (último commit de autor da régua: follow-up P2-3 da Astra, rodada 4; a Fase B3+ prova o R1 contra este sha).
+
+Follow-up P2-3 (`6ed6815d`):
+- **O que o `r20` passa a exigir** (`tests/test_spec369_metas.py`):
+  - pelo menos **200 lutas por modo** em cada célula-alvo;
+  - as sementes da convenção de cada fase.
+- **Convenção de sementes da arena de famílias:**
+
+  | Célula | Fase B (`final`) | Fase C (`confirmacao`) |
+  |---|---|---|
+  | demais células | 0-7 | 260-267 |
+  | `predador_apice` L3 | 0-19 | 260-279 |
+
+  A medição de `predador_apice` L3 é gravada na própria célula com `sementes`, como na base.
+- **Comandos da Fase C:**
+  - `familias --seeds 260-267`;
+  - `familias --seeds 260-279 --only predador_apice --levels 3`, mesclado na célula.
+
+  O `test_r22_confirmacao` passa `fase="confirmacao"`.
+- **Sem colisão:**
+  - a arena de famílias só usou 0-7 e 0-19 para ajuste, e 260-279 apenas estende a confirmação 260-267 dentro dela;
+  - as 260-339 das outras arenas são a mesma confirmação única do R22 (outra arena e outro rng), nunca usadas para ajuste;
+  - 20-259 (362) não tocam a arena de famílias.
+
+  O teste da régua `test_r20_exige_200_lutas_e_sementes_da_fase` confere tudo isso: a base passa; a amostra de 80 lutas reprova; as faixas de ajuste e de confirmação são disjuntas.
+
+Antes: **`<sha-A>` = `33b08981`** (depois do gate R9c, na branch `spec-369`).
 
 Emendas pós-gate R9c (04/11), em 2 commits de autor da régua, antes de qualquer passo do B3:
 - `06bd8f39`: `predador_apice` L3 remedida só nessa célula com as sementes **0-19** (200 lutas por modo; as sementes 8-19 são novas para a arena de famílias, e a confirmação segue nas 260-267). Deu `off` 75,0 %, `on` 58,5 %, Δ **−16,5 pp**. A célula **continua no R20**. A medição de 80 lutas fica em `amostra_original_0_7`, e o subcomando `familias` ganhou `--levels`.
