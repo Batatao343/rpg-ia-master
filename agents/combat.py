@@ -2606,55 +2606,7 @@ def _combat_node(state: GameState):
     if t.declaration is not None and not isinstance(t.declaration, TurnDeclaration):
         t.declaration = TurnDeclaration(**t.declaration)
 
-    # ---- Fuga: chase determinístico (conflito-09) ----
-    t.flee_dest_id = None
-    from services.chase import FLEE_RE
-
-    # SPEC-325 C-P2-1: "Brunna, recuar." é ordem ao aliado, nunca a fuga do herói.
-    flee_text, _order_only = _player_text_without_order(
-        t.intent, t.enemies, t.actors_by_id, t.sides
-    )
-    t.flee_requested = bool(FLEE_RE.search(flee_text.lower()))
-    if t.flee_requested:
-        from services.intent_guard import log_intent_guard
-
-        log_intent_guard("flee_regex", "FLEE_RE", t.intent)
-    if (
-        t.declaration is not None
-        and t.declaration.acao is not None
-        and t.declaration.acao.kind == "flee"
-    ):
-        t.flee_requested = True
-        t.flee_dest_id = t.declaration.acao.params.get("destination_id")
-    if t.state.get("combat_flee_attempt"):
-        t.flee_requested = True
-        t.flee_dest_id = t.state.get("combat_flee_destination")
-
-    # SPEC-325 R12/R13: abandono/sacrifício durante a perseguição (`off`/sem fuga = nada muda).
-    t.choices = _chase_party_choices(
-        t.state,
-        t.combat_meta,
-        t.party,
-        t.allies,
-        t.ally_ids,
-        t.actors_by_id,
-        t.sides,
-        t.player,
-        t.intent,
-        t.active,
-    )
-    if t.choices["flee"]:
-        t.flee_requested = True
-        t.logs_pre_flee = list(t.choices["logs"])
-    else:
-        t.logs_pre_flee = []
-
-    t.prior_flee_attempts = t.combat_meta.get("flee_attempts")
-    if t.flee_requested:
-        t.combat_meta["flee_attempts"] = int(t.combat_meta.get("flee_attempts", 0) or 0) + 1
-    else:
-        # O teto mede tentativas consecutivas dentro deste conflito.
-        t.combat_meta.pop("flee_attempts", None)
+    _combat_flee_request(t)
 
     _combat_environment(t)
     _combat_attempt_flee(t)
@@ -3081,6 +3033,59 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_flee_request(t: _CombatTurn) -> None:
+    """Pedido de fuga e escolhas do grupo na perseguição."""
+    # ---- Fuga: chase determinístico (conflito-09) ----
+    t.flee_dest_id = None
+    from services.chase import FLEE_RE
+
+    # SPEC-325 C-P2-1: "Brunna, recuar." é ordem ao aliado, nunca a fuga do herói.
+    flee_text, _order_only = _player_text_without_order(
+        t.intent, t.enemies, t.actors_by_id, t.sides
+    )
+    t.flee_requested = bool(FLEE_RE.search(flee_text.lower()))
+    if t.flee_requested:
+        from services.intent_guard import log_intent_guard
+
+        log_intent_guard("flee_regex", "FLEE_RE", t.intent)
+    if (
+        t.declaration is not None
+        and t.declaration.acao is not None
+        and t.declaration.acao.kind == "flee"
+    ):
+        t.flee_requested = True
+        t.flee_dest_id = t.declaration.acao.params.get("destination_id")
+    if t.state.get("combat_flee_attempt"):
+        t.flee_requested = True
+        t.flee_dest_id = t.state.get("combat_flee_destination")
+
+    # SPEC-325 R12/R13: abandono/sacrifício durante a perseguição (`off`/sem fuga = nada muda).
+    t.choices = _chase_party_choices(
+        t.state,
+        t.combat_meta,
+        t.party,
+        t.allies,
+        t.ally_ids,
+        t.actors_by_id,
+        t.sides,
+        t.player,
+        t.intent,
+        t.active,
+    )
+    if t.choices["flee"]:
+        t.flee_requested = True
+        t.logs_pre_flee = list(t.choices["logs"])
+    else:
+        t.logs_pre_flee = []
+
+    t.prior_flee_attempts = t.combat_meta.get("flee_attempts")
+    if t.flee_requested:
+        t.combat_meta["flee_attempts"] = int(t.combat_meta.get("flee_attempts", 0) or 0) + 1
+    else:
+        # O teto mede tentativas consecutivas dentro deste conflito.
+        t.combat_meta.pop("flee_attempts", None)
 
 
 def _combat_environment(t: _CombatTurn) -> None:
