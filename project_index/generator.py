@@ -789,11 +789,11 @@ def validate_curated_files(root: Path) -> None:
         raise ProjectIndexError("curated index references missing files: " + ", ".join(missing))
 
 
-def build_index(root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+def build_index(root: Path, index_dir: Path | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
     root = root.resolve()
     validate_curated_files(root)
     graph, manifest = generate(root)
-    index_root = root / "project_index"
+    index_root = index_dir if index_dir is not None else root / "project_index"
     index_root.mkdir(parents=True, exist_ok=True)
     (index_root / "repo_graph.json").write_bytes(
         json.dumps(graph, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n"
@@ -808,24 +808,28 @@ def _read_json(path: Path) -> dict[str, Any]:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
-        raise ProjectIndexError(f"cannot read index artifact {path}") from error
+        raise ProjectIndexError(
+            f"cannot read index artifact {path}; run: python -m project_index build"
+        ) from error
     if not isinstance(data, dict):
         raise ProjectIndexError(f"index artifact must be an object: {path}")
     return data
 
 
-def check_index(root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+def check_index(root: Path, index_dir: Path | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
     root = root.resolve()
     validate_curated_files(root)
-    actual_graph = _read_json(root / "project_index/repo_graph.json")
-    actual_manifest = _read_json(root / "project_index/manifest.json")
+    index_root = index_dir if index_dir is not None else root / "project_index"
+    actual_graph = _read_json(index_root / "repo_graph.json")
+    actual_manifest = _read_json(index_root / "manifest.json")
     indexed_commit = actual_manifest.get("commit_sha")
     if not isinstance(indexed_commit, str) or len(indexed_commit) < 7:
         raise ProjectIndexError("project index has invalid commit SHA")
     expected_graph, expected_manifest = generate(root, indexed_commit=indexed_commit)
     if actual_graph != expected_graph or actual_manifest != expected_manifest:
         raise ProjectIndexError(
-            "project index is stale: source tree or generated artifacts changed"
+            "project index is stale: source tree or generated artifacts changed; "
+            "run: python -m project_index build"
         )
     return actual_graph, actual_manifest
 

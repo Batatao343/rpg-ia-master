@@ -51,8 +51,8 @@ def _bounded(value: Any, limit: int) -> Any:
     return value
 
 
-def query(root: Path, text: str, limit: int = 12) -> dict[str, Any]:
-    graph, _ = check_index(root)
+def query(root: Path, text: str, limit: int = 12, index_dir: Path | None = None) -> dict[str, Any]:
+    graph, _ = check_index(root, index_dir)
     tokens = [token for token in _normalized(text).split() if token]
     if not tokens:
         raise ProjectIndexError("query cannot be empty")
@@ -87,8 +87,8 @@ def query(root: Path, text: str, limit: int = 12) -> dict[str, Any]:
     }
 
 
-def symbol(root: Path, name: str, limit: int = 12) -> dict[str, Any]:
-    graph, _ = check_index(root)
+def symbol(root: Path, name: str, limit: int = 12, index_dir: Path | None = None) -> dict[str, Any]:
+    graph, _ = check_index(root, index_dir)
     needle = _normalized(name)
     matches = [
         node
@@ -102,9 +102,9 @@ def symbol(root: Path, name: str, limit: int = 12) -> dict[str, Any]:
     return {"symbol": name, "count": len(results), "results": _bounded(results, _limit(limit))}
 
 
-def impact(root: Path, name: str, limit: int = 20) -> dict[str, Any]:
-    graph, _ = check_index(root)
-    matches = symbol(root, name, limit=_limit(limit))["results"]
+def impact(root: Path, name: str, limit: int = 20, index_dir: Path | None = None) -> dict[str, Any]:
+    graph, _ = check_index(root, index_dir)
+    matches = symbol(root, name, limit=_limit(limit), index_dir=index_dir)["results"]
     ids = {node["id"] for node in matches}
     related = [edge for edge in graph["edges"] if edge["source"] in ids or edge["target"] in ids]
     related.sort(key=lambda row: (row["source"], row["target"], row["type"]))
@@ -112,8 +112,10 @@ def impact(root: Path, name: str, limit: int = 20) -> dict[str, Any]:
     return {"symbol": name, "matched_nodes": matches, "count": len(results), "edges": results}
 
 
-def lookup_tests(root: Path, product_path: str, limit: int = 20) -> dict[str, Any]:
-    graph, _ = check_index(root)
+def lookup_tests(
+    root: Path, product_path: str, limit: int = 20, index_dir: Path | None = None
+) -> dict[str, Any]:
+    graph, _ = check_index(root, index_dir)
     normalized_path = PurePath(product_path)
     coverage = _load_yaml(root / "project_index/eval_map.yaml", "coverage")
     tests: set[str] = set()
@@ -141,8 +143,8 @@ def lookup_tests(root: Path, product_path: str, limit: int = 20) -> dict[str, An
     }
 
 
-def state(root: Path, field: str, limit: int = 12) -> dict[str, Any]:
-    check_index(root)
+def state(root: Path, field: str, limit: int = 12, index_dir: Path | None = None) -> dict[str, Any]:
+    check_index(root, index_dir)
     ownership = _load_yaml(root / "project_index/state_ownership.yaml", "state")
     needle = _normalized(field)
     matches = [

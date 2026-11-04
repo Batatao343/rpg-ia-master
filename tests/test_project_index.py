@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -13,11 +14,20 @@ from project_index.generator import (
     build_index,
     check_index,
     freshness_status,
+    validate_curated_files,
     validate_graph,
 )
 from project_index.query import MAX_RESULTS, lookup_tests, query, state, symbol
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+@pytest.fixture(scope="session")
+def built_index(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Real-repo index built in a per-worker temp dir (artifacts are not versioned)."""
+    index_dir = tmp_path_factory.mktemp("project_index")
+    build_index(ROOT, index_dir=index_dir)
+    return index_dir
 
 
 def _git(repo: Path, *args: str) -> None:
@@ -254,15 +264,15 @@ def test_committing_generated_artifacts_warns_without_infinite_staleness(tmp_pat
     assert freshness_status(repo, checked_manifest) == "fresh_commit_drift"
 
 
-def test_real_index_excludes_content_and_queries_are_bounded() -> None:
-    _, manifest = check_index(ROOT)
+def test_real_index_excludes_content_and_queries_are_bounded(built_index: Path) -> None:
+    _, manifest = check_index(ROOT, index_dir=built_index)
     included = manifest["included_files"]
 
     assert not any(
         path.startswith(("data/", "assets/", "lore_nova/", "saves/")) for path in included
     )
     assert not any(path.startswith((".claude/", ".agents/")) for path in included)
-    result = query(ROOT, "memory context", limit=999)
+    result = query(ROOT, "memory context", limit=999, index_dir=built_index)
     assert result["count"] <= MAX_RESULTS
     assert any(
         item.get("name") == "memory"
@@ -272,13 +282,42 @@ def test_real_index_excludes_content_and_queries_are_bounded() -> None:
     assert "Open the referenced source" in result["instruction"]
 
 
-def test_real_index_locates_symbols_tests_and_curated_state() -> None:
-    symbols = symbol(ROOT, "services.context_builder.build_context_pack")
-    related_tests = lookup_tests(ROOT, "services/context_builder.py")
-    ownership = state(ROOT, "player.gold")
+def test_real_index_locates_symbols_tests_and_curated_state(built_index: Path) -> None:
+    symbols = symbol(ROOT, "services.context_builder.build_context_pack", index_dir=built_index)
+    related_tests = lookup_tests(ROOT, "services/context_builder.py", index_dir=built_index)
+    ownership = state(ROOT, "player.gold", index_dir=built_index)
 
     assert any(item["path"] == "services/context_builder.py" for item in symbols["results"])
     assert "tests/test_npc_memory.py" in related_tests["tests"]
     assert "memory_recall_at_5" in related_tests["metrics"]
     assert ownership["authority"] == "curated"
     assert ownership["results"][0]["canonical_domain"] == "economy"
+
+
+def test_curated_files_reference_existing_paths() -> None:
+    """Replaces the CI `project_index check` step: curated yaml must not cite dead paths."""
+    validate_curated_files(ROOT)
+
+
+def test_query_without_index_is_friendly(tmp_path: Path) -> None:
+    repo = _fixture_repo(tmp_path)
+    result = subprocess.run(
+        [sys.executable, "-m", "project_index", "--root", str(repo), "query", "x"],
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
+    )
+    output = result.stdout + result.stderr
+    assert result.returncode != 0
+    assert "build" in output
+    assert "Traceback" not in output
+
+
+def test_stale_index_message_suggests_build(tmp_path: Path) -> None:
+    repo = _fixture_repo(tmp_path)
+    build_index(repo)
+    (repo / "mod.py").write_text("def target(value):\n    return value + 3\n", encoding="utf-8")
+
+    with pytest.raises(ProjectIndexError, match="stale") as info:
+        check_index(repo)
+    assert "build" in str(info.value)
