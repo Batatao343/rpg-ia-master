@@ -36,7 +36,14 @@ LIMIARES = {
     "max_cartas_heroi": 8,  # R18
     "max_passos_por_carta": 2,  # R18
     "max_cartas_inimigo_por_familia": 2,  # R18(d)
+    "familia_min_lutas_por_modo": 200,  # R20, D-369-7 (Astra rodada 4, P2-3)
 }
+# Sementes da arena de familias por fase (R3/R22). `predador_apice` L3 so tem 2 criaturas: para 200
+# lutas por modo usa 20 sementes (gate R9c item 4). 260-279 so estende a confirmacao 260-267 DENTRO da
+# arena de familias (nenhuma faixa de ajuste dela passa de 19); as 260-339 das outras arenas sao a
+# mesma confirmacao unica (R22), em outra arena/tag, e nunca serviram de ajuste.
+SEMENTES_FAMILIA = {"final": [0, 7], "confirmacao": [260, 267]}
+SEMENTES_FAMILIA_CELULA = {"predador_apice|L3": {"final": [0, 19], "confirmacao": [260, 279]}}
 FORA_DA_META_R14 = {"sangromante"}  # R4(a): Sangromante e excecao aceita
 # Gate R9c do dono (04/11, "ok defaults"; spec §8 "Resposta do dono ao gate R9c"):
 ISENTAS_PISO_R13 = {"Sangromante"}  # item 2(0): fora do piso por Postura; o total >= 2,00 vale
@@ -143,11 +150,21 @@ def r19(data: dict, base: dict | None) -> list[str]:
     return bad
 
 
-def r20(data: dict, alvo: list[str]) -> list[str]:
+def r20(data: dict, alvo: list[str], fase: str = "final") -> list[str]:
+    """Celula-alvo: >= 200 lutas por modo, sementes da convencao da fase, `on` em 45-85 % e
+    |Delta| <= 10 pp. Celula com sementes proprias traz ``sementes`` (como em `base-0-19.json`)."""
     lo, hi = LIMIARES["faixa_vitoria_pct"]
     bad = []
+    if data["familias"]["meta"]["seeds"] != SEMENTES_FAMILIA[fase]:
+        bad.append(f"sementes {data['familias']['meta']['seeds']} != {SEMENTES_FAMILIA[fase]}")
     for key in alvo:
         cell = data["familias"]["cells"][key]
+        esperado = SEMENTES_FAMILIA_CELULA.get(key, {}).get(fase)
+        if esperado is not None and cell.get("sementes") != esperado:
+            bad.append(f"{key} sementes {cell.get('sementes')} != {esperado}")
+        for mode in ("off", "on"):
+            if cell[mode]["fights"] < LIMIARES["familia_min_lutas_por_modo"]:
+                bad.append(f"{key} {mode} so {cell[mode]['fights']} lutas")
         on = cell["on"]["win"] * 100
         if not lo <= on <= hi or abs(cell["delta_pp"]) > LIMIARES["familia_delta_max_pp"]:
             bad.append(f"{key} on {on:.1f} delta {cell['delta_pp']}")
@@ -205,7 +222,9 @@ def test_r18_limites_de_passos():
 
 
 # --------------------------------------------------------------------------
-# Fase C (R22: uma vez, sementes 260-339 / familias 260-267, sem reajuste)
+# Fase C (R22: uma vez, sementes 260-339 / familias 260-267, sem reajuste). Excecao de amostra:
+# `predador_apice` L3 na confirmacao usa 260-279 (`familias --seeds 260-279 --only predador_apice
+# --levels 3`), gravada na celula com ``sementes: [260, 279]`` (SEMENTES_FAMILIA_CELULA).
 # --------------------------------------------------------------------------
 @pytest.mark.parametrize(
     "check",
@@ -222,6 +241,6 @@ def test_r22_confirmacao(check):
         "r16": lambda: r16(data),
         "r17": lambda: r17(data),
         "r19": lambda: r19(data, None),  # (a) e (c)
-        "r20": lambda: r20(data, _base()["familias"]["celulas_alvo"]),
+        "r20": lambda: r20(data, _base()["familias"]["celulas_alvo"], "confirmacao"),
     }
     assert fns[check]() == []

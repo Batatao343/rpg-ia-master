@@ -282,3 +282,25 @@ def test_limiares_do_gate_r9c_contra_a_base():
     r14 = T.r14(base)
     assert not any(f.startswith("(b)") for f in r14)  # so as 3 legadas travadas eram (b)
     assert not T.na_meta_r14a("bas_med_guarda", "basica")
+
+
+def test_r20_exige_200_lutas_e_sementes_da_fase():
+    """Astra rodada 4 (P2-3): a base passa o controle de amostra (apex com 0-19); com 80 lutas, reprova."""
+    import copy as _copy
+
+    T = _load("test_spec369_metas_regua", "tests/test_spec369_metas.py")
+    with open(os.path.join(ROOT, "docs", "spec369", "base-0-19.json"), encoding="utf-8") as fh:
+        base = json.load(fh)
+    alvo = base["familias"]["celulas_alvo"]
+    falhas = T.r20(base, alvo)
+    assert not any("lutas" in f or "sementes" in f for f in falhas)
+    pequeno = _copy.deepcopy(base)
+    k = "predador_apice|L3"
+    pequeno["familias"]["cells"][k] = pequeno["familias"]["cells"][k]["amostra_original_0_7"]
+    falhas = T.r20(pequeno, alvo)
+    assert f"{k} off so 80 lutas" in falhas and any("sementes None" in f for f in falhas)
+    # faixas de familia nao colidem: ajuste ate 19, confirmacao a partir de 260
+    fin = [T.SEMENTES_FAMILIA["final"], T.SEMENTES_FAMILIA_CELULA[k]["final"]]
+    conf = [T.SEMENTES_FAMILIA["confirmacao"], T.SEMENTES_FAMILIA_CELULA[k]["confirmacao"]]
+    assert max(b for _, b in fin) < min(a for a, _ in conf)
+    assert all(260 <= a <= b <= 339 for a, b in conf)
