@@ -490,6 +490,17 @@ A tolerância vale **só na dimensão que já estava fora da meta na Fase B** (A
 
 A revisão Sol da Fase B (P1-2) contou as sondagens feitas em árvore descartável: 11 Cartas de herói contra o teto de 8, 3 tentativas em `bas_cor_mofo` contra o teto de 2, e 3 famílias com mais de 2 Cartas. O pacote que ficou no jogo está dentro dos limites. O dono aceitou, com a Fase C (sementes 260–339, nunca usadas) como guarda contra overfit. As sondagens ficam registradas em `passos-0-19.json` (`mantido: false`, `sondagem: true`), e o R18 fica como "pacote final dentro, processo fora". Se a Fase C reprovar, a decisão volta ao dono.
 
+### D-369-13 — fecho com os números atuais (04/11, dono: "Aceitar números atuais")
+
+O passo da D-369-10 no `mon_automato_fundicao` não tem via permitida: mudar a ficha direto quebra o snapshot protegido da SPEC-373, e os dials do `_ajustes.yaml` não alcançam a criatura (`status: retro`). O passo foi revertido (`9acb4c82`). O rebase sobre a `main` (SPEC-373/391) também mexeu nos números. O dono aceitou os números medidos agora, no `final-0-19.json` de `9acb4c82`, como os limites registrados da D-369-10:
+
+- R15: o p95 do Médico tem limite registrado de 17, e o timeout do Médico, de 3,3 %. O p95 total continua com a meta ≤ 10 só se já passar; se não passar, o valor medido (11) vira limite registrado.
+- R16: limite registrado de 1,0355.
+- R14(a): `bas_cor_mofo` 0,718, `med1_fer_garra_de_protese` 0,604 e `arc1_cal_pulso_medido` com o valor medido viram limite registrado. As assinaturas a Fôlego 0 continuam isentas.
+- R20: só a célula `conjurador` L5 fica com limite registrado. As que agora passam voltam à meta cheia.
+
+A tolerância da D-369-11 continua igual. A Fase C confirma.
+
 ## 9. Registro de implementação
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
