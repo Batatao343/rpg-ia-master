@@ -2491,74 +2491,7 @@ def storyteller_node(state: GameState):
             if _intent_note:
                 t.fm_post_notes.append(_intent_note)
 
-        # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
-        t.needs_replan = t.travel_needs_replan
-        t.updated_plan = t.campaign_plan
-        t.beat_done = (
-            bool(getattr(t.update, "beat_completed", False))
-            and not t.quarantine_llm_payload
-            and t.beat_eligible
-        )
-        # Fase 4.1: beat concluído = XP determinístico (o LLM só sinaliza o beat;
-        # valor/level up são do motor). Level ups viram eventos source="progression".
-        t.leveled_player = None
-        t.level_up_events: list = []
-        # Cena de abertura roda com turn_count==1 (campaign_manager incrementa antes):
-        # narrador generoso marcando beat no prólogo não pode virar XP grátis na
-        # criação (achado do smoke real 2026-07-05). XP de beat só do turno 2 em diante.
-        if t.beat_done and int(t.world.get("turn_count", 0) or 0) > 1:
-            from progression import XP_PER_BEAT, grant_xp
-
-            # SPEC-226 R3: compõe sobre o jogador já atualizado (descanso/achado).
-            t.base_p = (
-                t.rested_player
-                if t.rested_player is not None
-                else t.discovery_player
-                if t.discovery_player is not None
-                else dict(t.state.get("player") or {})
-            )
-            t.leveled_player, t.level_up_events = grant_xp(t.base_p, XP_PER_BEAT)
-            t.turn_bl = record_gain(t.turn_bl, "xp", XP_PER_BEAT, "beat")
-        if t.beat_done:
-            t.beats[t.current_step] = {**t.beats[t.current_step], "status": "done"}
-            new_step = t.current_step + 1
-            t.updated_plan = {**t.campaign_plan, "beats": t.beats, "current_step": new_step}
-            # Esgotou os beats → próximo turno o campaign_manager replaneja (vê _should_replan).
-            if new_step >= len(t.beats):
-                t.needs_replan = True
-
-        # spec npcs-3-camadas (R5): viagem zera a cena (ninguém teleporta junto);
-        # introduced_npcs entram em cena; npcs_left_scene saem.
-        t.new_npcs = t.scene_npcs
-        home_id = t.world.get("current_location_id", "")
-        _turn = int(t.world.get("turn_count", 0) or 0)
-        introduced_npcs = [] if t.quarantine_llm_payload else (t.update.introduced_npcs or [])
-        t._pool_used_new: list = []
-        _recent_player_inputs = tuple(
-            str(m.content) for m in [m for m in t.messages if isinstance(m, HumanMessage)][-3:]
-        )
-        npcs_left_scene = (
-            [] if t.quarantine_llm_payload else (getattr(t.update, "npcs_left_scene", []) or [])
-        )
-        for new_name in introduced_npcs:
-            t.new_npcs = _with_new_npc(
-                t.new_npcs,
-                new_name,
-                t.loc,
-                t.narrative_text,
-                game_id=str(t.game_id or ""),
-                home_id=home_id,
-                turn=_turn,
-                cast=t._cast,
-                pool_used_out=t._pool_used_new,
-                player_inputs=_recent_player_inputs,
-                state=t.state,
-                stub_only=latency_flags.two_phase_on(),
-            )
-        for gone_name in npcs_left_scene:
-            key = next((k for k in t.new_npcs if k.lower() == str(gone_name).lower()), None)
-            if key and isinstance(t.new_npcs.get(key), dict):
-                t.new_npcs = {**t.new_npcs, key: {**t.new_npcs[key], "in_scene": False}}
+        _story_beat_and_npcs(t)
 
         _story_assemble_base(t)
 
@@ -2571,6 +2504,80 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_beat_and_npcs(t: _StoryTurn) -> None:
+    """Beat concluído (XP do motor) e NPCs que entram/saem da cena."""
+    from services.turn_outcome import record_gain
+
+    # --- Avanço de beat: o narrador sinaliza quando o objetivo da cena foi cumprido ---
+    t.needs_replan = t.travel_needs_replan
+    t.updated_plan = t.campaign_plan
+    t.beat_done = (
+        bool(getattr(t.update, "beat_completed", False))
+        and not t.quarantine_llm_payload
+        and t.beat_eligible
+    )
+    # Fase 4.1: beat concluído = XP determinístico (o LLM só sinaliza o beat;
+    # valor/level up são do motor). Level ups viram eventos source="progression".
+    t.leveled_player = None
+    t.level_up_events: list = []
+    # Cena de abertura roda com turn_count==1 (campaign_manager incrementa antes):
+    # narrador generoso marcando beat no prólogo não pode virar XP grátis na
+    # criação (achado do smoke real 2026-07-05). XP de beat só do turno 2 em diante.
+    if t.beat_done and int(t.world.get("turn_count", 0) or 0) > 1:
+        from progression import XP_PER_BEAT, grant_xp
+
+        # SPEC-226 R3: compõe sobre o jogador já atualizado (descanso/achado).
+        t.base_p = (
+            t.rested_player
+            if t.rested_player is not None
+            else t.discovery_player
+            if t.discovery_player is not None
+            else dict(t.state.get("player") or {})
+        )
+        t.leveled_player, t.level_up_events = grant_xp(t.base_p, XP_PER_BEAT)
+        t.turn_bl = record_gain(t.turn_bl, "xp", XP_PER_BEAT, "beat")
+    if t.beat_done:
+        t.beats[t.current_step] = {**t.beats[t.current_step], "status": "done"}
+        new_step = t.current_step + 1
+        t.updated_plan = {**t.campaign_plan, "beats": t.beats, "current_step": new_step}
+        # Esgotou os beats → próximo turno o campaign_manager replaneja (vê _should_replan).
+        if new_step >= len(t.beats):
+            t.needs_replan = True
+
+    # spec npcs-3-camadas (R5): viagem zera a cena (ninguém teleporta junto);
+    # introduced_npcs entram em cena; npcs_left_scene saem.
+    t.new_npcs = t.scene_npcs
+    home_id = t.world.get("current_location_id", "")
+    _turn = int(t.world.get("turn_count", 0) or 0)
+    introduced_npcs = [] if t.quarantine_llm_payload else (t.update.introduced_npcs or [])
+    t._pool_used_new: list = []
+    _recent_player_inputs = tuple(
+        str(m.content) for m in [m for m in t.messages if isinstance(m, HumanMessage)][-3:]
+    )
+    npcs_left_scene = (
+        [] if t.quarantine_llm_payload else (getattr(t.update, "npcs_left_scene", []) or [])
+    )
+    for new_name in introduced_npcs:
+        t.new_npcs = _with_new_npc(
+            t.new_npcs,
+            new_name,
+            t.loc,
+            t.narrative_text,
+            game_id=str(t.game_id or ""),
+            home_id=home_id,
+            turn=_turn,
+            cast=t._cast,
+            pool_used_out=t._pool_used_new,
+            player_inputs=_recent_player_inputs,
+            state=t.state,
+            stub_only=latency_flags.two_phase_on(),
+        )
+    for gone_name in npcs_left_scene:
+        key = next((k for k in t.new_npcs if k.lower() == str(gone_name).lower()), None)
+        if key and isinstance(t.new_npcs.get(key), dict):
+            t.new_npcs = {**t.new_npcs, key: {**t.new_npcs[key], "in_scene": False}}
 
 
 def _story_assemble_base(t: _StoryTurn) -> None:
