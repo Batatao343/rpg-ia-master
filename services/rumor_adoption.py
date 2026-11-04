@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 from observability.telemetry import log_event
+from services.env import env_choice
 
 MODES = ("off", "shadow", "on")
 DEFAULT_MODE = "shadow"  # D7: shadow ate o smoke real
@@ -35,8 +36,7 @@ _DATA = Path(__file__).resolve().parent.parent / "data" / "world"
 
 def mode() -> str:
     """`RPG_RUMORS_ADOPTED`; exige `RPG_RUMORS=on` e `RPG_RUMORS_PROPOSED=on` (senao `off`)."""
-    raw = os.getenv("RPG_RUMORS_ADOPTED", "").strip().lower()
-    m = raw if raw in MODES else DEFAULT_MODE
+    m = env_choice("RPG_RUMORS_ADOPTED", MODES, DEFAULT_MODE)
     if m == "off":
         return "off"
     from services import rumors
