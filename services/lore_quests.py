@@ -13,12 +13,12 @@ Modos `RPG_LORE_QUESTS=off|shadow|on` (so valem com `RPG_WORLD_QUESTS` efetivame
 from __future__ import annotations
 
 import math
-import os
 import re
 import unicodedata
 from typing import Any
 
 from services import world_pressures as wp
+from services.env import env_choice
 
 MODES = ("off", "shadow", "on")
 DEFAULT_MODE = "on"
@@ -52,8 +52,7 @@ _TIME_OR_MONEY = re.compile(
 
 def mode() -> str:
     """`RPG_LORE_QUESTS`; so vale `on`/`shadow` com `RPG_WORLD_QUESTS` efetivamente `on` (R32)."""
-    raw = os.getenv("RPG_LORE_QUESTS", "").strip().lower()
-    m = raw if raw in MODES else DEFAULT_MODE
+    m = env_choice("RPG_LORE_QUESTS", MODES, DEFAULT_MODE)
     from services import world_quests
 
     return m if world_quests.mode() == "on" else "off"
