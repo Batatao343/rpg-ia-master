@@ -100,7 +100,7 @@ O Corruptor subiu de 44,2 % (355) para 50,7 % sem Carta nova: o catálogo mudou 
 `buff_iniciativa` do Corruptor, continua sendo requisito de desenho ("resposta à emboscada"), mas
 deixou de ser necessário para o número. **Decisão do dono** (abaixo).
 
-## Meta 7: células de família (D-369-7, 200 lutas por célula e modo, exceto `predador_apice` com 80; sementes 0-7)
+## Meta 7: células de família (D-369-7, 200 lutas por célula e modo; sementes 0-7, exceto `predador_apice` L3 com 0-19)
 
 Definição aplicada: **alvo** = `off` ∈ [45, 85] e (`on` fora da faixa **ou** \|Δ\| > 10 pp);
 **fora de escopo** = `off` já fora de 45-85 %.
@@ -111,13 +111,16 @@ Definição aplicada: **alvo** = `off` ∈ [45, 85] e (`on` fora da faixa **ou**
 | `conjurador` L5 | 46,5 | **36,5** | −10,0 | `on` abaixo de 45 |
 | `lider_matilha` L3 | 58,0 | 70,0 | **+12,0** | \|Δ\| > 10 (fica mais fácil) |
 | `lider_matilha` L5 | 68,5 | 80,0 | **+11,5** | \|Δ\| > 10 (fica mais fácil) |
-| `predador_apice` L3 ⚠ | 76,2 | 63,7 | **−12,5** | \|Δ\| > 10 |
+| `predador_apice` L3 ⚠ | 75,0 | 58,5 | **−16,5** | \|Δ\| > 10 |
 
-- ⚠ **Exceção de amostra:** `predador_apice` tem só **2 criaturas** não-chefe, então a célula tem
-  **80 lutas por modo**, não as 200 do R20/D-369-7. O erro-padrão da vitória é de cerca de 5 pp por
-  braço, e o do Δ é de cerca de 7 pp (braços tratados como independentes). O −12,5 pp fica a menos de
-  2 erros-padrão do limiar de 10. A célula entra como alvo com essa ressalva, e o dono decide (item 4
-  do pedido).
+- ⚠ **Amostra ampliada (gate R9c, item 4):** `predador_apice` tem só **2 criaturas** não-chefe, e com
+  as sementes 0-7 a célula tinha 80 lutas por modo (76,2 → 63,7, Δ −12,5 pp). Por decisão do dono,
+  **só essa célula** foi remedida com as sementes **0-19**, o que dá **200 lutas por modo**:
+  `metricas_369.py familias --seeds 0-19 --only predador_apice --levels 3`. As sementes 8-19 são
+  novas para a arena de famílias; a confirmação continua nas 260-267.
+- Resultado: `off` 75,0 %, `on` 58,5 %, **Δ −16,5 pp** (erro-padrão do Δ ≈ 4,5 pp). **Continua na lista
+  do R20.** O `on` está dentro de 45-85 %, mas \|Δ\| > 10. O registro de 80 lutas fica em
+  `familias.cells["predador_apice|L3"].amostra_original_0_7`.
 
 - Fora de escopo (o `off` já está fora): predador L5, morto-vivo L5, bruto L5, guardião L5, apex L5,
   emboscador L5 e abissal L5.

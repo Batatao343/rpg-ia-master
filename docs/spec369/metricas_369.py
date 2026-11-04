@@ -602,6 +602,7 @@ def _parser() -> argparse.ArgumentParser:
             p.add_argument("--base", default="", help="JSON com a chave `posturas` ja medida")
         if name == "familias":
             p.add_argument("--only", default="")
+            p.add_argument("--levels", default="3,5")
     return ap
 
 
@@ -624,7 +625,11 @@ def _dispatch(args, seeds: list[int]) -> dict:
             with open(args.base, encoding="utf-8") as fh:
                 base = json.load(fh)["posturas"]["posturas"]
         return cmd_emboscada(seeds, base)
-    return cmd_familias(seeds, only=[f for f in args.only.split(",") if f] or None)
+    return cmd_familias(
+        seeds,
+        only=[f for f in args.only.split(",") if f] or None,
+        levels=tuple(int(x) for x in args.levels.split(",")),
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
