@@ -508,6 +508,9 @@ a ficar congelado a partir do commit desta emenda.
 - **Arena (só observação, sem gate):** com `RPG_CARD_DECK/ENEMY_DECKS/ENEMY_INTENT=on` a arena exige os 3 `on`
   (sem `RPG_ENEMY_DECKS` o chamado nunca é jogado e tudo cancela). 2 sementes, L3: 70 lutas, 70 telegrafados,
   70 chamados, 47 chegadas, 0 cancelados; morte 51 % (OFF de sanidade da Etapa 1: 35,7 %). O gate §8 é do coordenador.
+- **L1 aplicada após gate 1 reprovar (+19,6 pp):** a chegada do fluxo de Carta exige folga de orçamento para
+  o reforço + 1 Lacaio (`rf.spawn(..., slack=2)`, só o fluxo de Carta). Sem folga o reforço não chega e o
+  estado vira `cancelled` com `cause="sem_folga"` (antes `budget`). L2/L3 não aplicadas; gate 2 é do coordenador.
 - **Playtest (R17):** `combate_reforco` com os 3 `on` e a flag: 8 turnos, 0 erro, 0 violação, `fired via=carta`.
 
 ## 5. Critérios de aceite

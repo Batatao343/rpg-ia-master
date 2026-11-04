@@ -375,7 +375,7 @@ def test_budget_cancels(card_on):
     rc.advance_card_flow(scene, enemies, actors, sides, meta, 2)
     scene["reinforcement_triggers"][0]["budget"] = 0
     rc.advance_card_flow(scene, enemies, actors, sides, meta, 3)
-    assert meta["reinforcement"]["cause"] == "budget" and len(enemies) == 1
+    assert meta["reinforcement"]["cause"] == "sem_folga" and len(enemies) == 1
 
 
 # --- R12/R13 -------------------------------------------------------------------------
@@ -609,3 +609,17 @@ def test_save_load_real_persistence(monkeypatch, tmp_path, card_on, rounds):
     _, nxt = step(cont, {}, monkeypatch, "espero", declaration=PASS)
     assert _meta(nxt)["stage"] == "called" or _meta(nxt)["fired"]
     assert nxt["enemies"][0]["cartas"].count(rc.CALL_CARD) == 1
+
+
+@pytest.mark.parametrize(("budget", "fires"), [(8, False), (9, True)])
+def test_l1_arrival_needs_one_lacaio_of_slack(card_on, budget, fires):
+    """L1 (gate 1): líder Elite (5) + reforço Lacaio (2) + folga de 1 Lacaio (2) = 9."""
+    scene, enemies, actors, sides, meta = _telegraphed_world()
+    rc.advance_card_flow(scene, enemies, actors, sides, meta, 1)
+    rc.on_declaration(scene, LID, rc.CALL_CARD, 2)
+    rc.advance_card_flow(scene, enemies, actors, sides, meta, 2)
+    scene["reinforcement_triggers"][0]["budget"] = budget
+    rc.advance_card_flow(scene, enemies, actors, sides, meta, 3)
+    assert meta["reinforcement"].get("fired", False) is fires
+    if not fires:
+        assert meta["reinforcement"]["cause"] == "sem_folga" and len(enemies) == 1

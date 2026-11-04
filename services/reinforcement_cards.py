@@ -138,6 +138,13 @@ def _called(scene: dict, state: dict, leader: dict, played: dict, res: dict) -> 
     _log_event("combat", "reinforcements_warned", level="info", via=VIA)
 
 
+def _slack() -> int:
+    """SPEC-391 L1 (gate 1 reprovou): a chegada só com folga de orçamento para +1 Lacaio."""
+    import encounter_budget as eb
+
+    return int(eb.CATEGORIA_COST["lacaio"])
+
+
 def _fire(
     scene: dict,
     enemies: list[dict],
@@ -152,9 +159,13 @@ def _fire(
 ) -> None:
     trigs = scene.get("reinforcement_triggers") or []
     trig = next((t for t in trigs if t.get("id") == state["trigger_id"]), None)
-    new = rf.spawn(trig, combat_meta, enemies, deck_seed=leader.get("deck_seed")) if trig else []
+    new = (
+        rf.spawn(trig, combat_meta, enemies, deck_seed=leader.get("deck_seed"), slack=_slack())
+        if trig
+        else []
+    )
     if not new:
-        _cancel(scene, combat_meta, state, "budget")
+        _cancel(scene, combat_meta, state, "sem_folga")
         return
     pos = rf._arrival_position(scene, str(state["leader_id"]))
     for enemy in new:

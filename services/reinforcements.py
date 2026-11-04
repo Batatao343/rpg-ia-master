@@ -113,6 +113,7 @@ def spawn(
     combat_meta: dict,
     enemies: list[dict] | None = None,
     deck_seed: int | str | None = None,
+    slack: int = 0,
 ) -> list[dict]:
     """Instancia o reforco (id unico `<base>_r<N>`, contador em `combat_meta`); lista vazia se o
     orcamento restante do encontro nao comporta o inimigo."""
@@ -124,7 +125,7 @@ def spawn(
         return []
     cost = eb.tier_cost(template)
     living = sum(eb.tier_cost(e) for e in (enemies or []) if acts(e))
-    if int(trigger.get("budget", 0) or 0) - living < cost:
+    if int(trigger.get("budget", 0) or 0) - living < cost + slack:  # slack: SPEC-391 L1
         return []
     base = str(template.get("id") or "enemy")
     counters = combat_meta.setdefault("next_by_template", {})
