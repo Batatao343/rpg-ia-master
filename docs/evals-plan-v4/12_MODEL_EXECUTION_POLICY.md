@@ -9,6 +9,18 @@ Modelos-alvo no Codex/Work/API conforme disponibilidade atual:
 - **Sol (`gpt-5.6-sol`)** — código complexo, cross-domain, depuração difícil, concorrência, stateful systems e revisão técnica crítica.
 - **Astra (`gpt-6-astra`)** — somente para decisões conceituais/arquiteturais de maior risco e revisão de evaluators que definem a própria régua.
 
+### Tradução para o Claude Code (SPEC-380 R4)
+
+| Tier | Modelo Claude | Subagentes (`.claude/agents/`) |
+|---|---|---|
+| Luna | Haiku | `code-locator`, `ci-watcher` |
+| Terra | Sonnet | `spec-executor`, `audit-reader` |
+| Sol | Opus | `spec-author`, `spec-reviewer` |
+| Astra | Opus em **contexto independente** (outro agente, `model: opus` explícito) + aprovação do dono no environment `eval-governance` quando a régua muda | `spec-reviewer` |
+
+Não existe tier Claude acima de Opus: Astra é "quem revisa a régua sem tê-la escrito",
+não "modelo maior". O spawn sempre passa `model` explícito.
+
 ## Regra principal
 
 O coding agent **NÃO deve escolher o modelo pelo prestígio**. Deve escolher pelo menor tier que satisfaça o risco da próxima etapa.

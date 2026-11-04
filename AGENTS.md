@@ -42,7 +42,8 @@ implementação bounded; Sol para trabalho cross-domain, concorrência, estado e
 revisão técnica; Astra somente para checkpoints conceituais e semântica de
 evaluators. Se o modelo ou reviewer mínimo não estiver disponível, registre
 `MODEL_HANDOFF_REQUIRED`, prepare `handoffs/SPEC-xxx-<model>-review.md` e não
-autoaprove a revisão independente.
+autoaprove a revisão independente. Tiers → modelos/subagentes do Claude Code:
+tabela em `docs/evals-plan-v4/12_MODEL_EXECUTION_POLICY.md` § Tradução.
 
 Long-runs, campanhas de 100/200 turnos e a matriz 10×200 são estritamente
 opt-in. Só execute por pedido explícito do usuário ou por spec de horizonte longo
