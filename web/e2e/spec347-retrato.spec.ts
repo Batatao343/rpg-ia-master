@@ -40,3 +40,24 @@ test("retrato_ausente_nao_muda_o_chip: sem `retrato` o markup é o de hoje", asy
   await expect(page.locator("[data-portrait]")).toHaveCount(0);
   await expect(page.locator(".tchip--portrait")).toHaveCount(0);
 });
+
+// Movido de spec354-prints.spec.ts (SPEC-383 R4): com a flag desligada o marcador aparece nos dois inimigos.
+const base = { ator_id: "player", ator_nome: "Ayla", lado: "heroi", carta_id: "golpe", carta_nome: "Golpe do Véu", alvo_id: "e1", alvo_nome: "Saqueador", origem: "turno", rotulo: null, resultado: "acerto", dano: 5, efeito: null };
+const log = [base, { ...base, ator_id: "e1", ator_nome: "Saqueador", lado: "inimigo", alvo_id: "player", alvo_nome: "Ayla", resultado: "erro", dano: null },
+  { ...base, carta_id: null, carta_nome: "Sangrando", alvo_id: null, alvo_nome: null, rotulo: "Dano contínuo", resultado: "efeito", dano: 1, efeito: "−1 Vitalidade" }];
+
+function withMarkers(state: ReturnType<typeof armDeck>) {
+  for (const e of state.combat.enemies) (e as unknown as Record<string, unknown>).retrato = { estado: "marcador", src: null, familia: "bruto", icone: "combat", alt: `Retrato de ${e.name}`, proprio: false, gerar: null };
+}
+
+for (const [label, viewport, touch] of [["1440", { width: 1440, height: 900 }, false], ["390", { width: 390, height: 844 }, true]] as const) {
+  test.describe(`retrato sem flag ${label}`, () => {
+    test.use({ viewport, hasTouch: touch, isMobile: touch });
+    test(`retrato_marcador_sem_flag_${label}`, async ({ page, backend }) => {
+      const state = armDeck(backend, { roundLog: log });
+      withMarkers(state);
+      await openCombat(page);
+      await expect(page.locator(".tchip__portrait")).toHaveCount(2);
+    });
+  });
+}
