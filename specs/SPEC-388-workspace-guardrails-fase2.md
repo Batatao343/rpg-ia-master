@@ -1,6 +1,6 @@
 # SPEC-388 — Workspace, fase 2: guardrails que esperam a onda 375–378
 
-> **Status:** `draft`
+> **Status:** `approved` (04/11, dono: "vai executando o que puder"; etapas só quando a spec da etapa estiver `done`)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** SPEC-386 § Fora de escopo · [auditoria do workspace](../docs/auditorias/auditoria-workspace-2026-11-03.md) §8
 > **Depende de:** **por etapa** (cada etapa só começa quando a spec dela estiver `done` na `main`):
