@@ -1400,6 +1400,8 @@ class AdapterRegistry:
 
 
 def default_registry() -> AdapterRegistry:
+    from evals.core.cards_combat import CardsCombatAdapter  # SPEC-380 (own module)
+
     return AdapterRegistry(
         {
             "governance": FixtureActualAdapter(),
@@ -1417,6 +1419,7 @@ def default_registry() -> AdapterRegistry:
             "gameplay_gate": GameplayGateAdapter(),
             "encounter_manifest": EncounterManifestAdapter(),
             "npc_knowledge": NpcKnowledgeAdapter(),
+            "cards_combat": CardsCombatAdapter(),
         }
     )
 
