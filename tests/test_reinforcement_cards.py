@@ -83,6 +83,28 @@ def test_arena_reforco_saida_tem_campos(arena, deck_flags_off):
         for pc in block["per_class"].values():
             assert pc["fights"] == len(pool)
             assert {"death", "win", "timeout", "death_rate", "win_rate"} <= set(pc)
+        assert isinstance(block["countered"], int) and block["countered"] == 0
+
+
+@pytest.mark.parametrize(
+    ("state", "outcome", "expected"),
+    [
+        ({}, "win", False),  # sem telegrafo: não é contra-jogo
+        ({"telegraphed_round": 2, "fired": True}, "win", False),  # chegou
+        ({"telegraphed_round": 2, "cancelled": True}, "death", True),  # motor cancelou
+        ({"telegraphed_round": 2, "called_round": 3}, "win", True),  # líder caiu antes da chegada
+        ({"telegraphed_round": 2}, "win", True),
+        ({"telegraphed_round": 2, "called_round": 3}, "death", False),  # herói morreu antes
+        ({"telegraphed_round": 2}, "timeout", False),
+    ],
+)
+def test_arena_reforco_countered(arena, state, outcome, expected):
+    """Emenda pré-gate (revisão Sol P3-2): `countered` conta o contra-jogo que a arena encerra
+    como `win` antes de `advance_card_flow` rodar; `cancelled` segue só o do motor."""
+    counters: dict = {}
+    arena._count_flow({"reinforcement": state}, counters, outcome)
+    assert counters["countered"] == int(expected)
+    assert counters["cancelled"] == int(bool(state.get("cancelled")))
 
 
 # ==========================================================================

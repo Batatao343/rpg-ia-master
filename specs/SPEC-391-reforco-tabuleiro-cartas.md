@@ -474,6 +474,16 @@ não traz tempo (o tempo vai para o stderr), então o JSON é determinístico. T
 `off` e 2 sementes: L3 morte 35,7 %, vitória 62,9 %; L5 morte 28,6 %, vitória 68,6 %. Com a flag `on` e sem
 o módulo, o resultado sai idêntico ao `off` (`card_flow: false`).
 
+**Emenda do avaliador antes do gate** (autor de eval, a pedido do coordenador; nenhum gate on/off tinha rodado).
+A revisão Sol (`handoffs/SPEC-391-sol-review.md`, P3-2) mostrou que o critério 3 do §8 (`cancelled / telegraphed`)
+dava cerca de 0 % por construção. Na célula do líder sozinho, derrubar o líder encerra a luta como `win` antes de
+`advance_card_flow` rodar, então esse contra-jogo nunca vira `cancelled`. A arena ganhou o contador `countered`:
+luta telegrafada em que o reforço não chegou porque o herói impediu, isto é, `cancelled` ou desfecho `win` sem
+`fired`. Morte do herói e `timeout` antes da chegada **não** contam. `cancelled` não mudou. O critério 3 passou a
+`countered / telegraphed ≥ 25 %`. Ficaram iguais as sementes, o bot, o denominador, as células e a equivalência
+`off`. Teste novo: `test_arena_reforco_countered` (7 casos). Os 2 testes da Etapa 1 seguem verdes. O arquivo volta
+a ficar congelado a partir do commit desta emenda.
+
 ### Execução — Etapas 2, 3 e 4 (04/11, executor; commits `61a465d2`, `83252abf` e o da Etapa 4)
 
 - **Módulo:** `services/reinforcement_cards.py` (~260 l.). `advance` é a porta do nó (escolhe legado × Carta
@@ -581,8 +591,10 @@ L1 fica fora: o orçamento do nível 1 (3) não comporta Elite + Lacaio, então 
      Postura dentro da faixa **45–85 %** travada pelo dono (SPEC-369 R2/(d)). Sangromante segue a exceção já
      registrada na 335;
    - opção 3 (só faixa): vitória ON dentro de 45–85 % por Postura, sem teto de Δ.
-3. Contra-jogo funciona: `cancelled / telegraphed` ≥ 25 % (o bot do baralho foca o líder sozinho; se ficar
-   abaixo, o contra-jogo não é real) [R; o dono pode tirar].
+3. Contra-jogo funciona: `countered / telegraphed` ≥ 25 % (o bot do baralho foca o líder sozinho; se ficar
+   abaixo, o contra-jogo não é real) [R; o dono pode tirar]. `countered` = luta telegrafada em que o reforço
+   não chegou porque o herói impediu (`cancelled` ou luta em `win` antes do `fired`); emenda pré-gate, ver
+   §4 Execução (Sol P3-2). Mesma intenção do critério original.
 4. `timeout` reportado junto de `death` (D-P2-6 da 325).
 
 **Alavancas pré-declaradas [D-391-5; R = na ordem, parar na 1ª que passar]:**

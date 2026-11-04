@@ -29,7 +29,11 @@ do nó): não mudam o desfecho mecânico do ``run_round``.
 Saída (``--json``): ``{"seeds", "levels", "classes", "mode", "card_flow", "pool", "cells", "total"}``.
 Cada célula: ``fights/death/win/timeout/death_rate/win_rate/timeout_rate/avg_rounds/early_deaths``,
 ``per_class`` (mesmos contadores por Postura) e os contadores do fluxo ``telegraphed/called/fired/
-cancelled`` (lidos do ``combat_meta["reinforcement"]`` ao fim de cada luta). Sem tempo de execução
+cancelled`` (lidos do ``combat_meta["reinforcement"]`` ao fim de cada luta), mais ``countered``
+(emenda pré-gate, revisão Sol P3-2): luta com telegrafo em que o reforço NÃO chegou porque o
+herói o impediu, isto é, ``cancelled`` ou a luta acabou em ``win`` antes do ``fired`` (derrubar o
+líder sozinho encerra a luta antes de ``advance_card_flow`` rodar, então nunca vira ``cancelled``).
+Morte do herói ou ``timeout`` antes da chegada não contam como contra-jogo. Sem tempo de execução
 no JSON (saída determinística; o tempo vai para o stderr).
 
 Não edita ``sim.py`` nem a arena da 285: importa os dois como ``sim.py`` importa a 285.
@@ -74,7 +78,7 @@ from services import conflict_scene as cs  # noqa: E402
 LEADER_CELL = A.LEADER_CELL
 CLASSES = A.CLASSES
 MAX_ROUNDS = sim.MAX_ROUNDS
-FLOW_COUNTERS = ("telegraphed", "called", "fired", "cancelled")
+FLOW_COUNTERS = ("telegraphed", "called", "fired", "cancelled", "countered")
 
 
 # --------------------------------------------------------------------------
@@ -103,13 +107,22 @@ def _plan(scene: dict, enemies: list[dict], level: int) -> None:
         cs.add_reinforcement_trigger(scene, trigger)
 
 
-def _count_flow(meta: dict, counters: dict | None) -> None:
+def _countered(state: dict, outcome: str | None) -> bool:
+    """Contra-jogo real: telegrafado, não chegou, e foi o herói que impediu (cancelado pelo motor
+    ou líder derrubado com a luta encerrada em ``win`` antes da chegada)."""
+    if state.get("telegraphed_round") is None or state.get("fired"):
+        return False
+    return bool(state.get("cancelled")) or outcome == "win"
+
+
+def _count_flow(meta: dict, counters: dict | None, outcome: str | None = None) -> None:
     if counters is None:
         return
     state = meta.get("reinforcement") or {}
     counters["telegraphed"] = counters.get("telegraphed", 0) + (
         state.get("telegraphed_round") is not None
     )
+    counters["countered"] = counters.get("countered", 0) + _countered(state, outcome)
     counters["called"] = counters.get("called", 0) + (state.get("called_round") is not None)
     counters["fired"] = counters.get("fired", 0) + bool(state.get("fired"))
     counters["cancelled"] = counters.get("cancelled", 0) + bool(state.get("cancelled"))
@@ -126,10 +139,13 @@ def fight(bid, n, class_name, level, seed, deck, tag, counters=None):
 def _fight(bid, n, class_name, level, seed, deck, tag, counters=None):
     """Devolve ``("win"|"death"|"timeout", rodadas)``; ``counters`` acumula o fluxo do reforço."""
     meta: dict = {}
+    outcome = None
     try:
-        return _loop(bid, n, class_name, level, seed, deck, tag, meta)
+        res = _loop(bid, n, class_name, level, seed, deck, tag, meta)
+        outcome = res[0]
+        return res
     finally:
-        _count_flow(meta, counters)
+        _count_flow(meta, counters, outcome)
 
 
 def _loop(bid, n, class_name, level, seed, deck, tag, meta):
