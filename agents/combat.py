@@ -2442,34 +2442,7 @@ def _combat_node(state: GameState):
             "archive_due": True,
         }
 
-    # ---- Montagem dos lados + declaração do jogador ----
-    import party as party_mod
-
-    t.party = party_mod.backfill_party(t.state.get("party") or [])
-    t.enemy_refs = [
-        str(value) for enemy in t.enemies for value in (enemy.get("id"), enemy.get("name")) if value
-    ]
-    t.scene_tr = t.combat_meta.get("scene_allies") or party_mod.scene_allies(
-        t.state, excluded=t.enemy_refs
-    )
-    t.allies = [
-        orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.party if a.get("active")
-    ] + [
-        orch.ensure_combat_sheet(dict(a), is_ally=True)
-        for a in t.scene_tr
-        if not (a.get("dead") or a.get("status") == "morto")
-    ]
-    t.player["_party_active"] = bool(t.allies)
-    t.ally_ids = [a.get("id") or a.get("name") for a in t.allies]
-
-    t.actors_by_id: dict[str, dict] = {_PLAYER_ID: t.player}
-    for e in t.enemies:
-        t.actors_by_id[e["id"]] = e
-    for a in t.allies:
-        t.actors_by_id[a.get("id") or a.get("name")] = a
-    t.sides = {"hero": [_PLAYER_ID], "ally": t.ally_ids, "enemy": [e["id"] for e in t.active]}
-
-    t.intent = _last_human_text(t.messages)
+    _combat_assemble_sides(t)
     if opening_board:
         return _board_opening_result(
             t.state,
@@ -2530,6 +2503,38 @@ def _combat_node(state: GameState):
     _combat_result_events(t)
 
     return t.result
+
+
+def _combat_assemble_sides(t: _CombatTurn) -> None:
+    """Lados, atores por id e intenção do jogador."""
+    # ---- Montagem dos lados + declaração do jogador ----
+    import party as party_mod
+
+    t.party = party_mod.backfill_party(t.state.get("party") or [])
+    t.enemy_refs = [
+        str(value) for enemy in t.enemies for value in (enemy.get("id"), enemy.get("name")) if value
+    ]
+    t.scene_tr = t.combat_meta.get("scene_allies") or party_mod.scene_allies(
+        t.state, excluded=t.enemy_refs
+    )
+    t.allies = [
+        orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.party if a.get("active")
+    ] + [
+        orch.ensure_combat_sheet(dict(a), is_ally=True)
+        for a in t.scene_tr
+        if not (a.get("dead") or a.get("status") == "morto")
+    ]
+    t.player["_party_active"] = bool(t.allies)
+    t.ally_ids = [a.get("id") or a.get("name") for a in t.allies]
+
+    t.actors_by_id: dict[str, dict] = {_PLAYER_ID: t.player}
+    for e in t.enemies:
+        t.actors_by_id[e["id"]] = e
+    for a in t.allies:
+        t.actors_by_id[a.get("id") or a.get("name")] = a
+    t.sides = {"hero": [_PLAYER_ID], "ally": t.ally_ids, "enemy": [e["id"] for e in t.active]}
+
+    t.intent = _last_human_text(t.messages)
 
 
 def _combat_narrate(t: _CombatTurn) -> None:
