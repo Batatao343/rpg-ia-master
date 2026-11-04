@@ -1,0 +1,2 @@
+after (median ms): 2063.1 / 2085.7 (two runs)
+base re-measured in the same machine state: 2057.2 / 2068.2 -> ratio ~1.00 (the 1803.7 baseline was taken on a quieter machine)

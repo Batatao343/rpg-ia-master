@@ -1,6 +1,6 @@
 # SPEC-381 — Fatiar `api.py` em routers por domínio, DTOs e montagem de resposta (refatoração pura)
 
-> **Status:** `approved` (04/11, dono: "vai executando o que puder"; D1–D10 = recomendações do §8)
+> **Status:** `in-progress` (executor 04/11: Etapas 0-14 prontas, faltam R13b/R18/Etapa 15; ver "Registro de execucao"; aprovada em 04/11, dono: "vai executando o que puder"; D1–D10 = recomendações do §8)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03 (revisão independente aplicada: `handoffs/SPEC-381-independent-review.md`; ver "Resposta à revisão" no fim)
 > **Origem:** `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §4.1 itens 1, 8 e 9, §3 R8, §5 letra E e §6 inteiro (letra E → SPEC-381; regras W1–W8, W1 na versão revisada)
 > **Depende de:** SPEC-367 e SPEC-368 **pousadas**. A revisão confirmou que já pousaram as edições de `api.py`: `566a4efc` e `061c330b`. SPEC-378 **recomendada antes** (helpers comuns), com a condição D10: a 378 não toca `api.py`.
@@ -684,3 +684,15 @@ Todos os P0/P1 foram aplicados, e todos os P2 que dependiam só desta spec tamb�
 | P2-8 | **Não aplicado aqui:** o texto fica na SPEC-384, que esta tarefa não pode editar. O coordenador alinha "router SSE" → `routes/turn.py` |
 
 Rejeições: nenhuma.
+
+
+## Registro de execucao (executor, 04/11)
+
+Desvios da spec, todos de ordem/forma, sem mudar superficie HTTP (R6 byte-igual nos dois perfis):
+- **Ordem das etapas:** `api_models` -> `api_core` -> `api_presenters` -> routers (`saves`, `play`, `art`, `billing`, `read`, `ops`, `auth`, `turn`). O core vem antes dos presenters porque o grafo de chamadas mostrou que os presenters leem helpers do core.
+- **Montagem dos routers:** `from routes.X import router as _X_router` + `_mount_router(_X_router)` ficam no ponto exato onde o bloco estava em `api.py` (R21/§3.2 "ponto exato"), e nao todas juntas no fim; assim cada commit intermediario preserva a ordem de `app.routes`.
+- **Grafo real vs. §3.1:** `health_check` mora em `routes/ops.py`; `game_prologue` em `routes/art.py`; `_enqueue_art_generation`, `_enqueue_turn_art`, `_prologue_owner`, `_meter_auxiliary_operation`, `_account_reader`, `_action_already_processed`, `_schedule_*` etc. foram para onde o grafo manda (core se usados por 2+ grupos). `_schedule_chronicle_jobs` ficou em `routes/turn.py`; `_authfail*`, `_rate_hits`, `_metrics_hits`, `_error_code_of`/`_CODE_RE` e os hooks de telemetria ficaram em `api.py`.
+- **`_CORS_ORIGINS`:** lista unica criada em `api_core` e preenchida no lugar por `api.py` (`_CORS_ORIGINS[:] = [...]`, mesma posicao, `reload(api)` continua refazendo o conteudo).
+- **Oraculo:** dumps com LF fixo (byte-igual entre SOs); `modules.json` compara apenas o conjunto de modulos (so ganha `api_core/api_models/api_presenters/routes.*`).
+- **`tests/api_sources.py`:** `API_FILES` e dinamico (os arquivos existentes); a contagem por scanner (R14) nao foi gravada em JSON: a prova foi os 13 scanners verdes antes e depois.
+- **Pendentes (nao feitos):** R13b (`patch_liveness.py` + mutacao), R18 (`_load_or_404`, D7) e a Etapa 15 (W2 do coordenador, smoke local, revisao Sol, apagar `test_spec381_api_surface.py`, §6 em staging).
