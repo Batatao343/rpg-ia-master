@@ -86,15 +86,21 @@ max-complexity = 15
 [tool.ruff.lint.extend-per-file-ignores]
 "tests/**" = ["F403", "F405", "F811", "C90", "PERF"]  # teste: clareza > complexidade/perf (SPEC-388)
 # Avaliadores congelados (evals/protected-paths.txt, hash travado): famílias da SPEC-388 não se
-# aplicam; reescrever para o lint mudaria o avaliador. Gate: tests/test_ruff_protected_exempt.py.
-"evals/**" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
-"scripts/**/eval*.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
-"services/*_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
-"tests/test_spec*_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+# aplicam; reescrever para o lint mudaria o avaliador. Lista exata (spec-372 incluída de antemão);
+# avaliador protegido novo entra aqui — gate: tests/test_ruff_protected_exempt.py.
+"evals/datasets/regression/**" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"scripts/fauna/eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"scripts/fauna/eval_tramas.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"scripts/bestiario/eval_geracao.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"services/creature_gen_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"tests/test_spec360_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"tests/test_spec361_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"tests/test_spec370_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"tests/test_spec372_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
 # Arquivos protegidos de eval (evals/protected-paths.txt): hashes travados, não reescrever.
-"evals/core/**" = ["I", "UP"]
-"evals/evaluators/**" = ["I", "UP"]
-"evals/__main__.py" = ["I", "UP"]
+"evals/core/**" = ["I", "UP", "C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"evals/evaluators/**" = ["I", "UP", "C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"evals/__main__.py" = ["I", "UP", "C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
 # Experimentos congelados: _source() das funções entra no digest de estrutura (SPEC-217/238).
 "evals/experiments/**" = ["I", "UP"]
 

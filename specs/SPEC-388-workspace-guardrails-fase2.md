@@ -77,8 +77,10 @@ Não se aplica (tooling).
 ## 8. Execução
 
 - **Etapa B (04/11):** desvios declarados: (1) `tests/**` isento de `C90`/`PERF`; (2) avaliadores
-  protegidos (`evals/**`, `scripts/**/eval*.py`, `services/*_eval.py`, `tests/test_spec*_eval.py`) isentos
-  das famílias novas, porque o hash travado impede reescrever (achado: `scripts/fauna/eval_tramas.py` da
+  protegidos isentos das famílias novas por **lista exata** (revisão terra P2-1/P2-2: globs largos isentavam
+  scripts comuns), com os 2 da `spec-372` já incluídos, porque o hash travado impede reescrever (achado: `scripts/fauna/eval_tramas.py` da
   branch `spec-372` teria 8 violações sem poder corrigir); gate `tests/test_ruff_protected_exempt.py`.
   Impacto medido nas branches vivas: `spec-359` 0, `spec-373` 0, `spec-372` 3 triviais (PERF401 em
   `services/fauna_tramas.py`, SIM115 em `tests/test_spec372_flags_off.py`, SIM102 em `world_utils.py`).
+- Revisão terra (`handoffs/SPEC-388-terra-review.md`): P2-1/P2-2 → lista exata; P2-3 → o hook
+  `ruff_after_edit.py` passa a ler `evals/protected-paths.txt` (antes só `evals/` e `web/e2e/contracts/`).

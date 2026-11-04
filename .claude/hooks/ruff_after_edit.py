@@ -20,6 +20,21 @@ MAX_LINES = 10
 PROTECTED_PREFIXES = ("evals/", "web/e2e/contracts/")
 
 
+def _is_protected(rel: str, root: Path) -> bool:
+    """Caminho de `evals/protected-paths.txt` (arquivo ou pasta) ou prefixo fixo acima."""
+    if rel.startswith(PROTECTED_PREFIXES):
+        return True
+    try:
+        lines = (root / "evals" / "protected-paths.txt").read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return False
+    for line in lines:
+        entry = line.strip().rstrip("/")
+        if entry and not entry.startswith("#") and (rel == entry or rel.startswith(entry + "/")):
+            return True
+    return False
+
+
 def _repo_root(path: Path) -> Path | None:
     for parent in path.parents:
         cfg = parent / "pyproject.toml"
@@ -71,7 +86,7 @@ def main() -> None:
     if root is None:
         return
     rel = path.resolve().relative_to(root).as_posix()
-    if rel.startswith(PROTECTED_PREFIXES):  # evals/contratos: hash travado, nunca reescrever
+    if _is_protected(rel, root):  # avaliador/contrato congelado: hash travado, nunca reescrever
         return
     ruff = _ruff(root)
     if ruff is None:

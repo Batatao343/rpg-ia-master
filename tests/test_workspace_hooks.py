@@ -219,3 +219,17 @@ def test_ruff_hook_skips_protected_eval_paths(tmp_path: Path) -> None:
     py.write_text("x=1\n", encoding="utf-8")
     assert _run("ruff_after_edit.py", {"tool_input": {"file_path": str(py)}}) is None
     assert py.read_text(encoding="utf-8") == "x=1\n"
+
+
+def test_ruff_hook_skips_files_listed_in_protected_paths(tmp_path: Path) -> None:
+    """Revisão SPEC-388 P2-3: avaliador protegido fora de `evals/` também não é reescrito."""
+    (tmp_path / "pyproject.toml").write_text("[tool.ruff]\n", encoding="utf-8")
+    (tmp_path / "evals").mkdir()
+    (tmp_path / "evals" / "protected-paths.txt").write_text(
+        "# congelados\nscripts/fauna/eval.py\n", encoding="utf-8"
+    )
+    py = tmp_path / "scripts" / "fauna" / "eval.py"
+    py.parent.mkdir(parents=True)
+    py.write_text("x=1\n", encoding="utf-8")
+    assert _run("ruff_after_edit.py", {"tool_input": {"file_path": str(py)}}) is None
+    assert py.read_text(encoding="utf-8") == "x=1\n"
