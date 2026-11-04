@@ -3067,63 +3067,25 @@ def _round_actor_loop(
         _expire_stat_conditions(actor, present_at_start, out)
 
 
-def _run_round(
+def _round_end(
     scene: dict,
-    actors_by_id: dict[str, dict],
-    sides: dict[str, list[str]],
-    state: dict | None = None,
-    *,
-    declarations: dict | None = None,
-    prepared_abyss: list[dict] | None = None,
-    scene_state: dict | None = None,
-    initiator: str | None = None,
-    rng=None,
-    refusal: str = "",
-    pressagios: dict | None = None,
-) -> dict:
-    """Resolve uma RODADA inteira. `sides` = {"hero":[ids], "ally":[ids], "enemy":[ids]}.
-    `pressagios` (SPEC-329, flag `RPG_ENEMY_INTENT=on`): intenções congeladas no fim da rodada
-    anterior; ausente (save antigo/1ª rodada) = calcula no início desta rodada.
-    `declarations[actor_id]` = TurnDeclaration do jogador/aliado controlado; inimigos
-    sem declaração recebem uma via `enemy_declaration`. Retorna
-    {logs, deaths, terminal, scars_pending, player_dead, ended, reason, initiative}."""
-    rng = rng or random.Random()
-    declarations = dict(declarations or {})
-    out = _round_new_out(actors_by_id)
-    from services import card_deck_round as _deck  # SPEC-328 (atras de RPG_CARD_DECK)
+    actors_by_id: dict,
+    sides: dict,
+    out: dict,
+    rng,
+    scene_state: dict | None,
+    prepared_abyss: list[dict] | None,
+    player: dict | None,
+    player_id: str | None,
+    player_decl,
+    scene_ctx,
+    scene_rnd: int,
+    intents: "_RoundIntents",
+) -> None:
+    """SPEC-382: fim da cena na rodada, Última Ação, Estado Terminal e colheita de Entropia/Abismo."""
     from services import scene_cards as _sc
 
-    if _round_refusal(out, actors_by_id, sides, state, declarations, refusal):
-        return out
-    _scene_ctx, _scene_rnd, phase_changed = _round_scene_start(scene, actors_by_id, sides, out)
-    # SPEC-329: Presságio. `off` = byte a byte como antes; `shadow` calcula e compara com a
-    # decisão tardia sem mudar nada; `on` executa o presságio congelado (R4).
-    from services import enemy_intent as ei
-
-    intent_mode = ei.mode()
-    frozen: dict | None = None
-    intent_cursor: dict[str, int] = {}
-    if intent_mode != "off":
-        frozen = (
-            pressagios
-            if (intent_mode == "on" and pressagios is not None and not phase_changed)
-            else ei.forecast_round(scene, actors_by_id, sides, rng, scene_state=scene_state)
-        )
-
-    intents = _RoundIntents(
-        scene, actors_by_id, sides, out, rng, scene_state, intent_mode, frozen, intent_cursor
-    )
-
-    player, player_id, player_decl = _round_start_of_round(
-        actors_by_id, sides, declarations, state, rng, out, intents
-    )
-    _round_class_mechanics(player, state, rng, out)
-
-    seq, side_actors = _round_sequence(actors_by_id, sides, initiator, rng, out)
-    _round_actor_loop(
-        scene, actors_by_id, sides, seq, declarations, player_id, state, out, rng, intents
-    )
-
+    _scene_ctx, _scene_rnd = scene_ctx, scene_rnd
     _cond_before = _snapshot_conditions(actors_by_id)  # SPEC-339
     if _scene_ctx is not None:  # SPEC-331: fim de rodada da cena, antes do terminal
         _scene_mark = len(out["logs"])
@@ -3158,6 +3120,25 @@ def _run_round(
             scene, player, actors_by_id, prepared_abyss, out, scene_state=scene_state, rng=rng
         )
 
+
+def _round_close(
+    scene: dict,
+    actors_by_id: dict,
+    sides: dict,
+    side_actors: dict,
+    out: dict,
+    state: dict | None,
+    player: dict | None,
+    player_id: str | None,
+    scene_ctx,
+    scene_rnd: int,
+) -> None:
+    """SPEC-382: gatilho `fim_rodada`, fase de chefe, promessas e desfecho (inimigos e Objetivo)."""
+    from services import card_deck_round as _deck
+    from services import enemy_intent as ei
+    from services import scene_cards as _sc
+
+    _scene_ctx, _scene_rnd = scene_ctx, scene_rnd
     for aid in sorted(actors_by_id):
         if _alive(actors_by_id[aid]):
             fx.fire("fim_rodada", sujeito_id=aid, out=out)
@@ -3188,4 +3169,87 @@ def _run_round(
                 "motivo": _why,  # SPEC-387 R20: o fecho conta a causa
             }
             out["logs"].append(_why)
+
+
+def _run_round(
+    scene: dict,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    state: dict | None = None,
+    *,
+    declarations: dict | None = None,
+    prepared_abyss: list[dict] | None = None,
+    scene_state: dict | None = None,
+    initiator: str | None = None,
+    rng=None,
+    refusal: str = "",
+    pressagios: dict | None = None,
+) -> dict:
+    """Resolve uma RODADA inteira. `sides` = {"hero":[ids], "ally":[ids], "enemy":[ids]}.
+    `pressagios` (SPEC-329, flag `RPG_ENEMY_INTENT=on`): intenções congeladas no fim da rodada
+    anterior; ausente (save antigo/1ª rodada) = calcula no início desta rodada.
+    `declarations[actor_id]` = TurnDeclaration do jogador/aliado controlado; inimigos
+    sem declaração recebem uma via `enemy_declaration`. Retorna
+    {logs, deaths, terminal, scars_pending, player_dead, ended, reason, initiative}."""
+    rng = rng or random.Random()
+    declarations = dict(declarations or {})
+    out = _round_new_out(actors_by_id)
+    if _round_refusal(out, actors_by_id, sides, state, declarations, refusal):
+        return out
+    _scene_ctx, _scene_rnd, phase_changed = _round_scene_start(scene, actors_by_id, sides, out)
+    # SPEC-329: Presságio. `off` = byte a byte como antes; `shadow` calcula e compara com a
+    # decisão tardia sem mudar nada; `on` executa o presságio congelado (R4).
+    from services import enemy_intent as ei
+
+    intent_mode = ei.mode()
+    frozen: dict | None = None
+    intent_cursor: dict[str, int] = {}
+    if intent_mode != "off":
+        frozen = (
+            pressagios
+            if (intent_mode == "on" and pressagios is not None and not phase_changed)
+            else ei.forecast_round(scene, actors_by_id, sides, rng, scene_state=scene_state)
+        )
+
+    intents = _RoundIntents(
+        scene, actors_by_id, sides, out, rng, scene_state, intent_mode, frozen, intent_cursor
+    )
+
+    player, player_id, player_decl = _round_start_of_round(
+        actors_by_id, sides, declarations, state, rng, out, intents
+    )
+    _round_class_mechanics(player, state, rng, out)
+
+    seq, side_actors = _round_sequence(actors_by_id, sides, initiator, rng, out)
+    _round_actor_loop(
+        scene, actors_by_id, sides, seq, declarations, player_id, state, out, rng, intents
+    )
+
+    _round_end(
+        scene,
+        actors_by_id,
+        sides,
+        out,
+        rng,
+        scene_state,
+        prepared_abyss,
+        player,
+        player_id,
+        player_decl,
+        _scene_ctx,
+        _scene_rnd,
+        intents,
+    )
+    _round_close(
+        scene,
+        actors_by_id,
+        sides,
+        side_actors,
+        out,
+        state,
+        player,
+        player_id,
+        _scene_ctx,
+        _scene_rnd,
+    )
     return out
