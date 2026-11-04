@@ -39,7 +39,18 @@ def _deck_on(monkeypatch):
     monkeypatch.setenv("RPG_CARD_DECK", "on")  # como o `sim.deck_env` da arena
 
 
-HAND_DEV = ["bas_dev_golpe", "bas_dev_golpe", "bas_dev_guarda", "bas_dev_voto", "bas_dev_golpe"]
+# So golpe e guarda basicos: o teste nao depende do custo da assinatura (`bas_dev_voto`, taunt, que o
+# R7 conta como ataque de dano 0 e cujo Folego a Fase B pode mudar). Os custos reais de golpe/guarda
+# sao lidos do catalogo em `_esperado_cego`.
+HAND_DEV = ["bas_dev_golpe", "bas_dev_golpe", "bas_dev_guarda", "bas_dev_golpe", "bas_dev_golpe"]
+
+
+def _esperado_cego(BP, piles) -> list[str]:
+    """Golpes que o bot cego declara: tantos quanto o Folego paga (custo real do catalogo)."""
+    custo = BP.fx.custo_folego(BP.cards.get_card("bas_dev_golpe"))
+    golpes = HAND_DEV.count("bas_dev_golpe")
+    n = golpes if custo == 0 else min(golpes, int(piles["folego"]) // custo)
+    return ["bas_dev_golpe"] * n
 
 
 def _cena(BP, *, hand, vit_inimigos=(16, 16), dano_arma=None, known=False):
@@ -100,11 +111,16 @@ def test_bot_faixa_troca_ataque_por_defesa(BP):
     forecast = {ids[0]: [_ataque(ids[0])]}
     assert BP.ameaca_prevista(forecast, actors) == 9.0  # faixa [6, 12] -> meio 9
     assert BP.ameaca_seria(9.0, player)
+    golpe, guarda = (BP.cards.get_card(c) for c in ("bas_dev_golpe", "bas_dev_guarda"))
+    # a situacao provada: a troca cabe no Folego (guarda nao custa mais que o golpe que sai)
+    assert BP.fx.custo_folego(guarda) <= BP.fx.custo_folego(golpe)
+    esperado = _esperado_cego(BP, piles)
+    assert len(esperado) >= 1
     cego = BP.cego_decl(player, copy.deepcopy(piles), ids[0], None)
-    assert _cards(cego) == ["bas_dev_golpe", "bas_dev_golpe"]
+    assert _cards(cego) == esperado
     decl = BP.leitor_faixa_decl(player, piles, actors, sides, None, forecast, None)
-    assert sorted(_cards(decl)) == ["bas_dev_golpe", "bas_dev_guarda"]
-    assert decl.jogadas[1].target_id == "player"  # o ultimo golpe (o mais fraco) saiu
+    assert sorted(_cards(decl)) == sorted([*esperado[:-1], "bas_dev_guarda"])
+    assert decl.jogadas[len(esperado) - 1].target_id == "player"  # o ultimo golpe saiu
 
 
 def test_bot_faixa_mantem_sem_ameaca(BP):
