@@ -81,7 +81,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - Notas 27/10–02/11 → `CHANGELOG.md`.
-- 03/11: SPEC-375–385 `draft` (refatoração; plano e regra W1 anti-conflito em `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §6).
+- 04/11: 375/376/378 `done`, 377/379 pousadas, 388 B+C. **Index local** (375): `reindex.sh` saiu; `python -m project_index build`; nunca `--theirs` em `project_index/`.
 
 
 ## Como rodar

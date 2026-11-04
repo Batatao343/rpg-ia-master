@@ -52,8 +52,8 @@
 - **Audiovisual (Fase 9):** sprites por bioma/local, música por região e período,
   efeitos de combate, packs CC0.
 - **Crônica:** melhorias pendentes listadas no histórico.
-- **Infra:** migrar o adapter FAISS do `langchain-community` (spec própria);
-  decidir se `project_index/repo_graph.json` deixa de ser commitado.
+- **Infra:** migrar o adapter FAISS do `langchain-community` (spec própria).
+  (`repo_graph.json`/`manifest.json` saíram do git na SPEC-375.)
 - **Workspace:** medir de novo após uma onda com as melhorias de
   `docs/melhorias_workspace/` ligadas (metas em `01-tokens-e-contexto.md` §5).
 
