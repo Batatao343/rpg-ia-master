@@ -113,3 +113,9 @@ def test_flag_npc_self_kill_switch():
     """SPEC-384 D1: RPG_NPC_SELF vira kill_switch (alavanca permanente, sem validade); `off` continua desligando."""
     entry = fr.load()["RPG_NPC_SELF"]
     assert entry["kind"] == "kill_switch" and not entry.get("expires")
+
+
+def test_flag_context_prefetch_ops():
+    """SPEC-384 D1: RPG_CONTEXT_PREFETCH vira ops (alavanca permanente, sem validade); `off` continua desligando."""
+    entry = fr.load()["RPG_CONTEXT_PREFETCH"]
+    assert entry["kind"] == "ops" and not entry.get("expires")

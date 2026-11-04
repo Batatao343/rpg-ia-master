@@ -219,11 +219,10 @@ RPG_CONTEXT_MAX_CONCURRENCY:
   spec: SPEC-214
   note: "ajuste operacional (context max concurrency)"
 RPG_CONTEXT_PREFETCH:
-  kind: release
+  kind: ops
   default: "on"
   spec: SPEC-317
-  expires: 2027-01-25
-  note: "prefetch de contexto"
+  note: "ajuste operacional (prefetch de contexto; off na suíte via RPG_FORCE_MOCK); SPEC-384 D1"
 RPG_CONTEXT_PREFETCH_WAIT_S:
   kind: ops
   default: "2.0"
