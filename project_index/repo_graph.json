@@ -1,5 +1,5 @@
 {
-  "commit_sha": "a8341f80639e64702ad4b3ae7c1be84722fbe98e",
+  "commit_sha": "4e886549a572ccd37b782c493c9a7425f9d6d3ea",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -21317,6 +21317,17 @@
       },
       "source": "file:tests/test_routing_tiers.py",
       "target": "module:tests.test_routing_tiers",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ruff_protected_exempt.py",
+        "line": 1
+      },
+      "source": "file:tests/test_ruff_protected_exempt.py",
+      "target": "module:tests.test_ruff_protected_exempt",
       "type": "contains"
     },
     {
@@ -179332,6 +179343,39 @@
       },
       "source": "module:tests.test_routing_tiers",
       "target": "symbol:tests.test_routing_tiers.test_world_simulator_usa_fast",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ruff_protected_exempt.py",
+        "line": 17
+      },
+      "source": "module:tests.test_ruff_protected_exempt",
+      "target": "symbol:tests.test_ruff_protected_exempt._exempt_globs",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ruff_protected_exempt.py",
+        "line": 23
+      },
+      "source": "module:tests.test_ruff_protected_exempt",
+      "target": "symbol:tests.test_ruff_protected_exempt._protected_py",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ruff_protected_exempt.py",
+        "line": 37
+      },
+      "source": "module:tests.test_ruff_protected_exempt",
+      "target": "symbol:tests.test_ruff_protected_exempt.test_protected_python_files_are_exempt_from_spec388_families",
       "type": "defines"
     },
     {
@@ -539654,6 +539698,28 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_ruff_protected_exempt.py",
+        "line": 38
+      },
+      "source": "symbol:tests.test_ruff_protected_exempt.test_protected_python_files_are_exempt_from_spec388_families",
+      "target": "symbol:tests.test_ruff_protected_exempt._exempt_globs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_ruff_protected_exempt.py",
+        "line": 39
+      },
+      "source": "symbol:tests.test_ruff_protected_exempt.test_protected_python_files_are_exempt_from_spec388_families",
+      "target": "symbol:tests.test_ruff_protected_exempt._protected_py",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_runtime_cache.py",
         "line": 112
       },
@@ -716982,6 +717048,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_ruff_protected_exempt.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_ruff_protected_exempt.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_runtime_cache.py",
       "kind": "file",
       "line": 1,
@@ -727431,6 +727504,13 @@
       "line": 1,
       "path": "tests/test_routing_tiers.py",
       "qualified_name": "tests.test_routing_tiers"
+    },
+    {
+      "id": "module:tests.test_ruff_protected_exempt",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_ruff_protected_exempt.py",
+      "qualified_name": "tests.test_ruff_protected_exempt"
     },
     {
       "id": "module:tests.test_runtime_cache",
@@ -820701,6 +820781,27 @@
       "qualified_name": "tests.test_routing_tiers.test_world_simulator_usa_fast"
     },
     {
+      "id": "symbol:tests.test_ruff_protected_exempt._exempt_globs",
+      "kind": "test",
+      "line": 17,
+      "path": "tests/test_ruff_protected_exempt.py",
+      "qualified_name": "tests.test_ruff_protected_exempt._exempt_globs"
+    },
+    {
+      "id": "symbol:tests.test_ruff_protected_exempt._protected_py",
+      "kind": "test",
+      "line": 23,
+      "path": "tests/test_ruff_protected_exempt.py",
+      "qualified_name": "tests.test_ruff_protected_exempt._protected_py"
+    },
+    {
+      "id": "symbol:tests.test_ruff_protected_exempt.test_protected_python_files_are_exempt_from_spec388_families",
+      "kind": "test",
+      "line": 37,
+      "path": "tests/test_ruff_protected_exempt.py",
+      "qualified_name": "tests.test_ruff_protected_exempt.test_protected_python_files_are_exempt_from_spec388_families"
+    },
+    {
       "id": "symbol:tests.test_runtime_cache._fake_enemy",
       "kind": "test",
       "line": 22,
@@ -862660,5 +862761,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:f4f17c57a774bfff502184de0fceae4069b83dcbce9cc6b1185e71f83699b135"
+  "source_tree_hash": "sha256:d25e4f468dc83620f08d75082708e5c1da7ca9c712bf8ba9b07f406bea5dd884"
 }

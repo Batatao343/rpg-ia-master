@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "a8341f80639e64702ad4b3ae7c1be84722fbe98e",
+  "commit_sha": "4e886549a572ccd37b782c493c9a7425f9d6d3ea",
   "edge_counts": {
-    "calls": 38899,
-    "contains": 1284,
-    "defines": 18906,
+    "calls": 38901,
+    "contains": 1285,
+    "defines": 18909,
     "imports": 3132,
     "likely_test_for": 2277,
     "route_to": 69
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:4710544a21324e1f9960c61c0d8f2f2883753bf4f284581896b30667016e9b49",
+  "graph_hash": "sha256:249537d44be486ff988fc581f07cf2d05ed258d251bcb28a480e1bd496ccedeb",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -931,6 +931,7 @@
     "tests/test_router_interlocutor.py",
     "tests/test_routing.py",
     "tests/test_routing_tiers.py",
+    "tests/test_ruff_protected_exempt.py",
     "tests/test_runtime_cache.py",
     "tests/test_runtime_profiles.py",
     "tests/test_runtime_role_local.py",
@@ -1563,12 +1564,12 @@
     "artifact": 10,
     "class": 1102,
     "endpoint": 69,
-    "file": 1506,
+    "file": 1507,
     "function": 5859,
     "method": 868,
-    "module": 1284,
-    "test": 11076
+    "module": 1285,
+    "test": 11079
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:f4f17c57a774bfff502184de0fceae4069b83dcbce9cc6b1185e71f83699b135"
+  "source_tree_hash": "sha256:d25e4f468dc83620f08d75082708e5c1da7ca9c712bf8ba9b07f406bea5dd884"
 }
