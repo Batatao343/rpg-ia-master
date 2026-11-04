@@ -48,7 +48,7 @@ _HUMAN_LINE_RES = tuple(
         r"já foi usada \(|^Entropia insuficiente|só pode ser jogada 1× por rodada\.$",
         r"é um Fardo e não pode ser jogada\.$|^Falta Fôlego para descartar |não pode ser descartada\.$",
         r"não é uma Carta ativa\.$|está silenciado — sem Cartas\.$",
-        r" resiste à provocação de ",  # SPEC-387: a Provocação que não desvia também se explica
+        r" resiste à (?:sua )?provocação(?: de )?",  # SPEC-387: a Provocação que não desvia também se explica
         r", provocado por .+, muda de alvo\.$",  # SPEC-389 R12: o desvio efetivo do Voto
     )
 )
@@ -250,6 +250,9 @@ def _voce(line: str, hero_name: str) -> str:
         m = re.match(rf"^(.+?), provocado por {re.escape(hero)}, muda de alvo\.$", text)
         if m:
             return f"{m.group(1)}, provocado por você, muda de alvo."
+        m = re.match(rf"^(.+?) resiste à provocação de {re.escape(hero)}\.$", text)
+        if m:
+            return f"{m.group(1)} resiste à sua provocação."
     m = re.match(r"^(.+?): ganha condição (.+?)\.?$", text)
     if m:
         return f"{m.group(1)} ganha a condição {_cap_cond(m.group(2))}."

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+import re
 
 import pytest
 
@@ -67,24 +68,56 @@ def test_finalize_outcome_keeps_receipt_id_and_adds_titles():
     assert to.finalize_outcome(state)["receipt_id"] == out["receipt_id"]
 
 
-def test_voto_api_never_shows_hero_name(saves):
+def test_voce_resiste_a_provocacao_do_heroi():
+    line = f"Goblin resiste à provocação de {HERO}."
+    assert rl._voce(line, HERO) == "Goblin resiste à sua provocação."
+    assert rl._is_human_line(rl._voce(line, HERO))
+    other = "Goblin resiste à provocação de Ketil."
+    assert rl._voce(other, HERO) == other
+
+
+_RAW_ID = re.compile(r"[a-z]{2,}(?:_[a-z0-9]+)+")
+_SKIP = {"player_stats", "party", "chronicle", "inventory", "visual", "art_offers"}
+
+
+def _strings(node, key=""):
+    if key in _SKIP:
+        return
+    if isinstance(node, str):
+        yield key, node
+    elif isinstance(node, dict):
+        for k, v in node.items():
+            yield from _strings(v, k)
+    elif isinstance(node, list):
+        for v in node:
+            yield from _strings(v, key)
+
+
+_TEXT_KEYS = {"message", "text", "registro_rodada", "last_mech_log", "last_turn_log", "efeito"}
+
+
+@pytest.mark.parametrize("variant", ["voto", "armadura"])
+def test_voto_api_never_shows_hero_name_or_raw_id(saves, variant):
     from fastapi.testclient import TestClient
 
     import api
 
     seen = False
     for seed in range(6):
-        gid = sd.seed_save(13, variant="voto", saves_dir=saves)
+        gid = sd.seed_save(13, variant=variant, saves_dir=saves)
         with sd._legacy(saves):
             random.seed(seed)
             c = TestClient(api.app)
-            r = c.post("/game/action", json=sd.smoke_body(13, "voto", gid))
+            r = c.post("/game/action", json=sd.smoke_body(13, variant, gid))
             assert r.status_code == 200, r.text[:300]
-            hist = c.get("/game/history", params={"game_id": gid}).text
-        for text in (r.text, hist):
-            assert f"provocado por {HERO}" not in text
+            hist = c.get("/game/history", params={"game_id": gid}).json()
+        for body in (r.json(), hist):
+            for key, text in _strings(body):
+                if key in _TEXT_KEYS:  # `narrative_summary` é a abertura (prosa), fora do escopo
+                    assert HERO not in text, (variant, key, text)
+                    assert not _RAW_ID.search(text), (variant, key, text)
         seen = seen or "provocado por você, muda de alvo" in r.text
-    assert seen
+    assert seen or variant == "armadura"
 
 
 def test_entrega_receipt_shows_title(saves):

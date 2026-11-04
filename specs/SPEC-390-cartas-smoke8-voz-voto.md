@@ -50,7 +50,7 @@ Balanço (SPEC-369), novas mecânicas, mudanças de layout.
 
 ## 4. Plano
 
-1. Testes vermelhos para R1–R3: `tests/test_spec390_text.py`, com as seeds `13 voto`, `13 armadura` e `14 entrega` pela API
+1. Testes vermelhos para R1–R3: `tests/test_combat_text_smoke8.py`, com as seeds `13 voto`, `13 armadura` e `14 entrega` pela API
    real.
 2. Implementar.
 3. Guardas globais (`test_error_envelope`, `test_no_silent_except`, `test_log_event_registry`, `test_size_budget`), ruff e
@@ -82,4 +82,4 @@ Nenhuma decisão aberta: é só texto.
 
 ## 9. Registro de implementação
 
-04/11: R1 em `round_log._voce` (troca o herói por "você" na linha do desvio); R3 em `round_log._taunt_lines` (ramo da vítima "Você"); R2 em `turn_outcome` (`quest_titles` aditivo, escrito depois do `receipt_id`; `public_outcome` lê, fallback id). Front sem mudança (`outcomeToast` já usa `title`). Testes: `tests/test_spec390_text.py` (R1, R2, R3, R4 pela API real com MockLLM). Nenhum teste antigo precisou de ajuste. Smoke §6 real (LLM) fica com o coordenador.
+04/11: R1 em `round_log._voce` (troca o herói por "você" na linha do desvio); R3 em `round_log._taunt_lines` (ramo da vítima "Você"); R2 em `turn_outcome` (`quest_titles` aditivo, escrito depois do `receipt_id`; `public_outcome` lê, fallback id). Front sem mudança (`outcomeToast` já usa `title`). Testes: `tests/test_combat_text_smoke8.py` (R1, R2, R3, R4 pela API real com MockLLM). Revisão Sol: "resiste à sua provocação" (P1-1), varredura de nome do herói/id cru em `13 voto` e `13 armadura` (P1-2). Nenhum teste antigo precisou de ajuste. Smoke §6 real (LLM) fica com o coordenador.
