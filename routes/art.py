@@ -246,7 +246,6 @@ def create_image_quote(game_id: str, req: ArtQuoteRequest):
     return public_quote(quote)
 
 
-@router.post("/game/{game_id}/art/player/confirm")
 @router.post("/game/{game_id}/art/confirm")
 def confirm_player_art(game_id: str, req: ArtConfirmRequest):
     from infrastructure.contracts import Conflict

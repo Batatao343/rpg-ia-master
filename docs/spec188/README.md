@@ -17,8 +17,7 @@ literal `confirmed: true`. A confirmação faz commit de estado, operação de
 imagem, reserva da wallet, geração e outbox na mesma transação. Replay da
 cotação devolve a mesma geração; cotação ainda não usada expirada ou de outro
 owner/epoch falha antes de reservar. Saldo insuficiente retorna 402 e mantém o
-estado original, sem job ou provider. O alias `/art/player/confirm` também exige
-esse contrato; o contrato antigo sem cotação está encerrado.
+estado original, sem job ou provider. O alias `/art/player/confirm` foi removido (SPEC-384 D8); o contrato antigo sem cotação está encerrado.
 
 A UI apresenta Estilhas com conversão exata de milli, teto, validade,
 cancelamento e confirmação explícita em diálogo nativo. O checkbox do wizard

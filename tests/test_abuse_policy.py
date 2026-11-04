@@ -45,7 +45,6 @@ ART = "7f1c1c0e-5d0e-4e0e-9a3e-0b0e0e0e0e0e"
         ("POST", "/game/chronicle/search", "embedding"),
         ("POST", f"/game/{GAME}/art/quote", "quote"),
         ("POST", f"/game/{GAME}/art/confirm", "quote"),
-        ("POST", f"/game/{GAME}/art/player/confirm", "quote"),
         ("POST", "/game/equip", "mutation"),
         ("POST", "/game/levelup", "mutation"),
         ("POST", "/game/cards/prepare", "mutation"),

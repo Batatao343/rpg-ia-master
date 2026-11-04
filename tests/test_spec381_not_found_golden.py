@@ -25,7 +25,7 @@ CASES = [
     (
         "confirm",
         "POST",
-        "/game/{gid}/art/player/confirm",
+        "/game/{gid}/art/confirm",
         {"action_id": ACT, "quote_id": OP, "confirmed": True},
         None,
     ),

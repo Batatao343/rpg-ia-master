@@ -77,7 +77,7 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
             )
             assert quote.status == 200, quote.text()
             art = page.request.post(
-                base + f"/game/{gid}/art/player/confirm",
+                base + f"/game/{gid}/art/confirm",
                 data={
                     "action_id": str(uuid4()),
                     "quote_id": quote.json()["quote_id"],

@@ -173,7 +173,6 @@ def test_scope_is_locked():
         ("POST", "/account/transcriptions"),
         ("POST", "/game/action/stream"),
         ("POST", "/game/{game_id}/art/confirm"),
-        ("POST", "/game/{game_id}/art/player/confirm"),
         ("POST", "/game/{game_id}/art/{generation_id}/quality"),
         ("POST", "/payments/stripe/webhook"),
     ]
