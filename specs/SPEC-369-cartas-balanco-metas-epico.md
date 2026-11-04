@@ -444,6 +444,23 @@ O balanço é determinístico, e a Fase C é a prova dele. O LLM real entra em d
 3. D-369-1 e D-369-4: manter o Fôlego 2 e as legadas travadas?
 4. D-369-7: a lista de células do BASE.md.
 
+### Resposta do dono ao gate R9c (04/11: "ok defaults")
+
+Itens do pedido no fim de `docs/spec369/BASE.md`. Onde o item não trazia default escrito, o coordenador escolheu o mais conservador e registra aqui:
+
+1. **D-369-2:** sim. O critério primário é `on-faixa` ≤ 95 % do dano de `on-cego` (`conhecida`, decks `on`); o `on` × `off` só fica registrado.
+2. **D-369-3:** sim, metas em camadas.
+   - (0) O **Sangromante fica isento do piso de 1,90 do R13**, como na exceção do R14 e na exceção do dono registrada na 335. O total ≥ 2,00 continua valendo.
+   - (a2) `bas_cor_mofo` continua na meta R14(a) (R14d).
+   - (a) As 3 legadas (`arc_cal_valvula`, `dev_ombro_porta`, `dev_reflexo_bastiao`) ficam como "travadas pelo golden", fora da meta R14(b).
+   - (b) O B4 (`bomba_estopim`) sai do plano, porque não tem alvo na base.
+3. **D-369-1 e D-369-4:** manter o Fôlego 2 e a mão 5, com as legadas travadas (sem `custo_folego` explícito).
+4. **D-369-7:** a lista de 5 células vale, incluindo as duas de `lider_matilha`. Para `predador_apice` L3, o autor da régua **mede só essa célula com mais sementes até 200 lutas por modo**, antes de qualquer passo da Fase B, e grava o resultado na base.
+5. **R17:** a Carta `cor1_tro_faro_do_abismo` continua. A guarda básica (`bas_*_guarda`) fica fora da meta R14(a), como o golpe básico.
+6. **Pouso da Fase B:** exige 0 xfailed em `tests/test_spec369_metas.py` nos testes R13–R20 e R18 (a Fase C fica à parte).
+
+Os limiares de `tests/test_spec369_metas.py` que mudam por estas respostas (isenção do Sangromante no R13, legadas fora do R14b, guarda fora do R14a) são atualizados pelo autor da régua num commit separado, antes do B3.
+
 ## 9. Registro de implementação
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
