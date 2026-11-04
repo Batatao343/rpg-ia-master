@@ -1,5 +1,10 @@
 """SPEC-314: fações do mundo sob a regra de ouro (o NPC não entrega o plano secreto).
 
+Política complementar (SPEC-377 D4): aqui só a facção SECRETA desconhecida é escondida (NPC,
+contexto, crônica, RAG, missões de lore, rumores); a pública é citada pelo nome. O nome de
+COMBATENTE de qualquer facção desconhecida é mascarado por outra regra, a SPEC-293
+(`services/faction_display.py`). As duas são decisões do dono; não unificar sem nova decisão.
+
 Puro e determinístico: sem LLM, sem rede, sem gravação. Tudo sai de `faction_intel` (o que o
 jogador sabe), da fação do próprio NPC e da faixa de relação.
 

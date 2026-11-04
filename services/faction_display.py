@@ -5,6 +5,12 @@ Azul"). Enquanto o jogador não conhece a fação (`faction_intel[fid].known`), 
 superfície player-facing mostra só o papel ("Iniciado"). O canônico segue interno
 (save, ids, manifesto, prompts). O rótulo é derivado na LEITURA — nunca gravado —,
 então a revelação (`apply_faction_reveal`) mostra o nome completo retroativamente.
+
+Política complementar (SPEC-377 D4): esta máscara cobre o NOME DE COMBATENTE de qualquer
+facção desconhecida, pública ou secreta. O NPC, o contexto, a crônica e o RAG seguem a
+SPEC-314 (`services/faction_gate.py`), que esconde só a facção SECRETA desconhecida. As duas
+são decisões do dono e divergem de propósito na facção pública (matriz em
+`tests/test_faction_visibility.py`).
 """
 
 from __future__ import annotations
