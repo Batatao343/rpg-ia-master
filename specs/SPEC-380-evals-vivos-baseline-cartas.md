@@ -486,6 +486,8 @@ não as define e `test_enemy_intent.py` apaga a primeira). 368/371/377 `done`.
   (`input.rng.sequence`) ou `{seed}`; o `random` global é semeado por `input.global_seed`
   (default 7) e restaurado. Acerto/erro/terminal vêm de `test_conflito_turno.py`; não existe assert
   exato de **crítico** em `resolve_turn`, então não há caso de crítico (sem inventar `expected`).
+- **Fôlego sintético (revisão Astra P2-1):** os 3 casos de Fôlego com Carta sintética (`cards_combat.jsonl:27-29`) tiram o `expected` da regra antiga do jogo congelada como oráculo em `tests/test_spec377_folego.py:9-29` (`_jogo_antigo`), não de um `assert` existente nem do golden. A fonte é independente do produto atual (é a regra anterior à unificação da SPEC-377), mas foge da letra da R2.3; aceito como desvio declarado pelo coordenador em 04/11. Trocar por Cartas do catálogo exige nova revisão Astra (follow-up).
+- Follow-ups P3 da revisão Astra (`handoffs/SPEC-380-astra-review.md`): P3-3 secrets só nos passos que usam (`llm-playtest-weekly.yml`), P3-4 `!cancelled()` no lugar de `always()`, P3-5 `AdapterError` para entrada malformada, P3-1/P3-2/P3-6 conforme o handoff.
 - Cada caso declara `input.projection` (caminhos do `actual`); caminho inexistente ⇒ `AdapterError`.
 - `test_eval_baseline.py` e o `compare` rodam **depois** do `run` (com `if: always()`), não no passo
   `pytest` da linha 70: senão, entre os commits A e B, o job pararia antes do `run` e não haveria
