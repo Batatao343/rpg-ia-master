@@ -51,6 +51,35 @@ ISENTAS_PISO_R13 = {"Sangromante"}  # item 2(0): fora do piso por Postura; o tot
 # ficar `dominante` reprova. Item 2(b): o B4 sai do plano, mas `bomba_estopim` (onda) segue no R14(b).
 LEGADAS_TRAVADAS_R14B = {"arc_cal_valvula", "dev_ombro_porta", "dev_reflexo_bastiao"}
 
+# D-369-10 (dono, 04/11, "Aceitar e ajustar", spec §8): limites REGISTRADOS com os numeros da Fase B
+# (`final-0-19.json` de 540deb81). Sao tetos que nao podem piorar; o resto das metas fica inalterado.
+# - R14(a): assinatura basica com `custo_folego` 0 (lido do catalogo) fica isenta, como o golpe.
+LIMITE_USO_R14A = {"arc1_cal_pulso_medido": 1.0, "bas_cor_mofo": 0.714}  # D-369-10 item 1
+LIMITE_P95_POSTURA = {"Médico de Campo": 16.0}  # D-369-10 item 2 (p95 total <= 10 continua meta)
+LIMITE_PRESSAGIO_RAZAO = 1.0257  # D-369-10 item 3 (vitoria de on-faixa segue em 45-85 %)
+# D-369-10 item 3: celulas do R20 com limite registrado (vitoria `on` e Delta da Fase B, sem piorar).
+LIMITE_FAMILIA = {
+    "conjurador|L5": {"on_win": 0.385, "delta_pp": -8.0},
+    "predador_apice|L3": {"on_win": 0.615, "delta_pp": -13.5},
+}
+# D-369-10 item 5 / R22: na confirmacao (sementes novas) os LIMITES REGISTRADOS ganham uma tolerancia
+# de amostra (~1 erro-padrao das amostras da Fase C); metas cheias e pisos absolutos nao ganham nada.
+TOLERANCIA_CONFIRMACAO = {"uso": 0.05, "p95": 1.0, "razao": 0.02, "familia_pp": 5.0}
+
+
+def _tol(fase: str, chave: str) -> float:
+    return TOLERANCIA_CONFIRMACAO[chave] if fase == "confirmacao" else 0.0
+
+
+def assinatura_gratis(cid: str) -> bool:
+    """D-369-10 item 1: Carta basica com `custo_folego` 0 no catalogo atual (jogada sempre que esta
+    na mao; o uso nao mede dominancia)."""
+    from services import card_effects as fx
+    from services import cards
+
+    card = cards.get_card(cid) or {}
+    return bool(card.get("basica")) and fx.custo_folego(card) == 0
+
 
 def _load(name: str) -> dict | list:
     path = D / name
@@ -87,36 +116,46 @@ def na_meta_r14a(cid: str, categoria: str) -> bool:
     return categoria == "basica" and not cid.endswith(("_golpe", "_guarda"))
 
 
-def r14(data: dict) -> list[str]:
+def r14(data: dict, fase: str = "final") -> list[str]:
     bad = []
     for cid, r in data["uso"]["cartas"].items():
         if r["categoria"] in FORA_DA_META_R14:
             continue
-        if na_meta_r14a(cid, r["categoria"]) and r["uso"] > LIMIARES["uso_alto"]:
+        na_meta = na_meta_r14a(cid, r["categoria"]) and not assinatura_gratis(cid)
+        teto = LIMIARES["uso_alto"]
+        if cid in LIMITE_USO_R14A:
+            teto = max(teto, LIMITE_USO_R14A[cid] + _tol(fase, "uso"))
+        if na_meta and r["uso"] > teto:
             bad.append(f"(a) {cid} uso {r['uso']}")
         if "dominante" in r["bandeiras_v2"] and cid not in LEGADAS_TRAVADAS_R14B:
             bad.append(f"(b) {cid} delta {r['delta_pp_v2']}")
     return bad
 
 
-def r15(data: dict) -> list[str]:
+def r15(data: dict, fase: str = "final") -> list[str]:
     r9 = data["base"]["r9"]
     bad = []
     if r9["total"]["p95_rodadas_conflito"] > LIMIARES["p95_total_max"]:
         bad.append(f"p95 total {r9['total']['p95_rodadas_conflito']}")
     for cls, v in r9["por_postura"].items():
-        if v["p95_rodadas_conflito"] > LIMIARES["p95_postura_max"]:
+        teto = LIMIARES["p95_postura_max"]
+        if cls in LIMITE_P95_POSTURA:
+            teto = max(teto, LIMITE_P95_POSTURA[cls] + _tol(fase, "p95"))
+        if v["p95_rodadas_conflito"] > teto:
             bad.append(f"{cls} p95 {v['p95_rodadas_conflito']}")
         if v["timeout_pct"] > LIMIARES["timeout_postura_max_pct"]:
             bad.append(f"{cls} timeout {v['timeout_pct']}")
     return bad
 
 
-def r16(data: dict) -> list[str]:
+def r16(data: dict, fase: str = "final") -> list[str]:
     bloco = data["pressagio"]["conhecida"]["decks_on"]
     lo, hi = LIMIARES["faixa_vitoria_pct"]
     bad = []
-    if bloco["razao_faixa_cego"] > LIMIARES["pressagio_razao_faixa_cego_max"]:
+    teto = max(
+        LIMIARES["pressagio_razao_faixa_cego_max"], LIMITE_PRESSAGIO_RAZAO + _tol(fase, "razao")
+    )
+    if bloco["razao_faixa_cego"] > teto:
         bad.append(f"on-faixa/on-cego {bloco['razao_faixa_cego']}")
     if not lo <= bloco["on-faixa"]["vitoria_pct"] <= hi:
         bad.append(f"vitoria on-faixa {bloco['on-faixa']['vitoria_pct']}")
@@ -166,9 +205,23 @@ def r20(data: dict, alvo: list[str], fase: str = "final") -> list[str]:
             if cell[mode]["fights"] < LIMIARES["familia_min_lutas_por_modo"]:
                 bad.append(f"{key} {mode} so {cell[mode]['fights']} lutas")
         on = cell["on"]["win"] * 100
-        if not lo <= on <= hi or abs(cell["delta_pp"]) > LIMIARES["familia_delta_max_pp"]:
+        c_lo, c_hi, d_max = _faixa_celula(key, fase)
+        if not c_lo <= on <= c_hi or abs(cell["delta_pp"]) > d_max:
             bad.append(f"{key} on {on:.1f} delta {cell['delta_pp']}")
     return bad
+
+
+def _faixa_celula(key: str, fase: str) -> tuple[float, float, float]:
+    """(on_min, on_max, |Delta|_max) da celula: a meta cheia, ou o limite registrado D-369-10
+    (a faixa so se alarga ate o valor da Fase B, nunca alem; + tolerancia na confirmacao)."""
+    lo, hi = LIMIARES["faixa_vitoria_pct"]
+    d_max = LIMIARES["familia_delta_max_pp"]
+    lim = LIMITE_FAMILIA.get(key)
+    if lim is None:
+        return lo, hi, d_max
+    tol = _tol(fase, "familia_pp")
+    on = lim["on_win"] * 100
+    return min(lo, on - tol), max(hi, on + tol), max(d_max, abs(lim["delta_pp"]) + tol)
 
 
 # --------------------------------------------------------------------------
@@ -236,9 +289,9 @@ def test_r22_confirmacao(check):
     assert data["familias"]["meta"]["seeds"] == [260, 267]
     fns = {
         "r13": lambda: r13(data),
-        "r14": lambda: r14(data),
-        "r15": lambda: r15(data),
-        "r16": lambda: r16(data),
+        "r14": lambda: r14(data, "confirmacao"),
+        "r15": lambda: r15(data, "confirmacao"),
+        "r16": lambda: r16(data, "confirmacao"),
         "r17": lambda: r17(data),
         "r19": lambda: r19(data, None),  # (a) e (c)
         "r20": lambda: r20(data, _base()["familias"]["celulas_alvo"], "confirmacao"),

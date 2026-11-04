@@ -268,9 +268,50 @@ def test_r14a_conta_assinatura_basica_fora_do_sangromante():
     assert not T.na_meta_r14a("bas_cor_golpe", "basica")
     assert not T.na_meta_r14a("bas_dev_guarda", "basica")
     with open(os.path.join(ROOT, "docs", "spec369", "base-0-19.json"), encoding="utf-8") as fh:
-        falhas = T.r14(json.load(fh))
-    assert "(a) bas_cor_mofo uso 0.607" in falhas
+        base = json.load(fh)
+    falhas = T.r14(base)
+    assert "(a) med1_fer_lente_de_protese uso 1.0" in falhas  # onda sem limite registrado reprova
     assert not any("bas_cor_golpe" in f or "san" in f for f in falhas)
+    # D-369-10: bas_cor_mofo tem teto registrado 0,714 (Fase B), que nao pode subir
+    usos = base["uso"]["cartas"]["bas_cor_mofo"]
+    for uso, reprova in ((0.714, False), (0.72, True)):
+        usos["uso"] = uso
+        assert any(f.startswith("(a) bas_cor_mofo") for f in T.r14(base)) is reprova, uso
+    usos["uso"] = 0.76
+    assert not any("bas_cor_mofo" in f for f in T.r14(base, "confirmacao"))  # 0,714 + 0,05
+
+
+def test_d369_10_assinatura_gratis_le_o_catalogo():
+    """D-369-10 item 1: a isencao vem do `custo_folego` 0 do catalogo, nao de lista de ids."""
+    T = _load("test_spec369_metas_regua", "tests/test_spec369_metas.py")
+    from services import card_effects as fx
+    from services import cards
+
+    for cid in ("bas_dev_voto", "bas_arc_vazao", "bas_cor_mofo", "bas_dev_golpe", "arc_descarga"):
+        card = cards.get_card(cid)
+        esperado = bool(card.get("basica")) and fx.custo_folego(card) == 0
+        assert T.assinatura_gratis(cid) is esperado, cid
+    assert not T.assinatura_gratis("arc_descarga")  # nao basica nunca isenta
+
+
+def test_d369_10_limites_registrados_nao_podem_piorar():
+    """D-369-10: p95 do Medico 16, razao do Pressagio 1,0257 e as 2 celulas do R20 sao tetos."""
+    T = _load("test_spec369_metas_regua", "tests/test_spec369_metas.py")
+    with open(os.path.join(ROOT, "docs", "spec369", "final-0-19.json"), encoding="utf-8") as fh:
+        final = json.load(fh)
+    assert T.r15(final) == [] and T.r16(final) == []
+    final["base"]["r9"]["por_postura"]["Médico de Campo"]["p95_rodadas_conflito"] = 17.0
+    assert T.r15(final) == ["Médico de Campo p95 17.0"]
+    assert T.r15(final, "confirmacao") == []  # 16 + 1 rodada de tolerancia
+    final["pressagio"]["conhecida"]["decks_on"]["razao_faixa_cego"] = 1.03
+    assert T.r16(final) == ["on-faixa/on-cego 1.03"]
+    cell = final["familias"]["cells"]["predador_apice|L3"]
+    cell["delta_pp"] = -14.0
+    assert any(f.startswith("predador_apice|L3") for f in T.r20(final, ["predador_apice|L3"]))
+    cell["delta_pp"] = -13.5
+    assert T.r20(final, ["predador_apice|L3"]) == []
+    # as outras 3 celulas seguem com a meta cheia
+    assert T._faixa_celula("abissal|L3", "final") == (45.0, 85.0, 10.0)
 
 
 def test_posturas_deterministico_e_igual_a_base_do_emboscada(M):
