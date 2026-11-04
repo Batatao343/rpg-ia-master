@@ -14,10 +14,11 @@ from __future__ import annotations
 
 import copy
 import json
-import os
 import random
 from pathlib import Path
 from typing import Any
+
+from services.env import env_choice
 
 _SINAIS_PATH = Path(__file__).resolve().parent.parent / "data" / "combat" / "pressagio_sinais.json"
 _MODES = ("off", "shadow", "on")
@@ -41,8 +42,7 @@ _DEFENSE_EFFECTS = {"protecao", "buff_defesa", "esconder"}
 
 
 def mode() -> str:
-    raw = os.getenv("RPG_ENEMY_INTENT", "off").strip().lower()
-    return raw if raw in _MODES else "off"
+    return env_choice("RPG_ENEMY_INTENT", _MODES, "off")
 
 
 def active() -> bool:
