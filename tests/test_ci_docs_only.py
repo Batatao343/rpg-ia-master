@@ -98,7 +98,7 @@ def test_workflows_wire_docs_only_without_touching_eval_gates():
 def test_dependabot_groups_minor_patch_and_leaves_majors_alone():
     config = yaml.safe_load((ROOT / ".github/dependabot.yml").read_text(encoding="utf-8"))
     ecosystems = {update["package-ecosystem"] for update in config["updates"]}
-    assert ecosystems == {"github-actions", "pip", "npm"}
+    assert ecosystems == {"github-actions", "uv", "npm"}
     for update in config["updates"]:
         groups = update["groups"].values()
         assert [g["update-types"] for g in groups] == [["minor", "patch"]]
