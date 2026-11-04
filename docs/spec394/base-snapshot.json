@@ -1,0 +1,1176 @@
+{
+"enemy_aranha_de_cristal": {
+"off": "28b1f3bcad536bd3"
+},
+"enemy_aranha_lobo": {
+"off": "c682c3aac5fdc95c"
+},
+"enemy_arpoador_osshari": {
+"off": "4d6bda0b3ea96709",
+"on": "279a0097163dd01c"
+},
+"enemy_assassino_cinzeu": {
+"off": "589a34cb6bfe6037",
+"on": "b31412def8a273df"
+},
+"enemy_bandido": {
+"off": "22a23611a5cf4bbb",
+"on": "b3bdfe9112f74852"
+},
+"enemy_bandido_capitao": {
+"off": "8253d3377f1a0d4e",
+"on": "52c69dbd158439a6"
+},
+"enemy_basilisco_caverna": {
+"off": "d4f0e93e3a2adb1d"
+},
+"enemy_boss_arauto_nevoa": {
+"off": "0b6ce903ba44c262",
+"on": "ceda81423f13945b"
+},
+"enemy_boss_general_escorpiao": {
+"off": "96dfd334b8ad3156"
+},
+"enemy_boss_valerius": {
+"off": "d8f30cf1edfe404f",
+"on": "80959c1967bc5529"
+},
+"enemy_boss_vibora": {
+"off": "fda9ac585a567714",
+"on": "3b90ec613887e7dc"
+},
+"enemy_capturador_groth": {
+"off": "ed841c0b744b3e5f",
+"on": "a10cdc9a91cb1144"
+},
+"enemy_carni\u00e7al": {
+"off": "5279822494d5ba56",
+"on": "d86883f15646817e"
+},
+"enemy_cultista_destilacao": {
+"off": "c16c239afadf78b9",
+"on": "82dd50b391495bd9"
+},
+"enemy_degolador_mao_sombria": {
+"off": "e5fc0d8287445bd8",
+"on": "f4788fd4b81ba722"
+},
+"enemy_devorador_sol_zhur": {
+"off": "5a4f611ad895fd7b",
+"on": "53f4604b427921e7"
+},
+"enemy_djinn_menor": {
+"off": "485f7d34af566a12"
+},
+"enemy_druida_renegado": {
+"off": "db81aaf76f5df0fb",
+"on": "223e7a6b63710c60"
+},
+"enemy_elemental_fogo_poluido": {
+"off": "7d9c572a88aafc33"
+},
+"enemy_escorpiao_cristal": {
+"off": "1cd905fdf458d9d8",
+"on": "9d7731549f26d4d3"
+},
+"enemy_espectro_lamento": {
+"off": "3fa35e5af839aac9",
+"on": "4ecf864778c834ee"
+},
+"enemy_esqueleto": {
+"off": "1e3feb018dd0a971",
+"on": "80e5fd70b8398694"
+},
+"enemy_esqueleto_legiao_antiga": {
+"off": "959a2b63845abf94"
+},
+"enemy_esqueleto_mago": {
+"off": "ca61708dd9af9c53"
+},
+"enemy_fantasma": {
+"off": "d48b7b02d9dd8237"
+},
+"enemy_gargula_ferro": {
+"off": "87c5162b71caee1e"
+},
+"enemy_garrick,_o_silenciador": {
+"off": "5c09df5b0211da2b",
+"on": "fa88695e8d088c92"
+},
+"enemy_gigante_gelo_norte": {
+"off": "6e9be7c9a55e8345",
+"on": "5ced70ece2ddf87c"
+},
+"enemy_goblin": {
+"off": "dc3b1831ab713d91",
+"on": "3884f07d205048b8"
+},
+"enemy_golem_carne": {
+"off": "a07b5ee303674910"
+},
+"enemy_golem_lixo": {
+"off": "ca781f694f7adcab"
+},
+"enemy_guerreiro_bjorn": {
+"off": "7fdc7a5821917727",
+"on": "36805656cf600c72"
+},
+"enemy_horror_esgoto": {
+"off": "53e73fbab6743834"
+},
+"enemy_hospedeiro_fungico": {
+"off": "302cbdb0eb78e8a9",
+"on": "15e2774f70a3051b"
+},
+"enemy_iniciado_chama_azul": {
+"off": "bac769d821296fe5",
+"on": "af146cadece6b631"
+},
+"enemy_lobo_invernal": {
+"off": "029b7e6ac4813d2f"
+},
+"enemy_lobo_sombrio": {
+"off": "4b61e0a000310547",
+"on": "e1f67a37bd0712f9"
+},
+"enemy_mimico_bau": {
+"off": "5c4cdd3bc1c29d20"
+},
+"enemy_minotauro_esqueleto": {
+"off": "4b898a163cf1b309"
+},
+"enemy_morcego_vampiro": {
+"off": "780d6f95015f8ef0"
+},
+"enemy_mumia_de_po": {
+"off": "8ffe26f56ff738a8"
+},
+"enemy_necromante_renegado": {
+"off": "2d88c8d094382941",
+"on": "a743b1f48da7f700"
+},
+"enemy_nomade_canibal": {
+"off": "b5c23fa44c37e6f8",
+"on": "7bfdf8f085515cdf"
+},
+"enemy_observador_menor": {
+"off": "fd28827f15d8a0f1"
+},
+"enemy_orc_saidas_baixas": {
+"off": "635777e90f03985e",
+"on": "bebf202c9efc1ba1"
+},
+"enemy_pirata_brekmar": {
+"off": "2f44bce9d79f24ad",
+"on": "048b80d5a5b85fc6"
+},
+"enemy_polvo_esgoto": {
+"off": "a877815d9b3a4d34"
+},
+"enemy_rato_peste_anel_lama": {
+"off": "99d81bbdcc1c610b",
+"on": "c1627146bbc3dc18"
+},
+"enemy_renegado_ermo": {
+"off": "88de8b2a46540576",
+"on": "9ddc9dacb1abb3b9"
+},
+"enemy_sentinela_ferro": {
+"off": "466bcb1b6945073e"
+},
+"enemy_soldado_legiao_ferro": {
+"off": "9432cba82caaddf8",
+"on": "b4a479291fd472ce"
+},
+"enemy_sombra_espreitadora": {
+"off": "aa0d4ff357ff6e00"
+},
+"enemy_troll_ponte": {
+"off": "90ad4c8ff9f28c5f"
+},
+"enemy_urso_coruja_mutante": {
+"off": "8f8a1903204e2963"
+},
+"enemy_verme_areia_jovem": {
+"off": "08161f52ecabca23"
+},
+"enemy_vinha_estranguladora": {
+"off": "aeb44b091b3fbd6c"
+},
+"enemy_wyvern_jovem": {
+"off": "5cab6854283e1a7d"
+},
+"enemy_yeti": {
+"off": "3ba24950478e1c57"
+},
+"enemy_zumbi_blindado": {
+"off": "ffea8b487d7df709"
+},
+"mon_abafador_de_candeias": {
+"off": "82c31e88ea953d9a"
+},
+"mon_acendedor_de_naufragios": {
+"off": "6b277b178d87bc46"
+},
+"mon_afogado_da_batalha": {
+"off": "50af15c865802c7a",
+"on": "5187fe6b2838d051"
+},
+"mon_afogado_de_aethelgard": {
+"off": "278613d5591c942b",
+"on": "a8d07e006d1ce3fa"
+},
+"mon_aguadeiro_de_bucho": {
+"off": "8f19cb93ce68b95f"
+},
+"mon_alambique_de_carne": {
+"off": "484f1fdba716c6e3"
+},
+"mon_altivo_do_vidro": {
+"off": "4552929d49c833fa"
+},
+"mon_anao_eco": {
+"off": "22102230405a1599",
+"on": "a45467e9d7413acd"
+},
+"mon_andarilho_de_cracas": {
+"off": "e6c93808c48dea44"
+},
+"mon_andarilho_de_duas_idades": {
+"off": "2b0f60e564266fdf"
+},
+"mon_andas_de_caribu": {
+"off": "bd9e5247c4a971d1"
+},
+"mon_anzolado_da_casa": {
+"off": "8382cde5ae17a6c7"
+},
+"mon_aperto_da_tregua": {
+"off": "37afb97ca6f43789"
+},
+"mon_arame_vivo": {
+"off": "1602cca8dbf82e0d"
+},
+"mon_aranha_de_bolha": {
+"off": "63710beb5f5078da"
+},
+"mon_ariete_de_medula": {
+"off": "f3b343f4de8ff098"
+},
+"mon_armador_de_fosso": {
+"off": "6b8c55acf4cff6fd"
+},
+"mon_arpeu_de_bracos": {
+"off": "7779b22971aa236e"
+},
+"mon_arqueiro_de_tendao": {
+"off": "3e0d4dacee060876"
+},
+"mon_arraia_de_lodo": {
+"off": "b4637a890d2bf181"
+},
+"mon_aspirante_de_coral": {
+"off": "e7019b9d99ea900c"
+},
+"mon_auroque_ruinas": {
+"off": "7e16f1f86e456094"
+},
+"mon_automato_fundicao": {
+"off": "0a55f6f50ac1fd97"
+},
+"mon_avesso_de_oghma": {
+"off": "72d35321001d2a6b"
+},
+"mon_baleia_ossario": {
+"off": "68bf2e3e6daa8a2f"
+},
+"mon_balsa_de_ultimo_dia": {
+"off": "af7b21ada55d0ac5"
+},
+"mon_banhado_do_centro": {
+"off": "2f1f30eb1a34f928"
+},
+"mon_barata_das_costelas": {
+"off": "bd94e8ce25557497"
+},
+"mon_besouro_de_alavanca": {
+"off": "7db5860631d996dc"
+},
+"mon_besouro_do_estalo": {
+"off": "6b810a6014a751d6"
+},
+"mon_bexiga_de_respiro": {
+"off": "908a1fa0dd80d209"
+},
+"mon_bigua_de_vidro": {
+"off": "58dd3b932a51a569"
+},
+"mon_boia_de_bracos": {
+"off": "8ecf1dd83355ee2c"
+},
+"mon_borda_que_anda": {
+"off": "cfdc6456d6978dd8"
+},
+"mon_bracos_de_tenaz": {
+"off": "a6afec93a0f0e01f"
+},
+"mon_broca_de_costado": {
+"off": "13c366f9ed45fb6e"
+},
+"mon_bruxa_de_carcaca": {
+"off": "1082b83204712190"
+},
+"mon_bucho_de_praia": {
+"off": "2f64252fe192952f"
+},
+"mon_bugio_invertido": {
+"off": "cd7fdb2a662134d7"
+},
+"mon_cabeca_acima": {
+"off": "e12c6958d3e7c66f"
+},
+"mon_cabeleira_de_vidro": {
+"off": "a6254980e35a7ff2"
+},
+"mon_cabra_labirinto": {
+"off": "be09b2bceaecdaad"
+},
+"mon_cabra_navalha": {
+"off": "c05315d898adf146",
+"on": "1c17080c0d76e877"
+},
+"mon_cacador_casca": {
+"off": "927ead5cd9b3b412"
+},
+"mon_cacador_sem_calor": {
+"off": "e6d667e36063e0d4"
+},
+"mon_cacao_de_lastro": {
+"off": "5a34b82ae0cc9bce"
+},
+"mon_cagado_de_geada": {
+"off": "cd494ebddec30864"
+},
+"mon_calado_das_guelras": {
+"off": "c2198bcf060efd96"
+},
+"mon_caldeira_de_peito": {
+"off": "1fa9ac58f3c25ba0"
+},
+"mon_caldeireiro_de_oleo": {
+"off": "78a2658b847c1584"
+},
+"mon_camarao_faxineiro": {
+"off": "193113924c349637"
+},
+"mon_cao_rebite": {
+"off": "c75ea6e8dcc5c54e"
+},
+"mon_capangas_do_poco": {
+"off": "5f0dda927ba9c234",
+"on": "e52a52fe66a49664"
+},
+"mon_capita_corda": {
+"off": "1c33fb81f37e8137"
+},
+"mon_caranguejo_cinza": {
+"off": "43ee584c056e8372"
+},
+"mon_caranguejo_mare": {
+"off": "68b77d0152b2592c",
+"on": "74f34221dce6dbae"
+},
+"mon_cardume_coagulado": {
+"off": "0cb32744e0ddd876"
+},
+"mon_carranca_de_proa": {
+"off": "9f8b28ab764ab0f6"
+},
+"mon_carrapato_de_mamute": {
+"off": "aeb58e798d59e330"
+},
+"mon_carrapato_osso": {
+"off": "4f37ba44a82feee8"
+},
+"mon_carregador_de_ganchos": {
+"off": "17b61b7d915a7fe1"
+},
+"mon_casaco_de_sanguessugas": {
+"off": "5a6d3ba259bfc70f"
+},
+"mon_casco_de_costelas": {
+"off": "036638637bff7c49"
+},
+"mon_castor_de_estacas": {
+"off": "e3fdbda633c36285"
+},
+"mon_cauda_de_atalaia": {
+"off": "3cd1b9b9f1eb2dcf"
+},
+"mon_cauda_emendada": {
+"off": "2f920db63efd729e"
+},
+"mon_cavadeira_de_unhas": {
+"off": "4710fa7487f4aaec"
+},
+"mon_cavador_de_funil": {
+"off": "557ed3b66255d240"
+},
+"mon_cavaleiro_sem_rosto": {
+"off": "98372291bbc045db"
+},
+"mon_centopeia_da_torre_invertida": {
+"off": "d04f998fb8734473"
+},
+"mon_cervo_afogado": {
+"off": "225b7fc326e9c75a"
+},
+"mon_chicote_de_fenda": {
+"off": "7985fe1f7e5c342b"
+},
+"mon_chifres_travados": {
+"off": "135eb307737a452a"
+},
+"mon_cisne_de_patina": {
+"off": "08b24bf87fef7cea"
+},
+"mon_coandu_de_rebrota": {
+"off": "6057c3352c839fa4"
+},
+"mon_cobra_de_legua": {
+"off": "f716f3e6dd91b823"
+},
+"mon_cobra_de_sangria": {
+"off": "758febf924d4fded"
+},
+"mon_cobrador_gancho": {
+"off": "587cb79187043566"
+},
+"mon_colecionador_de_poses": {
+"off": "47334fe3b4f46534"
+},
+"mon_colosso_duna": {
+"off": "d0d8c4f23d122baa"
+},
+"mon_comedor_de_alga": {
+"off": "d263f5231a875884"
+},
+"mon_compassado_do_trono": {
+"off": "bbe599fc0472680d"
+},
+"mon_contrabandista_vitreo": {
+"off": "2c585596a7fd1e8a"
+},
+"mon_convidado_de_cera": {
+"off": "71e6a8673bd1c6fe"
+},
+"mon_cordao_de_medida": {
+"off": "9a202a05a103d14d"
+},
+"mon_corvo_gelo": {
+"off": "5508ce263b846987"
+},
+"mon_costas_de_alicerce": {
+"off": "d72dde3ff227c6cc"
+},
+"mon_costurado_de_lentes": {
+"off": "6104f3a3e838c3ec"
+},
+"mon_couro_pegado": {
+"off": "3ac2bbfd33be6cd3"
+},
+"mon_craca_de_amarra": {
+"off": "bac6b37085d62f92"
+},
+"mon_cupinzeiro_de_vidro": {
+"off": "9e2e9df61f982d85"
+},
+"mon_dedos_de_colheita": {
+"off": "bb59867704033fba"
+},
+"mon_deitado_na_parede": {
+"off": "1cea9ba3a39bcec6"
+},
+"mon_dentado_de_eras": {
+"off": "8e5893e4dea923bd"
+},
+"mon_desafiante_rubro": {
+"off": "403249d85af69be1"
+},
+"mon_desbotado_da_nevoa": {
+"off": "4eba9884814a4ddd"
+},
+"mon_desfiado_da_aurora": {
+"off": "3fc697f84c4ff514"
+},
+"mon_desfiado_de_vaelorn": {
+"off": "6a263b4a2e6edcac"
+},
+"mon_despenseiro_de_espinhos": {
+"off": "ea070887c72dd499"
+},
+"mon_doador_inacabado": {
+"off": "c3ae0b590e37403f"
+},
+"mon_doente_de_encomenda": {
+"off": "befce019fb55b9c1"
+},
+"mon_eclipse_caminhante": {
+"off": "cfdf43037a2ae2e0"
+},
+"mon_egua_de_costas": {
+"off": "ddf9b09af8079fc4"
+},
+"mon_enegrecido_que_espera": {
+"off": "504e173bd8e85551"
+},
+"mon_enrolado_da_clareira": {
+"off": "41f84a7c4de3d4bb"
+},
+"mon_ent_dormindo": {
+"off": "688f7339da4d1897"
+},
+"mon_enxertadora_da_uniao": {
+"off": "dc9306f3ef60b4f2"
+},
+"mon_enxerto_da_fornalha": {
+"off": "dd0c0c75d615d128"
+},
+"mon_ermitao_de_carcaca": {
+"off": "f8a87e4edc368790"
+},
+"mon_ermitao_de_elmo": {
+"off": "b38cfad890c07257"
+},
+"mon_escama_revirada": {
+"off": "bfb34bd13b85b145"
+},
+"mon_escaravelho_vidro": {
+"off": "da676e77ac5f2012"
+},
+"mon_escavador_das_camaras": {
+"off": "0572c320019b2ccf"
+},
+"mon_escorpena_de_basalto": {
+"off": "99cc5f0bb67c3f1c"
+},
+"mon_escritura_rastejante": {
+"off": "f47a44963b385293"
+},
+"mon_escuta_do_sinal": {
+"off": "91fd974dff8b5dc6"
+},
+"mon_esfolado_da_tempestade": {
+"off": "5721ce5b34275c43"
+},
+"mon_esfolado_de_sal": {
+"off": "61d9374afe843b3e"
+},
+"mon_espectro_elfico": {
+"off": "9ba98f9fde3e3818",
+"on": "655dee52b7d02bae"
+},
+"mon_estaqueiro_afogado": {
+"off": "6ff9c2ae61620740"
+},
+"mon_estivador_das_facas": {
+"off": "78e99f27e50585f3"
+},
+"mon_estrela_de_alavanca": {
+"off": "01f23c5223da38d5"
+},
+"mon_faisca_destilacao": {
+"off": "bfe202bde3724e40"
+},
+"mon_fardo_de_espolio": {
+"off": "4ad73353de9f00d7"
+},
+"mon_fechado_de_escapulas": {
+"off": "bccd640040db3140"
+},
+"mon_feltro_do_ventre": {
+"off": "aa0154889863d73e"
+},
+"mon_ferida_de_coral": {
+"off": "72c239a11640f337"
+},
+"mon_ferreiro_chama_fria": {
+"off": "99b72d9a52d059d3"
+},
+"mon_fervente_de_ferrugem": {
+"off": "190a85770f330bae"
+},
+"mon_fervido_da_corrente": {
+"off": "16c5bf3597161cfe"
+},
+"mon_fila_de_grilhoes": {
+"off": "ed843bb1f670ef50"
+},
+"mon_fole_de_costela": {
+"off": "ae64096905fb53c0"
+},
+"mon_forrado_de_leviata": {
+"off": "cb3b720754a21172"
+},
+"mon_fucador_da_semente": {
+"off": "6015ebdf2cc868c9"
+},
+"mon_fumaca_de_cor_errada": {
+"off": "ffbd80566a38c8a9",
+"on": "9243eccefdc40214"
+},
+"mon_fundeiro_da_poca": {
+"off": "c13bfb9b968136d5"
+},
+"mon_furador_de_odres": {
+"off": "dae6b9e870af9a10"
+},
+"mon_gafanhoto_runa": {
+"off": "69f721fe3919a115"
+},
+"mon_gaivota_ladra": {
+"off": "f12110d34ebddc11",
+"on": "5f88a7d827a8d08e"
+},
+"mon_gancho_de_esfola": {
+"off": "6e54d8b95977476b"
+},
+"mon_gato_de_lastro": {
+"off": "c93e219ef154175b"
+},
+"mon_geodo_da_praga": {
+"off": "a7d2253cb25e0e34"
+},
+"mon_goblin_eco": {
+"off": "44d309ed4dc5586e"
+},
+"mon_gralha_de_crematorio": {
+"off": "a666fa6b31f81152"
+},
+"mon_guardiao_basalto": {
+"off": "537e0afce7cd87f9"
+},
+"mon_guia_avesso": {
+"off": "8d261065d2b80df6"
+},
+"mon_hiena_sol": {
+"off": "d02de1c117d9ab29"
+},
+"mon_hospede_do_estomago": {
+"off": "060b1d5143f1fb92"
+},
+"mon_isca_amarrada": {
+"off": "01fb359f5bfa2907"
+},
+"mon_jardineiro_de_tumores": {
+"off": "dbe9a64ee12f9fff"
+},
+"mon_jotun_cinza": {
+"off": "552b32128ff4cc2d"
+},
+"mon_lacado_de_hifas": {
+"off": "aa6c6b36cc1eb7cb"
+},
+"mon_lacrador_de_saidas": {
+"off": "7fd20234af2719fb"
+},
+"mon_ladrao_de_lume": {
+"off": "3b2ff0aac4ba2f0b"
+},
+"mon_lagarta_da_hora": {
+"off": "9aceb2c9d397f3a0"
+},
+"mon_lagarta_de_visgo": {
+"off": "98c721462db84da9"
+},
+"mon_lagarta_sete_invernos": {
+"off": "67df5b319957b793"
+},
+"mon_lagarto_de_mudas": {
+"off": "511e1ac0f90c3b85"
+},
+"mon_lagarto_espirrador": {
+"off": "7fe31ab2b7620f73"
+},
+"mon_lambedor_de_aboboda": {
+"off": "855d3cb405a0d8bf"
+},
+"mon_lambedor_de_halito": {
+"off": "fd418fa6a3f226f5"
+},
+"mon_lamelas_de_ferrugem": {
+"off": "de76e9708c0e767b"
+},
+"mon_larva_hospedeira": {
+"off": "33ec106276cf647d"
+},
+"mon_lascador_morno": {
+"off": "1590c74eddb753a2"
+},
+"mon_lastreiro_da_cratera": {
+"off": "8480ec655ed22900"
+},
+"mon_lavado_da_mare_vermelha": {
+"off": "45b36c92d93fcf57"
+},
+"mon_leitor_de_cativos": {
+"off": "42bab15de7a77e19"
+},
+"mon_lencol_de_chamine": {
+"off": "373406409b1f4c5b"
+},
+"mon_lesma_de_penacho": {
+"off": "784c5504bbe55008"
+},
+"mon_levantado_de_rubi": {
+"off": "98014bd9311245fe"
+},
+"mon_leviata_caldeira": {
+"off": "52f056276a09e508"
+},
+"mon_lingua_de_lima": {
+"off": "3a91ee4793f35a87"
+},
+"mon_lixado_da_fronteira": {
+"off": "52385c8770c1b899"
+},
+"mon_lobo_aurora": {
+"off": "05d7278f8238172f"
+},
+"mon_lobo_da_pradaria": {
+"off": "48b64d84f9ccfe79",
+"on": "4cac20809414f8be"
+},
+"mon_lobo_de_vidro": {
+"off": "878fc13ba12504fb",
+"on": "afc16c9366c02f0d"
+},
+"mon_locomotiva_penitente": {
+"off": "480aa3a13efba2d7"
+},
+"mon_macaco_esporo": {
+"off": "b522c5eb1cf59485"
+},
+"mon_mae_micelio": {
+"off": "faf68691b801ed18"
+},
+"mon_mandriao_dois_bicos": {
+"off": "b8bdf56885c757cf"
+},
+"mon_mao_da_borda": {
+"off": "1462426082dc7ca9"
+},
+"mon_mao_de_oghma": {
+"off": "49c99b2982995de3"
+},
+"mon_mao_estendida": {
+"off": "40f6244863265da6"
+},
+"mon_maos_de_cinzel": {
+"off": "5b0767164251e8d0"
+},
+"mon_maos_no_rosto": {
+"off": "7bf397231b65593e"
+},
+"mon_mapa_de_cicatrizes": {
+"off": "9c2a9d0cdab346ea"
+},
+"mon_marco_que_aponta": {
+"off": "8adea49e00c19528"
+},
+"mon_mariposa_sussurro": {
+"off": "485e02350af15ad4"
+},
+"mon_mascador_de_nectar": {
+"off": "e3d30753a5ae7ba6"
+},
+"mon_mascador_de_raiz": {
+"off": "0f92676a3b8ad2a8"
+},
+"mon_mastro_de_trofeus": {
+"off": "1c0c603675da71e6"
+},
+"mon_mastro_dos_ultimos": {
+"off": "a7aac841ef492983"
+},
+"mon_mergulhadores_saqueadores": {
+"off": "c6d0745dff63559b",
+"on": "45952e2a4738b3f6"
+},
+"mon_montaria_cravada": {
+"off": "1844b78b978ce777"
+},
+"mon_monte_de_alheios": {
+"off": "4085596e77684f4b"
+},
+"mon_morcego_rasteiro": {
+"off": "9a85fcaa4d7797d8"
+},
+"mon_moreia_vulcanica": {
+"off": "fa30382ef2d3c31e"
+},
+"mon_mosquito_eter": {
+"off": "6adb6eeeacdda25d"
+},
+"mon_mula_de_lagrimas": {
+"off": "12a119acbf9f9696"
+},
+"mon_musaranho_de_dente_vermelho": {
+"off": "ffe191f757923d96"
+},
+"mon_nadador_de_pedra": {
+"off": "bf0eaec13a2c3508"
+},
+"mon_nadador_escaldado": {
+"off": "a95beae0c67c6ccc"
+},
+"mon_ninho_dos_mergulhadores": {
+"off": "64b370ad041a6548"
+},
+"mon_novelo_de_anzois": {
+"off": "edf4e56b7b765687"
+},
+"mon_o_que_come_nas_praias": {
+"off": "3a030d0e624b53f3",
+"on": "40c515a217322104"
+},
+"mon_oco_da_fronteira": {
+"off": "9175c88affd435cf"
+},
+"mon_odre_de_oleo": {
+"off": "6f9cb617e20b51e8"
+},
+"mon_olho_de_petala": {
+"off": "dc8504a7e4aa54fa"
+},
+"mon_onca_vazada": {
+"off": "2440a57dc7995d56"
+},
+"mon_oraculo_coral": {
+"off": "79a9e4052547c19b"
+},
+"mon_os_que_voltaram_e_nao_eram_eles": {
+"off": "22b6f63cdfc08212",
+"on": "2b9fe050c44d1ec4"
+},
+"mon_ossada_de_pomes": {
+"off": "7cc0451b9ed403de"
+},
+"mon_ourico_de_lajedo": {
+"off": "ddb473b05519a9cf"
+},
+"mon_parado_do_sopro": {
+"off": "67994a4a18d87c01"
+},
+"mon_parelha_carmesim": {
+"off": "71c75868790b52be"
+},
+"mon_patinador_de_oleo": {
+"off": "3e630897fe7836e0"
+},
+"mon_pavio_da_lista": {
+"off": "720866a546f3c0e9"
+},
+"mon_peito_de_geodo": {
+"off": "1d4629cbfd00c2d0"
+},
+"mon_peito_de_sino": {
+"off": "bd2037267398d5fd"
+},
+"mon_penhorado_do_poco": {
+"off": "01e7824a6634bd68"
+},
+"mon_pernalta_das_colunas": {
+"off": "7464e92695ea15c2"
+},
+"mon_pernalta_do_conselho": {
+"off": "a9b7d868f2e7324e"
+},
+"mon_pescador_de_lanterna": {
+"off": "54f6b0f72087549d"
+},
+"mon_peso_dos_vencidos": {
+"off": "77f188c8e8703574"
+},
+"mon_petrel_de_papo_cheio": {
+"off": "3a7572aff1b549cf"
+},
+"mon_picanco_de_espinheiro": {
+"off": "2e6ea55a641c9b04"
+},
+"mon_pisador_do_salao": {
+"off": "f694aca23efb0586"
+},
+"mon_podador_do_ciclo": {
+"off": "605ae2c99ec6bd1f"
+},
+"mon_porca_da_queda": {
+"off": "c8fdb9c5c1ac7bba"
+},
+"mon_portao_que_morde": {
+"off": "cf02d94336b97f9e"
+},
+"mon_predador_crescido": {
+"off": "6f53e12e9fbf31b0",
+"on": "c2e9683971c1ea4a"
+},
+"mon_preguica_de_pomar": {
+"off": "4fc6ca204d1ab994"
+},
+"mon_pressa_da_seiva": {
+"off": "e95d754c97b2b045"
+},
+"mon_profanador_cravejado": {
+"off": "9471b56f9f8f0e71"
+},
+"mon_provador_da_borda": {
+"off": "9784576be17b72fc"
+},
+"mon_provador_de_cores": {
+"off": "b4477aff90bbf4f6"
+},
+"mon_puxado_do_oeste": {
+"off": "36c4ccb767807322"
+},
+"mon_quebrado_de_vitrine": {
+"off": "d6c8feb2b8115774"
+},
+"mon_queimado_de_breu": {
+"off": "a866943760fc3131"
+},
+"mon_queimado_de_frio": {
+"off": "02c13ba67ae2e958"
+},
+"mon_quilhado_do_estaleiro": {
+"off": "8d7b0d3d9c6c4609"
+},
+"mon_quimera_cristal": {
+"off": "32a4f539a2ba9365"
+},
+"mon_rainha_cipo": {
+"off": "861bff9852e0abda"
+},
+"mon_rancor_de_pincas": {
+"off": "3876f33ca64ca593"
+},
+"mon_raspadeira_de_barbatana": {
+"off": "7ef3db27793f8f0e"
+},
+"mon_rato_cais_brekmar": {
+"off": "5d43f356bab24a64"
+},
+"mon_rato_caldeira": {
+"off": "aa4def8073551e2b"
+},
+"mon_recusado_do_ciclo": {
+"off": "89d858ba52e89708"
+},
+"mon_regaco_da_margem": {
+"off": "71a80d0fc4f8bd11"
+},
+"mon_relicario_de_osso": {
+"off": "b38d77b5f1502db5"
+},
+"mon_remendado_de_osso": {
+"off": "8ead52ff1e243495"
+},
+"mon_remo_acorrentado": {
+"off": "14806bc9271ee0af"
+},
+"mon_remora_de_conves": {
+"off": "a64963d24473d3d5"
+},
+"mon_ressecado_da_travessia": {
+"off": "0d0b3b9a3490761e"
+},
+"mon_retalho_das_duas_cidades": {
+"off": "d9dd9fa9a30c153b"
+},
+"mon_roda_de_mandibulas": {
+"off": "8acf8760360a9985"
+},
+"mon_rodante_de_espinhos": {
+"off": "74025cc89059681b"
+},
+"mon_rolador_de_escarpa": {
+"off": "c30cd4ec16ff07ec"
+},
+"mon_romeiro_de_ambar": {
+"off": "4309f52c6867a629"
+},
+"mon_rosario_de_vertebras": {
+"off": "7744ff3ce4bd4da5"
+},
+"mon_saltador_de_palafita": {
+"off": "9467f3011875b463"
+},
+"mon_saltador_de_poca": {
+"off": "3c6c389fb6edafde"
+},
+"mon_saltao_de_galeria": {
+"off": "431dfb72e74bf2b9"
+},
+"mon_sangrado_da_clinica": {
+"off": "42bdfd78d0301914"
+},
+"mon_sangria_de_aluguel": {
+"off": "490da6109ff286e6"
+},
+"mon_sanguessuga_braco": {
+"off": "50f31a91b6e7908b",
+"on": "efdce213974734a0"
+},
+"mon_sapo_boi_acido": {
+"off": "1fe28cdf925605d0",
+"on": "2cbc3f1f1e0398bd"
+},
+"mon_saqueador_marfim": {
+"off": "c6bc57e001bbb7fc"
+},
+"mon_sentinela_hospedeiro": {
+"off": "967fd33dd8c6b623",
+"on": "71cf47da88f0d562"
+},
+"mon_sereia_de_ophidia": {
+"off": "830e049c4d3905cd",
+"on": "b9012b608600d472"
+},
+"mon_serpente_raiz": {
+"off": "96360936803d94ab",
+"on": "bbad7969838227e7"
+},
+"mon_sino_de_enlace": {
+"off": "e31fad57447d3901"
+},
+"mon_sorvedouro_do_codigo": {
+"off": "6bfa42d3ef38d0e6"
+},
+"mon_subida_de_cracas": {
+"off": "fc1a8159e2b3ec83"
+},
+"mon_surdo_da_colmeia": {
+"off": "e90d1da5154d2a5e"
+},
+"mon_tamandua_de_ponte": {
+"off": "c2a8daae601c84d7"
+},
+"mon_tambor_do_ossario": {
+"off": "e0873278b054bca9"
+},
+"mon_tampao_da_camara": {
+"off": "f98a1154a5d8395a"
+},
+"mon_tatu_de_navalha": {
+"off": "1e4a847a4e6cb5aa"
+},
+"mon_tatuzinho_de_afogado": {
+"off": "9e5af7ae64065c50"
+},
+"mon_tesoura_de_cordada": {
+"off": "36ddf8501c14fba0"
+},
+"mon_ticao_do_juramento": {
+"off": "5395ab558b7cd45a"
+},
+"mon_toldo_das_clareiras": {
+"off": "ebcad8d72675422b"
+},
+"mon_torcido_da_rinha": {
+"off": "a24f383b4e6f3184"
+},
+"mon_touro_de_banha": {
+"off": "dca31e90df92208b"
+},
+"mon_traca_do_sino_mudo": {
+"off": "e4f983d8437e859f"
+},
+"mon_trepano_de_borda": {
+"off": "581e60554bba20b9"
+},
+"mon_tripeiro_de_fundo": {
+"off": "5ad86d7285ab8523"
+},
+"mon_tritao_de_sobra": {
+"off": "9a9e5827ac8351e5"
+},
+"mon_tropel_sem_saida": {
+"off": "74549e2f09bb31de"
+},
+"mon_tubarao_de_casco": {
+"off": "894265b8cd8a1554",
+"on": "acb7f7a91d0b8b3d"
+},
+"mon_turno_vencido": {
+"off": "02a0965914731f9a"
+},
+"mon_turu_de_casco": {
+"off": "5c9772ac8258a2b8"
+},
+"mon_urso_de_espinha": {
+"off": "f77a26d1f7b38642",
+"on": "b4568e05a90eb14d"
+},
+"mon_urso_tita": {
+"off": "d32f8c42defbce6b",
+"on": "1c52f0d3d1fba343"
+},
+"mon_varano_vidrado": {
+"off": "837c3b55e05c658d"
+},
+"mon_vazado_da_mare": {
+"off": "f4c0e0f088cf430d"
+},
+"mon_vedado_de_piche": {
+"off": "64d5645dec67ac15"
+},
+"mon_vela_sem_barco": {
+"off": "fc238c3d32117059"
+},
+"mon_ventre_partilhado": {
+"off": "f6a8c9f6fd0c508d"
+},
+"mon_verme_do_gelo": {
+"off": "357c529cffe5302e",
+"on": "83e03d0ecaabd251"
+},
+"mon_vertedor_de_areia": {
+"off": "104781b34726938f"
+},
+"mon_vespa_coveira": {
+"off": "f7de0d468bf035d8"
+},
+"mon_vespa_oleira": {
+"off": "9f9c5876534b5bff"
+},
+"mon_vestido_de_gafanhotos": {
+"off": "73e9df1b69e83a1e"
+},
+"mon_veu_faminto": {
+"off": "bccff308f962153c"
+},
+"mon_vidrado_do_morro": {
+"off": "94b68c384a035df2"
+},
+"mon_vigia_caco": {
+"off": "82376df53eafed91"
+},
+"mon_vigia_de_cor_errada": {
+"off": "023c422fe891c49a"
+},
+"mon_vipera_flora": {
+"off": "d291b13591ea00fc",
+"on": "43416c0d77e283c4"
+},
+"mon_vira_costas_da_praca": {
+"off": "ce8d6296de5b62cd"
+},
+"mon_virado_do_avesso": {
+"off": "010ea8fd72680502"
+},
+"mon_viuva_lodo": {
+"off": "fe6dad47b75a1db8"
+},
+"mon_viuvo_do_esporo": {
+"off": "00539328a8bfb849"
+}
+}

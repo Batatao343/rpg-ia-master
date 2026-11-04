@@ -1,0 +1,91 @@
+{
+ "seeds": 40,
+ "criaturas": {
+  "mon_anzolado_da_casa": {
+   "nome": "Anzolado da Casa",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.725,
+    "L3|on": 0.91
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 91% fora de 45-85%"
+   ]
+  },
+  "mon_lacrador_de_saidas": {
+   "nome": "Lacrador de Sa\u00eddas",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.645,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_bracos_de_tenaz": {
+   "nome": "Bra\u00e7os de Tenaz",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.595,
+    "L3|on": 0.715
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_armador_de_fosso": {
+   "nome": "Armador de Fosso",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.785,
+    "L3|on": 0.955
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 96% fora de 45-85%"
+   ]
+  },
+  "mon_portao_que_morde": {
+   "nome": "Port\u00e3o que Morde",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.91,
+    "L3|on": 0.9
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 91% fora de 45-85%",
+    "L3|on 90% fora de 45-85%"
+   ]
+  },
+  "mon_carregador_de_ganchos": {
+   "nome": "Carregador de Ganchos",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.545,
+    "L3|on": 0.695
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_escuta_do_sinal": {
+   "nome": "Escuta do Sinal",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.465,
+    "L3|on": 0.895
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 90% fora de 45-85%"
+   ]
+  }
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "regiao": "pradaria_ruinas",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 6.1,
+ "criaturas": {
+  "mon_carregador_de_ganchos": {
+   "nome": "Carregador de Ganchos",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.545,
+    "L3|on": 0.695
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

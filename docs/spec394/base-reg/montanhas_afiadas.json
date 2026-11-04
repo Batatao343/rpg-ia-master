@@ -1,0 +1,38 @@
+{
+ "regiao": "montanhas_afiadas",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 12.1,
+ "criaturas": {
+  "mon_bracos_de_tenaz": {
+   "nome": "Braços de Tenaz",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.595,
+    "L3|on": 0.715
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_armador_de_fosso": {
+   "nome": "Armador de Fosso",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.785,
+    "L3|on": 0.955
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 96% fora de 45-85%"
+   ]
+  }
+ }
+}
