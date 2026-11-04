@@ -66,3 +66,7 @@ bash scripts/dev/pt.sh <20 arquivos: card_effects_*, scene_cards*, spec299_hunte
 bash scripts/dev/py.sh docs/spec355/arena_spec355.py base --seeds 0:20 --classes "Devoto do Abismo" → 60,2 % (consagrado 65,8 / zeloso 56,7 / enlutado 61,9); seção idêntica a arena-depois.json
 git diff main...HEAD -- services/conflict_turn.py → só renome _side_of→_turn_side e docstrings
 ```
+
+## Re-revisão
+
+Re-revisão (212a07cb + §10 da spec): APPROVED. O P1-1 e o P2-1 foram corrigidos no código (guard só na branch `spec-363`, docstring unida). Os P2-2, P2-3 e P2-4 ficaram registrados como desvios no §10. Pendência aceita: o playtest curto de `law.*` não rodou. Testes rodados: `test_spec363_golden_guard.py` + `test_card_alive.py` verdes.
