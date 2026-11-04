@@ -22,7 +22,6 @@ import copy
 import hashlib
 import json
 import math
-import os
 import unicodedata
 from functools import lru_cache
 from typing import Any
@@ -30,6 +29,7 @@ from typing import Any
 from services import npc_perils as perils
 from services import world_director as wd
 from services import world_pressures as wp
+from services.env import env_choice
 
 MODES = ("off", "shadow", "on")
 DEFAULT_MODE = "off"
@@ -44,8 +44,7 @@ _STATUS_BY_FATE = {"morto": "morto", "capturado": "capturado", "ferido": "ferido
 # --------------------------------------------------------------------------- #
 def mode() -> str:
     """`RPG_NPC_WORLD` efetivo: com o motor de mundo != on, a spec fica `off` (R29)."""
-    raw = os.getenv("RPG_NPC_WORLD", "").strip().lower()
-    m = raw if raw in MODES else DEFAULT_MODE
+    m = env_choice("RPG_NPC_WORLD", MODES, DEFAULT_MODE)
     if m == "off":
         return "off"
     from services import world_engine
