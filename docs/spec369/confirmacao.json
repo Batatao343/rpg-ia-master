@@ -1,0 +1,3547 @@
+{
+ "base": {
+  "r9": {
+   "por_postura": {
+    "Devoto do Abismo": {
+     "conflitos": 1440,
+     "rodadas": 6682,
+     "cartas_por_rodada_media": 1.998,
+     "cartas_por_rodada_p50": 2.0,
+     "pct_rodadas_ge3_escolhas": 92.7,
+     "pct_rodadas_ge3_com_basico": 99.6,
+     "uso_cartas_da_mao_pct": 40.0,
+     "cartas_com_uso_acima_60": {
+      "bas_dev_golpe": 0.76,
+      "bas_dev_voto": 1.0
+     },
+     "p95_rodadas_conflito": 11.0,
+     "vitoria_pct": 72.5,
+     "timeout_pct": 0.2
+    },
+    "Sangromante": {
+     "conflitos": 1440,
+     "rodadas": 5083,
+     "cartas_por_rodada_media": 1.8,
+     "cartas_por_rodada_p50": 2.0,
+     "pct_rodadas_ge3_escolhas": 95.8,
+     "pct_rodadas_ge3_com_basico": 99.8,
+     "uso_cartas_da_mao_pct": 36.0,
+     "cartas_com_uso_acima_60": {
+      "bas_san_corte_raso": 0.901,
+      "san1_ava_penhor_de_carne": 0.688,
+      "san1_exp_selo_de_dor": 0.654,
+      "san_sil_exato": 0.769
+     },
+     "p95_rodadas_conflito": 8.0,
+     "vitoria_pct": 70.2,
+     "timeout_pct": 0.0
+    },
+    "Corruptor": {
+     "conflitos": 1440,
+     "rodadas": 6144,
+     "cartas_por_rodada_media": 2.676,
+     "cartas_por_rodada_p50": 3.0,
+     "pct_rodadas_ge3_escolhas": 93.3,
+     "pct_rodadas_ge3_com_basico": 99.1,
+     "uso_cartas_da_mao_pct": 53.5,
+     "cartas_com_uso_acima_60": {
+      "bas_cor_golpe": 0.845,
+      "bas_cor_guarda": 1.0,
+      "bas_cor_mofo": 0.682,
+      "cor_bio_gangrena": 0.671,
+      "cor_esporos": 0.613
+     },
+     "p95_rodadas_conflito": 9.0,
+     "vitoria_pct": 66.5,
+     "timeout_pct": 0.1
+    },
+    "Arcanista Cinzento": {
+     "conflitos": 1440,
+     "rodadas": 5283,
+     "cartas_por_rodada_media": 2.071,
+     "cartas_por_rodada_p50": 2.0,
+     "pct_rodadas_ge3_escolhas": 84.4,
+     "pct_rodadas_ge3_com_basico": 98.6,
+     "uso_cartas_da_mao_pct": 41.4,
+     "cartas_com_uso_acima_60": {
+      "arc1_cal_pulso_medido": 1.0,
+      "arc_des_mao_nua": 0.926,
+      "arc_descarga": 0.878,
+      "arc_faisca": 0.672,
+      "bas_arc_vazao": 1.0
+     },
+     "p95_rodadas_conflito": 9.0,
+     "vitoria_pct": 56.5,
+     "timeout_pct": 0.0
+    },
+    "Médico de Campo": {
+     "conflitos": 1440,
+     "rodadas": 8533,
+     "cartas_por_rodada_media": 2.156,
+     "cartas_por_rodada_p50": 2.0,
+     "pct_rodadas_ge3_escolhas": 84.0,
+     "pct_rodadas_ge3_com_basico": 98.5,
+     "uso_cartas_da_mao_pct": 43.1,
+     "cartas_com_uso_acima_60": {
+      "bas_med_golpe": 0.872
+     },
+     "p95_rodadas_conflito": 15.0,
+     "vitoria_pct": 64.4,
+     "timeout_pct": 2.2
+    }
+   },
+   "total": {
+    "conflitos": 7200,
+    "rodadas": 31725,
+    "cartas_por_rodada_media": 2.152,
+    "cartas_por_rodada_p50": 2.0,
+    "pct_rodadas_ge3_escolhas": 89.6,
+    "pct_rodadas_ge3_com_basico": 99.1,
+    "uso_cartas_da_mao_pct": 43.0,
+    "cartas_com_uso_acima_60": {
+     "arc1_cal_pulso_medido": 1.0,
+     "arc_des_mao_nua": 0.926,
+     "arc_descarga": 0.878,
+     "arc_faisca": 0.672,
+     "bas_arc_vazao": 1.0,
+     "bas_cor_golpe": 0.845,
+     "bas_cor_guarda": 1.0,
+     "bas_cor_mofo": 0.682,
+     "bas_dev_golpe": 0.76,
+     "bas_dev_voto": 1.0,
+     "bas_med_golpe": 0.872,
+     "bas_san_corte_raso": 0.901,
+     "cor_bio_gangrena": 0.671,
+     "cor_esporos": 0.613,
+     "san1_ava_penhor_de_carne": 0.688,
+     "san1_exp_selo_de_dor": 0.654,
+     "san_sil_exato": 0.769
+    },
+    "p95_rodadas_conflito": 10.0,
+    "vitoria_pct": 66.0,
+    "timeout_pct": 0.5
+   }
+  },
+  "r10": {
+   "total": {
+    "off": {
+     "conflitos": 7200,
+     "dano_medio": 11.74,
+     "vitoria_pct": 66.0
+    },
+    "on": {
+     "conflitos": 7200,
+     "dano_medio": 13.03,
+     "vitoria_pct": 59.3
+    },
+    "delta_dano": 1.29,
+    "delta_dano_pct": 11.0,
+    "dano_cai": false
+   },
+   "por_postura": {
+    "Arcanista Cinzento": {
+     "off": {
+      "conflitos": 1440,
+      "dano_medio": 13.04,
+      "vitoria_pct": 56.5
+     },
+     "on": {
+      "conflitos": 1440,
+      "dano_medio": 14.47,
+      "vitoria_pct": 46.2
+     }
+    },
+    "Corruptor": {
+     "off": {
+      "conflitos": 1440,
+      "dano_medio": 12.69,
+      "vitoria_pct": 66.5
+     },
+     "on": {
+      "conflitos": 1440,
+      "dano_medio": 13.8,
+      "vitoria_pct": 57.8
+     }
+    },
+    "Devoto do Abismo": {
+     "off": {
+      "conflitos": 1440,
+      "dano_medio": 10.08,
+      "vitoria_pct": 72.5
+     },
+     "on": {
+      "conflitos": 1440,
+      "dano_medio": 11.53,
+      "vitoria_pct": 67.6
+     }
+    },
+    "Médico de Campo": {
+     "off": {
+      "conflitos": 1440,
+      "dano_medio": 11.05,
+      "vitoria_pct": 64.4
+     },
+     "on": {
+      "conflitos": 1440,
+      "dano_medio": 11.81,
+      "vitoria_pct": 60.8
+     }
+    },
+    "Sangromante": {
+     "off": {
+      "conflitos": 1440,
+      "dano_medio": 11.83,
+      "vitoria_pct": 70.2
+     },
+     "on": {
+      "conflitos": 1440,
+      "dano_medio": 13.51,
+      "vitoria_pct": 63.9
+     }
+    }
+   }
+  },
+  "meta": {
+   "spec": "SPEC-369",
+   "seeds": [
+    260,
+    339
+   ],
+   "elapsed_s": 390.8
+  }
+ },
+ "uso": {
+  "cartas": {
+   "arc1_cal_pulso_medido": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 2,
+    "custo_folego": 0,
+    "na_mao": 322,
+    "uso": 1.0,
+    "delta_pp_v2": -0.9,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.58,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc1_des_brasa": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 824,
+    "uso": 0.0,
+    "delta_pp_v2": 0.3,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "arc1_des_garganta": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 406,
+    "uso": 0.47,
+    "delta_pp_v2": -5.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.341,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc1_des_sobrecarga": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 792,
+    "uso": 0.321,
+    "delta_pp_v2": -7.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.359,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc1_imp_bomba_estopim": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 2,
+    "custo_folego": 2,
+    "na_mao": 814,
+    "uso": 0.205,
+    "delta_pp_v2": -0.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.488,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc1_imp_carretel": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 770,
+    "uso": 0.405,
+    "delta_pp_v2": -5.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.394,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc1_imp_mola": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 836,
+    "uso": 0.0,
+    "delta_pp_v2": -4.1,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "arc1_imp_olho_latao": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 675,
+    "uso": 0.243,
+    "delta_pp_v2": -6.2,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.388,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc1_imp_truque": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 2,
+    "custo_folego": 1,
+    "na_mao": 894,
+    "uso": 0.302,
+    "delta_pp_v2": -4.1,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.493,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc1_ini_cinza_nos_olhos": {
+    "categoria": "onda",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 718,
+    "uso": 0.0,
+    "delta_pp_v2": 1.9,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "arc_cal_malha": {
+    "categoria": "legada",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 900,
+    "uso": 0.02,
+    "delta_pp_v2": -3.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.111,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc_cal_valvula": {
+    "categoria": "legada",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1502,
+    "uso": 0.0,
+    "delta_pp_v2": -1.9,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "arc_des_mao_nua": {
+    "categoria": "legada",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1602,
+    "uso": 0.926,
+    "delta_pp_v2": -17.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.916,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "arc_des_sobrecarga": {
+    "categoria": "legada",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 791,
+    "uso": 0.431,
+    "delta_pp_v2": -3.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.526,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc_descarga": {
+    "categoria": "legada",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 724,
+    "uso": 0.878,
+    "delta_pp_v2": 0.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.866,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "arc_empuxo": {
+    "categoria": "legada",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 478,
+    "uso": 0.084,
+    "delta_pp_v2": -21.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.243,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "arc_faisca": {
+    "categoria": "legada",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 676,
+    "uso": 0.672,
+    "delta_pp_v2": 0.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.674,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "arc_imp_bomba": {
+    "categoria": "legada",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 784,
+    "uso": 0.218,
+    "delta_pp_v2": -7.5,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.481,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "bas_arc_golpe": {
+    "categoria": "basica",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 4693,
+    "uso": 0.57,
+    "delta_pp_v2": 0.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.518,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "bas_arc_guarda": {
+    "categoria": "basica",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 4822,
+    "uso": 0.409,
+    "delta_pp_v2": -4.1,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.515,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "bas_arc_vazao": {
+    "categoria": "basica",
+    "classe": "Arcanista Cinzento",
+    "versao": 2,
+    "custo_folego": 0,
+    "na_mao": 1240,
+    "uso": 1.0,
+    "delta_pp_v2": -8.4,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.913,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "bas_cor_golpe": {
+    "categoria": "basica",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 5512,
+    "uso": 0.845,
+    "delta_pp_v2": 0.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 1.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "bas_cor_guarda": {
+    "categoria": "basica",
+    "classe": "Corruptor",
+    "versao": 2,
+    "custo_folego": 0,
+    "na_mao": 5367,
+    "uso": 1.0,
+    "delta_pp_v2": -5.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 1.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "bas_cor_mofo": {
+    "categoria": "basica",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1332,
+    "uso": 0.682,
+    "delta_pp_v2": -2.5,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.864,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "bas_dev_golpe": {
+    "categoria": "basica",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 6322,
+    "uso": 0.76,
+    "delta_pp_v2": 0.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.963,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "bas_dev_guarda": {
+    "categoria": "basica",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 6125,
+    "uso": 0.3,
+    "delta_pp_v2": -0.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.305,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "bas_dev_voto": {
+    "categoria": "basica",
+    "classe": "Devoto do Abismo",
+    "versao": 2,
+    "custo_folego": 0,
+    "na_mao": 1467,
+    "uso": 1.0,
+    "delta_pp_v2": -10.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.928,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "bas_med_golpe": {
+    "categoria": "basica",
+    "classe": "Médico de Campo",
+    "versao": 3,
+    "custo_folego": 1,
+    "na_mao": 7708,
+    "uso": 0.872,
+    "delta_pp_v2": 0.9,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.87,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "bas_med_guarda": {
+    "categoria": "basica",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 7555,
+    "uso": 0.58,
+    "delta_pp_v2": -4.1,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.669,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "bas_med_pressao": {
+    "categoria": "basica",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1811,
+    "uso": 0.167,
+    "delta_pp_v2": -1.9,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.199,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "bas_san_corte_raso": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1133,
+    "uso": 0.901,
+    "delta_pp_v2": -5.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.861,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "bas_san_golpe": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 4775,
+    "uso": 0.535,
+    "delta_pp_v2": 0.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.559,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "bas_san_guarda": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 4545,
+    "uso": 0.352,
+    "delta_pp_v2": -1.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.414,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor1_alm_culpa_antiga": {
+    "categoria": "onda",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 817,
+    "uso": 0.242,
+    "delta_pp_v2": -7.5,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.269,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor1_bio_carne_tenra": {
+    "categoria": "onda",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 752,
+    "uso": 0.273,
+    "delta_pp_v2": -5.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.119,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor1_bio_ler_a_carne": {
+    "categoria": "onda",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 427,
+    "uso": 0.536,
+    "delta_pp_v2": -3.4,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.382,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor1_ino_carapaca_de_ferrugem": {
+    "categoria": "onda",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1023,
+    "uso": 0.333,
+    "delta_pp_v2": -0.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.39,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor1_ino_medir_a_fadiga": {
+    "categoria": "onda",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 824,
+    "uso": 0.035,
+    "delta_pp_v2": -2.2,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.13,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor1_ino_oxido_no_gume": {
+    "categoria": "onda",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 333,
+    "uso": 0.306,
+    "delta_pp_v2": -7.5,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.208,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor1_ino_peso_morto": {
+    "categoria": "onda",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 726,
+    "uso": 0.168,
+    "delta_pp_v2": -9.7,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.156,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor1_tro_sinal_do_abismo": {
+    "categoria": "onda",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 976,
+    "uso": 0.338,
+    "delta_pp_v2": -3.1,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.355,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor_alm_duvida": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1826,
+    "uso": 0.303,
+    "delta_pp_v2": -6.2,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.151,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor_bio_gangrena": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1871,
+    "uso": 0.671,
+    "delta_pp_v2": -3.7,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.646,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "cor_chao_morde": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 833,
+    "uso": 0.0,
+    "delta_pp_v2": 2.2,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "cor_esporos": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 838,
+    "uso": 0.613,
+    "delta_pp_v2": -0.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.613,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "cor_fratura_util": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 721,
+    "uso": 0.498,
+    "delta_pp_v2": -5.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.645,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "cor_ino_ferrugem": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1838,
+    "uso": 0.224,
+    "delta_pp_v2": -1.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.33,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor_ino_geometria_ferrugem": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 839,
+    "uso": 0.284,
+    "delta_pp_v2": -3.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.31,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "cor_semear": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 769,
+    "uso": 0.445,
+    "delta_pp_v2": -0.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.3,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev1_con_bencao_do_aco": {
+    "categoria": "onda",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 916,
+    "uso": 0.402,
+    "delta_pp_v2": -5.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.486,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev1_con_cinza_no_peito": {
+    "categoria": "onda",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 974,
+    "uso": 0.227,
+    "delta_pp_v2": -3.7,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.3,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev1_con_postura_de_oracao": {
+    "categoria": "onda",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 986,
+    "uso": 0.246,
+    "delta_pp_v2": -2.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.3,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev1_tro_palavra_que_corta": {
+    "categoria": "onda",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1333,
+    "uso": 0.509,
+    "delta_pp_v2": 0.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.487,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev1_zel_mao_na_frente": {
+    "categoria": "onda",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 427,
+    "uso": 0.6,
+    "delta_pp_v2": 2.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.554,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev_cons_liturgia": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 463,
+    "uso": 0.225,
+    "delta_pp_v2": -1.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.192,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev_cons_marca": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1990,
+    "uso": 0.47,
+    "delta_pp_v2": 0.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.502,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev_cons_relicario": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 1006,
+    "uso": 0.252,
+    "delta_pp_v2": -0.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.333,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev_enl_cortejo": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 975,
+    "uso": 0.437,
+    "delta_pp_v2": 0.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.25,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev_enl_lamento": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 2022,
+    "uso": 0.326,
+    "delta_pp_v2": -2.5,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.297,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev_enl_luto": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 841,
+    "uso": 0.421,
+    "delta_pp_v2": -1.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.431,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev_ombro_porta": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1033,
+    "uso": 0.0,
+    "delta_pp_v2": -1.2,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "dev_provocacao": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 939,
+    "uso": 0.091,
+    "delta_pp_v2": -3.1,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.03,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_baixo"
+    ]
+   },
+   "dev_reflexo_bastiao": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 1031,
+    "uso": 0.0,
+    "delta_pp_v2": 0.6,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "dev_zel_ciume": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 2024,
+    "uso": 0.229,
+    "delta_pp_v2": -6.2,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.568,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "dev_zel_interdito": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 1045,
+    "uso": 0.051,
+    "delta_pp_v2": -5.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.043,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_baixo"
+    ]
+   },
+   "esporos": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1882,
+    "uso": 0.116,
+    "delta_pp_v2": -9.4,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.149,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "faisca_cinza": {
+    "categoria": "legada",
+    "classe": "Arcanista Cinzento",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 870,
+    "uso": 0.263,
+    "delta_pp_v2": -3.1,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.107,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "fardo_estilhaco": {
+    "categoria": "legada",
+    "classe": null,
+    "versao": 1,
+    "custo_folego": 0,
+    "na_mao": 2643,
+    "uso": 0.0,
+    "delta_pp_v2": -0.6,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "grito_provocador": {
+    "categoria": "legada",
+    "classe": "Devoto do Abismo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 948,
+    "uso": 0.142,
+    "delta_pp_v2": -2.5,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.117,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "hemorragia": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 838,
+    "uso": 0.07,
+    "delta_pp_v2": -9.4,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.016,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_baixo"
+    ]
+   },
+   "med1_bot_giz_vermelho": {
+    "categoria": "onda",
+    "classe": "Médico de Campo",
+    "versao": 2,
+    "custo_folego": 0,
+    "na_mao": 2143,
+    "uso": 0.487,
+    "delta_pp_v2": -17.5,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.518,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med1_bot_sal_na_sombra": {
+    "categoria": "onda",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 0,
+    "na_mao": 2118,
+    "uso": 0.498,
+    "delta_pp_v2": -9.7,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.527,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med1_fer_cotovelo_de_aco": {
+    "categoria": "onda",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 937,
+    "uso": 0.454,
+    "delta_pp_v2": -4.7,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.429,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med1_fer_garra_de_protese": {
+    "categoria": "onda",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 639,
+    "uso": 0.582,
+    "delta_pp_v2": -9.4,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.507,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med1_fer_lente_de_protese": {
+    "categoria": "onda",
+    "classe": "Médico de Campo",
+    "versao": 2,
+    "custo_folego": 1,
+    "na_mao": 497,
+    "uso": 0.421,
+    "delta_pp_v2": -1.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.192,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med1_fer_tala_rigida": {
+    "categoria": "onda",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 0,
+    "na_mao": 1033,
+    "uso": 0.512,
+    "delta_pp_v2": -5.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.46,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med1_tri_remendo_rapido": {
+    "categoria": "onda",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1265,
+    "uso": 0.181,
+    "delta_pp_v2": -0.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.179,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med1_tri_sutura_sob_fogo": {
+    "categoria": "onda",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1070,
+    "uso": 0.101,
+    "delta_pp_v2": -0.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.139,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med_bot_composto": {
+    "categoria": "legada",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 2659,
+    "uso": 0.38,
+    "delta_pp_v2": -12.2,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.408,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med_bot_purga": {
+    "categoria": "legada",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 1056,
+    "uso": 0.07,
+    "delta_pp_v2": -0.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.016,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_baixo"
+    ]
+   },
+   "med_dose_choque": {
+    "categoria": "legada",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 1110,
+    "uso": 0.0,
+    "delta_pp_v2": -2.2,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "med_estabilizar": {
+    "categoria": "legada",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 1082,
+    "uso": 0.044,
+    "delta_pp_v2": 0.0,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.014,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_baixo"
+    ]
+   },
+   "med_fer_talas": {
+    "categoria": "legada",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 2604,
+    "uso": 0.553,
+    "delta_pp_v2": -3.1,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.559,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med_marca_triagem": {
+    "categoria": "legada",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 983,
+    "uso": 0.127,
+    "delta_pp_v2": -1.3,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.057,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med_tri_corredor": {
+    "categoria": "legada",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 1143,
+    "uso": 0.057,
+    "delta_pp_v2": 3.4,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.055,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "med_tri_reflexo": {
+    "categoria": "legada",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 2670,
+    "uso": 0.0,
+    "delta_pp_v2": -1.6,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "san1_ava_gota_contada": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 747,
+    "uso": 0.21,
+    "delta_pp_v2": -1.9,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.188,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "san1_ava_penhor_de_carne": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 705,
+    "uso": 0.688,
+    "delta_pp_v2": -4.4,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.61,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "san1_exp_sangue_na_areia": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 796,
+    "uso": 0.207,
+    "delta_pp_v2": -0.9,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.296,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "san1_exp_selo_de_dor": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 723,
+    "uso": 0.654,
+    "delta_pp_v2": -3.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.699,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "san1_exp_veia_a_mostra": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 712,
+    "uso": 0.243,
+    "delta_pp_v2": -12.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.435,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "san1_sil_corte_sem_aviso": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 2,
+    "custo_folego": 2,
+    "na_mao": 676,
+    "uso": 0.484,
+    "delta_pp_v2": -2.2,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.439,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "san1_sil_pe_de_pluma": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 342,
+    "uso": 0.0,
+    "delta_pp_v2": 1.9,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "san1_sil_veneno_vermelho": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 670,
+    "uso": 0.057,
+    "delta_pp_v2": -3.4,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.177,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "san_ava_juros_carne": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 764,
+    "uso": 0.003,
+    "delta_pp_v2": 1.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_baixo"
+    ]
+   },
+   "san_corte_troca": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1120,
+    "uso": 0.265,
+    "delta_pp_v2": -1.9,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.236,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "san_esquiva": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 769,
+    "uso": 0.0,
+    "delta_pp_v2": -1.3,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "san_exp_espetaculo": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1548,
+    "uso": 0.044,
+    "delta_pp_v2": -7.8,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.169,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "san_sil_exato": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1611,
+    "uso": 0.769,
+    "delta_pp_v2": -0.9,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.876,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_alto"
+    ]
+   },
+   "san_sil_fio": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 776,
+    "uso": 0.022,
+    "delta_pp_v2": 3.1,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_baixo"
+    ]
+   },
+   "san_sil_veia": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 776,
+    "uso": 0.464,
+    "delta_pp_v2": -0.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.298,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "san_transfusao_hostil": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 774,
+    "uso": 0.15,
+    "delta_pp_v2": -5.6,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.229,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "san_troco_carmesim": {
+    "categoria": "sangromante",
+    "classe": "Sangromante",
+    "versao": 1,
+    "custo_folego": 2,
+    "na_mao": 409,
+    "uso": 0.0,
+    "delta_pp_v2": 0.0,
+    "delta_base": "remocao",
+    "taxa_uso_lote": 0.0,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": [
+     "uso_nao_medido",
+     "sem_referencia"
+    ]
+   },
+   "toque_corrosivo": {
+    "categoria": "legada",
+    "classe": "Corruptor",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 865,
+    "uso": 0.066,
+    "delta_pp_v2": -5.9,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.064,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   },
+   "torniquete": {
+    "categoria": "legada",
+    "classe": "Médico de Campo",
+    "versao": 1,
+    "custo_folego": 1,
+    "na_mao": 1319,
+    "uso": 0.188,
+    "delta_pp_v2": -2.2,
+    "delta_base": "substituicao",
+    "taxa_uso_lote": 0.211,
+    "lutas_por_braco": 320,
+    "bandeiras_v2": [],
+    "avisos_v2": []
+   }
+  },
+  "por_categoria": {
+   "basica": {
+    "uso_acima_60": [
+     "bas_arc_vazao",
+     "bas_cor_golpe",
+     "bas_cor_guarda",
+     "bas_cor_mofo",
+     "bas_dev_golpe",
+     "bas_dev_voto",
+     "bas_med_golpe"
+    ],
+    "dominante_delta": []
+   },
+   "legada": {
+    "uso_acima_60": [
+     "arc_des_mao_nua",
+     "arc_descarga",
+     "arc_faisca",
+     "cor_bio_gangrena",
+     "cor_esporos"
+    ],
+    "dominante_delta": []
+   },
+   "onda": {
+    "uso_acima_60": [
+     "arc1_cal_pulso_medido"
+    ],
+    "dominante_delta": []
+   },
+   "sangromante": {
+    "uso_acima_60": [
+     "bas_san_corte_raso",
+     "san1_ava_penhor_de_carne",
+     "san1_exp_selo_de_dor",
+     "san_sil_exato"
+    ],
+    "dominante_delta": []
+   }
+  },
+  "meta": {
+   "spec": "SPEC-369",
+   "seeds": [
+    260,
+    339
+   ],
+   "elapsed_s": 2428.9
+  }
+ },
+ "posturas": {
+  "posturas": {
+   "Devoto do Abismo": {
+    "todas": {
+     "celulas": {
+      "L1 padrao": [
+       263,
+       320
+      ],
+      "L1 elite": [
+       231,
+       320
+      ],
+      "L3 padrao": [
+       265,
+       320
+      ],
+      "L3 elite": [
+       259,
+       320
+      ],
+      "L5 padrao": [
+       112,
+       320
+      ],
+      "L5 elite": [
+       92,
+       320
+      ]
+     },
+     "total": 0.636,
+     "padrao": 0.667,
+     "elite": 0.606
+    },
+    "consagrado": {
+     "celulas": {
+      "L1 padrao": [
+       275,
+       320
+      ],
+      "L1 elite": [
+       233,
+       320
+      ],
+      "L3 padrao": [
+       300,
+       320
+      ],
+      "L3 elite": [
+       270,
+       320
+      ],
+      "L5 padrao": [
+       98,
+       320
+      ],
+      "L5 elite": [
+       77,
+       320
+      ]
+     },
+     "total": 0.653,
+     "padrao": 0.701,
+     "elite": 0.604
+    },
+    "zeloso": {
+     "celulas": {
+      "L1 padrao": [
+       253,
+       320
+      ],
+      "L1 elite": [
+       209,
+       320
+      ],
+      "L3 padrao": [
+       260,
+       320
+      ],
+      "L3 elite": [
+       237,
+       320
+      ],
+      "L5 padrao": [
+       73,
+       320
+      ],
+      "L5 elite": [
+       58,
+       320
+      ]
+     },
+     "total": 0.568,
+     "padrao": 0.61,
+     "elite": 0.525
+    },
+    "enlutado": {
+     "celulas": {
+      "L1 padrao": [
+       266,
+       320
+      ],
+      "L1 elite": [
+       227,
+       320
+      ],
+      "L3 padrao": [
+       283,
+       320
+      ],
+      "L3 elite": [
+       260,
+       320
+      ],
+      "L5 padrao": [
+       99,
+       320
+      ],
+      "L5 elite": [
+       66,
+       320
+      ]
+     },
+     "total": 0.626,
+     "padrao": 0.675,
+     "elite": 0.576
+    }
+   },
+   "Sangromante": {
+    "todas": {
+     "celulas": {
+      "L1 padrao": [
+       279,
+       320
+      ],
+      "L1 elite": [
+       244,
+       320
+      ],
+      "L3 padrao": [
+       270,
+       320
+      ],
+      "L3 elite": [
+       248,
+       320
+      ],
+      "L5 padrao": [
+       99,
+       320
+      ],
+      "L5 elite": [
+       96,
+       320
+      ]
+     },
+     "total": 0.644,
+     "padrao": 0.675,
+     "elite": 0.613
+    },
+    "exposto": {
+     "celulas": {
+      "L1 padrao": [
+       279,
+       320
+      ],
+      "L1 elite": [
+       226,
+       320
+      ],
+      "L3 padrao": [
+       273,
+       320
+      ],
+      "L3 elite": [
+       242,
+       320
+      ],
+      "L5 padrao": [
+       92,
+       320
+      ],
+      "L5 elite": [
+       76,
+       320
+      ]
+     },
+     "total": 0.619,
+     "padrao": 0.671,
+     "elite": 0.567
+    },
+    "avaro": {
+     "celulas": {
+      "L1 padrao": [
+       278,
+       320
+      ],
+      "L1 elite": [
+       254,
+       320
+      ],
+      "L3 padrao": [
+       276,
+       320
+      ],
+      "L3 elite": [
+       272,
+       320
+      ],
+      "L5 padrao": [
+       108,
+       320
+      ],
+      "L5 elite": [
+       97,
+       320
+      ]
+     },
+     "total": 0.669,
+     "padrao": 0.69,
+     "elite": 0.649
+    },
+    "silencioso": {
+     "celulas": {
+      "L1 padrao": [
+       300,
+       320
+      ],
+      "L1 elite": [
+       269,
+       320
+      ],
+      "L3 padrao": [
+       269,
+       320
+      ],
+      "L3 elite": [
+       255,
+       320
+      ],
+      "L5 padrao": [
+       103,
+       320
+      ],
+      "L5 elite": [
+       89,
+       320
+      ]
+     },
+     "total": 0.669,
+     "padrao": 0.7,
+     "elite": 0.639
+    }
+   },
+   "Corruptor": {
+    "todas": {
+     "celulas": {
+      "L1 padrao": [
+       270,
+       320
+      ],
+      "L1 elite": [
+       234,
+       320
+      ],
+      "L3 padrao": [
+       259,
+       320
+      ],
+      "L3 elite": [
+       223,
+       320
+      ],
+      "L5 padrao": [
+       72,
+       320
+      ],
+      "L5 elite": [
+       60,
+       320
+      ]
+     },
+     "total": 0.582,
+     "padrao": 0.626,
+     "elite": 0.539
+    },
+    "biologia": {
+     "celulas": {
+      "L1 padrao": [
+       276,
+       320
+      ],
+      "L1 elite": [
+       260,
+       320
+      ],
+      "L3 padrao": [
+       280,
+       320
+      ],
+      "L3 elite": [
+       257,
+       320
+      ],
+      "L5 padrao": [
+       123,
+       320
+      ],
+      "L5 elite": [
+       89,
+       320
+      ]
+     },
+     "total": 0.669,
+     "padrao": 0.707,
+     "elite": 0.631
+    },
+    "alma": {
+     "celulas": {
+      "L1 padrao": [
+       275,
+       320
+      ],
+      "L1 elite": [
+       230,
+       320
+      ],
+      "L3 padrao": [
+       236,
+       320
+      ],
+      "L3 elite": [
+       204,
+       320
+      ],
+      "L5 padrao": [
+       81,
+       320
+      ],
+      "L5 elite": [
+       59,
+       320
+      ]
+     },
+     "total": 0.565,
+     "padrao": 0.617,
+     "elite": 0.514
+    },
+    "inorganica": {
+     "celulas": {
+      "L1 padrao": [
+       290,
+       320
+      ],
+      "L1 elite": [
+       244,
+       320
+      ],
+      "L3 padrao": [
+       276,
+       320
+      ],
+      "L3 elite": [
+       256,
+       320
+      ],
+      "L5 padrao": [
+       60,
+       320
+      ],
+      "L5 elite": [
+       62,
+       320
+      ]
+     },
+     "total": 0.619,
+     "padrao": 0.652,
+     "elite": 0.585
+    }
+   },
+   "Arcanista Cinzento": {
+    "todas": {
+     "celulas": {
+      "L1 padrao": [
+       252,
+       320
+      ],
+      "L1 elite": [
+       201,
+       320
+      ],
+      "L3 padrao": [
+       239,
+       320
+      ],
+      "L3 elite": [
+       176,
+       320
+      ],
+      "L5 padrao": [
+       75,
+       320
+      ],
+      "L5 elite": [
+       55,
+       320
+      ]
+     },
+     "total": 0.52,
+     "padrao": 0.59,
+     "elite": 0.45
+    },
+    "calibrado": {
+     "celulas": {
+      "L1 padrao": [
+       277,
+       320
+      ],
+      "L1 elite": [
+       234,
+       320
+      ],
+      "L3 padrao": [
+       275,
+       320
+      ],
+      "L3 elite": [
+       243,
+       320
+      ],
+      "L5 padrao": [
+       57,
+       320
+      ],
+      "L5 elite": [
+       44,
+       320
+      ]
+     },
+     "total": 0.589,
+     "padrao": 0.634,
+     "elite": 0.543
+    },
+    "descoberto": {
+     "celulas": {
+      "L1 padrao": [
+       243,
+       320
+      ],
+      "L1 elite": [
+       203,
+       320
+      ],
+      "L3 padrao": [
+       244,
+       320
+      ],
+      "L3 elite": [
+       209,
+       320
+      ],
+      "L5 padrao": [
+       83,
+       320
+      ],
+      "L5 elite": [
+       64,
+       320
+      ]
+     },
+     "total": 0.545,
+     "padrao": 0.594,
+     "elite": 0.496
+    },
+    "improvisador": {
+     "celulas": {
+      "L1 padrao": [
+       266,
+       320
+      ],
+      "L1 elite": [
+       232,
+       320
+      ],
+      "L3 padrao": [
+       273,
+       320
+      ],
+      "L3 elite": [
+       234,
+       320
+      ],
+      "L5 padrao": [
+       63,
+       320
+      ],
+      "L5 elite": [
+       42,
+       320
+      ]
+     },
+     "total": 0.578,
+     "padrao": 0.627,
+     "elite": 0.529
+    }
+   },
+   "Médico de Campo": {
+    "todas": {
+     "celulas": {
+      "L1 padrao": [
+       226,
+       320
+      ],
+      "L1 elite": [
+       203,
+       320
+      ],
+      "L3 padrao": [
+       261,
+       320
+      ],
+      "L3 elite": [
+       236,
+       320
+      ],
+      "L5 padrao": [
+       83,
+       320
+      ],
+      "L5 elite": [
+       64,
+       320
+      ]
+     },
+     "total": 0.559,
+     "padrao": 0.594,
+     "elite": 0.524
+    },
+    "cirurgiao_trincheira": {
+     "celulas": {
+      "L1 padrao": [
+       226,
+       320
+      ],
+      "L1 elite": [
+       211,
+       320
+      ],
+      "L3 padrao": [
+       274,
+       320
+      ],
+      "L3 elite": [
+       241,
+       320
+      ],
+      "L5 padrao": [
+       86,
+       320
+      ],
+      "L5 elite": [
+       65,
+       320
+      ]
+     },
+     "total": 0.574,
+     "padrao": 0.61,
+     "elite": 0.539
+    },
+    "boticario": {
+     "celulas": {
+      "L1 padrao": [
+       199,
+       320
+      ],
+      "L1 elite": [
+       191,
+       320
+      ],
+      "L3 padrao": [
+       250,
+       320
+      ],
+      "L3 elite": [
+       209,
+       320
+      ],
+      "L5 padrao": [
+       82,
+       320
+      ],
+      "L5 elite": [
+       73,
+       320
+      ]
+     },
+     "total": 0.523,
+     "padrao": 0.553,
+     "elite": 0.493
+    },
+    "cirurgiao_ferro": {
+     "celulas": {
+      "L1 padrao": [
+       226,
+       320
+      ],
+      "L1 elite": [
+       200,
+       320
+      ],
+      "L3 padrao": [
+       255,
+       320
+      ],
+      "L3 elite": [
+       230,
+       320
+      ],
+      "L5 padrao": [
+       108,
+       320
+      ],
+      "L5 elite": [
+       79,
+       320
+      ]
+     },
+     "total": 0.572,
+     "padrao": 0.614,
+     "elite": 0.53
+    }
+   }
+  },
+  "guarda_r19": {
+   "totais": {
+    "Devoto do Abismo": 0.636,
+    "Sangromante": 0.644,
+    "Corruptor": 0.582,
+    "Arcanista Cinzento": 0.52,
+    "Médico de Campo": 0.559
+   },
+   "postura_fora_45_85": [],
+   "padrao_acima_75": [],
+   "arcanista_todas_ge_45": true,
+   "excecoes_teto": [
+    "Sangromante/avaro",
+    "Sangromante/silencioso",
+    "Sangromante/todas"
+   ],
+   "ok": true
+  },
+  "meta": {
+   "spec": "SPEC-369",
+   "seeds": [
+    260,
+    339
+   ],
+   "elapsed_s": 730.8
+  }
+ },
+ "pressagio": {
+  "conhecida": {
+   "decks_on": {
+    "off": {
+     "conflitos": 7200,
+     "dano_medio": 11.18,
+     "vitoria_pct": 69.6,
+     "rodadas_media": 4.56
+    },
+    "on-cego": {
+     "conflitos": 7200,
+     "dano_medio": 12.72,
+     "vitoria_pct": 62.2,
+     "rodadas_media": 4.68,
+     "vs_off": {
+      "delta_pct": 13.7,
+      "razao": 1.1371,
+      "sementes_abaixo": 2,
+      "sementes": 80
+     },
+     "por_postura": {
+      "Devoto do Abismo": {
+       "conflitos": 1440,
+       "dano_medio": 10.81,
+       "vitoria_pct": 71.2,
+       "rodadas_media": 5.06
+      },
+      "Sangromante": {
+       "conflitos": 1440,
+       "dano_medio": 12.8,
+       "vitoria_pct": 67.8,
+       "rodadas_media": 3.9
+      },
+      "Corruptor": {
+       "conflitos": 1440,
+       "dano_medio": 13.54,
+       "vitoria_pct": 59.4,
+       "rodadas_media": 4.38
+      },
+      "Arcanista Cinzento": {
+       "conflitos": 1440,
+       "dano_medio": 13.91,
+       "vitoria_pct": 51.5,
+       "rodadas_media": 3.98
+      },
+      "Médico de Campo": {
+       "conflitos": 1440,
+       "dano_medio": 12.52,
+       "vitoria_pct": 60.8,
+       "rodadas_media": 6.1
+      }
+     }
+    },
+    "on-368": {
+     "conflitos": 7200,
+     "dano_medio": 12.72,
+     "vitoria_pct": 62.2,
+     "rodadas_media": 4.68,
+     "vs_off": {
+      "delta_pct": 13.7,
+      "razao": 1.1371,
+      "sementes_abaixo": 2,
+      "sementes": 80
+     },
+     "vs_cego": {
+      "delta_pct": 0.0,
+      "razao": 1.0,
+      "sementes_abaixo": 0,
+      "sementes": 80
+     },
+     "por_postura": {
+      "Devoto do Abismo": {
+       "conflitos": 1440,
+       "dano_medio": 10.81,
+       "vitoria_pct": 71.2,
+       "rodadas_media": 5.06
+      },
+      "Sangromante": {
+       "conflitos": 1440,
+       "dano_medio": 12.8,
+       "vitoria_pct": 67.8,
+       "rodadas_media": 3.9
+      },
+      "Corruptor": {
+       "conflitos": 1440,
+       "dano_medio": 13.54,
+       "vitoria_pct": 59.4,
+       "rodadas_media": 4.38
+      },
+      "Arcanista Cinzento": {
+       "conflitos": 1440,
+       "dano_medio": 13.91,
+       "vitoria_pct": 51.5,
+       "rodadas_media": 3.98
+      },
+      "Médico de Campo": {
+       "conflitos": 1440,
+       "dano_medio": 12.52,
+       "vitoria_pct": 60.8,
+       "rodadas_media": 6.1
+      }
+     }
+    },
+    "on-faixa": {
+     "conflitos": 7200,
+     "dano_medio": 13.13,
+     "vitoria_pct": 56.4,
+     "rodadas_media": 5.02,
+     "vs_off": {
+      "delta_pct": 17.4,
+      "razao": 1.1744,
+      "sementes_abaixo": 1,
+      "sementes": 80
+     },
+     "vs_cego": {
+      "delta_pct": 3.3,
+      "razao": 1.0328,
+      "sementes_abaixo": 15,
+      "sementes": 80
+     },
+     "por_postura": {
+      "Devoto do Abismo": {
+       "conflitos": 1440,
+       "dano_medio": 10.96,
+       "vitoria_pct": 65.5,
+       "rodadas_media": 5.48
+      },
+      "Sangromante": {
+       "conflitos": 1440,
+       "dano_medio": 13.48,
+       "vitoria_pct": 60.6,
+       "rodadas_media": 4.2
+      },
+      "Corruptor": {
+       "conflitos": 1440,
+       "dano_medio": 13.41,
+       "vitoria_pct": 59.2,
+       "rodadas_media": 4.52
+      },
+      "Arcanista Cinzento": {
+       "conflitos": 1440,
+       "dano_medio": 14.33,
+       "vitoria_pct": 44.3,
+       "rodadas_media": 4.33
+      },
+      "Médico de Campo": {
+       "conflitos": 1440,
+       "dano_medio": 13.49,
+       "vitoria_pct": 52.4,
+       "rodadas_media": 6.59
+      }
+     }
+    },
+    "delta_faixa_vs_cego_pct": 3.3,
+    "delta_faixa_vs_off_pct": 17.4,
+    "razao_faixa_cego": 1.0328
+   }
+  },
+  "meta": {
+   "spec": "SPEC-369",
+   "seeds": [
+    260,
+    339
+   ],
+   "elapsed_s": 793.2
+  }
+ },
+ "emboscada": {
+  "cenario": "emboscada realista (f_viagem = 1), credito de passiva D-369-6",
+  "posturas": {
+   "Devoto do Abismo": {
+    "todas": {
+     "p_emb": {
+      "1": 0.5,
+      "3": 0.5,
+      "5": 0.45
+     },
+     "base_total": 0.636,
+     "emboscada_total": 0.618,
+     "realista": {
+      "total": 0.629,
+      "padrao": 0.6651,
+      "elite": 0.593
+     },
+     "realista_com_contrapartida": {
+      "total": 0.629,
+      "padrao": 0.6651,
+      "elite": 0.593
+     },
+     "realista_369": {
+      "total": 0.6365,
+      "padrao": 0.6667,
+      "elite": 0.6062
+     }
+    },
+    "consagrado": {
+     "p_emb": {
+      "1": 0.5,
+      "3": 0.5,
+      "5": 0.45
+     },
+     "base_total": 0.653,
+     "emboscada_total": 0.623,
+     "realista": {
+      "total": 0.639,
+      "padrao": 0.6829,
+      "elite": 0.5951
+     },
+     "realista_com_contrapartida": {
+      "total": 0.639,
+      "padrao": 0.6829,
+      "elite": 0.5951
+     },
+     "realista_369": {
+      "total": 0.639,
+      "padrao": 0.6829,
+      "elite": 0.5951
+     }
+    },
+    "zeloso": {
+     "p_emb": {
+      "1": 0.5,
+      "3": 0.5,
+      "5": 0.45
+     },
+     "base_total": 0.568,
+     "emboscada_total": 0.56,
+     "realista": {
+      "total": 0.5645,
+      "padrao": 0.6047,
+      "elite": 0.5242
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5645,
+      "padrao": 0.6047,
+      "elite": 0.5242
+     },
+     "realista_369": {
+      "total": 0.5677,
+      "padrao": 0.6104,
+      "elite": 0.525
+     }
+    },
+    "enlutado": {
+     "p_emb": {
+      "1": 0.5,
+      "3": 0.5,
+      "5": 0.45
+     },
+     "base_total": 0.626,
+     "emboscada_total": 0.611,
+     "realista": {
+      "total": 0.6199,
+      "padrao": 0.6573,
+      "elite": 0.5824
+     },
+     "realista_com_contrapartida": {
+      "total": 0.6199,
+      "padrao": 0.6573,
+      "elite": 0.5824
+     },
+     "realista_369": {
+      "total": 0.6199,
+      "padrao": 0.6573,
+      "elite": 0.5824
+     }
+    }
+   },
+   "Sangromante": {
+    "todas": {
+     "p_emb": {
+      "1": 0.5,
+      "3": 0.5,
+      "5": 0.45
+     },
+     "base_total": 0.644,
+     "emboscada_total": 0.595,
+     "realista": {
+      "total": 0.621,
+      "padrao": 0.6659,
+      "elite": 0.5761
+     },
+     "realista_com_contrapartida": {
+      "total": 0.621,
+      "padrao": 0.6659,
+      "elite": 0.5761
+     },
+     "realista_369": {
+      "total": 0.6367,
+      "padrao": 0.6776,
+      "elite": 0.5958
+     }
+    },
+    "exposto": {
+     "p_emb": {
+      "1": 0.5,
+      "3": 0.5,
+      "5": 0.45
+     },
+     "base_total": 0.619,
+     "emboscada_total": 0.592,
+     "realista": {
+      "total": 0.6067,
+      "padrao": 0.6611,
+      "elite": 0.5522
+     },
+     "realista_com_contrapartida": {
+      "total": 0.6067,
+      "padrao": 0.6611,
+      "elite": 0.5522
+     },
+     "realista_369": {
+      "total": 0.6198,
+      "padrao": 0.6719,
+      "elite": 0.5677
+     }
+    },
+    "avaro": {
+     "p_emb": {
+      "1": 0.5,
+      "3": 0.5,
+      "5": 0.45
+     },
+     "base_total": 0.669,
+     "emboscada_total": 0.643,
+     "realista": {
+      "total": 0.6579,
+      "padrao": 0.6822,
+      "elite": 0.6336
+     },
+     "realista_com_contrapartida": {
+      "total": 0.6579,
+      "padrao": 0.6822,
+      "elite": 0.6336
+     },
+     "realista_369": {
+      "total": 0.6753,
+      "padrao": 0.7,
+      "elite": 0.6505
+     }
+    },
+    "silencioso": {
+     "p_emb": {
+      "1": 0.5,
+      "3": 0.5,
+      "5": 0.45
+     },
+     "base_total": 0.669,
+     "emboscada_total": 0.64,
+     "realista": {
+      "total": 0.656,
+      "padrao": 0.6861,
+      "elite": 0.6258
+     },
+     "realista_com_contrapartida": {
+      "total": 0.656,
+      "padrao": 0.6861,
+      "elite": 0.6258
+     },
+     "realista_369": {
+      "total": 0.6698,
+      "padrao": 0.6974,
+      "elite": 0.6422
+     }
+    }
+   },
+   "Corruptor": {
+    "todas": {
+     "p_emb": {
+      "1": 0.3,
+      "3": 0.3,
+      "5": 0.3
+     },
+     "base_total": 0.582,
+     "emboscada_total": 0.537,
+     "realista": {
+      "total": 0.5687,
+      "padrao": 0.6098,
+      "elite": 0.5276
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5687,
+      "padrao": 0.6098,
+      "elite": 0.5276
+     },
+     "realista_369": {
+      "total": 0.5823,
+      "padrao": 0.626,
+      "elite": 0.5385
+     }
+    },
+    "biologia": {
+     "p_emb": {
+      "1": 0.3,
+      "3": 0.3,
+      "5": 0.3
+     },
+     "base_total": 0.669,
+     "emboscada_total": 0.615,
+     "realista": {
+      "total": 0.653,
+      "padrao": 0.6895,
+      "elite": 0.6166
+     },
+     "realista_com_contrapartida": {
+      "total": 0.653,
+      "padrao": 0.6895,
+      "elite": 0.6166
+     },
+     "realista_369": {
+      "total": 0.653,
+      "padrao": 0.6895,
+      "elite": 0.6166
+     }
+    },
+    "alma": {
+     "p_emb": {
+      "1": 0.3,
+      "3": 0.3,
+      "5": 0.3
+     },
+     "base_total": 0.565,
+     "emboscada_total": 0.52,
+     "realista": {
+      "total": 0.5517,
+      "padrao": 0.5985,
+      "elite": 0.5048
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5517,
+      "padrao": 0.5985,
+      "elite": 0.5048
+     },
+     "realista_369": {
+      "total": 0.5517,
+      "padrao": 0.5985,
+      "elite": 0.5048
+     }
+    },
+    "inorganica": {
+     "p_emb": {
+      "1": 0.3,
+      "3": 0.3,
+      "5": 0.3
+     },
+     "base_total": 0.619,
+     "emboscada_total": 0.557,
+     "realista": {
+      "total": 0.6002,
+      "padrao": 0.6327,
+      "elite": 0.5676
+     },
+     "realista_com_contrapartida": {
+      "total": 0.6002,
+      "padrao": 0.6327,
+      "elite": 0.5676
+     },
+     "realista_369": {
+      "total": 0.6002,
+      "padrao": 0.6327,
+      "elite": 0.5676
+     }
+    }
+   },
+   "Arcanista Cinzento": {
+    "todas": {
+     "p_emb": {
+      "1": 0.25,
+      "3": 0.25,
+      "5": 0.25
+     },
+     "base_total": 0.52,
+     "emboscada_total": 0.461,
+     "realista": {
+      "total": 0.5051,
+      "padrao": 0.5784,
+      "elite": 0.4318
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5051,
+      "padrao": 0.5784,
+      "elite": 0.4318
+     },
+     "realista_369": {
+      "total": 0.5198,
+      "padrao": 0.5896,
+      "elite": 0.45
+     }
+    },
+    "calibrado": {
+     "p_emb": {
+      "1": 0.25,
+      "3": 0.25,
+      "5": 0.25
+     },
+     "base_total": 0.589,
+     "emboscada_total": 0.604,
+     "realista": {
+      "total": 0.5924,
+      "padrao": 0.6357,
+      "elite": 0.5492
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5924,
+      "padrao": 0.6357,
+      "elite": 0.5492
+     },
+     "realista_369": {
+      "total": 0.5958,
+      "padrao": 0.6391,
+      "elite": 0.5526
+     }
+    },
+    "descoberto": {
+     "p_emb": {
+      "1": 0.25,
+      "3": 0.25,
+      "5": 0.25
+     },
+     "base_total": 0.545,
+     "emboscada_total": 0.474,
+     "realista": {
+      "total": 0.5272,
+      "padrao": 0.5781,
+      "elite": 0.4763
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5272,
+      "padrao": 0.5781,
+      "elite": 0.4763
+     },
+     "realista_369": {
+      "total": 0.5378,
+      "padrao": 0.5898,
+      "elite": 0.4857
+     }
+    },
+    "improvisador": {
+     "p_emb": {
+      "1": 0.25,
+      "3": 0.25,
+      "5": 0.25
+     },
+     "base_total": 0.578,
+     "emboscada_total": 0.553,
+     "realista": {
+      "total": 0.5717,
+      "padrao": 0.6169,
+      "elite": 0.5266
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5717,
+      "padrao": 0.6169,
+      "elite": 0.5266
+     },
+     "realista_369": {
+      "total": 0.5781,
+      "padrao": 0.6271,
+      "elite": 0.5292
+     }
+    }
+   },
+   "Médico de Campo": {
+    "todas": {
+     "p_emb": {
+      "1": 0.3,
+      "3": 0.3,
+      "5": 0.3
+     },
+     "base_total": 0.559,
+     "emboscada_total": 0.503,
+     "realista": {
+      "total": 0.5421,
+      "padrao": 0.5797,
+      "elite": 0.5046
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5528,
+      "padrao": 0.5925,
+      "elite": 0.513
+     },
+     "realista_369": {
+      "total": 0.5528,
+      "padrao": 0.5925,
+      "elite": 0.513
+     }
+    },
+    "cirurgiao_trincheira": {
+     "p_emb": {
+      "1": 0.3,
+      "3": 0.3,
+      "5": 0.3
+     },
+     "base_total": 0.574,
+     "emboscada_total": 0.547,
+     "realista": {
+      "total": 0.5662,
+      "padrao": 0.6017,
+      "elite": 0.5307
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5751,
+      "padrao": 0.6117,
+      "elite": 0.5385
+     },
+     "realista_369": {
+      "total": 0.5751,
+      "padrao": 0.6117,
+      "elite": 0.5385
+     }
+    },
+    "boticario": {
+     "p_emb": {
+      "1": 0.3,
+      "3": 0.3,
+      "5": 0.3
+     },
+     "base_total": 0.523,
+     "emboscada_total": 0.519,
+     "realista": {
+      "total": 0.5218,
+      "padrao": 0.5525,
+      "elite": 0.4911
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5218,
+      "padrao": 0.5525,
+      "elite": 0.4911
+     },
+     "realista_369": {
+      "total": 0.5218,
+      "padrao": 0.5525,
+      "elite": 0.4911
+     }
+    },
+    "cirurgiao_ferro": {
+     "p_emb": {
+      "1": 0.3,
+      "3": 0.3,
+      "5": 0.3
+     },
+     "base_total": 0.572,
+     "emboscada_total": 0.547,
+     "realista": {
+      "total": 0.5644,
+      "padrao": 0.6032,
+      "elite": 0.5255
+     },
+     "realista_com_contrapartida": {
+      "total": 0.5716,
+      "padrao": 0.6092,
+      "elite": 0.534
+     },
+     "realista_369": {
+      "total": 0.5716,
+      "padrao": 0.6092,
+      "elite": 0.534
+     }
+    }
+   }
+  },
+  "meta": {
+   "spec": "SPEC-369",
+   "seeds": [
+    260,
+    339
+   ],
+   "elapsed_s": 2087.6
+  }
+ },
+ "familias": {
+  "per_family": 5,
+  "cells": {
+   "predador|L3": {
+    "off": {
+     "win": 0.695,
+     "death": 0.305,
+     "avg_rounds": 4.21,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.72,
+     "death": 0.275,
+     "avg_rounds": 4.35,
+     "fights": 200
+    },
+    "delta_pp": 2.5,
+    "classe_d369_7": "ok"
+   },
+   "predador|L5": {
+    "off": {
+     "win": 0.365,
+     "death": 0.635,
+     "avg_rounds": 3.34,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.39,
+     "death": 0.61,
+     "avg_rounds": 3.71,
+     "fights": 200
+    },
+    "delta_pp": 2.5,
+    "classe_d369_7": "fora_de_escopo"
+   },
+   "covarde_oportunista|L3": {
+    "off": {
+     "win": 0.745,
+     "death": 0.24,
+     "avg_rounds": 6.05,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.83,
+     "death": 0.155,
+     "avg_rounds": 5.91,
+     "fights": 200
+    },
+    "delta_pp": 8.5,
+    "classe_d369_7": "ok"
+   },
+   "covarde_oportunista|L5": {
+    "off": {
+     "win": 0.525,
+     "death": 0.46,
+     "avg_rounds": 5.86,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.625,
+     "death": 0.345,
+     "avg_rounds": 6.13,
+     "fights": 200
+    },
+    "delta_pp": 10.0,
+    "classe_d369_7": "ok"
+   },
+   "conjurador|L3": {
+    "off": {
+     "win": 0.765,
+     "death": 0.22,
+     "avg_rounds": 5.54,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.735,
+     "death": 0.26,
+     "avg_rounds": 5.37,
+     "fights": 200
+    },
+    "delta_pp": -3.0,
+    "classe_d369_7": "ok"
+   },
+   "conjurador|L5": {
+    "off": {
+     "win": 0.525,
+     "death": 0.46,
+     "avg_rounds": 5.76,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.47,
+     "death": 0.53,
+     "avg_rounds": 5.03,
+     "fights": 200
+    },
+    "delta_pp": -5.5,
+    "classe_d369_7": "ok"
+   },
+   "morto_vivo_implacavel|L3": {
+    "off": {
+     "win": 0.62,
+     "death": 0.365,
+     "avg_rounds": 5.74,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.62,
+     "death": 0.37,
+     "avg_rounds": 5.86,
+     "fights": 200
+    },
+    "delta_pp": 0.0,
+    "classe_d369_7": "ok"
+   },
+   "morto_vivo_implacavel|L5": {
+    "off": {
+     "win": 0.335,
+     "death": 0.645,
+     "avg_rounds": 5.07,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.385,
+     "death": 0.605,
+     "avg_rounds": 5.19,
+     "fights": 200
+    },
+    "delta_pp": 5.0,
+    "classe_d369_7": "fora_de_escopo"
+   },
+   "bruto|L3": {
+    "off": {
+     "win": 0.73,
+     "death": 0.27,
+     "avg_rounds": 3.95,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.76,
+     "death": 0.24,
+     "avg_rounds": 3.96,
+     "fights": 200
+    },
+    "delta_pp": 3.0,
+    "classe_d369_7": "ok"
+   },
+   "bruto|L5": {
+    "off": {
+     "win": 0.24,
+     "death": 0.76,
+     "avg_rounds": 3.29,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.215,
+     "death": 0.785,
+     "avg_rounds": 3.17,
+     "fights": 200
+    },
+    "delta_pp": -2.5,
+    "classe_d369_7": "fora_de_escopo"
+   },
+   "guardiao|L3": {
+    "off": {
+     "win": 0.65,
+     "death": 0.325,
+     "avg_rounds": 8.14,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.57,
+     "death": 0.41,
+     "avg_rounds": 7.83,
+     "fights": 200
+    },
+    "delta_pp": -8.0,
+    "classe_d369_7": "ok"
+   },
+   "guardiao|L5": {
+    "off": {
+     "win": 0.33,
+     "death": 0.62,
+     "avg_rounds": 7.0,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.29,
+     "death": 0.67,
+     "avg_rounds": 6.17,
+     "fights": 200
+    },
+    "delta_pp": -4.0,
+    "classe_d369_7": "fora_de_escopo"
+   },
+   "predador_apice|L3": {
+    "off": {
+     "win": 0.72,
+     "death": 0.265,
+     "avg_rounds": 5.24,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.695,
+     "death": 0.3,
+     "avg_rounds": 5.21,
+     "fights": 200
+    },
+    "delta_pp": -2.5,
+    "classe_d369_7": "ok",
+    "sementes": [
+     260,
+     279
+    ],
+    "amostra_original_260_267": {
+     "off": {
+      "win": 0.762,
+      "death": 0.237,
+      "avg_rounds": 5.26,
+      "fights": 80
+     },
+     "on": {
+      "win": 0.662,
+      "death": 0.338,
+      "avg_rounds": 5.3,
+      "fights": 80
+     },
+     "delta_pp": -10.0,
+     "classe_d369_7": "ok"
+    }
+   },
+   "predador_apice|L5": {
+    "off": {
+     "win": 0.1,
+     "death": 0.887,
+     "avg_rounds": 4.04,
+     "fights": 80
+    },
+    "on": {
+     "win": 0.087,
+     "death": 0.912,
+     "avg_rounds": 4.01,
+     "fights": 80
+    },
+    "delta_pp": -1.3,
+    "classe_d369_7": "fora_de_escopo"
+   },
+   "tatico|L3": {
+    "off": {
+     "win": 0.715,
+     "death": 0.285,
+     "avg_rounds": 3.87,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.665,
+     "death": 0.335,
+     "avg_rounds": 4.0,
+     "fights": 200
+    },
+    "delta_pp": -5.0,
+    "classe_d369_7": "ok"
+   },
+   "tatico|L5": {
+    "off": {
+     "win": 0.385,
+     "death": 0.61,
+     "avg_rounds": 3.83,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.41,
+     "death": 0.585,
+     "avg_rounds": 4.36,
+     "fights": 200
+    },
+    "delta_pp": 2.5,
+    "classe_d369_7": "fora_de_escopo"
+   },
+   "lider_matilha|L3": {
+    "off": {
+     "win": 0.615,
+     "death": 0.36,
+     "avg_rounds": 6.59,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.565,
+     "death": 0.425,
+     "avg_rounds": 6.61,
+     "fights": 200
+    },
+    "delta_pp": -5.0,
+    "classe_d369_7": "ok"
+   },
+   "lider_matilha|L5": {
+    "off": {
+     "win": 0.745,
+     "death": 0.25,
+     "avg_rounds": 6.93,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.655,
+     "death": 0.33,
+     "avg_rounds": 7.17,
+     "fights": 200
+    },
+    "delta_pp": -9.0,
+    "classe_d369_7": "ok"
+   },
+   "emboscador|L3": {
+    "off": {
+     "win": 0.745,
+     "death": 0.245,
+     "avg_rounds": 5.67,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.7,
+     "death": 0.295,
+     "avg_rounds": 5.53,
+     "fights": 200
+    },
+    "delta_pp": -4.5,
+    "classe_d369_7": "ok"
+   },
+   "emboscador|L5": {
+    "off": {
+     "win": 0.335,
+     "death": 0.65,
+     "avg_rounds": 4.73,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.37,
+     "death": 0.625,
+     "avg_rounds": 4.5,
+     "fights": 200
+    },
+    "delta_pp": 3.5,
+    "classe_d369_7": "fora_de_escopo"
+   },
+   "abissal|L3": {
+    "off": {
+     "win": 0.725,
+     "death": 0.27,
+     "avg_rounds": 4.51,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.76,
+     "death": 0.23,
+     "avg_rounds": 4.98,
+     "fights": 200
+    },
+    "delta_pp": 3.5,
+    "classe_d369_7": "ok"
+   },
+   "abissal|L5": {
+    "off": {
+     "win": 0.24,
+     "death": 0.76,
+     "avg_rounds": 3.13,
+     "fights": 200
+    },
+    "on": {
+     "win": 0.32,
+     "death": 0.68,
+     "avg_rounds": 3.92,
+     "fights": 200
+    },
+    "delta_pp": 8.0,
+    "classe_d369_7": "fora_de_escopo"
+   }
+  },
+  "celulas_alvo": [],
+  "meta": {
+   "spec": "SPEC-369",
+   "seeds": [
+    260,
+    267
+   ],
+   "elapsed_s": 146.7
+  },
+  "amostra_ampliada": {
+   "celula": "predador_apice|L3",
+   "sementes": [
+    260,
+    279
+   ],
+   "comando": "familias --seeds 260-279 --only predador_apice --levels 3"
+  }
+ }
+}
