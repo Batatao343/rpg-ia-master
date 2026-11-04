@@ -1592,19 +1592,10 @@ def raridade(card: dict) -> str:
 
 
 def custo_folego(card: dict) -> int:
-    """Custo de Fôlego: explícito no JSON ou a regra default da SPEC-328 R6."""
-    if card.get("custo_folego") is not None:
-        return max(0, min(3, int(card["custo_folego"])))
-    eff = primary_effect(card) or {}
-    freq = str(card.get("frequencia") or "livre")
-    dano = int(eff.get("dano_base", 0) or 0) if eff.get("kind") == "dano" else 0
-    if card.get("apex") or freq == "descanso_longo":
-        return 3
-    if int(card.get("tier", 0) or 0) >= 3 or dano >= 8:
-        return 2
-    if freq == "livre" and eff.get("kind") != "dano":
-        return 0
-    return 1
+    """Alias da implementação única em `cards.custo_folego` (SPEC-377 R11)."""
+    from services import cards
+
+    return cards.custo_folego(card)
 
 
 def _formula_avg(formula: str) -> float:

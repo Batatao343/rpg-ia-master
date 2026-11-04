@@ -445,14 +445,16 @@ _DAMAGE_KINDS = frozenset({"dano", "dot", "contra_ataque"})
 
 
 def custo_folego(card: dict) -> int:
-    """Fôlego da Carta por rodada (R6). Valor explícito no JSON vence; senão deriva:
+    """Fôlego da Carta por rodada (R6; implementação ÚNICA — SPEC-377 R11, `card_effects` é alias). Valor explícito no JSON vence; senão deriva:
     3 se Ápice/descanso_longo · 2 se tier ≥ 3 ou dano_base ≥ 8 · 0 se livre e sem dano · 1."""
     if "custo_folego" in card:
         try:
             return max(0, min(FOLEGO_MAX_CARTA, int(card["custo_folego"])))
         except (TypeError, ValueError):
             pass
-    effect = card.get("efeito") or {}
+    from services.card_effects import primary_effect  # local: sem ciclo no import
+
+    effect = card.get("efeito") or primary_effect(card) or {}
     freq = str(card.get("frequencia", "livre"))
     if card.get("apex") or freq == "descanso_longo":
         return 3

@@ -27,7 +27,7 @@ _LINT = fx.custo_folego
 def _par(card: dict) -> tuple[object, object]:
     try:
         lint: object = _LINT(card)
-    except Exception as exc:  # silent-ok: medicao registra o erro
+    except (ValueError, TypeError) as exc:
         lint = f"erro:{type(exc).__name__}"
     return _JOGO(card), lint
 
@@ -79,7 +79,15 @@ def _lote_v2(ids: list[str]) -> dict:
 
     batch = [fx.materialize(copy.deepcopy(cards.all_cards()[i])) for i in ids]
     rep = sim.simulate_protocolo_lote(batch, protocolo="v2")
-    keep = ("vitoria_sem", "vitoria_ref", "vitoria_com", "delta_pp", "delta_base", "bandeiras", "avisos")
+    keep = (
+        "vitoria_sem",
+        "vitoria_ref",
+        "vitoria_com",
+        "delta_pp",
+        "delta_base",
+        "bandeiras",
+        "avisos",
+    )
     return {
         cid: {k: r.get(k) for k in keep} | {"ref_custo_folego": (r.get("referencia") or {})}
         for cid, r in rep.items()
@@ -96,14 +104,19 @@ def main() -> int:
         if args.jogo:
             fx.custo_folego = _JOGO
         rep = _lote_v2(["cor_toque", "toque_corrosivo"])
-        Path(args.lote_v2).write_text(json.dumps(rep, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        Path(args.lote_v2).write_text(
+            json.dumps(rep, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+        )
         print(json.dumps(rep, ensure_ascii=False, indent=1))
         return 0
     bruto = _bruto()
     n_cat, cat = _catalogo()
     n_eff, eff = _efetivas()
-    res = {"bruto": bruto, "catalogo": {"cartas": n_cat, "divergentes": cat},
-           "efetivas": {"cartas_com_ruptura_ou_evolucao": n_eff, "divergentes": eff}}
+    res = {
+        "bruto": bruto,
+        "catalogo": {"cartas": n_cat, "divergentes": cat},
+        "efetivas": {"cartas_com_ruptura_ou_evolucao": n_eff, "divergentes": eff},
+    }
     txt = json.dumps(res, ensure_ascii=False, indent=1) + "\n"
     if args.out:
         Path(args.out).write_text(txt, encoding="utf-8", newline="\n")

@@ -496,3 +496,10 @@ Revisão Sol do pouso: [`handoffs/SPEC-377-sol-review.md`](../handoffs/SPEC-377-
 | P2-4 | Nota: arena idêntica antes/depois porque o bot não se rende (não-regressão, não prova do R15). Médico 45,8 %, perto do piso. |
 
 Pendente: **item 2 (custo de Fôlego)**, que depende de o dono publicar `lote-v2` via `/eval-publish`.
+
+### Execução do item 2 (04/11)
+
+- Etapa 0 em `docs/spec377/folego_divergencias.{py,json}`: modo (iii) limpo (16 Cartas com ruptura/evolução, 0 divergências). `lote-v2` antes/depois em `docs/spec377/lote-v2-{antes,depois}.json`: `cor_toque` idêntico (delta +2,5); `toque_corrosivo` vitoria_ref 0,875→0,887, delta +1,2→0,0, sem bandeira.
+- Desvio: a implementação única mora em `cards.custo_folego` (não em `card_effects`), e `card_effects.custo_folego` é o alias; motivo: `card_effects.py` é god-file e não pode crescer (size_budget), e as constantes já vivem em `cards.py`.
+- Achado novo: `card_lint.signature` inclui o custo; `cor_toque`/`toque_corrosivo` (1 Fôlego agora) passam a ter assinatura igual à de `cor1_bio_mofo_quente`, gerando aviso `redundancia` (brando). `test_lote4_passa_no_lint…` ignora esse par específico. Sem diff em Carta/orçamento.
+- Pendente (W5): publicar o antes/depois do `lote-v2` por `/eval-publish`.
