@@ -2848,6 +2848,13 @@ def _combat_node(state: GameState):
         if _hunted != list(t.result.get("quests", t.state.get("quests") or [])):
             t.result["quests"] = _hunted
 
+    _combat_result_events(t)
+
+    return t.result
+
+
+def _combat_result_events(t: _CombatTurn) -> None:
+    """Reflexo dos aliados, eventos de mundo (kills, queda), fuga com viagem."""
     # ---- Reflexo dos aliados transitórios no NPC de origem ----
     if t.scene_tr:
         t.result["npcs"] = _reflect_scene_allies(t.state, t.scene_tr, t.allies, t.combat_over)
@@ -2919,8 +2926,6 @@ def _combat_node(state: GameState):
         t.result["combat_flee_attempt"] = False
         t.result["combat_flee_destination"] = None
     t.result["player_reaction_card_id"] = None
-
-    return t.result
 
 
 def _combat_unconscious_refusal(t: _CombatTurn) -> dict | None:
