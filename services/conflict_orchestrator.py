@@ -2739,28 +2739,8 @@ class _RoundIntents:
         return late()
 
 
-def _run_round(
-    scene: dict,
-    actors_by_id: dict[str, dict],
-    sides: dict[str, list[str]],
-    state: dict | None = None,
-    *,
-    declarations: dict | None = None,
-    prepared_abyss: list[dict] | None = None,
-    scene_state: dict | None = None,
-    initiator: str | None = None,
-    rng=None,
-    refusal: str = "",
-    pressagios: dict | None = None,
-) -> dict:
-    """Resolve uma RODADA inteira. `sides` = {"hero":[ids], "ally":[ids], "enemy":[ids]}.
-    `pressagios` (SPEC-329, flag `RPG_ENEMY_INTENT=on`): intenções congeladas no fim da rodada
-    anterior; ausente (save antigo/1ª rodada) = calcula no início desta rodada.
-    `declarations[actor_id]` = TurnDeclaration do jogador/aliado controlado; inimigos
-    sem declaração recebem uma via `enemy_declaration`. Retorna
-    {logs, deaths, terminal, scars_pending, player_dead, ended, reason, initiative}."""
-    rng = rng or random.Random()
-    declarations = dict(declarations or {})
+def _round_new_out(actors_by_id: dict[str, dict]) -> dict:
+    """SPEC-382: o dict de resultado da rodada, já com a Última Ação armada fora dela."""
     out = {
         "logs": [],
         "deaths": [],
@@ -2786,6 +2766,13 @@ def _run_round(
     out["terminal"].extend(
         actor_id for actor_id, actor in actors_by_id.items() if actor.get("last_stand_pending")
     )
+    return out
+
+
+def _round_refusal(
+    out: dict, actors_by_id: dict, sides: dict, state: dict | None, declarations: dict, refusal: str
+) -> bool:
+    """SPEC-382: recusa de item/Baralho antes da rodada; True = `out` já está pronto (nada na cena é tocado)."""
     # SPEC-325 R11: `refusal` vem do nó (ataque corpo a corpo durante a fuga) e segue o
     # mesmo caminho do item recusado: nada na cena é tocado, os inimigos não agem.
     refusal = refusal or _refused_player_item(actors_by_id, sides, declarations)
@@ -2803,7 +2790,15 @@ def _run_round(
         # dá turno aos inimigos — nada na cena é tocado, o jogador redeclara.
         out["logs"].append(refusal)
         out["action_refused"] = True
-        return out
+        return True
+    return False
+
+
+def _round_scene_start(
+    scene: dict, actors_by_id: dict, sides: dict, out: dict
+) -> tuple[object, int, bool]:
+    """SPEC-382: início da rodada da cena: tática, impasse, Cartas de Cena, fases de chefe e promessas.
+    Devolve (_scene_ctx, _scene_rnd, phase_changed)."""
     for _a in actors_by_id.values():  # SPEC-339: sobra de refresh fora de combate não vale marcador
         for _c in _a.get("active_conditions") or []:
             _c.pop("_renovada", None)
@@ -2831,6 +2826,38 @@ def _run_round(
     )  # SPEC-355 R3
     if _edk_mod.mode() == "shadow":
         out["decks_shadow"] = _edk_mod.shadow_summary(actors_by_id, sides)
+    return _scene_ctx, _scene_rnd, phase_changed
+
+
+def _run_round(
+    scene: dict,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    state: dict | None = None,
+    *,
+    declarations: dict | None = None,
+    prepared_abyss: list[dict] | None = None,
+    scene_state: dict | None = None,
+    initiator: str | None = None,
+    rng=None,
+    refusal: str = "",
+    pressagios: dict | None = None,
+) -> dict:
+    """Resolve uma RODADA inteira. `sides` = {"hero":[ids], "ally":[ids], "enemy":[ids]}.
+    `pressagios` (SPEC-329, flag `RPG_ENEMY_INTENT=on`): intenções congeladas no fim da rodada
+    anterior; ausente (save antigo/1ª rodada) = calcula no início desta rodada.
+    `declarations[actor_id]` = TurnDeclaration do jogador/aliado controlado; inimigos
+    sem declaração recebem uma via `enemy_declaration`. Retorna
+    {logs, deaths, terminal, scars_pending, player_dead, ended, reason, initiative}."""
+    rng = rng or random.Random()
+    declarations = dict(declarations or {})
+    out = _round_new_out(actors_by_id)
+    from services import card_deck_round as _deck  # SPEC-328 (atras de RPG_CARD_DECK)
+    from services import scene_cards as _sc
+
+    if _round_refusal(out, actors_by_id, sides, state, declarations, refusal):
+        return out
+    _scene_ctx, _scene_rnd, phase_changed = _round_scene_start(scene, actors_by_id, sides, out)
     # SPEC-329: Presságio. `off` = byte a byte como antes; `shadow` calcula e compara com a
     # decisão tardia sem mudar nada; `on` executa o presságio congelado (R4).
     from services import enemy_intent as ei
