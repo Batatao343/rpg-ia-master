@@ -1,6 +1,6 @@
 # SPEC-383 — Front: hooks do `App.tsx`, `GameActionsContext`, `Hud.tsx` por aba e poda de e2e de prints
 
-> **Status:** `approved` (04/11, coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = sim, D2 = não, D3 = manter, D4 = não — defaults do §8)
+> **Status:** `done` com ressalvas (04/11; escopo reduzido, hooks de auth/turno movidos para a SPEC-392; aprovada em 04/11, coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = sim, D2 = não, D3 = manter, D4 = não — defaults do §8)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03 (revisão independente aplicada: `handoffs/SPEC-383-independent-review.md`)
 > **Origem:** auditoria de qualidade de 03/11 — `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §4.5 (itens 1–7) e §5 letra G; regras da onda em §6.2 (W1 revisada, W2–W8)
 > **Depende de:** SPEC-379 R6 pousada (testes que leem o fonte de `App.tsx`); SPEC-367 pousada (commit `94be76db`, mexeu no `App.tsx`); SPEC-368 e SPEC-371 `done` no cabeçalho (tocam `types.ts`, `combat/deck.ts`, `CodexTab.tsx`, `tabs/DossierDetail.tsx`, `components/combat/*`). Gate por etapa: W1 revisada (§4)
@@ -439,24 +439,24 @@ etapa, e as contagens vão para o hand-back.
 
 ## 5. Critérios de aceite
 
-- [ ] R1: 5 hooks em `web/src/hooks/`, um commit cada; `App.tsx` com no máximo 350 linhas
-- [ ] R1.1/R1.2: o revisor confirma por `git diff -w --color-moved` que `handleAction`/`retryTurnInner`
+- [ ] R1 (5 hooks, App.tsx <= 350): **movido para SPEC-392**; entregues 2 de 5 (`useImageQuote`, `useSaves`); App.tsx = 950 linhas (critério ajustado ao entregue)
+- [ ] R1.1/R1.2: o revisor confirma por `git diff -w --color-moved` que `handleAction`/`retryTurnInner` **[movido para SPEC-392: useTurn/useAuthSession]**
       só mudaram de lugar; nenhum `useCallback`/`useMemo` novo
-- [ ] R1.3: nenhum `useEffect` novo; nenhum `eslint-disable` novo (salvo R1.4(b), se acionado e justificado no hand-back)
-- [ ] R1.4/R1.5: `nativeCtx` e os refs compartilhados nascem no `App`; nenhum hook devolve ref
-- [ ] R2/R2.1: as 4 props saem de `PlayScreen`/`Workspace`/`ContextSurface`; valor do provider sem memo/ref/efeito; `components/combat/*` sem diff
-- [ ] R3: `Hud.tsx` e os 2 wrappers apagados; corpos das funções movidos sem alteração
-- [ ] R4 (se [D1]): os 4 arquivos apagados; `retrato_marcador_sem_flag_1440/_390` verdes no novo arquivo
-- [ ] R4.1: regra em `docs/guias/TESTES.md`
-- [ ] R5: as 2 classes removidas, `Grep` da §3.4 no hand-back
-- [ ] Etapa 1: `turn-retry.spec.ts` cobre (a)–(d) e os ramos sem cobertura, verde antes e depois, também em `preview`
-- [ ] R7: `npm test`, `typecheck`, `typecheck:e2e`, `lint` e `build` verdes; e2e completo
+- [x] R1.3: nenhum `useEffect` novo; nenhum `eslint-disable` novo (salvo R1.4(b), se acionado e justificado no hand-back) (nos hooks entregues)
+- [ ] R1.4/R1.5: `nativeCtx` e os refs compartilhados nascem no `App`; nenhum hook devolve ref **[movido para SPEC-392: useTurn/useAuthSession]**
+- [x] R2/R2.1: as 4 props saem de `PlayScreen`/`Workspace`/`ContextSurface`; valor do provider sem memo/ref/efeito; `components/combat/*` sem diff
+- [x] R3: `Hud.tsx` e os 2 wrappers apagados; corpos das funções movidos sem alteração
+- [x] R4 (se [D1]): os 4 arquivos apagados; `retrato_marcador_sem_flag_1440/_390` verdes no novo arquivo
+- [x] R4.1: regra em `docs/guias/TESTES.md`
+- [x] R5: as 2 classes removidas, `Grep` da §3.4 no hand-back
+- [x] Etapa 1: `turn-retry.spec.ts` cobre (a)–(d) e os ramos sem cobertura, verde antes e depois, também em `preview`
+- [x] R7: `npm test`, `typecheck`, `typecheck:e2e`, `lint` e `build` verdes; e2e completo (e2e completo = coordenador no pouso; lint com 1 warning, P3-1)
       `--workers=1` verde; a fórmula de contagem confere; bundle com no máximo +2 %
-- [ ] R8/W3: diff de teste só em caminho/import (lista da §3.5) mais os arquivos novos da Etapa 1
-- [ ] `uv run pytest` verde (suíte completa offline, coordenador)
-- [ ] Nada mudou em `web/e2e/contracts/`, `evals/`, `types.ts`, `combat/deck.ts`, `components/combat/*`
-- [ ] Smoke §6 executado
-- [ ] Revisão independente (`Sol`, W7) com o oráculo do R7 refeito em pelo menos 1 etapa
+- [x] R8/W3: diff de teste só em caminho/import (lista da §3.5) mais os arquivos novos da Etapa 1
+- [ ] `uv run pytest` verde (suíte completa offline, coordenador) (coordenador, no pouso)
+- [x] Nada mudou em `web/e2e/contracts/`, `evals/`, `types.ts`, `combat/deck.ts`, `components/combat/*`
+- [x] Smoke §6 dispensado: refatoração do front sem mudança visível nem de contrato, coberta por e2e de caracterização (decisão do coordenador, 04/11)
+- [x] Revisão independente (`Sol`, W7) com o oráculo do R7 refeito em pelo menos 1 etapa
 
 ## 6. Smoke test com LLM real
 
@@ -532,7 +532,7 @@ Registrar no hand-back o que foi feito em cada passo e os ids de requisição do
 
 Nada foi rejeitado.
 
-## 9. Registro de execução (04/11, executor) — PARCIAL, etapas 4-5 bloqueadas
+## 10. Registro de execução (04/11, executor) — PARCIAL, etapas 4-5 movidas para a SPEC-392
 
 Entregue (1 commit por etapa, oráculo antes/depois verde): Etapa 1 (`turn-retry.spec.ts`, 7 casos, verdes em dev e `preview`; matriz em `handoffs/SPEC-383-turn-matrix.md`; `lista_base` = 500), Etapa 2 (`useImageQuote`), Etapa 3 (`useSaves` + `loadHistory`), Etapa 7 (split do `Hud.tsx` + remoção dos 2 wrappers), Etapa 8 (4 specs de print apagados, 40 testes; `retrato_marcador_sem_flag_*` movidos; lista final 462 = 500 − 40 + 2; regra R4.1), Etapa 9 (CSS morto), R2 (Context; ver desvio 3). Bundle 843.264 → 844.302 bytes (+0,12 %).
 
@@ -544,3 +544,5 @@ Entregue (1 commit por etapa, oráculo antes/depois verde): Etapa 1 (`turn-retry
 Trabalho em `spec-383-etapa4-wip` (branch local, não pousar). As etapas 5 (`useTurn`) e a parte `useGameActions` da Etapa 6 dependem da mesma decisão do coordenador/dono: (a) autorizar renomear os refs do `core` com sufixo `Ref` + os disables mínimos, ou (b) manter `useAuthSession`/`useTurn` fora e fechar a spec com o que foi entregue.
 
 Desvios: (1) 1 `warning` `exhaustive-deps` (`resetImageQuote` no efeito `rpg:auth-expired`) desde a Etapa 2: a função agora vem de hook, deixa de ser reconhecida como estável; corrigir exigiria dep nova ou disable. (2) `web/tests/spec389-hud-subclass.test.mjs` também lia `Hud.tsx` (faltava na tabela §3.5): só o caminho virou `tabs/FichaTab.tsx`. (3) R2 foi feito sem `useGameActions`: `handleEquip`/`handleCardReward`/`handlePrepareCards` seguem no `App` e o `GameActionsProvider` recebe-os direto (valor novo a cada render, R2.1). (4) Ao mover `retrato_marcador_sem_flag_*`, o `screenshot` condicional a `RPG_SPEC354_PRINTS` (e `OUT`) ficou de fora, para não deixar print em `web/e2e/` (R4.1); `expect(` por teste igual (1). (5) Nas linhas de CSS do R5 houve deslocamento de +1. Playwright local sem ffmpeg: rodado com um config local não versionado (`video`/`trace` off).
+
+**Decisão do coordenador (04/11): opção (b).** A 383 fecha com o entregue. Movidos para a **SPEC-392** (`specs/SPEC-392-front-hooks-auth-turn.md`): R1 itens 3-5 (`useAuthSession`/`useAccountBalance`, `useTurn`, `useGameActions`), R1.1, R1.4(b), a sonda de lint do compilador `react-hooks` e o critério de `App.tsx` <= 350 linhas (aqui ajustado ao entregue: 950). Revisão Sol: `APPROVED_WITH_FOLLOWUPS` (`handoffs/SPEC-383-sol-review.md`); P2-2 (asserção do caso (a) de `turn-retry`) e P3-1 (warning `exhaustive-deps`) seguem para a 392. P3-2 corrigido (ponteiros de `docs/spec201/*`). Smoke §6 dispensado por ser refatoração sem mudança visível.

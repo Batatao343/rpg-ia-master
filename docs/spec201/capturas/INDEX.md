@@ -2,7 +2,7 @@
 
 Commit auditado: `afe98941a541dc5643b1f2f1f4ef3ba7563fcca6`. Fixture: `web/e2e/fixtures.ts` (`DeterministicBackend`, sem rede/provider/custo); estados de combate/morte/level-up injetados no próprio spec de diagnóstico (opção (a) da spec §3.2; **opção (b) via simulador real com `RPG_FORCE_MOCK=1` não foi usada**, sem alteração de `fixtures.ts`).
 
-**Reprodução** (a partir de `web/`):
+**Reprodução** (a partir de `web/`; o spec `web/e2e/diagnostics/spec201-capture.spec.ts` foi apagado na SPEC-383 e é recuperável pelo git: restaure-o antes de rodar):
 
 ```bash
 RPG_SPEC201=1 npx playwright test e2e/diagnostics --grep @spec201 --workers=1

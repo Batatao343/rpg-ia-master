@@ -12,7 +12,7 @@ Commit auditado: `afe98941a541dc5643b1f2f1f4ef3ba7563fcca6`; `git status` ao fim
 | `medicoes.md` | método, máquina, 3 repetições (blur, EmberField), peso do `motion`, reduced-motion/a11y, `não medido` |
 | `capturas/INDEX.md` + 90 PNGs | 1440×900 e 1280×800; baseline `reduce` e `--motion` |
 | `dados/*.json` | hitbox, sentinela, estados de carta, setas do tablist, medições brutas |
-| `web/e2e/diagnostics/spec201-capture.spec.ts` | captura Playwright (opt-in `RPG_SPEC201=1`) |
+| `web/e2e/diagnostics/spec201-capture.spec.ts` (apagado na SPEC-383; recuperável pelo git) | captura Playwright (opt-in `RPG_SPEC201=1`) |
 
 ## Comandos executados
 

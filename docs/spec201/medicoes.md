@@ -11,7 +11,7 @@ Commit auditado `afe9894` (working tree limpo em `web/src`). Tudo que **não** f
 | Node | v24.19.0 · `motion` 12.42.0 |
 | Display | viewport 1440×900; taxa de quadros do Chromium headless ≈ 144 Hz (mediana de quadro ≈ 7 ms) |
 | Throttling | nenhum (Q3: 4× CPU não aplicado → `não medido` para máquina fraca/mobile) |
-| Fonte dos dados | `web/e2e/diagnostics/spec201-capture.spec.ts`, teste "axe + reduced-motion + medicoes" → `dados/medicoes.json` (bruto) |
+| Fonte dos dados | `web/e2e/diagnostics/spec201-capture.spec.ts` (apagado na SPEC-383; recuperável pelo git), teste "axe + reduced-motion + medicoes" → `dados/medicoes.json` (bruto) |
 
 Reprodução: `cd web && RPG_SPEC201=1 npx playwright test e2e/diagnostics --grep @spec201 --workers=1 -g medicoes`.
 
