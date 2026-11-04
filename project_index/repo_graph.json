@@ -1,5 +1,5 @@
 {
-  "commit_sha": "3e6a613c102257949026a7c88182a14d1716efce",
+  "commit_sha": "fc4fccd78fadca3b0c0e0d00605af3afcbeb71a3",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -58496,7 +58496,7 @@
         "line": 732
       },
       "source": "module:llm_setup",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "defines"
     },
     {
@@ -159000,7 +159000,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 218
+        "line": 219
       },
       "source": "module:tests.test_hardening_persistencia_sse",
       "target": "symbol:tests.test_hardening_persistencia_sse.test_circuit_open_nao_conta_rede_falha_ou_custo",
@@ -159011,7 +159011,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 242
+        "line": 243
       },
       "source": "module:tests.test_hardening_persistencia_sse",
       "target": "symbol:tests.test_hardening_persistencia_sse.test_criacao_rejeita_opcoes_fora_dos_catalogos",
@@ -159044,7 +159044,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 198
+        "line": 199
       },
       "source": "module:tests.test_hardening_persistencia_sse",
       "target": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500",
@@ -159055,7 +159055,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 263
+        "line": 264
       },
       "source": "module:tests.test_hardening_persistencia_sse",
       "target": "symbol:tests.test_hardening_persistencia_sse.test_fixture_global_isola_diretorios_de_runtime",
@@ -294699,7 +294699,7 @@
         "line": 1682
       },
       "source": "symbol:llm_setup.RoutedLLM._hedged_first",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -294732,7 +294732,7 @@
         "line": 1682
       },
       "source": "symbol:llm_setup.RoutedLLM._hedged_first.abandon",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -294776,7 +294776,7 @@
         "line": 1077
       },
       "source": "symbol:llm_setup.RoutedLLM._prepare_candidate",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -294787,7 +294787,7 @@
         "line": 1095
       },
       "source": "symbol:llm_setup.RoutedLLM._prepare_candidate",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -294864,7 +294864,7 @@
         "line": 1420
       },
       "source": "symbol:llm_setup.RoutedLLM._stream_attempt",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -294875,7 +294875,7 @@
         "line": 1462
       },
       "source": "symbol:llm_setup.RoutedLLM._stream_attempt",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -294886,7 +294886,7 @@
         "line": 1535
       },
       "source": "symbol:llm_setup.RoutedLLM._stream_attempt",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -294897,7 +294897,7 @@
         "line": 1567
       },
       "source": "symbol:llm_setup.RoutedLLM._stream_attempt",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -294908,7 +294908,7 @@
         "line": 1586
       },
       "source": "symbol:llm_setup.RoutedLLM._stream_attempt",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -295106,7 +295106,7 @@
         "line": 1154
       },
       "source": "symbol:llm_setup.RoutedLLM.invoke",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -295117,7 +295117,7 @@
         "line": 1183
       },
       "source": "symbol:llm_setup.RoutedLLM.invoke",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -295128,7 +295128,7 @@
         "line": 1198
       },
       "source": "symbol:llm_setup.RoutedLLM.invoke",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -295249,7 +295249,7 @@
         "line": 1247
       },
       "source": "symbol:llm_setup.RoutedLLM.stream",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -295260,7 +295260,7 @@
         "line": 1263
       },
       "source": "symbol:llm_setup.RoutedLLM.stream",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -295271,7 +295271,7 @@
         "line": 1285
       },
       "source": "symbol:llm_setup.RoutedLLM.stream",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -295282,7 +295282,7 @@
         "line": 1300
       },
       "source": "symbol:llm_setup.RoutedLLM.stream",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -295293,7 +295293,7 @@
         "line": 1317
       },
       "source": "symbol:llm_setup.RoutedLLM.stream",
-      "target": "symbol:llm_setup._attempt",
+      "target": "symbol:llm_setup._attempt_telemetry",
       "type": "calls"
     },
     {
@@ -295424,7 +295424,7 @@
         "file": "llm_setup.py",
         "line": 747
       },
-      "source": "symbol:llm_setup._attempt",
+      "source": "symbol:llm_setup._attempt_telemetry",
       "target": "symbol:llm_setup.LLMAttemptEvent",
       "type": "calls"
     },
@@ -295435,7 +295435,7 @@
         "file": "llm_setup.py",
         "line": 746
       },
-      "source": "symbol:llm_setup._attempt",
+      "source": "symbol:llm_setup._attempt_telemetry",
       "target": "symbol:llm_setup._emit_attempt_telemetry",
       "type": "calls"
     },
@@ -496645,7 +496645,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 232
+        "line": 233
       },
       "source": "symbol:tests.test_hardening_persistencia_sse.test_circuit_open_nao_conta_rede_falha_ou_custo",
       "target": "symbol:api._attempt_telemetry_hook",
@@ -496656,7 +496656,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 233
+        "line": 234
       },
       "source": "symbol:tests.test_hardening_persistencia_sse.test_circuit_open_nao_conta_rede_falha_ou_custo",
       "target": "symbol:api._llm_log_fields",
@@ -496667,7 +496667,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 219
+        "line": 220
       },
       "source": "symbol:tests.test_hardening_persistencia_sse.test_circuit_open_nao_conta_rede_falha_ou_custo",
       "target": "symbol:llm_setup.LLMAttemptEvent",
@@ -496678,7 +496678,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 257
+        "line": 258
       },
       "source": "symbol:tests.test_hardening_persistencia_sse.test_criacao_rejeita_opcoes_fora_dos_catalogos",
       "target": "symbol:api.CreateCharacterRequest",
@@ -496821,7 +496821,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 200
+        "line": 201
       },
       "source": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500",
       "target": "symbol:persistence.save_game_state",
@@ -496832,7 +496832,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 200
+        "line": 201
       },
       "source": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500",
       "target": "symbol:tests.test_hardening_persistencia_sse._state",
@@ -496843,7 +496843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 202
+        "line": 203
       },
       "source": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500",
       "target": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500.Graph",
@@ -496854,7 +496854,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_hardening_persistencia_sse.py",
-        "line": 203
+        "line": 204
       },
       "source": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500.Graph",
       "target": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500.Graph.invoke",
@@ -746618,11 +746618,11 @@
       "qualified_name": "llm_setup._any_key_available"
     },
     {
-      "id": "symbol:llm_setup._attempt",
+      "id": "symbol:llm_setup._attempt_telemetry",
       "kind": "function",
       "line": 732,
       "path": "llm_setup.py",
-      "qualified_name": "llm_setup._attempt"
+      "qualified_name": "llm_setup._attempt_telemetry"
     },
     {
       "id": "symbol:llm_setup._authorize_provider_attempt",
@@ -810586,14 +810586,14 @@
     {
       "id": "symbol:tests.test_hardening_persistencia_sse.test_circuit_open_nao_conta_rede_falha_ou_custo",
       "kind": "test",
-      "line": 218,
+      "line": 219,
       "path": "tests/test_hardening_persistencia_sse.py",
       "qualified_name": "tests.test_hardening_persistencia_sse.test_circuit_open_nao_conta_rede_falha_ou_custo"
     },
     {
       "id": "symbol:tests.test_hardening_persistencia_sse.test_criacao_rejeita_opcoes_fora_dos_catalogos",
       "kind": "test",
-      "line": 242,
+      "line": 243,
       "path": "tests/test_hardening_persistencia_sse.py",
       "qualified_name": "tests.test_hardening_persistencia_sse.test_criacao_rejeita_opcoes_fora_dos_catalogos"
     },
@@ -810614,28 +810614,28 @@
     {
       "id": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500",
       "kind": "test",
-      "line": 198,
+      "line": 199,
       "path": "tests/test_hardening_persistencia_sse.py",
       "qualified_name": "tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500"
     },
     {
       "id": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500.Graph",
       "kind": "class",
-      "line": 202,
+      "line": 203,
       "path": "tests/test_hardening_persistencia_sse.py",
       "qualified_name": "tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500.Graph"
     },
     {
       "id": "symbol:tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500.Graph.invoke",
       "kind": "test",
-      "line": 203,
+      "line": 204,
       "path": "tests/test_hardening_persistencia_sse.py",
       "qualified_name": "tests.test_hardening_persistencia_sse.test_falha_de_persistencia_no_turno_retorna_500.Graph.invoke"
     },
     {
       "id": "symbol:tests.test_hardening_persistencia_sse.test_fixture_global_isola_diretorios_de_runtime",
       "kind": "test",
-      "line": 263,
+      "line": 264,
       "path": "tests/test_hardening_persistencia_sse.py",
       "qualified_name": "tests.test_hardening_persistencia_sse.test_fixture_global_isola_diretorios_de_runtime"
     },
@@ -866732,5 +866732,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:fd2e12cae87f2471a9ddb909bbd128786080ecbb39d27c9bafb546528c35c38c"
+  "source_tree_hash": "sha256:be835362adeda028fa63ea3e8f3db03508bb709b3110293cad6b2af4095245da"
 }
