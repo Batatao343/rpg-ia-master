@@ -67,7 +67,9 @@ A baseline fica em `docs/spec379/coverage-baseline.md`.
 
 ## Ruff (incremental)
 
-- Regras: `F`, `B`, `E4/E7/E9`, `I` (isort) e `UP` (py313) em `pyproject.toml`.
+- Regras: `F`, `B`, `E4/E7/E9`, `I` (isort), `UP` (py313) e, desde a SPEC-388, `C90` (complexidade ≤ 15),
+  `SIM`, `PERF`, `C4`, `PIE`, `RET`, `ERA`, `BLE` em `pyproject.toml` (testes isentos de `C90`/`PERF`;
+  avaliadores protegidos isentos das famílias novas, gate `tests/test_ruff_protected_exempt.py`).
   `E501` fora; `B905` depois. `ruff format` é obrigatório (`ruff format --check .` no CI e
   no pre-commit); `evals/core`, `evals/evaluators`, `evals/__main__.py`, `evals/datasets` e
   `web/e2e/contracts` ficam fora do format e de `I`/`UP` (hashes travados da régua).

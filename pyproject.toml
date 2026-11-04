@@ -74,11 +74,23 @@ exclude = ["evals/core/*.py", "evals/evaluators/*.py", "evals/__main__.py", "eva
 # Degrau 1: pyflakes (F), bugbear (B) e estrutura (E4/E7/E9). E501 fica fora;
 # B905 (zip sem strict) entra depois com --fix. Degraus 2–3 (I, UP, ruff format)
 # são commits mecânicos a fazer sem worktrees vivos — ver docs/guias/TESTES.md.
-select = ["E4", "E7", "E9", "F", "B", "I", "UP"]
+select = ["E4", "E7", "E9", "F", "B", "I", "UP", "C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
 ignore = ["E501", "B905"]
+# SPEC-388 Etapa B: C90/SIM/PERF/C4/PIE/RET/ERA/BLE valem para código novo; o legado fica
+# congelado em ruff-baseline.toml (só encolhe). `except Exception` novo: log + `# noqa: BLE001`
+# com motivo, ou exceção específica.
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15
 
 [tool.ruff.lint.extend-per-file-ignores]
-"tests/**" = ["F403", "F405", "F811"]
+"tests/**" = ["F403", "F405", "F811", "C90", "PERF"]  # teste: clareza > complexidade/perf (SPEC-388)
+# Avaliadores congelados (evals/protected-paths.txt, hash travado): famílias da SPEC-388 não se
+# aplicam; reescrever para o lint mudaria o avaliador. Gate: tests/test_ruff_protected_exempt.py.
+"evals/**" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"scripts/**/eval*.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"services/*_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"tests/test_spec*_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
 # Arquivos protegidos de eval (evals/protected-paths.txt): hashes travados, não reescrever.
 "evals/core/**" = ["I", "UP"]
 "evals/evaluators/**" = ["I", "UP"]
