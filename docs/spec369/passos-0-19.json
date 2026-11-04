@@ -97,8 +97,8 @@
    "de": 4,
    "para": 5,
    "versao": [
-    1,
-    2
+    2,
+    3
    ],
    "metricas_antes": {
     "cartas_rodada": 1.918,
@@ -644,7 +644,8 @@
    ],
    "celula": "abissal|L3",
    "resultado": "on 86,0 -> 85,0; d +9,0 -> +8,0",
-   "mantido": true
+   "mantido": true,
+   "guarda_r19": "nao medida por passo: nenhum log de Posturas por passo de familia; medida uma vez no estado final (posturas 0-19 identicas a antes do B6: Dev 60,2, San 65,0, Cor 60,6, Arc 57,1, Med 55,8)"
   },
   {
    "bloco": "B6",
@@ -660,7 +661,8 @@
    "celula": "abissal|L3",
    "resultado": "on 85,0 -> 85,0; d +8,0 -> +8,0",
    "mantido": false,
-   "motivo": "nao move (|d| < 1 luta); revertido"
+   "motivo": "nao move (|d| < 1 luta); revertido",
+   "guarda_r19": "nao medida por passo: nenhum log de Posturas por passo de familia; medida uma vez no estado final (posturas 0-19 identicas a antes do B6: Dev 60,2, San 65,0, Cor 60,6, Arc 57,1, Med 55,8)"
   },
   {
    "bloco": "B6",
@@ -675,7 +677,8 @@
    ],
    "celula": "lider_matilha|L3 e L5",
    "resultado": "L3 on 70,0 -> 63,0 (d +12,0 -> +5,0); L5 on 80,0 -> 78,5 (d +11,5 -> +10,0)",
-   "mantido": true
+   "mantido": true,
+   "guarda_r19": "nao medida por passo: nenhum log de Posturas por passo de familia; medida uma vez no estado final (posturas 0-19 identicas a antes do B6: Dev 60,2, San 65,0, Cor 60,6, Arc 57,1, Med 55,8)"
   },
   {
    "bloco": "B6",
@@ -691,7 +694,8 @@
    "celula": "conjurador|L5",
    "resultado": "L5 on 36,5 -> 38,5 (d -10,0 -> -8,0); L3 on 68,5 -> 68,5. NAO fecha: on < 45",
    "mantido": true,
-   "motivo": "melhoria parcial mantida"
+   "motivo": "melhoria parcial mantida",
+   "guarda_r19": "nao medida por passo: nenhum log de Posturas por passo de familia; medida uma vez no estado final (posturas 0-19 identicas a antes do B6: Dev 60,2, San 65,0, Cor 60,6, Arc 57,1, Med 55,8)"
   },
   {
    "bloco": "B6",
@@ -707,7 +711,8 @@
    "celula": "predador_apice|L3",
    "resultado": "0-19: on 58,5 -> 61,5 (d -16,5 -> -13,5). NAO fecha: |d| > 10",
    "mantido": true,
-   "motivo": "melhoria parcial mantida"
+   "motivo": "melhoria parcial mantida",
+   "guarda_r19": "nao medida por passo: nenhum log de Posturas por passo de familia; medida uma vez no estado final (posturas 0-19 identicas a antes do B6: Dev 60,2, San 65,0, Cor 60,6, Arc 57,1, Med 55,8)"
   },
   {
    "bloco": "R15-D369-10",
@@ -732,6 +737,383 @@
    "guarda_r19": "posturas 0-19 inalteradas (a criatura nao esta na arena de Posturas); Sangromante 65,0 (+0,0 pp)",
    "mantido": true,
    "motivo": "D-369-10 item 2: um passo num unico inimigo"
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_dev_voto",
+   "campo": "custo_folego",
+   "de": 1,
+   "para": 0,
+   "resultado": "cartas/rodada Devoto 1,799 -> 2,007; uso 1,0 (mantido depois como passo oficial)",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_dev_voto",
+   "campo": "frequencia",
+   "de": "turno",
+   "para": "cena",
+   "resultado": "uso segue 1,0; Devoto 1,959",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_arc_vazao",
+   "campo": "frequencia",
+   "de": "turno",
+   "para": "cena",
+   "resultado": "uso segue 1,0; Arcanista 2,025",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_med_pressao",
+   "campo": "efeito.valor",
+   "de": 3,
+   "para": 2,
+   "resultado": "p95 Medico 18 -> 17; sem efeito relevante",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_med_pressao",
+   "campo": "efeito.valor",
+   "de": 2,
+   "para": 1,
+   "resultado": "sem movimento (Medico 2,122, p95 17)",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "arc1_cal_pulso_medido",
+   "campo": "custo_folego",
+   "de": 0,
+   "para": 1,
+   "resultado": "uso 1,0 -> 0,923",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "arc1_cal_pulso_medido",
+   "campo": "efeito.dano_base",
+   "de": 4,
+   "para": 3,
+   "resultado": "uso 0,616 sem guarda livre; 0,755 com guarda livre; nao fecha R14a",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "arc1_cal_pulso_medido",
+   "campo": "custo_entropia",
+   "de": 1,
+   "para": 2,
+   "resultado": "sem efeito no uso",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_cor_mofo",
+   "campo": "frequencia",
+   "de": "livre",
+   "para": "turno",
+   "resultado": "uso 0,607 / 0,704: nao fecha",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_cor_mofo",
+   "campo": "frequencia",
+   "de": "livre",
+   "para": "cena",
+   "resultado": "uso 0,607 / 0,704: nao fecha",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_cor_mofo",
+   "campo": "efeito.dano_base",
+   "de": 3,
+   "para": 2,
+   "resultado": "uso 0,645; lint recusa (dano_base < base da arma 3)",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_cor_mofo",
+   "campo": "efeito.dano_base",
+   "de": 2,
+   "para": 1,
+   "resultado": "uso 0,571; lint recusa (dano_base < base da arma 3)",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_cor_mofo",
+   "campo": "custo_folego",
+   "de": 1,
+   "para": 2,
+   "resultado": "uso 0,271 mas orcamento invalido com dano 3; com dano 4 uso 0,772",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "med1_fer_lente_de_protese",
+   "campo": "efeito.valor",
+   "de": 3,
+   "para": 5,
+   "resultado": "sem efeito no p95 do Medico (17) nem no timeout",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_dev_guarda",
+   "campo": "custo_folego",
+   "de": 1,
+   "para": 0,
+   "resultado": "trajetoria guardas livres (4 juntas): total 2,54; Devoto/consagrado 79,2 % (R19a reprova); +4 Cartas sobem de 0,6 (garganta, palavra_que_corta, mao_na_frente, garra); Pressagio 0,997",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_cor_guarda",
+   "campo": "custo_folego",
+   "de": 1,
+   "para": 0,
+   "resultado": "trajetoria guardas livres (4 juntas): total 2,54; Devoto/consagrado 79,2 % (R19a reprova); +4 Cartas sobem de 0,6 (garganta, palavra_que_corta, mao_na_frente, garra); Pressagio 0,997",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_arc_guarda",
+   "campo": "custo_folego",
+   "de": 1,
+   "para": 0,
+   "resultado": "trajetoria guardas livres (4 juntas): total 2,54; Devoto/consagrado 79,2 % (R19a reprova); +4 Cartas sobem de 0,6 (garganta, palavra_que_corta, mao_na_frente, garra); Pressagio 0,997",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "bas_med_guarda",
+   "campo": "custo_folego",
+   "de": 1,
+   "para": 0,
+   "resultado": "trajetoria guardas livres (4 juntas): total 2,54; Devoto/consagrado 79,2 % (R19a reprova); +4 Cartas sobem de 0,6 (garganta, palavra_que_corta, mao_na_frente, garra); Pressagio 0,997",
+   "mantido": false
+  },
+  {
+   "bloco": "B3",
+   "sondagem": true,
+   "sondagem_carta": "med1_fer_garra_de_protese",
+   "campo": "frequencia",
+   "de": "turno",
+   "para": "cena",
+   "resultado": "uso 0,604 -> 0,579 (nao aplicado)",
+   "mantido": false
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_abissal_toque_do_abismo",
+   "campo": "efeito.dano_base",
+   "de": 8,
+   "para": 9,
+   "resultado": "abissal L3 on 86,0 -> 87,0 / 86,0: nao fecha",
+   "mantido": false,
+   "familia": "abissal"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_abissal_dissolver",
+   "campo": "efeito.valor",
+   "de": 2,
+   "para": 3,
+   "resultado": "sem movimento",
+   "mantido": false,
+   "familia": "abissal"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_abissal_sede_de_entropia",
+   "campo": "efeito.valor",
+   "de": 4,
+   "para": 5,
+   "resultado": "sem movimento",
+   "mantido": false,
+   "familia": "abissal"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_lider_matilha_golpe_de_ponta",
+   "campo": "efeito.dano_base",
+   "de": 6,
+   "para": 8,
+   "resultado": "sem movimento (L3 +12,0; L5 +12,0)",
+   "mantido": false,
+   "familia": "lider_matilha"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_lider_matilha_golpe_de_ponta",
+   "campo": "frequencia",
+   "de": "cena",
+   "para": "turno",
+   "resultado": "sem movimento",
+   "mantido": false,
+   "familia": "lider_matilha"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_conjurador_raio_de_eter",
+   "campo": "efeito.dano_base",
+   "de": 5,
+   "para": 4,
+   "resultado": "L5 -9,5; lint recusa abaixo da base da arma",
+   "mantido": false,
+   "familia": "conjurador"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_conjurador_pulso_de_fenda",
+   "campo": "frequencia",
+   "de": "turno",
+   "para": "cena",
+   "resultado": "L5 on 37,0 (-9,5): nao fecha",
+   "mantido": false,
+   "familia": "conjurador"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_conjurador_brasa_viva",
+   "campo": "efeito.valor",
+   "de": 2,
+   "para": 1,
+   "resultado": "sem movimento",
+   "mantido": false,
+   "familia": "conjurador"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_conjurador_sussurro_do_abismo",
+   "campo": "efeito.valor",
+   "de": 4,
+   "para": 3,
+   "resultado": "sem movimento",
+   "mantido": false,
+   "familia": "conjurador"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_conjurador_escudo_de_cinzas",
+   "campo": "efeito.valor",
+   "de": 5,
+   "para": 3,
+   "resultado": "L5 on 38,5 (-8,0): igual ao passo mantido",
+   "mantido": false,
+   "familia": "conjurador"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_predador_apice_sentenca_do_apice",
+   "campo": "efeito.dano_base",
+   "de": 9,
+   "para": 8,
+   "resultado": "sem movimento (-16,5)",
+   "mantido": false,
+   "familia": "predador_apice"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_predador_apice_sentenca_do_apice",
+   "campo": "frequencia",
+   "de": "turno",
+   "para": "cena",
+   "resultado": "sem movimento (-16,5)",
+   "mantido": false,
+   "familia": "predador_apice"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_predador_apice_dilacerar",
+   "campo": "efeito.dano_base",
+   "de": 8,
+   "para": 7,
+   "resultado": "-15,0; lint recusa (abaixo da base da arma)",
+   "mantido": false,
+   "familia": "predador_apice"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_predador_apice_investida_de_caca",
+   "campo": "efeito.dano_base",
+   "de": 6,
+   "para": 5,
+   "resultado": "-4,0 numa rodada com JSON quebrado (descartada); lint recusa",
+   "mantido": false,
+   "familia": "predador_apice"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_predador_apice_ferida_que_nao_fecha",
+   "campo": "efeito.valor",
+   "de": 2,
+   "para": 1,
+   "resultado": "sem movimento",
+   "mantido": false,
+   "familia": "predador_apice"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_predador_apice_pele_de_veterano",
+   "campo": "efeito.valor",
+   "de": 6,
+   "para": 4,
+   "resultado": "-16,0",
+   "mantido": false,
+   "familia": "predador_apice"
+  },
+  {
+   "bloco": "B6",
+   "sondagem": true,
+   "sondagem_carta": "inf_predador_apice_marca_do_territorio",
+   "campo": "efeito.valor",
+   "de": 4,
+   "para": 3,
+   "resultado": "sem movimento",
+   "mantido": false,
+   "familia": "predador_apice"
   }
  ]
 }
