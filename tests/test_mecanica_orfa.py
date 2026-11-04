@@ -896,6 +896,10 @@ EFFECT_TESTS["card:ativa:descartar"] = _reuse_test(
     "test_card_effects_piles",
     "test_descartar_com_escolha_leva_o_fardo_primeiro_e_poupa_a_carta_em_jogo",
 )
+# SPEC-373 R21: Mão Adiantada (buff_iniciativa ativo) grava a condição `initiative`.
+EFFECT_TESTS["card:ativa:buff_iniciativa"] = _reuse_test(
+    "test_spec373_cartas", "test_mao_adiantada_jogada_grava_condicao_de_iniciativa"
+)
 for _name in cm.NAMED_CONDITIONS:
     EFFECT_TESTS[f"condicao:{_name}"] = _condition_test(_name)
 for _name in ("atordoado", "amedrontado", "dominado", "enraizado"):
