@@ -1,0 +1,295 @@
+{
+ "regiao": "floresta_sussurros",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 126.2,
+ "criaturas": {
+  "mon_lixado_da_fronteira": {
+   "nome": "Lixado da Fronteira",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.805,
+    "L3|on": 0.775
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_abafador_de_candeias": {
+   "nome": "Abafador de Candeias",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.58,
+    "L3|on": 0.85
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_fechado_de_escapulas": {
+   "nome": "Fechado de Escápulas",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.555,
+    "L3|on": 0.575
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_virado_do_avesso": {
+   "nome": "Virado do Avesso",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.615,
+    "L3|on": 0.68
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_calado_das_guelras": {
+   "nome": "Calado das Guelras",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.765,
+    "L3|on": 0.745
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_aranha_lobo": {
+   "nome": "Saltão Desbotado",
+   "categoria": "lacaio",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.76,
+    "L3|on": 0.66
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_urso_coruja_mutante": {
+   "nome": "Casuar de Elmo Fundo",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.64,
+    "L3|on": 0.53
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ent_dormindo": {
+   "nome": "Preguiça da Pradaria",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.73,
+    "L3|on": 0.72
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on delta 15.5 pp > 8"
+   ]
+  },
+  "mon_morcego_rasteiro": {
+   "nome": "Morcego Rasteiro",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.76,
+    "L3|on": 0.81
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_besouro_do_estalo": {
+   "nome": "Besouro do Estalo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.75,
+    "L3|on": 0.855
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 86% fora de 45-85%"
+   ]
+  },
+  "mon_onca_vazada": {
+   "nome": "Onça Vazada",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.62,
+    "L3|on": 0.605
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lagarta_de_visgo": {
+   "nome": "Lagarta de Visgo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.705,
+    "L3|on": 0.785
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_toldo_das_clareiras": {
+   "nome": "Toldo das Clareiras",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.46,
+    "L5|on": 0.475
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_vespa_coveira": {
+   "nome": "Vespa Coveira",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.655,
+    "L3|on": 0.63
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_bugio_invertido": {
+   "nome": "Bugio Invertido",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.57,
+    "L3|on": 0.535
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_dedos_de_colheita": {
+   "nome": "Dedos de Colheita",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.79,
+    "L3|on": 0.77
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_olho_de_petala": {
+   "nome": "Olho de Pétala",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.675,
+    "L3|on": 0.825
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mapa_de_cicatrizes": {
+   "nome": "Mapa de Cicatrizes",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.41,
+    "L3|on": 0.46
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 41% fora de 45-85%"
+   ]
+  },
+  "mon_ressecado_da_travessia": {
+   "nome": "Ressecado da Travessia",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.735,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mascador_de_raiz": {
+   "nome": "Mascador de Raiz",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.66,
+    "L3|on": 0.63
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_sombra_espreitadora": {
+   "nome": "Sombra Deitada",
+   "categoria": "lacaio",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.82,
+    "L3|on": 0.685
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ermitao_de_carcaca": {
+   "nome": "Ermitão de Carcaça",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.8,
+    "L3|on": 0.675
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_desafiante_rubro": {
+   "nome": "Desafiante Rubro",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.7,
+    "L3|on": 0.735
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_enrolado_da_clareira": {
+   "nome": "Enrolado da Clareira",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.59,
+    "L3|on": 0.665
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_picanco_de_espinheiro": {
+   "nome": "Picanço de Espinheiro",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.725,
+    "L3|on": 0.675
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

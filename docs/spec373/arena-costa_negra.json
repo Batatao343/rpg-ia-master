@@ -1,0 +1,259 @@
+{
+ "regiao": "costa_negra",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 103.3,
+ "criaturas": {
+  "mon_escama_revirada": {
+   "nome": "Escama Revirada",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.705,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ferida_de_coral": {
+   "nome": "Ferida de Coral",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.65,
+    "L3|on": 0.78
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_compassado_do_trono": {
+   "nome": "Compassado do Trono",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.605,
+    "L3|on": 0.57
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_forrado_de_leviata": {
+   "nome": "Forrado de Leviatã",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.52,
+    "L3|on": 0.625
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_hospede_do_estomago": {
+   "nome": "Hóspede do Estômago",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.435,
+    "L5|on": 0.385
+   },
+   "ok": false,
+   "motivos": [
+    "L5|off 44% fora de 45-85%",
+    "L5|on 38% fora de 45-85%"
+   ]
+  },
+  "mon_barata_das_costelas": {
+   "nome": "Barata das Costelas",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.775,
+    "L3|on": 0.78
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_estrela_de_alavanca": {
+   "nome": "Estrela de Alavanca",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.805,
+    "L3|on": 0.785
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_andarilho_de_cracas": {
+   "nome": "Andarilho de Cracas",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.53,
+    "L3|on": 0.67
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_touro_de_banha": {
+   "nome": "Touro de Banha",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.6,
+    "L3|on": 0.83
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_saltador_de_poca": {
+   "nome": "Saltador de Poça",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.655,
+    "L3|on": 0.8
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_bruxa_de_carcaca": {
+   "nome": "Bruxa de Carcaça",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.815,
+    "L3|on": 0.845
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_petrel_de_papo_cheio": {
+   "nome": "Petrel de Papo Cheio",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.72,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_esfolado_de_sal": {
+   "nome": "Esfolado de Sal",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.78,
+    "L3|on": 0.78
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_contrabandista_vitreo": {
+   "nome": "Contrabandista Vítreo",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.825,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_caldeireiro_de_oleo": {
+   "nome": "Caldeireiro de Óleo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.55,
+    "L3|on": 0.725
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_acendedor_de_naufragios": {
+   "nome": "Acendedor de Naufrágios",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.695,
+    "L3|on": 0.605
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_remo_acorrentado": {
+   "nome": "Remo Acorrentado",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.67,
+    "L3|on": 0.655
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ventre_partilhado": {
+   "nome": "Ventre Partilhado",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.605,
+    "L3|on": 0.835
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_balsa_de_ultimo_dia": {
+   "nome": "Balsa de Último Dia",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.48,
+    "L3|on": 0.59
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_gancho_de_esfola": {
+   "nome": "Gancho de Esfola",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.56,
+    "L3|on": 0.79
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_raspadeira_de_barbatana": {
+   "nome": "Raspadeira de Barbatana",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.81,
+    "L3|on": 0.755
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_rancor_de_pincas": {
+   "nome": "Rancor de Pinças",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.715,
+    "L3|on": 0.775
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

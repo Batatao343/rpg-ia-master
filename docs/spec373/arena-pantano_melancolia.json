@@ -1,0 +1,261 @@
+{
+ "regiao": "pantano_melancolia",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 107.2,
+ "criaturas": {
+  "mon_estaqueiro_afogado": {
+   "nome": "Estaqueiro Afogado",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.605,
+    "L3|on": 0.64
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_romeiro_de_ambar": {
+   "nome": "Romeiro de Âmbar",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.575,
+    "L3|on": 0.835
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_banhado_do_centro": {
+   "nome": "Banhado do Centro",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.715,
+    "L3|on": 0.73
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_castor_de_estacas": {
+   "nome": "Castor de Estacas",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.525,
+    "L3|on": 0.63
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_patinador_de_oleo": {
+   "nome": "Patinador de Óleo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.76,
+    "L3|on": 0.815
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cagado_de_geada": {
+   "nome": "Cágado de Geada",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.61,
+    "L3|on": 0.76
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_fundeiro_da_poca": {
+   "nome": "Fundeiro da Poça",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.625,
+    "L3|on": 0.82
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_tritao_de_sobra": {
+   "nome": "Tritão de Sobra",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.585,
+    "L3|on": 0.61
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_musaranho_de_dente_vermelho": {
+   "nome": "Musaranho de Dente Vermelho",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.735,
+    "L3|on": 0.745
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_borda_que_anda": {
+   "nome": "Borda que Anda",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.76,
+    "L5|on": 0.6
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_podador_do_ciclo": {
+   "nome": "Podador do Ciclo",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.75,
+    "L3|on": 0.8
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_jardineiro_de_tumores": {
+   "nome": "Jardineiro de Tumores",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.735,
+    "L3|on": 0.68
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mula_de_lagrimas": {
+   "nome": "Mula de Lágrimas",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.62,
+    "L3|on": 0.68
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_casaco_de_sanguessugas": {
+   "nome": "Casaco de Sanguessugas",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.565,
+    "L3|on": 0.735
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_turno_vencido": {
+   "nome": "Turno Vencido",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.52,
+    "L3|on": 0.525
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_regaco_da_margem": {
+   "nome": "Regaço da Margem",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.665,
+    "L3|on": 0.64
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cordao_de_medida": {
+   "nome": "Cordão de Medida",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.69,
+    "L3|on": 0.775
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_maos_no_rosto": {
+   "nome": "Mãos no Rosto",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.795,
+    "L3|on": 0.665
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cisne_de_patina": {
+   "nome": "Cisne de Pátina",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.67,
+    "L3|on": 0.86
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 86% fora de 45-85%"
+   ]
+  },
+  "mon_arraia_de_lodo": {
+   "nome": "Arraia de Lodo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.705,
+    "L3|on": 0.735
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_fardo_de_espolio": {
+   "nome": "Fardo de Espólio",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.815,
+    "L3|on": 0.755
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_zumbi_blindado": {
+   "nome": "Curtido da Turfeira",
+   "categoria": "lacaio",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.415,
+    "L3|on": 0.305
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 42% fora de 45-85%",
+    "L3|on 30% fora de 45-85%"
+   ]
+  }
+ }
+}

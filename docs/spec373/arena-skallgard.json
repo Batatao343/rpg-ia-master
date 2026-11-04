@@ -1,0 +1,274 @@
+{
+ "regiao": "skallgard",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 140.9,
+ "criaturas": {
+  "mon_parado_do_sopro": {
+   "nome": "Parado do Sopro",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.775,
+    "L3|on": 0.755
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_levantado_de_rubi": {
+   "nome": "Levantado de Rubi",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.64,
+    "L3|on": 0.64
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_queimado_de_breu": {
+   "nome": "Queimado de Breu",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.62,
+    "L3|on": 0.6
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_parelha_carmesim": {
+   "nome": "Parelha Carmesim",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.555,
+    "L3|on": 0.595
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_desfiado_da_aurora": {
+   "nome": "Desfiado da Aurora",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.805,
+    "L3|on": 0.76
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ermitao_de_elmo": {
+   "nome": "Ermitão de Elmo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.655,
+    "L3|on": 0.755
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_carrapato_de_mamute": {
+   "nome": "Carrapato de Mamute",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.7,
+    "L3|on": 0.715
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lagarta_sete_invernos": {
+   "nome": "Lagarta de Sete Invernos",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.715,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mandriao_dois_bicos": {
+   "nome": "Mandrião de Dois Bicos",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.655,
+    "L3|on": 0.61
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_montaria_cravada": {
+   "nome": "Montaria Cravada",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.575,
+    "L3|on": 0.81
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ferreiro_chama_fria": {
+   "nome": "Ferreiro de Chama Fria",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.755,
+    "L3|on": 0.79
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lascador_morno": {
+   "nome": "Lascador Morno",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.8,
+    "L3|on": 0.82
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_escuta_do_sinal": {
+   "nome": "Escuta do Sinal",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.465,
+    "L3|on": 0.895
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 90% fora de 45-85%"
+   ]
+  },
+  "mon_caldeira_de_peito": {
+   "nome": "Caldeira de Peito",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.53,
+    "L3|on": 0.555
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_andas_de_caribu": {
+   "nome": "Andas de Caribu",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.69,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ticao_do_juramento": {
+   "nome": "Tição do Juramento",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.425,
+    "L3|on": 0.785
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 42% fora de 45-85%"
+   ]
+  },
+  "mon_colecionador_de_poses": {
+   "nome": "Colecionador de Poses",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.64,
+    "L5|on": 0.665
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_feltro_do_ventre": {
+   "nome": "Feltro do Ventre",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.725,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_aperto_da_tregua": {
+   "nome": "Aperto da Trégua",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.78,
+    "L3|on": 0.745
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_enegrecido_que_espera": {
+   "nome": "Enegrecido que Espera",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.465,
+    "L3|on": 0.535
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_lobo_invernal": {
+   "nome": "Pulga de Forquilha",
+   "categoria": "lacaio",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.455,
+    "L3|on": 0.365
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 36% fora de 45-85%",
+    "L3|on delta 20.5 pp > 8"
+   ]
+  },
+  "enemy_yeti": {
+   "nome": "Corcova Fervente",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.67,
+    "L3|on": 0.655
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_jotun_cinza": {
+   "nome": "Crescido do Clã",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.78,
+    "L3|on": 0.755
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

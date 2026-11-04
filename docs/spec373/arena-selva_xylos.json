@@ -1,0 +1,262 @@
+{
+ "regiao": "selva_xylos",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 128.9,
+ "criaturas": {
+  "mon_lamelas_de_ferrugem": {
+   "nome": "Lamelas de Ferrugem",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.68,
+    "L3|on": 0.825
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ariete_de_medula": {
+   "nome": "Aríete de Medula",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.63,
+    "L3|on": 0.59
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lacado_de_hifas": {
+   "nome": "Laçado de Hifas",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.71,
+    "L3|on": 0.76
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_recusado_do_ciclo": {
+   "nome": "Recusado do Ciclo",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.465,
+    "L3|on": 0.61
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_remendado_de_osso": {
+   "nome": "Remendado de Osso",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.63,
+    "L3|on": 0.73
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_tamandua_de_ponte": {
+   "nome": "Tamanduá de Ponte",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.66,
+    "L3|on": 0.68
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lagarta_da_hora": {
+   "nome": "Lagarta da Hora",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.675,
+    "L3|on": 0.825
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_preguica_de_pomar": {
+   "nome": "Preguiça de Pomar",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.575,
+    "L3|on": 0.655
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_coandu_de_rebrota": {
+   "nome": "Coandu de Rebrota",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.695,
+    "L3|on": 0.805
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_vespa_oleira": {
+   "nome": "Vespa Oleira",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.77,
+    "L3|on": 0.72
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_escavador_das_camaras": {
+   "nome": "Escavador das Câmaras",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.655,
+    "L5|on": 0.4
+   },
+   "ok": false,
+   "motivos": [
+    "L5|on 40% fora de 45-85%"
+   ]
+  },
+  "enemy_vinha_estranguladora": {
+   "nome": "Serpente Cipó Constritora",
+   "categoria": "elite",
+   "status": "adotada",
+   "cells": {
+    "L3|off": 0.765,
+    "L3|on": 0.895
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 90% fora de 45-85%"
+   ]
+  },
+  "mon_viuvo_do_esporo": {
+   "nome": "Viúvo do Esporo",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.79,
+    "L3|on": 0.68
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_surdo_da_colmeia": {
+   "nome": "Surdo da Colmeia",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.585,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mascador_de_nectar": {
+   "nome": "Mascador de Néctar",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.695,
+    "L3|on": 0.65
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_enxertadora_da_uniao": {
+   "nome": "Enxertadora da União",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.845,
+    "L3|on": 0.645
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_pressa_da_seiva": {
+   "nome": "Pressa da Seiva",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.71,
+    "L3|on": 0.585
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_provador_de_cores": {
+   "nome": "Provador de Cores",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.825,
+    "L3|on": 0.8
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_monte_de_alheios": {
+   "nome": "Monte de Alheios",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.685,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_isca_amarrada": {
+   "nome": "Isca Amarrada",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.43,
+    "L3|on": 0.765
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 43% fora de 45-85%"
+   ]
+  },
+  "mon_oco_da_fronteira": {
+   "nome": "Oco da Fronteira",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.625,
+    "L3|on": 0.61
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_tropel_sem_saida": {
+   "nome": "Tropel Sem Saída",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.545,
+    "L3|on": 0.645
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

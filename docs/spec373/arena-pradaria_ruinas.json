@@ -1,0 +1,261 @@
+{
+ "regiao": "pradaria_ruinas",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 118.0,
+ "criaturas": {
+  "mon_vertedor_de_areia": {
+   "nome": "Vertedor de Areia",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.57,
+    "L3|on": 0.675
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_vidrado_do_morro": {
+   "nome": "Vidrado do Morro",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.51,
+    "L3|on": 0.54
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_costas_de_alicerce": {
+   "nome": "Costas de Alicerce",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.59,
+    "L3|on": 0.79
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_vestido_de_gafanhotos": {
+   "nome": "Vestido de Gafanhotos",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.69,
+    "L3|on": 0.68
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_fucador_da_semente": {
+   "nome": "Fuçador da Semente",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.69,
+    "L3|on": 0.605
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_nadador_de_pedra": {
+   "nome": "Nadador de Pedra",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.805,
+    "L3|on": 0.805
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cobra_de_legua": {
+   "nome": "Cobra de Légua",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.645,
+    "L3|on": 0.865
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 86% fora de 45-85%"
+   ]
+  },
+  "mon_rodante_de_espinhos": {
+   "nome": "Rodante de Espinhos",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.695,
+    "L3|on": 0.715
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_pernalta_das_colunas": {
+   "nome": "Pernalta das Colunas",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.685,
+    "L3|on": 0.66
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lagarto_de_mudas": {
+   "nome": "Lagarto de Mudas",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.835,
+    "L3|on": 0.655
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_besouro_de_alavanca": {
+   "nome": "Besouro de Alavanca",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.64,
+    "L3|on": 0.655
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_carregador_de_ganchos": {
+   "nome": "Carregador de Ganchos",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.545,
+    "L3|on": 0.85
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_leitor_de_cativos": {
+   "nome": "Leitor de Cativos",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.625,
+    "L3|on": 0.625
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_profanador_cravejado": {
+   "nome": "Profanador Cravejado",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.82,
+    "L3|on": 0.825
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cauda_emendada": {
+   "nome": "Cauda Emendada",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.625,
+    "L3|on": 0.73
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_desfiado_de_vaelorn": {
+   "nome": "Desfiado de Vaelorn",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.485,
+    "L3|on": 0.605
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_arqueiro_de_tendao": {
+   "nome": "Arqueiro de Tendão",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.7,
+    "L3|on": 0.65
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_egua_de_costas": {
+   "nome": "Égua de Costas",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.495,
+    "L3|on": 0.64
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cabeca_acima": {
+   "nome": "Cabeça Acima",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.66,
+    "L3|on": 0.675
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_chifres_travados": {
+   "nome": "Chifres Travados",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.645,
+    "L5|on": 0.585
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_retalho_das_duas_cidades": {
+   "nome": "Retalho das Duas Cidades",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.695,
+    "L3|on": 0.815
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_esqueleto_legiao_antiga": {
+   "nome": "Capim de Couraça",
+   "categoria": "lacaio",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.485,
+    "L3|on": 0.435
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 44% fora de 45-85%",
+    "L3|on delta 8.5 pp > 8"
+   ]
+  }
+ }
+}

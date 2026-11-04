@@ -1,0 +1,304 @@
+{
+ "regiao": "deserto_zhur",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 122.9,
+ "criaturas": {
+  "mon_andarilho_de_duas_idades": {
+   "nome": "Andarilho de Duas Idades",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.505,
+    "L3|on": 0.61
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_esfolado_da_tempestade": {
+   "nome": "Esfolado da Tempestade",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.73,
+    "L3|on": 0.825
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_provador_da_borda": {
+   "nome": "Provador da Borda",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.82,
+    "L3|on": 0.85
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_peito_de_geodo": {
+   "nome": "Peito de Geodo",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.81,
+    "L3|on": 0.815
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_fervente_de_ferrugem": {
+   "nome": "Fervente de Ferrugem",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.74,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_mumia_de_po": {
+   "nome": "Carregador de Liteira",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.66,
+    "L3|on": 0.64
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_varano_vidrado": {
+   "nome": "Varano Vidrado",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.7,
+    "L3|on": 0.845
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_tatu_de_navalha": {
+   "nome": "Tatu de Navalha",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.775,
+    "L3|on": 0.825
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lambedor_de_halito": {
+   "nome": "Lambedor de Hálito",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.665,
+    "L3|on": 0.645
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lastreiro_da_cratera": {
+   "nome": "Lastreiro da Cratera",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.735,
+    "L3|on": 0.72
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cavador_de_funil": {
+   "nome": "Cavador de Funil",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.465,
+    "L3|on": 0.68
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_saltador_de_palafita": {
+   "nome": "Saltador de Palafita",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.75,
+    "L3|on": 0.745
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_verme_areia_jovem": {
+   "nome": "Verme de Vidro",
+   "categoria": "elite",
+   "status": "adotada",
+   "cells": {
+    "L3|off": 0.615,
+    "L3|on": 0.785
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off delta 8.5 pp > 8"
+   ]
+  },
+  "enemy_djinn_menor": {
+   "nome": "Pipa de Costelas",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.695,
+    "L3|on": 0.705
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_aranha_de_cristal": {
+   "nome": "Braceiro da Borda Sul",
+   "categoria": "chefe",
+   "status": "reinventada",
+   "cells": {
+    "L5|off": 0.61,
+    "L5|on": 0.55
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_costurado_de_lentes": {
+   "nome": "Costurado de Lentes",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.56,
+    "L3|on": 0.555
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_couro_pegado": {
+   "nome": "Couro Pegado",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.45,
+    "L3|on": 0.565
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_maos_de_cinzel": {
+   "nome": "Mãos de Cinzel",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.815,
+    "L3|on": 0.9
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 90% fora de 45-85%"
+   ]
+  },
+  "mon_aguadeiro_de_bucho": {
+   "nome": "Aguadeiro de Bucho",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.565,
+    "L3|on": 0.71
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cacador_sem_calor": {
+   "nome": "Caçador Sem Calor",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.805,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_altivo_do_vidro": {
+   "nome": "Altivo do Vidro",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.785,
+    "L3|on": 0.85
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_despenseiro_de_espinhos": {
+   "nome": "Despenseiro de Espinhos",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.75,
+    "L3|on": 0.85
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lacrador_de_saidas": {
+   "nome": "Lacrador de Saídas",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.645,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_furador_de_odres": {
+   "nome": "Furador de Odres",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.81,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_guia_avesso": {
+   "nome": "Guia Avesso",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.605,
+    "L3|on": 0.605
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_boss_general_escorpiao": {
+   "nome": "Trono de Ajoelhados",
+   "categoria": "chefe",
+   "status": "reinventada",
+   "cells": {
+    "L5|off": 0.72,
+    "L5|on": 0.595
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}
