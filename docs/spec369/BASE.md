@@ -152,6 +152,8 @@ O dono precisa confirmar ou trocar:
    precisa sair antes de ver o efeito da Fase B.
 5. **R17.** A meta 6 já passa (50,7 %). A Carta `buff_iniciativa` do Corruptor continua no B2 por
    desenho, ou sai?
+   Também sobre a meta (a) do R14: a guarda básica (`bas_*_guarda`) fica fora, como o golpe básico?
+   Hoje nenhuma guarda passa de 60 % de uso, então a resposta não muda nenhum número (P3-6 da Astra).
 6. **Pouso da Fase B.** A revisão Sol (Etapa 8) e o `/spec-land` exigem `tests/test_spec369_metas.py`
    com **0 xfailed** nos testes R13–R20 e R18 (a Fase C fica à parte). Um xfail por artefato ausente
    bloqueia o pouso.
