@@ -184,7 +184,7 @@ Leitura e faixas: piso **45 %** e teto **85 %** por Postura na leitura **total**
   Grava `docs/spec355/arena-emboscada-{0-19,20-99}.json` e `RELATORIO-emboscada.md`.
 - **R17 — Contrapartida só se preciso (item 4; D6).** Se alguma Postura ficar abaixo de 45 % na taxa
   realista (0–19), `agents/combat._has_vigilia` passa a aceitar **qualquer** Carta com `efeito.kind ==
-  "buff_iniciativa"` no baralho/preparadas, não só `dev_zel_vigilia`. São Cartas existentes, sem número novo:
+  "buff_iniciativa"` no baralho/preparadas (04/11, SPEC-397: passivas conhecidas valem sem preparar), não só `dev_zel_vigilia`. São Cartas existentes, sem número novo:
   `medico.json`, `sangromante.json`, `devoto.json` e `arcanista.json` ×2. Se a Postura continuar abaixo
   (o Corruptor não tem nenhuma), registra-se como **exceção pendente** em §9 e não há número novo nesta spec.
 - **R18 — Confirmação uma vez.** Com R11–R17 fechados nas 0–19, uma única rodada nas 20–99 grava

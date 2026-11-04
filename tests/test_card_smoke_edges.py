@@ -103,3 +103,11 @@ def test_deactivate_deck_keeps_the_passive_effect(client):
     player["prepared_cards_pre_deck"] = list(player["prepared_cards"])
     card_piles.deactivate_deck(player)
     assert _has_vigilia(player)
+
+
+def test_passive_reason_is_permanent_and_vigilia_id_has_one_source():
+    from agents import combat
+    from services import card_rewards, initiative_cards
+
+    assert card_rewards.acervo_reason({"deck": ["x"]}, FARO) == "passiva_permanente"
+    assert combat.VIGILIA_CARD_ID is initiative_cards.VIGILIA_CARD_ID

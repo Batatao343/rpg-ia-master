@@ -51,6 +51,7 @@ export const ACERVO_MOTIVO_LABEL: Record<string, string> = {
   baralho_cheio: "só para o Acervo — Baralho cheio",
   limite_de_copias: "só para o Acervo — limite de cópias no Baralho",
   preparadas_cheias: "só para o Acervo — Preparadas cheias",
+  passiva_permanente: "só para o Acervo — sempre ativa: não ocupa Preparação",
   sem_baralho: "só para o Acervo — o Baralho se forma no primeiro combate",
 };
 

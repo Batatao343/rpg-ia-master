@@ -73,6 +73,7 @@ problemas. O dono decidiu, além de corrigir tudo, **mudar o modelo do combate c
     - Exceção "vigília" (decisão do coordenador, opção a): com `dev_zel_vigilia` ("Vigília Ciumenta") no
       baralho/preparadas a emboscada é anulada e vale a regra de iniciativa atual. A abertura grava o motivo
       (`initiator_reason`) e a rodada 1 obedece a ele, ignorando o `encounter_surprise` cru do mundo.
+      (04/11, SPEC-397: passiva de iniciativa conhecida também vale, sem estar preparada.)
 - **R2 — Rodada sem LLM.** Em turno com combate ativo e declaração estruturada (`combat_declaration` com
   `jogadas`), o grafo inteiro faz **zero** chamadas a `get_llm(...).invoke/stream`. Isso inclui router,
   combate, loot, campaign_manager e arquivista. A Cicatriz obrigatória usa o caminho determinístico

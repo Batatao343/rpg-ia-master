@@ -46,7 +46,7 @@ Repetir os itens 2a e 2b do smoke da 369 (abertura narrada) e um lote do `draft.
 
 ## 6. Decisões
 
-Nenhuma aberta.
+Nenhuma aberta. Regra registrada (P3-4): passiva de iniciativa conhecida (`known_cards`) anula a emboscada sem estar preparada, coerente com `learned_passives` e com "passiva não ocupa Preparação"; vale para Vigília, Remendo, Equação Persistente, Conta Memorizada e Faro.
 
 ## 7. Registro de implementação
 
@@ -60,4 +60,4 @@ Executada em 04/11 (branch `spec-397`).
 - **R1 (P3-3)** o corte em `n` agora avisa quantas aprovadas foram descartadas.
 - **Desvio declarado (P3-1)**: o teste do R3 usa `_combat_node` com MockLLM, não o HTTP; o smoke real cobre.
 - **Smoke real (§5)** não executado pelo executor (sem chave/serviço no worktree); fica para o coordenador.
-
+- **Follow-ups da rodada 2 (P3-4/5/6):** regra no §6 e linhas datadas nas specs 346 e 355; `VIGILIA_CARD_ID` com fonte única em `services/initiative_cards.py` (combat importa); `acervo_reason` devolve `passiva_permanente` para passivas e a UI (`web/src/cardRewards.ts`, `types.ts`) mostra "sempre ativa: não ocupa Preparação".

@@ -101,7 +101,7 @@ export interface LojaOferta extends EspolioOferta {
   preco: number;
   destino: "baralho" | "acervo" | "preparadas";
   /** SPEC-363 R32: só presente quando `destino` é "acervo". */
-  destino_motivo?: "baralho_cheio" | "limite_de_copias" | "preparadas_cheias" | "sem_baralho";
+  destino_motivo?: "baralho_cheio" | "limite_de_copias" | "preparadas_cheias" | "sem_baralho" | "passiva_permanente";
   bloqueio: string | null;
 }
 export interface LojaCartasView {

@@ -315,7 +315,7 @@ def _add_to_deck(player: dict, card_id: str) -> str:
 def acervo_reason(player: dict, card_id: str) -> str | None:
     """SPEC-363 R32: por que a Carta comprada/sorteada fica só no Acervo (None = não fica)."""
     if _is_passive(card_id):
-        return None
+        return "passiva_permanente"  # SPEC-397: não ocupa Preparação nem Baralho
     if player.get("deck"):
         if len(player["deck"]) >= cards.DECK_MAX:
             return "baralho_cheio"

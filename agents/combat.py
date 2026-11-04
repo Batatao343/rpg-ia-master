@@ -1923,7 +1923,7 @@ def _fast_text_call(
         return None
 
 
-VIGILIA_CARD_ID = "dev_zel_vigilia"
+from services.initiative_cards import VIGILIA_CARD_ID  # noqa: E402,F401  (fonte única, SPEC-397)
 
 
 def _has_vigilia(player: dict | None) -> bool:
