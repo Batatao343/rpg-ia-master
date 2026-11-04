@@ -448,7 +448,7 @@ O balanço é determinístico, e a Fase C é a prova dele. O LLM real entra em d
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
 
-**`<sha-A>` = `d6a6de69`** (branch `spec-369`; o primeiro commit foi `10935009`): `docs/spec369/metricas_369.py`, `docs/spec369/bot_pressagio.py`, `docs/spec369/base-0-19.json`, `docs/spec369/BASE.md`, `tests/test_spec369_regua.py` e `tests/test_spec369_metas.py`. Se a revisão pedir correção, o sha final de pouso substitui este.
+**`<sha-A>` = `8985c4c0`** (sha na `main` após o rebase do pouso; na branch eram `d6a6de69` e, antes, `10935009`): `docs/spec369/metricas_369.py`, `docs/spec369/bot_pressagio.py`, `docs/spec369/base-0-19.json`, `docs/spec369/BASE.md`, `tests/test_spec369_regua.py` e `tests/test_spec369_metas.py`. Se a revisão pedir correção, o sha final de pouso substitui este.
 
 **Etapa 0**
 - `lote-v2` aceita Carta do catálogo como lote: sim. `sim.injected` sobrescreve com `fx.materialize` (idempotente, `services/card_effects.py:217-226`), `build_arms` tira a Carta para montar o `sem` e devolve (`scripts/cards/sim.py:324-336`), e o catálogo sai intacto (conferido). O `uso` chama `sim.simulate_batch(..., protocolo="v2")` com os parâmetros de `PROTOCOLO_LOTE` e as sementes do `--seeds`. Em 0-19, isso é exatamente `simulate_protocolo_lote([carta], protocolo="v2")`. Não foi preciso leave-one-out.
