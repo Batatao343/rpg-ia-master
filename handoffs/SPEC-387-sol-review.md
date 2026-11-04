@@ -1,7 +1,7 @@
 # SPEC-387 — revisão sol (review)
 
-> **Veredito (rodada 2):** `CHANGES_REQUIRED` (rodada 1: `CHANGES_REQUIRED`)
-> **Revisor:** Opus 5.5 / papel Sol · **Data:** 2026-11-03 · **Commits revisados:** rodada 1 `4ceb5f94` (`a965031e..4ceb5f94`, base `8ff8d674`); rodada 2 `07116abd` (`eb11d4a9..07116abd`)
+> **Veredito (rodada 3):** `CHANGES_REQUIRED` (rodadas 1 e 2: `CHANGES_REQUIRED`)
+> **Revisor:** Opus 5.5 / papel Sol · **Data:** 2026-11-03 · **Commits revisados:** rodada 1 `4ceb5f94` (`a965031e..4ceb5f94`, base `8ff8d674`); rodada 2 `07116abd` (`eb11d4a9..07116abd`); rodada 3 `1557736e` (`e53d525d..1557736e`)
 
 ## Escopo
 
@@ -176,4 +176,70 @@ bash scripts/dev/pt.sh tests/test_spec360_flags_off.py → FAILED test_golden_fl
 dump golden 360 (base 8ff8d674 × 07116abd) → diff só nas mensagens 12, 14, 20 (fallback off)
 sonda off_fallback_text com cura + dano contínuo → "Você acerta Goblin." (cura, Cartas e DoT perdidos: R2-P1-1)
 ruff check (arquivos .py da rodada) → ok; eslint web/e2e/spec387-omen-390.spec.ts → ok
+```
+
+---
+
+## Rodada 3 (commit `1557736e`, diff `e53d525d..1557736e`)
+
+**Veredito da rodada 3: `CHANGES_REQUIRED`.**
+
+### Estado dos achados da rodada 2
+
+| ID | Estado | Evidência |
+|---|---|---|
+| R2-P2-1 | Resolvido | `_fire_omen_frustrated` é o helper comum de `_frustrate` e `_retract_omen` (`conflict_orchestrator.py:1866-1883`). Teste `test_reaction_kill_fires_ao_pressagio_frustrado_once` (`tests/test_spec387_seed.py:253`): o gatilho dispara 1× no abate por Reação. |
+| R2-P1-1 | **Parcial** (ver R3-P1-1 e R3-P2-1) | Cura e dano contínuo agora entram ("Você recupera 3 de Vitalidade com …", "Você sofre 1 de Sangramento."), e "Usa X" seguido de golpe é atribuído ao atacante da linha seguinte. Mas o autor de "Usa X" **sem golpe** é adivinhado pelo nome da Carta ou pela linha seguinte, e erra. |
+
+### Atribuição de "Usa X" pelo nome das Cartas do herói (pergunta do coordenador)
+
+Sondas em `off_fallback_text` (herói "Smoke", Cartas do herói = {Golpe Rachado, Bandagem de Campo, Golpe Básico}):
+
+| Logs | Saída | Problema |
+|---|---|---|
+| `Usa Pele de Veterano`, `Goblin coordena o próximo ataque de Lobo.` | "**Você usa Pele de Veterano.** Goblin coordena…" | Carta de apoio do **inimigo** atribuída ao herói. A linha seguinte não casa `_SUBJECT_RE` e o padrão é `hero` (`off_text.py:84`). |
+| `Usa Pele de Veterano`, `Usa Grito de Guerra`, `Goblin: ganha condição Fúria` | "**` usa Pele de Veterano.`** Goblin usa Grito de Guerra…" | Frase **sem sujeito**: `flush("")` (`off_text.py:61`) quando a Carta pendente não é do herói. |
+| `Goblin → Smoke: erro (…)`, `Usa Golpe Básico` | "Goblin erra você. **Você usa Golpe Básico.**" | **Colisão de nome**: Carta de mesmo nome no fim da rodada vai para o herói (`off_text.py:88`). Acontece com básica, neutra ou Carta de mesmo nome que inimigo e herói têm. |
+
+**Conclusão:** o nome da Carta não identifica o ator. Existe fonte robusta no próprio motor: `out["cards_used"]`, lista
+ordenada `{actor_id, card_id, …}` (`services/conflict_turn.py:473`; é a mesma que `round_log.round_registry` usa para "X joga
+C"). Ela está no escopo das duas chamadas de `_narrate` (`agents/combat.py:2917, 2951`, variável `out`).
+
+### Achados
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R3-P1-1 | P1 | `services/off_text.py:59-62, 82-84, 88` | O autor de "Usa X" sem golpe é adivinhado: (a) por pertença do **nome** a `hero_card_names` (colide com básicas, neutras e nomes repetidos); (b) pelo sujeito da linha seguinte, com `hero` como **padrão** quando ela não casa. O resultado é atribuir ao herói Cartas do inimigo e gerar "` usa X.`" sem sujeito. É mentira mecânica na superfície do jogador, a mesma família do P1-1. | Atribuir pelo motor, não pelo texto: passar `out.get("cards_used")` e os nomes por id dos atores (`actors_by_id`/`enemies` + herói) a `off_fallback_text`. Cada "Usa X" consome, em ordem, a 1ª entrada ainda não usada cujo `_card_name(card_id) == X`, e o ator é o `actor_id` dela ("Você" para o herói). Sem entrada correspondente, usar frase sem ator ("A Carta X entra em jogo.") e **nunca** usar o herói como padrão. Remover `hero_card_names` se ficar sem uso. Testes: os 3 casos da tabela acima (Carta inimiga de apoio seguida de linha sem sujeito; duas Cartas inimigas seguidas; Carta de mesmo nome do herói usada pelo inimigo) e Carta de apoio do herói sem golpe ("Você usa Bandagem de Campo."). Depois regravar o golden 360. |
+| R3-P2-1 | P2 | `services/off_text.py:8` × `services/round_log.py:902` | **Import circular**: `off_text` importa `round_log` no topo e `round_log` reexporta `off_text` no fim. Hoje funciona só porque `agents/combat` importa `round_log` antes. Um import direto em interpretador novo quebra: `bash scripts/dev/py.sh -c "import services.off_text"` → `ImportError: cannot import name 'hero_card_names' from partially initialized module 'services.off_text'`. | Remover a reexportação do fim de `round_log.py` e fazer `agents/combat.py` (e os testes) importar de `services.off_text`. Alternativa: em `off_text`, importar `round_log` dentro das funções. Teste: `subprocess` com `python -c "import services.off_text"` sai com código 0. |
+| R3-P3-1 | P3 | `tests/size_budget.json` (`agents/combat.py::_narrate`: 101, entrada **nova**) e `agents/combat.py:1828-1834` | É o 3º rebaseline, e este cria um **ofensor novo**: `_narrate` passa de 100 para 101 só pela chamada formatada em 7 linhas. A exceção do `size_budget` existe para código que a spec manda pôr no god-file, não para formatação evitável. **Não é aceitável; extrair.** | Uma função em `off_text`, por exemplo `for_round(logs, player, out, actors, flavor, victory)`, que monta os argumentos (inclusive os de R3-P1-1). `_narrate` faz 1 chamada de 1–2 linhas e volta a ≤ 100. Retirar a entrada `_narrate` do `size_budget.json` e reverter o +6 de `agents/combat.py`. |
+
+### Goldens 360 / 371
+
+- **360:** comparei de novo as mensagens dos 30 turnos (base `8ff8d674` × `1557736e`). Só mudam as **mensagens 12, 14 e 20**
+  (índice 0), todas do fallback `off`. Agora elas incluem "Crescido do Clã usa Punho de Tala." e, na 20, "Você sofre 1 de
+  Sangramento.".
+- **371:** `test_spec371_flags_off::test_golden_360_inalterado_com_a_flag_off` usa o **mesmo** `_run` e o mesmo arquivo de
+  golden. Medi as duas impressões digitais na branch (360 com fauna `off`; 371 com `RPG_FAUNA_SABER=off` também): são
+  idênticas, e a única chave diferente do golden é `messages`. Uma regravação conserta os dois testes.
+- **Regravação:** é permitida (`SPEC360_REGEN=1`, coordenador; o arquivo não é protegido), mas **só depois de R3-P1-1**. A
+  correção pode trocar a atribuição de "Usa Punho de Tala" nessas mensagens (aqui o golpe vem logo depois, então deve ficar
+  igual, mas é preciso confirmar). Ao regravar, conferir que o diff continua só nas mensagens 12/14/20.
+
+### Regressão nova
+
+Nenhuma além dos 3 itens acima.
+- Golden 330 e as guardas 353/355/364 estão verdes.
+- Sim v2 e `test_spec362_run_round` estão verdes.
+- `test_spec371_eval` (E5) está verde.
+- `_run_round` encolheu 4 linhas, e o rebaseline dele está correto.
+
+### Comandos rodados (rodada 3)
+
+```text
+bash scripts/dev/pt.sh tests/test_spec387_*.py test_objectives test_enemy_intent test_spec355_{golpe_reacao,guardas} test_spec353_registry test_spec367_omen_voice test_card_effects_grammar test_spec353_golden_guard test_spec364_golden_guard test_spec371_{eval,pressagio,reacao_inicial} test_spec346_board_no_llm test_size_budget test_log_event_registry test_card_sim_v2 test_spec362_run_round → 343 passed, 2 skipped, 1 xfailed
+sondas off_fallback_text (6 casos) → 3 atribuições erradas ou sem sujeito (R3-P1-1); cura e dano contínuo ok
+py.sh -c "import services.off_text" → ImportError (circular; R3-P2-1)
+dump golden 360 (base × 1557736e) → diff só nas mensagens 12, 14, 20
+fingerprint 360 × 371 (FAUNA_SABER=off) na branch → iguais; só `messages` difere do golden
+ruff check (off_text, round_log, orchestrator, combat) → ok
 ```
