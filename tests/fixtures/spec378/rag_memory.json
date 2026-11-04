@@ -1,0 +1,1020 @@
+{
+ "add.npc.existing_noemb": [
+  false,
+  [
+   [
+    "result",
+    "add_npc_memory",
+    false,
+    {
+     "error": "embeddings_unavailable",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": "npc1",
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+     "provider": "prov"
+    }
+   ]
+  ]
+ ],
+ "add.npc.existing_ok": [
+  true,
+  [
+   [
+    "load_local",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+    [
+     "allow_dangerous_deserialization"
+    ]
+   ],
+   [
+    "add_texts",
+    [
+     "a"
+    ],
+    []
+   ],
+   [
+    "save",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+    "prov"
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "npc_memory_saved"
+    ],
+    {
+     "facts": 1,
+     "level": "debug"
+    }
+   ],
+   [
+    "result",
+    "add_npc_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": "npc1",
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+     "provider": "prov"
+    }
+   ]
+  ]
+ ],
+ "add.npc.existing_ok_meta": [
+  true,
+  [
+   [
+    "load_local",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+    [
+     "allow_dangerous_deserialization"
+    ]
+   ],
+   [
+    "add_texts",
+    [
+     "a"
+    ],
+    [
+     "metadatas"
+    ]
+   ],
+   [
+    "save",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+    "prov"
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "npc_memory_saved"
+    ],
+    {
+     "facts": 1,
+     "level": "debug"
+    }
+   ],
+   [
+    "result",
+    "add_npc_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": [
+      {
+       "k": 1
+      }
+     ],
+     "npc_id": "npc1",
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+     "provider": "prov"
+    }
+   ]
+  ]
+ ],
+ "add.npc.faiss_exc_existing": [
+  false,
+  [
+   [
+    "load_local",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+    [
+     "allow_dangerous_deserialization"
+    ]
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "npc_memory_failed"
+    ],
+    {
+     "error": "_Boom",
+     "level": "error"
+    }
+   ],
+   [
+    "result",
+    "add_npc_memory",
+    false,
+    {
+     "error": "faiss",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": "npc1",
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+     "provider": "prov"
+    }
+   ]
+  ]
+ ],
+ "add.npc.faiss_exc_new": [
+  false,
+  [
+   [
+    "makedirs",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007"
+   ],
+   [
+    "from_texts",
+    [
+     "a"
+    ],
+    []
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "npc_memory_failed"
+    ],
+    {
+     "error": "_Boom",
+     "level": "error"
+    }
+   ],
+   [
+    "result",
+    "add_npc_memory",
+    false,
+    {
+     "error": "faiss",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": "npc1",
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+     "provider": "act"
+    }
+   ]
+  ]
+ ],
+ "add.npc.invalid_empty": [
+  false,
+  [
+   [
+    "result",
+    "add_npc_memory",
+    false,
+    {
+     "error": "invalid_input",
+     "facts_count": 0,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": "npc1",
+     "path": "",
+     "provider": null
+    }
+   ]
+  ]
+ ],
+ "add.npc.invalid_none_gid": [
+  false,
+  [
+   [
+    "result",
+    "add_npc_memory",
+    false,
+    {
+     "error": "invalid_input",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "",
+     "provider": null
+    }
+   ]
+  ]
+ ],
+ "add.npc.new_noemb": [
+  false,
+  [
+   [
+    "result",
+    "add_npc_memory",
+    false,
+    {
+     "error": "embeddings_unavailable",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": "npc1",
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+     "provider": "act"
+    }
+   ]
+  ]
+ ],
+ "add.npc.new_ok": [
+  true,
+  [
+   [
+    "makedirs",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007"
+   ],
+   [
+    "from_texts",
+    [
+     "a",
+     "b"
+    ],
+    []
+   ],
+   [
+    "save",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+    "act"
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "npc_memory_saved"
+    ],
+    {
+     "facts": 2,
+     "level": "debug"
+    }
+   ],
+   [
+    "result",
+    "add_npc_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 2,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": "npc1",
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+     "provider": "act"
+    }
+   ]
+  ]
+ ],
+ "add.npc.new_ok_meta": [
+  true,
+  [
+   [
+    "makedirs",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007"
+   ],
+   [
+    "from_texts",
+    [
+     "a"
+    ],
+    [
+     "metadatas"
+    ]
+   ],
+   [
+    "save",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+    "act"
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "npc_memory_saved"
+    ],
+    {
+     "facts": 1,
+     "level": "debug"
+    }
+   ],
+   [
+    "result",
+    "add_npc_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": [
+      {
+       "k": 1
+      }
+     ],
+     "npc_id": "npc1",
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1",
+     "provider": "act"
+    }
+   ]
+  ]
+ ],
+ "add.npc.profile_exc": [
+  false,
+  [
+   [
+    "stage",
+    "MemoryWriteIntent(document=MemoryDocument(document_id='npc:a8ad8772ddc826918d475176cfa8b3554a4d48e553e4a8f3f8a8743f1e441b92', text='a', scope='npc', metadata={}, score=None), principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id='npc1', timeline_epoch=0)"
+   ],
+   [
+    "result",
+    "add_npc_memory",
+    false,
+    {
+     "error": "_Boom",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": "npc1",
+     "path": "postgres://app.memory_documents",
+     "provider": "pgvector"
+    }
+   ]
+  ]
+ ],
+ "add.npc.profile_ok": [
+  true,
+  [
+   [
+    "stage",
+    "MemoryWriteIntent(document=MemoryDocument(document_id='npc:a1ed82a864b1b3b352a4ac26103036a186657ee6041da892de7566aa87962b64', text='a', scope='npc', metadata={'timeline_epoch': 3}, score=None), principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id='npc1', timeline_epoch=3)"
+   ],
+   [
+    "stage",
+    "MemoryWriteIntent(document=MemoryDocument(document_id='npc:b342f8005d5205b8b9adba60e6d3d561730cf77e2371d5898b419bcd6ee356f2', text='b', scope='npc', metadata={}, score=None), principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id='npc1', timeline_epoch=0)"
+   ],
+   [
+    "result",
+    "add_npc_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 2,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": [
+      {
+       "timeline_epoch": 3
+      },
+      null
+     ],
+     "npc_id": "npc1",
+     "path": "postgres://app.memory_documents",
+     "provider": "pgvector"
+    }
+   ]
+  ]
+ ],
+ "add.npc.profile_ok_nometa": [
+  true,
+  [
+   [
+    "stage",
+    "MemoryWriteIntent(document=MemoryDocument(document_id='npc:a8ad8772ddc826918d475176cfa8b3554a4d48e553e4a8f3f8a8743f1e441b92', text='a', scope='npc', metadata={}, score=None), principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id='npc1', timeline_epoch=0)"
+   ],
+   [
+    "result",
+    "add_npc_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": "npc1",
+     "path": "postgres://app.memory_documents",
+     "provider": "pgvector"
+    }
+   ]
+  ]
+ ],
+ "add.session.existing_noemb": [
+  false,
+  [
+   [
+    "result",
+    "add_session_memory",
+    false,
+    {
+     "error": "embeddings_unavailable",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+     "provider": "prov"
+    }
+   ]
+  ]
+ ],
+ "add.session.existing_ok": [
+  true,
+  [
+   [
+    "load_local",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+    [
+     "allow_dangerous_deserialization"
+    ]
+   ],
+   [
+    "add_texts",
+    [
+     "a"
+    ],
+    []
+   ],
+   [
+    "save",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+    "prov"
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "session_memory_saved"
+    ],
+    {
+     "facts": 1,
+     "level": "debug"
+    }
+   ],
+   [
+    "result",
+    "add_session_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+     "provider": "prov"
+    }
+   ]
+  ]
+ ],
+ "add.session.existing_ok_meta": [
+  true,
+  [
+   [
+    "load_local",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+    [
+     "allow_dangerous_deserialization"
+    ]
+   ],
+   [
+    "add_texts",
+    [
+     "a"
+    ],
+    [
+     "metadatas"
+    ]
+   ],
+   [
+    "save",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+    "prov"
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "session_memory_saved"
+    ],
+    {
+     "facts": 1,
+     "level": "debug"
+    }
+   ],
+   [
+    "result",
+    "add_session_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": [
+      {
+       "k": 1
+      }
+     ],
+     "npc_id": null,
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+     "provider": "prov"
+    }
+   ]
+  ]
+ ],
+ "add.session.faiss_exc_existing": [
+  false,
+  [
+   [
+    "load_local",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+    [
+     "allow_dangerous_deserialization"
+    ]
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "session_memory_failed"
+    ],
+    {
+     "error": "_Boom",
+     "level": "error"
+    }
+   ],
+   [
+    "result",
+    "add_session_memory",
+    false,
+    {
+     "error": "faiss",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+     "provider": "prov"
+    }
+   ]
+  ]
+ ],
+ "add.session.faiss_exc_new": [
+  false,
+  [
+   [
+    "makedirs",
+    "<TMP>/mem"
+   ],
+   [
+    "from_texts",
+    [
+     "a"
+    ],
+    []
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "session_memory_failed"
+    ],
+    {
+     "error": "_Boom",
+     "level": "error"
+    }
+   ],
+   [
+    "result",
+    "add_session_memory",
+    false,
+    {
+     "error": "faiss",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+     "provider": "act"
+    }
+   ]
+  ]
+ ],
+ "add.session.invalid_empty": [
+  false,
+  [
+   [
+    "result",
+    "add_session_memory",
+    false,
+    {
+     "error": "invalid_input",
+     "facts_count": 0,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "",
+     "provider": null
+    }
+   ]
+  ]
+ ],
+ "add.session.invalid_none_gid": [
+  false,
+  [
+   [
+    "result",
+    "add_session_memory",
+    false,
+    {
+     "error": "invalid_input",
+     "facts_count": 1,
+     "game_id": "",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "",
+     "provider": null
+    }
+   ]
+  ]
+ ],
+ "add.session.new_noemb": [
+  false,
+  [
+   [
+    "result",
+    "add_session_memory",
+    false,
+    {
+     "error": "embeddings_unavailable",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+     "provider": "act"
+    }
+   ]
+  ]
+ ],
+ "add.session.new_ok": [
+  true,
+  [
+   [
+    "makedirs",
+    "<TMP>/mem"
+   ],
+   [
+    "from_texts",
+    [
+     "a",
+     "b"
+    ],
+    []
+   ],
+   [
+    "save",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+    "act"
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "session_memory_saved"
+    ],
+    {
+     "facts": 2,
+     "level": "debug"
+    }
+   ],
+   [
+    "result",
+    "add_session_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 2,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+     "provider": "act"
+    }
+   ]
+  ]
+ ],
+ "add.session.new_ok_meta": [
+  true,
+  [
+   [
+    "makedirs",
+    "<TMP>/mem"
+   ],
+   [
+    "from_texts",
+    [
+     "a"
+    ],
+    [
+     "metadatas"
+    ]
+   ],
+   [
+    "save",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+    "act"
+   ],
+   [
+    "log",
+    [
+     "rag",
+     "session_memory_saved"
+    ],
+    {
+     "facts": 1,
+     "level": "debug"
+    }
+   ],
+   [
+    "result",
+    "add_session_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": [
+      {
+       "k": 1
+      }
+     ],
+     "npc_id": null,
+     "path": "<TMP>/mem/00000000-0000-0000-0000-000000000007",
+     "provider": "act"
+    }
+   ]
+  ]
+ ],
+ "add.session.profile_exc": [
+  false,
+  [
+   [
+    "stage",
+    "MemoryWriteIntent(document=MemoryDocument(document_id='session:14ad0684b3bba8ff0a5da38c0b5dfd49c3f1efe8a1b4422a58a87ac377c94e2a', text='a', scope='session', metadata={}, score=None), principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id=None, timeline_epoch=0)"
+   ],
+   [
+    "result",
+    "add_session_memory",
+    false,
+    {
+     "error": "_Boom",
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "postgres://app.memory_documents",
+     "provider": "pgvector"
+    }
+   ]
+  ]
+ ],
+ "add.session.profile_ok": [
+  true,
+  [
+   [
+    "stage",
+    "MemoryWriteIntent(document=MemoryDocument(document_id='session:22f055e72d161a5b688966191fc2d238775babed313f95a0d1271e931559cffe', text='a', scope='session', metadata={'timeline_epoch': 3}, score=None), principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id=None, timeline_epoch=3)"
+   ],
+   [
+    "stage",
+    "MemoryWriteIntent(document=MemoryDocument(document_id='session:dcf1dd6b0801812c77a384d802e7a65609b31428d9dc3bd73722961509788fdc', text='b', scope='session', metadata={}, score=None), principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id=None, timeline_epoch=0)"
+   ],
+   [
+    "result",
+    "add_session_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 2,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": [
+      {
+       "timeline_epoch": 3
+      },
+      null
+     ],
+     "npc_id": null,
+     "path": "postgres://app.memory_documents",
+     "provider": "pgvector"
+    }
+   ]
+  ]
+ ],
+ "add.session.profile_ok_nometa": [
+  true,
+  [
+   [
+    "stage",
+    "MemoryWriteIntent(document=MemoryDocument(document_id='session:14ad0684b3bba8ff0a5da38c0b5dfd49c3f1efe8a1b4422a58a87ac377c94e2a', text='a', scope='session', metadata={}, score=None), principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id=None, timeline_epoch=0)"
+   ],
+   [
+    "result",
+    "add_session_memory",
+    true,
+    {
+     "error": null,
+     "facts_count": 1,
+     "game_id": "00000000-0000-0000-0000-000000000007",
+     "metadatas": null,
+     "npc_id": null,
+     "path": "postgres://app.memory_documents",
+     "provider": "pgvector"
+    }
+   ]
+  ]
+ ],
+ "query.npc.exc": [
+  "",
+  [
+   [
+    "load_index",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1"
+   ],
+   [
+    "degraded",
+    "npc"
+   ]
+  ]
+ ],
+ "query.npc.noemb": [
+  "",
+  "",
+  []
+ ],
+ "query.npc.noindex": [
+  "",
+  "",
+  []
+ ],
+ "query.npc.novec": [
+  "",
+  "",
+  []
+ ],
+ "query.npc.ok": [
+  "FMT2",
+  "FMT2",
+  [
+   [
+    "load_index",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1"
+   ],
+   [
+    "evidence",
+    [
+     0.5,
+     0.25
+    ],
+    3,
+    "npc"
+   ],
+   [
+    "load_index",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007/npc1"
+   ],
+   [
+    "evidence",
+    [
+     0.5,
+     0.25
+    ],
+    5,
+    "npc"
+   ]
+  ]
+ ],
+ "query.npc.profile": [
+  "FMT0",
+  "FMT0",
+  [
+   [
+    "query",
+    "MemoryQuery(text='', scope='npc', principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id='npc1', max_visibility='public', k=3, vector=(0.5, 0.25), embedding_profile_id='EP')"
+   ],
+   [
+    "query",
+    "MemoryQuery(text='', scope='npc', principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id='npc1', max_visibility='public', k=5, vector=(0.5, 0.25), embedding_profile_id='EP')"
+   ]
+  ]
+ ],
+ "query.session.exc": [
+  "",
+  [
+   [
+    "load_index",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007"
+   ],
+   [
+    "degraded",
+    "session"
+   ]
+  ]
+ ],
+ "query.session.noemb": [
+  "",
+  "",
+  []
+ ],
+ "query.session.noindex": [
+  "",
+  "",
+  []
+ ],
+ "query.session.novec": [
+  "",
+  "",
+  []
+ ],
+ "query.session.ok": [
+  "FMT2",
+  "FMT2",
+  [
+   [
+    "load_index",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007"
+   ],
+   [
+    "evidence",
+    [
+     0.5,
+     0.25
+    ],
+    6,
+    "session"
+   ],
+   [
+    "load_index",
+    "<TMP>/mem/00000000-0000-0000-0000-000000000007"
+   ],
+   [
+    "evidence",
+    [
+     0.5,
+     0.25
+    ],
+    2,
+    "session"
+   ]
+  ]
+ ],
+ "query.session.profile": [
+  "FMT0",
+  "FMT0",
+  [
+   [
+    "query",
+    "MemoryQuery(text='', scope='session', principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id=None, max_visibility='public', k=6, vector=(0.5, 0.25), embedding_profile_id='EP')"
+   ],
+   [
+    "query",
+    "MemoryQuery(text='', scope='session', principal='P', game_id=UUID('00000000-0000-0000-0000-000000000007'), npc_id=None, max_visibility='public', k=2, vector=(0.5, 0.25), embedding_profile_id='EP')"
+   ]
+  ]
+ ]
+}
