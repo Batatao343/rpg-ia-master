@@ -103,8 +103,8 @@ def existing_for(postura: str, subclasse: str) -> list[dict]:
 
 
 def _budget_text() -> str:
-    """Faixas de `power_score` (raridade x custo de Fôlego) e limites de complexidade, LIDOS do orçamento
-    e do lint (nada copiado à mão)."""
+    """Faixas de `power_score` (raridade x custo de Fôlego), LIDAS do orçamento. A linha de complexidade
+    espelha `card_lint.check_raridade`; `tests/test_spec387_draft.py` compara as duas."""
     faixas = fx.budget_config().get("faixas") or {}
     linhas = [
         f"- {rar}: " + ", ".join(f"Fôlego {k}: [{v[0]}, {v[1]}]" for k, v in sorted(por.items()))
@@ -137,7 +137,7 @@ _EXEMPLO_POR_RARIDADE = {
 }  # fmt: skip
 
 
-def _examples(raridades: tuple[str, ...], postura: str, subclasse: str) -> str:
+def _examples(raridades: tuple[str, ...]) -> str:
     rows = []
     for rar in raridades:
         base = _EXEMPLO_POR_RARIDADE.get(rar)
@@ -180,7 +180,7 @@ GRAMÁTICA DE `escala` (opcional, por efeito): {{"por": um de {sorted(fx.ESCALA_
 ORÇAMENTO por raridade (power_score da Carta tem de caber na faixa do seu custo de Fôlego):
 {_budget_text()}
 EXEMPLO VÁLIDO por raridade pedida:
-{_examples(raridades, postura, subclasse)}
+{_examples(raridades)}
 
 VOZ: nome até 4 palavras; descrição até 140 caracteres, concreta e sensorial, SEM números;
 sabor de Valoria ({", ".join(lex["valoria"][:12])}); proibido: {", ".join(lex["proibidos"][:10])}…

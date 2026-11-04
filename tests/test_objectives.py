@@ -153,6 +153,7 @@ def test_run_round_encerra_com_desfecho_proprio():
     assert out2["ended"] and out2["objetivo"] == {
         "tipo": "sobreviver_n_rodadas",
         "resultado": "cumprido",
+        "motivo": "Vocês resistiram por 2 rodadas.",  # SPEC-387 R20: campo aditivo
     }
 
 

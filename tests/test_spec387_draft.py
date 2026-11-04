@@ -115,3 +115,20 @@ def test_mock_llm_empty_batch_unchanged(draft):
 
     out = draft.generate(Mock(), "Médico de Campo", "boticario", 3, lore=[])
     assert out == {"cards": [], "rejeitadas": [], "aviso": "sem chave de provider: lote vazio"}
+
+
+def test_prompt_complexity_rule_matches_the_lint(draft):
+    """Sol P3-3: a regra escrita no prompt é a que `card_lint.check_raridade` aplica."""
+    from services import card_lint
+
+    base = {"onda": 1, "patamar": "inicial", "raridade": "comum", "tipo": "ativa"}
+    um = {"kind": "dano", "categoria_arma": "leve", "dano_base": 3}
+    dois = [um, {"kind": "aplicar_condicao", "condicao": "sangramento", "duracao": 2}]
+    regra = draft._budget_text()
+    assert "comum: 1 efeito e ≤ 1 palavra-chave" in regra
+    assert not card_lint.check_raridade({**base, "efeitos": [um]})
+    assert card_lint.check_raridade({**base, "efeitos": dois})  # comum com 2 efeitos: erro
+    assert "incomum: ≤ 2 e ≤ 2" in regra
+    inc = {**base, "raridade": "incomum", "patamar": "avancado"}
+    assert not card_lint.check_raridade({**inc, "efeitos": dois})
+    assert card_lint.check_raridade({**inc, "efeitos": [um, um, um]})

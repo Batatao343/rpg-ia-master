@@ -66,5 +66,20 @@ def test_no_fallback_from_contentless_name(monkeypatch):
     monkeypatch.setenv("RPG_CREATURE_GEN", "off")
     _install_llm(monkeypatch, scan=_scan(("Criatura hostil", 1)))
     state = _state("pantano_melancolia", "g1")
-    combat._spawn_v4_enemies(state["messages"], "a criatura hostil", state, {})
+    enemies, _ = combat._spawn_v4_enemies(state["messages"], "a criatura hostil", state, {})
     assert "spawn_identity_mismatch" not in events
+    # Sol P3-2: o ramo novo é alcançado (sem candidato regional o fallback de hoje segue, documentado)
+    assert "spawn_generic_name" in events
+    assert enemies and enemies[0]["id"].startswith("fallback_")
+
+
+def test_regional_candidate_never_materializes_fallback(monkeypatch):
+    """Sol P3-2: com candidato regional, nem o ramo do fallback é alcançado e o id não é `fallback_*`."""
+    events: list[str] = []
+    monkeypatch.setattr(combat, "_log_event", lambda a, b, **k: events.append(b))
+    monkeypatch.setenv("RPG_CREATURE_GEN", "off")
+    _install_llm(monkeypatch, scan=_scan(("Criatura hostil", 1)))
+    state = _state("pantano_melancolia", "g2")
+    enemies, _ = combat._spawn_v4_enemies(state["messages"], "a criatura hostil", state, {})
+    assert not any(str(e["id"]).startswith("fallback_criatura_hostil") for e in enemies)
+    assert "spawn_identity_mismatch" not in events and "spawn_generic_name" not in events

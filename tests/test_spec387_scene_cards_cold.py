@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import json
+
+import pytest
+
 from services import card_piles, cards, combat_targeting
 from services import scene_cards as sc
 from tests.test_encounter_lifecycle_reload import _decl, _reload
@@ -80,8 +84,12 @@ def test_orphan_card_never_shown_raw(monkeypatch):
     cards._TEMP_CARDS.clear()
     state = _reload(state)
     assert cards.get_card(cid) is None
+    events: list = []
+    monkeypatch.setattr(card_piles, "log_event", lambda *a, **k: events.append((a, k)))
     view = card_piles.public_view(state["combat"]["pilhas"], state["player"])
     assert all(r["id"] != cid for r in view["mao"])
+    assert [e[0] for e in events] == [("combat", "scene_card_orphan")]  # Sol P3-1
+    assert cid not in str(events)  # sem id no evento
 
 
 def test_old_save_without_scene_loads(monkeypatch):
@@ -90,3 +98,54 @@ def test_old_save_without_scene_loads(monkeypatch):
     assert sc.rehydrate(state) == 0
     state["combat"] = None
     assert sc.rehydrate(state) == 0
+
+
+def _api_seed(tmp):
+    """Save legacy com a Carta de cena NA MÃO (objeto da cena), pronto para o POST /game/action."""
+    import persistence
+    from tests.fixtures import spec368_seed as sd
+
+    gid = sd.seed_save(12, saves_dir=tmp)
+    with sd._legacy(tmp):
+        st = persistence.load_game_state(persistence.save_path(gid))
+        st["enemies"][0]["vitalidade"] = st["enemies"][0]["max_vitalidade"] = 40
+        st["enemies"][0]["esquiva_penalidade"] = 30
+        st["combat"]["scene"]["objects"] = [dict(OBJ)]
+        sc.sync_hand(st["combat"]["scene"], st["combat"]["pilhas"], "player")
+        cid = next(c for c in st["combat"]["pilhas"]["mao"] if str(c).startswith("cena_"))
+        assert persistence.save_game_state(st)
+    return gid, cid, st["enemies"][0]["id"], sd
+
+
+def _post_cold(tmp, flood):
+    from fastapi.testclient import TestClient
+
+    import api
+
+    gid, cid, foe, sd = _api_seed(tmp)
+    cards._TEMP_CARDS.clear()
+    for i in range(flood):  # LRU cheio: 63 Cartas de outras partidas no meio
+        cards.register_temp_card({"id": f"cena_outra_{i}", "name": "x"})
+    with sd._legacy(tmp):
+        r = TestClient(api.app).post(
+            "/game/action",
+            json={
+                "game_id": gid,
+                "input_text": "Encerro a rodada.",
+                "jogadas": [{"card_id": cid, "target_id": foe}],
+            },
+        )
+        after = sd.view(gid, tmp)
+    return r, after, foe
+
+
+@pytest.mark.parametrize("flood", [0, 63])
+def test_cold_instance_play_via_api(tmp_path, flood):
+    """Sol P2-1 / R3: POST com o catálogo vazio (ou o LRU cheio) responde 200, tem a linha da Carta e o efeito."""
+    r, after, foe = _post_cold(str(tmp_path), flood)
+    assert r.status_code == 200, r.text
+    body = r.json()
+    text = body.get("narration") or body.get("message") or json.dumps(body, ensure_ascii=False)
+    assert "Empurrar (Poço Negro)" in text, text[:400]
+    hp = [e for e in after["combat"]["enemies"] if e["id"] == foe]
+    assert not hp or hp[0]["vitalidade"] < 40

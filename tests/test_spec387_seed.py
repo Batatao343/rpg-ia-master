@@ -174,6 +174,17 @@ def test_reacao_kills_and_the_summary_cites_the_author(saves, seeded):
         # SPEC-387: derrubado pela Reação, o atacante não resolve o próprio ataque na rodada
         assert not any(x.get("actor_id") == _enemy(st) for x in raw.get("attacks") or []), seed
         assert not any("Usa Investida Cega" in ln for ln in raw["logs"]), seed
+        # Sol P1-2: presságio FRUSTRADO (não cumprido), sem revelar a Carta que não foi jogada
+        assert not any(
+            p["actor_id"] == _enemy(st) for p in raw.get("pressagios_cumpridos") or []
+        ), seed
+        assert any(p["actor_id"] == _enemy(st) for p in raw.get("pressagios_frustrados") or []), (
+            seed
+        )
+        assert not any("cumpre o que o presságio" in ln for ln in raw["logs"]), seed
+        board = out["combat"]["last_round_board"]
+        assert not [e for e in board if e.get("tipo") == "pressagio"], seed
+        assert "Presságio frustrado: Goblin" in text and "Investida" not in text, (seed, text)
 
     _all_seeds(saves, st, [guard], check, reaction="dev_encaixe")
 

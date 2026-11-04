@@ -200,3 +200,41 @@ def test_frustrated_omen_line_in_registry(saves):
                 not ID_RE.search(text)
                 and "Investida" not in text.split("Presságio frustrado")[1].splitlines()[0]
             )
+
+
+REAL_FLEE_LOGS = [
+    "Você avança na fuga: pressionado → afastado.",
+    "Usa Punho de Tala",
+    "Crescido do Clã → Playtest-explorador: acerto (total 20 vs Esquiva 12).",
+    "dano 6×1=6; Vitalidade 0 -> 0 (excedente 6); Ferimento grave em torso",
+    "Playtest-explorador: +0 Entropia (on_damage_taken); Carga do Abismo 6",
+    "dano 1×1=1",
+    "Vitalidade 0 -> 0 (excedente 1)",
+    "Ferimento grave em perna",
+    "Playtest-explorador: Sangramento terminou.",
+]
+
+
+def test_off_fallback_keeps_the_facts_of_the_round():
+    """Sol P1-1: fuga, golpe, ferimento e Vitalidade viram frases; nada de id, '⚔️', '•' nem nome do herói."""
+    text = round_log.off_fallback_text(REAL_FLEE_LOGS, "Playtest-explorador", "", False)
+    assert "Você avança na fuga" in text
+    assert "Crescido do Clã acerta você." in text
+    assert "Você sofre um ferimento grave no torso." in text
+    assert "Você sofre um ferimento grave na perna." in text
+    assert "Sua condição Sangramento terminou." in text
+    assert "Playtest-explorador" not in text and "⚔️" not in text and "•" not in text
+    assert not ID_RE.search(text) and not re.search(r"\d", text)
+    atk = round_log.off_fallback_text(
+        [
+            "Playtest-explorador → Goblin: critico (total 12 vs Esquiva 13).",
+            "dano 7×2=14; Vitalidade 10 -> 0 (excedente 3)",
+        ],
+        "Playtest-explorador",
+        "",
+        True,
+    )
+    assert "Você acerta em cheio Goblin. Goblin fica sem Vitalidade." in atk
+    assert round_log.off_fallback_text(
+        ["Você tenta fugir, mas os inimigos te alcançam."], "Playtest-explorador", "", False
+    ).startswith("Você tenta fugir")

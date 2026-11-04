@@ -1863,6 +1863,21 @@ _ABSORB_RE = re.compile(r"(?:Proteção(?: \(efeito\))?|Vigília) -(\d+)")
 _PCT_RE = re.compile(r"Rachadura/Torpor ([+-]\d+)%")  # SPEC-387 R28
 
 
+def _retract_omen(out: dict, actor_id: str, actor: dict) -> None:
+    """SPEC-387 (Sol P1-2): quem caiu antes de agir NÃO cumpriu o presságio: sai de
+    `pressagios_cumpridos` (e a linha "cumpre…"), entra em `pressagios_frustrados` (motivo `incapaz`)."""
+    done = [p for p in out.get("pressagios_cumpridos") or [] if p.get("actor_id") == actor_id]
+    if not done:
+        return
+    out["pressagios_cumpridos"] = [p for p in out["pressagios_cumpridos"] if p not in done]
+    out.setdefault("pressagios_frustrados", []).append(
+        {"actor_id": actor_id, "tipo": done[0].get("tipo"), "motivo": "incapaz"}
+    )
+    line = f"{_name(actor)} cumpre o que o presságio anunciava."
+    if line in out["logs"]:
+        out["logs"].remove(line)
+
+
 def _extra_mark(out: dict) -> tuple[int, int, int]:
     return len(out["logs"]), len(out.get("attacks") or []), len(out.get("cards_used") or [])
 
@@ -1917,6 +1932,7 @@ def _resolve_actor_turn_inner(
     if _declaration_leaves_engagement(decl):
         _resolve_opportunity_attacks(scene, actor_id, actors_by_id, sides, out, rng)
         if not _can_act(actor):
+            _retract_omen(out, actor_id, actor)
             return
 
     # Janela de Reação sobre um ataque declarado (06 R1) — reator define Guarda na cena.
@@ -1931,6 +1947,7 @@ def _resolve_actor_turn_inner(
             scene, actor_id, acao.target_id, actors_by_id, sides, out, state, rng=rng, step=acao
         )
         if not _can_act(actor):  # SPEC-387: derrubado pela Reação, o atacante não resolve o ataque
+            _retract_omen(out, actor_id, actor)
             return
 
     if acao is not None and acao.kind == "tactic":

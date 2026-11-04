@@ -614,3 +614,24 @@ de reverter). Golden 330 e 453+223 testes de motor/sim verdes; **a arena não fo
 
 **Fica para o smoke §6 (coordenador):** itens 1–16 inteiros — nenhum foi rodado com LLM/staging reais aqui. Em especial 2 (causa de
 `offer_omitted`), 3 (latência do chip ao vivo), 4 (aberturas no Pântano/Floresta), 12 (Groq 120b faz tool call no router) e 14 (`draft.py` real).
+
+**Correções da revisão Sol (rodada 1, 03/11):**
+- P1-1: `round_log._translate_logs` traduz o registro técnico do modo `off` (golpe, ferimento, Vitalidade 0, fuga, "terminou") em
+  frases na voz "você", sem descartar fatos, sem id, sem aritmética e sem o nome do herói; reaproveita `_voce`, `_cat_pt`,
+  `_region_phrase`. Teste `test_off_fallback_keeps_the_facts_of_the_round` (logs reais do golden 360).
+- P1-2: atacante que cai na janela de Reação (ou na AoO) sai de `pressagios_cumpridos`, entra em `pressagios_frustrados` (motivo `incapaz`),
+  perde a linha "cumpre o que o presságio anunciava." e não aparece no quadro com Carta; o registro diz "Presságio frustrado: Goblin"
+  (`_retract_omen`; asserções na seed `13 reacao`, 50 sementes).
+- P1-3: `tests/test_objectives.py::test_run_round_encerra_com_desfecho_proprio` ganhou `"motivo": "Vocês resistiram por 2 rodadas."` na
+  igualdade exata: `out["objetivo"].motivo` é campo ADITIVO da R20 (nenhum consumidor existente lê chaves a mais).
+- P2-1: `test_cold_instance_play_via_api` (catálogo vazio e LRU com 63 Cartas): POST `/game/action` 200, linha "Empurrar (Poço Negro)" no
+  registro e dano no inimigo. P3-1: o evento `combat.scene_card_orphan` é afirmado (1 evento, sem id). P3-2: `spawn_generic_name` é alcançado
+  (sem candidato regional o fallback de hoje segue, documentado) e, com candidato, nenhum `fallback_*` nasce. P3-3: o teste compara a
+  regra de complexidade do prompt com `card_lint.check_raridade`; `_examples` perdeu os parâmetros sem uso. P3-4: o e2e a 390 mede
+  primeiro na rolagem padrão e de novo rolado até o fim.
+- P3-5 (notas que faltavam): (a) o golden `spec360_flags_off_golden.json` MUDA de propósito (R33 + P1-1): derrubam `test_spec360_flags_off.py::
+  test_golden_flags_off_byte_identico` e `test_spec371_flags_off.py::test_golden_360_inalterado_com_a_flag_off`; só 3 mensagens do fallback
+  `off` (fuga + golpe do Crescido do Clã, 2 delas sem ferimento, 1 com 2 ferimentos e Sangramento) mudam, o resto do fingerprint é idêntico;
+  o coordenador regrava (`SPEC360_REGEN=1`). (b) `test_objectives` (P1-3). (c) `tests/size_budget.json` teve 2 rebaselines: `4e246c45` (motor,
+  App.tsx) e `4ceb5f94` + este (`_resolve_actor_turn_inner` +2 do `_can_act` pós-Reação, `round_registry` +3 do presságio frustrado,
+  `round_log` +tradutor): exceções previstas ("spec manda tocar o motor").

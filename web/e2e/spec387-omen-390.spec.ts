@@ -9,15 +9,25 @@ test("a linha do presságio não intersecta a barra de envio na rolagem padrão 
   await openCombat(page);
   const omen = page.locator(".tchip__omen[data-omen='known']").first();
   await expect(omen).toBeVisible();
-  await omen.scrollIntoViewIfNeeded();
   const bar = page.locator(".play-queue__end").first();
   await expect(bar).toBeVisible();
-  const [o, b] = [await omen.boundingBox(), await bar.boundingBox()];
-  expect(o && b).toBeTruthy();
-  if (o && b) {
-    const overlap = o.y < b.y + b.height && o.y + o.height > b.y;
-    expect(overlap, `presságio ${JSON.stringify(o)} cobre a barra ${JSON.stringify(b)}`).toBe(false);
-  }
+  const clear = async () => {
+    const [o, b] = [await omen.boundingBox(), await bar.boundingBox()];
+    expect(o && b).toBeTruthy();
+    if (o && b) {
+      const overlap = o.y < b.y + b.height && o.y + o.height > b.y;
+      expect(overlap, `presságio ${JSON.stringify(o)} cobre a barra ${JSON.stringify(b)}`).toBe(false);
+    }
+  };
+  await clear(); // rolagem padrão, sem nenhum scroll explícito (SPEC-387 R32 / Sol P3-4)
+  await page.evaluate(() => {
+    for (const el of Array.from(document.querySelectorAll<HTMLElement>("*"))) {
+      if (el.scrollHeight > el.clientHeight + 4 && /(auto|scroll)/.test(getComputedStyle(el).overflowY)) el.scrollTop = el.scrollHeight;
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+  await page.waitForTimeout(150);
+  if (await omen.isVisible()) await clear(); // rolado até o fim, o padding reservado importa
   const reserved = await page.locator(".ws-combat").first().evaluate((el) => getComputedStyle(el).paddingBottom);
   expect(parseFloat(reserved)).toBeGreaterThan(0);
 });
