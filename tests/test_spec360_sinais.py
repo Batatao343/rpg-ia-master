@@ -356,3 +356,39 @@ def test_storyteller_prompt_tem_bloco_e_off_nao(on, monkeypatch):
     monkeypatch.setenv("RPG_FAUNA", "off")
     storyteller.storyteller_node(state_at(sim=sim_with(presence())))
     assert "<SINAIS_NA_CENA>" not in "\n".join(str(m.content) for m in captured)
+
+
+def _conv_enc():
+    for seed in range(60):
+        enc = _enc(sim_with(), seed=seed)
+        if enc and enc.get("fauna_convert"):
+            return enc
+    raise AssertionError("nenhum encontro de conversao nas seeds testadas")
+
+
+def _story_with_convert(monkeypatch, note: str):
+    from agents import storyteller
+
+    enc = _conv_enc()
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "off")
+    monkeypatch.setattr(wu, "check_encounter", lambda *a, **k: dict(enc))
+    monkeypatch.setattr(wu, "roll_encounter_type", lambda *a, **k: "combat")
+    monkeypatch.setattr(wu, "recovery_rest_safe", lambda *a, **k: False)
+    monkeypatch.setattr(fauna, "convert_to_signal", lambda *a, **k: (note, {}))
+    st = state_at(sim=sim_with(), text="descanso aqui")
+    st["world"]["danger_overrides"] = {LAMA: 4}
+    return storyteller.storyteller_node(st), enc
+
+
+def test_conversao_sem_vaga_devolve_a_luta(on, monkeypatch):
+    """P2-9 (Sol): se a criatura nao pode ser anunciada (sem vaga), o encontro original
+    segue como luta e nao gasta o cooldown de um sinal que nao houve."""
+    out, _enc_ = _story_with_convert(monkeypatch, "")
+    assert out["next"] == "combat_agent"
+    assert out["world"].get("last_encounter_id") != "fauna_sinal"
+
+
+def test_conversao_com_vaga_segue_virando_sinal(on, monkeypatch):
+    out, _enc_ = _story_with_convert(monkeypatch, "Pegadas fundas na lama.")
+    assert out.get("next") != "combat_agent"
+    assert out["world"]["last_encounter_id"] == "fauna_sinal"

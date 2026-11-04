@@ -1596,10 +1596,6 @@ def storyteller_node(state: GameState):
             world.pop("encounter_eff_danger", None)  # SPEC-233 R5
         if enc and enc.get("fauna_convert"):
             # SPEC-360 R16: sem presença anunciada, o encontro vira sinal; cooldown carimbado.
-            world["last_encounter_turn"] = turn
-            world["last_encounter_id"] = "fauna_sinal"
-            world["last_encounter_loc"] = world.get("current_location_id")
-            world.pop("encounter_eff_danger", None)
             _fe = _fauna.entry(str(enc.get("enemy_id") or ""))
             _fnote, _fupd = (
                 _fauna.convert_to_signal(
@@ -1611,12 +1607,19 @@ def storyteller_node(state: GameState):
                 if _fe
                 else ("", {})
             )
-            if _fupd.get("world_sim"):
-                sim_updates["world_sim"] = _fupd["world_sim"]
+            # P2-9 (Sol): sem vaga para anunciar (teto da região/global), a criatura que não pôde
+            # ser anunciada ataca como o encontro original; o turno não fica vazio nem gasta o
+            # cooldown de um sinal que não houve.
             if _fnote:
+                world["last_encounter_turn"] = turn
+                world["last_encounter_id"] = "fauna_sinal"
+                world["last_encounter_loc"] = world.get("current_location_id")
+                world.pop("encounter_eff_danger", None)
+                if _fupd.get("world_sim"):
+                    sim_updates["world_sim"] = _fupd["world_sim"]
                 world_note = f"ENCONTRO NA ESTRADA (sinal): {_fnote}\n{_fauna.SCENE_RULE}"
                 _fauna_sign_shown = True
-            enc = None
+                enc = None
         if enc:
             world["last_encounter_turn"] = turn
             world["last_encounter_id"] = enc.get("hint")

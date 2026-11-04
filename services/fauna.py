@@ -675,12 +675,14 @@ def _add_presence(
     # mais antiga ainda nao lida da regiao, e sem ela nao ha presenca nova.
     rows = fauna["presencas"]
     n_here = sum(1 for p in rows if p["region_id"] == region and _active(p, day))
+    # P2-10 (Sol): so mexe no estado se a presenca nova de fato nasce; sem vaga, devolve o
+    # `sim` original (nada removido sem nascer outra).
     if n_here >= region_cap(region) and not _drop_oldest_unread(rows, day, region):
-        return _with_fauna(sim, fauna), None
+        return sim, None
     if not _make_room(fauna, region, region, [region], day):
         rows = fauna["presencas"]
         if not _drop_oldest_unread(rows, day):  # P2-4: nunca uma presenca ja lida
-            return _with_fauna(sim, fauna), None
+            return sim, None
         fauna["presencas"] = rows
     fauna["presencas"].append(pres)
     _log("presenca_nasce", creature=e["id"], region=region, origem=origem)

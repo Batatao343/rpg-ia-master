@@ -149,3 +149,20 @@ def test_conversao_sem_vaga_nao_cria_nem_sinal_orfao(monkeypatch):
     sim = {"fauna": {"v": 1, "presencas": [lida], "carcacas": []}}
     note, upd = fauna.convert_to_signal(_state(sim), fauna.entry(b), "ophidia", 5)
     assert note == "" and upd == {}
+
+
+def test_add_presence_sem_vaga_nao_remove_nada(monkeypatch):
+    """P2-10 (Sol): o teto da regiao libera vaga tirando uma nao lida, mas o cap global nao
+    tem o que tirar: nao nasce e o `sim` devolvido e o original (nada removido sem nascer)."""
+    monkeypatch.setenv("RPG_FAUNA", "on")
+    monkeypatch.setenv("RPG_FAUNA_SINAIS", "on")
+    monkeypatch.setitem(fauna._config(), "MAX_PRESENCAS", 3)
+    na = _cids("nova_arcadia")
+    rows = [_row(i, "nova_arcadia", sinais=["rastro"]) for i in range(3)]
+    rows.append({**_row(3, "nova_arcadia"), "locais": [NA_LOC]})  # a unica nao lida
+    sim = {"fauna": {"v": 1, "presencas": rows, "carcacas": []}}
+    state = {"game_id": "g1", "world": {"current_location_id": NA_LOC}, "world_sim": sim}
+    new_sim, pres = fauna._add_presence(state, fauna.entry(na[0]), NA_LOC, 5, "conversao", "marca")
+    assert pres is None
+    assert new_sim is sim
+    assert {p["pid"] for p in sim["fauna"]["presencas"]} == {"p00", "p01", "p02", "p03"}
