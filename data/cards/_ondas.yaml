@@ -354,3 +354,13 @@ ondas:
   - arc1_ini_cinza_nos_olhos
   - med1_ini_pinca_no_tendao
   - dev1_ini_dor_devolvida
+- onda: 1
+  data: '2026-11-04'
+  autor: claude-sonnet-5.5
+  revisor_voz: dono
+  voz_status: aprovada
+  nota_voz: 'SPEC-369 R17: voz coberta pela autorização geral do dono de 27/10, sem leitura da Carta (não atesta leitura). Passiva de tronco do Corruptor (buff_iniciativa), D-369-6'
+  amostra_voz:
+  - cor1_tro_faro_do_abismo
+  cartas:
+  - cor1_tro_faro_do_abismo

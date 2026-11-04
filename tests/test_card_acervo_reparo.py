@@ -520,7 +520,7 @@ def test_tronco_cartas_por_postura_sem_subclasse_nivel_1():
     assert Counter(c["classe"] for c in cs) == {
         "Devoto do Abismo": 3,
         "Sangromante": 3,
-        "Corruptor": 3,
+        "Corruptor": 4,  # SPEC-369 R17: + cor1_tro_faro_do_abismo (passiva de iniciativa)
         "Arcanista Cinzento": 4,
         "Médico de Campo": 3,
     }
@@ -533,10 +533,43 @@ def test_tronco_cartas_por_postura_sem_subclasse_nivel_1():
             assert fx.primary_effect(c)["kind"] == "protecao"
         else:
             assert c["level_req"] == 1 and c["raridade"] == "comum"
-        assert c.get("onda") == 1 and c["tipo"] == "ativa"
+        tipo = "passiva" if c["id"] == "cor1_tro_faro_do_abismo" else "ativa"
+        assert c.get("onda") == 1 and c["tipo"] == tipo
         others = [o for o in pool if o["id"] != c["id"]]
         issues = card_lint.lint_card(c, others)
         assert not issues, (c["id"], issues)
         assert fx.budget_error(c) is None, c["id"]
-        if fx.custo_folego(c) == 0:
+        if fx.custo_folego(c) == 0 and c["tipo"] != "passiva":
             assert c["frequencia"] == "cena", c["id"]
+
+
+# ----------------------------------------------------------------- SPEC-369 R17: iniciativa do Corruptor
+CARTA_INICIATIVA_COR = "cor1_tro_faro_do_abismo"
+
+
+def test_corruptor_tem_carta_de_iniciativa_no_tronco():
+    pool = {c["id"]: c for c in card_lint.load_pool()}
+    c = pool[CARTA_INICIATIVA_COR]
+    assert c["classe"] == "Corruptor" and not c.get("subclasse")
+    assert c["raridade"] == "comum" and c["level_req"] == 1 and c["tipo"] == "passiva"
+    assert fx.primary_effect(c)["kind"] == "buff_iniciativa"
+    assert not any(ch.isdigit() for ch in c["descricao"])  # voz de Valoria: sem número
+    assert not card_lint.lint_card(c, [o for i, o in pool.items() if i != c["id"]])
+    assert fx.budget_error(c) is None
+
+
+def test_has_vigilia_corruptor_com_carta():
+    from agents.combat import _has_vigilia
+
+    assert _has_vigilia({"deck": [CARTA_INICIATIVA_COR]})
+    assert _has_vigilia({"prepared_cards": [CARTA_INICIATIVA_COR]})
+    assert not _has_vigilia({"deck": ["cor1_tro_fresta_no_osso"]})
+
+
+def test_opening_initiator_corruptor_ambush_negated():
+    from agents.combat import _opening_initiator
+
+    world = {"encounter_surprise": "enemy"}
+    player = {"deck": [CARTA_INICIATIVA_COR]}
+    assert _opening_initiator(world, "x", player) == (None, "ambush_negated_vigilia")
+    assert _opening_initiator(world, "x", {"deck": []}) == ("enemy", "ambush")

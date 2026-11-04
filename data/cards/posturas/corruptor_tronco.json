@@ -1,5 +1,5 @@
 {
-  "_meta": "SPEC-335 R6: 3 Cartas de TRONCO (sem subclasse, nivel 1) de Corruptor. Cobrem as palavras-chave que o Acervo de nivel 1-2 (so tronco) nao tinha.",
+  "_meta": "SPEC-335 R6: 4 Cartas de TRONCO (3 de SPEC-335 + a de iniciativa da SPEC-369 R17) (sem subclasse, nivel 1) de Corruptor. Cobrem as palavras-chave que o Acervo de nivel 1-2 (so tronco) nao tinha.",
   "cards": [
     {
       "id": "cor1_tro_fresta_no_osso",
@@ -82,6 +82,31 @@
       ],
       "descricao": "O Abismo risca um sinal na testa do alvo: o próximo golpe que ele receber pesa muito mais.",
       "momento": "Melhor jogada quando um aliado vai desferir o golpe grande da rodada e o sinal garante que ele pese.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_tro_faro_do_abismo",
+      "name": "Faro do Abismo",
+      "tipo": "passiva",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "buff_iniciativa",
+          "valor": 2
+        }
+      ],
+      "descricao": "O Abismo cochicha por onde a emboscada virá, e o seu primeiro passo chega antes do deles.",
+      "momento": "Melhor jogada quando a ordem de ação decide a rodada e ver o perigo antes dele vale mais que golpear forte.",
       "tier": 1,
       "level_req": 1,
       "apex": false,
