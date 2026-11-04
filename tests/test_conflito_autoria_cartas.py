@@ -1,7 +1,7 @@
 """Suíte da spec conflito-14: autoria completa das Cartas de classe/subclasse.
 
-100% determinístico, offline. Valida o Acervo autoral gerado por
-`scripts/gen_cards_v4.py` (`data/cards/{classe}.json`): cobertura das 15
+100% determinístico, offline. Valida o Acervo autoral curado em
+`data/cards/{classe}.json`: cobertura das 15
 combinações, catálogo fechado de efeitos, escala de dano nova (3/4/6/8),
 Ruptura A/B nas centrais, Cartas de Virtude sugeridas, potência por nível e
 parity de dano puro.

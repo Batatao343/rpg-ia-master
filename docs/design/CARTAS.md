@@ -2,8 +2,10 @@
 
 Referência do sistema de **Cartas** (spec conflito-02 = motor; **conflito-14** =
 autoria completa). Espelha [docs/design/CLASSES.md](CLASSES.md). Fonte de dados:
-`data/cards/{devoto,sangromante,corruptor,arcanista,medico}.json`, gerados por
-[`scripts/gen_cards_v4.py`](../../scripts/gen_cards_v4.py). Motor:
+`data/cards/{devoto,sangromante,corruptor,arcanista,medico}.json`, **curados à mão**
+(o gerador `gen_cards_v4.py` foi removido pela SPEC-376: apagava `momento`/`raridade`).
+As ondas por Postura ficam em `data/cards/posturas/`, alimentadas pela esteira da SPEC-336
+(`scripts/cards/draft.py` -> `lint.py` -> `sim.py` -> `promote.py`). Motor:
 [`services/cards.py`](../../services/cards.py).
 
 > **Escala nova (2d10 + Virtude).** Ataque = `2d10 + Virtude` vs Esquiva.
@@ -102,12 +104,13 @@ Talas de Ferro, *Prótese de Batalha*✦, Solda Viva.
 
 ## Como reautorar / balancear
 
-1. Editar a fonte em [`scripts/gen_cards_v4.py`](../../scripts/gen_cards_v4.py).
-2. `uv run python scripts/gen_cards_v4.py` (regenera `data/cards/*.json`).
+1. Editar `data/cards/{classe}.json` à mão, ou usar a esteira da SPEC-336
+   (`scripts/cards/draft.py` -> `lint.py` -> `sim.py` -> `promote.py`).
+2. `uv run python scripts/cards/lint.py`.
 3. `uv run pytest tests/test_conflito_autoria_cartas.py` (cobertura/kind/dano/
    Ruptura/Virtude/potência/parity).
 
 **Pendências de cutover (conflito-13):** trocar `classes.json.starting_abilities`
-para as Cartas iniciais (`STARTING_RECOMENDADO` no gerador, R9) e remover
+para as Cartas iniciais (R9) e remover
 `data/player_abilities.json` e o caminho `known_abilities` foram removidos no
 cutover; não devem ser recriados.
