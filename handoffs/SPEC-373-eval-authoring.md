@@ -268,3 +268,26 @@ e que nenhum commit de produto mexe nesses caminhos.
   `specs/SPEC-395-*.md` §9) e nenhuma id de `fichas` pode ter dial mudado nem estar em
   `recalibracoes`. Rejeitei pôr as 4 em `recalibracoes`: afrouxaria o R8 para um dial futuro delas.
 - Autor de eval não executou o produto; não toquei em `data/`, `services/` nem `scripts/`.
+
+## 12. Adendo (04/11): `fichas` não cega mais o R2 (P2-3 do Sol, `be910bcd`)
+
+- **Achado:** o snapshot R2 (`test_snapshot_off_existe_e_bate`) pulava a id inteira de quem
+  estava em `fichas`; com o odre registrado, HP 12→99 passava em toda a 373 e na calibragem.
+- **Desenho escolhido:** restaurar o campo, em vez de gravar hash novo. Para id em `fichas`,
+  `ficha_vs_base` (em `tests/test_spec373_montagem.py`) devolve **só** o `action_key` das
+  prioridades `resistance: absoluta` ao valor da base (`flee`) e exige o hash da 373
+  (`docs/spec373/base/snapshot-off.json`). Exige também que exista prioridade `absoluta` e que
+  ela não mapeie mais para `flee`/`surrender` (R3 da 395). As 4 ids batem exatamente.
+- **Por que não gravar o hash pós-correção em `fichas`:** o hash seria um número novo escrito por
+  quem registra. Ele poderia já embutir outra mudança, e não diria o que mudou. A restauração
+  amarra a ficha à base imutável da 373 e prova que a única diferença é o campo da R3. O custo é
+  `ACTION_KEY_BASE = "flee"` fixo: uma spec futura que mude outro campo precisa de outra
+  regra, e não de outra entrada em `fichas`.
+- **Known-good/bad:** `test_ficha_vs_base_known_good_e_bad`: correção só na absoluta passa;
+  HP 12→99, mudança na prioridade `flexivel`, absoluta ainda `flee`, absoluta `surrender` e
+  ficha sem absoluta reprovam.
+- **Mutação à mão:** `data/bestiary.json` odre `vitalidade`/`max_vitalidade` 12→99, e o R2
+  reprova `mon_odre_de_oleo` ("ficha mudou além do action_key da absoluta"). Restaurado, e
+  `git diff data/` ficou limpo.
+- `_doc` do registro e a docstring de `test_spec373_artefatos.py` foram atualizados. O R8 e a
+  guarda `avaliar_posteriores` não mudaram.

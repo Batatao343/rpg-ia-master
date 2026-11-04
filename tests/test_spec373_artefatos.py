@@ -12,7 +12,8 @@ não existem (é o alvo da spec, não um teste quebrado):
   ``docs/spec373/recalibradas.json`` (lista de ids que o R8 recalibrou; ``[]`` se nenhuma);
   dial mudado por spec posterior só sai do portão R8 se estiver em
   ``docs/bestiario/recalibracoes_posteriores.json`` (protegido, validado aqui); a seção ``fichas``
-  dele (ficha mudada por regra de produto, sem dial) só sai do snapshot ``off`` da montagem;
+  dele (ficha mudada por regra de produto, sem dial) entra no snapshot ``off`` da montagem
+  comparada com a base depois de devolver só o ``action_key`` da ``absoluta``;
 - R13 chefes: os 13 chefes da esteira com ``L5|off`` e ``L5|on`` em 45-85 %; slots com ``ok``;
   exceção nominal D-373 (dono, 04/11) por célula em ``EXCECOES_CHEFE_D373``, sem piorar > 3 pp;
 - R18 Posturas: ``docs/spec373/posturas-ab-0-19.json`` (``arena_spec355.py base --seeds 0:20``, depois

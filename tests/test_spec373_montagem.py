@@ -31,6 +31,62 @@ def _sig_ids(entry: dict) -> set[str]:
     return {str(s["carta"]) for s in edk._signature_configs(entry)}
 
 
+def _hash(sheet: dict) -> str:
+    blob = json.dumps(sheet, sort_keys=True, ensure_ascii=False, default=str)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
+
+
+# Valor do ``action_key`` da prioridade ``absoluta`` na base da 373 (antes da R1 da SPEC-395).
+ACTION_KEY_BASE = "flee"
+
+
+def ficha_vs_base(sheet: dict, base_hash: str) -> list[str]:
+    """Id em ``fichas``: só o ``action_key`` das prioridades ``absoluta`` pode ter mudado.
+
+    Devolve esse campo ao valor da base e exige o hash da 373; o resto da ficha (HP, cartas,
+    dano, perfil) segue travado. Também exige que a mudança exista e não seja fuga/rendição."""
+    restaurada = json.loads(json.dumps(sheet, default=str))
+    prios = (restaurada.get("tactical_profile") or {}).get("priorities") or []
+    absolutas = [p for p in prios if p.get("resistance") == "absoluta"]
+    if not absolutas:
+        return ["sem prioridade absoluta (a id não devia estar em fichas)"]
+    erros = [
+        f"absoluta ainda mapeia para {p.get('action_key')}"
+        for p in absolutas
+        if p.get("action_key") in (ACTION_KEY_BASE, "surrender")
+    ]
+    for p in absolutas:
+        p["action_key"] = ACTION_KEY_BASE
+    if _hash(restaurada) != base_hash:
+        erros.append("ficha mudou além do action_key da absoluta")
+    return erros
+
+
+def test_ficha_vs_base_known_good_e_bad():
+    base = {
+        "hp": 12,
+        "tactical_profile": {
+            "priorities": [
+                {"resistance": "absoluta", "action_key": "flee"},
+                {"resistance": "flexivel", "action_key": "attack"},
+            ]
+        },
+    }
+    h = _hash(base)
+    fixed = json.loads(json.dumps(base))
+    fixed["tactical_profile"]["priorities"][0]["action_key"] = "control"
+    assert ficha_vs_base(fixed, h) == []
+    assert ficha_vs_base({**fixed, "hp": 99}, h) == ["ficha mudou além do action_key da absoluta"]
+    flex = json.loads(json.dumps(fixed))
+    flex["tactical_profile"]["priorities"][1]["action_key"] = "flee"
+    assert ficha_vs_base(flex, h)  # só a absoluta pode mudar
+    assert ficha_vs_base(base, h) == ["absoluta ainda mapeia para flee"]  # sem correção
+    rend = json.loads(json.dumps(fixed))
+    rend["tactical_profile"]["priorities"][0]["action_key"] = "surrender"
+    assert ficha_vs_base(rend, h)
+    assert ficha_vs_base({"hp": 12}, h)  # sem absoluta
+
+
 def test_snapshot_off_existe_e_bate(monkeypatch):
     monkeypatch.setenv("RPG_ENEMY_DECKS", "off")
     snap = json.loads((BASE / "snapshot-off.json").read_text("utf-8"))
@@ -40,14 +96,18 @@ def test_snapshot_off_existe_e_bate(monkeypatch):
     # Recalibrações de specs posteriores (registro protegido, validado em test_spec373_artefatos).
     reg = BASE.parents[1] / "bestiario" / "recalibracoes_posteriores.json"
     registro = json.loads(reg.read_text("utf-8"))
-    # ``fichas``: ficha mudada por regra de produto de spec posterior, sem dial (só este portão).
-    recal |= set(registro["recalibracoes"]) | set(registro.get("fichas", {}))
+    recal |= set(registro["recalibracoes"])
+    # ``fichas``: regra de produto de spec posterior, sem dial. Não pula a id: compara com a base
+    # da 373 depois de devolver só o ``action_key`` da ``absoluta`` (adendo §12).
+    fichas = set(registro.get("fichas", {}))
     for bid, entry in bestiary.items():
         if bid in recal:
             continue
         sheet = orch.ensure_combat_sheet({**json.loads(json.dumps(entry)), "id": bid})
-        blob = json.dumps(sheet, sort_keys=True, ensure_ascii=False, default=str)
-        assert hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16] == snap[bid], bid
+        if bid in fichas:
+            assert ficha_vs_base(sheet, snap[bid]) == [], bid
+        else:
+            assert _hash(sheet) == snap[bid], bid
 
 
 def test_autoral_sem_assinatura_da_familia(monkeypatch):
