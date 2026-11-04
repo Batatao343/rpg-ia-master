@@ -453,3 +453,53 @@ def test_family_pools_still_never_call_and_only_chamados_does():
     data = json.loads((edk._DIR / "chamados.json").read_text(encoding="utf-8"))
     assert [c["id"] for c in data["cards"]] == [rc.CALL_CARD]
     assert rc.CALL_CARD not in sum(edk._pools()["familias"].values(), [])
+
+
+# --- Etapa 3: nó real de ponta a ponta e payload ---------------------------------------
+def test_node_card_flow_end_to_end(monkeypatch, card_on):
+    """Telegrafo -> chamado -> chegada `_r1` -> `joined` no manifesto -> XP do `_r1` ao morrer."""
+    from agents import combat as cbt
+    from services import encounter_manifest as em
+
+    seq = _run(monkeypatch, rounds=3)
+    state, out = seq[-1]
+    new = next(e for e in out["enemies"] if e["id"].endswith("_r1"))
+    manifest = out["combat"]["encounter"]
+    assert em.is_valid_manifest(manifest)
+    assert any(
+        ev["kind"] == "joined" and ev["participant_id"] == new["id"] for ev in manifest["events"]
+    )
+    new["vitalidade"] = 1
+    xp_before = out["player"].get("xp", 0)
+    merged = _carry(state, out)
+    merged["combat_declaration"] = {
+        "actor_id": "player",
+        "acao": {"kind": "attack", "target_id": new["id"]},
+    }
+    merged["player"] = {**merged["player"], "virtudes": {"forca": 9, "agilidade": 9, "corpo": 9}}
+    random.seed(1)
+    monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "Fim.")
+    out2 = cbt.combat_node(merged)
+    dead = next(e for e in out2["enemies"] if e["id"] == new["id"])
+    assert (dead.get("dead") or dead.get("status") == "morto") and dead["xp_awarded"] is True
+    assert out2["player"].get("xp", 0) > xp_before
+
+
+def test_payload_reinforcement_stages(monkeypatch, card_on):
+    seq = _run(monkeypatch, rounds=3)
+    views = [_api_payload(s, o)["combat"] for s, o in seq]
+    assert views[0]["reinforcement"]["stage"] == "telegraphed"
+    assert "reinforcement_warning" not in views[0]
+    assert views[1]["reinforcement"]["stage"] == "called" and views[1]["reinforcement_warning"]
+    assert "reinforcement" not in views[2] and "reinforcement_warning" not in views[2]  # chegou
+
+
+def test_payload_never_leaks_template(monkeypatch, card_on):
+    for state, out in _run(monkeypatch, rounds=2):  # telegrafo e chamado: o reforço não existe
+        blob = json.dumps(_api_payload(state, out)["combat"], default=str).lower()
+        assert "capanga" not in blob and "_r1" not in blob and rf.GENERIC_ID not in blob
+        assert set(_api_payload(state, out)["combat"]["reinforcement"]) == {
+            "stage",
+            "leader_id",
+            "chega_na_rodada",
+        }
