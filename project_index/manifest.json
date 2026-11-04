@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "3313fad11e349292c3ed78847e435551cf772c64",
+  "commit_sha": "5398755495ef10961c6cfcfa52b357e2e5dd463a",
   "edge_counts": {
-    "calls": 39058,
-    "contains": 1293,
-    "defines": 18998,
-    "imports": 3176,
-    "likely_test_for": 2286,
+    "calls": 39250,
+    "contains": 1298,
+    "defines": 19126,
+    "imports": 3187,
+    "likely_test_for": 2291,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:a6bf0ea9ce6522fcdf4a4459e170f979fbaf7e41b13208de82378ff2d6da6368",
+  "graph_hash": "sha256:9dd633da9d6a5b75c496cfa1ee49e770ba98aefff48690f5e9c7aab68884c313",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -322,6 +322,7 @@
     "scripts/staging/measure.py",
     "scripts/staging/migrations.py",
     "scripts/staging/ops_pool.py",
+    "scripts/staging/portrait_offer_measure.py",
     "scripts/staging/preview_isolation.py",
     "scripts/staging/projection_measure.py",
     "scripts/staging/runtime_role.py",
@@ -492,6 +493,7 @@
     "services/player_knowledge.py",
     "services/plot_threads.py",
     "services/plot_threads_lint.py",
+    "services/portrait_offer.py",
     "services/portrait_offer_log.py",
     "services/presentation_history.py",
     "services/projections.py",
@@ -688,6 +690,7 @@
     "tests/test_combat_preview.py",
     "tests/test_combat_simulator.py",
     "tests/test_combat_targeting.py",
+    "tests/test_combat_text_smoke7.py",
     "tests/test_combat_xp_outside_prose.py",
     "tests/test_conflict_summary_lifecycle.py",
     "tests/test_conflito16_frontend.py",
@@ -896,6 +899,7 @@
     "tests/test_playtest_start_levels.py",
     "tests/test_playtest_watchdog.py",
     "tests/test_polish_sessao.py",
+    "tests/test_portrait_offer_causes.py",
     "tests/test_post_deploy_smoke.py",
     "tests/test_postgres_claim_idempotency.py",
     "tests/test_postgres_game_store.py",
@@ -917,6 +921,7 @@
     "tests/test_prompt_order.py",
     "tests/test_prose_guard.py",
     "tests/test_provider_logging.py",
+    "tests/test_quest_delivery_npc.py",
     "tests/test_rag_index_cache.py",
     "tests/test_readiness_report.py",
     "tests/test_remediacao_comerciante_real.py",
@@ -1394,6 +1399,7 @@
     "web/e2e/spec367-portrait-pending.spec.ts",
     "web/e2e/spec387-omen-390.spec.ts",
     "web/e2e/spec387-portrait-optimistic.spec.ts",
+    "web/e2e/spec389-hud-subclass.spec.ts",
     "web/e2e/support-code.spec.ts",
     "web/e2e/touch-targets.spec.ts",
     "web/e2e/turn-wait.spec.ts",
@@ -1570,14 +1576,14 @@
   },
   "node_counts": {
     "artifact": 10,
-    "class": 1111,
+    "class": 1118,
     "endpoint": 69,
-    "file": 1515,
-    "function": 5869,
-    "method": 869,
-    "module": 1293,
-    "test": 11148
+    "file": 1521,
+    "function": 5900,
+    "method": 873,
+    "module": 1298,
+    "test": 11234
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:578d5656d685a8992a6b8bf57786186c83ef1c2d07b6aedecaf63185cb1d6cb3"
+  "source_tree_hash": "sha256:74f07092262ff9bc27234465f6f201eb58443b40f5adc54eedfc47cf0daccffe"
 }
