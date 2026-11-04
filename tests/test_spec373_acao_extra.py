@@ -86,3 +86,32 @@ def test_off_declaracao_igual_nas_duas_acoes(monkeypatch):
 
 def test_sem_filtro_quando_nao_ha_o_que_tirar():
     assert edk.extra_action_cards({"cartas": ["a"], "cartas_autorais": ["a"]}) is None
+
+
+def test_pressagio_da_extra_so_usa_carta_propria_com_intent_on(monkeypatch):
+    """P1-1 (Sol): `RPG_ENEMY_INTENT=on` não contorna o R12 na intenção congelada."""
+    from services import enemy_intent as ei
+
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
+    boss = _boss()
+    own = set(load_bestiary()[BOSS]["cartas_autorais"])
+    scene = cs.new_scene()
+    for i in ("player", boss["id"]):
+        cs.place(scene, i)
+    cs.freeze(scene)
+    actors = {"player": _player(), boss["id"]: boss}
+    sides = {"hero": ["player"], "ally": [], "enemy": [boss["id"]]}
+    seen: list[list[str]] = []
+    real = orch.enemy_declaration
+
+    def spy(scene_, eid, actors_, sides_, **kw):
+        seen.append(list(actors_[eid]["cartas"]))
+        return real(scene_, eid, actors_, sides_, **kw)
+
+    monkeypatch.setattr(orch, "enemy_declaration", spy)
+    ei.forecast_round(scene, actors, sides, random.Random(2))
+    assert len(seen) == 2
+    assert set(seen[0]) - own
+    assert set(seen[1]) <= own
+    assert set(actors[boss["id"]]["cartas"]) == set(boss["cartas"])  # ficha real intacta

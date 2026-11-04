@@ -12,12 +12,14 @@ compara com a decisão tardia sem mudar nada; `on` executa o presságio congelad
 
 from __future__ import annotations
 
+import contextlib
 import copy
 import json
 import random
 from pathlib import Path
 from typing import Any
 
+from services import enemy_decks as edk
 from services.env import env_choice
 
 _SINAIS_PATH = Path(__file__).resolve().parent.parent / "data" / "combat" / "pressagio_sinais.json"
@@ -183,9 +185,11 @@ def forecast_round(
             # run_round zera o uso "por turno" das Cartas do inimigo antes de agir.
             sandbox[aid]["enemy_card_usage"] = copy.deepcopy(real.get("enemy_card_usage") or {})
             cards_mod.reset_enemy_card_usage(sandbox[aid], "turno")
-            decl = orch.enemy_declaration(
-                scene, aid, sandbox, sides, scene_state=scene_state, rng=fork
-            )
+            # SPEC-373 R12: a ação extra declara só com Carta própria (também no Presságio).
+            with edk.extra_action_deck(sandbox[aid]) if idx >= 1 else contextlib.nullcontext():
+                decl = orch.enemy_declaration(
+                    scene, aid, sandbox, sides, scene_state=scene_state, rng=fork
+                )
             tipo, alvo, carta = _classify(decl, sandbox[aid], actors_by_id)
             intents.append(
                 {
