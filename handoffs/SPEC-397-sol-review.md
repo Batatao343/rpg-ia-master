@@ -72,3 +72,41 @@ dup_helpers.py --diff main...HEAD → nenhuma função duplicada
 ruff check (arquivos alterados) → All checks passed
 wc -l agents/combat.py main/branch → 3957/3957
 ```
+
+## Rodada 2
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` · **Commit revisado:** `46b58705` · 2026-11-04
+
+O commit aplica a opção (a) do P1-1. A passiva ganha por recompensa fica só em `known_cards`:
+`_add_to_deck` devolve `acervo` e `acervo_reason` devolve `None`. `_has_vigilia` delega para o novo
+`services/initiative_cards.has_initiative_card`.
+
+- **P1-1 fechado.** Sonda pela API (Corruptor novo, espólio da Faro): `prepared_cards` fica 4 com
+  `slots` 4, `_cards_block` marca 4 `prepared` (a UI mostra 4/4), `set_prepared(lista atual)` passa e
+  a Faro não entra no `deck`. Os testes novos cobrem 4/4 com `set_prepared`, o baralho `on` sem
+  `deck` e `deactivate_deck`.
+- **Equivalência.** `has_initiative_card` repete o laço antigo sobre `deck` + `prepared_cards`
+  (Vigília por id ou `buff_iniciativa`) e acrescenta só as passivas de `known_cards`.
+  `test_spec355_emboscada`, `test_spec346_vigilia`, `test_card_acervo_reparo`, `test_spec369_regua`
+  e `test_spec363_rare_scenarios` passam.
+- **`agents/combat.py`** foi de 3957 para 3948 linhas.
+- **P3-2 fechado.** `deactivate_deck` não tira mais o efeito: o teste cobre.
+- **P3-3 fechado.** O aviso conta as aprovadas descartadas além de `n`.
+- **P3-1** segue aceito como desvio declarado, coberto pelo smoke do §5.
+
+### Follow-ups (P3, não bloqueiam)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-4 | P3 | `services/initiative_cards.py:26-28` | **Mudança de regra.** Uma passiva de iniciativa **conhecida** agora anula a emboscada sem estar preparada e sem custo de slot. Antes, a decisão da SPEC-346 e o texto da R17 da SPEC-355 diziam "baralho/preparadas". Valem as 5 passivas: `dev_zel_vigilia`, `arc_imp_remendo`, `arc_equacao_persistente`, `san_conta_memorizada` e `cor1_tro_faro_do_abismo`. Isso é coerente com `learned_passives`, mas um herói que só conhece a Carta, sem prepará-la (o "Carta fora" do item 2b do smoke da 369, se lá ela continuava em `known_cards`), passa a não ser emboscado. | Registrar a regra no §6 da 397 como decisão e atualizar a frase das specs 346/355. No smoke do §5, o item 2b precisa remover a Carta também de `known_cards`. |
+| P3-5 | P3 | `agents/combat.py:1926` e `services/initiative_cards.py:11` | `VIGILIA_CARD_ID` está duplicado. | `combat.py` deve importar a constante do módulo novo (sem crescer), ou deixar o comentário "espelho". |
+| P3-6 | P3 | `web/src/cardRewards.ts:58` | Uma passiva recebida aparece como "só para o Acervo", mas ela já vale sem preparar, então o texto engana. | Opcional: `acervo_reason` devolve um motivo `passiva_permanente`, com o rótulo "vale sempre, sem ocupar Preparação". |
+
+### Comandos rodados (rodada 2)
+
+```text
+bash scripts/dev/pt.sh (16 arquivos: draft, smoke_edges, 346_vigilia, 355_emboscada, acervo_reparo, 369_regua, 363_rare_scenarios, rewards, shop, shop_api, quest_rewards, 363_rewards_shop, 368_discard, 373_cartas, size_budget, no_silent_except) --basetemp=.../btR397 → 198 passed
+sonda API Corruptor + espólio Faro → prepared 4, slots 4, ui prepared 4, set_prepared(mesma lista) ok
+ruff check (alterados) → All checks passed · dup_helpers --diff main...HEAD → nada duplicado
+wc -l agents/combat.py → 3948 (main 3957)
+```
