@@ -1132,25 +1132,30 @@ def query_global_by_vector(
         return ""
 
 
-def query_session_by_vector(vector: list[float], game_id: str, *, k: int = 6) -> str:
+def _query_by_vector(
+    scope: str, vector: list[float], game_id: str, npc_id: str | None, *, k: int
+) -> str:
+    """Consulta vetorial de memoria de sessao ou de NPC (SPEC-378 E5)."""
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
         from infrastructure.contracts import MemoryQuery
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
 
+        extra = {"npc_id": npc_id} if scope == "npc" else {}
         documents = get_runtime().memory_store.query(
             MemoryQuery(
                 text="",
-                scope="session",
+                scope=scope,
                 principal=current_principal(),
                 game_id=uuid.UUID(str(game_id)),
                 k=k,
                 vector=tuple(vector),
                 embedding_profile_id=embedding_profile_id(),
+                **extra,
             )
         )
         return _format_memory_documents(documents)  # SPEC-234 R9
-    path = _get_session_path(game_id)
+    path = _get_npc_path(game_id, npc_id) if scope == "npc" else _get_session_path(game_id)
     if not vector or not _has_faiss_index(path):
         return ""
     embeddings = _embeddings_for_index(path)
@@ -1158,47 +1163,20 @@ def query_session_by_vector(vector: list[float], game_id: str, *, k: int = 6) ->
         return ""
     try:
         db = _load_index(path, embeddings)
-        evidence = query_faiss_evidence(db, vector, k=k, source="session")
+        evidence = query_faiss_evidence(db, vector, k=k, source=scope)
         return _format_memory_documents(evidence)
     except Exception:
         _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
-        _note_degraded("session")
+        _note_degraded(scope)
         return ""
+
+
+def query_session_by_vector(vector: list[float], game_id: str, *, k: int = 6) -> str:
+    return _query_by_vector("session", vector, game_id, None, k=k)
 
 
 def query_npc_by_vector(vector: list[float], game_id: str, npc_id: str, *, k: int = 3) -> str:
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
-        from infrastructure.contracts import MemoryQuery
-        from infrastructure.request_context import current_principal
-        from infrastructure.runtime import get_runtime
-
-        documents = get_runtime().memory_store.query(
-            MemoryQuery(
-                text="",
-                scope="npc",
-                principal=current_principal(),
-                game_id=uuid.UUID(str(game_id)),
-                npc_id=npc_id,
-                k=k,
-                vector=tuple(vector),
-                embedding_profile_id=embedding_profile_id(),
-            )
-        )
-        return _format_memory_documents(documents)  # SPEC-234 R9
-    path = _get_npc_path(game_id, npc_id)
-    if not vector or not _has_faiss_index(path):
-        return ""
-    embeddings = _embeddings_for_index(path)
-    if embeddings is None:
-        return ""
-    try:
-        db = _load_index(path, embeddings)
-        evidence = query_faiss_evidence(db, vector, k=k, source="npc")
-        return _format_memory_documents(evidence)
-    except Exception:
-        _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
-        _note_degraded("npc")
-        return ""
+    return _query_by_vector("npc", vector, game_id, npc_id, k=k)
 
 
 def context_index_paths(
@@ -1349,102 +1327,101 @@ def query_rag(
             pass
 
 
-def add_memory_to_session(
-    game_id: str,
-    texts: list[str],
-    *,
-    metadatas: list[dict] | None = None,
+def _memory_result(scope: str, ok: bool, game_id, npc_id, **kw) -> bool:
+    return _rag_operation_result(f"add_{scope}_memory", ok, game_id=game_id, npc_id=npc_id, **kw)
+
+
+def _stage_memory(scope: str, game_id: str, npc_id: str | None, texts, metadatas) -> bool:
+    """Perfil com banco: grava as intencoes no ``memory_store`` (sem FAISS)."""
+    npc_id = npc_id if scope == "npc" else None
+    common = {
+        "path": "postgres://app.memory_documents",
+        "facts_count": len(texts) if isinstance(texts, list) else 0,
+        "provider": "pgvector",
+        "metadatas": metadatas,
+    }
+    try:
+        from infrastructure.contracts import MemoryDocument, MemoryWriteIntent
+        from infrastructure.request_context import current_principal
+        from infrastructure.runtime import get_runtime
+
+        principal = current_principal()
+        store = get_runtime().memory_store
+        extra = {"npc_id": npc_id} if scope == "npc" else {}
+        for index, text in enumerate(texts):
+            metadata = dict((metadatas or [{}] * len(texts))[index] or {})
+            key = f"{game_id}:{npc_id}:" if scope == "npc" else f"{game_id}:"
+            digest = hashlib.sha256(f"{key}{text}:{metadata}".encode()).hexdigest()
+            store.stage(
+                MemoryWriteIntent(
+                    document=MemoryDocument(
+                        document_id=f"{scope}:{digest}",
+                        text=str(text),
+                        scope=scope,
+                        metadata=metadata,
+                    ),
+                    principal=principal,
+                    game_id=uuid.UUID(str(game_id)),
+                    timeline_epoch=int(metadata.get("timeline_epoch", 0) or 0),
+                    **extra,
+                )
+            )
+        return _memory_result(scope, True, game_id, npc_id, error=None, **common)
+    except Exception as exc:
+        return _memory_result(scope, False, game_id, npc_id, error=type(exc).__name__, **common)
+
+
+def _log_memory_saved(scope: str, facts: int) -> None:
+    # Eventos literais: o scanner do catalogo (gen_event_catalog) so le constantes.
+    if scope == "npc":
+        _log_event("rag", "npc_memory_saved", level="debug", facts=facts)
+    else:
+        _log_event("rag", "session_memory_saved", level="debug", facts=facts)
+
+
+def _log_memory_failed(scope: str, exc: Exception) -> None:
+    if scope == "npc":
+        _log_event("rag", "npc_memory_failed", level="error", error=type(exc).__name__)
+    else:
+        _log_event("rag", "session_memory_failed", level="error", error=type(exc).__name__)
+
+
+def _add_memory(
+    scope: str, game_id: str, npc_id: str | None, texts, *, metadatas: list[dict] | None
 ) -> bool:
-    """Adiciona fatos à sessão e informa se a gravação física terminou."""
+    """Escrita de memoria de sessao ou de NPC (SPEC-378 E5); retorna sucesso fisico."""
     facts_count = len(texts) if isinstance(texts, list) else 0
-    if not game_id or not texts:
-        return _rag_operation_result(
-            "add_session_memory",
+    if not game_id or (scope == "npc" and not npc_id) or not texts:
+        return _memory_result(
+            scope,
             False,
-            game_id=str(game_id or ""),
-            npc_id=None,
+            str(game_id or ""),
+            str(npc_id) if scope == "npc" and npc_id else None,
             path="",
             facts_count=facts_count,
             provider=None,
             error="invalid_input",
             metadatas=metadatas,
         )
-
     if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
-        try:
-            import hashlib
+        return _stage_memory(scope, game_id, npc_id, texts, metadatas)
 
-            from infrastructure.contracts import MemoryDocument, MemoryWriteIntent
-            from infrastructure.request_context import current_principal
-            from infrastructure.runtime import get_runtime
-
-            principal = current_principal()
-            store = get_runtime().memory_store
-            for index, text in enumerate(texts):
-                metadata = dict((metadatas or [{}] * len(texts))[index] or {})
-                digest = hashlib.sha256(f"{game_id}:{text}:{metadata}".encode()).hexdigest()
-                store.stage(
-                    MemoryWriteIntent(
-                        document=MemoryDocument(
-                            document_id=f"session:{digest}",
-                            text=str(text),
-                            scope="session",
-                            metadata=metadata,
-                        ),
-                        principal=principal,
-                        game_id=uuid.UUID(str(game_id)),
-                        timeline_epoch=int(metadata.get("timeline_epoch", 0) or 0),
-                    )
-                )
-            return _rag_operation_result(
-                "add_session_memory",
-                True,
-                game_id=game_id,
-                npc_id=None,
-                path="postgres://app.memory_documents",
-                facts_count=facts_count,
-                provider="pgvector",
-                error=None,
-                metadatas=metadatas,
-            )
-        except Exception as exc:
-            return _rag_operation_result(
-                "add_session_memory",
-                False,
-                game_id=game_id,
-                npc_id=None,
-                path="postgres://app.memory_documents",
-                facts_count=facts_count,
-                provider="pgvector",
-                error=type(exc).__name__,
-                metadatas=metadatas,
-            )
-
-    session_path = ""
+    npc_id = npc_id if scope == "npc" else None
+    path = ""
     provider: str | None = None
+    common = {"facts_count": facts_count, "metadatas": metadatas}
     try:
-        session_path = _get_session_path(game_id)
-        if _has_faiss_index(session_path):
+        path = _get_npc_path(game_id, npc_id) if scope == "npc" else _get_session_path(game_id)
+        if _has_faiss_index(path):
             # Índice existente: usa somente o provider pinado.
-            provider = (_read_meta(session_path) or {}).get("provider", _LEGACY_PROVIDER)
-            embeddings = _embeddings_for_index(session_path)
+            provider = (_read_meta(path) or {}).get("provider", _LEGACY_PROVIDER)
+            embeddings = _embeddings_for_index(path)
             if not embeddings:
-                return _rag_operation_result(
-                    "add_session_memory",
-                    False,
-                    game_id=game_id,
-                    npc_id=None,
-                    path=session_path,
-                    facts_count=facts_count,
-                    provider=provider,
-                    error="embeddings_unavailable",
-                    metadatas=metadatas,
-                )
-            db = FAISS.load_local(
-                session_path,
-                embeddings,
-                allow_dangerous_deserialization=True,
-            )
+                return _memory_result(
+                    scope, False, game_id, npc_id, path=path, provider=provider,
+                    error="embeddings_unavailable", **common,
+                )  # fmt: skip
+            db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
             if metadatas is None:
                 db.add_texts(texts)
             else:
@@ -1453,49 +1430,36 @@ def add_memory_to_session(
             embeddings = get_embeddings()
             provider = active_provider() or _resolve_provider()
             if not embeddings or not provider:
-                return _rag_operation_result(
-                    "add_session_memory",
-                    False,
-                    game_id=game_id,
-                    npc_id=None,
-                    path=session_path,
-                    facts_count=facts_count,
-                    provider=provider,
-                    error="embeddings_unavailable",
-                    metadatas=metadatas,
-                )
-            os.makedirs(SAVES_DIR, exist_ok=True)
+                return _memory_result(
+                    scope, False, game_id, npc_id, path=path, provider=provider,
+                    error="embeddings_unavailable", **common,
+                )  # fmt: skip
+            os.makedirs(os.path.dirname(path) if scope == "npc" else SAVES_DIR, exist_ok=True)
             if metadatas is None:
                 db = FAISS.from_texts(texts, embeddings)
             else:
                 db = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
 
-        _save_index(db, session_path, provider)
-        _log_event("rag", "session_memory_saved", level="debug", facts=facts_count)
-        return _rag_operation_result(
-            "add_session_memory",
-            True,
-            game_id=game_id,
-            npc_id=None,
-            path=session_path,
-            facts_count=facts_count,
-            provider=provider,
-            error=None,
-            metadatas=metadatas,
+        _save_index(db, path, provider)
+        _log_memory_saved(scope, facts_count)
+        return _memory_result(
+            scope, True, game_id, npc_id, path=path, provider=provider, error=None, **common
         )
     except Exception as exc:
-        _log_event("rag", "session_memory_failed", level="error", error=type(exc).__name__)
-        return _rag_operation_result(
-            "add_session_memory",
-            False,
-            game_id=game_id,
-            npc_id=None,
-            path=session_path,
-            facts_count=facts_count,
-            provider=provider,
-            error=str(exc),
-            metadatas=metadatas,
+        _log_memory_failed(scope, exc)
+        return _memory_result(
+            scope, False, game_id, npc_id, path=path, provider=provider, error=str(exc), **common
         )
+
+
+def add_memory_to_session(
+    game_id: str,
+    texts: list[str],
+    *,
+    metadatas: list[dict] | None = None,
+) -> bool:
+    """Adiciona fatos à sessão e informa se a gravação física terminou."""
+    return _add_memory("session", game_id, None, texts, metadatas=metadatas)
 
 
 # --- MEMÓRIA DE NPC VETORIZADA (namespace por game_id + npc_id) ---
@@ -1516,146 +1480,7 @@ def add_npc_memory(
     metadatas: list[dict] | None = None,
 ) -> bool:
     """Adiciona fatos ao namespace do NPC e retorna sucesso físico."""
-    facts_count = len(texts) if isinstance(texts, list) else 0
-    if not game_id or not npc_id or not texts:
-        return _rag_operation_result(
-            "add_npc_memory",
-            False,
-            game_id=str(game_id or ""),
-            npc_id=str(npc_id) if npc_id else None,
-            path="",
-            facts_count=facts_count,
-            provider=None,
-            error="invalid_input",
-            metadatas=metadatas,
-        )
-
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
-        try:
-            from infrastructure.contracts import MemoryDocument, MemoryWriteIntent
-            from infrastructure.request_context import current_principal
-            from infrastructure.runtime import get_runtime
-
-            principal = current_principal()
-            store = get_runtime().memory_store
-            for index, text in enumerate(texts):
-                metadata = dict((metadatas or [{}] * len(texts))[index] or {})
-                digest = hashlib.sha256(
-                    f"{game_id}:{npc_id}:{text}:{metadata}".encode()
-                ).hexdigest()
-                store.stage(
-                    MemoryWriteIntent(
-                        document=MemoryDocument(
-                            document_id=f"npc:{digest}",
-                            text=str(text),
-                            scope="npc",
-                            metadata=metadata,
-                        ),
-                        principal=principal,
-                        game_id=uuid.UUID(str(game_id)),
-                        npc_id=npc_id,
-                        timeline_epoch=int(metadata.get("timeline_epoch", 0) or 0),
-                    )
-                )
-            return _rag_operation_result(
-                "add_npc_memory",
-                True,
-                game_id=game_id,
-                npc_id=npc_id,
-                path="postgres://app.memory_documents",
-                facts_count=facts_count,
-                provider="pgvector",
-                error=None,
-                metadatas=metadatas,
-            )
-        except Exception as exc:
-            return _rag_operation_result(
-                "add_npc_memory",
-                False,
-                game_id=game_id,
-                npc_id=npc_id,
-                path="postgres://app.memory_documents",
-                facts_count=facts_count,
-                provider="pgvector",
-                error=type(exc).__name__,
-                metadatas=metadatas,
-            )
-
-    npc_path = ""
-    provider: str | None = None
-    try:
-        npc_path = _get_npc_path(game_id, npc_id)
-        if _has_faiss_index(npc_path):
-            provider = (_read_meta(npc_path) or {}).get("provider", _LEGACY_PROVIDER)
-            embeddings = _embeddings_for_index(npc_path)
-            if not embeddings:
-                return _rag_operation_result(
-                    "add_npc_memory",
-                    False,
-                    game_id=game_id,
-                    npc_id=npc_id,
-                    path=npc_path,
-                    facts_count=facts_count,
-                    provider=provider,
-                    error="embeddings_unavailable",
-                    metadatas=metadatas,
-                )
-            db = FAISS.load_local(
-                npc_path,
-                embeddings,
-                allow_dangerous_deserialization=True,
-            )
-            if metadatas is None:
-                db.add_texts(texts)
-            else:
-                db.add_texts(texts, metadatas=metadatas)
-        else:
-            embeddings = get_embeddings()
-            provider = active_provider() or _resolve_provider()
-            if not embeddings or not provider:
-                return _rag_operation_result(
-                    "add_npc_memory",
-                    False,
-                    game_id=game_id,
-                    npc_id=npc_id,
-                    path=npc_path,
-                    facts_count=facts_count,
-                    provider=provider,
-                    error="embeddings_unavailable",
-                    metadatas=metadatas,
-                )
-            os.makedirs(os.path.dirname(npc_path), exist_ok=True)
-            if metadatas is None:
-                db = FAISS.from_texts(texts, embeddings)
-            else:
-                db = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
-
-        _save_index(db, npc_path, provider)
-        _log_event("rag", "npc_memory_saved", level="debug", facts=facts_count)
-        return _rag_operation_result(
-            "add_npc_memory",
-            True,
-            game_id=game_id,
-            npc_id=npc_id,
-            path=npc_path,
-            facts_count=facts_count,
-            provider=provider,
-            error=None,
-            metadatas=metadatas,
-        )
-    except Exception as exc:
-        _log_event("rag", "npc_memory_failed", level="error", error=type(exc).__name__)
-        return _rag_operation_result(
-            "add_npc_memory",
-            False,
-            game_id=game_id,
-            npc_id=npc_id,
-            path=npc_path,
-            facts_count=facts_count,
-            provider=provider,
-            error=str(exc),
-            metadatas=metadatas,
-        )
+    return _add_memory("npc", game_id, npc_id, texts, metadatas=metadatas)
 
 
 def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
