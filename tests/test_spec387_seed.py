@@ -322,14 +322,58 @@ def test_smoke_bodies_parse_and_play(saves, item, variant):
     with sd._legacy(saves):
         body = sd.smoke_body(item, variant, gid)
         api.ActionRequest(**body)
+        if (item, variant) == (14, "entrega"):  # roteamento real é do CLASSIFY: roda o nó direto
+            _assert_entrega_closes(gid, body["input_text"])
+            return None
         r = TestClient(api.app).post("/game/action", json=body)
         assert r.status_code == 200, (item, variant, r.text[:300])
-        if (item, variant) == (13, "armadura"):
-            state = TestClient(api.app).get("/game/state", params={"game_id": gid}).json()
-            conds = [c for e in state["combat"]["enemies"] for c in e["conditions"]]
-            assert any(c["name"] == c["label"] == "Armadura Comprometida" for c in conds), conds
-        if (item, variant) == (13, "reacao"):
-            assert "reage com Encaixe do Golpe" in r.text, r.text[:400]
+        state = TestClient(api.app).get("/game/state", params={"game_id": gid}).json()
+        _assert_variant_result(item, variant, r.text, state, gid)
+
+
+def _assert_variant_result(item: int, variant: str, text: str, state: dict, gid: str) -> None:
+    """SPEC-389 R18 (Sol P2-5): o corpo produz o resultado prometido da variante."""
+    key = (item, variant)
+    combat = state.get("combat") or {}
+    if key == (2, "frustrar"):
+        assert any(e.get("tipo") == "pressagio_frustrado" for e in combat["registro_rodada"])
+    elif key == (3, "eco"):
+        assert "Segundo Ato" in text
+    elif key == (4, "falha"):
+        assert (
+            not combat.get("active") and "perde os sentidos" not in text
+        )  # objetivo falho encerra
+    elif key == (12, "hostil"):
+        assert combat.get("active")
+    elif key == (13, "voto"):
+        assert ("muda de alvo" in text or "resiste" in text) and "próxima intenção" not in text
+    elif key == (13, "condicao_carta"):
+        assert "ganha a condição Enredado" in text
+    elif key == (13, "armadura"):
+        conds = [c for e in combat["enemies"] for c in e["conditions"]]
+        assert any(c["name"] == c["label"] == "Armadura Comprometida" for c in conds), conds
+    elif key == (13, "reacao"):
+        assert "reage com Encaixe do Golpe" in text
+
+
+def _assert_entrega_closes(gid: str, text: str) -> None:
+    """O MockLLM roteia "Entrego…" para STORY (sem palavra de conversa); o caminho real é o roteador
+    (CLASSIFY) → `npc_actor`. Aqui o nó roda direto com a frase do corpo: fecha a quest e paga."""
+    from langchain_core.messages import HumanMessage
+
+    from agents.npc import npc_actor_node
+    from services.event_processor import process_pending_events
+
+    st = sd._load(gid)
+    st["messages"] = [*st.get("messages", []), HumanMessage(content=text)]
+    st["active_npc_name"] = "Contratante"
+    out = npc_actor_node(st)
+    done = process_pending_events({**st, **out})
+    quest = next(q for q in done["quests"] if q["id"] == "q368")
+    assert quest["status"] == "completed", quest
+    from services.quest_log import QUEST_REWARD_GOLD
+
+    assert done["player"]["gold"] == st["player"]["gold"] + QUEST_REWARD_GOLD
 
 
 def test_printed_promote_passes_reviewer_check(monkeypatch):

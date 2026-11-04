@@ -7,15 +7,15 @@ from __future__ import annotations
 
 import os
 import time
-import uuid
 from collections import Counter
 from typing import Any
 
-from observability.telemetry import log_event, log_fallback
+from observability.boot import INSTANCE_REF
+from observability.telemetry import log_event, log_fallback, pseudonym
 from services.checkout_retry import retry_once
 from services.portrait_offer_log import log_offer_omitted, note_gate, set_tally, tally
 
-INSTANCE = uuid.uuid4().hex[:6]  # id curto do processo: separa instancias serverless nos logs
+INSTANCE = INSTANCE_REF  # mesmo id de processo do `instance_ref` de toda linha de log
 PRICE_TTL_S = 60.0
 
 OFFER_CAUSES = (
@@ -104,8 +104,16 @@ def art_cause(mode_on: bool, database: bool) -> str | None:
     return None
 
 
-def begin(art_live: bool) -> None:
-    set_tally({"offered": 0, "omitted": Counter(), "art_live": art_live, "price_cached": False})
+def begin(art_live: bool, game_id: str = "") -> None:
+    set_tally(
+        {
+            "offered": 0,
+            "omitted": Counter(),
+            "art_live": art_live,
+            "price_cached": False,
+            "game_ref": pseudonym(game_id) if game_id else "",  # /game/state nao liga a correlacao
+        }
+    )
 
 
 def classify(
@@ -114,9 +122,14 @@ def classify(
     """Causa da ausencia de `gerar` para 1 inimigo (`None` = ofertado)."""
     if portrait.get("gerar"):
         return None
-    for key in ("fallback_enemy", "private_other_game", "pending", "has_own_art"):
-        if key in reasons:
-            return key
+    # precedencia real de `portrait_for`: o fallback nem le o registro; arte propria/do tipo vence a linha
+    # `private` de outro jogo; `pending` com essa linha vira `private_other_game`.
+    if "fallback_enemy" in reasons:
+        return "fallback_enemy"
+    if "has_own_art" in reasons:
+        return "has_own_art"
+    if "pending" in reasons:
+        return "private_other_game" if "private_other_game" in reasons else "pending"
     gate_cause = (tally() or {}).get("gate") or ""
     if not registry_live:
         return art or (gate_cause if gate_cause == "registry_read_failed" else "art_not_live:flag")
@@ -146,6 +159,7 @@ def summarize(current: dict[str, Any]) -> dict[str, Any]:
         log_fallback("creature_portrait", "switch_age_failed", exc)
     return {
         "instance": INSTANCE,
+        "game_ref": current.get("game_ref", ""),
         "offered": int(current["offered"]),
         "omitted": dict(current["omitted"]),
         "switch_age_s": age,

@@ -27,6 +27,7 @@ from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 EVENT = "creature_portrait.offer_view"
@@ -108,6 +109,16 @@ def summarize(joined: list[dict[str, Any]]) -> dict[str, Any]:
         "with_offer": sum(1 for s in joined if s.get("gerar")),
         "causes": dict(causes),
         "per_instance": {k: dict(v) for k, v in per_instance.items()},
+        "games": sorted(  # R7: que jogo cada lado leu (hash do corpo x game_ref do log)
+            {
+                (
+                    str(s.get("kind", "")).split(":")[0],
+                    str(s.get("game")),
+                    str((s.get("offer_view") or {}).get("game_ref")),
+                )
+                for s in joined
+            }
+        ),
     }
 
 
@@ -118,16 +129,13 @@ def collect_api(base: str, game_id: str, reads: int, cookie: str) -> list[dict[s
     with httpx.Client(timeout=60, headers={"Cookie": cookie}) as client:
         for _ in range(reads):
             resp = client.get(f"{base}/game/state", params={"game_id": game_id})
-            samples.append(
-                _sample("api", "/game/state", resp.headers, resp.status_code, resp.json(), game_id)
-            )
+            body = resp.json() if resp.status_code == 200 else {}
+            samples.append(sample_from("api", str(resp.url), resp.headers, resp.status_code, body))
             time.sleep(1)
     return samples
 
 
-def collect_browser(
-    base: str, game_id: str, widths: list[int], storage_state: str
-) -> list[dict[str, Any]]:
+def collect_browser(base: str, widths: list[int], storage_state: str) -> list[dict[str, Any]]:
     from playwright.sync_api import sync_playwright
 
     samples = []
@@ -143,12 +151,10 @@ def collect_browser(
                 "response", lambda r, bag=seen: bag.append(r) if "/game/state" in r.url else None
             )
             page.goto(base, wait_until="networkidle")
-            for resp in seen[-1:]:
+            for resp in seen[-1:]:  # sem resposta = sem amostra: `count_problems` reprova
                 body = resp.json() if resp.ok else {}
                 samples.append(
-                    _sample(
-                        f"browser:{width}", "/game/state", resp.headers, resp.status, body, game_id
-                    )
+                    sample_from(f"browser:{width}", resp.url, resp.headers, resp.status, body)
                 )
             ctx.close()
         browser.close()
@@ -160,31 +166,66 @@ def _gerar_present(body: dict[str, Any]) -> bool:
     return any(((e.get("retrato") or {}).get("gerar")) for e in enemies if isinstance(e, dict))
 
 
-def _sample(kind: str, endpoint: str, headers: Any, status: int, body: dict, game_id: str) -> dict:
+def sample_from(kind: str, url: str, headers: Any, status: int, body: dict) -> dict[str, Any]:
+    """Amostra com o jogo REAL da resposta (`game_id` do corpo) e o path real (sem query)."""
+    body = body if isinstance(body, dict) else {}
     return {
         "at": datetime.now(UTC).isoformat(timespec="seconds"),
         "kind": kind,
-        "endpoint": endpoint,
+        "endpoint": urlsplit(url).path,
         "status": status,
         "request_id": headers.get("x-request-id", ""),
         "vercel_id": headers.get("x-vercel-id", ""),
-        "game": short_hash(game_id),
-        "gerar": _gerar_present(body if isinstance(body, dict) else {}),
+        "game": short_hash(str(body.get("game_id") or "")),
+        "gerar": _gerar_present(body),
     }
 
 
-def switches_snapshot() -> dict[str, Any]:
-    """`admin_kill_switch list` + 5 ultimas linhas do `audit`, com hora (sem segredo)."""
+def count_problems(samples: list[dict[str, Any]], api_reads: int, browser_loads: int) -> list[str]:
+    """Controle positivo do lado do cliente: contagem minima por lado e status 200."""
+    api = [s for s in samples if s.get("kind") == "api"]
+    web = [s for s in samples if str(s.get("kind", "")).startswith("browser")]
+    problems = []
+    if len(api) != api_reads:
+        problems.append(f"api: {len(api)}/{api_reads} amostras")
+    if len(web) != browser_loads:
+        problems.append(f"navegador: {len(web)}/{browser_loads} amostras")
+    bad = [s for s in samples if s.get("status") != 200]
+    if bad:
+        problems.append(f"{len(bad)} amostra(s) com status != 200")
+    return problems
+
+
+STAGING_DSN_ENV = "RPG_STAGING_DB_URL"  # como `incident_drill.py`
+STAGING_ENV_FILE = ".env.staging"
+SWITCH_KEY = "image_generation"
+
+
+def switches_snapshot(run: Any = subprocess.run) -> dict[str, Any]:
+    """Estado de `image_generation` (list) + 5 ultimas linhas do `audit` DELA, com hora do `on`.
+    Sem `actor_id`/`reason`. Falha (RuntimeError) se o snapshot nao vier."""
+    base = [
+        sys.executable,
+        str(ROOT / "scripts" / "admin_kill_switch.py"),
+        "--dsn-env",
+        STAGING_DSN_ENV,
+        "--env-file",
+        STAGING_ENV_FILE,
+    ]
     out: dict[str, Any] = {"at": datetime.now(UTC).isoformat(timespec="seconds")}
-    for cmd, args in (("list", []), ("audit", ["--limit", "5"])):
-        proc = subprocess.run(
-            [sys.executable, str(ROOT / "scripts" / "admin_kill_switch.py"), cmd, *args],
-            capture_output=True,
-            text=True,
-            timeout=120,
-            check=False,
-        )
-        out[cmd] = (proc.stdout or "").strip().splitlines()[-8:] or [f"rc={proc.returncode}"]
+    parsed = {}
+    for cmd, extra in (("list", []), ("audit", ["--limit", "50"])):
+        proc = run([*base, cmd, *extra], capture_output=True, text=True, timeout=120, check=False)
+        if proc.returncode != 0:
+            raise RuntimeError(f"admin_kill_switch {cmd} falhou (rc={proc.returncode})")
+        try:
+            parsed[cmd] = json.loads(proc.stdout)
+        except ValueError as exc:
+            raise RuntimeError(f"admin_kill_switch {cmd}: saida invalida") from exc
+    out[SWITCH_KEY] = parsed["list"].get(SWITCH_KEY, "default-on")
+    rows = [r for r in parsed["audit"] if r.get("key") == SWITCH_KEY][:5]
+    keep = ("key", "previous_enabled", "enabled", "created_at")
+    out["audit"] = [{k: r.get(k) for k in keep} for r in rows]
     return out
 
 
@@ -214,14 +255,19 @@ def fetch_logs(since: str) -> str:
 def run(args: argparse.Namespace) -> dict[str, Any]:
     cookie = os.environ.get("PORTRAIT_MEASURE_COOKIE", "")
     result: dict[str, Any] = {"switches": switches_snapshot()}
-    samples = collect_api(args.base, args.game_id, args.api_reads, cookie)
     widths = [int(w) for w in args.widths.split(",") if w.strip()]
+    samples = collect_api(args.base, args.game_id, args.api_reads, cookie)
     if widths and args.storage_state:
-        samples += collect_browser(args.base, args.game_id, widths, args.storage_state)
+        samples += collect_browser(args.base, widths, args.storage_state)
     joined = join_samples(
         samples, parse_logs(fetch_logs(args.since))
     )  # mesma execucao: retencao curta
-    result.update(samples=joined, summary=summarize(joined), missing=len(missing_views(joined)))
+    result.update(
+        samples=joined,
+        summary=summarize(joined),
+        missing=len(missing_views(joined)),
+        problems=count_problems(samples, args.api_reads, len(widths)),
+    )
     return result
 
 
@@ -241,6 +287,9 @@ def main(argv: list[str] | None = None) -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(result["summary"], ensure_ascii=False))
+    if result["problems"]:
+        print("FALHA: " + "; ".join(result["problems"]))
+        return 1
     if result["missing"]:
         print(
             f"FALHA: {result['missing']} amostra(s) sem offer_view (problema de log, nao de oferta)"

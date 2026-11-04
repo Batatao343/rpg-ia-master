@@ -95,20 +95,25 @@ def test_delivery_only_one_per_turn():
     assert len(patch["pending_world_events"]) == 1
 
 
-def test_delivery_event_processed_grants_completion():
+def test_delivery_event_processed_grants_reward_and_technique(monkeypatch):
     from services.event_processor import process_pending_events
 
-    quests, patch = quest_log.sync_npc_delivery(
-        [_quest()], "Contratante", ENTREGA, _state(), turn=4
+    monkeypatch.setenv("RPG_CARD_REWARDS", "on")
+    quest = _quest(
+        reward_card_planned=True, reward_card_label="justa", reward_hint="justa · uma técnica"
     )
+    quests, patch = quest_log.sync_npc_delivery([quest], "Contratante", ENTREGA, _state(), turn=4)
     state = {
         "world": {"turn_count": 4},
         "quests": quests,
-        "player": {"gold": 0, "level": 1},
+        "player": {"gold": 0, "level": 6},
         "pending_world_events": patch["pending_world_events"],
     }
     out = process_pending_events(state)
-    assert next(q for q in out["quests"] if q["id"] == "q1")["status"] == "completed"
+    done = next(q for q in out["quests"] if q["id"] == "q1")
+    assert done["status"] == "completed" and done["reward_card"]
+    assert out["player"]["gold"] == quest_log.QUEST_REWARD_GOLD
+    assert [c for c in out["player"]["known_cards"] if c.startswith("neu1_")]
 
 
 @pytest.fixture(scope="module")

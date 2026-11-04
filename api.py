@@ -2865,14 +2865,11 @@ _PORTRAIT_SIGN_CACHE: dict[tuple[str, str], tuple[float, str]] = {}
 
 
 def _creature_art_live() -> bool:
-    """SPEC-352: registro + oferta paga só com a flag `on`, perfil com banco e arte dinâmica ligada."""
+    """SPEC-352: registro + oferta paga só com a flag `on`, perfil com banco e arte dinâmica ligada
+    (SPEC-389: fonte única com a causa reportada, `portrait_offer.art_cause`)."""
     from services import creature_art as _art
 
-    return (
-        _art.mode() == "on"
-        and _database_profile()
-        and os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").strip().lower() in {"1", "true", "yes"}
-    )
+    return portrait_offer.art_cause(_art.mode() == "on", _database_profile()) is None
 
 
 def _image_effect_open() -> bool:
@@ -2944,7 +2941,8 @@ def _portrait_manifest_ctx(state: dict, meta: dict) -> tuple[dict | None, str | 
 
 def _portrait_registry(state: dict, meta: dict, enemies: list[dict]):
     """R11: UMA leitura do registro por resposta (nunca uma por inimigo). `None` fora do perfil com banco."""
-    portrait_offer.begin(_creature_art_live())  # abre o tally da resposta (SPEC-389)
+    if enemies:  # SPEC-389 R2: o offer_view é só de resposta com inimigo vivo
+        portrait_offer.begin(_creature_art_live(), str(state.get("game_id") or ""))
     if not _creature_art_live():
         return None
     from services import creature_art as _art

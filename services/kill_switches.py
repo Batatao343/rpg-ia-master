@@ -112,7 +112,8 @@ def _daily_cap_configured() -> bool:
 
 def _fail_closed_keys() -> set[str]:
     """RPG_KILL_SWITCH_FAIL_CLOSED=new_purchases,image_generation: keys that become OFF when the
-    store is unreadable AND no good snapshot was ever loaded (default: none, i.e. fail open)."""
+    store is unreadable AND no good snapshot was ever loaded, OR the last good snapshot is older than
+    MAX_STALE_SECONDS while rereads keep failing (SPEC-389 R4) (default: none, i.e. fail open)."""
     raw = os.getenv("RPG_KILL_SWITCH_FAIL_CLOSED")
     if raw is None:  # SPEC-218 R5: ausente => default por perfil; env explícita (até "") vence
         from infrastructure.runtime import kill_switch_fail_closed_default
@@ -217,7 +218,8 @@ class KillSwitches:
 
     @property
     def unreadable(self) -> bool:
-        """SPEC-387 R7: a 1ª carga falhou e não há snapshot anterior (chaves fail-closed)."""
+        """SPEC-387 R7: a 1ª carga falhou e não há snapshot anterior (chaves fail-closed). O snapshot bom
+        velho demais (> `MAX_STALE_SECONDS` com a releitura falhando) é `stale`, tratado igual (SPEC-389 R4)."""
         return self._load_failed and not self._ever_loaded
 
     def is_enabled(self, key: str) -> bool:

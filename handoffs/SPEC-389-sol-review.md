@@ -39,7 +39,7 @@ R6/R7 (correção final de S7-1) ficam fora: dependem da medição no staging. A
 
 ## Correções aplicadas
 
-(vazio: o executor preenche por commit)
+P1-1, P1-2, P2-1..P2-7 corrigidos com teste antes do código; ver o commit "fix(cards): SPEC-389 Sol review" e o final do §9 da spec.
 
 ## Pendências
 

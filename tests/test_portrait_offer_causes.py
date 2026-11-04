@@ -158,7 +158,7 @@ def test_offer_view_once_per_response(monkeypatch):
     assert kw["omitted"] == {"switch_off": 2} and kw["offered"] == 0
     assert kw["level"] == "warning" and kw["art_live"] is True
     assert kw["instance"] == portrait_offer.INSTANCE and kw["switch_age_s"] == 2.5
-    assert "game" not in "".join(kw)
+    assert "game_id" not in kw  # só game_ref (pseudônimo)
 
 
 def test_offer_view_levels(monkeypatch):
@@ -331,3 +331,154 @@ def test_spec389_integrity_and_no_new_flag():
         )
         == []
     )
+
+
+# --- Sol P1-1/P1-2: script de medição ----------------------------------------------------------
+
+
+class _Proc:
+    def __init__(self, out, rc=0):
+        self.stdout, self.returncode = out, rc
+
+
+def test_measure_switch_snapshot_uses_staging_dsn_and_filters(monkeypatch):
+    import json
+
+    from scripts.staging import portrait_offer_measure as m
+
+    calls = []
+
+    def fake(cmd, **kw):
+        calls.append(cmd)
+        if "list" in cmd:
+            return _Proc(json.dumps({"a": True, "image_generation": True}))
+        rows = [
+            {
+                "key": "model:x",
+                "enabled": False,
+                "previous_enabled": True,
+                "actor_id": "a",
+                "reason": "r",
+                "created_at": "t0",
+            },
+            *[
+                {
+                    "key": "image_generation",
+                    "enabled": i % 2 == 0,
+                    "previous_enabled": i % 2 == 1,
+                    "actor_id": "secret",
+                    "reason": "secret",
+                    "created_at": f"t{i}",
+                }
+                for i in range(1, 8)
+            ],
+        ]
+        return _Proc(json.dumps(rows))
+
+    snap = m.switches_snapshot(run=fake)
+    assert all(
+        "--dsn-env" in c and "RPG_STAGING_DB_URL" in c and ".env.staging" in c for c in calls
+    )
+    assert snap["image_generation"] is True
+    assert len(snap["audit"]) == 5 and all(
+        set(r) == {"key", "previous_enabled", "enabled", "created_at"} for r in snap["audit"]
+    )
+    assert {r["key"] for r in snap["audit"]} == {"image_generation"}
+    assert "secret" not in json.dumps(snap)
+
+
+def test_measure_switch_snapshot_fails_on_error():
+    from scripts.staging import portrait_offer_measure as m
+
+    with pytest.raises(RuntimeError):
+        m.switches_snapshot(run=lambda cmd, **kw: _Proc("", 2))
+
+
+def test_measure_sample_uses_real_game_and_path():
+    from scripts.staging import portrait_offer_measure as m
+
+    sample = m.sample_from(
+        "browser:390",
+        "https://x.test/game/state?game_id=zzz",
+        {"x-request-id": "r"},
+        200,
+        {"game_id": "real-game"},
+    )
+    assert sample["game"] == m.short_hash("real-game") != m.short_hash("arg-game")
+    assert sample["endpoint"] == "/game/state"
+
+
+def test_measure_problems_require_both_sides():
+    from scripts.staging import portrait_offer_measure as m
+
+    ok = {"status": 200, "request_id": "r"}
+    api_only = [{**ok, "kind": "api"}] * 6
+    assert m.count_problems(api_only, 6, 6)  # navegador sem resposta
+    full = api_only + [{**ok, "kind": "browser:1440"}] * 6
+    assert m.count_problems(full, 6, 6) == []
+    assert m.count_problems(full[:-1] + [{**ok, "kind": "browser:1440", "status": 500}], 6, 6)
+
+
+# --- Sol P2-1/P2-2/P2-3/P2-4 ----------------------------------------------------------------
+
+
+class _Rows:
+    def __init__(self, row):
+        self.row = row
+
+    def get(self, key):
+        return self.row if key.startswith("tipo:") else None
+
+
+def _real_cause(monkeypatch, *, curated: bool, row):
+    monkeypatch.setattr(creature_art, "mode", lambda: "on")
+    monkeypatch.setattr(
+        creature_art,
+        "_curated",
+        lambda kind, ident: "c.png" if curated and kind == "creature" else None,
+    )
+    reasons: list[str] = []
+    portrait = creature_art.portrait_for(
+        ENEMY, None, game_id="g", registry=_Rows(row), quote_price=3, reasons=reasons
+    )
+    portrait_offer.begin(True)
+    return portrait_offer.classify(dict(portrait), reasons, True, None)
+
+
+def test_classify_precedence_with_real_portrait_for(monkeypatch):
+    private = {
+        "status": "ready",
+        "store": "private",
+        "origin_game_id": "other",
+        "visibility": "shared",
+    }
+    assert _real_cause(monkeypatch, curated=True, row=private) == "has_own_art"
+    assert _real_cause(monkeypatch, curated=False, row=private) == "private_other_game"
+    pending = {"status": "pending", "visibility": "shared"}
+    assert _real_cause(monkeypatch, curated=False, row=pending) == "pending"
+    portrait_offer.finish()
+
+
+def test_no_offer_view_without_alive_enemy(monkeypatch):
+    _wire_live(monkeypatch, switch=True, price=3)
+    monkeypatch.undo()  # usa o _portrait_registry real: sem inimigo vivo ele não abre tally
+    seen = []
+    monkeypatch.setattr(portrait_offer, "log_event", lambda *a, **k: seen.append(k))
+    api._combat_block({"game_id": "g", "player": {}, "enemies": [], "combat": {"active": True}})
+    assert seen == []
+
+
+def test_instance_is_the_boot_instance_ref():
+    from observability.boot import INSTANCE_REF
+
+    assert portrait_offer.INSTANCE == INSTANCE_REF
+
+
+def test_art_live_single_source(monkeypatch):
+    for mode_on in (True, False):
+        for db in (True, False):
+            for env in ("1", "0"):
+                monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", env)
+                monkeypatch.setattr(creature_art, "mode", lambda m=mode_on: "on" if m else "off")
+                monkeypatch.setattr(api, "_database_profile", lambda d=db: d)
+                assert api._creature_art_live() is (portrait_offer.art_cause(mode_on, db) is None)
