@@ -103,3 +103,33 @@ snapshot base×fix×final (python) → 365/361 idênticos; ausentes = A / A∪4 
 git diff --exit-code main...HEAD -- arena.py calibrar.py test_bestiario_calibragem.py evals/ → limpo
 dup_helpers --diff main...HEAD → nada; validate_content → 0 erros
 ```
+
+## Rodada 2 (2026-11-04, commit revisado `3532d6bc`)
+
+**Veredito:** `APPROVED_WITH_FOLLOWUPS`. O P2-3 está fechado. Fica um resíduo menor, o P2-7.
+
+Em `test_spec373_montagem.py`, a função `ficha_vs_base` deixou de pular as ids de `fichas`:
+- devolve ao valor da base (`flee`) só o `action_key` das prioridades `absoluta`;
+- exige o hash original de `docs/spec373/base/snapshot-off.json`;
+- reprova quando não existe prioridade `absoluta`;
+- reprova quando a `absoluta` ainda sai `flee` ou `surrender`.
+
+Uma `absoluta` nova acrescentada à ficha também muda o hash e reprova. Não vi brecha nova: as demais ids seguem no hash estrito, e o `_doc` do registro foi atualizado.
+
+Mutações num worktree descartável em `3532d6bc`, restauradas e removidas depois:
+
+| Mutação | Resultado |
+|---|---|
+| M0 linha de base | 40 passed |
+| M7 HP do odre 12→99 (em `fichas`) | **F** `mon_odre_de_oleo`. O afrouxamento da rodada 1 está fechado. |
+| M8 prosa (`action_hint`) da prioridade `sempre` do odre | **F** |
+| M10 correção R1 revertida no produto | **F** (a `absoluta` volta a `flee`) |
+| M9 `action_key` da `absoluta` do odre forçado a `flank` (errado; o certo é `control`) | **passa** nos portões da 373 |
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-7 | P2 | `tests/test_spec373_montagem.py` (`ficha_vs_base`) | A função aceita qualquer chave que não seja fuga na `absoluta`. Ela não confere que a chave é a de `sempre` do arquétipo. `test_todo_bestiario_curado...` também só barra `flee` e `surrender`. Hoje o bestiário não tem `action_key` explícito, então a chave vem sempre da tabela e o risco é baixo. | Opcional, numa próxima mexida de eval: exigir `action_key == _ENEMY_ARCHETYPE_ACTIONS[arq].get("sempre", "attack")`, ou o valor de `tp.normalize_runtime_profile` sobre a ficha crua. |
+
+```text
+worktree @3532d6bc: pytest -n 2 test_spec373_montagem test_spec373_artefatos → M0 40 passed; M7/M8/M10 1 failed (odre); M9 40 passed
+```
