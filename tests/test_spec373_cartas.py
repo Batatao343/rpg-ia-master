@@ -130,3 +130,92 @@ def test_mao_adiantada_nao_e_legada_e_passa_o_lint():
     assert card["origem"] == ORIGEM and card["onda"] == 1
     erros = [i for i in card_lint.lint_card(card, []) if i.severity != "aviso"]
     assert erros == []
+
+
+# --- Mão Adiantada precisa FAZER algo quando jogada (revisões Sol P1-2 / Opus P1-1) -----------
+
+
+def _jogar_mao_adiantada():
+    import random
+
+    from services import card_piles as cp
+    from services import conflict_orchestrator as orch
+    from services import conflict_scene as cs
+    from services import conflict_turn as ct
+
+    player = orch.ensure_combat_sheet(
+        {
+            "id": "player",
+            "name": "Herói",
+            "is_player": True,
+            "class_name": "Corruptor",
+            "known_cards": ["cor1_tro_mao_adiantada"],
+            "prepared_cards": ["cor1_tro_mao_adiantada"],
+            "virtudes": {"forca": 2, "agilidade": 3, "corpo": 3, "mente": 3, "carisma": 1},
+            "entropy": 8,
+            "max_entropy": 10,
+            "abyss_charge": 0,
+        },
+        is_player=True,
+    )
+    cp.migrate_deck(player)
+    enemy = orch.ensure_combat_sheet(
+        {
+            "id": "gob_1",
+            "name": "Goblin",
+            "type": "Minion",
+            "hp": 40,
+            "max_hp": 40,
+            "ac": 11,
+            "attributes": {"str": 10, "dex": 12, "con": 10, "int": 8, "wis": 8, "cha": 6},
+        }
+    )
+    piles = cp.start_piles(player, 11)
+    piles["mao"] = ["cor1_tro_mao_adiantada"]
+    scene = cs.new_scene()
+    for aid in ("player", "gob_1"):
+        cs.place(scene, aid)
+    cs.freeze(scene)
+    state = {"player": player, "_piles": piles, "_deck_mode": "on"}
+    actors = {"player": player, "gob_1": enemy}
+    sides = {"hero": ["player"], "enemy": ["gob_1"]}
+    step = ct.TurnStep(kind="card", card_id="cor1_tro_mao_adiantada", target_id="player")
+    decl = ct.TurnDeclaration(actor_id="player", jogadas=[step])
+    out = orch.run_round(
+        scene, actors, sides, state, declarations={"player": decl}, rng=random.Random(5)
+    )
+    return out, player, enemy, state, (scene, actors, sides)
+
+
+def test_mao_adiantada_jogada_grava_condicao_de_iniciativa():
+    out, player, _e, state, _w = _jogar_mao_adiantada()
+    assert not any("sem resolução" in line for line in out["logs"])
+    conds = [c for c in player["active_conditions"] if c.get("source") == "cor1_tro_mao_adiantada"]
+    assert conds and conds[0]["stat"] == "initiative" and conds[0]["delta"] == 2
+    assert state["_piles"]["exaurida"] == ["cor1_tro_mao_adiantada"]  # frequência `cena`
+
+
+def test_mao_adiantada_vale_na_rolagem_da_rodada_seguinte(monkeypatch):
+    import random
+
+    from services import conflict_orchestrator as orch
+    from services import conflict_resolution as cr
+    from services import conflict_turn as ct
+
+    _out, player, _e, state, (scene, actors, sides) = _jogar_mao_adiantada()
+    base = cr.virtude_value(player, "agilidade")
+    seen: list[int] = []
+    real = cr._initiative_value
+
+    def spy(actor):
+        v = real(actor)
+        if actor is player:
+            seen.append(v)
+        return v
+
+    monkeypatch.setattr(cr, "_initiative_value", spy)
+    passe = ct.TurnDeclaration(actor_id="player", acao=ct.TurnStep(kind="pass"))
+    orch.run_round(
+        scene, actors, sides, state, declarations={"player": passe}, rng=random.Random(6)
+    )
+    assert seen and max(seen) == base + 2, (base, seen)

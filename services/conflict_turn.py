@@ -250,6 +250,7 @@ _SUPPORT_EFFECTS = {
     "buff_defesa",
     "buff_acerto",
     "buff_dano",
+    "buff_iniciativa",
     "reduzir_carga_aliado",
 }
 # SPEC-330: kinds novos resolvidos pelo intérprete (`services/card_effects.py`).
@@ -715,6 +716,7 @@ def _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
             "buff_defesa": "ac",
             "buff_acerto": "attack",
             "buff_dano": "damage",
+            "buff_iniciativa": "initiative",
         }.get(kind, kind)
         condition = {
             "name": name,
