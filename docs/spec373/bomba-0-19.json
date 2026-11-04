@@ -1,0 +1,17 @@
+{
+ "arc1_imp_bomba_estopim": {
+  "classe": "Arcanista Cinzento",
+  "vezes_na_mao": 117,
+  "vezes_jogada": 81,
+  "taxa_uso": 0.692,
+  "vitoria_sem": 0.138,
+  "vitoria_com": 0.263,
+  "delta_pp": 12.5,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 7.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ }
+}

@@ -191,7 +191,7 @@
       "patamar": "avancado",
       "raridade": "incomum",
       "custo_entropia": 1,
-      "custo_folego": 1,
+      "custo_folego": 2,
       "frequencia": "cena",
       "virtude_permitida": [
         "mente"
@@ -204,7 +204,7 @@
         },
         {
           "kind": "dano",
-          "valor": 3,
+          "valor": 2,
           "alvo": "inimigos"
         }
       ],
@@ -214,7 +214,7 @@
       "level_req": 4,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "arc1_imp_truque",

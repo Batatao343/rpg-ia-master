@@ -103,3 +103,30 @@ def test_uso_populacao_inteira_ate_15(monkeypatch):
         for k, v in use.items():
             pico[k] = max(pico[k], v)
     assert max(pico.values()) <= 15, pico.most_common(5)
+
+
+# --- Parte C (R21): Corruptor, Carta buff_iniciativa de tronco -----------------------------
+
+CORRUPTOR_SUBS = ["", "alma", "biologia", "inorganica"]
+
+
+@pytest.mark.parametrize("sub", CORRUPTOR_SUBS)
+@pytest.mark.parametrize("level", [1, 3, 5])
+def test_corruptor_tem_buff_iniciativa_no_full_deck(level, sub):
+    from scripts.cards import sim
+
+    ids = sim.full_deck("Corruptor", level, sub)
+    assert "cor1_tro_mao_adiantada" in ids, (level, sub)
+    ini = [
+        c
+        for c in ids
+        if any(e.get("kind") == "buff_iniciativa" for e in fx.normalize(cards.get_card(c) or {}))
+    ]
+    assert ini, (level, sub)
+
+
+def test_mao_adiantada_nao_e_legada_e_passa_o_lint():
+    card = cards.get_card("cor1_tro_mao_adiantada")
+    assert card["origem"] == ORIGEM and card["onda"] == 1
+    erros = [i for i in card_lint.lint_card(card, []) if i.severity != "aviso"]
+    assert erros == []
