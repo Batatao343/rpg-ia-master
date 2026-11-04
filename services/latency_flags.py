@@ -13,10 +13,9 @@ from __future__ import annotations
 
 import os
 
+from services.env import env_choice
 
-def _choice(name: str, allowed: tuple[str, ...], default: str) -> str:
-    raw = os.getenv(name, "").strip().lower()
-    return raw if raw in allowed else default
+_choice = env_choice
 
 
 def two_phase_on() -> bool:
