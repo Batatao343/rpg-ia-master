@@ -2560,35 +2560,7 @@ def storyteller_node(state: GameState):
             if key and isinstance(t.new_npcs.get(key), dict):
                 t.new_npcs = {**t.new_npcs, key: {**t.new_npcs[key], "in_scene": False}}
 
-        t.updates = {
-            **t.sim_updates,
-            "messages": [AIMessage(content=t.narrative_text)],
-            "npcs": t.new_npcs,
-            "world": t.world,
-            "factions": t.factions,
-            "campaign_plan": t.updated_plan,
-            "needs_replan": t.needs_replan,
-        }
-        if t._pool_used_new:  # SPEC-297 R24: nunca duas vezes no mesmo jogo
-            t.updates["pool_used"] = list(
-                dict.fromkeys([*(t.state.get("pool_used") or []), *t._pool_used_new])
-            )
-        # sinais mostrados + crime novo: o crime parte do estado já com os sinais
-        t.updates.update(t._law_scene_updates)
-        t.updates.update(t.law_updates)
-        for _k, _v in t.fm_extra.items():  # SPEC-301: vínculo/intel/quests parciais
-            t.updates[_k] = _v
-        # Rumores/cores do simulador são percepção narrativa, não fatos globais.
-        # A consequência mecânica aplicada já é persistida diretamente pelo
-        # world_simulator; o archivist deve ignorar inferências livres deste texto.
-        if t.world_note:
-            t.updates["memory_fact_policy"] = "canonical_only"
-        if t.rested_player is not None:
-            t.updates["player"] = t.rested_player
-        elif t.discovery_player is not None:
-            t.updates["player"] = t.discovery_player
-        if t.leveled_player is not None:  # Fase 4.1: XP do beat (inclui o descanso, se houve)
-            t.updates["player"] = t.leveled_player
+        _story_assemble_base(t)
 
         _story_assemble_items(t)
         _story_assemble_events(t)
@@ -2599,6 +2571,39 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_assemble_base(t: _StoryTurn) -> None:
+    """Base do dict de retorno do turno."""
+    t.updates = {
+        **t.sim_updates,
+        "messages": [AIMessage(content=t.narrative_text)],
+        "npcs": t.new_npcs,
+        "world": t.world,
+        "factions": t.factions,
+        "campaign_plan": t.updated_plan,
+        "needs_replan": t.needs_replan,
+    }
+    if t._pool_used_new:  # SPEC-297 R24: nunca duas vezes no mesmo jogo
+        t.updates["pool_used"] = list(
+            dict.fromkeys([*(t.state.get("pool_used") or []), *t._pool_used_new])
+        )
+    # sinais mostrados + crime novo: o crime parte do estado já com os sinais
+    t.updates.update(t._law_scene_updates)
+    t.updates.update(t.law_updates)
+    for _k, _v in t.fm_extra.items():  # SPEC-301: vínculo/intel/quests parciais
+        t.updates[_k] = _v
+    # Rumores/cores do simulador são percepção narrativa, não fatos globais.
+    # A consequência mecânica aplicada já é persistida diretamente pelo
+    # world_simulator; o archivist deve ignorar inferências livres deste texto.
+    if t.world_note:
+        t.updates["memory_fact_policy"] = "canonical_only"
+    if t.rested_player is not None:
+        t.updates["player"] = t.rested_player
+    elif t.discovery_player is not None:
+        t.updates["player"] = t.discovery_player
+    if t.leveled_player is not None:  # Fase 4.1: XP do beat (inclui o descanso, se houve)
+        t.updates["player"] = t.leveled_player
 
 
 def _story_assemble_items(t: _StoryTurn) -> None:
