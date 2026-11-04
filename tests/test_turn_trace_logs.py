@@ -1,6 +1,7 @@
 """SPEC-247: decisão de rota (fonte/motivo), ciclo de vida do SSE e 409/replay de operação."""
 
 import json
+import logging
 import threading
 import time
 import uuid
@@ -16,7 +17,12 @@ SENT_TEXT = "TEXTOSENTINELA247"
 @pytest.fixture(autouse=True)
 def _logs(monkeypatch):
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
+    # Isola de testes que vazam `logging.disable(...)` (ex.: arena da 285): reabilita o log.
+    prev = logging.root.manager.disable
+    logging.disable(logging.NOTSET)  # também limpa o cache de isEnabledFor
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "debug"})
+    yield
+    logging.disable(prev)
 
 
 def _lines(capsys):
