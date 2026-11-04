@@ -30,6 +30,7 @@ import unicodedata
 from typing import Any, Dict, List, Optional, Set, Tuple
 from collections.abc import Collection, Iterable
 from services import text as _text
+from services.env import env_choice
 
 logger = logging.getLogger("rpg.npc_knowledge")
 
@@ -99,8 +100,7 @@ _TITLE_WORDS = {
 # Primitivos
 # --------------------------------------------------------------------------- #
 def mode() -> str:
-    raw = str(os.getenv("RPG_NPC_KNOWLEDGE", "off") or "").strip().lower()
-    return raw if raw in MODES else "off"
+    return env_choice("RPG_NPC_KNOWLEDGE", MODES, "off")
 
 
 def clock_index(world: dict | None) -> int:
