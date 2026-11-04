@@ -95,3 +95,48 @@ sonda (scratchpad): round-trip real via persistence em telegraphed/called → co
 sonda (scratchpad): Chamado frustrado + defesas gastas → enemy_declaration joga inf_chamado_do_bando (P2-1)
 sonda (scratchpad): payload.round == chegou_na_rodada na resposta da chegada → nota "acabou de chegar" acende
 ```
+
+---
+
+## Re-revisão (delta `50715671..47fe0462`)
+
+> **Veredito:** `APPROVED`, para pousar com `RPG_COMBAT_REINFORCEMENTS=off` (default em `combat_flags._DEFAULT_MODE`). Ficam 3 follow-ups P3, nenhum bloqueante.
+> **Revisor:** Opus (papel Sol, `spec-reviewer`) · **Data:** 2026-11-04 · **Commit revisado:** `47fe0462`
+
+### Escopo
+
+6 commits: `8a2c0a36` (P2-1/P3), `481a0774` (emenda da arena, autor de eval), `c5e7c921` (L1), `eb1cabf1` (L2), `044d608c` (L3) e `47fe0462` (gate). Arquivos: `services/reinforcement_cards.py`, `services/reinforcements.py`, `tests/test_reinforcement_cards.py`, `docs/spec391/*` e a spec.
+
+### O que confere
+
+- **P2-1 resolvido.** `_cancel(..., leader)` tira `CALL_CARD` de `leader["cartas"]` só em `stage == "telegraphed"` (a Carta nunca foi jogada). Isso só acontece no caminho `frustrado` (`reinforcement_cards.py:225`). `sem_folga` e `lider_caido` acontecem em `called`, quando a Carta já foi jogada, então removê-la ali não teria efeito. O teste `test_frustrated_call_drops_card_and_never_returns` refaz a minha sonda: `support`/`protect`/`attack` nas rodadas 3–6, e a Carta nunca sai.
+- **P3-3 resolvido.** `_fire`, `_progress` e `advance` agora têm tipos, e `_fire` recebe keywords.
+- **P3-4 resolvido.** Agora há teste de nó para a frustração (payload sem `reinforcement`/`reinforcement_warning`, registro com "frustrado"), round-trip por `persistence` com `SAVES_DIR` em `tmp_path` (rodadas 1 e 2) e teste para a flag `off` com chamado pendente.
+- **Emenda da arena (`481a0774`).** Só acrescenta o contador `countered` (`_countered`, mais `outcome` repassado a `_count_flow`). Sementes, bot, células, denominador (`telegraphed`), `cancelled` e a equivalência `off` não mudaram. A emenda veio antes de qualquer gate, está registrada na spec (§4) e tem teste com 7 casos. `git diff 481a0774..HEAD -- docs/spec391/arena_reforco_cartas.py scripts/cards/sim.py evals docs/spec285 docs/spec332 docs/spec368 data/cards` → vazio: a arena está congelada desde a emenda. A definição nova tem a mesma intenção do critério original (morte e `timeout` não contam como contra-jogo).
+- **Flag `off` = legado intacto.** `rf.spawn` e `_template_for` ganharam `slack=0` e `generic=False` como default. O único chamador legado (`reinforcements.py:215`) não passa nenhum dos dois, então o resultado é byte-idêntico. L1, L2 e L3 só valem em `_fire` do fluxo de Carta, e esse fluxo só roda com `mode == "on"`. O `pending_call` agora devolve `None` com a flag diferente de `on`. Para o legado isso não muda nada, porque a promessa `tipo: chamado` só nasce no fluxo `on`. Neutralidade conferida: `neutro-285-{off,on}.json` e `neutro-368-{off,on}.json` diferem só em `elapsed_s`.
+- **L2 reaproveita o stun.** A condição `{"control": "stun", "duration": 1}` vai só no recém-chegado (`_recovering`, dentro do laço `for enemy in new`). O teste L2 prova que ela aparece no payload, nega a 1ª ação (nenhuma Carta usada) e expira. Nenhum outro ator é tocado.
+- **Assertivas alteradas são do próprio recurso.** `cause "budget" → "sem_folga"` é o nome novo da L1; nenhum outro lugar (eventos, web, docs) lia `"budget"`. O presságio do `_r1` passar da rodada 3 para a 4 é consequência direta da L2, que tira a ação da rodada seguinte à chegada. Nenhuma das duas é regressão.
+- **Gate (`47fe0462`).** `gate-resultado.md` registra os 4 gates, o critério da opção 2 e o resultado reprovado. A flag fica `off`, como manda o D-391-5. Os números do gate 4 batem entre o agregado e as linhas de célula.
+- **Size budget.** `reinforcement_cards.py` tem 334 l. e `reinforcements.py` 235 (ambos < 1.000). Funções novas ou alteradas ≤ 60 l. (`_fire` ~45). `dup_helpers --diff 50715671..HEAD`: nenhuma colisão. `ruff check` limpo.
+
+### Achados
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-6 | P3 | `services/reinforcement_cards.py:73-78` + `:121-122` | Só no rollback (save com `stage == "telegraphed"` carregado com a flag `off`): o `pending_call` devolve `None`, mas `_cancel` nunca roda, porque `advance_card_flow` sai antes com `mode != "on"`. Assim `CALL_CARD` fica em `leader["cartas"]` e pode voltar como proteção avulsa pelo `_enemy_support_card`, o mesmo sintoma do P2-1. `test_flag_off_with_pending_call_does_not_play_it` cobre só `attack`. Hoje é inalcançável em produção, porque a flag nunca esteve `on` fora da arena e dos testes. | Quando a 391 for religada: filtrar `CALL_CARD` em `_enemy_support_card` / `enemy_card_ids` se a flag não estiver `on`, ou na carga. Estender o teste para `support`/`protect`. |
+| P3-7 | P3 | `services/reinforcement_cards.py:144-149` | "Recuperando o fôlego" é um `stun` de verdade, então herda toda a semântica de controle: `card_effects.is_down` (conta como "caído" para Interromper), `controlled` no contexto de reação (`ao_aliado_perder_acao` do líder) e efeitos que removem controle. Fica restrito ao recém-chegado e ao fluxo `on`, mas é mais do que "perde a 1ª ação". | Registrar na spec se a L2 for mantida quando a flag religar, ou trocar por uma marca própria ("pula a 1ª ação") sem `control`. |
+| P3-8 | P3 | spec §8 / D-391-5 | L1, L2 e L3 reprovaram, mas pousam no código, cumulativas e dormentes atrás da flag `off`. Se o dono religar a flag, recebe a versão com as três alavancas, não o desenho original. | O coordenador registra no cabeçalho ou no fechamento da spec que o estado pousado é "L1+L2+L3, gate reprovado, flag `off`". Revertê-las ou mantê-las fica para a próxima spec de balanço (a vitória ON de 57–79 % passaria na opção 3). |
+
+### Comandos rodados
+
+```text
+git log --oneline 50715671..HEAD → 6 commits; git diff 50715671..HEAD --stat → 12 arquivos
+git diff 481a0774..HEAD --name-only -- arena/sim.py/evals/spec285/332/368/data/cards → vazio
+pt.sh -n 0 test_reinforcement_cards test_spec325_reinforcements test_size_budget → 73 passed
+pt.sh -n 0 test_enemy_decks test_enemy_intent test_flag_registry test_log_event_registry → 71 passed
+(serial: RAM livre 0,8 GB no momento)
+dup_helpers.py --diff 50715671..HEAD → nenhuma colisão
+ruff check (4 arquivos do delta) → All checks passed
+neutro-285/368 on×off → iguais exceto elapsed_s
+grep stun consumers (card_effects.is_down, orchestrator controlled, reactions ao_aliado_perder_acao) → P3-7
+```
