@@ -166,3 +166,34 @@ def test_eval_gates_compara_com_baseline():
     assert version.count(".") == 2 and version.startswith("3.13.")
     assert "evals/baselines" in (ROOT / "evals/protected-paths.txt").read_text(encoding="utf-8")
 
+
+def _real_calls(text: str) -> list[str]:
+    joined = text.replace("\\n", " ")
+    return [line for line in joined.splitlines() if "--real" in line]
+
+
+def test_llm_playtest_semanal_e_opt_in_com_teto():
+    """SPEC-380 R3.6: playtest real semanal opt-in, com tetos e sem cair no mock."""
+    import re
+
+    text = (ROOT / ".github/workflows/llm-playtest-weekly.yml").read_text(encoding="utf-8")
+    workflow = yaml.load(text, Loader=yaml.BaseLoader)
+    triggers = workflow["on"]
+    assert "workflow_dispatch" in triggers and "schedule" in triggers
+    assert "push" not in triggers and "pull_request" not in triggers
+    (job,) = workflow["jobs"].values()
+    assert "vars.RPG_WEEKLY_LLM_PLAYTEST == 'true'" in job["if"]
+    assert job["env"]["RPG_NO_MOCK"] == "1"
+    assert job["environment"] == "llm-playtest"
+    assert int(job["timeout-minutes"]) <= 45
+    calls = _real_calls(text)
+    assert calls
+    for call in calls:
+        cost = re.search(r"--max-cost (\S+)", call)
+        reqs = re.search(r"--max-requests (\S+)", call)
+        turns = re.search(r"--turns (\d+)", call)
+        assert cost and float(cost.group(1)) > 0
+        assert reqs and int(reqs.group(1)) > 0
+        assert turns and int(turns.group(1)) <= 5
+    for secret in ("DEEPSEEK_API_KEY", "GROQ_API_KEY", "JINA_API_KEY"):
+        assert f'test -n "${secret}"' in text or f'test -n "${{{secret}}}"' in text, secret

@@ -1,0 +1,106 @@
+name: llm-playtest-weekly
+
+# SPEC-380 R3: medida semanal com LLM real, opt-in e informativa (sem gate de qualidade).
+# - manual: sempre (workflow_dispatch);
+# - agendado: só com a variável de repositório RPG_WEEKLY_LLM_PLAYTEST == 'true' (D1);
+# - secrets no environment `llm-playtest` (D2, criado pelo dono, sem revisores).
+# O job só falha por medição inválida: secret ausente ou nenhum perfil em modo real
+# com provider registrado. Exit code de cada perfil é registrado, não propagado.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * 1"  # segunda 09:00 UTC
+
+permissions:
+  contents: read
+
+concurrency:
+  group: llm-playtest-weekly
+  cancel-in-progress: false
+
+jobs:
+  weekly-real-playtest:
+    if: github.event_name == 'workflow_dispatch' || vars.RPG_WEEKLY_LLM_PLAYTEST == 'true'
+    runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
+    timeout-minutes: 45
+    environment: llm-playtest
+    env:
+      RPG_NO_MOCK: "1"  # chave ausente não cai silenciosamente no MockLLM
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - name: Require provider secrets
+        run: |
+          test -n "$DEEPSEEK_API_KEY"
+          test -n "$GROQ_API_KEY"
+          test -n "$JINA_API_KEY"
+      - run: uv sync
+      - name: Run the 4 vital profiles (5 turns, request and cost caps)
+        run: |
+          set +e
+          mkdir -p playtest_runs
+          : > playtest_runs/weekly-index.tsv
+          for profile in explorador combate diplomatico secret_rusher; do
+            before=$(ls -1 playtest_runs | sort)
+            uv run python -m playtest run --profile "$profile" --turns 5 --seed 7 --real --max-requests 60 --max-cost 0.25
+            code=$?
+            run_id=$(comm -13 <(echo "$before") <(ls -1 playtest_runs | sort) | grep -v '\.tsv$' | head -1)
+            printf '%s\t%s\t%s\n' "$profile" "$code" "$run_id" >> playtest_runs/weekly-index.tsv
+          done
+          exit 0
+      - name: Summary and measurement validity
+        run: |
+          {
+            echo "## Playtest real semanal"
+            echo
+            echo "| perfil | exit | run_id |"
+            echo "|---|---|---|"
+            while IFS=$'\t' read -r profile code run_id; do
+              echo "| $profile | $code | ${run_id:-(nenhum)} |"
+            done < playtest_runs/weekly-index.tsv
+            echo
+            while IFS=$'\t' read -r profile code run_id; do
+              if [ -n "$run_id" ]; then
+                echo "### $profile ($run_id)"
+                uv run python -m playtest report "$run_id" || echo "(report falhou: exit $?)"
+                echo
+              fi
+            done < playtest_runs/weekly-index.tsv
+          } >> "$GITHUB_STEP_SUMMARY"
+          uv run python - <<'PY'
+          import glob
+          import json
+          import sys
+
+          real = []
+          for path in sorted(glob.glob("playtest_runs/*/*.summary.json")):
+              with open(path, encoding="utf-8") as fp:
+                  summary = json.load(fp)
+              providers = {
+                  k: v
+                  for k, v in (summary.get("llm_requests_by_provider") or {}).items()
+                  if k not in ("", "?", "mock") and v
+              }
+              print(
+                  f"{path}: mock={summary.get('mock')} providers={providers} "
+                  f"turns={summary.get('turns_completed')} "
+                  f"aborted={summary.get('aborted_reason')} "
+                  f"cost_usd={summary.get('cost_usd_total')}"
+              )
+              if summary.get("mock") is False and providers:
+                  real.append(path)
+          if not real:
+              print("medição inválida: nenhum perfil em modo real com provider registrado")
+              sys.exit(1)
+          PY
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: llm-playtest-weekly-${{ github.run_id }}-${{ github.run_attempt }}
+          path: playtest_runs/
+          if-no-files-found: error
