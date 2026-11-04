@@ -1,0 +1,5 @@
+{
+ "on_startup": 0,
+ "on_shutdown": 0,
+ "lifespan_context": "function"
+}

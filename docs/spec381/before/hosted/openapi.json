@@ -1,0 +1,4065 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "RPG IA Engine API",
+  "description": "Backend para RPG de Texto com IA, Crafting e NPCs.",
+  "version": "v2.0 Hybrid Memory"
+ },
+ "paths": {
+  "/auth/config": {
+   "get": {
+    "summary": "Auth Config",
+    "operationId": "auth_config_auth_config_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/login": {
+   "post": {
+    "summary": "Auth Login",
+    "operationId": "auth_login_auth_login_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AuthRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/signup": {
+   "post": {
+    "summary": "Auth Signup",
+    "operationId": "auth_signup_auth_signup_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SignupRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/verify/request": {
+   "post": {
+    "summary": "Auth Email Request",
+    "operationId": "auth_email_request_auth_verify_request_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EmailRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/reset/request": {
+   "post": {
+    "summary": "Auth Email Request",
+    "operationId": "auth_email_request_auth_reset_request_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EmailRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/verify": {
+   "post": {
+    "summary": "Auth Verify Email",
+    "operationId": "auth_verify_email_auth_verify_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/VerifyEmailRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/reset/confirm": {
+   "post": {
+    "summary": "Auth Reset Confirm",
+    "operationId": "auth_reset_confirm_auth_reset_confirm_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ResetPasswordRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/reauth": {
+   "post": {
+    "summary": "Auth Reauthenticate",
+    "operationId": "auth_reauthenticate_auth_reauth_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ReauthRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/export": {
+   "get": {
+    "summary": "Account Export",
+    "operationId": "account_export_account_export_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/{game_id}/audit-export": {
+   "post": {
+    "summary": "Game Audit Export",
+    "description": "SPEC-207: pacote ZIP de auditoria, owner-only, prova recente, zero LLM.\n\nGerado em memória e devolvido como download; nada é retido no servidor.",
+    "operationId": "game_audit_export_game__game_id__audit_export_post",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/delete": {
+   "post": {
+    "summary": "Account Delete",
+    "operationId": "account_delete_account_delete_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DeleteAccountRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/refresh": {
+   "post": {
+    "summary": "Auth Refresh",
+    "operationId": "auth_refresh_auth_refresh_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/refresh/logout": {
+   "post": {
+    "summary": "Auth Logout",
+    "operationId": "auth_logout_auth_refresh_logout_post",
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     }
+    }
+   }
+  },
+  "/auth/logout": {
+   "post": {
+    "summary": "Auth Logout",
+    "operationId": "auth_logout_auth_logout_post",
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     }
+    }
+   }
+  },
+  "/health": {
+   "get": {
+    "summary": "Health Check",
+    "operationId": "health_check_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/data/combat-simulator": {
+   "get": {
+    "summary": "Get Combat Simulator Options",
+    "operationId": "get_combat_simulator_options_data_combat_simulator_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/combat-simulator": {
+   "post": {
+    "summary": "New Combat Simulator",
+    "operationId": "new_combat_simulator_game_combat_simulator_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CombatSimulatorRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GameResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/data/options": {
+   "get": {
+    "summary": "Get Creation Options",
+    "operationId": "get_creation_options_data_options_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/data/onboarding": {
+   "get": {
+    "summary": "Get Onboarding",
+    "description": "Spec onboarding-valoria (R4): lore curado do wizard de criação.\n\nConteúdo estático de data/onboarding.json — zero LLM, zero RAG.",
+    "operationId": "get_onboarding_data_onboarding_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/map": {
+   "get": {
+    "summary": "Get Game Map",
+    "description": "SPEC-210: mapa do JOGO com fog server-side (só visitados + adjacentes).\n\nMesmo guard de save de /game/state (UUID validado; 404 sem save; em perfis\ncom banco o carregamento já é escopado ao dono). Fail-closed: nenhum nome,\nperigo, lore ou arte de local não alcançado sai daqui.",
+    "operationId": "get_game_map_game_map_get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Game Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/data/map": {
+   "get": {
+    "summary": "Get World Map",
+    "description": "Grafo de locais (Fase 0) para o mapa com fog of war no frontend.\n\nspec mapa-sublocais (R7): interiores NÃO aparecem no mapa-múndi —\nsão expostos como \"Locais daqui\" no bloco `world` de /game/state.\n\nSPEC-210: com `game_id` devolve o mesmo formato, mas SÓ com os locais que\no jogador descobriu (visitados + adjacentes, sem lore/perigo dos adjacentes).\nSem `game_id` é o grafo global estático (CLI/smoke/legado).",
+    "operationId": "get_world_map_data_map_get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Game Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/state": {
+   "get": {
+    "summary": "Get Current State",
+    "description": "Carrega o jogo. Se game_id for passado, carrega aquele especifico.\nCaso contrario, carrega o ultimo modificado.",
+    "operationId": "get_current_state_game_state_get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Game Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/combat/preview": {
+   "post": {
+    "summary": "Combat Preview",
+    "description": "Chance de acerto (2d10 exato), faixa de dano e ferimento provável do seu lado.\nNunca expõe resistência/imunidade do alvo. Não grava nada.",
+    "operationId": "combat_preview_game_combat_preview_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CombatPreviewRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/data/cards/glossario": {
+   "get": {
+    "summary": "Cards Glossary",
+    "description": "SPEC-334: glossário de palavras-chave (tooltip do front); estático e cacheável.",
+    "operationId": "cards_glossary_data_cards_glossario_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/codex": {
+   "get": {
+    "summary": "Get Player Codex",
+    "description": "Codex do jogador (Fase 3.2) — locais/fações/personagens/criaturas/segredos\njá registrados no save. On-demand (fora do GameResponse) para não inchar o turno.",
+    "operationId": "get_player_codex_game_codex_get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Game Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/codex/dossiers": {
+   "get": {
+    "summary": "Get Codex Dossiers",
+    "description": "SPEC-211 — dossiês vivos (NPC/local/facção/segredo/crônica + bestiário).\nProjeção somente leitura sobre o save, sobre a projeção player-facing da\nSPEC-206 (fail-closed). `GET /game/codex` segue inalterado.",
+    "operationId": "get_codex_dossiers_game_codex_dossiers_get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Game Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/history": {
+   "get": {
+    "summary": "Game History",
+    "operationId": "game_history_game_history_get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 50,
+       "title": "Limit"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/balance": {
+   "get": {
+    "summary": "Account Balance",
+    "operationId": "account_balance_account_balance_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/checkout/skus": {
+   "get": {
+    "summary": "Checkout Skus",
+    "operationId": "checkout_skus_account_checkout_skus_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/checkout": {
+   "post": {
+    "summary": "Checkout Create",
+    "operationId": "checkout_create_account_checkout_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CheckoutRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/purchases/google/profile": {
+   "get": {
+    "summary": "Google Play Profile",
+    "description": "Value the app must pass to setObfuscatedAccountId before launching billing.",
+    "operationId": "google_play_profile_account_purchases_google_profile_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/purchases/google/products": {
+   "get": {
+    "summary": "Google Play Products",
+    "description": "Play product ids the app may query in the Store. No price: price comes from the Store only.",
+    "operationId": "google_play_products_account_purchases_google_products_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/purchases/google/verify": {
+   "post": {
+    "summary": "Google Play Verify",
+    "operationId": "google_play_verify_account_purchases_google_verify_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GooglePlayVerifyRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/checkout/{order_id}": {
+   "get": {
+    "summary": "Checkout Status",
+    "operationId": "checkout_status_account_checkout__order_id__get",
+    "parameters": [
+     {
+      "name": "order_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Order Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/payments/stripe/webhook": {
+   "post": {
+    "summary": "Stripe Webhook",
+    "description": "External provider route: raw signature replaces user cookie/CSRF auth.",
+    "operationId": "stripe_webhook_payments_stripe_webhook_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/transcriptions": {
+   "post": {
+    "summary": "Account Transcription",
+    "description": "Raw audio upload, separate from game actions. No multipart spool or recording store.",
+    "operationId": "account_transcription_account_transcriptions_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/purchases": {
+   "get": {
+    "summary": "Account Purchases",
+    "operationId": "account_purchases_account_purchases_get",
+    "parameters": [
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 20,
+       "title": "Limit"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/usage": {
+   "get": {
+    "summary": "Account Usage",
+    "operationId": "account_usage_account_usage_get",
+    "parameters": [
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 20,
+       "title": "Limit"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/account/series": {
+   "get": {
+    "summary": "Account Series",
+    "operationId": "account_series_account_series_get",
+    "parameters": [
+     {
+      "name": "period",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "7d",
+       "title": "Period"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/{game_id}/operations/{operation_id}/cost": {
+   "get": {
+    "summary": "Turn Cost",
+    "operationId": "turn_cost_game__game_id__operations__operation_id__cost_get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     },
+     {
+      "name": "operation_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Operation Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/{game_id}/operations/{operation_id}": {
+   "get": {
+    "summary": "Operation Status",
+    "operationId": "operation_status_game__game_id__operations__operation_id__get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     },
+     {
+      "name": "operation_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Operation Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/prologue": {
+   "post": {
+    "summary": "Game Prologue",
+    "description": "spec inicio-personalizado (R1): gera o cenário de abertura a partir da\nficha + descrição livre. 1 chamada SMART; guard de FallbackLLM devolve\ntemplate determinístico — nunca 500. Stateless: o cenário vive no client\nentre preview e confirm.",
+    "operationId": "game_prologue_game_prologue_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreateCharacterRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/art/brief": {
+   "post": {
+    "summary": "Preview Player Art Brief",
+    "operationId": "preview_player_art_brief_game_art_brief_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ArtBriefRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/{game_id}/art/quote": {
+   "post": {
+    "summary": "Create Image Quote",
+    "operationId": "create_image_quote_game__game_id__art_quote_post",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ArtQuoteRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/{game_id}/art/confirm": {
+   "post": {
+    "summary": "Confirm Player Art",
+    "operationId": "confirm_player_art_game__game_id__art_confirm_post",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ArtConfirmRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/{game_id}/art/player/confirm": {
+   "post": {
+    "summary": "Confirm Player Art",
+    "operationId": "confirm_player_art_game__game_id__art_player_confirm_post",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ArtConfirmRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/{game_id}/art/{generation_id}": {
+   "get": {
+    "summary": "Dynamic Art Status",
+    "operationId": "dynamic_art_status_game__game_id__art__generation_id__get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     },
+     {
+      "name": "generation_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Generation Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/{game_id}/art/{generation_id}/quality": {
+   "post": {
+    "summary": "Dynamic Art Quality",
+    "operationId": "dynamic_art_quality_game__game_id__art__generation_id__quality_post",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     },
+     {
+      "name": "generation_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Generation Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ArtQualityRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/new": {
+   "post": {
+    "summary": "New Game",
+    "operationId": "new_game_game_new_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreateCharacterRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GameResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/action": {
+   "post": {
+    "summary": "Game Action",
+    "operationId": "game_action_game_action_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ActionRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GameResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/death": {
+   "post": {
+    "summary": "Game Death",
+    "description": "spec checkpoints-morte (D2): resolve a tela de morte.\n- `continue` → restaura do checkpoint (ou do início da sessão, D7); a saga segue.\n- `accept`   → memorial (game_over): a crônica encerra por escolha do jogador.",
+    "operationId": "game_death_game_death_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DeathChoiceRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GameResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/action/stream": {
+   "post": {
+    "summary": "Game Action Stream",
+    "description": "R1: mesmo corpo do /game/action, resposta text/event-stream com fases\nreais do grafo. Guard-rails (rate limit via middleware, game_id, memorial,\nteto de input) valem aqui também (R3).",
+    "operationId": "game_action_stream_game_action_stream_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ActionRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/equip": {
+   "post": {
+    "summary": "Game Equip",
+    "description": "Fase 4.3: equipar/desequipar — validação 100% Python (inventory.equip).",
+    "operationId": "game_equip_game_equip_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EquipRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/cards/prepare": {
+   "post": {
+    "summary": "Game Cards Prepare",
+    "description": "SPEC-209 R4: Preparação fora de combate. A regra mora em services.cards.",
+    "operationId": "game_cards_prepare_game_cards_prepare_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PrepareCardsRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/espolio": {
+   "post": {
+    "summary": "Game Espolio",
+    "description": "SPEC-333 R1/R3: escolhe 1 das 3 Cartas do espólio (ou recusa por 15 de ouro).",
+    "operationId": "game_espolio_game_espolio_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EspolioRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/loja-cartas": {
+   "post": {
+    "summary": "Game Loja Cartas",
+    "description": "SPEC-357 R7/R9: compra uma Carta neutra do mercador (preço e prateleira em Python).",
+    "operationId": "game_loja_cartas_game_loja_cartas_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LojaCartasRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/forja": {
+   "post": {
+    "summary": "Game Forja",
+    "description": "SPEC-333 R4/R5/R8: esquecer / afiar / purgar Cicatriz, fora de combate.",
+    "operationId": "game_forja_game_forja_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ForjaRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/levelup": {
+   "post": {
+    "summary": "Game Levelup",
+    "description": "Fase 4.1: aplica UMA escolha de level up (habilidade ou atributo).\n\nValidação 100% server-side (progression.apply_choice): escolha inexistente,\nhabilidade inelegível (classe/nível/pré-requisito/ramo rival) ou atributo\ninválido → 400 e o save fica intocado.",
+    "operationId": "game_levelup_game_levelup_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LevelUpRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/saves": {
+   "get": {
+    "summary": "Get Saves",
+    "description": "R1: lista as campanhas salvas (mtime desc; corrompido é pulado).",
+    "operationId": "get_saves_game_saves_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/SaveSummary"
+         },
+         "type": "array",
+         "title": "Response Get Saves Game Saves Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/save/{game_id}": {
+   "delete": {
+    "summary": "Delete Save Endpoint",
+    "description": "R2: exclui save + memória da sessão. Confirmação é da UI (uso local).",
+    "operationId": "delete_save_endpoint_game_save__game_id__delete",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Game Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/chronicle/search": {
+   "post": {
+    "summary": "Search Chronicle Endpoint",
+    "operationId": "search_chronicle_endpoint_game_chronicle_search_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ChronicleSearchRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/game/chronicle/export": {
+   "get": {
+    "summary": "Export Chronicle",
+    "description": "R5: crônica como .txt (download) com separadores por capítulo.",
+    "operationId": "export_chronicle_game_chronicle_export_get",
+    "parameters": [
+     {
+      "name": "game_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Game Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "ActionRequest": {
+    "properties": {
+     "input_text": {
+      "type": "string",
+      "maxLength": 2000,
+      "title": "Input Text"
+     },
+     "game_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Game Id"
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     },
+     "card_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 128
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Card Id"
+     },
+     "target_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 128
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Target Id"
+     },
+     "ruptura": {
+      "type": "boolean",
+      "title": "Ruptura",
+      "default": false
+     },
+     "reaction_card_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 128
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reaction Card Id"
+     },
+     "action_kind": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "attack",
+         "maneuver",
+         "pass",
+         "flee"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Kind"
+     },
+     "maneuver": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "engajar",
+         "desengajar",
+         "guardar",
+         "esconder",
+         "procurar"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Maneuver"
+     },
+     "jogadas": {
+      "anyOf": [
+       {
+        "items": {
+         "$ref": "#/components/schemas/PlayStepRequest"
+        },
+        "type": "array",
+        "maxItems": 8
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Jogadas"
+     }
+    },
+    "type": "object",
+    "required": [
+     "input_text"
+    ],
+    "title": "ActionRequest"
+   },
+   "ArtBriefRequest": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 80,
+      "title": "Name",
+      "default": "Herói"
+     },
+     "race": {
+      "type": "string",
+      "maxLength": 40,
+      "title": "Race"
+     },
+     "class_name": {
+      "type": "string",
+      "maxLength": 40,
+      "title": "Class Name"
+     },
+     "region": {
+      "type": "string",
+      "maxLength": 60,
+      "title": "Region",
+      "default": ""
+     },
+     "appearance": {
+      "type": "string",
+      "maxLength": 1000,
+      "title": "Appearance",
+      "default": ""
+     },
+     "visual_exclusions": {
+      "type": "string",
+      "maxLength": 500,
+      "title": "Visual Exclusions",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "required": [
+     "race",
+     "class_name"
+    ],
+    "title": "ArtBriefRequest"
+   },
+   "ArtConfirmRequest": {
+    "properties": {
+     "action_id": {
+      "type": "string",
+      "title": "Action Id"
+     },
+     "quote_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Quote Id"
+     },
+     "confirmed": {
+      "type": "boolean",
+      "const": true,
+      "title": "Confirmed"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "action_id",
+     "quote_id",
+     "confirmed"
+    ],
+    "title": "ArtConfirmRequest"
+   },
+   "ArtQualityRequest": {
+    "properties": {
+     "approved": {
+      "type": "boolean",
+      "title": "Approved"
+     }
+    },
+    "type": "object",
+    "required": [
+     "approved"
+    ],
+    "title": "ArtQualityRequest"
+   },
+   "ArtQuoteRequest": {
+    "properties": {
+     "image_type": {
+      "type": "string",
+      "enum": [
+       "player",
+       "npc",
+       "scene",
+       "monster"
+      ],
+      "title": "Image Type",
+      "default": "player"
+     },
+     "offer_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Offer Id"
+     },
+     "reformulation": {
+      "type": "boolean",
+      "title": "Reformulation",
+      "default": false
+     },
+     "enemy_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 128,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Enemy Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "ArtQuoteRequest"
+   },
+   "AuthRequest": {
+    "properties": {
+     "email": {
+      "type": "string",
+      "maxLength": 320,
+      "minLength": 3,
+      "title": "Email"
+     },
+     "password": {
+      "type": "string",
+      "maxLength": 256,
+      "minLength": 8,
+      "title": "Password"
+     },
+     "captcha_token": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 4096
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Captcha Token"
+     }
+    },
+    "type": "object",
+    "required": [
+     "email",
+     "password"
+    ],
+    "title": "AuthRequest"
+   },
+   "CheckoutRequest": {
+    "properties": {
+     "sku_id": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Sku Id"
+     },
+     "request_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Request Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "sku_id",
+     "request_id"
+    ],
+    "title": "CheckoutRequest"
+   },
+   "ChronicleSearchRequest": {
+    "properties": {
+     "game_id": {
+      "type": "string",
+      "title": "Game Id"
+     },
+     "query": {
+      "type": "string",
+      "maxLength": 300,
+      "minLength": 2,
+      "title": "Query"
+     },
+     "top_k": {
+      "type": "integer",
+      "maximum": 10.0,
+      "minimum": 1.0,
+      "title": "Top K",
+      "default": 5
+     }
+    },
+    "type": "object",
+    "required": [
+     "game_id",
+     "query"
+    ],
+    "title": "ChronicleSearchRequest"
+   },
+   "CombatPreviewRequest": {
+    "properties": {
+     "game_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Game Id"
+     },
+     "card_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 128
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Card Id"
+     },
+     "target_id": {
+      "type": "string",
+      "maxLength": 128,
+      "title": "Target Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "target_id"
+    ],
+    "title": "CombatPreviewRequest",
+    "description": "SPEC-334 R4: pré-visualização de uma jogada. Puro: sem LLM e sem tocar o save."
+   },
+   "CombatSimulatorRequest": {
+    "properties": {
+     "class_name": {
+      "type": "string",
+      "maxLength": 40,
+      "minLength": 1,
+      "title": "Class Name"
+     },
+     "level": {
+      "type": "integer",
+      "enum": [
+       1,
+       3,
+       5,
+       10
+      ],
+      "title": "Level",
+      "default": 1
+     },
+     "enemy_id": {
+      "type": "string",
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Enemy Id"
+     },
+     "quantity": {
+      "type": "integer",
+      "maximum": 3.0,
+      "minimum": 1.0,
+      "title": "Quantity",
+      "default": 1
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "class_name",
+     "enemy_id"
+    ],
+    "title": "CombatSimulatorRequest"
+   },
+   "CreateCharacterRequest": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 80,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "race": {
+      "type": "string",
+      "maxLength": 40,
+      "title": "Race"
+     },
+     "class_name": {
+      "type": "string",
+      "maxLength": 40,
+      "title": "Class Name"
+     },
+     "region": {
+      "type": "string",
+      "maxLength": 60,
+      "title": "Region"
+     },
+     "level": {
+      "type": "integer",
+      "maximum": 20.0,
+      "minimum": 1.0,
+      "title": "Level",
+      "default": 1
+     },
+     "backstory": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Backstory",
+      "default": ""
+     },
+     "appearance": {
+      "type": "string",
+      "maxLength": 1000,
+      "title": "Appearance",
+      "default": ""
+     },
+     "visual_exclusions": {
+      "type": "string",
+      "maxLength": 500,
+      "title": "Visual Exclusions",
+      "default": ""
+     },
+     "scenario": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/StartScenarioIn"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "scenario_token": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 1024
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Scenario Token"
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "name",
+     "race",
+     "class_name",
+     "region"
+    ],
+    "title": "CreateCharacterRequest"
+   },
+   "DeathChoiceRequest": {
+    "properties": {
+     "game_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Game Id"
+     },
+     "choice": {
+      "type": "string",
+      "pattern": "^(continue|accept)$",
+      "title": "Choice"
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "choice"
+    ],
+    "title": "DeathChoiceRequest"
+   },
+   "DeleteAccountRequest": {
+    "properties": {
+     "confirmation": {
+      "type": "string",
+      "const": "EXCLUIR",
+      "title": "Confirmation"
+     }
+    },
+    "type": "object",
+    "required": [
+     "confirmation"
+    ],
+    "title": "DeleteAccountRequest"
+   },
+   "EmailRequest": {
+    "properties": {
+     "email": {
+      "type": "string",
+      "maxLength": 320,
+      "minLength": 3,
+      "title": "Email"
+     },
+     "captcha_token": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 4096
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Captcha Token"
+     }
+    },
+    "type": "object",
+    "required": [
+     "email"
+    ],
+    "title": "EmailRequest"
+   },
+   "EquipRequest": {
+    "properties": {
+     "item_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Item Id"
+     },
+     "unequip_slot": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unequip Slot"
+     },
+     "game_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Game Id"
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     }
+    },
+    "type": "object",
+    "title": "EquipRequest",
+    "description": "Fase 4.3: equipa item do inventário (slot deduzido do tipo) ou desequipa slot."
+   },
+   "EspolioRequest": {
+    "properties": {
+     "game_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Game Id"
+     },
+     "card_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 80
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Card Id"
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     }
+    },
+    "type": "object",
+    "title": "EspolioRequest",
+    "description": "SPEC-333 R1: escolhe 1 Carta do espólio pós-conflito ou recusa (`card_id` vazio)."
+   },
+   "ForjaRequest": {
+    "properties": {
+     "game_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Game Id"
+     },
+     "acao": {
+      "type": "string",
+      "enum": [
+       "esquecer",
+       "afiar",
+       "purgar"
+      ],
+      "title": "Acao"
+     },
+     "card_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 80
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Card Id"
+     },
+     "scar_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 80
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Scar Id"
+     },
+     "via": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "descanso",
+         "templo",
+         "medico"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Via"
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "acao"
+    ],
+    "title": "ForjaRequest",
+    "description": "SPEC-333 R4/R5/R8: ações de forja fora de combate (validação 100% Python)."
+   },
+   "GameResponse": {
+    "properties": {
+     "timeline_epoch": {
+      "type": "integer",
+      "title": "Timeline Epoch",
+      "default": 0
+     },
+     "portrait_generation_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Portrait Generation Id"
+     },
+     "game_id": {
+      "type": "string",
+      "title": "Game Id"
+     },
+     "message": {
+      "type": "string",
+      "title": "Message"
+     },
+     "message_type": {
+      "type": "string",
+      "title": "Message Type"
+     },
+     "speaker": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "type": "object",
+      "title": "Speaker",
+      "default": {}
+     },
+     "player_stats": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Player Stats"
+     },
+     "inventory": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Inventory"
+     },
+     "current_location": {
+      "type": "string",
+      "title": "Current Location"
+     },
+     "narrative_summary": {
+      "type": "string",
+      "title": "Narrative Summary"
+     },
+     "last_turn_log": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Last Turn Log"
+     },
+     "simulated": {
+      "type": "boolean",
+      "title": "Simulated",
+      "default": false
+     },
+     "world": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "World",
+      "default": {}
+     },
+     "quest": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Quest",
+      "default": {}
+     },
+     "combat": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Combat",
+      "default": {}
+     },
+     "npcs": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Npcs",
+      "default": []
+     },
+     "art_offers": {
+      "items": {
+       "additionalProperties": {
+        "type": "string"
+       },
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Art Offers",
+      "default": []
+     },
+     "art_generations": {
+      "items": {
+       "additionalProperties": {
+        "type": "string"
+       },
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Art Generations",
+      "default": []
+     },
+     "chronicle": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Chronicle",
+      "default": []
+     },
+     "factions": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Factions",
+      "default": []
+     },
+     "reputation_notices": {
+      "items": {
+       "additionalProperties": {
+        "type": "string"
+       },
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Reputation Notices",
+      "default": []
+     },
+     "companion_feedback": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Companion Feedback",
+      "default": []
+     },
+     "party": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Party",
+      "default": []
+     },
+     "death_pending": {
+      "type": "boolean",
+      "title": "Death Pending",
+      "default": false
+     },
+     "game_over": {
+      "type": "boolean",
+      "title": "Game Over",
+      "default": false
+     },
+     "death": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Death",
+      "default": {}
+     },
+     "continuity": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Continuity",
+      "default": {}
+     },
+     "combat_simulation": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Combat Simulation",
+      "default": {}
+     },
+     "turn_outcome": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Turn Outcome",
+      "default": {}
+     },
+     "combat_result": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Combat Result",
+      "default": {}
+     },
+     "projections": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Projections",
+      "default": {}
+     },
+     "visual": {
+      "$ref": "#/components/schemas/VisualResponse"
+     }
+    },
+    "type": "object",
+    "required": [
+     "game_id",
+     "message",
+     "message_type",
+     "player_stats",
+     "inventory",
+     "current_location",
+     "narrative_summary",
+     "last_turn_log",
+     "visual"
+    ],
+    "title": "GameResponse"
+   },
+   "GooglePlayVerifyRequest": {
+    "properties": {
+     "product_id": {
+      "type": "string",
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Product Id"
+     },
+     "purchase_token": {
+      "type": "string",
+      "maxLength": 2048,
+      "minLength": 16,
+      "title": "Purchase Token"
+     },
+     "order_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 128
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Order Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "product_id",
+     "purchase_token"
+    ],
+    "title": "GooglePlayVerifyRequest"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "LevelUpRequest": {
+    "properties": {
+     "choice_id": {
+      "type": "string",
+      "title": "Choice Id"
+     },
+     "card_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Card Id"
+     },
+     "evolve_card_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Evolve Card Id"
+     },
+     "caminho": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Caminho"
+     },
+     "virtude": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Virtude"
+     },
+     "attr": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Attr"
+     },
+     "subclass_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Subclass Id"
+     },
+     "virtue_card_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Virtue Card Id"
+     },
+     "game_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Game Id"
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "choice_id"
+    ],
+    "title": "LevelUpRequest",
+    "description": "Conflito v2: consome escolha de Carta/evolução ou de Virtude."
+   },
+   "LojaCartasRequest": {
+    "properties": {
+     "game_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Game Id"
+     },
+     "card_id": {
+      "type": "string",
+      "maxLength": 80,
+      "title": "Card Id"
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "card_id"
+    ],
+    "title": "LojaCartasRequest",
+    "description": "SPEC-357 R9: compra 1 Carta neutra da prateleira do mercador do local."
+   },
+   "PersonalNPCIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 60,
+      "title": "Name"
+     },
+     "role_public": {
+      "type": "string",
+      "maxLength": 80,
+      "title": "Role Public"
+     },
+     "persona_public": {
+      "type": "string",
+      "maxLength": 400,
+      "title": "Persona Public"
+     },
+     "appearance": {
+      "type": "string",
+      "maxLength": 300,
+      "title": "Appearance"
+     },
+     "legend": {
+      "type": "string",
+      "maxLength": 160,
+      "title": "Legend"
+     },
+     "bond": {
+      "type": "string",
+      "maxLength": 300,
+      "title": "Bond"
+     },
+     "attitude": {
+      "type": "string",
+      "maxLength": 20,
+      "title": "Attitude"
+     }
+    },
+    "type": "object",
+    "required": [
+     "name",
+     "role_public",
+     "persona_public",
+     "appearance",
+     "legend",
+     "bond",
+     "attitude"
+    ],
+    "title": "PersonalNPCIn"
+   },
+   "PlayStepRequest": {
+    "properties": {
+     "card_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 128
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Card Id"
+     },
+     "target_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 128
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Target Id"
+     },
+     "ruptura": {
+      "type": "boolean",
+      "title": "Ruptura",
+      "default": false
+     },
+     "action_kind": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "attack",
+         "maneuver",
+         "pass",
+         "discard"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Kind"
+     },
+     "maneuver": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "engajar",
+         "desengajar",
+         "guardar",
+         "esconder",
+         "procurar"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Maneuver"
+     },
+     "descartar": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string",
+         "maxLength": 128
+        },
+        "type": "array",
+        "maxItems": 4
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Descartar"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "PlayStepRequest",
+    "description": "Uma jogada da lista `jogadas` (SPEC-328). O motor revalida tudo."
+   },
+   "PrepareCardsRequest": {
+    "properties": {
+     "game_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Game Id"
+     },
+     "prepared": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 64,
+      "title": "Prepared"
+     },
+     "action_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 36
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Action Id"
+     }
+    },
+    "type": "object",
+    "title": "PrepareCardsRequest",
+    "description": "SPEC-209 R4: prepara/troca Cartas fora de combate (validação 100% Python)."
+   },
+   "ReauthRequest": {
+    "properties": {
+     "password": {
+      "type": "string",
+      "maxLength": 256,
+      "minLength": 8,
+      "title": "Password"
+     },
+     "captcha_token": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 4096
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Captcha Token"
+     }
+    },
+    "type": "object",
+    "required": [
+     "password"
+    ],
+    "title": "ReauthRequest"
+   },
+   "ResetPasswordRequest": {
+    "properties": {
+     "token_hash": {
+      "type": "string",
+      "maxLength": 512,
+      "minLength": 10,
+      "title": "Token Hash"
+     },
+     "new_password": {
+      "type": "string",
+      "maxLength": 256,
+      "minLength": 10,
+      "title": "New Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "token_hash",
+     "new_password"
+    ],
+    "title": "ResetPasswordRequest"
+   },
+   "SaveSummary": {
+    "properties": {
+     "game_id": {
+      "type": "string",
+      "title": "Game Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "class_name": {
+      "type": "string",
+      "title": "Class Name"
+     },
+     "level": {
+      "type": "integer",
+      "title": "Level"
+     },
+     "location": {
+      "type": "string",
+      "title": "Location"
+     },
+     "day": {
+      "type": "integer",
+      "title": "Day"
+     },
+     "game_over": {
+      "type": "boolean",
+      "title": "Game Over"
+     },
+     "combat_simulation": {
+      "type": "boolean",
+      "title": "Combat Simulation",
+      "default": false
+     },
+     "updated_at": {
+      "type": "number",
+      "title": "Updated At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "game_id",
+     "name",
+     "class_name",
+     "level",
+     "location",
+     "day",
+     "game_over",
+     "updated_at"
+    ],
+    "title": "SaveSummary"
+   },
+   "SceneVisualResponse": {
+    "properties": {
+     "location_id": {
+      "type": "string",
+      "title": "Location Id"
+     },
+     "location_name": {
+      "type": "string",
+      "title": "Location Name"
+     },
+     "scope": {
+      "type": "string",
+      "enum": [
+       "exact",
+       "regional",
+       "placeholder"
+      ],
+      "title": "Scope"
+     },
+     "asset": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/VisualAssetResponse"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "type": "object",
+    "required": [
+     "location_id",
+     "location_name",
+     "scope"
+    ],
+    "title": "SceneVisualResponse"
+   },
+   "SeedNPCIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 60,
+      "title": "Name"
+     },
+     "role": {
+      "type": "string",
+      "maxLength": 80,
+      "title": "Role"
+     },
+     "attitude": {
+      "type": "string",
+      "maxLength": 20,
+      "title": "Attitude"
+     },
+     "persona": {
+      "type": "string",
+      "maxLength": 400,
+      "title": "Persona"
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "personal",
+       "plot"
+      ],
+      "title": "Kind",
+      "description": "DERIVADO pelo servidor; a LLM não preenche",
+      "default": "personal"
+     }
+    },
+    "type": "object",
+    "required": [
+     "name",
+     "role",
+     "attitude",
+     "persona"
+    ],
+    "title": "SeedNPCIn"
+   },
+   "SignupRequest": {
+    "properties": {
+     "email": {
+      "type": "string",
+      "maxLength": 320,
+      "minLength": 3,
+      "title": "Email"
+     },
+     "password": {
+      "type": "string",
+      "maxLength": 256,
+      "minLength": 10,
+      "title": "Password"
+     },
+     "captcha_token": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 4096
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Captcha Token"
+     },
+     "age_confirmed": {
+      "type": "boolean",
+      "const": true,
+      "title": "Age Confirmed"
+     }
+    },
+    "type": "object",
+    "required": [
+     "email",
+     "password",
+     "age_confirmed"
+    ],
+    "title": "SignupRequest"
+   },
+   "StartScenarioIn": {
+    "properties": {
+     "prologue": {
+      "type": "string",
+      "maxLength": 2000,
+      "title": "Prologue"
+     },
+     "opening_scene_brief": {
+      "type": "string",
+      "maxLength": 1200,
+      "title": "Opening Scene Brief"
+     },
+     "arc_title": {
+      "type": "string",
+      "maxLength": 80,
+      "title": "Arc Title"
+     },
+     "beats": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 5,
+      "title": "Beats"
+     },
+     "climax": {
+      "type": "string",
+      "maxLength": 300,
+      "title": "Climax"
+     },
+     "seeking": {
+      "type": "string",
+      "maxLength": 200,
+      "title": "Seeking",
+      "default": ""
+     },
+     "thread_refs": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 2,
+      "title": "Thread Refs"
+     },
+     "plot_npc_id": {
+      "type": "string",
+      "maxLength": 80,
+      "title": "Plot Npc Id",
+      "default": ""
+     },
+     "plot_npc_hook": {
+      "type": "string",
+      "maxLength": 300,
+      "title": "Plot Npc Hook",
+      "default": ""
+     },
+     "plot_npc_name": {
+      "type": "string",
+      "maxLength": 60,
+      "title": "Plot Npc Name",
+      "default": ""
+     },
+     "personal_npc": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/PersonalNPCIn"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "seed_npcs": {
+      "items": {
+       "$ref": "#/components/schemas/SeedNPCIn"
+      },
+      "type": "array",
+      "maxItems": 2,
+      "title": "Seed Npcs"
+     }
+    },
+    "type": "object",
+    "required": [
+     "prologue",
+     "opening_scene_brief",
+     "arc_title",
+     "beats",
+     "climax"
+    ],
+    "title": "StartScenarioIn"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   },
+   "VerifyEmailRequest": {
+    "properties": {
+     "token_hash": {
+      "type": "string",
+      "maxLength": 512,
+      "minLength": 10,
+      "title": "Token Hash"
+     },
+     "type": {
+      "type": "string",
+      "const": "signup",
+      "title": "Type",
+      "default": "signup"
+     }
+    },
+    "type": "object",
+    "required": [
+     "token_hash"
+    ],
+    "title": "VerifyEmailRequest"
+   },
+   "VisualAssetResponse": {
+    "properties": {
+     "asset_id": {
+      "type": "string",
+      "title": "Asset Id"
+     },
+     "subject_type": {
+      "type": "string",
+      "enum": [
+       "race",
+       "class",
+       "location",
+       "npc"
+      ],
+      "title": "Subject Type"
+     },
+     "subject_id": {
+      "type": "string",
+      "title": "Subject Id"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "alt": {
+      "type": "string",
+      "title": "Alt"
+     },
+     "placeholder_color": {
+      "type": "string",
+      "title": "Placeholder Color"
+     },
+     "variants": {
+      "$ref": "#/components/schemas/VisualVariantsResponse"
+     }
+    },
+    "type": "object",
+    "required": [
+     "asset_id",
+     "subject_type",
+     "subject_id",
+     "title",
+     "alt",
+     "placeholder_color",
+     "variants"
+    ],
+    "title": "VisualAssetResponse"
+   },
+   "VisualCueResponse": {
+    "properties": {
+     "kind": {
+      "type": "string",
+      "const": "npc_first_appearance",
+      "title": "Kind"
+     },
+     "subject_id": {
+      "type": "string",
+      "title": "Subject Id"
+     },
+     "subject_name": {
+      "type": "string",
+      "title": "Subject Name"
+     },
+     "caption": {
+      "type": "string",
+      "title": "Caption"
+     },
+     "asset": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/VisualAssetResponse"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "fallback": {
+      "type": "boolean",
+      "title": "Fallback"
+     }
+    },
+    "type": "object",
+    "required": [
+     "kind",
+     "subject_id",
+     "subject_name",
+     "caption",
+     "fallback"
+    ],
+    "title": "VisualCueResponse"
+   },
+   "VisualResponse": {
+    "properties": {
+     "scene": {
+      "$ref": "#/components/schemas/SceneVisualResponse"
+     },
+     "cue": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/VisualCueResponse"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "type": "object",
+    "required": [
+     "scene"
+    ],
+    "title": "VisualResponse"
+   },
+   "VisualVariantResponse": {
+    "properties": {
+     "url": {
+      "type": "string",
+      "title": "Url"
+     },
+     "width": {
+      "type": "integer",
+      "title": "Width"
+     },
+     "height": {
+      "type": "integer",
+      "title": "Height"
+     },
+     "bytes": {
+      "type": "integer",
+      "title": "Bytes"
+     },
+     "sha256": {
+      "type": "string",
+      "title": "Sha256"
+     }
+    },
+    "type": "object",
+    "required": [
+     "url",
+     "width",
+     "height",
+     "bytes",
+     "sha256"
+    ],
+    "title": "VisualVariantResponse"
+   },
+   "VisualVariantsResponse": {
+    "properties": {
+     "thumbnail": {
+      "$ref": "#/components/schemas/VisualVariantResponse"
+     },
+     "display": {
+      "$ref": "#/components/schemas/VisualVariantResponse"
+     }
+    },
+    "type": "object",
+    "required": [
+     "thumbnail",
+     "display"
+    ],
+    "title": "VisualVariantsResponse"
+   }
+  }
+ }
+}
