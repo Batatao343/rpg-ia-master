@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "0fcb219c1231620fb752006a4059f99810807b48",
+  "commit_sha": "6bc8baca922be45106bacefbc31148fe9508cf13",
   "edge_counts": {
-    "calls": 38946,
-    "contains": 1288,
-    "defines": 18946,
+    "calls": 38899,
+    "contains": 1284,
+    "defines": 18906,
     "imports": 3132,
     "likely_test_for": 2277,
     "route_to": 69
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:b97af091b34ea8f124f74348fb8aa619663401a80859cd3f9b33d23fb72712e7",
+  "graph_hash": "sha256:7f55f7701ef59b16ce75dfaabd9fd2dbcda81af9131c4f9aba5445f5c4820091",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -272,8 +272,6 @@
     "scripts/finops_margin_sim.py",
     "scripts/flag_registry.py",
     "scripts/frontend_eval_report.py",
-    "scripts/gen_cards_v4.py",
-    "scripts/gen_classes_v2.py",
     "scripts/gen_error_codes_doc.py",
     "scripts/gen_event_catalog.py",
     "scripts/gen_retention_doc.py",
@@ -319,7 +317,6 @@
     "scripts/staging/common.py",
     "scripts/staging/e2e_session.py",
     "scripts/staging/incident_drill.py",
-    "scripts/staging/jev_primary_measure.py",
     "scripts/staging/jev_shadow_measure.py",
     "scripts/staging/job_survival.py",
     "scripts/staging/measure.py",
@@ -334,8 +331,6 @@
     "scripts/staging/security_wave_smoke.py",
     "scripts/staging/smoke_ab.py",
     "scripts/staging/spec222_art_purge.py",
-    "scripts/staging/spec236_daily_cap.py",
-    "scripts/staging/spec279_usage_survives_delete.py",
     "scripts/staging/sse_disconnect.py",
     "scripts/staging/stt_fallback_smoke.py",
     "scripts/staging/synthetic_data.py",
@@ -721,6 +716,7 @@
     "tests/test_cron_logging.py",
     "tests/test_cutover_audit.py",
     "tests/test_daily_quota_postgres.py",
+    "tests/test_data_source_generators.py",
     "tests/test_day_digest_inline.py",
     "tests/test_db_logging.py",
     "tests/test_death_flow.py",
@@ -1565,14 +1561,14 @@
   },
   "node_counts": {
     "artifact": 10,
-    "class": 1103,
+    "class": 1102,
     "endpoint": 69,
-    "file": 1510,
-    "function": 5898,
-    "method": 870,
-    "module": 1288,
-    "test": 11074
+    "file": 1506,
+    "function": 5859,
+    "method": 868,
+    "module": 1284,
+    "test": 11076
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:7b0d3e54ec584955c8f9ebe4f278d6bdd57ddf21110f01f57ce47062972987b6"
+  "source_tree_hash": "sha256:f4f17c57a774bfff502184de0fceae4069b83dcbce9cc6b1185e71f83699b135"
 }
