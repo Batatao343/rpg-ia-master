@@ -11,7 +11,8 @@ não existem (é o alvo da spec, não um teste quebrado):
 - R2/R17 ``off``: células ``off`` idênticas à base para toda criatura fora de
   ``docs/spec373/recalibradas.json`` (lista de ids que o R8 recalibrou; ``[]`` se nenhuma);
   dial mudado por spec posterior só sai do portão R8 se estiver em
-  ``docs/bestiario/recalibracoes_posteriores.json`` (protegido, validado aqui);
+  ``docs/bestiario/recalibracoes_posteriores.json`` (protegido, validado aqui); a seção ``fichas``
+  dele (ficha mudada por regra de produto, sem dial) só sai do snapshot ``off`` da montagem;
 - R13 chefes: os 13 chefes da esteira com ``L5|off`` e ``L5|on`` em 45-85 %; slots com ``ok``;
   exceção nominal D-373 (dono, 04/11) por célula em ``EXCECOES_CHEFE_D373``, sem piorar > 3 pp;
 - R18 Posturas: ``docs/spec373/posturas-ab-0-19.json`` (``arena_spec355.py base --seeds 0:20``, depois
@@ -370,13 +371,23 @@ def test_posteriores_known_good_e_bad():
     ]
 
 
+def fichas_posteriores() -> dict[str, dict]:
+    """Ficha ``off`` mudada por regra de produto de spec posterior, **sem** dial (só o R2 desconta)."""
+    return _load(POSTERIORES).get("fichas", {})
+
+
 def test_registro_de_posteriores_valido():
-    reg = posteriores()
-    specs = {str(r.get("spec", "")) for r in reg.values()}
+    reg, fichas = posteriores(), fichas_posteriores()
+    specs = {str(r.get("spec", "")) for r in [*reg.values(), *fichas.values()]}
     textos = {s: _textos_da_spec(s) for s in specs}
     recal = set(_load(DOCS / "recalibradas.json"))
     base_ids = set(_load(DIALS_BASE)["dials"])
     assert avaliar_posteriores(reg, recal, base_ids, textos) == []
+    assert avaliar_posteriores(fichas, recal, base_ids, textos) == []
+    # ``fichas`` não desconta o R8: id com dial mudado tem de estar em ``recalibracoes``
+    pos = yaml.safe_load(AJUSTES.read_text("utf-8"))["ajustes"]
+    mudados = ids_com_dial_mudado(_load(DIALS_BASE)["dials"], pos)
+    assert sorted(set(fichas) & (mudados | set(reg))) == []
 
 
 def test_portao_confirmacao_cobre_as_recalibradas():

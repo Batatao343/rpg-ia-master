@@ -39,7 +39,9 @@ def test_snapshot_off_existe_e_bate(monkeypatch):
     recal = set(json.loads((BASE.parent / "recalibradas.json").read_text("utf-8")))  # R8
     # Recalibrações de specs posteriores (registro protegido, validado em test_spec373_artefatos).
     reg = BASE.parents[1] / "bestiario" / "recalibracoes_posteriores.json"
-    recal |= set(json.loads(reg.read_text("utf-8"))["recalibracoes"])
+    registro = json.loads(reg.read_text("utf-8"))
+    # ``fichas``: ficha mudada por regra de produto de spec posterior, sem dial (só este portão).
+    recal |= set(registro["recalibracoes"]) | set(registro.get("fichas", {}))
     for bid, entry in bestiary.items():
         if bid in recal:
             continue

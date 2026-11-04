@@ -249,3 +249,22 @@ e que nenhum commit de produto mexe nesses caminhos.
   A 395 entra aqui quando tiver relatório.
 - **Testes:** `test_spec373_*`, `test_bestiario_calibragem`, `test_ruff_protected_exempt`,
   `test_handoff_names` (`-n 2`): 59 passed.
+
+## 11. Adendo (04/11): entradas da SPEC-395 no registro de posteriores
+
+- **Acrescentadas** a `docs/bestiario/recalibracoes_posteriores.json` (`spec: SPEC-395`):
+  `mon_sorvedouro_do_codigo`, `mon_pavio_da_lista`, `mon_porca_da_queda`, `mon_dedos_de_colheita`.
+  Motivo: `resistance absoluta` deixou de fugir (fix da tabela de arquétipos) e a fuga parou de
+  contar como vitória do herói; as quatro caíram para 2-12 % e voltaram à faixa só por dials.
+- **Prova:** `docs/spec395/RELATORIO.md` (tabela F, arena final) e `specs/SPEC-395-abissal-nao-foge.md`
+  (lista nominal das ids). Nenhuma está em `recalibradas.json`; todas estão na base de dials.
+- **Conferência:** `git diff main -- data/bestiario/mecanica/_ajustes.yaml` muda dial só dessas
+  quatro; nenhuma outra id da 395 precisa entrar em `recalibracoes`.
+- **Achado:** o snapshot R2 (`test_snapshot_off_existe_e_bate`) reprovava em `mon_odre_de_oleo`:
+  a correção R1 muda o `action_key` da prioridade `absoluta` das 8 de A (R3 da 395), e 4 delas não
+  têm dial mudado (`portao_que_morde`, `odre_de_oleo`, `fervente_de_ferrugem`, `lencol_de_chamine`).
+- **Desenho:** seção nova `fichas` no mesmo registro (`{id: {spec, motivo}}`), descontada **só** no
+  snapshot R2; o R8 não a desconta. Guarda: mesma `avaliar_posteriores` (ids citadas em
+  `specs/SPEC-395-*.md` §9) e nenhuma id de `fichas` pode ter dial mudado nem estar em
+  `recalibracoes`. Rejeitei pôr as 4 em `recalibracoes`: afrouxaria o R8 para um dial futuro delas.
+- Autor de eval não executou o produto; não toquei em `data/`, `services/` nem `scripts/`.

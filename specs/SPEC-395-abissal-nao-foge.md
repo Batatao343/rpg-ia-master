@@ -130,3 +130,5 @@ Portao 61/63,5: sai das excecoes da 394. Confirmacao 40-119: tudo `ok` exceto **
 nao recalibrado por R7; excecao nominal / candidato a ajuste futuro). Avaliador e teste da 394 sem diff.
 Ids recalibrados (para `recalibracoes_posteriores.json`): mon_sorvedouro_do_codigo, mon_pavio_da_lista,
 mon_porca_da_queda, mon_dedos_de_colheita.
+Ids de A com ficha `off` mudada sem dial (R3, secao `fichas` do registro, so o snapshot R2 da 373
+desconta): mon_portao_que_morde, mon_odre_de_oleo, mon_fervente_de_ferrugem, mon_lencol_de_chamine.

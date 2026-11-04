@@ -1,5 +1,5 @@
 {
-  "_doc": "Recalibracoes de dial (data/bestiario/mecanica/_ajustes.yaml) feitas DEPOIS da SPEC-373, por spec propria. Os portoes da 373 (tests/test_spec373_artefatos.py, tests/test_spec373_montagem.py) descontam estas ids e seguem exigindo o resto. Protegido (evals/protected-paths.txt): so o autor de eval da spec citada acrescenta. Guarda: a id precisa constar em docs/specNNN/RELATORIO.md ou no arquivo da spec citada, e nao pode estar em docs/spec373/recalibradas.json.",
+  "_doc": "Recalibracoes de dial (data/bestiario/mecanica/_ajustes.yaml) feitas DEPOIS da SPEC-373, por spec propria. Os portoes da 373 (tests/test_spec373_artefatos.py, tests/test_spec373_montagem.py) descontam estas ids e seguem exigindo o resto. Protegido (evals/protected-paths.txt): so o autor de eval da spec citada acrescenta. Guarda: a id precisa constar em docs/specNNN/RELATORIO.md ou no arquivo da spec citada, e nao pode estar em docs/spec373/recalibradas.json. Secao fichas: ficha off mudada por regra de produto de spec posterior SEM dial (ex.: action_key); so o snapshot R2 (test_spec373_montagem) desconta; o R8 nao, e a id nao pode ter dial mudado.",
   "recalibracoes": {
     "mon_anzolado_da_casa": {
       "spec": "SPEC-394",
@@ -9,9 +9,43 @@
       "spec": "SPEC-394",
       "motivo": "derivada da 387 reprovada (F) na base pos-373; dials c1 d0 f0 s0 -> c2 d2 f0 s4, excecao registrada no relatorio"
     },
+    "mon_dedos_de_colheita": {
+      "spec": "SPEC-395",
+      "motivo": "resistance absoluta deixou de fugir; recalibrada pelos dials (c2 d2 f1 s0 -> c0 d2 f-2 s0)"
+    },
     "mon_escuta_do_sinal": {
       "spec": "SPEC-394",
       "motivo": "derivada da 387 reprovada (F) na base pos-373; dials c1 d1 f0 s2 -> c1 d1 f1 s3, excecao registrada no relatorio"
+    },
+    "mon_pavio_da_lista": {
+      "spec": "SPEC-395",
+      "motivo": "resistance absoluta deixou de fugir; recalibrada pelos dials (c1 d1 f1 s0 -> c-2 d-2 f0 s0)"
+    },
+    "mon_porca_da_queda": {
+      "spec": "SPEC-395",
+      "motivo": "resistance absoluta deixou de fugir; recalibrada pelos dials (sem dial -> c-2 d-2 f-1 s0)"
+    },
+    "mon_sorvedouro_do_codigo": {
+      "spec": "SPEC-395",
+      "motivo": "resistance absoluta deixou de fugir; recalibrada pelos dials (c0 d4 f4 s2 -> c-5 d4 f4 s2)"
+    }
+  },
+  "fichas": {
+    "mon_fervente_de_ferrugem": {
+      "spec": "SPEC-395",
+      "motivo": "action_key da prioridade absoluta deixou de ser flee pela correcao R1 (R3); sem dial mudado"
+    },
+    "mon_lencol_de_chamine": {
+      "spec": "SPEC-395",
+      "motivo": "action_key da prioridade absoluta deixou de ser flee pela correcao R1 (R3); sem dial mudado"
+    },
+    "mon_odre_de_oleo": {
+      "spec": "SPEC-395",
+      "motivo": "action_key da prioridade absoluta deixou de ser flee pela correcao R1 (R3); sem dial mudado"
+    },
+    "mon_portao_que_morde": {
+      "spec": "SPEC-395",
+      "motivo": "action_key da prioridade absoluta deixou de ser flee pela correcao R1 (R3); sem dial mudado"
     }
   }
 }
