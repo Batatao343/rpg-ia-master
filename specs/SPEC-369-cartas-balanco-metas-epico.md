@@ -465,7 +465,11 @@ Os limiares de `tests/test_spec369_metas.py` que mudam por estas respostas (isen
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
 
-**`<sha-A>` = `6ed6815d`** (último commit de autor da régua: follow-up P2-3 da Astra, rodada 4; a Fase B3+ prova o R1 contra este sha).
+**`<sha-A>` = `8ef607c0`** (último commit de autor da régua; a prova do R1 da Fase B usa este sha). Emenda em `8ef607c0`, só em teste, sem mexer no bot do R7 nem em número:
+- **Motivo:** a Fase B (c2d05130) pôs `bas_dev_voto`, `bas_arc_vazao` e `bas_cor_guarda` a Fôlego 0, e dois testes da régua quebraram. `test_bot_faixa_troca_ataque_por_defesa` e `test_braco_cego_nao_le_pressagio` fixavam uma mão com `bas_dev_voto`. Com custo 0, o voto (taunt, que o R7 conta como ataque de dano 0) entra na declaração, vira o "ataque mais fraco" e a troca deixa de caber.
+- **Correção:** a mão do teste agora é só de golpes e guarda básicos, e a declaração esperada do bot cego é calculada com o custo real do catálogo (`fx.custo_folego`). O teste também afirma a pré-condição da situação provada: a guarda não custa mais que o golpe. A prova continua a mesma: troca do golpe mais fraco pela defesa, e o leitor diferente do cego diante da mesma ameaça.
+
+Antes: **`<sha-A>` = `6ed6815d`** (follow-up P2-3 da Astra, rodada 4).
 
 Follow-up P2-3 (`6ed6815d`):
 - **O que o `r20` passa a exigir** (`tests/test_spec369_metas.py`):
