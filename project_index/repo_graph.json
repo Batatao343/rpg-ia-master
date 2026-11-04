@@ -1,5 +1,5 @@
 {
-  "commit_sha": "42dbd81b6dfa962c0ab6b140d67edf440b3380ac",
+  "commit_sha": "0a73a5344a9ef72521f17f6614e389d1c6e8c013",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -679560,6 +679560,17 @@
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec371_fonte.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_spec371_fonte.test_bestiary_e_fauna_json_intocados",
+      "target": "symbol:tests.test_spec371_fonte.test_bestiary_e_fauna_json_intocados._git",
+      "type": "defines"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -846675,6 +846686,13 @@
       "qualified_name": "tests.test_spec371_fonte.test_bestiary_e_fauna_json_intocados"
     },
     {
+      "id": "symbol:tests.test_spec371_fonte.test_bestiary_e_fauna_json_intocados._git",
+      "kind": "test",
+      "line": 87,
+      "path": "tests/test_spec371_fonte.py",
+      "qualified_name": "tests.test_spec371_fonte.test_bestiary_e_fauna_json_intocados._git"
+    },
+    {
       "id": "symbol:tests.test_spec371_fonte.test_build_deterministico",
       "kind": "test",
       "line": 33,
@@ -853165,5 +853183,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:c1c6c5d5bced70c4af5cef1a05ee76d4b8160c3afb5ff43b40ac44d71b346140"
+  "source_tree_hash": "sha256:db7b6c64f3fdb90eaff3632a6acac3f06b86c5d54fc5c418cb589e6c763ee816"
 }
