@@ -111,6 +111,8 @@ def test_guard_own_body_part_subject_and_far_negation_are_checked():
     assert death_prose_guard.check("Sua perna, ferida gravemente, cede.", LEVE_PERNA)
     assert death_prose_guard.check("Sua perna, ferida criticamente, cede.", LEVE_PERNA)
     assert death_prose_guard.check("Sua perna, ferida levemente, cede.", LEVE_PERNA) is None
+    assert death_prose_guard.check("A perna ferida gravemente cede.", LEVE_PERNA)
+    assert death_prose_guard.check("O goblin ferido na cabeça ri de você.", LEVE_PERNA) is None
 
 
 @pytest.mark.parametrize(

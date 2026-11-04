@@ -16,7 +16,7 @@ _OTHER_OWNER = re.compile(
     r"\b(?:braco|perna|torso|cabeca)s?(?: (?:esquerd|direit)[oa])? d[oae]s? (?!corpo\b)\w"
 )
 _THIRD_PARTY = re.compile(
-    r"^(?:o|a|os|as|um|uma) (?!(?:braco|perna|torso|cabeca)s?\b)\w+(?: \w+)?, ferid"
+    r"^(?:o|a|os|as|um|uma) (?!(?:braco|perna|torso|cabeca)s?\b)\w+(?: \w+)?,? ferid"
 )
 _NEGATION = re.compile(
     r"\b(?:sem|nenhum|nenhuma|nao)\b(?: \w+){0,2}? (?:ferimentos?|ferid\w*|leves?|graves?|criticos?)\b"
