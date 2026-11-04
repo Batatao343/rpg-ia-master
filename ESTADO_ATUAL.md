@@ -55,7 +55,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - Notas 27/10–02/11 → `CHANGELOG.md`.
-- 04/11: 375/376/378/388 `done`, 377/379 pousadas. **`api.py` travado pela SPEC-381 em voo (D8)**: não editar até ela pousar. **Index local** (375): `reindex.sh` saiu; `python -m project_index build`; nunca `--theirs` em `project_index/`.
+- 04/11: 375/376/378/381/388 `done`, 377/379 pousadas. **381**: `api.py` 7.970 → 1.082 l. (`api_core`/`api_models`/`api_presenters`/`routes/*`); trava do `api.py` liberada; follow-ups: podar ~106 imports mortos (R17b), §6 no próximo deploy. Próximas: 383 (`App.tsx`), 382 (espera 372), 391 `draft` (reforço em cartas, D-391 com o dono). **Index local** (375): `python -m project_index build`.
 
 
 ## Como rodar
