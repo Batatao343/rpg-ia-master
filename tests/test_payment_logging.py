@@ -38,7 +38,7 @@ def _lines(capsys):
 
 
 def _patch_stripe(monkeypatch, *, verify, accept=None):
-    import api
+    import routes.billing
     from services import stripe_checkout
 
     monkeypatch.setattr(
@@ -48,7 +48,7 @@ def _patch_stripe(monkeypatch, *, verify, accept=None):
     )
     monkeypatch.setattr(stripe_checkout, "verify_event", verify)
     monkeypatch.setattr(
-        api,
+        routes.billing,
         "_stripe_payments",
         lambda: SimpleNamespace(accept_event=accept or (lambda e, body_sha256: {})),
     )
@@ -132,7 +132,7 @@ def test_replay_conflict_and_ignored_type(client, capsys, monkeypatch):
 
 
 def test_google_cancelled_logged_with_outcome(client, capsys, monkeypatch):
-    import api
+    import routes.billing
     from infrastructure import request_context
 
     def verify(*_a, **_k):
@@ -142,7 +142,7 @@ def test_google_cancelled_logged_with_outcome(client, capsys, monkeypatch):
 
     principal = Principal(uuid.uuid4(), "iss", "sub")
     monkeypatch.setattr(request_context, "current_principal", lambda **k: principal)
-    monkeypatch.setattr(api, "_google_play", lambda: SimpleNamespace(verify=verify))
+    monkeypatch.setattr(routes.billing, "_google_play", lambda: SimpleNamespace(verify=verify))
     r = client.post(
         "/account/purchases/google/verify",
         json={"product_id": "shards_100", "purchase_token": TOKEN, "order_id": "GPA.1234-5678"},
@@ -157,7 +157,7 @@ def test_google_cancelled_logged_with_outcome(client, capsys, monkeypatch):
 
 
 def test_no_purchase_token_in_logs(client, capsys, monkeypatch):
-    import api
+    import routes.billing
     from infrastructure import request_context
 
     def verify(*_a, **_k):
@@ -165,7 +165,7 @@ def test_no_purchase_token_in_logs(client, capsys, monkeypatch):
 
     principal = Principal(uuid.uuid4(), "iss", "sub")
     monkeypatch.setattr(request_context, "current_principal", lambda **k: principal)
-    monkeypatch.setattr(api, "_google_play", lambda: SimpleNamespace(verify=verify))
+    monkeypatch.setattr(routes.billing, "_google_play", lambda: SimpleNamespace(verify=verify))
     client.post(
         "/account/purchases/google/verify",
         json={"product_id": "shards_100", "purchase_token": TOKEN},

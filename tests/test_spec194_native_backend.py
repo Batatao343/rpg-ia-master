@@ -6,6 +6,7 @@ from uuid import uuid4
 import pytest
 
 import api
+import routes.billing
 import api_core
 from infrastructure.contracts import Principal
 from infrastructure.google_play_payments import GooglePlayPurchases
@@ -144,15 +145,15 @@ def test_api_google_play_refuses_fake_flag_on_vercel_and_missing_key(monkeypatch
     monkeypatch.setenv("RPG_GOOGLE_PLAY_FAKE", "1")
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "hosted-supabase")
     with pytest.raises(HTTPException) as info:
-        api._google_play()
+        routes.billing._google_play()
     assert info.value.status_code == 503 and info.value.detail == "google_play_unconfigured"
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "local")
     monkeypatch.delenv("RPG_PLAY_ACCOUNT_KEY")
     with pytest.raises(HTTPException) as info:
-        api._google_play()
+        routes.billing._google_play()
     assert info.value.status_code == 503 and info.value.detail == "google_play_unconfigured"
     monkeypatch.setenv("RPG_PLAY_ACCOUNT_KEY", "k" * 32)
-    assert api._google_play() is not None  # local + flag + key: fake client allowed
+    assert routes.billing._google_play() is not None  # local + flag + key: fake client allowed
 
 
 def test_verify_maps_wallet_conflict_to_409(monkeypatch):
@@ -164,7 +165,7 @@ def test_verify_maps_wallet_conflict_to_409(monkeypatch):
         def verify(self, *a):
             raise WalletConflict("x")
 
-    monkeypatch.setattr(api, "_google_play", lambda: Boom())
+    monkeypatch.setattr(routes.billing, "_google_play", lambda: Boom())
     monkeypatch.setattr(
         "infrastructure.request_context.current_principal", lambda: Principal(uuid4(), "t", "o")
     )

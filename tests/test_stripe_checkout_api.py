@@ -8,6 +8,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import routes.billing
 import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from services.auth_sessions import CsrfSigner
@@ -49,7 +50,7 @@ def checkout_http(monkeypatch):
             calls.append(item)
             return {"received": True}
 
-    monkeypatch.setattr(api, "_stripe_payments", lambda: Repo(), raising=False)
+    monkeypatch.setattr(routes.billing, "_stripe_payments", lambda: Repo(), raising=False)
     monkeypatch.setattr(
         "services.stripe_checkout.StripeSettings.from_env",
         lambda: SimpleNamespace(webhook_secret=SECRET),
