@@ -2181,97 +2181,7 @@ def storyteller_node(state: GameState):
         if _fauna_text:
             t.lei_block = "\n".join(p for p in (t.lei_block, _fauna_text) if p)
 
-    # SPEC-317 R9: o prompt é montado em pedaços (texto, estático?) — ver prompt_layout.
-    _head = f"""
-    <PERSONA>
-    Você é o Narrador (Mestre) de um RPG.
-    Local Atual: {t.loc}.
-    Momento: {clock_label(t.world, _cal_of(t.state))}.{t.season_line}
-    NPCs na cena: {t.existing_npcs}.
-    Objetivo Atual: {t.active_step}
-    </PERSONA>
-
-    <EVENTOS_DESTE_TURNO>
-    {t.eventos_turno}
-    </EVENTOS_DESTE_TURNO>
-    {t.ambiente_block}
-    {t.mundo_percebido_block}
-    {t.ouviu_block}
-    {t.hero_state_block}
-    {t.companion_block}
-    {t.fame_block}
-    {t.lei_block}
-    {t.faction_member_block}
-
-    <FACÇÕES_CONHECIDAS>
-    {t.faccoes_conhecidas}
-    Se a ação do jogador NESTE turno claramente ajudar ou prejudicar uma destas fações,
-    registre em 'faction_impacts' (faction_id EXATO + direction 'ajudou'/'prejudicou' + magnitude 'menor'/'maior').
-    Caso contrário, deixe 'faction_impacts' vazio. NÃO invente ids fora da lista.
-    Só se o jogador pediu EXPLICITAMENTE para entrar numa destas fações, sair dela ou pedir
-    uma missão a ela, registre em 'membership_action' (join|leave|ask_mission + faction_id
-    EXATO); o motor decide se é possível. Não narre a entrada, a saída ou a missão como
-    concluídas: o resultado vem do motor.
-    </FACÇÕES_CONHECIDAS>
-
-    <ENTIDADES_CANONICAS>
-    {t.entidades_canonicas}
-    Se — e SÓ se — a ação deste turno causou mudança PERSISTENTE no mundo (morte de
-    personagem NOMEADO, segredo revelado, mudança de controle de local), registre em
-    'proposed_events' usando os ids EXATOS acima. Na dúvida, deixe vazio. NUNCA invente
-    ids fora desta lista.
-    </ENTIDADES_CANONICAS>
-
-    <QUESTS_ATIVAS>
-    {t.quests_ativas}
-    Se um personagem PRESENTE NA CENA ofereceu uma missão concreta ao jogador NESTE
-    turno, registre em 'proposed_quests' (origem = quem pediu; location_id só se o
-    destino é claro). Se a ação deste turno CONCLUIU uma das quests listadas acima
-    COM "prova: ok", proponha em 'proposed_events' um evento type='quest_completed'
-    com target_id=quest_id e payload={{"quest_id": quest_id}} usando o id EXATO.
-    Quest com "prova: pendente" NÃO pode ser concluída (o motor rejeita): falta ir
-    ao local e investigar, ou voltar a quem pediu. Na dúvida, deixe vazio. NUNCA
-    invente ids.
-    </QUESTS_ATIVAS>
-    {t.gancho_novo}
-
-    {t.capacidades_block}
-
-    {t.cast_block_text}{t.pack.world_state_block}
-    (Se o ESTADO ATUAL DO MUNDO acima contradisser o lore/fatos passados abaixo, o ESTADO ATUAL VENCE.)
-
-    <MEMORIA_RECENTE>
-    Resumo dos fatos anteriores: {t.memoria_recente}
-    </MEMORIA_RECENTE>
-
-    <LORE_PUBLICO_CANONICO>
-    {t.lore_context}
-    </LORE_PUBLICO_CANONICO>
-
-    """
-    _rules_a = f"""<INSTRUÇÕES>
-    - Responda em 2 a 3 parágrafos.
-    - JULGUE a ação: se for implausível para a classe/ficha do personagem ({t.state.get("player", {}).get("class_name", "")})
-      ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
-    - Não afirme como cânone nome, item, facção, local ou evento ausente do ESTADO,
-      da MEMÓRIA ou do LORE PÚBLICO acima. Quando faltar base, descreva incerteza
-      ou admita que o personagem não sabe; não preencha a lacuna com fato novo.
-    - Termine com opções ou pergunta para ação.
-    - Se um personagem ENTRAR na cena (novo ou conhecido que reapareceu), adicione o nome em 'introduced_npcs'.
-    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'."""
-    _rules_b = f"""
-    - {PLAYER_INPUT_RULE}
-    """
-    t.sys = SystemMessage(
-        content=compose_prompt(
-            [
-                (_head, False),
-                (_rules_a, True),
-                (f"{t.npc_fallback_clause}{t.varie_clause}{t.opcoes_clause}", False),
-                (_rules_b, True),
-            ]
-        )
-    )
+    _story_system_message(t)
 
     # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat
     # que só seria aplicado no caminho feliz).
@@ -2504,6 +2414,101 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_system_message(t: _StoryTurn) -> None:
+    """Monta o SystemMessage (SPEC-317 compose_prompt)."""
+    # SPEC-317 R9: o prompt é montado em pedaços (texto, estático?) — ver prompt_layout.
+    _head = f"""
+    <PERSONA>
+    Você é o Narrador (Mestre) de um RPG.
+    Local Atual: {t.loc}.
+    Momento: {clock_label(t.world, _cal_of(t.state))}.{t.season_line}
+    NPCs na cena: {t.existing_npcs}.
+    Objetivo Atual: {t.active_step}
+    </PERSONA>
+
+    <EVENTOS_DESTE_TURNO>
+    {t.eventos_turno}
+    </EVENTOS_DESTE_TURNO>
+    {t.ambiente_block}
+    {t.mundo_percebido_block}
+    {t.ouviu_block}
+    {t.hero_state_block}
+    {t.companion_block}
+    {t.fame_block}
+    {t.lei_block}
+    {t.faction_member_block}
+
+    <FACÇÕES_CONHECIDAS>
+    {t.faccoes_conhecidas}
+    Se a ação do jogador NESTE turno claramente ajudar ou prejudicar uma destas fações,
+    registre em 'faction_impacts' (faction_id EXATO + direction 'ajudou'/'prejudicou' + magnitude 'menor'/'maior').
+    Caso contrário, deixe 'faction_impacts' vazio. NÃO invente ids fora da lista.
+    Só se o jogador pediu EXPLICITAMENTE para entrar numa destas fações, sair dela ou pedir
+    uma missão a ela, registre em 'membership_action' (join|leave|ask_mission + faction_id
+    EXATO); o motor decide se é possível. Não narre a entrada, a saída ou a missão como
+    concluídas: o resultado vem do motor.
+    </FACÇÕES_CONHECIDAS>
+
+    <ENTIDADES_CANONICAS>
+    {t.entidades_canonicas}
+    Se — e SÓ se — a ação deste turno causou mudança PERSISTENTE no mundo (morte de
+    personagem NOMEADO, segredo revelado, mudança de controle de local), registre em
+    'proposed_events' usando os ids EXATOS acima. Na dúvida, deixe vazio. NUNCA invente
+    ids fora desta lista.
+    </ENTIDADES_CANONICAS>
+
+    <QUESTS_ATIVAS>
+    {t.quests_ativas}
+    Se um personagem PRESENTE NA CENA ofereceu uma missão concreta ao jogador NESTE
+    turno, registre em 'proposed_quests' (origem = quem pediu; location_id só se o
+    destino é claro). Se a ação deste turno CONCLUIU uma das quests listadas acima
+    COM "prova: ok", proponha em 'proposed_events' um evento type='quest_completed'
+    com target_id=quest_id e payload={{"quest_id": quest_id}} usando o id EXATO.
+    Quest com "prova: pendente" NÃO pode ser concluída (o motor rejeita): falta ir
+    ao local e investigar, ou voltar a quem pediu. Na dúvida, deixe vazio. NUNCA
+    invente ids.
+    </QUESTS_ATIVAS>
+    {t.gancho_novo}
+
+    {t.capacidades_block}
+
+    {t.cast_block_text}{t.pack.world_state_block}
+    (Se o ESTADO ATUAL DO MUNDO acima contradisser o lore/fatos passados abaixo, o ESTADO ATUAL VENCE.)
+
+    <MEMORIA_RECENTE>
+    Resumo dos fatos anteriores: {t.memoria_recente}
+    </MEMORIA_RECENTE>
+
+    <LORE_PUBLICO_CANONICO>
+    {t.lore_context}
+    </LORE_PUBLICO_CANONICO>
+
+    """
+    _rules_a = f"""<INSTRUÇÕES>
+    - Responda em 2 a 3 parágrafos.
+    - JULGUE a ação: se for implausível para a classe/ficha do personagem ({t.state.get("player", {}).get("class_name", "")})
+      ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
+    - Não afirme como cânone nome, item, facção, local ou evento ausente do ESTADO,
+      da MEMÓRIA ou do LORE PÚBLICO acima. Quando faltar base, descreva incerteza
+      ou admita que o personagem não sabe; não preencha a lacuna com fato novo.
+    - Termine com opções ou pergunta para ação.
+    - Se um personagem ENTRAR na cena (novo ou conhecido que reapareceu), adicione o nome em 'introduced_npcs'.
+    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'."""
+    _rules_b = f"""
+    - {PLAYER_INPUT_RULE}
+    """
+    t.sys = SystemMessage(
+        content=compose_prompt(
+            [
+                (_head, False),
+                (_rules_a, True),
+                (f"{t.npc_fallback_clause}{t.varie_clause}{t.opcoes_clause}", False),
+                (_rules_b, True),
+            ]
+        )
+    )
 
 
 def _story_beat_and_npcs(t: _StoryTurn) -> None:
