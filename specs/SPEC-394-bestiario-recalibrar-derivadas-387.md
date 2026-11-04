@@ -1,6 +1,6 @@
 # SPEC-394 — Bestiário: recalibrar as 7 criaturas que derivaram depois da SPEC-387
 
-> **Status:** `draft`
+> **Status:** `approved` — dono, 03–04/11: "transforme em spec e execute agora" (follow-ups do bestiário); D1–D5 nos defaults. Após SPEC-373 pousar (`b50e8fb3`).
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** SPEC-373 pousada (`approved`, em voo no worktree `rpg-spec-373`: o R9 dela muda o `on` destas criaturas e ela congela `arena.py`), SPEC-349 `done` (esteira, `calibrar.py`, `_ajustes.yaml`), SPEC-387 `done` (mudanças de motor que causaram a deriva)
