@@ -15399,7 +15399,7 @@
       {
         "name": "Anzol na Mão",
         "type": "melee",
-        "damage": "1d8"
+        "damage": "2d6"
       }
     ],
     "abilities": [
@@ -23317,7 +23317,7 @@
     "attributes": {
       "str": 10,
       "dex": 12,
-      "con": 14,
+      "con": 16,
       "int": 12,
       "wis": 10,
       "cha": 10
@@ -23326,7 +23326,7 @@
       {
         "name": "Gancho de Mola",
         "type": "ranged",
-        "damage": "1d6"
+        "damage": "1d8"
       }
     ],
     "abilities": [
@@ -23349,15 +23349,15 @@
     "virtudes": {
       "forca": 1,
       "agilidade": 2,
-      "corpo": 3,
+      "corpo": 4,
       "mente": 2,
       "carisma": 1
     },
-    "max_vitalidade": 12,
-    "vitalidade": 12,
+    "max_vitalidade": 14,
+    "vitalidade": 14,
     "ferimento_espacos": {
       "leve": 4,
-      "grave": 2,
+      "grave": 3,
       "critico": 2
     },
     "ferimentos": {
@@ -35167,7 +35167,7 @@
     "categoria": "lacaio",
     "arquetipo": "covarde_oportunista",
     "attributes": {
-      "str": 12,
+      "str": 14,
       "dex": 12,
       "con": 14,
       "int": 12,
@@ -35199,7 +35199,7 @@
       "cri_escuta_do_sinal_chamado_sob_o_gelo"
     ],
     "virtudes": {
-      "forca": 2,
+      "forca": 3,
       "agilidade": 2,
       "corpo": 3,
       "mente": 2,

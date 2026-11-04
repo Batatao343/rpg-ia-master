@@ -741,7 +741,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 5,
+        "dano_base": 6,
         "dano_tipo": "perfurante"
       },
       "descricao": "Um anzol de ferro velho rasga a manga e a carne embaixo.",
@@ -761,14 +761,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "leve",
-        "dano_base": 4,
+        "dano_base": 6,
         "dano_tipo": "perfurante"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "leve",
-          "dano_base": 4,
+          "dano_base": 6,
           "dano_tipo": "perfurante"
         },
         {
