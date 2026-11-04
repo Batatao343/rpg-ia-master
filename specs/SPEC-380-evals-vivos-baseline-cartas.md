@@ -1,7 +1,7 @@
 # SPEC-380 — Evals vivos: baseline no CI, suíte `cards_combat` e playtest real semanal
 
 > **Status:** `approved` (04/11, dono: "ok para tudo" — D1..D6 = recomendações; D3: a SPEC-377 pousou, então os 20 casos de Fôlego entram de uma vez; D2: environment `llm-playtest` e chaves são ação do dono)
-> **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
+> **Criada:** 2026-11-03 · **Atualizada:** 2026-11-04 (execução: Etapas 0–5 na branch `spec-380`; commit B da baseline pendente, ver § Execução)
 > **Origem:** [auditoria 03/11](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md) §4.6 "Evals" (a)–(d) e §5 letra J · regras da onda §6.2 (W1–W8, em especial **W5**)
 > **Depende de:** SPEC-370 e SPEC-374 pousadas (as duas editam `evals/protected-paths.txt`, §6.3 da auditoria) · SPEC-375 pousada (edita `.github/workflows/eval-gates.yml`, ver SPEC-375 §R5/R7) · **só para R2:** SPEC-368 pousada (muda o comportamento das Cartas); SPEC-371 pousada ou abandonada para os casos de Presságio (a branch `spec-371` mexe em `services/enemy_intent.py` e em Cartas `reacao_inicial`); SPEC-377 decidida para os casos de custo (ver D3)
 > **Desbloqueia:** gate de regressão **no CI** com baseline versionada (o W2 local da onda continua A/B na mesma máquina: a baseline do CI é `linux-py3.13.N` e sai 2 contra qualquer run Windows, ver §7); cobertura de eval do épico de Cartas
@@ -460,3 +460,47 @@ foram aplicados; não rejeitei nenhum.
 | P2-8 input do `setup-uv` | Aceito: R1.4 com a alternativa `UV_PYTHON`; Etapa 0.2. |
 
 W1: a Etapa 0 usa a versão revisada da auditoria §6.2, com as três fontes e branches vivas de 7 dias.
+
+## Execução (04/11, executor autor de eval)
+
+**Etapa 0.** W1: branches vivas com interseção = `spec-373` (acrescenta 3 linhas no **fim** de
+`evals/protected-paths.txt`; muda `enemy_intent.forecast_round`, `conflict_turn` (`buff_iniciativa`),
+`conflict_orchestrator` (ação extra do inimigo) e `data/cards/**`). Mitigação: a linha
+`evals/baselines` entrou junto das outras `evals/` (sem conflito textual com o fim do arquivo);
+nenhum caso usa `forecast_round`, ação extra, `buff_iniciativa` nem Carta tocada pela 373/369
+(o Presságio usa só `public_intent`). `spec-369` não toca nenhum arquivo de §3. [H] confirmados:
+`setup-uv@1c37ad07…` (v10.3.0) tem o input `python-version` → `"3.13.18"` (= `platform` do run
+41829010751 da `main`, `linux-py3.13.18`); artefato JSON do CI = **673.860 bytes** (> 500 KB, R1.7
+vale); flags no ambiente das asserções de origem = `RPG_ENEMY_INTENT=off`, `RPG_CARD_DECK=off`,
+`RPG_ENEMY_DECKS=off`, `RPG_RUNTIME_PROFILE=legacy` (defaults de `config/flags.yaml`; o conftest
+não as define e `test_enemy_intent.py` apaga a primeira). 368/371/377 `done`.
+
+**Desvios (atualizam R2.1/R2.4/R2.6/§3.2/R1.5):**
+- Adapter em módulo próprio `evals/core/cards_combat.py` (o `adapters.py` tem 1.445 linhas e não
+  cresce); `adapters.py` só registra (`default_registry`, +3 linhas). Continua em `evals/core`
+  (ruler hash) e protegido.
+- Operações: além de `resolve_card`/`resolve_turn`/`round`/`intent`, **`damage`**
+  (`conflict_damage.resolve_damage_and_wounds`) — os asserts numéricos de `test_conflito_dano.py`
+  são do pipeline de dano, não de `resolve_turn` — e **`folego`** (`card_effects.custo_folego`, D3).
+  `resolve_turn` usa o rng **roteirizado** de `tests/test_conflito_turno.py::_Rng`
+  (`input.rng.sequence`) ou `{seed}`; o `random` global é semeado por `input.global_seed`
+  (default 7) e restaurado. Acerto/erro/terminal vêm de `test_conflito_turno.py`; não existe assert
+  exato de **crítico** em `resolve_turn`, então não há caso de crítico (sem inventar `expected`).
+- Cada caso declara `input.projection` (caminhos do `actual`); caminho inexistente ⇒ `AdapterError`.
+- `test_eval_baseline.py` e o `compare` rodam **depois** do `run` (com `if: always()`), não no passo
+  `pytest` da linha 70: senão, entre os commits A e B, o job pararia antes do `run` e não haveria
+  artefato para gerar a baseline.
+- `RPG_WEEKLY_LLM_PLAYTEST` registrado em `config/flags.yaml` (o gate de flags varre workflows).
+
+**`cards_combat`: 29 casos**, todos verdes contra o produto atual (nenhum retirado): 8 `damage`
++ 3 `resolve_turn` de dano (acerto/erro/terminal) = 11 `dano`; 4 `condicao` (DoT, Ordem R11 inline,
+Sangria em área inline, Antitoxina do golden 330 com os logs citados); 1 Entropia (`raio_cinza`);
+1 suporte (`sutura_rapida`); 3 `fim` (lacaio, chefe, morte do jogador); 3 `pressagio`
+(desconhecida/conhecida/estudada); 4 `custo` de Fôlego; 2 `known-bad` (passiva como ação, alvo
+escondido). `metrics-registry.yaml` e `evaluator_version` inalterados; lock = 11 datasets antigos + 1.
+
+**Pendente (coordenador):** commit B — push da branch, no run do `eval-gates` baixar
+`deterministic-evals-<run_id>-<attempt>`, copiar `ci-<…>.json` sem editar para
+`evals/baselines/deterministic.json`, commit, push (`compare` = 0); depois `/eval-publish` (D6) e
+revisão Astra (Etapa 6). Até B, `tests/test_eval_baseline.py::test_baseline_bate_com_a_regua_atual`
+falha (esperado, §3.1). Smoke §6 depois de D2 (environment `llm-playtest` + 3 secrets).
