@@ -1,0 +1,10 @@
+{
+ "admin_connection_calls": 3,
+ "codes_503": 21,
+ "enforce_owner_budget_calls": 3,
+ "except_handlers": 137,
+ "functions": 263,
+ "http_exception_calls": 153,
+ "status_429_413_calls": 5,
+ "with_structured_output": 0
+}

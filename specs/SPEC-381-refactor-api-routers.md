@@ -695,4 +695,7 @@ Desvios da spec, todos de ordem/forma, sem mudar superficie HTTP (R6 byte-igual 
 - **`_CORS_ORIGINS`:** lista unica criada em `api_core` e preenchida no lugar por `api.py` (`_CORS_ORIGINS[:] = [...]`, mesma posicao, `reload(api)` continua refazendo o conteudo).
 - **Oraculo:** dumps com LF fixo (byte-igual entre SOs); `modules.json` compara apenas o conjunto de modulos (so ganha `api_core/api_models/api_presenters/routes.*`).
 - **`tests/api_sources.py`:** `API_FILES` e dinamico (os arquivos existentes); a contagem por scanner (R14) nao foi gravada em JSON: a prova foi os 13 scanners verdes antes e depois.
-- **Pendentes (nao feitos):** R13b (`patch_liveness.py` + mutacao), R18 (`_load_or_404`, D7) e a Etapa 15 (W2 do coordenador, smoke local, revisao Sol, apagar `test_spec381_api_surface.py`, §6 em staging).
+- **R13b feito:** `scripts/dev/patch_liveness.py` (378 chaves teste::nome, iguais antes e depois: `docs/spec381/patch_liveness_{before,after}.json`); mutacao dos nao-chamaveis (`_DOCS_PATHS`, `_CLIENT_ERROR_LOG_MAX_PER_MIN`, `game_graph`): 24 testes, 19 falham e 5 passam, identico antes e depois (`patch_mutation_*.json`).
+- **R18 feito:** golden de 404 (`not_found_golden.json`, 34 respostas 404) criado antes; `_load_or_404` em 22 sites; nao convertido: `routes/turn.py` recarga `fresh` (sem 404).
+- **R14:** `scripts/dev/api_scanner_counts.py` + `scanner_counts_{before,after}.json`: iguais exceto o esperado (functions +2: `_mount_router`, `_load_or_404`; HTTPException calls -21 do helper).
+- **Pendentes:** Etapa 15 (W2 do coordenador, smoke, revisao Sol, apagar `test_spec381_api_surface.py`, §6 em staging).
