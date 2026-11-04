@@ -19,6 +19,7 @@
 "agents/turn_finalizer.py" = ["BLE001", "C901"]
 "agents/world_simulator.py" = ["BLE001", "F401", "UP035"]
 "api.py" = ["B904", "BLE001", "C901", "E402", "F401", "F841", "I001", "PERF401", "PIE807", "RET502", "RET503", "RET504", "SIM102", "SIM105", "UP035"]
+"api_models.py" = ["B904", "I001"]
 "character_creator.py" = ["B904", "BLE001", "E722", "F401", "UP035"]
 "combat_mechanics.py" = ["BLE001", "C420", "F401", "SIM105", "UP035"]
 "encounter_budget.py" = ["F401", "UP035"]
