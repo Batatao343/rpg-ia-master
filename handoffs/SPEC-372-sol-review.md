@@ -1,8 +1,8 @@
 # SPEC-372 — revisão sol (review)
 
 > Nome do arquivo: `handoffs/SPEC-372-sol-review.md`.
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus (`claude-opus-5-5`, `spec-reviewer`, papel Sol técnico) · **Data:** 2026-11-03 · **Commit revisado:** `3a92ece8`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 2; rodada 1 em `3a92ece8` foi `CHANGES_REQUIRED`)
+> **Revisor:** Opus (`claude-opus-5-5`, `spec-reviewer`, papel Sol técnico) · **Data:** 2026-11-03 · **Commit revisado:** `6ceaec6e` (rodada 1: `3a92ece8`)
 
 ## Escopo
 
@@ -74,4 +74,61 @@ py.sh -c "plot_stages no save fd3082fd + mutações" → dormente; active→inve
 pytest (teste temporário) save_game_state/load_game_state com trama_id → PASSED (arquivo removido)
 git merge-tree --write-tree --name-only HEAD spec-370 → conflito em 5 arquivos
 scripts/dev/dup_helpers.py / size_budget.py → não existem neste worktree (não rodados)
+```
+
+## Rodada 2 (`16956de5`, `6ceaec6e`, sem rebase sobre a 370)
+
+**P1-1 fechado.** O rastro em jogo agora passa pelo portão. O storyteller passa
+`stages_for(state, world)` para `resolve_track` (`agents/storyteller.py:1787`), que repassa os
+estágios a `pick_encounter_enemy` (`world_utils.py:1918-1920`). No ramo legado, `open_pool` tira do
+pool quem está atrás do portão. `_fauna_presence` (`world_utils.py:1464-1479`) devolve `None` quando
+a presença é de criatura com `gate_closed`, então `ptheme`, `_presence_entry` e `_fauna_encounter`
+deixam de usá-la. `test_track_respeita_portao` chama `resolve_track` com estágios dormentes e
+confere que o `bestiary_knowledge` não registra a criatura. A asserção vale porque `record_rumor`
+grava em `bk[creature_id]`. `test_presenca_atras_do_portao_nao_decide_encontro` cobre a presença.
+
+**Todos os chamadores de `pick_encounter_enemy`:**
+
+| Chamador | Portão |
+|---|---|
+| `check_encounter`, ramos de ameaça e regional (`world_utils.py:1402`, `:1438`) | sim (rodada 1) |
+| `resolve_track` (`:1918`) | sim (rodada 2) |
+| `encounter_budget.fill_encounter` (`encounter_budget.py:158`, via `agents/combat.py:973`) | sim (rodada 2) |
+| `rumor_adoption.encounter_hint` (`services/rumor_adoption.py:633`) | sim (rodada 2). `criatura_avistada` usa a entidade da semente, que antes do estágio tem peso 0 (R11) |
+| `check_encounter`, ramo de facção dominante (`world_utils.py:1357`) | **não**, ver P2-8 |
+
+**Com a flag `off`, os caminhos novos não mudam nada.**
+- `stages_for` devolve `None`. Nesse caso `fill_encounter` nem passa o kwarg (`6ceaec6e`), e a
+  chamada fica idêntica à anterior.
+- `_weighted_pool` só aplica o portão com estágios não vazios. A troca de `fauna_on and
+  trama_stages` por `trama_stages` só pesa com a flag `on`: é o que leva o portão ao sorteio sem
+  fauna do `rumor_adoption`.
+- `_fauna_presence` e `log_pull` saem cedo quando não há estágios.
+- O `import fauna_tramas` que subiu em `pick_encounter_enemy` não tem efeito colateral.
+- Única mudança fora da flag: no `day_hook`, a candidata padrão passou de `cands[-1]` para a
+  última com peso > 0 (`services/fauna.py:519`). Isso só muda o resultado no caso de borda de
+  ponto flutuante em que a regra antiga escolheria uma candidata de peso 0. O golden da 360 e o T7
+  seguem idênticos.
+
+**P2 da rodada 1:**
+- P2-1: fechado.
+- P2-2: follow-up registrado na §9.
+- P2-3: fechado. `known is not False` exclui o lojista e mantém o `met` que o T8 congelado exige.
+- P2-4: documentado na §9 (D7).
+- P2-5: fechado. Saíram o relatório `docs/spec372/eval-tramas-nova_arcadia.md`, o playtest
+  registrado na §9 e os testes de `invoke` `on`×`off`, `trama_puxao` e save/load com `trama_id`.
+  O teste de save/load faz `normalize_fauna_sim` + JSON, que é o que `load_game_state` executa. O
+  round-trip pela `persistence` já foi conferido na rodada 1.
+- P2-6: fechado.
+- P2-7: o conflito com a 370 continua, para o pouso.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-8 | P2 | `world_utils.py:1357` | O ramo de facção dominante chama `pick_encounter_enemy(faction_id=…)` sem `trama_stages`. Facção sem combatente curado cai no pool regional sem portão; hoje só `poder_kahen` (Brekmar) está nesse caso. Sondei 19 facções × 3 anéis: com `poder_kahen`, as 8 criaturas ligadas saem. Só acontece em jogo se essa facção dominar um nó de NA, o que é improvável. | Passar `trama_stages=trama_stages` também nesta chamada (uma linha). |
+| P2-9 | P2 | `tests/test_spec372_motor.py:307` | `test_encounter_budget_e_rumor_respeitam_portao` só exercita `fill_encounter`; `rumor_adoption.encounter_hint` com portão continua sem teste. | Acrescentar um caso com `encounter_hint` e estágios dormentes. |
+
+```text
+rg "pick_encounter_enemy(" (sem tests/specs) → 6 chamadores; 5 com portão
+py.sh -c "pick_encounter_enemy(faction_id=f), 19 facções × 3 anéis" → só poder_kahen cai no pool sem portão (P2-8)
+pytest -n 2 test_spec372_* test_spec360_* test_spec350_* test_spec351_* test_flag_registry test_spec315_* test_spec287_encounter_scale test_spec272_conflito_ligado test_fase64 test_spec289_ameaca_tematica → exit 0
 ```

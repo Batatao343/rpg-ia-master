@@ -2,7 +2,7 @@
 
 > Nome do arquivo: `handoffs/SPEC-372-independent-review.md` (revisor Opus independente, não é o autor das ligações).
 > **Veredito:** `APPROVED_WITH_FOLLOWUPS`
-> **Revisor:** Opus (`claude-opus-5-5`, `spec-reviewer`) · **Data:** 2026-11-03 · **Commit revisado:** `3a92ece8`
+> **Revisor:** Opus (`claude-opus-5-5`, `spec-reviewer`) · **Data:** 2026-11-03 · **Commit revisado:** `6ceaec6e` (rodada 1: `3a92ece8`)
 
 ## Escopo
 
@@ -69,3 +69,21 @@ py.sh -c "sinais das 8 criaturas ligadas × leak_phrases() por frase e por token
 py.sh -c "encounter_distribution por anel, tramas dormentes × reveladas" → pool dormente 26 em cada anel; fatia ligada 0,29–0,35 aberta
 py.sh -c "contagem não-BOSS por anel" → Lama 3/16, Ferro 5/22, Dourado 1/9 ligadas
 ```
+
+## Rodada 2 (`16956de5`, `6ceaec6e`)
+
+Veredito mantido: `APPROVED_WITH_FOLLOWUPS`. As ligações não mudaram, e os três P2 foram tratados:
+
+- **P2-1 fechado.** O E22 agora também procura as frases de `leak_phrases()[secret_id]`, por frase e
+  sem acento (`services/fauna_lint_tramas.py:57-62` e `:91-93`). Com isso, `corpos`, `praga`,
+  `aco_lembra`, `elaryin` e `barril` passam a ser conferidos. NA segue com 0 erro, o que bate com a
+  minha varredura da rodada 1.
+- **P2-2 fechado.** Na §9, a justificativa do Rosário agora cita a Roda de Mandíbulas e o Rato da
+  Peste, que estão livres.
+- **P2-3 fechado.** Os tokens do nome do núcleo ignoram `COMMON_NAME_WORDS` (`conta`, `senhor`,
+  `senhora`, `mestre`, `velho`, `velha`, `sangue`); o nome inteiro e os demais tokens seguem
+  proibidos. Ressalva leve: a lista vale para todas as regiões, então um nome próprio futuro igual a
+  uma dessas palavras deixa de ser conferido por token. Como a checagem por frase continua e a lista
+  é curta, aceito.
+- As duas reescritas da rodada 1 ("jura que", "livro de dívidas") ficam, mesmo sem o lint exigir:
+  não perdem sentido.
