@@ -1,0 +1,1145 @@
+{
+ "dials": {
+  "enemy_aranha_de_cristal": {
+   "corpo": 0,
+   "dano": -7,
+   "forca": 0,
+   "sig": 0
+  },
+  "enemy_aranha_lobo": {
+   "dano": -1,
+   "sig": 0
+  },
+  "enemy_basilisco_caverna": {
+   "corpo": 0,
+   "dano": 1,
+   "forca": 0,
+   "sig": 4
+  },
+  "enemy_boss_general_escorpiao": {
+   "corpo": 0,
+   "dano": -7,
+   "forca": 0,
+   "sig": -2
+  },
+  "enemy_djinn_menor": {
+   "dano": 1,
+   "sig": 1
+  },
+  "enemy_elemental_fogo_poluido": {
+   "dano": -2
+  },
+  "enemy_esqueleto_legiao_antiga": {
+   "corpo": 0,
+   "dano": 0,
+   "forca": 0,
+   "sig": -4
+  },
+  "enemy_esqueleto_mago": {
+   "corpo": 0,
+   "dano": -2,
+   "forca": 0,
+   "sig": 3
+  },
+  "enemy_fantasma": {
+   "dano": -3,
+   "sig": 0
+  },
+  "enemy_gargula_ferro": {
+   "dano": -1
+  },
+  "enemy_golem_carne": {
+   "dano": -7,
+   "sig": 0
+  },
+  "enemy_golem_lixo": {
+   "corpo": 0,
+   "dano": -6,
+   "sig": 5
+  },
+  "enemy_horror_esgoto": {
+   "corpo": 0,
+   "dano": -1,
+   "sig": 0
+  },
+  "enemy_lobo_invernal": {
+   "corpo": 0,
+   "dano": 0,
+   "forca": 0,
+   "sig": 0
+  },
+  "enemy_mimico_bau": {
+   "corpo": 0,
+   "dano": 2,
+   "forca": 0,
+   "sig": 6
+  },
+  "enemy_minotauro_esqueleto": {
+   "corpo": 0,
+   "dano": -7,
+   "forca": 0,
+   "sig": -5
+  },
+  "enemy_morcego_vampiro": {
+   "corpo": 0,
+   "dano": 0,
+   "forca": 0,
+   "sig": 0
+  },
+  "enemy_mumia_de_po": {
+   "dano": -4,
+   "sig": 2
+  },
+  "enemy_observador_menor": {
+   "dano": -1,
+   "sig": 0
+  },
+  "enemy_polvo_esgoto": {
+   "corpo": 0,
+   "dano": -2,
+   "forca": 0,
+   "sig": 5
+  },
+  "enemy_sentinela_ferro": {
+   "dano": -3
+  },
+  "enemy_sombra_espreitadora": {},
+  "enemy_troll_ponte": {
+   "dano": -1,
+   "sig": 0
+  },
+  "enemy_urso_coruja_mutante": {
+   "corpo": 0,
+   "dano": -2,
+   "forca": 0,
+   "sig": -3
+  },
+  "enemy_verme_areia_jovem": {
+   "dano": -2,
+   "sig": 1
+  },
+  "enemy_vinha_estranguladora": {},
+  "enemy_wyvern_jovem": {
+   "dano": -2,
+   "sig": 0
+  },
+  "enemy_yeti": {
+   "dano": -2,
+   "sig": 0
+  },
+  "enemy_zumbi_blindado": {
+   "corpo": 0,
+   "dano": -1,
+   "forca": 0,
+   "sig": 2
+  },
+  "mon_abafador_de_candeias": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_acendedor_de_naufragios": {},
+  "mon_aguadeiro_de_bucho": {
+   "corpo": 2,
+   "dano": 0,
+   "forca": 1,
+   "sig": 5
+  },
+  "mon_alambique_de_carne": {
+   "corpo": 5,
+   "dano": 4,
+   "forca": 4,
+   "sig": 0
+  },
+  "mon_altivo_do_vidro": {},
+  "mon_andarilho_de_cracas": {
+   "corpo": -2,
+   "dano": -1,
+   "sig": 0
+  },
+  "mon_andarilho_de_duas_idades": {
+   "corpo": -2,
+   "dano": -1,
+   "sig": 0
+  },
+  "mon_andas_de_caribu": {},
+  "mon_anzolado_da_casa": {
+   "corpo": 2,
+   "dano": 1,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_aperto_da_tregua": {},
+  "mon_arame_vivo": {},
+  "mon_aranha_de_bolha": {
+   "corpo": 3,
+   "dano": 2,
+   "forca": 2,
+   "sig": 3
+  },
+  "mon_ariete_de_medula": {},
+  "mon_armador_de_fosso": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_arpeu_de_bracos": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_arqueiro_de_tendao": {
+   "corpo": 1,
+   "dano": 1,
+   "forca": 0,
+   "sig": 0
+  },
+  "mon_arraia_de_lodo": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_aspirante_de_coral": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 1
+  },
+  "mon_avesso_de_oghma": {},
+  "mon_balsa_de_ultimo_dia": {
+   "corpo": -2,
+   "dano": -2,
+   "forca": -1,
+   "sig": 0
+  },
+  "mon_banhado_do_centro": {},
+  "mon_barata_das_costelas": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_besouro_de_alavanca": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_besouro_do_estalo": {},
+  "mon_bexiga_de_respiro": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_bigua_de_vidro": {},
+  "mon_boia_de_bracos": {
+   "corpo": 2,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_borda_que_anda": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": -7
+  },
+  "mon_bracos_de_tenaz": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_broca_de_costado": {},
+  "mon_bruxa_de_carcaca": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_bucho_de_praia": {
+   "corpo": -1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_bugio_invertido": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": 2
+  },
+  "mon_cabeca_acima": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_cabeleira_de_vidro": {},
+  "mon_cacador_sem_calor": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_cacao_de_lastro": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": 0
+  },
+  "mon_cagado_de_geada": {
+   "corpo": -3,
+   "dano": -2,
+   "forca": 1,
+   "sig": 2
+  },
+  "mon_calado_das_guelras": {},
+  "mon_caldeira_de_peito": {
+   "corpo": -3,
+   "dano": -3,
+   "forca": -1,
+   "sig": 0
+  },
+  "mon_caldeireiro_de_oleo": {
+   "corpo": 2,
+   "dano": 0,
+   "forca": 1,
+   "sig": 5
+  },
+  "mon_camarao_faxineiro": {},
+  "mon_cardume_coagulado": {},
+  "mon_carranca_de_proa": {
+   "corpo": -3,
+   "dano": -3,
+   "sig": 0
+  },
+  "mon_carrapato_de_mamute": {},
+  "mon_carregador_de_ganchos": {
+   "corpo": 5,
+   "dano": 5,
+   "forca": 4,
+   "sig": 7
+  },
+  "mon_casaco_de_sanguessugas": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_casco_de_costelas": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": -7
+  },
+  "mon_castor_de_estacas": {
+   "corpo": -1,
+   "dano": -1,
+   "sig": 2
+  },
+  "mon_cauda_de_atalaia": {
+   "corpo": -1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_cauda_emendada": {
+   "corpo": 1,
+   "dano": 1,
+   "forca": 0,
+   "sig": 1
+  },
+  "mon_cavadeira_de_unhas": {},
+  "mon_cavador_de_funil": {
+   "corpo": 4,
+   "dano": 2,
+   "forca": 3,
+   "sig": 7
+  },
+  "mon_centopeia_da_torre_invertida": {},
+  "mon_chicote_de_fenda": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_chifres_travados": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": -7
+  },
+  "mon_cisne_de_patina": {},
+  "mon_coandu_de_rebrota": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 1
+  },
+  "mon_cobra_de_legua": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_cobra_de_sangria": {},
+  "mon_colecionador_de_poses": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": 0
+  },
+  "mon_comedor_de_alga": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_compassado_do_trono": {
+   "corpo": -2,
+   "dano": -2,
+   "forca": -1,
+   "sig": 0
+  },
+  "mon_contrabandista_vitreo": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_convidado_de_cera": {
+   "corpo": 6,
+   "dano": 6,
+   "forca": 5,
+   "sig": 7
+  },
+  "mon_cordao_de_medida": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": 1
+  },
+  "mon_costas_de_alicerce": {
+   "corpo": -1,
+   "dano": 0,
+   "forca": 0,
+   "sig": 1
+  },
+  "mon_costurado_de_lentes": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": 3
+  },
+  "mon_couro_pegado": {
+   "corpo": -1,
+   "dano": -1,
+   "sig": 0
+  },
+  "mon_craca_de_amarra": {
+   "corpo": 3,
+   "dano": 0,
+   "forca": 2,
+   "sig": 4
+  },
+  "mon_cupinzeiro_de_vidro": {
+   "corpo": -1,
+   "dano": -1,
+   "forca": 0,
+   "sig": 0
+  },
+  "mon_dedos_de_colheita": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_deitado_na_parede": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_dentado_de_eras": {},
+  "mon_desafiante_rubro": {
+   "corpo": -3,
+   "dano": -3,
+   "forca": -1,
+   "sig": -1
+  },
+  "mon_desbotado_da_nevoa": {},
+  "mon_desfiado_da_aurora": {
+   "corpo": 1,
+   "dano": 0,
+   "forca": 0,
+   "sig": 0
+  },
+  "mon_desfiado_de_vaelorn": {
+   "corpo": -1,
+   "dano": -1,
+   "sig": 1
+  },
+  "mon_despenseiro_de_espinhos": {
+   "corpo": 2,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_doador_inacabado": {},
+  "mon_doente_de_encomenda": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": -1
+  },
+  "mon_egua_de_costas": {
+   "corpo": -2,
+   "dano": -1,
+   "sig": 0
+  },
+  "mon_enegrecido_que_espera": {
+   "corpo": -2,
+   "dano": -1,
+   "sig": 0
+  },
+  "mon_enrolado_da_clareira": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_ent_dormindo": {
+   "corpo": 0,
+   "dano": -4,
+   "forca": 0,
+   "sig": 0
+  },
+  "mon_enxertadora_da_uniao": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": -2
+  },
+  "mon_enxerto_da_fornalha": {},
+  "mon_ermitao_de_carcaca": {},
+  "mon_ermitao_de_elmo": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_escama_revirada": {
+   "corpo": 2,
+   "dano": 2,
+   "sig": 0
+  },
+  "mon_escavador_das_camaras": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": -7
+  },
+  "mon_escorpena_de_basalto": {},
+  "mon_escritura_rastejante": {
+   "corpo": -2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 4
+  },
+  "mon_escuta_do_sinal": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_esfolado_da_tempestade": {
+   "corpo": 2,
+   "dano": 1,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_esfolado_de_sal": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_estaqueiro_afogado": {},
+  "mon_estivador_das_facas": {},
+  "mon_estrela_de_alavanca": {
+   "corpo": 2,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_fardo_de_espolio": {},
+  "mon_fechado_de_escapulas": {
+   "corpo": -2,
+   "dano": -2,
+   "forca": -1,
+   "sig": 4
+  },
+  "mon_feltro_do_ventre": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_ferida_de_coral": {
+   "corpo": 1,
+   "dano": 0,
+   "forca": 0,
+   "sig": 1
+  },
+  "mon_ferreiro_chama_fria": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": 0
+  },
+  "mon_fervente_de_ferrugem": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_fervido_da_corrente": {
+   "corpo": -1,
+   "dano": -1,
+   "sig": 2
+  },
+  "mon_fila_de_grilhoes": {
+   "corpo": -2,
+   "dano": 1
+  },
+  "mon_fole_de_costela": {
+   "corpo": 1,
+   "dano": 0
+  },
+  "mon_forrado_de_leviata": {
+   "corpo": -2,
+   "dano": -1,
+   "sig": 0
+  },
+  "mon_fucador_da_semente": {},
+  "mon_fundeiro_da_poca": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_furador_de_odres": {},
+  "mon_gancho_de_esfola": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": 1
+  },
+  "mon_gato_de_lastro": {},
+  "mon_geodo_da_praga": {
+   "corpo": -1,
+   "dano": 0,
+   "sig": -1
+  },
+  "mon_gralha_de_crematorio": {
+   "corpo": 2,
+   "dano": -2,
+   "forca": -2,
+   "sig": 2
+  },
+  "mon_guia_avesso": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_hospede_do_estomago": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": 0
+  },
+  "mon_isca_amarrada": {
+   "corpo": 3,
+   "dano": 2,
+   "forca": 2,
+   "sig": 4
+  },
+  "mon_jardineiro_de_tumores": {
+   "corpo": 1,
+   "dano": 1,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_jotun_cinza": {
+   "dano": -2,
+   "sig": -2
+  },
+  "mon_lacado_de_hifas": {},
+  "mon_lacrador_de_saidas": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_ladrao_de_lume": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_lagarta_da_hora": {},
+  "mon_lagarta_de_visgo": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_lagarta_sete_invernos": {
+   "corpo": -3,
+   "dano": -2,
+   "sig": 0
+  },
+  "mon_lagarto_de_mudas": {},
+  "mon_lagarto_espirrador": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_lambedor_de_aboboda": {},
+  "mon_lambedor_de_halito": {
+   "corpo": 1,
+   "dano": 1,
+   "forca": 0,
+   "sig": 0
+  },
+  "mon_lamelas_de_ferrugem": {
+   "corpo": 1,
+   "dano": 1,
+   "forca": 0,
+   "sig": 0
+  },
+  "mon_lascador_morno": {
+   "corpo": 2,
+   "dano": 1,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_lastreiro_da_cratera": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_lavado_da_mare_vermelha": {
+   "corpo": -1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_leitor_de_cativos": {
+   "corpo": 5,
+   "dano": 4,
+   "forca": 4,
+   "sig": 0
+  },
+  "mon_lencol_de_chamine": {},
+  "mon_lesma_de_penacho": {},
+  "mon_levantado_de_rubi": {
+   "corpo": -1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_lingua_de_lima": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_lixado_da_fronteira": {
+   "corpo": 2,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_mandriao_dois_bicos": {},
+  "mon_mao_da_borda": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_mao_de_oghma": {},
+  "mon_mao_estendida": {},
+  "mon_maos_de_cinzel": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_maos_no_rosto": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": -1
+  },
+  "mon_mapa_de_cicatrizes": {
+   "corpo": 6,
+   "dano": 6,
+   "forca": -4,
+   "sig": 1
+  },
+  "mon_marco_que_aponta": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": 1
+  },
+  "mon_mascador_de_nectar": {},
+  "mon_mascador_de_raiz": {
+   "corpo": 5,
+   "dano": 4,
+   "forca": 4,
+   "sig": 0
+  },
+  "mon_mastro_de_trofeus": {},
+  "mon_mastro_dos_ultimos": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": -7
+  },
+  "mon_montaria_cravada": {},
+  "mon_monte_de_alheios": {},
+  "mon_morcego_rasteiro": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_mula_de_lagrimas": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_musaranho_de_dente_vermelho": {},
+  "mon_nadador_de_pedra": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_nadador_escaldado": {
+   "corpo": 1,
+   "dano": 1,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_ninho_dos_mergulhadores": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_novelo_de_anzois": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_oco_da_fronteira": {
+   "corpo": -3,
+   "dano": -2,
+   "sig": 0
+  },
+  "mon_odre_de_oleo": {
+   "corpo": 2,
+   "dano": 1,
+   "sig": 1
+  },
+  "mon_olho_de_petala": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_onca_vazada": {},
+  "mon_ossada_de_pomes": {},
+  "mon_ourico_de_lajedo": {},
+  "mon_parado_do_sopro": {},
+  "mon_parelha_carmesim": {
+   "corpo": -2,
+   "dano": -2,
+   "sig": 0
+  },
+  "mon_patinador_de_oleo": {},
+  "mon_pavio_da_lista": {
+   "corpo": 1,
+   "dano": 1,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_peito_de_geodo": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_peito_de_sino": {},
+  "mon_penhorado_do_poco": {},
+  "mon_pernalta_das_colunas": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_pernalta_do_conselho": {},
+  "mon_pescador_de_lanterna": {},
+  "mon_peso_dos_vencidos": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": -7
+  },
+  "mon_petrel_de_papo_cheio": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_picanco_de_espinheiro": {},
+  "mon_pisador_do_salao": {
+   "corpo": -3,
+   "dano": -3,
+   "forca": -1,
+   "sig": 1
+  },
+  "mon_podador_do_ciclo": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": -1
+  },
+  "mon_porca_da_queda": {},
+  "mon_portao_que_morde": {
+   "corpo": -2,
+   "dano": -1
+  },
+  "mon_preguica_de_pomar": {
+   "corpo": -3,
+   "dano": -3,
+   "forca": -3,
+   "sig": 5
+  },
+  "mon_pressa_da_seiva": {},
+  "mon_profanador_cravejado": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 0
+  },
+  "mon_provador_da_borda": {
+   "corpo": 2,
+   "dano": 1,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_provador_de_cores": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_puxado_do_oeste": {
+   "corpo": 6,
+   "dano": 6,
+   "forca": 5,
+   "sig": 7
+  },
+  "mon_quebrado_de_vitrine": {
+   "corpo": 5,
+   "dano": 4,
+   "forca": 4,
+   "sig": 0
+  },
+  "mon_queimado_de_breu": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_queimado_de_frio": {
+   "corpo": -1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_quilhado_do_estaleiro": {},
+  "mon_quimera_cristal": {
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_rancor_de_pincas": {
+   "corpo": -3,
+   "dano": -2,
+   "sig": 0
+  },
+  "mon_raspadeira_de_barbatana": {},
+  "mon_recusado_do_ciclo": {
+   "corpo": -2,
+   "dano": -1,
+   "sig": 0
+  },
+  "mon_regaco_da_margem": {},
+  "mon_relicario_de_osso": {
+   "corpo": -1,
+   "dano": 0
+  },
+  "mon_remendado_de_osso": {},
+  "mon_remo_acorrentado": {},
+  "mon_remora_de_conves": {
+   "corpo": 1,
+   "dano": 0,
+   "forca": 0,
+   "sig": 0
+  },
+  "mon_ressecado_da_travessia": {},
+  "mon_retalho_das_duas_cidades": {},
+  "mon_roda_de_mandibulas": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": -3
+  },
+  "mon_rodante_de_espinhos": {},
+  "mon_rolador_de_escarpa": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_romeiro_de_ambar": {
+   "corpo": 2,
+   "dano": 1,
+   "forca": 1,
+   "sig": 4
+  },
+  "mon_rosario_de_vertebras": {
+   "corpo": 1,
+   "dano": 0
+  },
+  "mon_saltador_de_palafita": {
+   "corpo": 2,
+   "dano": 2,
+   "sig": 0
+  },
+  "mon_saltador_de_poca": {},
+  "mon_saltao_de_galeria": {},
+  "mon_sangrado_da_clinica": {
+   "corpo": 1,
+   "dano": 1
+  },
+  "mon_sangria_de_aluguel": {},
+  "mon_sino_de_enlace": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_sorvedouro_do_codigo": {
+   "corpo": 0,
+   "dano": 4,
+   "forca": 4,
+   "sig": 2
+  },
+  "mon_subida_de_cracas": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": 1
+  },
+  "mon_surdo_da_colmeia": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": 2
+  },
+  "mon_tamandua_de_ponte": {},
+  "mon_tambor_do_ossario": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_tampao_da_camara": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_tatu_de_navalha": {},
+  "mon_tatuzinho_de_afogado": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_tesoura_de_cordada": {},
+  "mon_ticao_do_juramento": {
+   "corpo": 3,
+   "dano": 2,
+   "forca": 2,
+   "sig": 4
+  },
+  "mon_toldo_das_clareiras": {
+   "corpo": -7,
+   "dano": -7,
+   "forca": -7,
+   "sig": 0
+  },
+  "mon_torcido_da_rinha": {
+   "corpo": 7,
+   "dano": 7,
+   "forca": 6,
+   "sig": 7
+  },
+  "mon_touro_de_banha": {
+   "corpo": 1,
+   "dano": 0,
+   "sig": 1
+  },
+  "mon_traca_do_sino_mudo": {},
+  "mon_trepano_de_borda": {},
+  "mon_tripeiro_de_fundo": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_tritao_de_sobra": {
+   "corpo": -3,
+   "dano": -3,
+   "forca": -2,
+   "sig": 4
+  },
+  "mon_tropel_sem_saida": {
+   "corpo": -2,
+   "dano": -2,
+   "sig": 1
+  },
+  "mon_turno_vencido": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 2
+  },
+  "mon_turu_de_casco": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 2,
+   "sig": 0
+  },
+  "mon_varano_vidrado": {},
+  "mon_vazado_da_mare": {},
+  "mon_vedado_de_piche": {},
+  "mon_vela_sem_barco": {
+   "corpo": 3,
+   "dano": 3,
+   "forca": 2,
+   "sig": 7
+  },
+  "mon_ventre_partilhado": {},
+  "mon_vertedor_de_areia": {},
+  "mon_vespa_coveira": {},
+  "mon_vespa_oleira": {
+   "corpo": 2,
+   "dano": 1,
+   "sig": 0
+  },
+  "mon_vestido_de_gafanhotos": {},
+  "mon_veu_faminto": {
+   "corpo": 2,
+   "dano": 2,
+   "forca": 1,
+   "sig": 0
+  },
+  "mon_vidrado_do_morro": {
+   "corpo": -3,
+   "dano": -3,
+   "sig": 1
+  },
+  "mon_vigia_de_cor_errada": {
+   "corpo": 4,
+   "dano": 4,
+   "forca": 3,
+   "sig": 5
+  },
+  "mon_vira_costas_da_praca": {},
+  "mon_virado_do_avesso": {
+   "corpo": -1,
+   "dano": -1,
+   "sig": 0
+  },
+  "mon_viuvo_do_esporo": {
+   "corpo": 1,
+   "dano": 1,
+   "sig": 0
+  }
+ },
+ "fonte": "git show 9468d058:data/bestiario/mecanica/_ajustes.yaml (main medida na linha de base), sem a chave arena"
+}

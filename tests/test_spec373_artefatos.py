@@ -23,12 +23,14 @@ herói por célula (5 Posturas x 40 sementes = 200 lutas). Nada é excluído.
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import os
 from pathlib import Path
 
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "spec373"
@@ -247,6 +249,75 @@ def test_portao_off_identico_fora_das_recalibradas():
         if k.endswith("|off") and rec["cells"][k] != base[bid]["cells"].get(k)
     }
     assert not mudou, mudou
+
+
+# --- P2-2 (Sol): a lista de recalibradas é exatamente o conjunto com dial mudado (R8) --------
+# Base congelada dos dials (sem a chave ``arena``) da main medida, ``9468d058``; ver
+# ``handoffs/SPEC-373-eval-authoring.md`` §9. Não depende de git: o CI lê o JSON. O hash é do
+# conteúdo canônico (indiferente a CRLF), para acusar edição da base.
+AJUSTES = ROOT / "data" / "bestiario" / "mecanica" / "_ajustes.yaml"
+DIALS_BASE = BASE / "ajustes-dials-base.json"
+DIALS_BASE_SHA = "82155e342f5c54574cece7cf5ebe0e37b451f8ae9d29af4a7e5773dcc6894b70"
+
+
+def _sha_canonico(obj: object) -> str:
+    blob = json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def _dials(entry: dict | None) -> dict[str, int]:
+    """Dials de uma entrada; ausente vale 0 (o ``calibrar.py`` grava só os usados)."""
+    return {k: int(v) for k, v in (entry or {}).items() if k != "arena" and v}
+
+
+def ids_com_dial_mudado(base: dict[str, dict], pos: dict[str, dict]) -> set[str]:
+    return {b for b in set(base) | set(pos) if _dials(base.get(b)) != _dials(pos.get(b))}
+
+
+def avaliar_recalibradas(recal: set[str], mudados: set[str]) -> list[str]:
+    erros = []
+    if sem := sorted(recal - mudados):
+        erros.append(f"na lista sem mudança de dial contra a base: {sem}")
+    if fora := sorted(mudados - recal):
+        erros.append(f"dial mudado fora da lista (sem confirmação 40-119): {fora}")
+    return erros
+
+
+def test_recalibradas_known_good_e_bad():
+    base = {"a": {"arena": "x", "dano": -1, "sig": 0}, "b": {"dano": 2}}
+    # só o texto ``arena`` e zeros explícitos/ausentes não contam como mudança
+    pos = {"a": {"arena": "y", "dano": -1}, "b": {"dano": 2, "corpo": 0}}
+    assert ids_com_dial_mudado(base, pos) == set()
+    pos2 = pos | {"b": {"dano": 3}, "c": {"sig": 1}}  # mudou b; c é nova com dial
+    mudados = ids_com_dial_mudado(base, pos2)
+    assert mudados == {"b", "c"}
+    assert avaliar_recalibradas({"b", "c"}, mudados) == []
+    sem = avaliar_recalibradas({"a", "b", "c"}, mudados)
+    assert sem == ["na lista sem mudança de dial contra a base: ['a']"]
+    fora = avaliar_recalibradas({"b"}, mudados)
+    assert fora == ["dial mudado fora da lista (sem confirmação 40-119): ['c']"]
+
+
+def test_base_de_dials_congelada():
+    payload = _load(DIALS_BASE)
+    assert payload["fonte"].startswith("git show 9468d058:")
+    assert len(payload["dials"]) == TOTAL_CRIATURAS
+    assert _sha_canonico(payload["dials"]) == DIALS_BASE_SHA
+
+
+def test_portao_recalibradas_igual_aos_dials_mudados():
+    """``recalibradas.json`` == ids com dial mudado contra a base, nas duas direções."""
+    base = _load(DIALS_BASE)["dials"]
+    pos = yaml.safe_load(AJUSTES.read_text("utf-8"))["ajustes"]
+    recal = set(_load(DOCS / "recalibradas.json"))
+    assert avaliar_recalibradas(recal, ids_com_dial_mudado(base, pos)) == []
+
+
+def test_portao_confirmacao_cobre_as_recalibradas():
+    """Etapa 6: a confirmação 40-119 roda nos 13 chefes **e** nas recalibradas."""
+    conf = _load(DOCS / "confirmacao-40-119.json")["criaturas"]
+    recal = set(_load(DOCS / "recalibradas.json"))
+    assert recal <= set(conf), sorted(recal - set(conf))
 
 
 def _fora_pp(w: float) -> float:

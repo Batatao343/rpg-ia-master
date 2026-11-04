@@ -183,3 +183,43 @@ e que nenhum commit de produto mexe nesses caminhos.
   `tests/test_spec349_mecanica.py`; nenhum `xfail` sobrou em `tests/test_spec373_cartas.py`). Não há
   trabalho de avaliador pendente nela; a verificação dela é rodar os 3 arquivos (§5, comando final).
 - **Testes:** `tests/test_spec373_artefatos.py tests/test_spec373_cartas.py -n 4`: 45 passed.
+
+## 9. Adendo (04/11): portão da lista `recalibradas.json` (P2-2 do Sol)
+
+- **Problema:** `docs/spec373/recalibradas.json` fica do lado do produto e tira ids de dois portões
+  (`test_portao_off_identico_fora_das_recalibradas` e `test_spec373_montagem.py::test_snapshot_off_existe_e_bate`).
+  Nada impedia pôr na lista uma id sem recalibração e esconder uma regressão do `off`.
+- **Forma escolhida:** base congelada dos dials, `docs/spec373/base/eval/ajustes-dials-base.json`
+  (protegida pelo `docs/spec373/base/eval` que já está em `evals/protected-paths.txt`). É o
+  `_ajustes.yaml` da `main` medida (`9468d058`, a mesma da linha de base da arena), só os dials
+  (`corpo`, `dano`, `forca`, `sig`), sem o texto `arena`, 281 ids. Gerado uma vez com
+  `git show 9468d058:data/bestiario/mecanica/_ajustes.yaml`; o teste não chama git (o CI faz
+  checkout raso). Comparar com a `main` viva não serve: ela anda, e o pouso põe os dials novos
+  nela. O `test_base_de_dials_congelada` fixa o sha256 do conteúdo canônico (JSON ordenado,
+  indiferente a CRLF), para acusar edição da base.
+- **Regra de comparação:** dial ausente vale 0 (o `calibrar.py` só grava os usados); mudança só no
+  texto `arena` não conta. Id nova no `_ajustes.yaml` com dial ≠ 0 conta como mudada.
+- **Portão (`test_portao_recalibradas_igual_aos_dials_mudados`), nas duas direções:**
+  1. toda id da lista tem dial mudado contra a base (pedido do Sol);
+  2. **o inverso:** toda id com dial mudado está na lista. Motivo: pelo R8 e pela Etapa 6, a lista é
+     "as criaturas que o R8 recalibrou", e é ela que define o conjunto da confirmação 40–119
+     (chefes + recalibradas). Dial mudado fora da lista escapa da confirmação e do relatório,
+     mesmo que o `off` fique igual (o `sig` só pesa no `on`, nas Cartas da criatura).
+- **Portão novo (`test_portao_confirmacao_cobre_as_recalibradas`):** toda id da lista está em
+  `confirmacao-40-119.json` (o teste antigo só exigia os 13 chefes). Hoje verde: 24 = 13 + 12 − 1
+  (`enemy_boss_general_escorpiao` está nos dois).
+- **Known-good/known-bad (`test_recalibradas_known_good_e_bad`):** só texto `arena` e zero
+  explícito × ausente → nada mudou; dial mudado e id nova detectados; id na lista sem mudança
+  reprova; id mudada fora da lista reprova.
+- **Resultado hoje:** a direção 1 passa (as 12 ids da lista têm dial mudado). A direção 2
+  **reprova** com `enemy_fantasma` (`sig` 0 → 6, passo manual; leitura `L3|off 63% | L3|on 56%`),
+  que não está na lista e não entrou na confirmação 40–119. Não mexi no produto. Correção do
+  executor: incluir `enemy_fantasma` em `recalibradas.json`, rodar a confirmação 40–119 **só nela**
+  (uma vez, sem reajuste, R3) e anexar o resultado a `confirmacao-40-119.json` (ou gravar à
+  parte e o coordenador decide), registrando em §9 da spec. O `off` dela segue idêntico, então
+  sair do snapshot R2 não esconde nada.
+- **Testes:** `tests/test_spec373_{acao_extra,artefatos,cartas,montagem}.py -n 2`: 60 passed,
+  1 failed (`test_portao_recalibradas_igual_aos_dials_mudados`, `enemy_fantasma`, esperado).
+  Observação: `test_arena_seed_inicio_default_identico` falhou uma vez sob `-n 2`
+  (`FileNotFoundError` no `tmp_path`, provável efeito do `os.chdir` do `arena.py` no worker) e
+  passou isolado e na rodada seguinte; não é desta mudança.
