@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "ee9f9594575a47bc1341d1eca6740345e4434789",
+  "commit_sha": "3e6a613c102257949026a7c88182a14d1716efce",
   "edge_counts": {
-    "calls": 38902,
-    "contains": 1285,
-    "defines": 18910,
-    "imports": 3132,
-    "likely_test_for": 2277,
+    "calls": 39054,
+    "contains": 1292,
+    "defines": 18994,
+    "imports": 3176,
+    "likely_test_for": 2286,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:969edc42223564bc4f8ce35e47a178a1282a8764b9008bb0426df9d04cdff099",
+  "graph_hash": "sha256:5a4b7fe132d174238a84509f8e123b8a8e87c98045656b6964a1f56a40fbfe99",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -425,6 +425,7 @@
     "services/enemy_decks.py",
     "services/enemy_intent.py",
     "services/entity_identity.py",
+    "services/env.py",
     "services/error_codes.py",
     "services/event_processor.py",
     "services/exploration.py",
@@ -523,6 +524,7 @@
     "services/stripe_checkout.py",
     "services/structured_outputs.py",
     "services/tactical_profile.py",
+    "services/text.py",
     "services/turn_delivery.py",
     "services/turn_effects.py",
     "services/turn_execution.py",
@@ -1281,6 +1283,11 @@
     "tests/test_spec374_migrate.py",
     "tests/test_spec374_rag_cli.py",
     "tests/test_spec374_u14.py",
+    "tests/test_spec378_database_profile.py",
+    "tests/test_spec378_env_choice.py",
+    "tests/test_spec378_llm_attempt_golden.py",
+    "tests/test_spec378_rag_memory_golden.py",
+    "tests/test_spec378_text_fold.py",
     "tests/test_spec387_draft.py",
     "tests/test_spec387_generic_spawn.py",
     "tests/test_spec387_guards.py",
@@ -1562,14 +1569,14 @@
   },
   "node_counts": {
     "artifact": 10,
-    "class": 1102,
+    "class": 1111,
     "endpoint": 69,
-    "file": 1507,
-    "function": 5859,
-    "method": 868,
-    "module": 1285,
-    "test": 11080
+    "file": 1514,
+    "function": 5869,
+    "method": 869,
+    "module": 1292,
+    "test": 11144
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:c983a6b8ced21398c007f11b70c0d341a3df09f8af9640ee8ccbeeb2ed4d44f7"
+  "source_tree_hash": "sha256:fd2e12cae87f2471a9ddb909bbd128786080ecbb39d27c9bafb546528c35c38c"
 }
