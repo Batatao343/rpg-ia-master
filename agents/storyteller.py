@@ -2060,6 +2060,40 @@ def storyteller_node(state: GameState):
 
     t.llm = get_llm(temperature=0.7)
 
+    _story_prompt_blocks(t)
+
+    _story_prompt_scene_blocks(t)
+
+    _story_system_message(t)
+
+    # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat
+    # que só seria aplicado no caminho feliz).
+    t.turn_bl_pre_llm = t.turn_bl
+    t.companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
+    try:
+        _story_narrate(t)
+
+        _story_guard_narrative(t)
+
+        _story_engine_proposals(t)
+
+        _story_beat_and_npcs(t)
+
+        _story_assemble_base(t)
+
+        _story_assemble_items(t)
+        _story_assemble_events(t)
+
+        _story_assemble_quests(t)
+        return t.updates
+
+    except Exception as e:
+        _log_event("storyteller", "failed", level="error", error=type(e).__name__)
+        return _story_exception_fallback(t)
+
+
+def _story_prompt_blocks(t: _StoryTurn) -> None:
+    """Eventos do turno, fações, entidades, quests e herói do prompt."""
     # PROMPT ATUALIZADO
     t.eventos_turno = (
         "\n".join(
@@ -2126,35 +2160,6 @@ def storyteller_node(state: GameState):
         "Se mencionar o saldo do herói, use EXATAMENTE esse Ouro.\n"
         "</ESTADO_DO_HEROI>"
     )
-
-    _story_prompt_scene_blocks(t)
-
-    _story_system_message(t)
-
-    # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat
-    # que só seria aplicado no caminho feliz).
-    t.turn_bl_pre_llm = t.turn_bl
-    t.companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
-    try:
-        _story_narrate(t)
-
-        _story_guard_narrative(t)
-
-        _story_engine_proposals(t)
-
-        _story_beat_and_npcs(t)
-
-        _story_assemble_base(t)
-
-        _story_assemble_items(t)
-        _story_assemble_events(t)
-
-        _story_assemble_quests(t)
-        return t.updates
-
-    except Exception as e:
-        _log_event("storyteller", "failed", level="error", error=type(e).__name__)
-        return _story_exception_fallback(t)
 
 
 def _story_prompt_scene_blocks(t: _StoryTurn) -> None:
