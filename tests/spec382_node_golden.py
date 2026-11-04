@@ -97,6 +97,16 @@ class Recorder:
         self._old_level = root.level
         root.addHandler(self.sink)
         root.setLevel(logging.DEBUG)
+        # outros testes do mesmo processo mudam nivel/propagacao dos loggers rpg.*: normaliza
+        monkeypatch.setattr(logging.root.manager, "disable", logging.NOTSET)
+        for name in [
+            "rpg",
+            *[n for n in list(logging.root.manager.loggerDict) if n.startswith("rpg.")],
+        ]:
+            lg = logging.getLogger(name)
+            monkeypatch.setattr(lg, "level", logging.DEBUG)
+            monkeypatch.setattr(lg, "propagate", True)
+            monkeypatch.setattr(lg, "disabled", False)
         from agents import combat
 
         monkeypatch.setattr(combat, "_OUTCOME_BUDGET_S", 600.0, raising=False)
