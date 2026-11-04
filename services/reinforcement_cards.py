@@ -234,7 +234,11 @@ def payload_fields(meta: dict | None) -> dict[str, Any]:
         return {}
     state = (meta or {}).get("reinforcement") or {}
     out: dict[str, Any] = {}
-    if state.get("warned_round") is not None and not state.get("fired") and not state.get("cancelled"):
+    if (
+        state.get("warned_round") is not None
+        and not state.get("fired")
+        and not state.get("cancelled")
+    ):
         out["reinforcement_warning"] = True
     view = public_view(meta)
     if view:
