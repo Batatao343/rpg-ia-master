@@ -38,6 +38,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
 
 from observability.telemetry import log_event as _log_event
+from services.env import is_database_profile
 from services.memory_provenance import format_memory_fact, make_memory_fact
 
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
@@ -996,7 +997,7 @@ def _format_memory_documents(documents: list) -> str:
 
 def query_session_memory(query: str, game_id: str) -> str:
     """Busca somente fatos da sessão, sem consultar lore/regras globais."""
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         from infrastructure.contracts import MemoryQuery
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
@@ -1018,7 +1019,7 @@ def prepare_shared_query_vector(
     query: str, paths: list[str]
 ) -> tuple[list[float] | None, str | None, str | None]:
     """Embed once when every existing FAISS scope uses the same pinned profile."""
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         embeddings = get_embeddings()
         provider = active_provider() or _resolve_provider()
         if not query or embeddings is None or provider is None:
@@ -1084,7 +1085,7 @@ def query_global_by_vector(
 ) -> str:
     from services.lore_query import LORE_K, RERANK_CANDIDATES, rerank_by_region
 
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         from infrastructure.contracts import MemoryQuery
         from infrastructure.runtime import get_runtime
 
@@ -1136,7 +1137,7 @@ def _query_by_vector(
     scope: str, vector: list[float], game_id: str, npc_id: str | None, *, k: int
 ) -> str:
     """Consulta vetorial de memoria de sessao ou de NPC (SPEC-378 E5)."""
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         from infrastructure.contracts import MemoryQuery
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
@@ -1209,7 +1210,7 @@ def _query_rag_impl(
     """
     from services.lore_query import LORE_K, RERANK_CANDIDATES, rerank_by_region
 
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         from infrastructure.contracts import MemoryQuery
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
@@ -1403,7 +1404,7 @@ def _add_memory(
             error="invalid_input",
             metadatas=metadatas,
         )
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         return _stage_memory(scope, game_id, npc_id, texts, metadatas)
 
     npc_id = npc_id if scope == "npc" else None
@@ -1490,7 +1491,7 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
     if not game_id or not npc_id or not query:
         return ""
 
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         from infrastructure.contracts import MemoryQuery
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
