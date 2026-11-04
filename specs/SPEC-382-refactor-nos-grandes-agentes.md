@@ -1,6 +1,6 @@
 # SPEC-382 — Refatoração pura dos nós grandes: `storyteller_node`, `_combat_node` e `_run_round` em fases nomeadas no mesmo módulo
 
-> **Status:** `in-progress` (Etapas 0-parcial, 1, 2 e 4 executadas em 04/11; Etapa 3 pendente por W1 da `spec-373`; Etapa 5 feita para as Etapas 1–2 e 4: W2 verde, revisão Sol APPROVED_WITH_FOLLOWUPS, smoke real ok — `docs/spec382/equivalence.md`; antes da Etapa 3, golden mais sensível (Sol P2-1)). Aprovada em 04/11 ( coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = não (follow-up), D2 = 378 já `done`, D3 = aceitar, D4 = aceitar, D5 = smoke local, D6 = já aplicada pela SPEC-387 (guard da 363 com gate de branch), D7 = SPEC-384 D3 é **não**: Etapa 4 preserva `_advance_reinforcements`. Etapa 3 espera a `spec-373` (W1: `services/conflict_orchestrator.py`))
+> **Status:** `done` (04/11: Etapas 0-parcial e 1–4 executadas; Etapa 5 verde para todas — W2 A=B, revisões Sol APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-382-sol-independent-review.md`, `handoffs/SPEC-382-sol-etapa3-review.md`), smoke real ok — `docs/spec382/equivalence.md`; follow-ups: mover `_RoundIntents`/`_round_*` e os helpers novos de `combat.py`/`storyteller.py` para módulos próprios (Sol E3 P2-1), máscara de `event_id` no golden antigo, P3 cosméticos). Aprovada em 04/11 (coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = não (follow-up), D2 = 378 já `done`, D3 = aceitar, D4 = aceitar, D5 = smoke local, D6 = já aplicada pela SPEC-387, D7 = SPEC-384 D3 é **não**)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-04
 > **Origem:** auditoria de qualidade de 03/11 (`docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md`
 > §4.2 itens 1–2, §5 letra F, §6 regras W1–W8, §6.3 ordem 7)
@@ -447,20 +447,20 @@ tests/test_api_jogadas.py tests/test_spec361_integracao.py tests/test_combat_lif
 
 ## 5. Critérios de aceite
 
-- [ ] R1: `storyteller_node` ≤ 250, `_combat_node` ≤ 250, `_run_round` ≤ 150 linhas; nenhum helper novo > 220
-- [ ] R2/R7/R8: nenhum `.py` novo de produto; nenhum nome existente removido; nenhum import local promovido ao topo
-- [ ] R3: sem `nonlocal` em `storyteller.py`; sem as 7 closures de 1º nível dentro de `_run_round`
-- [ ] R4/R5: `tests/test_spec382_node_golden.py` verde em **todos** os commits da série (provado commit a commit no handoff), estável em 3 processos e com `-n 2`, com toda faixa da §3.3 coberta
-- [ ] R6: revisor confirma, por commit, que o `try` principal do storyteller cobre o mesmo bloco e o fallback lê os mesmos valores
-- [ ] R9: nenhum teste existente alterado, salvo o commit da D6 (se o dono aprovar)
-- [ ] R10: um commit por extração; cada um revertível sozinho
-- [ ] R11: W2 A = B (evals sem diferença; hashes de `last_mech_log`/`record_step` iguais); sanidade: violações/desfechos iguais em `--seed 0` e `--seed 1` e `check_reproducibility()` `True`
-- [ ] R12: `test_spec297_review_fixes`, `test_spec304_review`, `test_spec303_passes`, `test_spec298_faccao_eventos` verdes sem mudança
-- [ ] `uv run pytest` verde (suíte completa offline, coordenador)
-- [ ] Guard de FallbackLLM preservado (`isinstance(update, StoryUpdate)` segue antes de qualquer acesso a campo)
-- [ ] Saves antigos continuam carregando (nada de schema muda; coberto pela suíte)
-- [ ] Smoke §6 com LLM real executado e anotado
-- [ ] Revisão independente Sol do código aprovada (`handoffs/SPEC-382-sol-independent-review.md`; o
+- [x] R1: `storyteller_node` ≤ 250, `_combat_node` ≤ 250, `_run_round` ≤ 150 linhas; nenhum helper novo > 220
+- [x] R2/R7/R8: nenhum `.py` novo de produto; nenhum nome existente removido; nenhum import local promovido ao topo
+- [x] R3: sem `nonlocal` em `storyteller.py`; sem as 7 closures de 1º nível dentro de `_run_round`
+- [x] R4/R5: `tests/test_spec382_node_golden.py` verde em **todos** os commits da série (provado commit a commit no handoff), estável em 3 processos e com `-n 2`, com toda faixa da §3.3 coberta
+- [x] R6: revisor confirma, por commit, que o `try` principal do storyteller cobre o mesmo bloco e o fallback lê os mesmos valores
+- [x] R9: nenhum teste existente alterado, salvo o commit da D6 (se o dono aprovar)
+- [x] R10: um commit por extração; cada um revertível sozinho
+- [x] R11: W2 A = B (evals sem diferença; hashes de `last_mech_log`/`record_step` iguais); sanidade: violações/desfechos iguais em `--seed 0` e `--seed 1` e `check_reproducibility()` `True`
+- [x] R12: `test_spec297_review_fixes`, `test_spec304_review`, `test_spec303_passes`, `test_spec298_faccao_eventos` verdes sem mudança
+- [x] `uv run pytest` verde (suíte completa offline, coordenador)
+- [x] Guard de FallbackLLM preservado (`isinstance(update, StoryUpdate)` segue antes de qualquer acesso a campo)
+- [x] Saves antigos continuam carregando (nada de schema muda; coberto pela suíte)
+- [x] Smoke §6 com LLM real executado e anotado
+- [x] Revisão independente Sol do código aprovada (`handoffs/SPEC-382-sol-independent-review.md`; o
       `handoffs/SPEC-382-independent-review.md` é a revisão desta spec, de 03/11)
 
 ## 6. Smoke test com LLM real
