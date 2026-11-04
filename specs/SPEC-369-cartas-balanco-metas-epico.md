@@ -641,3 +641,10 @@ As outras células das famílias não pioraram mais de 5 pp (`conjurador` L3 68,
 
 **Erro corrigido no caminho (sem efeito no produto):** a primeira rodada de `conjurador` e `predador_apice` usou um arquivo JSON quebrado pelo meu editor de teste (família ignorada) e deu números falsos; as duas foram refeitas com o JSON válido e é o que está acima.
 
+### Fase B, fechamento (Etapa 8)
+
+- `docs/spec369/final-0-19.json` (base, uso, posturas, emboscada, pressagio e familias no estado final), `passos-0-19.json` e `RELATORIO.md`.
+- `test_spec369_metas.py`: R13, R17, R18, R19 passam; R14, R15, R16, R20 falham pelos números (nenhum xfail nos testes R13-R20 e R18; só o R22 da Fase C está em xfail).
+- **Decisão do dono pendente (metas que o R18 não fecha):** R14 (pulso, mofo e as básicas de Fôlego 0 por desenho), R15 (Médico contra `mon_automato_fundicao`, p95 total 11), R16 (1,026) e as células `conjurador` L5 e `predador_apice` L3. Opções: aceitar os números como estão; liberar o D-369-1 (Fôlego 3); permitir Cartas novas ou mudança de `tier`/`raridade` (hoje fora de escopo); ou afrouxar a meta.
+- **Pendência de Fase A:** os dois testes de `test_spec369_regua.py` citados no B3 precisam ser tornados robustos ao Fôlego das básicas pelo autor da régua.
+

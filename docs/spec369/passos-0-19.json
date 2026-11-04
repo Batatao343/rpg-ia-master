@@ -1,0 +1,713 @@
+{
+ "passos": [
+  {
+   "bloco": "B3",
+   "carta": "bas_med_golpe",
+   "campo": "efeito.dano_base",
+   "de": 3,
+   "para": 4,
+   "versao": [
+    1,
+    2
+   ],
+   "metricas_antes": {
+    "cartas_rodada": 1.915,
+    "p95_total": 12.0,
+    "vitoria_pct": 64.8,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 1.799,
+      "p95": 11.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 71.7
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 1.864,
+      "p95": 9.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 61.7
+     },
+     "Arcanista Cinzento": {
+      "cpr": 1.876,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 62.8
+     },
+     "Médico de Campo": {
+      "cpr": 2.1,
+      "p95": 19.0,
+      "timeout_pct": 4.4,
+      "vitoria_pct": 55.3
+     }
+    }
+   },
+   "metricas_depois": {
+    "cartas_rodada": 1.918,
+    "p95_total": 11.0,
+    "vitoria_pct": 66.4,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 1.799,
+      "p95": 11.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 71.7
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 1.864,
+      "p95": 9.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 61.7
+     },
+     "Arcanista Cinzento": {
+      "cpr": 1.876,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 62.8
+     },
+     "Médico de Campo": {
+      "cpr": 2.135,
+      "p95": 18.0,
+      "timeout_pct": 3.6,
+      "vitoria_pct": 63.3
+     }
+    }
+   },
+   "posturas_total_classe_0_19": {
+    "Médico de Campo": 0.515
+   },
+   "guarda_r19": "Postura afetada dentro de 45-85 %; as outras nao dependem da Carta (Sangromante inalterado, 65,0 %)",
+   "mantido": true
+  },
+  {
+   "bloco": "B3",
+   "carta": "bas_med_golpe",
+   "campo": "efeito.dano_base",
+   "de": 4,
+   "para": 5,
+   "versao": [
+    1,
+    2
+   ],
+   "metricas_antes": {
+    "cartas_rodada": 1.918,
+    "p95_total": 11.0,
+    "vitoria_pct": 66.4,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 1.799,
+      "p95": 11.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 71.7
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 1.864,
+      "p95": 9.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 61.7
+     },
+     "Arcanista Cinzento": {
+      "cpr": 1.876,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 62.8
+     },
+     "Médico de Campo": {
+      "cpr": 2.135,
+      "p95": 18.0,
+      "timeout_pct": 3.6,
+      "vitoria_pct": 63.3
+     }
+    }
+   },
+   "metricas_depois": {
+    "cartas_rodada": 1.919,
+    "p95_total": 11.0,
+    "vitoria_pct": 67.4,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 1.799,
+      "p95": 11.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 71.7
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 1.864,
+      "p95": 9.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 61.7
+     },
+     "Arcanista Cinzento": {
+      "cpr": 1.876,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 62.8
+     },
+     "Médico de Campo": {
+      "cpr": 2.155,
+      "p95": 16.0,
+      "timeout_pct": 3.1,
+      "vitoria_pct": 68.3
+     }
+    }
+   },
+   "posturas_total_classe_0_19": {
+    "Médico de Campo": 0.56
+   },
+   "guarda_r19": "Postura afetada dentro de 45-85 %; as outras nao dependem da Carta (Sangromante inalterado, 65,0 %)",
+   "mantido": true
+  },
+  {
+   "bloco": "B3",
+   "carta": "bas_dev_voto",
+   "campo": "custo_folego",
+   "de": 1,
+   "para": 0,
+   "versao": [
+    1,
+    2
+   ],
+   "metricas_antes": {
+    "cartas_rodada": 1.919,
+    "p95_total": 11.0,
+    "vitoria_pct": 67.4,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 1.799,
+      "p95": 11.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 71.7
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 1.864,
+      "p95": 9.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 61.7
+     },
+     "Arcanista Cinzento": {
+      "cpr": 1.876,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 62.8
+     },
+     "Médico de Campo": {
+      "cpr": 2.155,
+      "p95": 16.0,
+      "timeout_pct": 3.1,
+      "vitoria_pct": 68.3
+     }
+    }
+   },
+   "metricas_depois": {
+    "cartas_rodada": 1.963,
+    "p95_total": 11.0,
+    "vitoria_pct": 67.3,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 2.007,
+      "p95": 11.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 71.4
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 1.864,
+      "p95": 9.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 61.7
+     },
+     "Arcanista Cinzento": {
+      "cpr": 1.876,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 62.8
+     },
+     "Médico de Campo": {
+      "cpr": 2.155,
+      "p95": 16.0,
+      "timeout_pct": 3.1,
+      "vitoria_pct": 68.3
+     }
+    }
+   },
+   "posturas_total_classe_0_19": {
+    "Devoto do Abismo": 0.602
+   },
+   "guarda_r19": "Postura afetada dentro de 45-85 %; as outras nao dependem da Carta (Sangromante inalterado, 65,0 %)",
+   "mantido": true,
+   "uso": {
+    "bas_dev_voto": {
+     "uso": 1.0,
+     "delta_pp_v2": -5.0,
+     "bandeiras_v2": []
+    }
+   }
+  },
+  {
+   "bloco": "B3",
+   "carta": "bas_arc_vazao",
+   "campo": "custo_folego",
+   "de": 1,
+   "para": 0,
+   "versao": [
+    1,
+    2
+   ],
+   "metricas_antes": {
+    "cartas_rodada": 1.963,
+    "p95_total": 11.0,
+    "vitoria_pct": 67.3,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 2.007,
+      "p95": 11.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 71.4
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 1.864,
+      "p95": 9.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 61.7
+     },
+     "Arcanista Cinzento": {
+      "cpr": 1.876,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 62.8
+     },
+     "Médico de Campo": {
+      "cpr": 2.155,
+      "p95": 16.0,
+      "timeout_pct": 3.1,
+      "vitoria_pct": 68.3
+     }
+    }
+   },
+   "metricas_depois": {
+    "cartas_rodada": 1.999,
+    "p95_total": 11.0,
+    "vitoria_pct": 67.4,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 2.007,
+      "p95": 11.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 71.4
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 1.864,
+      "p95": 9.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 61.7
+     },
+     "Arcanista Cinzento": {
+      "cpr": 2.097,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 63.1
+     },
+     "Médico de Campo": {
+      "cpr": 2.155,
+      "p95": 16.0,
+      "timeout_pct": 3.1,
+      "vitoria_pct": 68.3
+     }
+    }
+   },
+   "posturas_total_classe_0_19": {
+    "Arcanista Cinzento": 0.571
+   },
+   "guarda_r19": "Postura afetada dentro de 45-85 %; as outras nao dependem da Carta (Sangromante inalterado, 65,0 %)",
+   "mantido": true,
+   "uso": {
+    "bas_arc_vazao": {
+     "uso": 1.0,
+     "delta_pp_v2": -5.0,
+     "bandeiras_v2": []
+    }
+   }
+  },
+  {
+   "bloco": "B3",
+   "carta": "bas_cor_guarda",
+   "campo": "custo_folego",
+   "de": 1,
+   "para": 0,
+   "versao": [
+    1,
+    2
+   ],
+   "metricas_antes": {
+    "cartas_rodada": 1.999,
+    "p95_total": 11.0,
+    "vitoria_pct": 67.4,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 2.007,
+      "p95": 11.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 71.4
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 1.864,
+      "p95": 9.0,
+      "timeout_pct": 0.3,
+      "vitoria_pct": 61.7
+     },
+     "Arcanista Cinzento": {
+      "cpr": 2.097,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 63.1
+     },
+     "Médico de Campo": {
+      "cpr": 2.155,
+      "p95": 16.0,
+      "timeout_pct": 3.1,
+      "vitoria_pct": 68.3
+     }
+    }
+   },
+   "metricas_depois": {
+    "cartas_rodada": 2.159,
+    "p95_total": 11.0,
+    "vitoria_pct": 68.5,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 2.007,
+      "p95": 11.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 71.4
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 2.717,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 67.2
+     },
+     "Arcanista Cinzento": {
+      "cpr": 2.097,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 63.1
+     },
+     "Médico de Campo": {
+      "cpr": 2.155,
+      "p95": 16.0,
+      "timeout_pct": 3.1,
+      "vitoria_pct": 68.3
+     }
+    }
+   },
+   "posturas_total_classe_0_19": {
+    "Corruptor": 0.606
+   },
+   "guarda_r19": "Postura afetada dentro de 45-85 %; as outras nao dependem da Carta (Sangromante inalterado, 65,0 %)",
+   "mantido": true,
+   "uso": {
+    "bas_cor_mofo": {
+     "uso": 0.718,
+     "delta_pp_v2": -5.0,
+     "bandeiras_v2": []
+    }
+   }
+  },
+  {
+   "bloco": "B3",
+   "carta": "med1_fer_lente_de_protese",
+   "campo": "custo_folego",
+   "de": 0,
+   "para": 1,
+   "versao": [
+    1,
+    2
+   ],
+   "metricas_antes": {
+    "cartas_rodada": 2.159,
+    "p95_total": 11.0,
+    "vitoria_pct": 68.5,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 2.007,
+      "p95": 11.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 71.4
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 2.717,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 67.2
+     },
+     "Arcanista Cinzento": {
+      "cpr": 2.097,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 63.1
+     },
+     "Médico de Campo": {
+      "cpr": 2.155,
+      "p95": 16.0,
+      "timeout_pct": 3.1,
+      "vitoria_pct": 68.3
+     }
+    }
+   },
+   "metricas_depois": {
+    "cartas_rodada": 2.15,
+    "p95_total": 11.0,
+    "vitoria_pct": 68.3,
+    "por_postura": {
+     "Devoto do Abismo": {
+      "cpr": 2.007,
+      "p95": 11.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 71.4
+     },
+     "Sangromante": {
+      "cpr": 1.792,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 72.5
+     },
+     "Corruptor": {
+      "cpr": 2.717,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 67.2
+     },
+     "Arcanista Cinzento": {
+      "cpr": 2.097,
+      "p95": 8.0,
+      "timeout_pct": 0.0,
+      "vitoria_pct": 63.1
+     },
+     "Médico de Campo": {
+      "cpr": 2.122,
+      "p95": 17.0,
+      "timeout_pct": 3.3,
+      "vitoria_pct": 67.2
+     }
+    }
+   },
+   "posturas_total_classe_0_19": {
+    "Médico de Campo": 0.558
+   },
+   "guarda_r19": "Postura afetada dentro de 45-85 %; as outras nao dependem da Carta (Sangromante inalterado, 65,0 %)",
+   "mantido": true,
+   "uso": {
+    "med1_fer_lente_de_protese": {
+     "uso": 0.333,
+     "delta_pp_v2": 2.5,
+     "bandeiras_v2": []
+    }
+   }
+  },
+  {
+   "bloco": "B5",
+   "carta": "bas_dev_guarda",
+   "campo": "efeito.valor",
+   "de": 2,
+   "para": 3,
+   "versao": [
+    1,
+    2
+   ],
+   "medido_em": "braco unico com as 3 guardas juntas (pressagio conhecida, decks on, 0-19)",
+   "metricas_antes": {
+    "razao_faixa_cego": 1.0258
+   },
+   "metricas_depois": {
+    "razao_faixa_cego": 1.026,
+    "vitoria_on_faixa_pct": 60.5
+   },
+   "mantido": false,
+   "motivo": "nao move a razao on-faixa/on-cego (|d| < 0,01); revertido"
+  },
+  {
+   "bloco": "B5",
+   "carta": "bas_arc_guarda",
+   "campo": "efeito.valor",
+   "de": 2,
+   "para": 3,
+   "versao": [
+    1,
+    2
+   ],
+   "medido_em": "braco unico com as 3 guardas juntas (pressagio conhecida, decks on, 0-19)",
+   "metricas_antes": {
+    "razao_faixa_cego": 1.0258
+   },
+   "metricas_depois": {
+    "razao_faixa_cego": 1.026,
+    "vitoria_on_faixa_pct": 60.5
+   },
+   "mantido": false,
+   "motivo": "nao move a razao on-faixa/on-cego (|d| < 0,01); revertido"
+  },
+  {
+   "bloco": "B5",
+   "carta": "bas_med_guarda",
+   "campo": "efeito.valor",
+   "de": 2,
+   "para": 3,
+   "versao": [
+    1,
+    2
+   ],
+   "medido_em": "braco unico com as 3 guardas juntas (pressagio conhecida, decks on, 0-19)",
+   "metricas_antes": {
+    "razao_faixa_cego": 1.0258
+   },
+   "metricas_depois": {
+    "razao_faixa_cego": 1.026,
+    "vitoria_on_faixa_pct": 60.5
+   },
+   "mantido": false,
+   "motivo": "nao move a razao on-faixa/on-cego (|d| < 0,01); revertido"
+  },
+  {
+   "bloco": "B6",
+   "familia": "abissal",
+   "carta": "inf_abissal_rachar_a_realidade",
+   "campo": "efeito.dano_base",
+   "de": 6,
+   "para": 7,
+   "versao": [
+    1,
+    2
+   ],
+   "celula": "abissal|L3",
+   "resultado": "on 86,0 -> 85,0; d +9,0 -> +8,0",
+   "mantido": true
+  },
+  {
+   "bloco": "B6",
+   "familia": "abissal",
+   "carta": "inf_abissal_rachar_a_realidade",
+   "campo": "efeito.dano_base",
+   "de": 7,
+   "para": 8,
+   "versao": [
+    1,
+    2
+   ],
+   "celula": "abissal|L3",
+   "resultado": "on 85,0 -> 85,0; d +8,0 -> +8,0",
+   "mantido": false,
+   "motivo": "nao move (|d| < 1 luta); revertido"
+  },
+  {
+   "bloco": "B6",
+   "familia": "lider_matilha",
+   "carta": "inf_lider_matilha_mordida_do_alfa",
+   "campo": "efeito.dano_base",
+   "de": 5,
+   "para": 6,
+   "versao": [
+    1,
+    2
+   ],
+   "celula": "lider_matilha|L3 e L5",
+   "resultado": "L3 on 70,0 -> 63,0 (d +12,0 -> +5,0); L5 on 80,0 -> 78,5 (d +11,5 -> +10,0)",
+   "mantido": true
+  },
+  {
+   "bloco": "B6",
+   "familia": "conjurador",
+   "carta": "inf_conjurador_raio_de_eter",
+   "campo": "frequencia",
+   "de": "turno",
+   "para": "cena",
+   "versao": [
+    1,
+    2
+   ],
+   "celula": "conjurador|L5",
+   "resultado": "L5 on 36,5 -> 38,5 (d -10,0 -> -8,0); L3 on 68,5 -> 68,5. NAO fecha: on < 45",
+   "mantido": true,
+   "motivo": "melhoria parcial mantida"
+  },
+  {
+   "bloco": "B6",
+   "familia": "predador_apice",
+   "carta": "inf_predador_apice_dilacerar",
+   "campo": "frequencia",
+   "de": "turno",
+   "para": "cena",
+   "versao": [
+    1,
+    2
+   ],
+   "celula": "predador_apice|L3",
+   "resultado": "0-19: on 58,5 -> 61,5 (d -16,5 -> -13,5). NAO fecha: |d| > 10",
+   "mantido": true,
+   "motivo": "melhoria parcial mantida"
+  }
+ ]
+}
