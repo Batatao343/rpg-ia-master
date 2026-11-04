@@ -294,20 +294,8 @@ def _name(actor: dict | None, fallback: str = "") -> str:
 
 
 def _alive(actor: dict | None) -> bool:
-    """Pode ser alvo de efeito de Carta (exclui terminal)."""
-    if not actor:
-        return False
-    return not (
-        actor.get("dead")
-        or actor.get("estado_terminal")
-        or actor.get("incapacitated")
-        or actor.get("fled")
-    )
-
-
-def _in_fight(actor: dict | None) -> bool:
-    """Alvo/aliado de efeito de Carta: vivo e que nao se rendeu (SPEC-377 R15)."""
-    return _alive(actor) and not (actor or {}).get("surrendered")
+    dead = ("dead", "estado_terminal", "incapacitated", "fled")
+    return bool(actor) and not any(actor.get(k) for k in dead)
 
 
 def is_down(actor: dict | None) -> bool:
@@ -395,7 +383,6 @@ def reset_round(actor: dict) -> None:
 
 
 def _card_side(actor_id: str, sides: dict | None) -> str | None:
-    """Lado de Carta: `hero`/`ally` colapsam em `heroes`; o resto fica como declarado."""
     for side, ids in (sides or {}).items():
         if actor_id in ids:
             return "heroes" if side in ("hero", "ally") else side
@@ -412,14 +399,18 @@ def _opponents(ctx: Ctx, actor_id: str) -> list[str]:
         side = _card_side(aid, ctx.sides)
         if side is None:
             side = "heroes" if a.get("is_player") or a.get("player") else "enemy"
-        if side != mine and _in_fight(a):
+        if side != mine and _alive(a) and not a.get("surrendered"):  # SPEC-377 R15
             out.append(aid)
     return sorted(out)
 
 
 def _allies(ctx: Ctx, actor_id: str) -> list[str]:
     opp = set(_opponents(ctx, actor_id))
-    return sorted(aid for aid, a in ctx.actors_by_id.items() if aid not in opp and _in_fight(a))
+    return sorted(
+        aid
+        for aid, a in ctx.actors_by_id.items()
+        if aid not in opp and _alive(a) and not a.get("surrendered")
+    )
 
 
 # --------------------------------------------------------------------------

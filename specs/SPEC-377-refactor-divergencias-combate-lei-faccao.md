@@ -1,6 +1,6 @@
 # SPEC-377 — Divergências de regra: poda da lei, custo de Fôlego, "vivo" no combate e esconder facção
 
-> **Status:** `approved` (03/11 noite, dono: "vai executando o que puder"; D1=a, D3=a+b, D4=a, D5=1→3→4. **Item 2 (Fôlego) fica com o dono**: depende de publicar `lote-v2` via `/eval-publish`)
+> **Status:** `in-progress` (itens 1, 3, 4 entregues 03/11; item 2 pendente do dono: publicar `lote-v2`) · antes `approved` (03/11 noite, dono: "vai executando o que puder"; D1=a, D3=a+b, D4=a, D5=1→3→4. **Item 2 (Fôlego) fica com o dono**: depende de publicar `lote-v2` via `/eval-publish`)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03 (rodada 2: revisão independente aplicada, ver §9)
 > **Origem:** `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §3 (R2–R5) e §6 (letra C → SPEC-377; regras W1–W8, com a W1 revisada)
 > **Depende de:** SPEC-299, 302, 293, 314, 328 e 330 (`done`). A SPEC-368 já pousou (`712f0228` na `main`), então os itens 2 e 3 não esperam mais. A W1 roda de novo no início de cada etapa.
