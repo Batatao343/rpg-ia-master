@@ -16,6 +16,7 @@ import os
 from typing import Any, Dict, List, Optional
 from collections.abc import Mapping
 
+from services.env import is_database_profile
 from services import discovery
 from services import graph_resolver as gr
 from services.chronicle import CHRONICLE_EVENT_TYPES
@@ -298,7 +299,7 @@ def _revealed_for(base: Mapping, tier: int) -> tuple:
     # O overlay é escopo do dono LEGADO (jogador local único). Em perfil com
     # banco (multi-tenant) esse escopo é compartilhado: lê-lo mostraria a um
     # jogador o que outro revelou. Fail-closed até existir escopo por dono/jogo.
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         return [], []
     try:
         from services import bestiary_knowledge as bk
