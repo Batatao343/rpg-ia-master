@@ -474,6 +474,7 @@ pedidas foram aplicadas:
 | P2-1 | R9/R10: número real (2 Cartas, motivo (b), lint igual). D2 fica recomendada como adotada na aprovação e a arena base saiu do item 2. **Ressalva:** o modo (iii) (Ruptura/evolução) continua obrigatório, porque a revisão não o mediu. |
 | P2-2 | R6: guard `world_engine.mode()=="on"` dentro do hook; a frase do modelo `npc_world` saiu. |
 | P2-3 | R2/D1: o efeito é "só após suborno"; pena, multa e decaimento natural não mudam. |
+| Flake (pouso) | `tests/test_world_rejection_logs.py` lia o stdout real e falhava sob xdist (2 de 4 suítes completas da onda) quando outro teste do worker trocava stdout/captura. Agora um `capsys` local lê as mesmas linhas JSON de um handler no logger `rpg` com o formatador de produção. Nenhuma asserção mudou (W3 ok). |
 | P2-4 | §4 item 1 passo 4: o playtest é guarda de regressão, não prova. |
 | P2-5 | R15: 3 caminhos mais a rodada seguinte; a arena do item 3 virou obrigatória. |
 | P2-6 | R13/R16: a nuance de `ct._targetable(terminal) is True` entrou na tabela e no teste. |
