@@ -2362,6 +2362,57 @@ def _story_guard_narrative(t: _StoryTurn) -> None:
     from services import prose_guard
 
     t.narrative_text = t.update.narrative
+    _story_prevalidate_events(t)
+    if not str(t.narrative_text).strip():
+        # Fallback digno: o TURNO MECÂNICO sobrevive mesmo com LLM flaky —
+        # as notas determinísticas (viagem/descanso/encontro) viram a narração.
+        t.narrative_text = _deterministic_story_fallback(
+            (t.travel_note, t.rest_note, t.world_note, t.faction_note, t.weather_note),
+            t._ll,
+        )
+    t.narrative_text = prose_guard.sanitize_player_facing(str(t.narrative_text))
+    if t.rumor_nothing:
+        t.narrative_text = _neutralize_false_find(t.narrative_text)
+    t.narrative_text = prose_guard.reconcile_player_gold_claims(
+        t.narrative_text, int((t.state.get("player") or {}).get("gold", 0) or 0)
+    )
+    if t.invalid_story_events:
+        # Não há fact-check semântico confiável frase a frase. Em vez de
+        # deixar a alegação rejeitada sobreviver, usa somente consequências
+        # determinísticas já aplicadas neste turno.
+        safe_parts = [note for note in (t.travel_note, t.rest_note, t.faction_note) if note]
+        t.narrative_text = (
+            _deterministic_story_fallback(safe_parts, t._ll)
+            if safe_parts
+            else (
+                "A tentativa altera apenas o momento imediato; nenhuma mudança "
+                "permanente no mundo foi confirmada."
+            )
+        )
+        t.narrative_text += (
+            "\n\n[SISTEMA] Uma mudança permanente proposta pela narração "
+            "foi rejeitada pelo estado canônico."
+        )
+
+    t.narrative_text = prose_guard.vary_repeated_opening(
+        str(t.narrative_text),
+        t._aberturas,
+        salt=t._open_salt,
+    )
+
+    # SPEC-202 R11: narração mediada não revela segredo não revelado.
+    t.narrative_text, t.mediation_rejections = _guard_mediation_secret(
+        str(t.narrative_text), t.scene_state
+    )
+
+    # spec polish-prosa (R4): telemetria de abertura repetida (não re-tenta).
+    prose_guard.log_if_repeats(
+        str(t.narrative_text), t._aberturas[0] if t._aberturas else "", where="storyteller"
+    )
+
+
+def _story_prevalidate_events(t: _StoryTurn) -> None:
+    """Pré-validação read-only das propostas de evento da LLM e política de quarentena."""
     # Pré-validação read-only das propostas da própria LLM. O processor no
     # archivist continua sendo o único escritor, mas a mensagem visível não
     # pode afirmar como fato uma mudança que ele rejeitará logo depois.
@@ -2412,52 +2463,6 @@ def _story_guard_narrative(t: _StoryTurn) -> None:
         ]
         if t.quarantine_llm_payload
         else llm_event_proposals
-    )
-    if not str(t.narrative_text).strip():
-        # Fallback digno: o TURNO MECÂNICO sobrevive mesmo com LLM flaky —
-        # as notas determinísticas (viagem/descanso/encontro) viram a narração.
-        t.narrative_text = _deterministic_story_fallback(
-            (t.travel_note, t.rest_note, t.world_note, t.faction_note, t.weather_note),
-            t._ll,
-        )
-    t.narrative_text = prose_guard.sanitize_player_facing(str(t.narrative_text))
-    if t.rumor_nothing:
-        t.narrative_text = _neutralize_false_find(t.narrative_text)
-    t.narrative_text = prose_guard.reconcile_player_gold_claims(
-        t.narrative_text, int((t.state.get("player") or {}).get("gold", 0) or 0)
-    )
-    if t.invalid_story_events:
-        # Não há fact-check semântico confiável frase a frase. Em vez de
-        # deixar a alegação rejeitada sobreviver, usa somente consequências
-        # determinísticas já aplicadas neste turno.
-        safe_parts = [note for note in (t.travel_note, t.rest_note, t.faction_note) if note]
-        t.narrative_text = (
-            _deterministic_story_fallback(safe_parts, t._ll)
-            if safe_parts
-            else (
-                "A tentativa altera apenas o momento imediato; nenhuma mudança "
-                "permanente no mundo foi confirmada."
-            )
-        )
-        t.narrative_text += (
-            "\n\n[SISTEMA] Uma mudança permanente proposta pela narração "
-            "foi rejeitada pelo estado canônico."
-        )
-
-    t.narrative_text = prose_guard.vary_repeated_opening(
-        str(t.narrative_text),
-        t._aberturas,
-        salt=t._open_salt,
-    )
-
-    # SPEC-202 R11: narração mediada não revela segredo não revelado.
-    t.narrative_text, t.mediation_rejections = _guard_mediation_secret(
-        str(t.narrative_text), t.scene_state
-    )
-
-    # spec polish-prosa (R4): telemetria de abertura repetida (não re-tenta).
-    prose_guard.log_if_repeats(
-        str(t.narrative_text), t._aberturas[0] if t._aberturas else "", where="storyteller"
     )
 
 
