@@ -605,7 +605,6 @@ select {
 .quest__beat.is-current::before { content: "▸"; color: var(--accent); }
 .quest__beat.is-done { color: var(--faint); text-decoration: line-through; }
 .quest__beat.is-done::before { content: "●"; color: var(--accent); }
-.diary__summary { font-size: 0.98rem; line-height: 1.6; color: var(--muted); margin: 0; }
 
 /* --- mapa --- */
 .worldmap {
@@ -1183,8 +1182,7 @@ select {
   max-height: calc(100dvh - 32px); overflow: auto;
 }
 .image-quote-dialog::backdrop { background: oklch(0 0 0 / 0.75); }
-.image-quote-actions, .image-offers { display: flex; flex-wrap: wrap; gap: 12px; }
-.image-offers { padding: 8px 16px; }
+.image-quote-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .image-quote-actions .btn:not(.btn--ghost) { background: var(--accent-strong); color: var(--on-accent); }
 .image-generations { display: flex; flex-wrap: wrap; gap: 0.75rem; padding: 0.5rem 1rem; }
 .generated-art-card { width: min(20rem, 100%); padding: 0.75rem; border: 1px solid var(--line-soft); border-radius: var(--r-sm); background: var(--surface); }
