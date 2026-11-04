@@ -8,8 +8,8 @@ do sacrificio. Fase C: uso de objeto de cena e ordem a companheiro.
 from __future__ import annotations
 
 import re
-import unicodedata
 
+from services import text as _text
 from services.death_flow import NONLETHAL_RE, nonlethal_declared  # noqa: F401
 
 __all__ = [
@@ -27,8 +27,7 @@ _NEGATION = re.compile(r"\b(?:nao|nunca|jamais|sem|ninguem)\b")
 
 
 def _fold(text: object) -> str:
-    raw = unicodedata.normalize("NFKD", str(text or ""))
-    return "".join(c for c in raw if not unicodedata.combining(c)).lower()
+    return _text.fold(text, case="lower")
 
 
 def _negated(folded: str, start: int) -> bool:
