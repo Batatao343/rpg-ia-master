@@ -397,7 +397,9 @@ def test_reinforcement_inherits_deck_seed_and_forecast(monkeypatch, card_on):
     new = out["enemies"][1]
     assert new["id"].endswith("_r1") and new["deck_seed"] == 7 and new.get("_deck332")
     assert new["chegou_na_rodada"] == 3
-    assert new["id"] in [r["actor_id"] for r in out["combat"]["pressagios_publicos"]]
+    # L2: a rodada da chegada + 1 é de fôlego; o presságio do `_r1` volta na rodada seguinte
+    nxt = _run(monkeypatch, rounds=4)[-1][1]
+    assert new["id"] in [r["actor_id"] for r in nxt["combat"]["pressagios_publicos"]]
     assert last(7)["enemies"][1]["cartas"] == new["cartas"]  # determinístico
 
 
@@ -623,3 +625,16 @@ def test_l1_arrival_needs_one_lacaio_of_slack(card_on, budget, fires):
     assert meta["reinforcement"].get("fired", False) is fires
     if not fires:
         assert meta["reinforcement"]["cause"] == "sem_folga" and len(enemies) == 1
+
+
+def test_l2_arrival_recovers_breath_and_skips_first_action(monkeypatch, card_on):
+    """L2 (gate 2): o `_r1` chega com a condição visível e perde o turno da rodada seguinte."""
+    seq = _run(monkeypatch, rounds=4)
+    state3, out3 = seq[2]
+    new3 = next(e for e in out3["enemies"] if e["id"].endswith("_r1"))
+    conds = [c for c in _api_payload(state3, out3)["combat"]["enemies"] if c["id"] == new3["id"]]
+    assert [c["name"] for c in conds[0]["conditions"]] == [rc.RECOVERING]
+    _, out4 = seq[3]
+    new4 = next(e for e in out4["enemies"] if e["id"].endswith("_r1"))
+    assert not new4.get("active_conditions")  # expirou depois de negar a ação
+    assert not any((new4.get("enemy_card_usage") or {}).values())  # não jogou Carta

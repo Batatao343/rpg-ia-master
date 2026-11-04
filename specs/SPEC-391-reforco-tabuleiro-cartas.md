@@ -511,6 +511,9 @@ a ficar congelado a partir do commit desta emenda.
 - **L1 aplicada após gate 1 reprovar (+19,6 pp):** a chegada do fluxo de Carta exige folga de orçamento para
   o reforço + 1 Lacaio (`rf.spawn(..., slack=2)`, só o fluxo de Carta). Sem folga o reforço não chega e o
   estado vira `cancelled` com `cause="sem_folga"` (antes `budget`). L2/L3 não aplicadas; gate 2 é do coordenador.
+- **L2 aplicada após gate 2 reprovar (+10,6 pp; Corruptor +17,9):** cumulativa com a L1. O reforço chega com a
+  condição "Recuperando o fôlego" (controle `stun`, 1 rodada, visível no chip/payload): perde a ação da rodada
+  seguinte à chegada e a condição expira. Efeito colateral: o presságio do `_r1` só volta 1 rodada depois. L3 não aplicada.
 - **Playtest (R17):** `combate_reforco` com os 3 `on` e a flag: 8 turnos, 0 erro, 0 violação, `fired via=carta`.
 
 ## 5. Critérios de aceite

@@ -138,6 +138,17 @@ def _called(scene: dict, state: dict, leader: dict, played: dict, res: dict) -> 
     _log_event("combat", "reinforcements_warned", level="info", via=VIA)
 
 
+RECOVERING = "Recuperando o fôlego"
+
+
+def _recovering(enemy: dict) -> None:
+    """SPEC-391 L2 (gate 2 reprovou): o recém-chegado perde a 1ª ação (stun de 1 rodada, visível
+    como condição no chip/payload); reaproveita o mecanismo de controle, sem regra nova."""
+    conds = list(enemy.get("active_conditions") or [])
+    conds.append({"name": RECOVERING, "control": "stun", "duration": 1, "dot": 0})
+    enemy["active_conditions"] = conds
+
+
 def _slack() -> int:
     """SPEC-391 L1 (gate 1 reprovou): a chegada só com folga de orçamento para +1 Lacaio."""
     import encounter_budget as eb
@@ -170,6 +181,7 @@ def _fire(
     pos = rf._arrival_position(scene, str(state["leader_id"]))
     for enemy in new:
         enemy["chegou_na_rodada"] = int(round_)  # R12: padrao/assinatura contam daqui
+        _recovering(enemy)
         trig.setdefault("participants", {})[enemy["id"]] = dict(pos)
     cs.fire_reinforcement(scene, str(trig["id"]))
     for enemy in new:
