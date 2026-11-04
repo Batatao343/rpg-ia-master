@@ -217,23 +217,27 @@ def test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2():
     }
 
 
-def _redundante_dot_legado(issue) -> bool:
-    return issue.code == "redundancia" and any(
-        f"de {cid} " in issue.message for cid in ("cor_toque", "toque_corrosivo")
-    )
-
-
 def test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio():
     pool = card_lint.load_pool()
+    colisoes: set[tuple[str, str]] = set()
     for c in _lote4():
         others = [o for o in pool if o["id"] != c["id"]]
         issues = card_lint.lint_card(c, others)
         assert not card_lint.errors(issues), c["id"]
         # SPEC-377 R11: o dot livre legado (cor_toque/toque_corrosivo) passou a custar 1 no lint,
-        # igual ao jogo; a assinatura deles coincide com a de Mofo Quente (aviso brando, aceito).
-        avisos = [i for i in issues if i.level == "warn" and not _redundante_dot_legado(i)]
-        assert not avisos, (c["id"], issues)
+        # igual ao jogo; a única colisão aceita é Mofo Quente x esse par (asserção exata abaixo).
+        avisos = [i for i in issues if i.level == "warn"]
+        colisoes.update(
+            (c["id"], i.message.split(" de ")[1].split(" ")[0])
+            for i in avisos
+            if i.code == "redundancia"
+        )
+        assert all(i.code == "redundancia" for i in avisos), (c["id"], issues)
         assert fx.budget_error(c) is None, c["id"]
+    assert colisoes == {
+        ("cor1_bio_mofo_quente", "cor_toque"),
+        ("cor1_bio_mofo_quente", "toque_corrosivo"),
+    }
     legado = [c for c in pool if c.get("classe") == "Corruptor" and c.get("onda") is None]
     assert len(legado) >= 53
     assert not [c["id"] for c in legado if c.get("momento_placeholder")]
@@ -294,10 +298,7 @@ def test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio():
         others = [o for o in pool if o["id"] != c["id"]]
         issues = card_lint.lint_card(c, others)
         assert not card_lint.errors(issues), c["id"]
-        # SPEC-377 R11: o dot livre legado (cor_toque/toque_corrosivo) passou a custar 1 no lint,
-        # igual ao jogo; a assinatura deles coincide com a de Mofo Quente (aviso brando, aceito).
-        avisos = [i for i in issues if i.level == "warn" and not _redundante_dot_legado(i)]
-        assert not avisos, (c["id"], issues)
+        assert not [i for i in issues if i.level == "warn"], (c["id"], issues)
         assert fx.budget_error(c) is None, c["id"]
     legado = [c for c in pool if c.get("classe") == "Médico de Campo" and c.get("onda") is None]
     assert len(legado) >= 52
@@ -438,10 +439,7 @@ def test_lote6_passa_no_lint_e_no_orcamento_sem_avisos():
         others = [o for o in pool if o["id"] != c["id"]]
         issues = card_lint.lint_card(c, others)
         assert not card_lint.errors(issues), (c["id"], issues)
-        # SPEC-377 R11: o dot livre legado (cor_toque/toque_corrosivo) passou a custar 1 no lint,
-        # igual ao jogo; a assinatura deles coincide com a de Mofo Quente (aviso brando, aceito).
-        avisos = [i for i in issues if i.level == "warn" and not _redundante_dot_legado(i)]
-        assert not avisos, (c["id"], issues)
+        assert not [i for i in issues if i.level == "warn"], (c["id"], issues)
         assert fx.budget_error(c) is None, c["id"]
 
 
