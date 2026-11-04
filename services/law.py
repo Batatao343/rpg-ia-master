@@ -14,7 +14,6 @@ from __future__ import annotations
 import hashlib
 import logging
 import math
-import os
 import random
 import re
 from typing import Any, TypedDict
@@ -22,6 +21,7 @@ from typing import Any, TypedDict
 from observability.telemetry import log_event as _log_event
 from services import law_codes
 from services import text as _text
+from services.env import env_choice
 
 _LOG = logging.getLogger("rpg.law")
 
@@ -154,8 +154,7 @@ class LawReceipt(TypedDict, total=False):
 # Primitivos
 # --------------------------------------------------------------------------- #
 def mode() -> str:
-    raw = str(os.getenv("RPG_LAW", "off") or "").strip().lower()
-    return raw if raw in MODES else "off"
+    return env_choice("RPG_LAW", MODES, "off")
 
 
 def _fold(text: Any) -> str:
