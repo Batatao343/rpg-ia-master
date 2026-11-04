@@ -1,6 +1,6 @@
 # SPEC-369 — revisão astra (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 5, `8ef607c0` + `7a75a389` + `65bcd824`; P2-4 e P2-5 antes da Fase C). Rodadas anteriores: 4 `APPROVED_WITH_FOLLOWUPS` (P2-3 fechado em `6ed6815d`), 3 e 2 `APPROVED`, 1 `CHANGES_REQUIRED` (corrigida)
+> **Veredito:** `APPROVED` (rodada 6, `9acb4c82` + `4aa0baea` + `be072cef`, D-369-13). Rodadas anteriores: 5 e 4 `APPROVED_WITH_FOLLOWUPS` (follow-ups fechados), 3 e 2 `APPROVED`, 1 `CHANGES_REQUIRED` (corrigida)
 > **Revisor:** Astra (Opus 5.5, semântica de avaliador; não escreveu o código) · **Data:** 2026-11-04 · **Commit revisado:** `2361ca66` (régua `10935009`)
 
 ## Escopo
@@ -188,4 +188,36 @@ comparação base-0-19.json × 06bd8f39~1 → só predador_apice|L3 (+ amostra_a
 bash scripts/dev/pt.sh tests/test_spec369_regua.py tests/test_spec369_metas.py → 26 passed, 7 xfailed (-n 2; os 7 xfailed são test_r22_confirmacao, confirmacao.json ausente)
 final-0-19.json × LIMITE_* → todos iguais aos valores medidos
 grep "item 5" na spec → só a citação do §9; a D-369-10 tem 3 itens
+```
+
+## Rodada 6 (D-369-13: `9acb4c82`, `4aa0baea`, `be072cef`)
+
+**Veredito: `APPROVED`.** Ficam só 2 P3, nenhum bloqueante.
+
+1. **Cada limite é igual ao valor de `final-0-19.json` (`9acb4c82`).** Conferi um a um:
+   - uso: `arc1_cal_pulso_medido` 1,0, `bas_cor_mofo` 0,718 e `med1_fer_garra_de_protese` 0,604. São exatamente as 3 Cartas na meta (a) acima de 60 %;
+   - p95 total 11; Médico com p95 17 e timeout 3,3;
+   - razão do Presságio 1,0355;
+   - `conjurador` L5 com `on` 0,395. O Δ de −7,0 cumpre a meta e ficou sem limite.
+
+   O que passa voltou à meta cheia: `predador_apice` L3 (72,0 %, −3,0), `abissal` L3, `lider_matilha` L3/L5 e o p95 e o timeout das outras Posturas. As funções `r13` a `r20` e o `r19` contra o final dão `[]`, e nenhum limite ficou mais frouxo que o medido.
+2. **A prova ficou mais forte.** O teste reescrito afirma que limite e medido são iguais (p95 total e do Médico, timeout, razão, `bas_cor_mofo`) e que um passo pior reprova. Também confere:
+   - timeout sem tolerância;
+   - Postura sem limite reprovando na meta cheia;
+   - as 4 células com a faixa cheia;
+   - o Δ do `conjurador` preso em ≤ 10 mesmo com o `on` no limite.
+
+   A célula sintética (`monkeypatch` de `LIMITE_FAMILIA`) conserva o caso "só o Δ fora", que nenhuma célula real cobre mais. Ela é restaurada pelo fixture.
+3. **`9acb4c82` não toca arquivo da Fase A nem caminho do R2.** `git diff --exit-code main` sai vazio no R2. O revert é exato: `data/bestiary.json` e `tests/fixtures/spec349_legado_snapshot.json` estão byte-iguais à `main` (`0fdb2a85`), com `agilidade` 4.
+4. **A tolerância da D-369-11 não mudou** (`TOLERANCIA_CONFIRMACAO` está intacta). O teto de timeout é `max(meta, limite)`, sem `_tol`, então a tolerância não cobre timeout.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-9 | P3 | `tests/test_spec369_regua.py` (`test_d369_10_limites_registrados_nao_podem_piorar`) | A igualdade limite = medido é afirmada para p95, timeout, razão e `bas_cor_mofo`, mas não para `arc1_cal_pulso_medido`, `med1_fer_garra_de_protese` e o `on_win` do `conjurador`. Conferi à mão e estão iguais. | Opcional: um laço `T.LIMITE_USO_R14A[c] == final["uso"]["cartas"][c]["uso"]` e `LIMITE_FAMILIA["conjurador|L5"]["on_win"] == cell["on"]["win"]`. |
+| P3-10 | P3 | spec §8 D-369-11 (linha 487) × `r15` | A D-369-11 lista "o p95 total ≤ 10" entre as metas sem tolerância. Pela D-369-13, ele virou limite registrado (11), e o código dá +1 rodada a ele na confirmação. É coerente com "cada limite registrado ganha tolerância", mas o texto da D-369-11 contradiz isso. | Ajustar a linha 487 para "p95 total: limite registrado 11 (+1) desde a D-369-13", ou tirar a tolerância do total. Quem escolhe é o coordenador, antes da Fase C. |
+
+```text
+bash scripts/dev/pt.sh tests/test_spec369_regua.py tests/test_spec369_metas.py --basetemp <scratchpad>/bt6 → 28 passed, 7 xfailed (-n 2; os 7 são do R22). O basetemp padrão `pt-28ac9867` estava ocupado por outro processo (WinError 183), por isso usei um próprio.
+git diff main -- data/bestiary.json tests/fixtures/spec349_legado_snapshot.json → vazio
+git diff --exit-code main -- <R2> → vazio; 9acb4c82 sem arquivo da Fase A
 ```
