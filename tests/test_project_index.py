@@ -321,3 +321,20 @@ def test_stale_index_message_suggests_build(tmp_path: Path) -> None:
     with pytest.raises(ProjectIndexError, match="stale") as info:
         check_index(repo)
     assert "build" in str(info.value)
+
+
+def test_generated_index_artifacts_are_untracked() -> None:
+    tracked = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(ROOT),
+            "ls-files",
+            "project_index/repo_graph.json",
+            "project_index/manifest.json",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    assert tracked == ""

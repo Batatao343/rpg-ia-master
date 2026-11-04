@@ -17,7 +17,6 @@ SKILLS = (
     "spec-new",
     "spec-land",
     "estado",
-    "reindex",
     "eval-publish",
     "staging-deploy",
     "status-dono",

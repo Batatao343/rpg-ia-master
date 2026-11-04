@@ -66,7 +66,6 @@ jobs:
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - run: uv sync
       - run: uv run python -m evals.core.governance check --root .
-      - run: uv run python -m project_index check
       - run: uv run pytest tests/test_eval_governance.py tests/test_eval_harness.py
       - run: >-
           uv run python -m evals run

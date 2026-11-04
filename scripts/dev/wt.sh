@@ -3,7 +3,8 @@
 #
 #   scripts/dev/wt.sh new  <NNN|branch>   create worktree from main (outside OneDrive)
 #   scripts/dev/wt.sh sync <NNN|branch>   rebase on main + regenerate specs/index.yaml
-#                                         and project_index ON THE BRANCH (one commit)
+#                                         ON THE BRANCH (one commit). project_index/ artifacts
+#                                         are local and untracked (python -m project_index build)
 #   scripts/dev/wt.sh land <NNN|branch>   sync, then fast-forward main to the branch
 #   scripts/dev/wt.sh drop <NNN|branch>   remove worktree and branch
 #   scripts/dev/wt.sh path <NNN|branch>   print the worktree path
@@ -27,25 +28,62 @@ py() {  # project python inside the given worktree
   (cd "$1" && shift && bash scripts/dev/py.sh "$@")
 }
 
+GENERATED_IDX="project_index/repo_graph.json project_index/manifest.json"
+
+# Rebase on main. A stale branch may carry the old "sync indexes" commit, which
+# touches the (now untracked) project_index artifacts and specs/index.yaml: when the
+# conflict is ONLY in those three files, drop the artifacts, take main's
+# specs/index.yaml (regenerated right after) and continue. Anything else stops.
+rebase_main() {
+  local max i conflicts extra f
+  max=$(( $(git rev-list --count main..HEAD) + 1 ))
+  if git rebase -q main; then return 0; fi
+  for ((i = 0; i < max; i++)); do
+    conflicts="$(git diff --name-only --diff-filter=U)"
+    extra=""
+    for f in $conflicts; do
+      case "$f" in
+        project_index/repo_graph.json|project_index/manifest.json|specs/index.yaml) ;;
+        *) extra="$extra $f";;
+      esac
+    done
+    if [ -n "$extra" ]; then
+      echo "rebase stopped; conflicts outside generated files:$extra (resolve in $WT)" >&2; return 1
+    fi
+    # -f also deletes the conflict leftovers from the tree: untracked copies would
+    # block the next pick. They are generated files (python -m project_index build).
+    # shellcheck disable=SC2086
+    git rm -qf --ignore-unmatch $GENERATED_IDX
+    if echo "$conflicts" | grep -qx "specs/index.yaml"; then
+      git checkout --ours specs/index.yaml && git add specs/index.yaml
+    fi
+    if GIT_EDITOR=true git rebase --continue >/dev/null; then return 0; fi
+  done
+  echo "rebase still in conflict after $max auto-resolutions; aborting" >&2
+  git rebase --abort || true
+  return 1
+}
+
 sync_branch() {
   cd "$WT"
   if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
     echo "worktree $WT has uncommitted tracked changes; commit them first" >&2; exit 1
   fi
-  git rebase -q main
+  rebase_main || exit 1
   py "$WT" scripts/spec_index.py build
-  py "$WT" -m project_index build >/dev/null
-  git add specs/index.yaml project_index/manifest.json project_index/repo_graph.json
+  # project_index artifacts are local, untracked: never let them back into git.
+  # shellcheck disable=SC2086
+  git rm -q --cached --ignore-unmatch $GENERATED_IDX
+  git add specs/index.yaml
   if ! git diff --cached --quiet; then
-    git commit -q -m "chore: sync spec index and project index
+    git commit -q -m "chore: sync spec index
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
-    echo "synced indexes: $(git log --oneline -1)"
+    echo "synced index: $(git log --oneline -1)"
   else
-    echo "indexes already in sync"
+    echo "index already in sync"
   fi
   py "$WT" scripts/spec_index.py check >/dev/null
-  py "$WT" -m project_index check >/dev/null && echo "project_index check: fresh"
 }
 
 case "$cmd" in

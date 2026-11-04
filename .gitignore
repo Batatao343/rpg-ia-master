@@ -39,7 +39,6 @@ supabase/.branches/
 !.claude/skills/spec-new/
 !.claude/skills/spec-land/
 !.claude/skills/estado/
-!.claude/skills/reindex/
 !.claude/skills/eval-publish/
 !.claude/skills/staging-deploy/
 !.claude/skills/status-dono/
@@ -98,3 +97,7 @@ docs/descricao_projeto/rpg-ia-master-linkedin-3min-narrado.mp4
 coverage.xml
 coverage.json
 htmlcov/
+
+# Project Index: artefatos gerados localmente (python -m project_index build), nao versionados
+/project_index/repo_graph.json
+/project_index/manifest.json
