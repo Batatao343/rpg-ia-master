@@ -1,6 +1,6 @@
 # SPEC-389 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
+> **Veredito:** `APPROVED` (rodada 3; rodadas 1 e 2: `CHANGES_REQUIRED`)
 > **Revisor:** Opus / Sol · **Data:** 2026-11-04 · **Commit revisado:** `b4cefa2b`
 
 ## Escopo
@@ -101,4 +101,39 @@ bash scripts/dev/pt.sh (portrait_offer_causes, quest_delivery_npc, combat_text_s
 ruff format --check . → 1849 files already formatted · ruff check . → All checks passed
 bash scripts/dev/py.sh scripts/dev/size_budget.py → rc 0
 py.sh -c (join_samples com game_ref no log) → offer_view sem game_ref; games=[('api','h','None')] (P2-R2-1)
+```
+
+---
+
+## Rodada 3 (2026-11-04) — commit `0b1893b5`
+
+> **Veredito da rodada 3:** `APPROVED` · **Commit revisado:** `0b1893b5`. R6/R7 seguem condicionados à medição no staging
+> (§6 passo 1, coordenador). Isso é critério de aceite da spec, não pendência da revisão de código.
+
+### Achados da rodada 2
+
+| ID | Situação | Evidência |
+|---|---|---|
+| P2-R2-1 | resolvido | `join_samples` copia `game_ref` (`portrait_offer_measure.py:77`). O teste `test_measure_join_copies_game_ref_to_summary` afirma `("api", "h", "abc123") in summary["games"]` |
+| P2-R2-2 | resolvido | `test_entrega_body_through_the_graph_keeps_the_arc` faz o POST do corpo da `14 entrega` pelo `TestClient`, numa seed nova, e confere 200, `campaign_plan.location == "Brekmar"` e que `current_step` não volta. Junto com `_assert_entrega_closes` (nó `npc_actor` com a mesma frase e a mesma seed: `completed` e ouro pago), as partes de R8 e R18 que dá para provar offline estão cobertas |
+
+### Pergunta do coordenador: fechamento aleatório da `14 entrega` pelo grafo
+
+**Julgamento: (a) aceitável. Não é bug de produto.**
+
+- **De onde vem a aleatoriedade:** é desenho do MockLLM, não do motor. O storyteller do mock propõe `quest_completed` com `random.random() < 0.5` para quests marcadas como `prova: ok` (`mock_llm.py:335-361`, "Fase 5: … ~50% das vezes propõe a CONCLUSÃO"). A seed `14 entrega` já tem prova antes da conversa: `location_reached` (turno 1) e `investigation` (turno 2), em `spec368_seed.py:411-413`, e a quest tem `location_id`. Então `has_completion_proof` passa pela regra (a)+(b) da SPEC-223 sem `npc_interaction`, e o validador aceita a proposta. Um LLM real que proponha concluir uma quest provada é um caminho legítimo do produto. Quest provada fechar sem conversa com a origem é o comportamento especificado para quest com local-alvo, e não muda nada da R9.
+- **Por que não tornar determinístico:**
+  - Fixar `random` no mock (por exemplo, `random.random → 0.99`) só provaria que a quest **não** fecha pelo storyteller. Isso não acrescenta nada.
+  - Trocar a frase do corpo por um verbo de conversa mudaria o cenário do smoke §6, que precisa reproduzir a frase do jogador do L3 ("Entrego a prova da caça ao contratante").
+  - Que o CLASSIFY real mande essa frase para a rota NPC é decisão de LLM. Isso só se prova no smoke real (§6 passo 2), como o próprio §6 prevê.
+- **Determinismo do teste:** o teste é determinístico no que afirma. Status 200, arco preservado e status válido valem nos dois desfechos do mock. Rodei 3 vezes os 10 testes de `smoke_body` e o do grafo: verdes nas 3. O fechamento determinístico pela rota NPC fica provado por `_assert_entrega_closes` e pelos 18 testes de `tests/test_quest_delivery_npc.py`.
+- Recomendação ao coordenador para o §6 passo 2: anotar a rota (`speaker.kind`/`reason`) junto com o `quest_completed`. Fechar pelo storyteller com prova continua correto. Se o roteamento real nunca cair em NPC com essa frase, o caminho da R9 fica sem uso real, e esse dado vai para o `docs/spec389/smoke.md`.
+
+### Comandos rodados (rodada 3)
+
+```text
+git diff fbdb7f52..spec-389 → 3 arquivos (+34)
+bash scripts/dev/pt.sh test_entrega_body_through_the_graph_keeps_the_arc + test_smoke_bodies_parse_and_play (3×) → 10 passed ×3
+bash scripts/dev/pt.sh tests/test_portrait_offer_causes.py tests/test_quest_delivery_npc.py tests/test_size_budget.py → 57 passed
+ruff format --check (3 arquivos do diff) → already formatted · scripts/dev/size_budget.py → rc 0
 ```
