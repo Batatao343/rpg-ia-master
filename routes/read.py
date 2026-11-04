@@ -280,9 +280,9 @@ def get_game_map(game_id: str | None = None):
     perigo, lore ou arte de local não alcançado sai daqui."""
     from services.map_view import build_map_view
 
-    state = api_core._load_unlocked_or_locked(api_core._resolve_save_file(game_id), game_id)
-    if not state:
-        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    _, state = api_core._load_or_404(
+        game_id, detail="Nenhum jogo salvo encontrado.", locked_read=True
+    )
     return build_map_view(state)
 
 
@@ -300,9 +300,9 @@ def get_world_map(game_id: str | None = None):
     if game_id:
         from services.map_view import legacy_filtered_map
 
-        state = api_core._load_unlocked_or_locked(api_core._resolve_save_file(game_id), game_id)
-        if not state:
-            raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+        _, state = api_core._load_or_404(
+            game_id, detail="Nenhum jogo salvo encontrado.", locked_read=True
+        )
         return legacy_filtered_map(state)
     data = dict(load_json_data("world_map.json") or {})
     data["locations"] = [loc for loc in data.get("locations", []) if loc.get("kind") != "interior"]
@@ -319,13 +319,9 @@ def get_current_state(game_id: str | None = None):
     # Por enquanto, load_game_state carrega o mais recente se não passarmos nada
     # Se você implementou o load_game_state(specific_file), usaria aqui
 
-    file_to_load = None
-    file_to_load = api_core._resolve_save_file(game_id)
-
-    state = api_core._load_unlocked_or_locked(file_to_load, game_id)
-
-    if not state:
-        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    _, state = api_core._load_or_404(
+        game_id, detail="Nenhum jogo salvo encontrado.", locked_read=True
+    )
     return format_response(state)
 
 
@@ -344,9 +340,7 @@ def combat_preview(req: CombatPreviewRequest, response: Response):
     Nunca expõe resistência/imunidade do alvo. Não grava nada."""
     from services import combat_preview as _preview
 
-    state = api_core.load_game_state(api_core._resolve_save_file(req.game_id))
-    if not state:
-        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    _, state = api_core._load_or_404(req.game_id, detail="Nenhum jogo salvo encontrado.")
     if not (state.get("combat") or {}).get("active"):
         raise HTTPException(
             409, detail={"code": "preview_no_combat", "message": "Não há conflito em andamento."}
@@ -386,11 +380,7 @@ def cards_glossary(response: Response):
 def get_player_codex(game_id: str | None = None):
     """Codex do jogador (Fase 3.2) — locais/fações/personagens/criaturas/segredos
     já registrados no save. On-demand (fora do GameResponse) para não inchar o turno."""
-    file_to_load = api_core._resolve_save_file(game_id)
-    state = api_core.load_game_state(file_to_load)
-
-    if not state:
-        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    _, state = api_core._load_or_404(game_id, detail="Nenhum jogo salvo encontrado.")
     return player_codex(state)
 
 
@@ -402,10 +392,7 @@ def get_codex_dossiers(response: Response, game_id: str | None = None):
     from services.dossier_visibility import DossiersResponseModel
     from services.dossiers import build_dossiers
 
-    file_to_load = api_core._resolve_save_file(game_id)
-    state = api_core.load_game_state(file_to_load)
-    if not state:
-        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    _, state = api_core._load_or_404(game_id, detail="Nenhum jogo salvo encontrado.")
     response.headers["Cache-Control"] = "private, no-store"
     # exclude_unset: chave acima do tier (R6) fica AUSENTE do JSON, nunca `null`.
     return DossiersResponseModel.model_validate(build_dossiers(state)).model_dump(
@@ -415,9 +402,7 @@ def get_codex_dossiers(response: Response, game_id: str | None = None):
 
 @router.get("/game/history")
 def game_history(game_id: str, cursor: str | None = None, limit: int = 50):
-    state = api_core.load_game_state(api_core._resolve_save_file(game_id))
-    if not state:
-        raise HTTPException(404, "Jogo não encontrado.")
+    _, state = api_core._load_or_404(game_id)
     from services.presentation_history import history_page
 
     try:

@@ -433,9 +433,7 @@ def account_series(period: str = "7d"):
 
 @router.get("/game/{game_id}/operations/{operation_id}/cost")
 def turn_cost(game_id: str, operation_id: str):
-    state = api_core.load_game_state(api_core._resolve_save_file(game_id))
-    if not state:
-        raise HTTPException(404, "Jogo não encontrado.")
+    _, state = api_core._load_or_404(game_id)
     if not api_core._database_profile():
         return {
             "history_id": None,
@@ -459,11 +457,7 @@ def turn_cost(game_id: str, operation_id: str):
 
 @router.get("/game/{game_id}/operations/{operation_id}")
 def operation_status(game_id: str, operation_id: str):
-    state = api_core.load_game_state(
-        api_core._resolve_save_file(game_id)
-    )  # ownership before lookup
-    if not state:
-        raise HTTPException(404, "Jogo não encontrado.")
+    _, state = api_core._load_or_404(game_id)  # ownership before lookup
     try:
         op, gid = uuid.UUID(operation_id), uuid.UUID(str(state["game_id"]))
     except ValueError as exc:

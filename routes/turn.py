@@ -1325,9 +1325,7 @@ def _execute_action(
     with lock:
         # SPEC-200 R17: a "fila" do turno = espera do lock (e, em perfis hosted, da operacao).
         timeline.extra["lock_wait_ms"] = int(round((_lat.now() - lock_wait_started) * 1000))
-        state = api_core.load_game_state(api_core._resolve_save_file(req.game_id))
-        if not state:
-            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        _, state = api_core._load_or_404(req.game_id)
         if not api_core._database_profile():
             persistence_module.ensure_synthetic_checkpoint(state)  # SPEC-228 R4
         operation_wait_started = _lat.now()
@@ -1440,10 +1438,7 @@ def game_death(req: DeathChoiceRequest):
     _bind_corr(req.game_id, req.action_id)
     lock = api_core._game_lock(req.game_id) if not api_core._database_profile() else nullcontext()
     with lock:
-        file_to_load = api_core._resolve_save_file(req.game_id)
-        state = api_core.load_game_state(file_to_load)
-        if not state:
-            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        _, state = api_core._load_or_404(req.game_id)
         claim, request_hash, receipt = _begin_state_mutation(
             state,
             action_id=req.action_id,
@@ -1899,10 +1894,7 @@ def game_action_stream(req: ActionRequest):
     from observability import latency as _lat
 
     timeline = _lat.TurnTimeline(transport="stream")  # t0 = entrada do handler (ACK servidor)
-    file_to_load = api_core._resolve_save_file(req.game_id)
-    state = api_core._load_unlocked_or_locked(file_to_load, req.game_id)
-    if not state:
-        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    _, state = api_core._load_or_404(req.game_id, locked_read=True)
     if not req.game_id and not api_core._database_profile() and state.get("game_id"):
         # SPEC-228 R8: resolve "mais recente" UMA vez; aceite e worker usam o UUID.
         req = req.model_copy(update={"game_id": str(state["game_id"])})

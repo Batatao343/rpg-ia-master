@@ -42,10 +42,7 @@ def game_equip(req: EquipRequest):
     _bind_corr(req.game_id, req.action_id)
     lock = api_core._game_lock(req.game_id) if not api_core._database_profile() else nullcontext()
     with lock:
-        file_to_load = api_core._resolve_save_file(req.game_id)
-        state = api_core.load_game_state(file_to_load)
-        if not state:
-            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        _, state = api_core._load_or_404(req.game_id)
         claim, request_hash, receipt = _begin_state_mutation(
             state,
             action_id=req.action_id,
@@ -102,10 +99,7 @@ def game_cards_prepare(req: PrepareCardsRequest):
     _bind_corr(req.game_id, req.action_id)
     lock = api_core._game_lock(req.game_id) if not api_core._database_profile() else nullcontext()
     with lock:
-        file_to_load = api_core._resolve_save_file(req.game_id)
-        state = api_core.load_game_state(file_to_load)
-        if not state:
-            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        _, state = api_core._load_or_404(req.game_id)
         claim, request_hash, receipt = _begin_state_mutation(
             state,
             action_id=req.action_id,
@@ -164,10 +158,7 @@ def _card_reward_mutation(
     _bind_corr(game_id, action_id)
     lock = api_core._game_lock(game_id) if not api_core._database_profile() else nullcontext()
     with lock:
-        file_to_load = api_core._resolve_save_file(game_id)
-        state = api_core.load_game_state(file_to_load)
-        if not state:
-            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        _, state = api_core._load_or_404(game_id)
         claim, request_hash, receipt = _begin_state_mutation(
             state, action_id=action_id, kind="equip", payload=payload
         )
@@ -267,10 +258,7 @@ def game_levelup(req: LevelUpRequest):
     _bind_corr(req.game_id, getattr(req, "action_id", None))
     lock = api_core._game_lock(req.game_id) if not api_core._database_profile() else nullcontext()
     with lock:
-        file_to_load = api_core._resolve_save_file(req.game_id)
-        state = api_core.load_game_state(file_to_load)
-        if not state:
-            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        _, state = api_core._load_or_404(req.game_id)
         claim, request_hash, receipt = _begin_state_mutation(
             state,
             action_id=req.action_id,

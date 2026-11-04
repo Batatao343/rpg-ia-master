@@ -743,3 +743,18 @@ def _bind_corr(game_id=None, action_id=None) -> None:
 
 # SPEC-381: a lista e preenchida no lugar por api.py (mesma posicao de import, reload-safe)
 _CORS_ORIGINS: list[str] = []
+
+
+def _load_or_404(
+    game_id: str | None, *, detail: str = "Jogo não encontrado.", locked_read: bool = False
+) -> tuple[str | None, dict]:
+    """SPEC-381 R18: resolve o save, carrega e responde 404 se vazio.
+    Resolve os loaders na hora da chamada (patches de teste continuam valendo)."""
+    file_to_load = _resolve_save_file(game_id)
+    if locked_read:
+        state = _load_unlocked_or_locked(file_to_load, game_id)
+    else:
+        state = load_game_state(file_to_load)
+    if not state:
+        raise HTTPException(status_code=404, detail=detail)
+    return file_to_load, state

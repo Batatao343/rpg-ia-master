@@ -125,9 +125,7 @@ def delete_save_endpoint(game_id: str, request: Request):
 
 @router.post("/game/chronicle/search")
 def search_chronicle_endpoint(req: ChronicleSearchRequest):
-    state = api_core.load_game_state(api_core._resolve_save_file(req.game_id))
-    if not state:
-        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    _, state = api_core._load_or_404(req.game_id)
     from services.chronicle_search import search_chronicle
 
     try:
@@ -172,10 +170,7 @@ def export_chronicle(game_id: str | None = None):
     """R5: crônica como .txt (download) com separadores por capítulo."""
     from fastapi.responses import PlainTextResponse
 
-    file_to_load = api_core._resolve_save_file(game_id)
-    state = api_core.load_game_state(file_to_load)
-    if not state:
-        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    _, state = api_core._load_or_404(game_id, detail="Nenhum jogo salvo encontrado.")
 
     player = state.get("player") or {}
     lines: list[str] = [

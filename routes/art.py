@@ -189,9 +189,7 @@ def create_image_quote(game_id: str, req: ArtQuoteRequest):
     elif req.enemy_id is not None:
         raise HTTPException(422, "enemy_id_only_monster")
     runtime, principal, repository = _image_finance()
-    state = api_core.load_game_state(api_core._resolve_save_file(game_id))
-    if not state:
-        raise HTTPException(404, "Jogo não encontrado.")
+    _, state = api_core._load_or_404(game_id)
     _validate_image_request(state, req.reformulation, req.image_type)
     if req.image_type == "monster":
         trigger, brief = _monster_quote_inputs(state, req, runtime)
@@ -263,9 +261,7 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
     # only a NEW confirm is refused (guard runs after the `prior` lookup below).
     runtime, principal, repository = _image_finance(guard=False)
     claim = None
-    state = api_core.load_game_state(api_core._resolve_save_file(game_id))
-    if not state:
-        raise HTTPException(404, "Jogo não encontrado.")
+    _, state = api_core._load_or_404(game_id)
     try:
         quote = repository.get(principal, uuid.UUID(game_id), req.quote_id)
         with runtime.resources[0].connection() as connection:
@@ -358,9 +354,7 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
 
 @router.get("/game/{game_id}/art/{generation_id}")
 def dynamic_art_status(game_id: str, generation_id: str):
-    state = api_core.load_game_state(api_core._resolve_save_file(game_id))
-    if not state:
-        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    _, state = api_core._load_or_404(game_id)
     if api_core._database_profile():
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
@@ -438,9 +432,7 @@ def dynamic_art_status(game_id: str, generation_id: str):
 
 @router.post("/game/{game_id}/art/{generation_id}/quality")
 def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest):
-    state = api_core.load_game_state(api_core._resolve_save_file(game_id))
-    if not state:
-        raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+    _, state = api_core._load_or_404(game_id)
     if api_core._database_profile():
         from infrastructure.contracts import Conflict
         from infrastructure.request_context import current_principal
