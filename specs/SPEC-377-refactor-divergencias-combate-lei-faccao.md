@@ -1,6 +1,6 @@
 # SPEC-377 — Divergências de regra: poda da lei, custo de Fôlego, "vivo" no combate e esconder facção
 
-> **Status:** `in-progress` (itens 1, 3, 4 entregues 03/11; item 2 pendente do dono: publicar `lote-v2`) · antes `approved` (03/11 noite, dono: "vai executando o que puder"; D1=a, D3=a+b, D4=a, D5=1→3→4. **Item 2 (Fôlego) fica com o dono**: depende de publicar `lote-v2` via `/eval-publish`)
+> **Status:** `done` (04/11; itens 1, 3, 4 entregues 03/11; item 2 entregue 04/11, sem publicação de eval: nada protegido muda) · antes `approved` (03/11 noite, dono: "vai executando o que puder"; D1=a, D3=a+b, D4=a, D5=1→3→4. item 2 (Fôlego) executado em 04/11; não exige `/eval-publish`)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03 (rodada 2: revisão independente aplicada, ver §9)
 > **Origem:** `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §3 (R2–R5) e §6 (letra C → SPEC-377; regras W1–W8, com a W1 revisada)
 > **Depende de:** SPEC-299, 302, 293, 314, 328 e 330 (`done`). A SPEC-368 já pousou (`712f0228` na `main`), então os itens 2 e 3 não esperam mais. A W1 roda de novo no início de cada etapa.
@@ -284,9 +284,9 @@ A conferência e a revisão independente corrigiram a auditoria em cinco pontos:
   extrai partes do `storyteller`; se este item pousar antes, a 382 herda a ordem nova (o
   coordenador sequencia).
 - Item 2: `services/cards.py:447-468` e `services/card_effects.py:1596-1609`. Com [D2] = (a), a
-  implementação mora em `card_effects.py` e lê `card.get("efeito") or primary_effect(card) or {}`.
+  implementação (desvio: mora em `cards.py`, ver § Execução do item 2) lê `card.get("efeito") or primary_effect(card) or {}`.
   Ela usa `_DAMAGE_KINDS` e `DANO_BASE_FOLEGO_2` com as semânticas do jogo e protege `int()`
-  (R12). `cards.custo_folego` vira alias. As constantes de `cards.py` ficam onde estão.
+  (R12). `card_effects.custo_folego` vira alias (desvio, ver § Execução). As constantes de `cards.py` ficam onde estão.
 - Item 3: só nomes e docstrings em `card_effects.py`, `scene_cards.py`, `companion_orders.py`,
   `conflict_turn.py` e `conflict_orchestrator.py`, mais a correção do R15 em
   `card_effects._alive`: excluir `surrendered` e status `rendido`/`morto`/`fugiu`, mantendo a
@@ -334,7 +334,7 @@ Antes de cada etapa: W1 revisada (R23) e RAM livre ≥ 3 GB. Os testes do escopo
 1. **Etapa 0** (R10): reproduz as 2 divergências, mede o modo (iii) e roda o `lote-v2` das
    2 Cartas antes/depois. Se o modo (iii) achar divergência nova, para e reporta.
 2. Com [D2] = (a) e o modo (iii) limpo, **não** rodar a arena base. O jogo não muda (paridade de
-   catálogo) e o lint dessas 2 Cartas também não [R].
+   catálogo) e o orçamento dessas 2 Cartas também não [R] (correção: a `signature` do lint muda e gera o aviso `redundancia` contra `cor1_bio_mofo_quente`; ver § Execução do item 2).
 3. **Testes** (`tests/test_spec377_folego.py`):
    - `test_uma_implementacao`;
    - `test_paridade_catalogo_com_jogo` (oráculo: o `.json` da Etapa 0, coluna `jogo`);
@@ -386,7 +386,7 @@ Antes de cada etapa: W1 revisada (R23) e RAM livre ≥ 3 GB. Os testes do escopo
 - [ ] Item 1: hook registrado com guard `world_engine.mode()=="on"`; R2–R7 com testes, incluindo
       a colisão `mark_hunters`; playtest curto sem violação `law.*` nova
 - [ ] Item 2: Etapa 0 publicada com o modo (iii); uma implementação; paridade com o catálogo do
-      jogo; `lote-v2` antes/depois publicado via `/eval-publish` (W5); R24 sem diff de arquivo
+      jogo; `lote-v2` antes/depois registrado em `docs/spec377/lote-v2-{antes,depois}.json` e reproduzido pela revisão independente (nada protegido muda; sem `/eval-publish`); R24 sem diff de arquivo
 - [ ] Item 3: mapa publicado; R14 renomeado; R15 corrigido nos 3 caminhos e nas rodadas
       seguintes; R16 fotografado e intacto; arena 45–85 %
 - [ ] Item 4: matriz publicada; [D4] aplicada; testes 293/294/298/314/315/351 verdes
@@ -502,4 +502,4 @@ Pendente: **item 2 (custo de Fôlego)**, que depende de o dono publicar `lote-v2
 - Etapa 0 em `docs/spec377/folego_divergencias.{py,json}`: modo (iii) limpo (16 Cartas com ruptura/evolução, 0 divergências). `lote-v2` antes/depois em `docs/spec377/lote-v2-{antes,depois}.json`: `cor_toque` idêntico (delta +2,5); `toque_corrosivo` vitoria_ref 0,875→0,887, delta +1,2→0,0, sem bandeira.
 - Desvio: a implementação única mora em `cards.custo_folego` (não em `card_effects`), e `card_effects.custo_folego` é o alias; motivo: `card_effects.py` é god-file e não pode crescer (size_budget), e as constantes já vivem em `cards.py`.
 - Achado novo: `card_lint.signature` inclui o custo; `cor_toque`/`toque_corrosivo` (1 Fôlego agora) passam a ter assinatura igual à de `cor1_bio_mofo_quente`, gerando aviso `redundancia` (brando). `test_lote4_passa_no_lint…` ignora esse par específico. Sem diff em Carta/orçamento.
-- Pendente (W5): publicar o antes/depois do `lote-v2` por `/eval-publish`.
+- W5: nada protegido muda (`ci_eval_scope.classify` → `protected: False`), então não há `/eval-publish`. Evidência `docs/spec377/lote-v2-{antes,depois}.json` conferida pela revisão independente (`handoffs/SPEC-377-sol-independent-review.md`, APPROVED_WITH_FOLLOWUPS); follow-ups P2/P3 aplicados (asserção exata do par de redundância no lote 4, lotes 5/6 restaurados, paridade do catálogo contra a regra antiga congelada).
