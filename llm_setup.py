@@ -729,6 +729,36 @@ def _emit_attempt_telemetry(event: LLMAttemptEvent) -> None:
             _LOG.warning("attempt telemetry hook falhou: %s", type(e).__name__)
 
 
+def _attempt(
+    *,
+    provider: str,
+    model: str,
+    tier: ModelTier,
+    attempt_index: int,
+    latency_ms: int,
+    fell_back: bool,
+    outcome: LLMAttemptOutcome,
+    error: str | None,
+    structured: bool,
+    **extra,
+) -> None:
+    """Monta e emite um ``LLMAttemptEvent`` (SPEC-378 E4)."""
+    _emit_attempt_telemetry(
+        LLMAttemptEvent(
+            provider=provider,
+            model=model,
+            tier=tier,
+            attempt_index=attempt_index,
+            latency_ms=latency_ms,
+            fell_back=fell_back,
+            outcome=outcome,
+            error=error,
+            structured=structured,
+            **extra,
+        )
+    )
+
+
 _UNSET = object()
 _STREAM_CANCELLED = object()
 
@@ -1031,18 +1061,16 @@ class RoutedLLM:
             circuit_reason = _OPEN_CIRCUITS.get((provider, model))
             if circuit_reason:
                 errors.append(f"{provider}:{model} circuit")
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=provider,
-                        model=model,
-                        tier=self.tier,
-                        attempt_index=attempt_index,
-                        latency_ms=0,
-                        fell_back=fell_back,
-                        outcome="circuit_open",
-                        error=circuit_reason,
-                        structured=structured_contract is not None,
-                    )
+                _attempt(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=attempt_index,
+                    latency_ms=0,
+                    fell_back=fell_back,
+                    outcome="circuit_open",
+                    error=circuit_reason,
+                    structured=structured_contract is not None,
                 )
                 attempt_index += 1
                 continue
@@ -1052,19 +1080,17 @@ class RoutedLLM:
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
                 errors.append(f"{provider}:{model} build:{type(e).__name__}")
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=provider,
-                        model=model,
-                        tier=self.tier,
-                        attempt_index=attempt_index,
-                        latency_ms=latency_ms,
-                        fell_back=fell_back,
-                        outcome="build_error",
-                        error=type(e).__name__,
-                        http_status=_http_status(e),
-                        structured=structured_contract is not None,
-                    )
+                _attempt(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=attempt_index,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="build_error",
+                    error=type(e).__name__,
+                    http_status=_http_status(e),
+                    structured=structured_contract is not None,
                 )
                 attempt_index += 1
                 _open_circuit_if_permanent(provider, model, e)
@@ -1074,19 +1100,17 @@ class RoutedLLM:
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
                 errors.append(f"{provider}:{model} apply:{type(e).__name__}")
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=provider,
-                        model=model,
-                        tier=self.tier,
-                        attempt_index=attempt_index,
-                        latency_ms=latency_ms,
-                        fell_back=fell_back,
-                        outcome="build_error",
-                        error=f"apply:{type(e).__name__}",
-                        http_status=_http_status(e),
-                        structured=structured_contract is not None,
-                    )
+                _attempt(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=attempt_index,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="build_error",
+                    error=f"apply:{type(e).__name__}",
+                    http_status=_http_status(e),
+                    structured=structured_contract is not None,
                 )
                 attempt_index += 1
                 _open_circuit_if_permanent(provider, model, e)
@@ -1121,24 +1145,22 @@ class RoutedLLM:
                         and _http_status(e) == 400
                         and perr in _PROVIDER_GENERATION_FAILURES
                     )
-                    _emit_attempt_telemetry(
-                        LLMAttemptEvent(
-                            provider=provider,
-                            model=model,
-                            tier=self.tier,
-                            attempt_index=attempt_index,
-                            latency_ms=latency_ms,
-                            fell_back=fell_back,
-                            outcome="invoke_error",
-                            error=type(e).__name__,
-                            http_status=_http_status(e),
-                            structured=structured_contract is not None,
-                            structured_failure_code=(
-                                "provider_tool_use_failed" if semantic_gen_failure else "transport"
-                            ),
-                            usage=_usage_snapshot(e),
-                            provider_error_code=perr,
-                        )
+                    _attempt(
+                        provider=provider,
+                        model=model,
+                        tier=self.tier,
+                        attempt_index=attempt_index,
+                        latency_ms=latency_ms,
+                        fell_back=fell_back,
+                        outcome="invoke_error",
+                        error=type(e).__name__,
+                        http_status=_http_status(e),
+                        structured=structured_contract is not None,
+                        structured_failure_code=(
+                            "provider_tool_use_failed" if semantic_gen_failure else "transport"
+                        ),
+                        usage=_usage_snapshot(e),
+                        provider_error_code=perr,
                     )
                     attempt_index += 1
                     if semantic_gen_failure and semantic_attempt == 0:
@@ -1152,37 +1174,33 @@ class RoutedLLM:
                 if not valid:
                     last_failure_code = failure_code or "schema_validation"
                     errors.append(f"{provider}:{model} structured:{last_failure_code}")
-                    _emit_attempt_telemetry(
-                        LLMAttemptEvent(
-                            provider=provider,
-                            model=model,
-                            tier=self.tier,
-                            attempt_index=attempt_index,
-                            latency_ms=latency_ms,
-                            fell_back=fell_back,
-                            outcome="invalid_structured",
-                            error=last_failure_code,
-                            structured=structured,
-                            structured_failure_code=failure_code,
-                            usage=usage_snapshot,
-                        )
-                    )
-                    attempt_index += 1
-                    continue
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
+                    _attempt(
                         provider=provider,
                         model=model,
                         tier=self.tier,
                         attempt_index=attempt_index,
                         latency_ms=latency_ms,
                         fell_back=fell_back,
-                        outcome="success",
-                        error=None,
+                        outcome="invalid_structured",
+                        error=last_failure_code,
                         structured=structured,
-                        recovery=recovery,
+                        structured_failure_code=failure_code,
                         usage=usage_snapshot,
                     )
+                    attempt_index += 1
+                    continue
+                _attempt(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=attempt_index,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="success",
+                    error=None,
+                    structured=structured,
+                    recovery=recovery,
+                    usage=usage_snapshot,
                 )
                 _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
                 return result
@@ -1215,18 +1233,16 @@ class RoutedLLM:
             circuit_reason = _OPEN_CIRCUITS.get((provider, model))
             if circuit_reason:
                 errors.append(f"{provider}:{model} circuit")
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=provider,
-                        model=model,
-                        tier=self.tier,
-                        attempt_index=idx,
-                        latency_ms=0,
-                        fell_back=fell_back,
-                        outcome="circuit_open",
-                        error=circuit_reason,
-                        structured=structured,
-                    )
+                _attempt(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=0,
+                    fell_back=fell_back,
+                    outcome="circuit_open",
+                    error=circuit_reason,
+                    structured=structured,
                 )
                 continue
             build_t0 = time.perf_counter()
@@ -1236,19 +1252,17 @@ class RoutedLLM:
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
                 errors.append(f"{provider}:{model} build:{type(e).__name__}")
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=provider,
-                        model=model,
-                        tier=self.tier,
-                        attempt_index=idx,
-                        latency_ms=latency_ms,
-                        fell_back=fell_back,
-                        outcome="build_error",
-                        error=type(e).__name__,
-                        http_status=_http_status(e),
-                        structured=structured,
-                    )
+                _attempt(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="build_error",
+                    error=type(e).__name__,
+                    http_status=_http_status(e),
+                    structured=structured,
                 )
                 _open_circuit_if_permanent(provider, model, e)
                 continue
@@ -1259,37 +1273,33 @@ class RoutedLLM:
                 first = next(it)
             except StopIteration:
                 latency_ms = int((time.perf_counter() - t0) * 1000)
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=provider,
-                        model=model,
-                        tier=self.tier,
-                        attempt_index=idx,
-                        latency_ms=latency_ms,
-                        fell_back=fell_back,
-                        outcome="success",
-                        error=None,
-                        structured=structured,
-                    )
+                _attempt(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="success",
+                    error=None,
+                    structured=structured,
                 )
                 _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
                 return
             except Exception as e:
                 latency_ms = int((time.perf_counter() - t0) * 1000)
                 errors.append(f"{provider}:{model} stream:{type(e).__name__}")
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=provider,
-                        model=model,
-                        tier=self.tier,
-                        attempt_index=idx,
-                        latency_ms=latency_ms,
-                        fell_back=fell_back,
-                        outcome="stream_error",
-                        error=type(e).__name__,
-                        http_status=_http_status(e),
-                        structured=structured,
-                    )
+                _attempt(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="stream_error",
+                    error=type(e).__name__,
+                    http_status=_http_status(e),
+                    structured=structured,
                 )
                 _open_circuit_if_permanent(provider, model, e)
                 continue
@@ -1301,55 +1311,49 @@ class RoutedLLM:
                     yield chunk
             except GeneratorExit:
                 latency_ms = int((time.perf_counter() - t0) * 1000)
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=provider,
-                        model=model,
-                        tier=self.tier,
-                        attempt_index=idx,
-                        latency_ms=latency_ms,
-                        fell_back=fell_back,
-                        outcome="stream_interrupted",
-                        error="consumer_closed",
-                        structured=structured,
-                        usage=usage_snapshot,
-                    )
-                )
-                raise
-            except Exception as e:  # falha no meio do stream: encerra o que veio
-                latency_ms = int((time.perf_counter() - t0) * 1000)
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=provider,
-                        model=model,
-                        tier=self.tier,
-                        attempt_index=idx,
-                        latency_ms=latency_ms,
-                        fell_back=fell_back,
-                        outcome="stream_interrupted",
-                        error=str(e),
-                        error_type=type(e).__name__,
-                        http_status=_http_status(e),
-                        structured=structured,
-                        usage=usage_snapshot,
-                    )
-                )
-                _open_circuit_if_permanent(provider, model, e)
-                return
-            latency_ms = int((time.perf_counter() - t0) * 1000)
-            _emit_attempt_telemetry(
-                LLMAttemptEvent(
+                _attempt(
                     provider=provider,
                     model=model,
                     tier=self.tier,
                     attempt_index=idx,
                     latency_ms=latency_ms,
                     fell_back=fell_back,
-                    outcome="success",
-                    error=None,
+                    outcome="stream_interrupted",
+                    error="consumer_closed",
                     structured=structured,
                     usage=usage_snapshot,
                 )
+                raise
+            except Exception as e:  # falha no meio do stream: encerra o que veio
+                latency_ms = int((time.perf_counter() - t0) * 1000)
+                _attempt(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="stream_interrupted",
+                    error=str(e),
+                    error_type=type(e).__name__,
+                    http_status=_http_status(e),
+                    structured=structured,
+                    usage=usage_snapshot,
+                )
+                _open_circuit_if_permanent(provider, model, e)
+                return
+            latency_ms = int((time.perf_counter() - t0) * 1000)
+            _attempt(
+                provider=provider,
+                model=model,
+                tier=self.tier,
+                attempt_index=idx,
+                latency_ms=latency_ms,
+                fell_back=fell_back,
+                outcome="success",
+                error=None,
+                structured=structured,
+                usage=usage_snapshot,
             )
             _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
             return
@@ -1442,18 +1446,16 @@ class RoutedLLM:
         circuit_reason = _OPEN_CIRCUITS.get((provider, model))
         if circuit_reason:
             errors.append(f"{provider}:{model} circuit")
-            _emit_attempt_telemetry(
-                LLMAttemptEvent(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=idx,
-                    latency_ms=0,
-                    fell_back=fell_back,
-                    outcome="circuit_open",
-                    error=circuit_reason,
-                    structured=structured,
-                )
+            _attempt(
+                provider=provider,
+                model=model,
+                tier=self.tier,
+                attempt_index=idx,
+                latency_ms=0,
+                fell_back=fell_back,
+                outcome="circuit_open",
+                error=circuit_reason,
+                structured=structured,
             )
             return None
         if provider not in _OPENAI_COMPAT_PROVIDERS:
@@ -1486,19 +1488,17 @@ class RoutedLLM:
                 client = client.bind_tools([schema], tool_choice=tool_name)
         except Exception as e:
             errors.append(f"{provider}:{model} build:{type(e).__name__}")
-            _emit_attempt_telemetry(
-                LLMAttemptEvent(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=idx,
-                    latency_ms=int((time.perf_counter() - build_t0) * 1000),
-                    fell_back=fell_back,
-                    outcome="build_error",
-                    error=type(e).__name__,
-                    http_status=_http_status(e),
-                    structured=structured,
-                )
+            _attempt(
+                provider=provider,
+                model=model,
+                tier=self.tier,
+                attempt_index=idx,
+                latency_ms=int((time.perf_counter() - build_t0) * 1000),
+                fell_back=fell_back,
+                outcome="build_error",
+                error=type(e).__name__,
+                http_status=_http_status(e),
+                structured=structured,
             )
             _open_circuit_if_permanent(provider, model, e)
             return None
@@ -1561,22 +1561,20 @@ class RoutedLLM:
                 return _STREAM_CANCELLED
             latency_ms = int((time.perf_counter() - t0) * 1000)
             errors.append(f"{provider}:{model} stream:{type(e).__name__}")
-            _emit_attempt_telemetry(
-                LLMAttemptEvent(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=idx,
-                    latency_ms=latency_ms,
-                    fell_back=fell_back,
-                    outcome="stream_interrupted" if chunks else "stream_error",
-                    error=str(e) if chunks else type(e).__name__,
-                    error_type=type(e).__name__,
-                    http_status=_http_status(e),
-                    provider_error_code=_provider_error_code(e),
-                    structured=structured,
-                    usage=usage,
-                )
+            _attempt(
+                provider=provider,
+                model=model,
+                tier=self.tier,
+                attempt_index=idx,
+                latency_ms=latency_ms,
+                fell_back=fell_back,
+                outcome="stream_interrupted" if chunks else "stream_error",
+                error=str(e) if chunks else type(e).__name__,
+                error_type=type(e).__name__,
+                http_status=_http_status(e),
+                provider_error_code=_provider_error_code(e),
+                structured=structured,
+                usage=usage,
             )
             _open_circuit_if_permanent(provider, model, e)
             return None
@@ -1595,20 +1593,18 @@ class RoutedLLM:
             failure = "empty"
         if result is None:
             errors.append(f"{provider}:{model} structured:{failure}")
-            _emit_attempt_telemetry(
-                LLMAttemptEvent(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=idx,
-                    latency_ms=latency_ms,
-                    fell_back=fell_back,
-                    outcome="invalid_structured",
-                    error=failure,
-                    structured=structured,
-                    structured_failure_code=failure,
-                    usage=usage,
-                )
+            _attempt(
+                provider=provider,
+                model=model,
+                tier=self.tier,
+                attempt_index=idx,
+                latency_ms=latency_ms,
+                fell_back=fell_back,
+                outcome="invalid_structured",
+                error=failure,
+                structured=structured,
+                structured_failure_code=failure,
+                usage=usage,
             )
             if structured:
                 # P2-8: o `invoke` regenera ate 3x no mesmo provider; o stream so tenta 1x. Antes
@@ -1616,19 +1612,17 @@ class RoutedLLM:
                 # dele — DEPOIS de mandar `reset` ao cliente (F-1: o parcial invalido nunca fica).
                 return _StreamRetry(provider, model)
             return None
-        _emit_attempt_telemetry(
-            LLMAttemptEvent(
-                provider=provider,
-                model=model,
-                tier=self.tier,
-                attempt_index=idx,
-                latency_ms=latency_ms,
-                fell_back=fell_back,
-                outcome="success",
-                error=None,
-                structured=structured,
-                usage=usage,
-            )
+        _attempt(
+            provider=provider,
+            model=model,
+            tier=self.tier,
+            attempt_index=idx,
+            latency_ms=latency_ms,
+            fell_back=fell_back,
+            outcome="success",
+            error=None,
+            structured=structured,
+            usage=usage,
         )
         _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
         return result
@@ -1714,18 +1708,16 @@ class RoutedLLM:
                 if i == winner or i in ended:
                     continue  # quem ja terminou (falhou) nao e "hedge perdido"
                 cancels[i].set()
-                _emit_attempt_telemetry(
-                    LLMAttemptEvent(
-                        provider=p,
-                        model=m,
-                        tier=self.tier,
-                        attempt_index=i,
-                        latency_ms=int((time.perf_counter() - t_start) * 1000),
-                        fell_back=i > 0,
-                        outcome="hedge_lost",
-                        error=None,
-                        structured=True,
-                    )
+                _attempt(
+                    provider=p,
+                    model=m,
+                    tier=self.tier,
+                    attempt_index=i,
+                    latency_ms=int((time.perf_counter() - t_start) * 1000),
+                    fell_back=i > 0,
+                    outcome="hedge_lost",
+                    error=None,
+                    structured=True,
                 )
 
         def finish(winner: int, hedged: bool) -> None:

@@ -71,10 +71,7 @@ def run(monkeypatch):
         llm_setup.set_llm_telemetry_hook(lambda *a: legacy.append([str(x) for x in a]))
         try:
             llm = RoutedLLM(ModelTier.FAST, 0.7, [("a", "m1"), ("b", "m2")])
-            if kind == "invoke":
-                out = llm.invoke("x")
-            else:
-                out = list(llm.stream("x"))
+            out = llm.invoke("x") if kind == "invoke" else list(llm.stream("x"))
         finally:
             llm_setup.set_llm_attempt_telemetry_hook(prev)
             llm_setup.set_llm_telemetry_hook(None)
