@@ -461,6 +461,16 @@ Itens do pedido no fim de `docs/spec369/BASE.md`. Onde o item não trazia defaul
 
 Os limiares de `tests/test_spec369_metas.py` que mudam por estas respostas (isenção do Sangromante no R13, legadas fora do R14b, guarda fora do R14a) são atualizados pelo autor da régua num commit separado, antes do B3.
 
+### D-369-10: resposta do dono depois da Fase B (04/11, "Aceitar e ajustar")
+
+A Fase B esgotou as alavancas do R18 com R13, R17, R19 e 3 de 5 células do R20 passando. O dono escolheu:
+
+1. **R14(a):** as assinaturas básicas com `custo_folego` 0 ficam isentas da meta de uso > 60 %, como o golpe básico. Uma Carta grátis é jogada sempre que está na mão, então o uso dela não mede dominância. As isentas são `bas_dev_voto`, `bas_arc_vazao` e `bas_cor_guarda`, e qualquer outra assinatura básica que fique a Fôlego 0. O que sobrar no R14(a) (`arc1_cal_pulso_medido`, `bas_cor_mofo` e `med1_fer_garra_de_protese`, com os números da Fase B) fica registrado como limite do conteúdo. O R14(b) (bandeira `dominante`) continua valendo.
+2. **R15:** fica liberado **um passo** num único inimigo, `mon_automato_fundicao` (todos os timeouts do Médico são contra ele), contado no R18 e com a guarda R19. Se o p95 total continuar acima de 10 depois dele, o valor medido fica registrado como limite.
+3. **R16 (Presságio) e R20 (`conjurador` L5, `predador_apice` L3):** ficam registrados como limite do que só o conteúdo consegue mexer, com os números da Fase B. Não há mais passos.
+
+`tests/test_spec369_metas.py` passa a refletir isto num commit do autor da régua: a isenção do R14(a), o limite registrado do R14(a)/R15/R16 e das 2 células do R20 como valores máximos que não podem piorar, e o resto inalterado. O pouso continua exigindo 0 xfailed. A Fase C confirma que nada piorou além do registrado.
+
 ## 9. Registro de implementação
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
