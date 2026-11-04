@@ -394,14 +394,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "leve",
-        "dano_base": 5,
+        "dano_base": 6,
         "dano_tipo": "impactante"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "leve",
-          "dano_base": 5,
+          "dano_base": 6,
           "dano_tipo": "impactante"
         },
         {

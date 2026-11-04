@@ -1218,14 +1218,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 4,
+        "dano_base": 5,
         "dano_tipo": "perfurante"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "marcial",
-          "dano_base": 4,
+          "dano_base": 5,
           "dano_tipo": "perfurante"
         },
         {

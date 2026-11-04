@@ -8,9 +8,9 @@
 | Ossada de Pomes (`mon_ossada_de_pomes`) | lacaio | nova | 76% | 79% | - | - | - | sim |
 | Cabeleira de Vidro (`mon_cabeleira_de_vidro`) | elite | nova | 72% | 84% | - | - | - | sim |
 | Vazado da Maré (`mon_vazado_da_mare`) | padrao | nova | 60% | 60% | - | - | - | sim |
-| Desbotado da Névoa (`mon_desbotado_da_nevoa`) | lacaio | nova | 84% | 86% | - | - | - | NAO: L3|on 86% fora de 45-85% |
-| Turu de Casco (`mon_turu_de_casco`) | padrao | nova | 57% | 86% | - | - | - | NAO: L3|on 86% fora de 45-85% |
-| Vela sem Barco (`mon_vela_sem_barco`) | elite | nova | 48% | 40% | - | - | - | NAO: L3|on 40% fora de 45-85% |
+| Desbotado da Névoa (`mon_desbotado_da_nevoa`) | lacaio | nova | 66% | 68% | - | - | - | sim |
+| Turu de Casco (`mon_turu_de_casco`) | padrao | nova | 55% | 82% | - | - | - | sim |
+| Vela sem Barco (`mon_vela_sem_barco`) | elite | nova | 64% | 66% | - | - | - | sim |
 | Lagarto Espirrador (`mon_lagarto_espirrador`) | lacaio | nova | 84% | 71% | - | - | - | sim |
 | Bucho de Praia (`mon_bucho_de_praia`) | padrao | nova | 64% | 77% | - | - | - | sim |
 | Cobra de Sangria (`mon_cobra_de_sangria`) | lacaio | nova | 71% | 74% | - | - | - | sim |
@@ -20,7 +20,7 @@
 | Puxado do Oeste (`mon_puxado_do_oeste`) | elite | nova | 41% | 54% | - | - | - | NAO: L3|off 41% fora de 45-85% |
 | Vigia de Cor Errada (`mon_vigia_de_cor_errada`) | padrao | nova | 46% | 58% | - | - | - | sim |
 | Trépano de Borda (`mon_trepano_de_borda`) | elite | nova | 70% | 60% | - | - | - | sim |
-| Arpéu de Braços (`mon_arpeu_de_bracos`) | padrao | nova | 82% | 90% | - | - | - | NAO: L3|on 90% fora de 45-85% |
+| Arpéu de Braços (`mon_arpeu_de_bracos`) | padrao | nova | 59% | 73% | - | - | - | sim |
 | Ninho dos Mergulhadores (`mon_ninho_dos_mergulhadores`) | padrao | nova | 62% | 64% | - | - | - | sim |
 | Mastro dos Últimos (`mon_mastro_dos_ultimos`) | chefe | nova | - | - | 78% | 65% | - | sim |
 | Rêmora de Convés (`mon_remora_de_conves`) | lacaio | nova | 80% | 73% | - | - | - | sim |

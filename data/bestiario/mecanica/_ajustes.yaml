@@ -38,15 +38,17 @@ ajustes:
     forca: 0
     sig: -4
   enemy_esqueleto_mago:
-    arena: L3|off 48% | L3|on 55% (arena final, 40 seeds)
+    arena: L3|off 48% | L3|on 53% (SPEC-373 passo manual, sig 0)
     corpo: 0
     dano: -2
     forca: 0
-    sig: 3
-  enemy_fantasma:
-    arena: L3|off 62% | L3|on 54% (arena final, 40 seeds)
-    dano: -3
     sig: 0
+  enemy_fantasma:
+    arena: L3|off 63% | L3|on 56% (SPEC-373 passo manual, sig 6)
+    corpo: 0
+    dano: -3
+    forca: 0
+    sig: 6
   enemy_gargula_ferro:
     arena: L3|off 68% | L3|on 58% (arena final, 40 seeds)
     dano: -1
@@ -122,7 +124,9 @@ ajustes:
     dano: -2
     sig: 1
   enemy_vinha_estranguladora:
-    arena: L3|off 76% | L3|on 78% (arena final, 40 seeds)
+    arena: L3|off 63% | L3|on 78%
+    dano: 2
+    sig: 0
   enemy_wyvern_jovem:
     arena: L3|off 61% | L3|on 72% (arena final, 40 seeds)
     dano: -2
@@ -195,9 +199,10 @@ ajustes:
     dano: 0
     sig: 0
   mon_arpeu_de_bracos:
-    arena: L3|off 82% | L3|on 72% (arena final, 40 seeds)
-    corpo: 1
-    dano: 1
+    arena: L3|off 59% | L3|on 73%
+    corpo: 2
+    dano: 2
+    forca: 1
     sig: 0
   mon_arqueiro_de_tendao:
     arena: L3|off 70% | L3|on 70% (arena final, 40 seeds)
@@ -211,10 +216,11 @@ ajustes:
     dano: 1
     sig: 0
   mon_aspirante_de_coral:
-    arena: L3|off 56% | L3|on 82% (arena final, 40 seeds)
+    arena: L3|off 50% | L3|on 84%
     corpo: 1
     dano: 1
-    sig: 1
+    forca: 1
+    sig: 2
   mon_avesso_de_oghma:
     arena: L3|off 58% | L3|on 80% (arena final, 40 seeds)
   mon_balsa_de_ultimo_dia:
@@ -384,18 +390,22 @@ ajustes:
     forca: -7
     sig: -7
   mon_cisne_de_patina:
-    arena: L3|off 67% | L3|on 74% (arena final, 40 seeds)
+    arena: L3|off 67% | L3|on 82%
+    corpo: 1
+    dano: 0
+    forca: 0
+    sig: 1
   mon_coandu_de_rebrota:
     arena: L3|off 70% | L3|on 80% (arena final, 40 seeds)
     corpo: 1
     dano: 0
     sig: 1
   mon_cobra_de_legua:
-    arena: L3|off 64% | L3|on 80% (arena final, 40 seeds)
+    arena: L3|off 64% | L3|on 82%
     corpo: 2
     dano: 2
-    forca: 1
-    sig: 0
+    forca: 2
+    sig: 1
   mon_cobra_de_sangria:
     arena: L3|off 71% | L3|on 74% (arena final, 40 seeds)
   mon_colecionador_de_poses:
@@ -483,7 +493,11 @@ ajustes:
     forca: -1
     sig: -1
   mon_desbotado_da_nevoa:
-    arena: L3|off 84% | L3|on 74% (arena final, 40 seeds)
+    arena: L3|off 66% | L3|on 68%
+    corpo: 1
+    dano: 1
+    forca: 0
+    sig: 0
   mon_desfiado_da_aurora:
     arena: L3|off 80% | L3|on 76% (arena final, 40 seeds)
     corpo: 1
@@ -790,9 +804,10 @@ ajustes:
   mon_mao_estendida:
     arena: L3|off 63% | L3|on 60% (arena final, 40 seeds)
   mon_maos_de_cinzel:
-    arena: L3|off 82% | L3|on 78% (arena final, 40 seeds)
-    corpo: 1
-    dano: 1
+    arena: L3|off 60% | L3|on 77%
+    corpo: 2
+    dano: 2
+    forca: 1
     sig: 0
   mon_maos_no_rosto:
     arena: L3|off 80% | L3|on 66% (arena final, 40 seeds)
@@ -885,7 +900,11 @@ ajustes:
   mon_ossada_de_pomes:
     arena: L3|off 76% | L3|on 72% (arena final, 40 seeds)
   mon_ourico_de_lajedo:
-    arena: L3|off 79% | L3|on 82% (arena final, 40 seeds)
+    arena: L3|off 76% | L3|on 82%
+    corpo: 1
+    dano: 0
+    forca: 0
+    sig: 0
   mon_parado_do_sopro:
     arena: L3|off 78% | L3|on 76% (arena final, 40 seeds)
   mon_parelha_carmesim:
@@ -1167,11 +1186,11 @@ ajustes:
     dano: 1
     sig: 2
   mon_turu_de_casco:
-    arena: L3|off 57% | L3|on 83% (arena final, 40 seeds)
-    corpo: 2
-    dano: 2
+    arena: L3|off 55% | L3|on 82%
+    corpo: 3
+    dano: 3
     forca: 2
-    sig: 0
+    sig: 2
   mon_varano_vidrado:
     arena: L3|off 70% | L3|on 84% (arena final, 40 seeds)
   mon_vazado_da_mare:
@@ -1179,11 +1198,11 @@ ajustes:
   mon_vedado_de_piche:
     arena: L3|off 63% | L3|on 65% (arena final, 40 seeds)
   mon_vela_sem_barco:
-    arena: L3|off 48% | L3|on 82% (arena final, 40 seeds)
-    corpo: 3
-    dano: 3
-    forca: 2
-    sig: 7
+    arena: L3|off 65% | L3|on 67% (SPEC-373 passo manual)
+    corpo: 1
+    dano: 1
+    forca: 1
+    sig: 3
   mon_ventre_partilhado:
     arena: L3|off 60% | L3|on 74% (arena final, 40 seeds)
   mon_vertedor_de_areia:

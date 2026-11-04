@@ -26,12 +26,20 @@ def _uses(bestiary: dict, edk) -> list[collections.Counter]:
     for seed in range(12):
         c: collections.Counter = collections.Counter()
         for bid, entry in bestiary.items():
-            c.update(x for x in edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed) if x.startswith("inf_"))
+            c.update(
+                x
+                for x in edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed)
+                if x.startswith("inf_")
+            )
         runs.append(c)
     c = collections.Counter()
     for bid, entry in bestiary.items():
         seed = zlib.crc32(f"game-x|3|{bid}".encode())
-        c.update(x for x in edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed) if x.startswith("inf_"))
+        c.update(
+            x
+            for x in edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed)
+            if x.startswith("inf_")
+        )
     runs.append(c)
     return runs
 

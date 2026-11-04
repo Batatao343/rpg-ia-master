@@ -22,7 +22,7 @@
 | Regaço da Margem (`mon_regaco_da_margem`) | elite | nova | 66% | 64% | - | - | - | sim |
 | Cordão de Medida (`mon_cordao_de_medida`) | padrao | nova | 69% | 78% | - | - | - | sim |
 | Mãos no Rosto (`mon_maos_no_rosto`) | padrao | nova | 80% | 66% | - | - | - | sim |
-| Cisne de Pátina (`mon_cisne_de_patina`) | elite | nova | 67% | 86% | - | - | - | NAO: L3|on 86% fora de 45-85% |
+| Cisne de Pátina (`mon_cisne_de_patina`) | elite | nova | 67% | 82% | - | - | - | sim |
 | Arraia de Lodo (`mon_arraia_de_lodo`) | lacaio | nova | 70% | 74% | - | - | - | sim |
 | Fardo de Espólio (`mon_fardo_de_espolio`) | lacaio | nova | 82% | 76% | - | - | - | sim |
 | Curtido da Turfeira (`enemy_zumbi_blindado`) | lacaio | reinventada | 42% | 30% | - | - | L3|off: +11.0; L3|on: +7.5 | NAO: L3|off 42% fora de 45-85%; L3|on 30% fora de 45-85% |

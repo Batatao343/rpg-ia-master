@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 122.9,
+ "elapsed_s": 119.9,
  "criaturas": {
   "mon_andarilho_de_duas_idades": {
    "nome": "Andarilho de Duas Idades",
@@ -204,13 +204,11 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.815,
-    "L3|on": 0.9
+    "L3|off": 0.595,
+    "L3|on": 0.77
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 90% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_aguadeiro_de_bucho": {
    "nome": "Aguadeiro de Bucho",

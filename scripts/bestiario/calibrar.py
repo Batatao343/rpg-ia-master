@@ -86,6 +86,19 @@ def _fora(cells: dict, base: dict | None) -> float:
     return max(viol, key=abs) if viol else 0.0
 
 
+def _passos(novo: dict, comps: list[str], k: int, sentido: int, lim_dano: int) -> None:
+    """Move ``k`` passos o dial menos usado que ainda tem folga (D4: dano de chefe até 9)."""
+    for _ in range(k):
+        livres = [
+            c for c in comps if abs(novo[c] + sentido) <= (lim_dano if c == "dano" else LIMITE)
+        ]
+        if not livres:
+            break
+        comp = min(livres, key=lambda c: (abs(novo[c]), comps.index(c)))
+        lim = lim_dano if comp == "dano" else LIMITE
+        novo[comp] = max(-lim, min(lim, novo[comp] + sentido))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--regioes", required=True)
@@ -154,13 +167,7 @@ def main() -> int:
             novo = {c: int(cur.get(c, 0)) for c in (*comps, "sig")}
             chefe = fichas[cid]["categoria"] == "chefe"
             lim_dano = LIMITE_DANO_CHEFE if chefe else LIMITE_DANO
-            for _ in range(k):
-                livres = [c for c in comps if abs(novo[c] + sentido) <= (lim_dano if c == "dano" else LIMITE)]
-                if not livres:
-                    break
-                comp = min(livres, key=lambda c: (abs(novo[c]), comps.index(c)))
-                lim = lim_dano if comp == "dano" else LIMITE
-                novo[comp] = max(-lim, min(lim, novo[comp] + sentido))
+            _passos(novo, comps, k, sentido, lim_dano)
             if (
                 len(cells) == 2
                 and abs(
@@ -171,9 +178,7 @@ def main() -> int:
             ):
                 on = next(v for k, v in cells.items() if k.endswith("|on"))
                 off = next(v for k, v in cells.items() if k.endswith("|off"))
-                novo["sig"] = max(
-                    -lim_dano, min(lim_dano, novo["sig"] + (1 if on > off else -1))
-                )
+                novo["sig"] = max(-lim_dano, min(lim_dano, novo["sig"] + (1 if on > off else -1)))
             aj.setdefault(cid, {}).update(novo)
             aj[cid]["arena"] = leitura
             nxt.append(cid)

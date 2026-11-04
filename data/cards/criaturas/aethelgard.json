@@ -280,14 +280,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "pesada",
-        "dano_base": 9,
+        "dano_base": 6,
         "dano_tipo": "arcano"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "pesada",
-          "dano_base": 9,
+          "dano_base": 6,
           "dano_tipo": "arcano"
         },
         {
@@ -367,14 +367,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 1,
+        "dano_base": 7,
         "dano_tipo": "gelido"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "marcial",
-          "dano_base": 1,
+          "dano_base": 7,
           "dano_tipo": "gelido"
         },
         {

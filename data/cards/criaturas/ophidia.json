@@ -249,7 +249,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "leve",
-        "dano_base": 3,
+        "dano_base": 4,
         "dano_tipo": "impactante"
       },
       "descricao": "A mão mole como pão molhado agarra e pesa.",
@@ -280,7 +280,7 @@
         {
           "kind": "dano",
           "categoria_arma": "leve",
-          "dano_base": 3,
+          "dano_base": 4,
           "dano_tipo": "impactante"
         },
         {
@@ -305,7 +305,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 6,
+        "dano_base": 7,
         "dano_tipo": "cortante"
       },
       "descricao": "As conchas da cabeça giram contra a madeira e a carne.",
@@ -325,14 +325,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 6,
+        "dano_base": 9,
         "dano_tipo": "cortante"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "marcial",
-          "dano_base": 6,
+          "dano_base": 9,
           "dano_tipo": "cortante"
         },
         {
@@ -359,7 +359,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "versatil",
-        "dano_base": 9,
+        "dano_base": 7,
         "dano_tipo": "igneo"
       },
       "descricao": "Um cordão de ferrão sobe da água e chicoteia no rosto.",
@@ -1012,7 +1012,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 5,
+        "dano_base": 6,
         "dano_tipo": "perfurante"
       },
       "descricao": "Os dedos em gancho do arpéu sobem pela perna e puxam.",
@@ -1032,14 +1032,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 5,
+        "dano_base": 6,
         "dano_tipo": "perfurante"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "marcial",
-          "dano_base": 5,
+          "dano_base": 6,
           "dano_tipo": "perfurante"
         },
         {

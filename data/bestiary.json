@@ -13132,7 +13132,7 @@
     "attributes": {
       "str": 10,
       "dex": 12,
-      "con": 12,
+      "con": 14,
       "int": 12,
       "wis": 10,
       "cha": 10
@@ -13164,16 +13164,16 @@
     "virtudes": {
       "forca": 1,
       "agilidade": 2,
-      "corpo": 2,
+      "corpo": 3,
       "mente": 2,
       "carisma": 1
     },
-    "max_vitalidade": 10,
-    "vitalidade": 10,
+    "max_vitalidade": 12,
+    "vitalidade": 12,
     "ferimento_espacos": {
-      "leve": 3,
+      "leve": 4,
       "grave": 2,
-      "critico": 1
+      "critico": 2
     },
     "ferimentos": {
       "leve": [],
@@ -13694,7 +13694,7 @@
     "categoria": "lacaio",
     "arquetipo": "bruto",
     "attributes": {
-      "str": 12,
+      "str": 14,
       "dex": 10,
       "con": 16,
       "int": 10,
@@ -13726,7 +13726,7 @@
       "cri_aspirante_de_coral_crosta_no_golpe"
     ],
     "virtudes": {
-      "forca": 2,
+      "forca": 3,
       "agilidade": 1,
       "corpo": 4,
       "mente": 1,
@@ -19541,9 +19541,9 @@
     "categoria": "padrao",
     "arquetipo": "bruto",
     "attributes": {
-      "str": 16,
+      "str": 18,
       "dex": 12,
-      "con": 16,
+      "con": 18,
       "int": 12,
       "wis": 10,
       "cha": 10
@@ -19552,7 +19552,7 @@
       {
         "name": "Cunha Azul",
         "type": "melee",
-        "damage": "1d8"
+        "damage": "2d6"
       }
     ],
     "abilities": [
@@ -19573,18 +19573,18 @@
       "cri_maos_de_cinzel_linha_da_racha"
     ],
     "virtudes": {
-      "forca": 4,
+      "forca": 5,
       "agilidade": 2,
-      "corpo": 4,
+      "corpo": 5,
       "mente": 2,
       "carisma": 1
     },
-    "max_vitalidade": 14,
-    "vitalidade": 14,
+    "max_vitalidade": 16,
+    "vitalidade": 16,
     "ferimento_espacos": {
-      "leve": 4,
+      "leve": 5,
       "grave": 3,
-      "critico": 2
+      "critico": 3
     },
     "ferimentos": {
       "leve": [],
@@ -26563,7 +26563,7 @@
     "attributes": {
       "str": 12,
       "dex": 14,
-      "con": 12,
+      "con": 14,
       "int": 10,
       "wis": 10,
       "cha": 10
@@ -26595,16 +26595,16 @@
     "virtudes": {
       "forca": 2,
       "agilidade": 3,
-      "corpo": 2,
+      "corpo": 3,
       "mente": 1,
       "carisma": 1
     },
-    "max_vitalidade": 10,
-    "vitalidade": 10,
+    "max_vitalidade": 12,
+    "vitalidade": 12,
     "ferimento_espacos": {
-      "leve": 3,
+      "leve": 4,
       "grave": 2,
-      "critico": 1
+      "critico": 2
     },
     "ferimentos": {
       "leve": [],
@@ -26758,7 +26758,7 @@
       {
         "name": "Cordão de Ferrão",
         "type": "melee",
-        "damage": "2d8"
+        "damage": "2d6"
       }
     ],
     "abilities": [
@@ -27693,9 +27693,9 @@
     "categoria": "padrao",
     "arquetipo": "bruto",
     "attributes": {
-      "str": 16,
+      "str": 18,
       "dex": 12,
-      "con": 16,
+      "con": 18,
       "int": 12,
       "wis": 10,
       "cha": 10
@@ -27704,7 +27704,7 @@
       {
         "name": "Gancho de Dedos",
         "type": "melee",
-        "damage": "1d8"
+        "damage": "2d6"
       }
     ],
     "abilities": [
@@ -27725,18 +27725,18 @@
       "cri_arpeu_de_bracos_corda_curta"
     ],
     "virtudes": {
-      "forca": 4,
+      "forca": 5,
       "agilidade": 2,
-      "corpo": 4,
+      "corpo": 5,
       "mente": 2,
       "carisma": 1
     },
-    "max_vitalidade": 14,
-    "vitalidade": 14,
+    "max_vitalidade": 16,
+    "vitalidade": 16,
     "ferimento_espacos": {
-      "leve": 4,
+      "leve": 5,
       "grave": 3,
-      "critico": 2
+      "critico": 3
     },
     "ferimentos": {
       "leve": [],

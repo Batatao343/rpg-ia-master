@@ -1170,7 +1170,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 5,
+        "dano_base": 6,
         "dano_tipo": "perfurante"
       },
       "descricao": "A mão em cunha azul de cristal bate seca no ombro.",
@@ -1190,14 +1190,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 5,
+        "dano_base": 6,
         "dano_tipo": "perfurante"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "marcial",
-          "dano_base": 5,
+          "dano_base": 6,
           "dano_tipo": "perfurante"
         },
         {

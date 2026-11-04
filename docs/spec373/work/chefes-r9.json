@@ -1,0 +1,166 @@
+{
+ "regiao": "nova_arcadia",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 120.3,
+ "criaturas": {
+  "mon_borda_que_anda": {
+   "nome": "Borda que Anda",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.76,
+    "L5|on": 0.605
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_chifres_travados": {
+   "nome": "Chifres Travados",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.645,
+    "L5|on": 0.59
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_casco_de_costelas": {
+   "nome": "Casco de Costelas",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.63,
+    "L5|on": 0.535
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_aranha_de_cristal": {
+   "nome": "Braceiro da Borda Sul",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.61,
+    "L5|on": 0.545
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_boss_general_escorpiao": {
+   "nome": "Trono de Ajoelhados",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.91,
+    "L5|on": 0.64
+   },
+   "ok": false,
+   "motivos": [
+    "L5|off 91% fora de 45-85%"
+   ]
+  },
+  "mon_hospede_do_estomago": {
+   "nome": "Hóspede do Estômago",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.435,
+    "L5|on": 0.39
+   },
+   "ok": false,
+   "motivos": [
+    "L5|off 44% fora de 45-85%",
+    "L5|on 39% fora de 45-85%"
+   ]
+  },
+  "mon_toldo_das_clareiras": {
+   "nome": "Toldo das Clareiras",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.46,
+    "L5|on": 0.41
+   },
+   "ok": false,
+   "motivos": [
+    "L5|on 41% fora de 45-85%"
+   ]
+  },
+  "mon_peso_dos_vencidos": {
+   "nome": "Peso dos Vencidos",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.68,
+    "L5|on": 0.5
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_escavador_das_camaras": {
+   "nome": "Escavador das Câmaras",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.655,
+    "L5|on": 0.4
+   },
+   "ok": false,
+   "motivos": [
+    "L5|on 40% fora de 45-85%"
+   ]
+  },
+  "mon_cacao_de_lastro": {
+   "nome": "Cação de Lastro",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.695,
+    "L5|on": 0.645
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_roda_de_mandibulas": {
+   "nome": "Roda de Mandíbulas",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.655,
+    "L5|on": 0.66
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mastro_dos_ultimos": {
+   "nome": "Mastro dos Últimos",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.785,
+    "L5|on": 0.62
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_colecionador_de_poses": {
+   "nome": "Colecionador de Poses",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.64,
+    "L5|on": 0.645
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

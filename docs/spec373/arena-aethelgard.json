@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 133.9,
+ "elapsed_s": 150.3,
  "criaturas": {
   "mon_doador_inacabado": {
    "nome": "Doador Inacabado",
@@ -60,12 +60,10 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.475,
-    "L3|on": 0.475
+    "L3|on": 0.53
    },
-   "ok": false,
-   "motivos": [
-    "L3|on delta 13.0 pp > 8"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "enemy_fantasma": {
    "nome": "Nadador Transparente",
@@ -73,12 +71,10 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.625,
-    "L3|on": 0.64
+    "L3|on": 0.56
    },
-   "ok": false,
-   "motivos": [
-    "L3|on delta 15.5 pp > 8"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "enemy_golem_carne": {
    "nome": "Encomenda Costurada",
@@ -140,13 +136,11 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.79,
-    "L3|on": 0.865
+    "L3|off": 0.76,
+    "L3|on": 0.815
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 86% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_cupinzeiro_de_vidro": {
    "nome": "Cupinzeiro de Vidro",
@@ -221,13 +215,11 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.565,
-    "L3|on": 0.885
+    "L3|off": 0.5,
+    "L3|on": 0.835
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 88% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_comedor_de_alga": {
    "nome": "Comedor de Alga",

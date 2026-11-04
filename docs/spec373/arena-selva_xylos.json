@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 128.9,
+ "elapsed_s": 248.0,
  "criaturas": {
   "mon_lamelas_de_ferrugem": {
    "nome": "Lamelas de Ferrugem",
@@ -138,13 +138,11 @@
    "categoria": "elite",
    "status": "adotada",
    "cells": {
-    "L3|off": 0.765,
-    "L3|on": 0.895
+    "L3|off": 0.63,
+    "L3|on": 0.785
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 90% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_viuvo_do_esporo": {
    "nome": "Viúvo do Esporo",

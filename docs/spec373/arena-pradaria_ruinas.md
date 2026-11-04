@@ -10,7 +10,7 @@
 | Vestido de Gafanhotos (`mon_vestido_de_gafanhotos`) | elite | nova | 69% | 68% | - | - | - | sim |
 | Fuçador da Semente (`mon_fucador_da_semente`) | padrao | nova | 69% | 60% | - | - | - | sim |
 | Nadador de Pedra (`mon_nadador_de_pedra`) | padrao | nova | 80% | 80% | - | - | - | sim |
-| Cobra de Légua (`mon_cobra_de_legua`) | padrao | nova | 64% | 86% | - | - | - | NAO: L3|on 86% fora de 45-85% |
+| Cobra de Légua (`mon_cobra_de_legua`) | padrao | nova | 64% | 82% | - | - | - | sim |
 | Rodante de Espinhos (`mon_rodante_de_espinhos`) | lacaio | nova | 70% | 72% | - | - | - | sim |
 | Pernalta das Colunas (`mon_pernalta_das_colunas`) | padrao | nova | 68% | 66% | - | - | - | sim |
 | Lagarto de Mudas (`mon_lagarto_de_mudas`) | lacaio | nova | 84% | 66% | - | - | - | sim |

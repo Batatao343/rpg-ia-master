@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 118.0,
+ "elapsed_s": 114.9,
  "criaturas": {
   "mon_vertedor_de_areia": {
    "nome": "Vertedor de Areia",
@@ -82,12 +82,10 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.645,
-    "L3|on": 0.865
+    "L3|on": 0.82
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 86% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_rodante_de_espinhos": {
    "nome": "Rodante de Espinhos",

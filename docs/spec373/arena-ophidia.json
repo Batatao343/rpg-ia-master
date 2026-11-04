@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 93.8,
+ "elapsed_s": 88.9,
  "criaturas": {
   "mon_nadador_escaldado": {
    "nome": "Nadador Escaldado",
@@ -59,39 +59,33 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.845,
-    "L3|on": 0.865
+    "L3|off": 0.665,
+    "L3|on": 0.685
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 86% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_turu_de_casco": {
    "nome": "Turu de Casco",
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.57,
-    "L3|on": 0.86
+    "L3|off": 0.55,
+    "L3|on": 0.825
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 86% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_vela_sem_barco": {
    "nome": "Vela sem Barco",
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.475,
-    "L3|on": 0.405
+    "L3|off": 0.645,
+    "L3|on": 0.665
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 40% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_lagarto_espirrador": {
    "nome": "Lagarto Espirrador",
@@ -199,13 +193,11 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.82,
-    "L3|on": 0.895
+    "L3|off": 0.59,
+    "L3|on": 0.73
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 90% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_ninho_dos_mergulhadores": {
    "nome": "Ninho dos Mergulhadores",

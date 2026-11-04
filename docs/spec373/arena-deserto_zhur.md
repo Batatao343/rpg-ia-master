@@ -21,7 +21,7 @@
 | Braceiro da Borda Sul (`enemy_aranha_de_cristal`) | chefe | reinventada | - | - | 61% | 55% | L5|off: +56.5; L5|on: +50.0 | sim |
 | Costurado de Lentes (`mon_costurado_de_lentes`) | padrao | nova | 56% | 56% | - | - | - | sim |
 | Couro Pegado (`mon_couro_pegado`) | padrao | nova | 45% | 56% | - | - | - | sim |
-| Mãos de Cinzel (`mon_maos_de_cinzel`) | padrao | nova | 82% | 90% | - | - | - | NAO: L3|on 90% fora de 45-85% |
+| Mãos de Cinzel (`mon_maos_de_cinzel`) | padrao | nova | 60% | 77% | - | - | - | sim |
 | Aguadeiro de Bucho (`mon_aguadeiro_de_bucho`) | lacaio | nova | 56% | 71% | - | - | - | sim |
 | Caçador Sem Calor (`mon_cacador_sem_calor`) | padrao | nova | 80% | 76% | - | - | - | sim |
 | Altivo do Vidro (`mon_altivo_do_vidro`) | elite | nova | 78% | 85% | - | - | - | sim |

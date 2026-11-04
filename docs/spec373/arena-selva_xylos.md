@@ -15,7 +15,7 @@
 | Coandu de Rebrota (`mon_coandu_de_rebrota`) | lacaio | nova | 70% | 80% | - | - | - | sim |
 | Vespa Oleira (`mon_vespa_oleira`) | lacaio | nova | 77% | 72% | - | - | - | sim |
 | Escavador das Câmaras (`mon_escavador_das_camaras`) | chefe | nova | - | - | 66% | 40% | - | NAO: L5|on 40% fora de 45-85% |
-| Serpente Cipó Constritora (`enemy_vinha_estranguladora`) | elite | adotada | 76% | 90% | - | - | L3|off: -23.0; L3|on: -5.5 | NAO: L3|on 90% fora de 45-85% |
+| Serpente Cipó Constritora (`enemy_vinha_estranguladora`) | elite | adotada | 63% | 78% | - | - | L3|off: -36.5; L3|on: -16.5 | sim |
 | Viúvo do Esporo (`mon_viuvo_do_esporo`) | padrao | nova | 79% | 68% | - | - | - | sim |
 | Surdo da Colmeia (`mon_surdo_da_colmeia`) | padrao | nova | 58% | 76% | - | - | - | sim |
 | Mascador de Néctar (`mon_mascador_de_nectar`) | elite | nova | 70% | 65% | - | - | - | sim |

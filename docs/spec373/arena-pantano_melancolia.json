@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 107.2,
+ "elapsed_s": 103.4,
  "criaturas": {
   "mon_estaqueiro_afogado": {
    "nome": "Estaqueiro Afogado",
@@ -214,12 +214,10 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.67,
-    "L3|on": 0.86
+    "L3|on": 0.825
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 86% fora de 45-85%"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_arraia_de_lodo": {
    "nome": "Arraia de Lodo",

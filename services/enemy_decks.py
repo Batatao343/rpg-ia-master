@@ -337,6 +337,12 @@ def extra_action_deck(actor: dict):
         actor["cartas"] = full
 
 
+def declare_extra(actor: dict, declare, actor_id: str):
+    """Chama ``declare(actor_id, actor)`` (a declaração do inimigo) com o baralho da ação extra (R12)."""
+    with extra_action_deck(actor):
+        return declare(actor_id, actor)
+
+
 # --------------------------------------------------------------------------
 # R4 - padrão de intenção e assinatura
 # --------------------------------------------------------------------------
