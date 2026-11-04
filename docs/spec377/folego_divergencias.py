@@ -89,7 +89,7 @@ def _lote_v2(ids: list[str]) -> dict:
         "avisos",
     )
     return {
-        cid: {k: r.get(k) for k in keep} | {"ref_custo_folego": (r.get("referencia") or {})}
+        cid: {k: r.get(k) for k in keep} | {"referencia": (r.get("referencia") or {})}
         for cid, r in rep.items()
     }
 

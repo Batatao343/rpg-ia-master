@@ -1,31 +1,51 @@
 """SPEC-377 item 2: uma unica implementacao de custo_folego."""
 
-import json
-from pathlib import Path
-
 import pytest
 
 from services import card_effects as fx
 from services import cards
 
-_EVID = Path(__file__).resolve().parents[1] / "docs" / "spec377" / "folego_divergencias.json"
+
+def _jogo_antigo(card: dict) -> int:
+    """Regra do jogo congelada (cópia literal de `cards.custo_folego` antes da SPEC-377)."""
+    if "custo_folego" in card:
+        try:
+            return max(0, min(3, int(card["custo_folego"])))
+        except (TypeError, ValueError):
+            pass
+    effect = card.get("efeito") or {}
+    freq = str(card.get("frequencia", "livre"))
+    if card.get("apex") or freq == "descanso_longo":
+        return 3
+    try:
+        dano_base = int(effect.get("dano_base", 0) or 0)
+        tier = int(card.get("tier", 1) or 1)
+    except (TypeError, ValueError):
+        dano_base, tier = 0, 1
+    if tier >= 3 or dano_base >= 8:
+        return 2
+    if freq == "livre" and str(effect.get("kind") or "") not in {"dano", "dot", "contra_ataque"}:
+        return 0
+    return 1
 
 
-def test_uma_implementacao():
-    assert fx.custo_folego.__doc__.startswith("Alias")
-    assert fx.custo_folego({"custo_folego": 2}) == cards.custo_folego({"custo_folego": 2})
+def test_uma_implementacao(monkeypatch):
+    """O nome do lint é alias: um patch na implementação única chega a `fx.custo_folego`."""
+    monkeypatch.setattr(cards, "custo_folego", lambda card: 42)
+    assert fx.custo_folego({}) == 42
 
 
 def test_paridade_catalogo_com_jogo():
-    """Oraculo: a coluna `jogo` da Etapa 0 (so as divergentes) vale para o catalogo todo."""
-    oraculo = {
-        d["id"]: d["jogo"] for d in json.loads(_EVID.read_text("utf-8"))["catalogo"]["divergentes"]
-    }
+    """Catálogo inteiro e `effective_card` (Ruptura, evolução A/B) iguais à regra antiga do jogo."""
     for cid, card in cards.all_cards().items():
-        esperado = oraculo.get(cid)
-        if esperado is not None:
-            assert fx.custo_folego(card) == esperado, cid
-        assert 0 <= fx.custo_folego(card) <= 3, cid
+        assert fx.custo_folego(card) == _jogo_antigo(card), cid
+        assert cards.custo_folego(card) == _jogo_antigo(card), cid
+        if not (card.get("ruptura") or card.get("evolucao")):
+            continue
+        for player in ({}, {"evolved_cards": {cid: "A"}}, {"evolved_cards": {cid: "B"}}):
+            for rup in (False, True):
+                eff = cards.effective_card(player, cid, ruptura=rup)
+                assert fx.custo_folego(eff) == _jogo_antigo(eff), (cid, player, rup)
 
 
 @pytest.mark.parametrize("cid", ["cor_toque", "toque_corrosivo"])
