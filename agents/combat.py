@@ -2704,44 +2704,7 @@ def _combat_node(state: GameState):
     _register_environmental_damage_terminal(t.player, t.weather_logs)
     if isinstance(t.combat_meta.get("pilhas"), dict):  # SPEC-331 P1-1: cartas de objeto no turno
         _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)
-    t.resolved_decl: TurnDeclaration | None = t.declaration
-    flee_allowed = _can_attempt_flee(t.player)
-    if t.flee_requested and flee_allowed:
-        _prev_track = str((t.combat_meta.get("chase") or {}).get("trilha") or "pressionado")
-        t.hero_fled, flee_logs, t.chase_state = _attempt_flee(
-            t.scene,
-            t.player,
-            t.active,
-            t.sides,
-            t.rng,
-            existing_chase=t.combat_meta.get("chase"),
-            intent=t.intent,
-            force_escape=bool(t.choices["sacrificed"]),
-        )
-        if not t.hero_fled and _is_valid_flee_destination(t.state, t.flee_dest_id):
-            t.hero_fled, t.chase_state = _enforce_flee_attempt_limit(
-                t.chase_state,
-                attempts=int(t.combat_meta.get("flee_attempts", 0) or 0),
-            )
-            if t.hero_fled:
-                flee_logs.append("Após uma perseguição prolongada, os inimigos perdem o rastro.")
-        _publish_sacrifice_offer(
-            t.state, t.party, t.chase_state, hero_fled=t.hero_fled, logs=flee_logs
-        )
-        t.combat_meta["chase"] = t.chase_state
-        t.flee_roll = _flee_roll_payload(t.chase_state, _prev_track, t.hero_fled) or t.flee_roll
-        t.logs += t.weather_logs + t.logs_pre_flee + flee_logs
-        t.flee_lines = list(t.logs_pre_flee) + list(flee_logs)
-    elif t.flee_requested:
-        t.chase_state = {
-            **dict(t.combat_meta.get("chase") or {}),
-            "eligible": False,
-            "blocked_reason": "lifecycle",
-        }
-        t.combat_meta["chase"] = t.chase_state
-        t.logs += t.weather_logs + [
-            "Sua condição atual impede iniciar a fuga; a rodada resolve sua recuperação."
-        ]
+    _combat_attempt_flee(t)
     if not t.hero_fled:
         _combat_declare_turn(t)
         _combat_prepare_round(t)
@@ -3165,6 +3128,48 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_attempt_flee(t: _CombatTurn) -> None:
+    """Tentativa de fuga do herói (chase determinístico)."""
+    t.resolved_decl: TurnDeclaration | None = t.declaration
+    flee_allowed = _can_attempt_flee(t.player)
+    if t.flee_requested and flee_allowed:
+        _prev_track = str((t.combat_meta.get("chase") or {}).get("trilha") or "pressionado")
+        t.hero_fled, flee_logs, t.chase_state = _attempt_flee(
+            t.scene,
+            t.player,
+            t.active,
+            t.sides,
+            t.rng,
+            existing_chase=t.combat_meta.get("chase"),
+            intent=t.intent,
+            force_escape=bool(t.choices["sacrificed"]),
+        )
+        if not t.hero_fled and _is_valid_flee_destination(t.state, t.flee_dest_id):
+            t.hero_fled, t.chase_state = _enforce_flee_attempt_limit(
+                t.chase_state,
+                attempts=int(t.combat_meta.get("flee_attempts", 0) or 0),
+            )
+            if t.hero_fled:
+                flee_logs.append("Após uma perseguição prolongada, os inimigos perdem o rastro.")
+        _publish_sacrifice_offer(
+            t.state, t.party, t.chase_state, hero_fled=t.hero_fled, logs=flee_logs
+        )
+        t.combat_meta["chase"] = t.chase_state
+        t.flee_roll = _flee_roll_payload(t.chase_state, _prev_track, t.hero_fled) or t.flee_roll
+        t.logs += t.weather_logs + t.logs_pre_flee + flee_logs
+        t.flee_lines = list(t.logs_pre_flee) + list(flee_logs)
+    elif t.flee_requested:
+        t.chase_state = {
+            **dict(t.combat_meta.get("chase") or {}),
+            "eligible": False,
+            "blocked_reason": "lifecycle",
+        }
+        t.combat_meta["chase"] = t.chase_state
+        t.logs += t.weather_logs + [
+            "Sua condição atual impede iniciar a fuga; a rodada resolve sua recuperação."
+        ]
 
 
 def _combat_declare_turn(t: _CombatTurn) -> None:
