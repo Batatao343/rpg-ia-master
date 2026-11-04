@@ -25,6 +25,7 @@ from typing import Dict, List, Tuple, Union
 import gamedata
 from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
+from services import text as _text
 
 MAX_ACTIVE_QUESTS = 8
 _LORE_KINDS = frozenset(
@@ -332,9 +333,7 @@ PROOF_EVIDENCE_KINDS = (
 
 
 def _fold_name(value: object) -> str:
-    folded = unicodedata.normalize("NFKD", str(value or ""))
-    plain = "".join(ch for ch in folded if not unicodedata.combining(ch))
-    return " ".join(plain.casefold().split())
+    return _text.fold(value, collapse=True)
 
 
 def sync_npc_interaction(quests: list[dict], npc_name: str, *, turn: int = 0) -> list[dict]:
