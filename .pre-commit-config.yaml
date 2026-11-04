@@ -17,6 +17,7 @@ repos:
         args: [--allow-multiple-documents]
       - id: check-added-large-files
         args: [--maxkb=500]
+        exclude: ^evals/baselines/  # SPEC-380 R1.7: baseline do CI (~0,7 MB), copiada sem editar
       - id: check-merge-conflict
   - repo: local
     hooks:
