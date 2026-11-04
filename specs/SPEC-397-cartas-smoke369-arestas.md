@@ -1,0 +1,53 @@
+# SPEC-397 — Cartas: arestas do smoke da SPEC-369 (corte do `draft.py`, `frequencia` fechada, emboscada na abertura narrada, arma na prosa final, passiva por recompensa)
+
+> **Status:** `approved` (04/11, coordenador, sob a ordem permanente do dono "manda bala" e a política de zero pendência)
+> **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
+> **Épico:** SPEC-327
+> **Origem:** [docs/spec369/smoke.md](../docs/spec369/smoke.md) § Achados 1–5.
+> **Depende de:** SPEC-369 (`main`).
+> **Risco:** `médio` (texto de abertura de combate, script de autoria). Revisor Sol (Opus).
+
+## 1. Contexto & Objetivo
+
+O smoke real da SPEC-369 passou nos 4 itens, mas deixou 4 P3 e 1 observação. A política do dono é não deixar pendência.
+
+## 2. Requisitos
+
+- **R1 (achado 1).** `scripts/cards/draft.py` entrega no máximo `--n` Cartas por lote: o corte acontece depois da triagem e do reparo, e só entram as que passaram. Se entregar menos que `n`, o aviso continua. Teste: um LLM fake que devolve mais Cartas que `n`.
+- **R2 (achado 4).** O campo `frequencia` do rascunho vira enum fechado no schema Pydantic do `draft.py`, com os mesmos valores aceitos pelo `card_lint`. O LLM não consegue mais inventar "rodada". Teste de schema, mais o guard de FallbackLLM intacto.
+- **R3 (achado 2).** Quando o conflito abre com emboscada inimiga (`initiator="enemy"`, `reason="ambush"`), a abertura narrada diz que o inimigo atacou primeiro. Quando a emboscada é negada (`ambush_negated_vigilia`), ela diz que o herói percebeu a tempo. O texto é determinístico (frase fixa em voz "você", sem número nem id), anexado ou passado como fato à narração de abertura. A mecânica não muda. Teste pela API real (MockLLM) com as duas seeds do smoke (Carta preparada e Carta fora).
+- **R4 (achado 3), investigação.** Confirmar se a "Serra Cirúrgica pesada na mão" na prosa final do item 3 era a arma equipada. Se a prosa cita uma arma que o herói não tem, a narração final passa a receber como fato a arma equipada e a Carta jogada. Se era a arma equipada, registrar no §9 e não mudar nada.
+- **R5 (observação 5).** Provar que a passiva `cor1_tro_faro_do_abismo`, quando chega por recompensa (espólio ou loja), aparece em `player_stats.cards`, pode ser preparada e nega a emboscada. Teste pela API real. Se não aparecer, corrigir.
+- **R6 (guardas).** Sem flag nova; golden 330, avaliadores, arenas, `sim.py`, `web/e2e/contracts` e arquivos da SPEC-369 Fase A intocados; `agents/combat.py` não cresce; `test_size_budget`, `test_no_silent_except`, `test_log_event_registry` e `test_error_envelope` verdes; ruff limpo.
+
+### Fora de escopo
+
+Balanço (SPEC-369), timeouts do DeepSeek (infra).
+
+## 3. Plano
+
+1. Testes vermelhos de R1, R2, R3 e R5 (para o R5, verde é aceitável se já funciona) e investigação do R4.
+2. Implementar.
+3. Guardas.
+4. §9.
+
+## 4. Critérios de aceite
+
+- [ ] R1: corte em `n`.
+- [ ] R2: `frequencia` em enum.
+- [ ] R3: abertura narrada coerente com a emboscada ou com a emboscada negada.
+- [ ] R4: causa registrada (e corrigida, se for bug).
+- [ ] R5: passiva por recompensa listada e efetiva.
+- [ ] R6: guardas e suíte completa verdes no pouso.
+
+## 5. Smoke real (curto, local)
+
+Repetir os itens 2a e 2b do smoke da 369 (abertura narrada) e um lote do `draft.py` com `--n 4`. Registrar em `docs/spec397/smoke.md`.
+
+## 6. Decisões
+
+Nenhuma aberta.
+
+## 7. Registro de implementação
+
+(vazio)
