@@ -284,6 +284,10 @@ def _deck_room(player: dict, card_id: str) -> bool:
     return deck.count(card_id) < limit
 
 
+def _is_passive(card_id: str) -> bool:
+    return (cards.get_card(card_id) or {}).get("tipo") == "passiva"
+
+
 def _add_to_deck(player: dict, card_id: str) -> str:
     """R2: Acervo sempre; baralho por padrao (se houver espaco e copias); sem baralho
     (flag do Baralho desligada) vira Preparada quando ha vaga. Devolve onde caiu."""
@@ -291,6 +295,11 @@ def _add_to_deck(player: dict, card_id: str) -> str:
     if card_id not in known:
         known.append(card_id)
     player["known_cards"] = known
+    if _is_passive(card_id):  # SPEC-397 R5: passiva não ocupa slot nem baralho
+        prepared = list(player.get("prepared_cards") or [])
+        if card_id not in prepared:
+            player["prepared_cards"] = prepared + [card_id]  # `_has_vigilia` lê daqui
+        return "preparadas"
     if player.get("deck"):
         if _deck_room(player, card_id):
             player["deck"] = list(player["deck"]) + [card_id]
@@ -308,6 +317,8 @@ def _add_to_deck(player: dict, card_id: str) -> str:
 
 def acervo_reason(player: dict, card_id: str) -> str | None:
     """SPEC-363 R32: por que a Carta comprada/sorteada fica só no Acervo (None = não fica)."""
+    if _is_passive(card_id):
+        return None
     if player.get("deck"):
         if len(player["deck"]) >= cards.DECK_MAX:
             return "baralho_cheio"

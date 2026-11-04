@@ -33,11 +33,11 @@ Balanço (SPEC-369), timeouts do DeepSeek (infra).
 
 ## 4. Critérios de aceite
 
-- [ ] R1: corte em `n`.
-- [ ] R2: `frequencia` em enum.
-- [ ] R3: abertura narrada coerente com a emboscada ou com a emboscada negada.
-- [ ] R4: causa registrada (e corrigida, se for bug).
-- [ ] R5: passiva por recompensa listada e efetiva.
+- [x] R1: corte em `n`.
+- [x] R2: `frequencia` em enum.
+- [x] R3: abertura narrada coerente com a emboscada ou com a emboscada negada.
+- [x] R4: causa registrada (e corrigida, se for bug).
+- [x] R5: passiva por recompensa listada e efetiva.
 - [ ] R6: guardas e suíte completa verdes no pouso.
 
 ## 5. Smoke real (curto, local)
@@ -50,4 +50,12 @@ Nenhuma aberta.
 
 ## 7. Registro de implementação
 
-(vazio)
+Executada em 04/11 (branch `spec-397`).
+
+- **R1** `scripts/cards/draft.py`: `aceitas[:n]` depois de triagem, reparo e ajuste. Teste `test_batch_is_cut_at_n`.
+- **R2** `frequencia` com `json_schema_extra={"enum": sorted(card_lint.FREQUENCIAS)}` (mesma técnica do `alvo`: parse tolerante) e a triagem rejeita valor fora do vocabulário (cai em `rejeitadas`/reparo). Testes em `tests/test_card_draft.py`.
+- **R3** novo `services/opening_ambush.py` (2 frases fixas, voz "você"); `agents/combat.py` só troca 2 linhas (3957 linhas, sem crescer): a frase é anexada à narração de abertura por `initiator_reason` (`ambush` / `ambush_negated_vigilia`). Testes em `tests/test_spec346_vigilia.py` (via `_combat_node` com MockLLM, não pelo HTTP).
+- **R4** Não era bug. `data/classes.json` dá ao Médico de Campo `serra_cirurgica` como equipamento inicial (única arma) e `character_creator` a auto-equipa; a prosa citava a arma equipada. Teste `test_medico_starts_with_the_surgical_saw_equipped`. Nada mudou.
+- **R5** Era bug real: pelo espólio (ou loja), uma Carta `passiva` caía só no Acervo (herói nível 1 com 4 preparadas cheias, ou sem vaga no baralho), então `_has_vigilia` (lê `deck`+`prepared_cards`) não a via e a emboscada não era anulada. Correção em `services/card_rewards._add_to_deck`/`acervo_reason`: passiva vai para `prepared_cards` sem ocupar slot nem baralho (coerente com `cards.py` "passiva não ocupa Preparação" e `migrate_deck`, que preserva passivas em `prepared_cards`). Teste pela API (`/game/espolio`) em `tests/test_card_smoke_edges.py`.
+- **Smoke real (§5)** não executado pelo executor (sem chave/serviço no worktree); fica para o coordenador.
+
