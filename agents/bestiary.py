@@ -14,18 +14,10 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, ConfigDict, Field
 
 import gamedata
+from agents.librarian import find_existing_entity
 from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
-
-try:
-    from rag import query_rag
-except ImportError:
-
-    def query_rag(*args, **kwargs):
-        return ""
-
-
-from agents.librarian import find_existing_entity
+from rag import query_rag
 
 BESTIARY_FILE = "data/bestiary.json"
 

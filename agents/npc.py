@@ -14,8 +14,10 @@ from typing import Any, Dict, List, Optional
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field, field_validator
 
+from agents.librarian import find_existing_entity
 from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
+from rag import add_npc_memory, query_npc_memory, query_rag
 from services import graph_resolver as gr
 from services import latency_flags, quest_log
 from services.ambient import ambient_block
@@ -49,22 +51,8 @@ from services.structured_outputs import CrimeClaim, ProposedQuest, coerce_crime_
 from state import GameState
 from world_utils import apply_faction_reveal, ensure_faction_intel, ensure_factions
 
-# Fallback para RAG
-try:
-    from rag import add_npc_memory, query_npc_memory, query_rag
-
-    RAG_AVAILABLE = True
-except ImportError:
-    RAG_AVAILABLE = False
-
-    def query_rag(*args, **kwargs):
-        return ""
-
-    def add_npc_memory(*args, **kwargs):
-        return None
-
-    def query_npc_memory(*args, **kwargs):
-        return ""
+# Constante mantida: testes fazem monkeypatch (SPEC-376: o stub ImportError saiu).
+RAG_AVAILABLE = True
 
 
 # SPEC-215: texto do `world_state_block`. `off`/`shadow` mantêm o texto anterior
@@ -115,15 +103,6 @@ def _canonical_npc_id(name: str) -> str:
     from services.entity_identity import resolve_npc_entity_id
 
     return resolve_npc_entity_id({}, name) or ""
-
-
-# Importa Librarian para verificar duplicatas
-try:
-    from agents.librarian import find_existing_entity
-except ImportError:
-
-    def find_existing_entity(*args, **kwargs):
-        return None
 
 
 NPC_DB_FILE = "data/npc_database.json"

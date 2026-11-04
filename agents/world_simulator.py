@@ -15,22 +15,14 @@ from typing import Tuple
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
+import gamedata
 from llm_setup import ModelTier, get_llm
+from rag import add_memory_to_session
 from services.prose_guard import sanitize_meta_preamble
 from world_utils import clock_label, ensure_faction_intel, ensure_factions
 
-try:
-    from rag import add_memory_to_session
-
-    RAG_AVAILABLE = True
-except ImportError:  # pragma: no cover
-    RAG_AVAILABLE = False
-
-    def add_memory_to_session(*args, **kwargs):
-        return None
-
-
-import gamedata
+# Constante mantida (SPEC-376: o stub ImportError saiu).
+RAG_AVAILABLE = True
 
 
 class WorldPulse(BaseModel):
