@@ -1,6 +1,6 @@
 # SPEC-388 — Workspace, fase 2: guardrails que esperam a onda 375–378
 
-> **Status:** `approved` (04/11, dono: "vai executando o que puder"; etapas só quando a spec da etapa estiver `done`)
+> **Status:** `in-progress` — B e C pousadas; A espera a SPEC-375 (04/11, dono: "vai executando o que puder"; etapas só quando a spec da etapa estiver `done`)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** SPEC-386 § Fora de escopo · [auditoria do workspace](../docs/auditorias/auditoria-workspace-2026-11-03.md) §8
 > **Depende de:** **por etapa** (cada etapa só começa quando a spec dela estiver `done` na `main`):
@@ -62,7 +62,7 @@ exige (violação nova em legado vai para a baseline, não é corrigida aqui).
 
 - [ ] Etapa A pousada (ou registrada como pendente com o motivo)
 - [x] Etapa B pousada, baseline com diff só aditivo (04/11; legado: BLE001 447, PERF401 173, C901 130, ERA001 66, SIM105 62…; únicas remoções = encolhimentos pré-existentes em `archivist.py`/`prologue.py` e `E741` de `test_mvp.py` pago pela 376)
-- [ ] Etapa C pousada
+- [x] Etapa C pousada (04/11: `tests/test_no_new_fold.py` + `tests/data/fold_allowlist.txt` com as 52 definições que a 378 manteve; falha com `def _fold` sintético)
 - [ ] `uv run pytest` verde a cada pouso de etapa
 
 ## 6. Smoke test com LLM real
@@ -84,3 +84,5 @@ Não se aplica (tooling).
   `services/fauna_tramas.py`, SIM115 em `tests/test_spec372_flags_off.py`, SIM102 em `world_utils.py`).
 - Revisão terra (`handoffs/SPEC-388-terra-review.md`): P2-1/P2-2 → lista exata; P2-3 → o hook
   `ruff_after_edit.py` passa a ler `evals/protected-paths.txt` (antes só `evals/` e `web/e2e/contracts/`).
+- **Etapa C (04/11):** padrão restrito a `_fold*`, `_norm` e `_norm_*` (o `_norm*` literal pegava 21
+  `_normalize_*` legítimos). Allowlist só encolhe; migrar para `services.text.fold` = apagar a linha.
