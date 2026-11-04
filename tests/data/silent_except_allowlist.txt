@@ -17,7 +17,7 @@ api.py::_publish_timeline::1
 api.py::_run_turn_collected._timeline_progress::1
 api.py::_stream_turn_events._observe_delivery::1
 api.py::_stream_turn_events::1
-api.py::auth_config::1
+routes/auth.py::auth_config::1
 routes/ops.py::client_latency::1
 routes/read.py::game_history::1
 infrastructure/account_lifecycle.py::PostgresAccountLifecycle._asset_downloads::1
