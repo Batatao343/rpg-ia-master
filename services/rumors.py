@@ -15,12 +15,13 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import re
 from difflib import SequenceMatcher
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
+
+from services.env import env_choice
 
 MODES = ("off", "shadow", "on")
 DEFAULT_MODE = "on"  # D3: local e suite; o staging fixa `shadow` por env
@@ -34,8 +35,7 @@ _DATA = Path(__file__).resolve().parent.parent / "data" / "world"
 
 def mode() -> str:
     """`RPG_RUMORS`; so vale com `RPG_WORLD_ENGINE=on` (senao se comporta como `off`)."""
-    raw = os.getenv("RPG_RUMORS", "").strip().lower()
-    m = raw if raw in MODES else DEFAULT_MODE
+    m = env_choice("RPG_RUMORS", MODES, DEFAULT_MODE)
     if m == "off":
         return "off"
     from services import world_engine
@@ -44,8 +44,7 @@ def mode() -> str:
 
 
 def proposed_mode() -> str:
-    raw = os.getenv("RPG_RUMORS_PROPOSED", "").strip().lower()
-    return raw if raw in ("off", "on") else "off"
+    return env_choice("RPG_RUMORS_PROPOSED", ("off", "on"), "off")
 
 
 @lru_cache(maxsize=1)
