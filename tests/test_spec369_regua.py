@@ -162,8 +162,21 @@ def test_emboscada_credita_passiva_preparada(M):
     # san_conta_memorizada: passiva level_req 4 -> so do nivel 4 em diante
     assert not M.tem_iniciativa("Sangromante", 3, "")
     assert M.tem_iniciativa("Sangromante", 5, "")
-    # Corruptor: nenhuma Carta buff_iniciativa (meta 6)
-    assert not any(M.tem_iniciativa("Corruptor", lv, "") for lv in (1, 3, 5))
+    # Corruptor: robusto ao catalogo com ou sem a Carta do R17 (B2, `cor1_tro_faro_do_abismo`).
+    ini = tuple(
+        c["id"]
+        for c in M.cards._load_cards().values()
+        if c.get("classe") == "Corruptor"
+        and any(e.get("kind") == "buff_iniciativa" for e in M.fx.normalize(c))
+    )
+    with M.sem_cartas(ini):  # estado da base (meta 6): sem Carta -> sem credito
+        assert not any(M.tem_iniciativa("Corruptor", lv, "") for lv in (1, 3, 5))
+    for cid in ini:  # cada Carta do Corruptor: passiva fora do full_deck, creditada so pelo D-369-6
+        card = M.cards.get_card(cid)
+        assert card["tipo"] == "passiva", cid
+        lv = max(int(card.get("level_req", 1) or 1), 1)
+        assert not M.E.has_initiative_card("Corruptor", lv, "")
+        assert M.tem_iniciativa("Corruptor", lv, "")
     assert M.E.has_initiative_card is M._orig_has_initiative  # nada ficou trocado
 
 

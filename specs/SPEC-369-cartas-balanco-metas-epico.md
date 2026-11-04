@@ -488,6 +488,11 @@ O balanço é determinístico, e a Fase C é a prova dele. O LLM real entra em d
 - O R9(a) não bate com o JSON da 368 por mudança de catálogo, com a causa isolada.
 - `emboscada` aceita `--base <json>` para reaproveitar o `posturas` já medido, como faz a 355.
 - Cada subcomando grava a sua chave no mesmo JSON de `--out` (mescla).
+- **Ajuste de régua depois do B2 (autor de eval, commit próprio).** `test_emboscada_credita_passiva_preparada` afirmava o estado da base: "Corruptor sem Carta `buff_iniciativa`". Com `cor1_tro_faro_do_abismo` criada no B2, essa afirmação deixou de valer, e o teste passou a ser robusto ao catálogo:
+  - sem as Cartas `buff_iniciativa` do Corruptor (`sem_cartas`), ele exige que não haja crédito em nível nenhum, que é o estado da base;
+  - com elas, cada Carta tem de ser `passiva`, ficar fora do crédito da 355 (`full_deck`) e ser creditada pelo D-369-6 no seu `level_req`.
+
+  A prova não perdeu força: os casos do Devoto e do Sangromante ficaram iguais. Nenhum arquivo de produto foi tocado.
 
 ### Fase B, B1 (04/11, executor Terra/Sonnet)
 
