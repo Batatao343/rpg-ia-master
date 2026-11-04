@@ -12,3 +12,8 @@ def env_choice(name: str, choices: tuple[str, ...] | frozenset[str], default: st
     """
     raw = os.getenv(name, default).strip().lower()
     return raw if raw in choices else default
+
+
+def is_database_profile() -> bool:
+    """Perfil runtime com banco (qualquer valor diferente de ``legacy``; ``""`` conta)."""
+    return os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy"
