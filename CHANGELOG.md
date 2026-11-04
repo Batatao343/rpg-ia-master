@@ -5,6 +5,15 @@
 
 ---
 
+## 2026-11-04 — épico de cartas fechado
+
+- SPEC-387 (Carta de cena sem cache de processo, oferta sem cache de falha, chip otimista, nome genérico vira criatura da região, Groq 120b no CLASSIFY, jogada inelegível explicada, escolta, seeds, `draft.py`), SPEC-389 (instrumentação `offer_view`, kill switch com idade máxima, entrega de quest pela rota NPC, P3 de texto) e SPEC-390 (voz "você" no Voto, título da missão no recibo) pousadas com Sol aprovado e smokes reais (staging `70c7ebc3`).
+- Medição no staging: oferta de retrato 12/12 (API + navegador, 3 instâncias), `docs/spec389/offer-measure-20261104.json`.
+- Auditoria critério × evidência fechou 327–336, 345–347, 352, 355, 357, 367, 368, 387, 389, 390 (`done`), com ressalvas só-por-teste nas notas. Métricas não atingidas → SPEC-369.
+- Ferramentas: `retire_creature_portrait.py --dsn-env`, `portrait_offer_measure.py --hero`; flakes corrigidos (diretor 302 por `id()` reciclado, mão sem ataque no helper 364, guarda 371 só na branch).
+
+---
+
 ## 2026-11-03 — notas de onda movidas do ESTADO (27/10–02/11)
 
 - 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
