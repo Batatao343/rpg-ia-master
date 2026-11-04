@@ -1,0 +1,373 @@
+{
+ "campaign_combate_off": {
+  "events": "de0fbee055f69d4e",
+  "files": "4b64440a1eaf7f75",
+  "result": "8ce3b3380372171c",
+  "state": "4f53cda18c2baa0c",
+  "trace": "ffb04127e74564d0"
+ },
+ "campaign_combate_on": {
+  "events": "68474c074ea0607d",
+  "files": "4b64440a1eaf7f75",
+  "result": "19b9335e4718f7f5",
+  "state": "4f53cda18c2baa0c",
+  "trace": "86a1a191146f3247"
+ },
+ "campaign_diplomatico_off": {
+  "events": "4d2ce2da16b794cd",
+  "files": "5f0bbf8acc827db5",
+  "result": "fae7f472ce486c7c",
+  "state": "4f53cda18c2baa0c",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "campaign_diplomatico_on": {
+  "events": "4d2ce2da16b794cd",
+  "files": "5f0bbf8acc827db5",
+  "result": "fae7f472ce486c7c",
+  "state": "4f53cda18c2baa0c",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "campaign_explorador_off": {
+  "events": "71b38d8b69eb7fbd",
+  "files": "a932a397575c6cfb",
+  "result": "27d6ced2e93f7241",
+  "state": "4f53cda18c2baa0c",
+  "trace": "91ab8bf06cc0b6ae"
+ },
+ "campaign_explorador_on": {
+  "events": "a57149146404473b",
+  "files": "7534764e22175fee",
+  "result": "a64ab887c22528c3",
+  "state": "4f53cda18c2baa0c",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "campaign_secret_rusher_off": {
+  "events": "f9804a49f5ad3613",
+  "files": "7ca9bcafbb2e7923",
+  "result": "e0c1a25f9cf8f3bd",
+  "state": "4f53cda18c2baa0c",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "campaign_secret_rusher_on": {
+  "events": "f9804a49f5ad3613",
+  "files": "7ca9bcafbb2e7923",
+  "result": "e0c1a25f9cf8f3bd",
+  "state": "4f53cda18c2baa0c",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "combat_basic_off": {
+  "events": "94c8a660c8b78bc0",
+  "files": "abc2b07e6d62c63f",
+  "result": "6577ff5ab73e01ae",
+  "state": "36142f1f62141a90",
+  "trace": "6649087997df2372"
+ },
+ "combat_basic_on": {
+  "events": "3845027da04d78cd",
+  "files": "4f53cda18c2baa0c",
+  "result": "4a485a88b017ff66",
+  "state": "626be27a2ead1945",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "combat_death_off": {
+  "events": "b35e6ed40c014c71",
+  "files": "315e770380445915",
+  "result": "87de92c66f4358fa",
+  "state": "594c779330719a19",
+  "trace": "3ba118ef3f6a5ef4"
+ },
+ "combat_death_on": {
+  "events": "c157e2aaf673701c",
+  "files": "315e770380445915",
+  "result": "f155c92a978431c2",
+  "state": "533a3736a5a3aacc",
+  "trace": "c80ba93bb1989bc9"
+ },
+ "combat_flee_dest_off": {
+  "events": "81e898fb8f1b9719",
+  "files": "4f53cda18c2baa0c",
+  "result": "df42bb5fd20c17d3",
+  "state": "2b0c299dd1c539a4",
+  "trace": "5701175d706ce09d"
+ },
+ "combat_flee_dest_on": {
+  "events": "878e3e45eea75b6c",
+  "files": "4f53cda18c2baa0c",
+  "result": "08b7da443d8e6d1a",
+  "state": "30f156bce22addf8",
+  "trace": "d4c3948c9a861ece"
+ },
+ "combat_flee_off": {
+  "events": "f6dd542e58148dd9",
+  "files": "4f53cda18c2baa0c",
+  "result": "4035f284e9008c4c",
+  "state": "85b3967c6938e522",
+  "trace": "f1e295c6b1d0ea85"
+ },
+ "combat_flee_on": {
+  "events": "4b4711a212d430fe",
+  "files": "4f53cda18c2baa0c",
+  "result": "9fac1078340646fc",
+  "state": "e32032e6153c15cf",
+  "trace": "5701175d706ce09d"
+ },
+ "combat_flee_rooted_off": {
+  "events": "98ca02a2af4d5324",
+  "files": "4f53cda18c2baa0c",
+  "result": "03944ff49df2f65f",
+  "state": "de7ceb7d44f9015b",
+  "trace": "01fe6b31d3b8bed2"
+ },
+ "combat_flee_rooted_on": {
+  "events": "a161463e4906abe8",
+  "files": "4f53cda18c2baa0c",
+  "result": "846d1680bd55b66e",
+  "state": "721076afc994ea05",
+  "trace": "a8880bb20e752112"
+ },
+ "combat_freetext_on": {
+  "events": "d50afdfc6dd8aa65",
+  "files": "4f53cda18c2baa0c",
+  "result": "8ee693b0119d3ba9",
+  "state": "eae00eede09c6ef6",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "combat_no_active_off": {
+  "events": "39f42852c58763ab",
+  "files": "315e770380445915",
+  "result": "1a7dedf8c77be1fb",
+  "state": "654c5fb4e5a12616",
+  "trace": "8e339b791246780c"
+ },
+ "combat_no_active_on": {
+  "events": "39f42852c58763ab",
+  "files": "315e770380445915",
+  "result": "bb90f3346d5682f9",
+  "state": "35c5505789496248",
+  "trace": "5fb828fec2d2bf11"
+ },
+ "combat_party_off": {
+  "events": "4ea616ddfc4c0777",
+  "files": "315e770380445915",
+  "result": "729dae0bf6f12a86",
+  "state": "80d6a0b6c7fcc39d",
+  "trace": "f1b08fc790cd6d0e"
+ },
+ "combat_party_on": {
+  "events": "b28f5767326a9dcf",
+  "files": "315e770380445915",
+  "result": "9639fd614370ffcf",
+  "state": "7020997db5a8377c",
+  "trace": "8dc2d90839ad78d3"
+ },
+ "combat_real_narrate_off": {
+  "events": "1753b48478f50ce5",
+  "files": "abc2b07e6d62c63f",
+  "result": "c286b32e28963786",
+  "state": "7a494f29ce7fca80",
+  "trace": "3ef70d0a0cba3c67"
+ },
+ "combat_real_narrate_on": {
+  "events": "1753b48478f50ce5",
+  "files": "abc2b07e6d62c63f",
+  "result": "3dac3880337f37f9",
+  "state": "f9cf8ae78dbe90b1",
+  "trace": "37e921fddeb74319"
+ },
+ "combat_simulation_off": {
+  "events": "1753b48478f50ce5",
+  "files": "abc2b07e6d62c63f",
+  "result": "3bad037be2478123",
+  "state": "45ff5f1ac6114cc6",
+  "trace": "c8beff6323550211"
+ },
+ "combat_simulation_on": {
+  "events": "1753b48478f50ce5",
+  "files": "abc2b07e6d62c63f",
+  "result": "bb08830dcf2731ee",
+  "state": "e30d518ca6ed6142",
+  "trace": "ffc61293b20b8902"
+ },
+ "combat_start_spawn_off": {
+  "events": "9e316790beac2a6b",
+  "files": "315e770380445915",
+  "result": "bacecfd1e2ccf87a",
+  "state": "351cc750441640dc",
+  "trace": "8bdb9fdb3b3ea17a"
+ },
+ "combat_start_spawn_on": {
+  "events": "d40eb83c433c092c",
+  "files": "4f53cda18c2baa0c",
+  "result": "ced7054cf6ee3e19",
+  "state": "3dd845b991670551",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "combat_unconscious_off": {
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "result": "56c80910754c9ffe",
+  "state": "a9727c896ddd5b58",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "combat_unconscious_on": {
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "result": "56c80910754c9ffe",
+  "state": "a9727c896ddd5b58",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "combat_victory_quest_off": {
+  "events": "1753b48478f50ce5",
+  "files": "abc2b07e6d62c63f",
+  "result": "7859d4e8d9123d01",
+  "state": "d44c085e92734097",
+  "trace": "3ef70d0a0cba3c67"
+ },
+ "combat_victory_quest_on": {
+  "events": "1753b48478f50ce5",
+  "files": "abc2b07e6d62c63f",
+  "result": "826c393d42bc6f1e",
+  "state": "9d49ec2125c61132",
+  "trace": "37e921fddeb74319"
+ },
+ "story_empty_narrative": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "5feb7c70f2269f2a",
+  "state": "4be87facdeb7bbda",
+  "trace": "708365d77122cc29"
+ },
+ "story_exception": {
+  "events": "bce69dcb43a27b03",
+  "files": "4f53cda18c2baa0c",
+  "result": "d135e51d1c68df1b",
+  "state": "4be87facdeb7bbda",
+  "trace": "708365d77122cc29"
+ },
+ "story_fallback_llm": {
+  "events": "d5fd309e8b19793d",
+  "files": "4f53cda18c2baa0c",
+  "result": "5feb7c70f2269f2a",
+  "state": "4be87facdeb7bbda",
+  "trace": "4f53cda18c2baa0c"
+ },
+ "story_free": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "3403851ad757f0b9",
+  "state": "e2ae4ee9adcb4377",
+  "trace": "751e80fdf38b219f"
+ },
+ "story_free_items": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "37b56f1ce8536bca",
+  "state": "c18c9ec47cb2390e",
+  "trace": "de2106a0cfbad177"
+ },
+ "story_membership": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "ace20cdd39af7411",
+  "state": "5542102a10483567",
+  "trace": "708365d77122cc29"
+ },
+ "story_quarantine": {
+  "events": "ccb5777e62106c47",
+  "files": "4f53cda18c2baa0c",
+  "result": "d681597c5ba8ec98",
+  "state": "e2ae4ee9adcb4377",
+  "trace": "751e80fdf38b219f"
+ },
+ "story_recovery": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "3403851ad757f0b9",
+  "state": "7353e96d6a203272",
+  "trace": "e7921f0e5ef6e2c6"
+ },
+ "story_rest": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "d3d413a525343d95",
+  "state": "c5f8ebd60018df1f",
+  "trace": "608cf096e0a23a80"
+ },
+ "story_rest_ambush": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "86b691aceac14c4f",
+  "state": "775410b47c4e5167",
+  "trace": "b36ef968367bf0b2"
+ },
+ "story_rest_blocked": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "47f7927084a759c7",
+  "state": "bb9b2992fbbd991e",
+  "trace": "9176a2a90e5ca14e"
+ },
+ "story_travel": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "9293e6757899b8da",
+  "state": "4be87facdeb7bbda",
+  "trace": "708365d77122cc29"
+ },
+ "story_travel_combat": {
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "result": "fa5980421c002478",
+  "state": "4be87facdeb7bbda",
+  "trace": "76f56a070bcbab5d"
+ },
+ "story_travel_refused": {
+  "events": "2d957141887cd8ab",
+  "files": "4f53cda18c2baa0c",
+  "result": "1e0e1bd9710ccd23",
+  "state": "2e4c741b524c92f2",
+  "trace": "76f56a070bcbab5d"
+ },
+ "story_travel_social": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "cc163cde4a666696",
+  "state": "4be87facdeb7bbda",
+  "trace": "92d0ce5dc8f90191"
+ },
+ "story_travel_track": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "1f94faceff658af5",
+  "state": "4be87facdeb7bbda",
+  "trace": "9646e5fa342452a5"
+ },
+ "story_travel_trap": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "7b85f7df4c80d434",
+  "state": "4be87facdeb7bbda",
+  "trace": "0ed326cf6f41a254"
+ },
+ "stream_combat": {
+  "events": "1753b48478f50ce5",
+  "files": "abc2b07e6d62c63f",
+  "result": "e5189bd3217f2795",
+  "state": "a89ce79b0aa62e25",
+  "trace": "d348e27e1a9d3b92"
+ },
+ "stream_story": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "715b5bc8663a9ef8",
+  "state": "4be87facdeb7bbda",
+  "trace": "93c890095febe111"
+ },
+ "stream_story_plain": {
+  "events": "3b39f35f75df5629",
+  "files": "4f53cda18c2baa0c",
+  "result": "a32606c2629f75cc",
+  "state": "e2ae4ee9adcb4377",
+  "trace": "5c43daf78b6e23df"
+ }
+}
