@@ -2816,62 +2816,7 @@ def _combat_node(state: GameState):
             t.combat_meta["pilhas"] = _copy.deepcopy(t.combat_meta["pilhas"])
             t.round_state["_piles"] = t.combat_meta["pilhas"]
             t.round_state["_deck_mode"] = deck_mode
-        t.wounds_before = card_status.wound_counts(t.player)
-        t.out = orch.run_round(
-            t.scene,
-            t.actors_by_id,
-            t.sides,
-            t.round_state,
-            declarations={**t.order_decls, _PLAYER_ID: t.decl},
-            prepared_abyss=t.scene.get("abyss_events"),
-            initiator=t.initiator,
-            rng=t.rng,
-            **({"refusal": t.chase_refusal} if t.chase_refusal else {}),
-            **(
-                {"pressagios": t.combat_meta["pressagios"]}
-                if _enemy_intent.active() and isinstance(t.combat_meta.get("pressagios"), dict)
-                else {}
-            ),
-        )
-        if t.chase_refusal or t.out.get("deck_refused"):
-            t.combat_meta["round"] = max(0, int(t.combat_meta.get("round", 1) or 1) - 1)
-            if t.prior_flee_attempts is not None:  # recusa não gasta nada: preserva o teto de fuga
-                t.combat_meta["flee_attempts"] = t.prior_flee_attempts
-        _sync_enemy_knowledge(t.enemies)
-        _reveal_resistances(t.out.get("attacks") or [], t.enemies, t.sides)
-        t.logs += t.weather_logs + t.order_logs + t.out["logs"]
-        # SPEC-371 R3: telegrafo/assinatura -> save (texto-fonte vigiado: test_spec371_saber)
-        is_simulation = t.is_simulation
-        if not is_simulation and _fauna_saber.active():
-            _alive_now = not (
-                t.out.get("player_dead")
-                or t.player.get("dead")
-                or t.player.get("estado_terminal")
-                or int(t.player.get("vitalidade", 0) or 0) <= 0
-            )
-            t.bestiary_knowledge, _saber_logs = _fauna_saber.absorb(
-                t.bestiary_knowledge, t.scene, t.actors_by_id, _alive_now, t.turn
-            )
-            t.status_logs += _saber_logs  # R14: texto fixo no REGISTRO/mech_log, não na prosa
-            t.bk_changed = True
-            if _saber_logs:  # P2-5: revelado no meio da luta -> o chip já mostra "Você sabe:"
-                for _enemy in t.enemies:
-                    if not _enemy.get("dead"):
-                        _fauna_saber.stamp_actor(_enemy, t.bestiary_knowledge)
-        elif t.is_simulation and isinstance(
-            t.scene, dict
-        ):  # P2-7: a simulação não deixa lixo na cena
-            t.scene.pop("saber_obs", None)
-        # Gasto BRUTO da economia da Carta. O delta líquido antes/depois era
-        # incorreto para classes cujo próprio uso repõe Entropia no mesmo turno.
-        player_cards = [
-            used for used in (t.out.get("cards_used") or []) if used.get("actor_id") == _PLAYER_ID
-        ]
-        t.player["_last_entropy_spent"] = sum(
-            int((used.get("economy") or {}).get("cost", 0) or 0) for used in player_cards
-        )
-        t.player["_last_used_active"] = bool(player_cards)
-        t.player["_last_ability_id"] = player_cards[-1].get("card_id") if player_cards else None
+        _combat_run_round(t)
     else:
         t.out = {
             "deaths": [],
@@ -3291,6 +3236,64 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_run_round(t: _CombatTurn) -> None:
+    """Resolve a rodada no orquestrador de conflito e absorve o saber de fauna."""
+    t.wounds_before = card_status.wound_counts(t.player)
+    t.out = orch.run_round(
+        t.scene,
+        t.actors_by_id,
+        t.sides,
+        t.round_state,
+        declarations={**t.order_decls, _PLAYER_ID: t.decl},
+        prepared_abyss=t.scene.get("abyss_events"),
+        initiator=t.initiator,
+        rng=t.rng,
+        **({"refusal": t.chase_refusal} if t.chase_refusal else {}),
+        **(
+            {"pressagios": t.combat_meta["pressagios"]}
+            if _enemy_intent.active() and isinstance(t.combat_meta.get("pressagios"), dict)
+            else {}
+        ),
+    )
+    if t.chase_refusal or t.out.get("deck_refused"):
+        t.combat_meta["round"] = max(0, int(t.combat_meta.get("round", 1) or 1) - 1)
+        if t.prior_flee_attempts is not None:  # recusa não gasta nada: preserva o teto de fuga
+            t.combat_meta["flee_attempts"] = t.prior_flee_attempts
+    _sync_enemy_knowledge(t.enemies)
+    _reveal_resistances(t.out.get("attacks") or [], t.enemies, t.sides)
+    t.logs += t.weather_logs + t.order_logs + t.out["logs"]
+    # SPEC-371 R3: telegrafo/assinatura -> save (texto-fonte vigiado: test_spec371_saber)
+    is_simulation = t.is_simulation
+    if not is_simulation and _fauna_saber.active():
+        _alive_now = not (
+            t.out.get("player_dead")
+            or t.player.get("dead")
+            or t.player.get("estado_terminal")
+            or int(t.player.get("vitalidade", 0) or 0) <= 0
+        )
+        t.bestiary_knowledge, _saber_logs = _fauna_saber.absorb(
+            t.bestiary_knowledge, t.scene, t.actors_by_id, _alive_now, t.turn
+        )
+        t.status_logs += _saber_logs  # R14: texto fixo no REGISTRO/mech_log, não na prosa
+        t.bk_changed = True
+        if _saber_logs:  # P2-5: revelado no meio da luta -> o chip já mostra "Você sabe:"
+            for _enemy in t.enemies:
+                if not _enemy.get("dead"):
+                    _fauna_saber.stamp_actor(_enemy, t.bestiary_knowledge)
+    elif t.is_simulation and isinstance(t.scene, dict):  # P2-7: a simulação não deixa lixo na cena
+        t.scene.pop("saber_obs", None)
+    # Gasto BRUTO da economia da Carta. O delta líquido antes/depois era
+    # incorreto para classes cujo próprio uso repõe Entropia no mesmo turno.
+    player_cards = [
+        used for used in (t.out.get("cards_used") or []) if used.get("actor_id") == _PLAYER_ID
+    ]
+    t.player["_last_entropy_spent"] = sum(
+        int((used.get("economy") or {}).get("cost", 0) or 0) for used in player_cards
+    )
+    t.player["_last_used_active"] = bool(player_cards)
+    t.player["_last_ability_id"] = player_cards[-1].get("card_id") if player_cards else None
 
 
 def _combat_aftermath(t: _CombatTurn) -> None:
