@@ -12,6 +12,7 @@
 - **Épico de cartas fechado (04/11):** 327–336, 345–347, 352, 355, 357, 367, 368, 387, 389, 390 `done` após auditoria critério × evidência (8 smokes reais; notas "Fechamento" com ressalvas só-por-teste em cada spec).
 - Últimos smokes: Carta de cena serverless ok; oferta de retrato 12/12 em 3 instâncias (`docs/spec389/offer-measure-20261104.json`); quest de entrega fecha pela rota NPC; 0 LLM por rodada; débito 8 ≤ 15 milli.
 - **SPEC-369** (balanço, 3 fases): Fase A (régua, `docs/spec369/`) e B1/B2 (`draft.py` com ajuste de orçamento; Carta `cor1_tro_faro_do_abismo`) na `main`. Base: 1,915 Cartas/rodada, 15 Cartas > 60 %, Médico p95 19, leitor de Presságio 103,4 % do cego, 5 células de família fora. B3+ espera o gate do dono.
+- **SPEC-393** `done` (04/11): smoke real das ressalvas do épico (`docs/smoke-ressalvas-cartas/`) + correções: texto de morte aceita, golpe final com vários alvos, guard da prosa de morte, compra "com minhas últimas moedas", aviso do import de arte. Ainda não está no staging (`70c7ebc3`).
 - Balanço: Arcanista 49,7 %; Sangromante acima do teto (exceção do dono registrada na 335).
 - Latência: 1ª narração p50 2,6 s; abertura de combate ~13 s (staging).
 - Project Index não é mais versionado (`51c70d85`): nada de reindex por commit.
@@ -19,7 +20,7 @@
 ## Próximos 3 passos
 
 1. SPEC-369 B3–B6 e Fase C, depois do gate do dono em `docs/spec369/BASE.md`.
-2. Follow-ups das ressalvas só-por-teste (morte no staging, "Vasculho o corpo", chefe `unico`, `trade_prose_rejected`, `replace` real) num smoke dedicado.
+2. Redeploy do staging com 369 B1/B2 + 393; chefe `unico` entre 2 contas só no staging.
 3. Refatoração 375–385 (outra sessão); artes do staging (326 D2); smoke §6 de 349/359/360/361.
 
 ## Bloqueios no dono
