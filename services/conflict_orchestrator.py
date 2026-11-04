@@ -2581,6 +2581,13 @@ class _RoundIntents:
         ] = {}  # SPEC-355 R2: Provocações a gastar APÓS a ação
         self.acted: set[str] | None = None  # ligado onde o laço o cria
 
+    def frustrate_pending(self, actor_id: str, motivo: str) -> None:
+        """Ator que não age frustra o próprio presságio (só com Presságio `on`)."""
+        if self.intent_mode == "on" and self.frozen is not None:
+            _it = self.next_intent(actor_id)
+            if _it is not None:
+                self.frustrate(actor_id, _it, motivo)
+
     def tf_acted(self) -> set[str] | None:
         return self.acted if (self.intent_mode == "on" and self.frozen is not None) else None
 
@@ -2990,6 +2997,42 @@ def _round_extra_action(
     )
 
 
+def _round_resolve_actor(
+    scene: dict,
+    actors_by_id: dict,
+    sides: dict,
+    actor_id: str,
+    declarations: dict,
+    player_id: str | None,
+    state: dict | None,
+    out: dict,
+    rng,
+    intents: "_RoundIntents",
+    cond_before: dict,
+    present_at_start: list,
+) -> None:
+    """SPEC-382: declaração (a do jogador ou a do inimigo), resolução do turno e fechamento de marcadores."""
+    from services import card_deck_round as _deck
+
+    actor = actors_by_id.get(actor_id)
+    _cond_before = cond_before
+    decl = declarations.get(actor_id)
+    if decl is None:
+        decl = intents.enemy_decl(actor_id, actor)
+    if actor_id == player_id and _deck.deck_mode(state) == "on":
+        _deck.resolve_player_plays(
+            scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng
+        )
+    else:
+        _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+    intents.spend_taunt(actor_id, actor)
+    _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
+    _mark_fresh_conditions(
+        _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=intents.tf_acted()
+    )
+    _expire_stat_conditions(actor, present_at_start, out)
+
+
 def _round_actor_loop(
     scene: dict,
     actors_by_id: dict,
@@ -3006,8 +3049,6 @@ def _round_actor_loop(
     denied: set[str] = set()
     acted: set[str] = set()
     intents.acted = acted
-    from services import card_deck_round as _deck
-
     for actor_id in seq:
         actor = actors_by_id.get(actor_id)
         _cond_before = _snapshot_conditions(actors_by_id)  # SPEC-339
@@ -3020,51 +3061,38 @@ def _round_actor_loop(
         if actor is None or not _can_act(actor):
             denied.add(actor_id)
             _note_denied_span(out, actor_id)
-            if intents.intent_mode == "on" and intents.frozen is not None:
-                _it = intents.next_intent(actor_id)
-                if _it is not None:
-                    intents.frustrate(actor_id, _it, "incapaz")
+            intents.frustrate_pending(actor_id, "incapaz")
             continue
-        # Controle é observado ANTES do tick: duration=1 precisa negar exatamente
-        # esta ação e só então expirar. O fluxo anterior removia stun/sleep antes
-        # de consultá-los, tornando consumíveis de controle mecanicamente inertes.
+        # Controle é observado ANTES do tick: duration=1 nega esta ação e só então expira.
         stunned_this_turn = cm.has_control(actor, "stun")
-        # Lista de refs (não set de id()): mantém os dicts vivos — o id() de uma
-        # condição removida no tick podia ser reusado por buff novo deste turno.
+        # Lista de refs (não set de id()): o id() de condição removida podia ser reusado.
         present_at_start = list(actor.get("active_conditions") or [])
         dot_applied = _tick_conditions_v4(actor, out, rng=rng)
         _check_terminal(actor, actor_id, out, damage_applied=dot_applied, record=True)
         if not _can_act(actor):
-            if intents.intent_mode == "on" and intents.frozen is not None:
-                _it = intents.next_intent(actor_id)
-                if _it is not None:
-                    intents.frustrate(actor_id, _it, "incapaz")
+            intents.frustrate_pending(actor_id, "incapaz")
             continue
         if stunned_this_turn:
             denied.add(actor_id)
             _note_denied_span(out, actor_id)
             out["logs"].append(f"{_name(actor)} está atordoado e perde o turno.")
-            if intents.intent_mode == "on" and intents.frozen is not None:
-                _it = intents.next_intent(actor_id)
-                if _it is not None:
-                    intents.frustrate(actor_id, _it, "atordoado")
+            intents.frustrate_pending(actor_id, "atordoado")
             _expire_stat_conditions(actor, present_at_start, out)
             continue
-        decl = declarations.get(actor_id)
-        if decl is None:
-            decl = intents.enemy_decl(actor_id, actor)
-        if actor_id == player_id and _deck.deck_mode(state) == "on":
-            _deck.resolve_player_plays(
-                scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng
-            )
-        else:
-            _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
-        intents.spend_taunt(actor_id, actor)
-        _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
-        _mark_fresh_conditions(
-            _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=intents.tf_acted()
+        _round_resolve_actor(
+            scene,
+            actors_by_id,
+            sides,
+            actor_id,
+            declarations,
+            player_id,
+            state,
+            out,
+            rng,
+            intents,
+            _cond_before,
+            present_at_start,
         )
-        _expire_stat_conditions(actor, present_at_start, out)
 
 
 def _round_end(
