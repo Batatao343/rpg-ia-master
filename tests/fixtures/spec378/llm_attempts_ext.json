@@ -1,0 +1,462 @@
+{
+ "hedge_second_wins": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": null,
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "hedge_lost",
+    "provider": "deepseek",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "groq:m2"
+  ],
+  "out": "[[('delta', 'B')], StoryUpdate(narrative='B', introduced_npcs=[], npcs_left_scene=[], faction_impacts=[], membership_action=None, crime_claims=[], beat_completed=False, proposed_events=[], proposed_quests=[], items_gained=[])]"
+ },
+ "s_429": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "_HttpErr",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 429,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invoke_error",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": "transport",
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "gemini",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "gemini:m2"
+  ],
+  "out": "_Small(value='ok')"
+ },
+ "s_all_fail": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "_HttpErr",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 500,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invoke_error",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": "transport",
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": "_HttpErr",
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 429,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "invoke_error",
+    "provider": "gemini",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": "transport",
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   }
+  ],
+  "legacy": [],
+  "out": "AIMessage(content='', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])"
+ },
+ "s_always_invalid": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "parsing_error",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invalid_structured",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": "parsing_error",
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": "parsing_error",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invalid_structured",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": "parsing_error",
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   },
+   {
+    "attempt_index": 2,
+    "error": "parsing_error",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invalid_structured",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": "parsing_error",
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   },
+   {
+    "attempt_index": 3,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "gemini",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "gemini:m2"
+  ],
+  "out": "_Small(value='ok')"
+ },
+ "s_apply_error": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "apply:_HttpErr",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 500,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "build_error",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "gemini",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "gemini:m2"
+  ],
+  "out": "_Small(value='ok')"
+ },
+ "s_ok": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": null,
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "success",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "groq:m1"
+  ],
+  "out": "_Small(value='ok')"
+ },
+ "s_retry_then_ok": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "parsing_error",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invalid_structured",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": "parsing_error",
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "success",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "groq:m1"
+  ],
+  "out": "_Small(value='ok')"
+ },
+ "s_timeout": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "TimeoutError",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invoke_error",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": "transport",
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "gemini",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "gemini:m2"
+  ],
+  "out": "_Small(value='ok')"
+ },
+ "s_tool_use_failed": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "_HttpErr",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 400,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invoke_error",
+    "provider": "groq",
+    "provider_error_code": "tool_use_failed",
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": "provider_tool_use_failed",
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "success",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.CLASSIFY",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "groq:m1"
+  ],
+  "out": "_Small(value='ok')"
+ },
+ "ss_fail_before_fallback": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "RuntimeError",
+    "error_type": "RuntimeError",
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "stream_error",
+    "provider": "deepseek",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "groq",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "groq:m2"
+  ],
+  "out": "[[('delta', 'B')], StoryUpdate(narrative='B', introduced_npcs=[], npcs_left_scene=[], faction_impacts=[], membership_action=None, crime_claims=[], beat_completed=False, proposed_events=[], proposed_quests=[], items_gained=[])]"
+ },
+ "ss_ok": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": null,
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "success",
+    "provider": "deepseek",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": true,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   "deepseek:m1"
+  ],
+  "out": "[[('delta', 'A')], StoryUpdate(narrative='A', introduced_npcs=[], npcs_left_scene=[], faction_impacts=[], membership_action=None, crime_claims=[], beat_completed=False, proposed_events=[], proposed_quests=[], items_gained=[])]"
+ }
+}
