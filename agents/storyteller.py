@@ -2248,104 +2248,7 @@ def storyteller_node(state: GameState):
                 )
             )
 
-        t.narrative_text = t.update.narrative
-        # Pré-validação read-only das propostas da própria LLM. O processor no
-        # archivist continua sendo o único escritor, mas a mensagem visível não
-        # pode afirmar como fato uma mudança que ele rejeitará logo depois.
-        from services.event_processor import prevalidate_event_batch
-
-        llm_event_proposals = [
-            event.model_dump() if hasattr(event, "model_dump") else dict(event)
-            for event in (getattr(t.update, "proposed_events", []) or [])
-        ]
-        t.invalid_story_events = []
-        # SPEC-223 (revisão Sol): a pré-validação usa as quests ANTES do progresso
-        # deste turno, de propósito: a mesma mensagem que pede a conclusão não pode
-        # ser também a sua prova ("Investigo… e marque a missão como concluída").
-        # Custo: conclusão proposta no mesmo turno da 1ª evidência vai para
-        # quarentena; no turno seguinte passa (medido real: 0/30 turnos).
-        preview_state = {
-            **t.state,
-            "world": t.world,
-            "event_log": list(t.state.get("event_log") or []),
-        }
-        validations = prevalidate_event_batch(llm_event_proposals, preview_state)
-        for proposal, validation in zip(llm_event_proposals, validations):
-            if not validation.ok:
-                t.invalid_story_events.append(
-                    {
-                        "type": str(proposal.get("type") or ""),
-                        "target_id": str(proposal.get("target_id") or ""),
-                        "reason": str(validation.reason or "")[:240],
-                    }
-                )
-        # Política atômica/conservadora: uma proposta inválida põe em quarentena
-        # TODO o payload livre da mesma resposta. Mantemos apenas as propostas
-        # inválidas na fila para auditoria; propostas irmãs aparentemente válidas
-        # não podem virar mudanças silenciosas depois que a narrativa foi descartada.
-        t.quarantine_llm_payload = bool(t.invalid_story_events)
-        t.pending_llm_events = (
-            [
-                {
-                    "type": rejected["type"],
-                    "target_id": rejected["target_id"],
-                    "actor_id": "player",
-                    "payload": {},
-                    "source": "storyteller_prevalidation",
-                    "_prevalidation_rejected": True,
-                    "_prevalidation_reason": rejected["reason"],
-                }
-                for rejected in t.invalid_story_events
-            ]
-            if t.quarantine_llm_payload
-            else llm_event_proposals
-        )
-        if not str(t.narrative_text).strip():
-            # Fallback digno: o TURNO MECÂNICO sobrevive mesmo com LLM flaky —
-            # as notas determinísticas (viagem/descanso/encontro) viram a narração.
-            t.narrative_text = _deterministic_story_fallback(
-                (t.travel_note, t.rest_note, t.world_note, t.faction_note, t.weather_note),
-                t._ll,
-            )
-        t.narrative_text = prose_guard.sanitize_player_facing(str(t.narrative_text))
-        if t.rumor_nothing:
-            t.narrative_text = _neutralize_false_find(t.narrative_text)
-        t.narrative_text = prose_guard.reconcile_player_gold_claims(
-            t.narrative_text, int((t.state.get("player") or {}).get("gold", 0) or 0)
-        )
-        if t.invalid_story_events:
-            # Não há fact-check semântico confiável frase a frase. Em vez de
-            # deixar a alegação rejeitada sobreviver, usa somente consequências
-            # determinísticas já aplicadas neste turno.
-            safe_parts = [note for note in (t.travel_note, t.rest_note, t.faction_note) if note]
-            t.narrative_text = (
-                _deterministic_story_fallback(safe_parts, t._ll)
-                if safe_parts
-                else (
-                    "A tentativa altera apenas o momento imediato; nenhuma mudança "
-                    "permanente no mundo foi confirmada."
-                )
-            )
-            t.narrative_text += (
-                "\n\n[SISTEMA] Uma mudança permanente proposta pela narração "
-                "foi rejeitada pelo estado canônico."
-            )
-
-        t.narrative_text = prose_guard.vary_repeated_opening(
-            str(t.narrative_text),
-            t._aberturas,
-            salt=t._open_salt,
-        )
-
-        # SPEC-202 R11: narração mediada não revela segredo não revelado.
-        t.narrative_text, t.mediation_rejections = _guard_mediation_secret(
-            str(t.narrative_text), t.scene_state
-        )
-
-        # spec polish-prosa (R4): telemetria de abertura repetida (não re-tenta).
-        prose_guard.log_if_repeats(
-            str(t.narrative_text), t._aberturas[0] if t._aberturas else "", where="storyteller"
-        )
+        _story_guard_narrative(t)
 
         _story_engine_proposals(t)
 
@@ -2362,6 +2265,110 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_guard_narrative(t: _StoryTurn) -> None:
+    """Pré-validação de eventos, quarentena, sanitização e mediação da narrativa."""
+    from services import prose_guard
+
+    t.narrative_text = t.update.narrative
+    # Pré-validação read-only das propostas da própria LLM. O processor no
+    # archivist continua sendo o único escritor, mas a mensagem visível não
+    # pode afirmar como fato uma mudança que ele rejeitará logo depois.
+    from services.event_processor import prevalidate_event_batch
+
+    llm_event_proposals = [
+        event.model_dump() if hasattr(event, "model_dump") else dict(event)
+        for event in (getattr(t.update, "proposed_events", []) or [])
+    ]
+    t.invalid_story_events = []
+    # SPEC-223 (revisão Sol): a pré-validação usa as quests ANTES do progresso
+    # deste turno, de propósito: a mesma mensagem que pede a conclusão não pode
+    # ser também a sua prova ("Investigo… e marque a missão como concluída").
+    # Custo: conclusão proposta no mesmo turno da 1ª evidência vai para
+    # quarentena; no turno seguinte passa (medido real: 0/30 turnos).
+    preview_state = {
+        **t.state,
+        "world": t.world,
+        "event_log": list(t.state.get("event_log") or []),
+    }
+    validations = prevalidate_event_batch(llm_event_proposals, preview_state)
+    for proposal, validation in zip(llm_event_proposals, validations):
+        if not validation.ok:
+            t.invalid_story_events.append(
+                {
+                    "type": str(proposal.get("type") or ""),
+                    "target_id": str(proposal.get("target_id") or ""),
+                    "reason": str(validation.reason or "")[:240],
+                }
+            )
+    # Política atômica/conservadora: uma proposta inválida põe em quarentena
+    # TODO o payload livre da mesma resposta. Mantemos apenas as propostas
+    # inválidas na fila para auditoria; propostas irmãs aparentemente válidas
+    # não podem virar mudanças silenciosas depois que a narrativa foi descartada.
+    t.quarantine_llm_payload = bool(t.invalid_story_events)
+    t.pending_llm_events = (
+        [
+            {
+                "type": rejected["type"],
+                "target_id": rejected["target_id"],
+                "actor_id": "player",
+                "payload": {},
+                "source": "storyteller_prevalidation",
+                "_prevalidation_rejected": True,
+                "_prevalidation_reason": rejected["reason"],
+            }
+            for rejected in t.invalid_story_events
+        ]
+        if t.quarantine_llm_payload
+        else llm_event_proposals
+    )
+    if not str(t.narrative_text).strip():
+        # Fallback digno: o TURNO MECÂNICO sobrevive mesmo com LLM flaky —
+        # as notas determinísticas (viagem/descanso/encontro) viram a narração.
+        t.narrative_text = _deterministic_story_fallback(
+            (t.travel_note, t.rest_note, t.world_note, t.faction_note, t.weather_note),
+            t._ll,
+        )
+    t.narrative_text = prose_guard.sanitize_player_facing(str(t.narrative_text))
+    if t.rumor_nothing:
+        t.narrative_text = _neutralize_false_find(t.narrative_text)
+    t.narrative_text = prose_guard.reconcile_player_gold_claims(
+        t.narrative_text, int((t.state.get("player") or {}).get("gold", 0) or 0)
+    )
+    if t.invalid_story_events:
+        # Não há fact-check semântico confiável frase a frase. Em vez de
+        # deixar a alegação rejeitada sobreviver, usa somente consequências
+        # determinísticas já aplicadas neste turno.
+        safe_parts = [note for note in (t.travel_note, t.rest_note, t.faction_note) if note]
+        t.narrative_text = (
+            _deterministic_story_fallback(safe_parts, t._ll)
+            if safe_parts
+            else (
+                "A tentativa altera apenas o momento imediato; nenhuma mudança "
+                "permanente no mundo foi confirmada."
+            )
+        )
+        t.narrative_text += (
+            "\n\n[SISTEMA] Uma mudança permanente proposta pela narração "
+            "foi rejeitada pelo estado canônico."
+        )
+
+    t.narrative_text = prose_guard.vary_repeated_opening(
+        str(t.narrative_text),
+        t._aberturas,
+        salt=t._open_salt,
+    )
+
+    # SPEC-202 R11: narração mediada não revela segredo não revelado.
+    t.narrative_text, t.mediation_rejections = _guard_mediation_secret(
+        str(t.narrative_text), t.scene_state
+    )
+
+    # spec polish-prosa (R4): telemetria de abertura repetida (não re-tenta).
+    prose_guard.log_if_repeats(
+        str(t.narrative_text), t._aberturas[0] if t._aberturas else "", where="storyteller"
+    )
 
 
 def _story_engine_proposals(t: _StoryTurn) -> None:
