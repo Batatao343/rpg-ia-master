@@ -2740,84 +2740,89 @@ def storyteller_node(state: GameState):
                 }
             ]
 
-        # Fase 3.3: side quests propostas nesta cena (validadas/criadas em Python).
-        t.turn = int(t.world.get("turn_count", 0))
-        proposed_quests = (
-            [] if t.quarantine_llm_payload else (getattr(t.update, "proposed_quests", []) or [])
-        )
-        # SPEC-313 R6: so o `npc_actor` ancora; `kind` do narrador vira quest comum.
-        _downgraded = [
-            p for p in proposed_quests if str(getattr(p, "kind", "comum") or "comum") != "comum"
-        ]
-        if _downgraded:
-            from services import lore_quests as _lq2
-
-            _lq2._log("downgraded", kind="storyteller", reason="not_npc", count=len(_downgraded))
-        new_quests, created = quest_log.register_proposed_quests(
-            t.wq_quests, proposed_quests, turn=t.turn
-        )
-        new_quests = quest_log.sync_location_progress(
-            new_quests,
-            str(t.world.get("current_location_id") or ""),
-            turn=t.turn,
-        )
-        new_quests, ready_quest_ids = quest_log.sync_action_progress(
-            new_quests,
-            str(t.world.get("current_location_id") or ""),
-            t.last_user_input,
-            turn=t.turn,
-        )
-        if ready_quest_ids:
-            quest_events = [
-                {
-                    "type": "quest_completed",
-                    "actor_id": "player",
-                    "target_id": quest_id,
-                    "detail": "Objetivo concluído por investigação verificável.",
-                    "payload": {"quest_id": quest_id},
-                    "source": "system",
-                }
-                for quest_id in ready_quest_ids
-            ]
-            t.updates["pending_world_events"] = (
-                list(
-                    t.updates.get("pending_world_events")
-                    or t.state.get("pending_world_events", [])
-                    or []
-                )
-                + quest_events
-            )
-        if created or t.wq_created or new_quests != list(t.state.get("quests", []) or []):
-            t.updates["quests"] = new_quests
-            t.updates["archive_due"] = True  # nova missão é evento relevante
-        if t.turn_bl is not t.state.get("turn_baseline"):
-            t.updates["turn_baseline"] = t.turn_bl
-        if t.companion_narrated and t.companion_ack:
-            t.updates["companion_voice_ack"] = list(t.companion_ack)
-        if t.mediation_rejections:
-            _log_narrative_rejected("mediation", ["secret_signature"] * len(t.mediation_rejections))
-            t.updates["narrative_rejections"] = [
-                *list(t.updates.get("narrative_rejections") or []),
-                *t.mediation_rejections,
-            ]
-        _apply_proposed_rumors(t.state, t.updates, t.update, t.turn, bool(t.quarantine_llm_payload))
-        # SPEC-318 R5: viagem dentro da mesma regiao, sem descanso/beat/evento/missao, e baixo valor.
-        if (
-            latency_flags.archive_low_wanted()
-            and t.dest
-            and t.rested_player is None
-            and not t.beat_done
-            and not t.updates.get("pending_world_events")
-            and "quests" not in t.updates
-            and "memory_canonical_facts" not in t.updates
-            and _same_region_travel(t.state, t.world)
-        ):
-            t.updates["archive_low"] = t.turn
+        _story_assemble_quests(t)
         return t.updates
 
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_assemble_quests(t: _StoryTurn) -> None:
+    """Quests propostas, eventos de quest, rumores e arquivamento baixo."""
+    # Fase 3.3: side quests propostas nesta cena (validadas/criadas em Python).
+    t.turn = int(t.world.get("turn_count", 0))
+    proposed_quests = (
+        [] if t.quarantine_llm_payload else (getattr(t.update, "proposed_quests", []) or [])
+    )
+    # SPEC-313 R6: so o `npc_actor` ancora; `kind` do narrador vira quest comum.
+    _downgraded = [
+        p for p in proposed_quests if str(getattr(p, "kind", "comum") or "comum") != "comum"
+    ]
+    if _downgraded:
+        from services import lore_quests as _lq2
+
+        _lq2._log("downgraded", kind="storyteller", reason="not_npc", count=len(_downgraded))
+    new_quests, created = quest_log.register_proposed_quests(
+        t.wq_quests, proposed_quests, turn=t.turn
+    )
+    new_quests = quest_log.sync_location_progress(
+        new_quests,
+        str(t.world.get("current_location_id") or ""),
+        turn=t.turn,
+    )
+    new_quests, ready_quest_ids = quest_log.sync_action_progress(
+        new_quests,
+        str(t.world.get("current_location_id") or ""),
+        t.last_user_input,
+        turn=t.turn,
+    )
+    if ready_quest_ids:
+        quest_events = [
+            {
+                "type": "quest_completed",
+                "actor_id": "player",
+                "target_id": quest_id,
+                "detail": "Objetivo concluído por investigação verificável.",
+                "payload": {"quest_id": quest_id},
+                "source": "system",
+            }
+            for quest_id in ready_quest_ids
+        ]
+        t.updates["pending_world_events"] = (
+            list(
+                t.updates.get("pending_world_events")
+                or t.state.get("pending_world_events", [])
+                or []
+            )
+            + quest_events
+        )
+    if created or t.wq_created or new_quests != list(t.state.get("quests", []) or []):
+        t.updates["quests"] = new_quests
+        t.updates["archive_due"] = True  # nova missão é evento relevante
+    if t.turn_bl is not t.state.get("turn_baseline"):
+        t.updates["turn_baseline"] = t.turn_bl
+    if t.companion_narrated and t.companion_ack:
+        t.updates["companion_voice_ack"] = list(t.companion_ack)
+    if t.mediation_rejections:
+        _log_narrative_rejected("mediation", ["secret_signature"] * len(t.mediation_rejections))
+        t.updates["narrative_rejections"] = [
+            *list(t.updates.get("narrative_rejections") or []),
+            *t.mediation_rejections,
+        ]
+    _apply_proposed_rumors(t.state, t.updates, t.update, t.turn, bool(t.quarantine_llm_payload))
+    # SPEC-318 R5: viagem dentro da mesma regiao, sem descanso/beat/evento/missao, e baixo valor.
+    if (
+        latency_flags.archive_low_wanted()
+        and t.dest
+        and t.rested_player is None
+        and not t.beat_done
+        and not t.updates.get("pending_world_events")
+        and "quests" not in t.updates
+        and "memory_canonical_facts" not in t.updates
+        and _same_region_travel(t.state, t.world)
+    ):
+        t.updates["archive_low"] = t.turn
 
 
 def _story_exception_fallback(t: _StoryTurn) -> dict:
