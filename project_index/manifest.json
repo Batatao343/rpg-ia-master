@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "586844018ab2fd10355d03492ac4861b1efc7689",
+  "commit_sha": "5ef360b601df8c89f4ccd9c72d97c5b1ad75ee74",
   "edge_counts": {
-    "calls": 38731,
-    "contains": 1281,
-    "defines": 18837,
-    "imports": 3121,
-    "likely_test_for": 2266,
+    "calls": 38946,
+    "contains": 1288,
+    "defines": 18946,
+    "imports": 3132,
+    "likely_test_for": 2277,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:040ae62a802ab4cf58ee0f53479d5c4afe7ff17687643064a5227f00bc10ef90",
+  "graph_hash": "sha256:33ad942f3846fd0836a643d2fe33b8e33a3820f3c06faa70d5909fe7cb411b39",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -1264,6 +1264,13 @@
     "tests/test_spec368_rollback.py",
     "tests/test_spec368_scenarios.py",
     "tests/test_spec368_seed.py",
+    "tests/test_spec370_caps.py",
+    "tests/test_spec370_carcaca.py",
+    "tests/test_spec370_eval.py",
+    "tests/test_spec370_latencia.py",
+    "tests/test_spec370_migrante.py",
+    "tests/test_spec370_solo.py",
+    "tests/test_spec370_suprime.py",
     "tests/test_spec371_eval.py",
     "tests/test_spec371_flags_off.py",
     "tests/test_spec371_fonte.py",
@@ -1560,12 +1567,12 @@
     "artifact": 10,
     "class": 1103,
     "endpoint": 69,
-    "file": 1503,
-    "function": 5874,
+    "file": 1510,
+    "function": 5898,
     "method": 870,
-    "module": 1281,
-    "test": 10989
+    "module": 1288,
+    "test": 11074
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5df5d540e8ef2d1bb2e263934d7d5d97800b8f5e9b0609270ade43ffeffdfae3"
+  "source_tree_hash": "sha256:7b0d3e54ec584955c8f9ebe4f278d6bdd57ddf21110f01f57ce47062972987b6"
 }
