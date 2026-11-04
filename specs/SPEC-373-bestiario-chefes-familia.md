@@ -1,6 +1,6 @@
 # SPEC-373 — Bestiário: chefes na faixa com Cartas `on` e teto de uso das Cartas de família de volta
 
-> **Status:** `in-review` (era `approved`; dono, 03/11: "transforme em spec e execute agora"; decisões do autor em §8 valem como aprovadas e são revogáveis)
+> **Status:** `done` (era `approved`; dono, 03/11: "transforme em spec e execute agora"; decisões do autor em §8 valem como aprovadas e são revogáveis)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** SPEC-349 (`done`: 281 criaturas, `scripts/bestiario/{arena,calibrar,gerar_mecanica}.py`), SPEC-332 (baralhos de família/facção, `services/enemy_decks.py`), SPEC-358 (`done`: `lote-v2` opt-in), SPEC-362 (`done`: Arcanista 49,7 % na 180–259). SPEC-336 (`in-progress`) **não** bloqueia: esta spec escreve as Cartas de família que a 336 deixou pendentes.
@@ -264,21 +264,21 @@ Python sempre por `bash scripts/dev/py.sh …`. Testes do escopo com `-n 2` no m
 
 ## 5. Critérios de aceite
 
-- [ ] R1: `git diff --exit-code main` vazio nos avaliadores (exceto o `--seed-inicio` da Etapa E, em commit de outro agente)
-- [ ] R2: snapshot `off` igual para toda criatura não recalibrada (lista das recalibradas no relatório)
-- [ ] R9/R10: regra de montagem com testes; população da 332 idêntica; save antigo não remonta
-- [ ] R13: 9 chefes em 45–85 % em `off` e `on` nas 0–39; os 4 que estavam na faixa continuam; slots passam no veredito completo
-- [ ] R16: nenhuma `inf_*` acima de 15 na população inteira, sementes 0–11 e ids de instância; testes da 332 sem exceção (Etapa E2, outro agente)
-- [ ] R15: Cartas novas aprovadas por revisor Opus, com veredito por Carta registrado
-- [ ] R17: ≥ 250 de 281 no veredito completo (decisão do dono 04/11); zero regressão > 3 pp; ≤ 5 de borda, listadas
-- [ ] R18: arena das Posturas 0–19 idêntica depois das Partes A/B
-- [ ] Confirmação 40–119 gravada uma vez, com o resultado em §9 (fora da faixa = registro, não reajuste)
-- [ ] Parte C (se não migrar para a 369, D9): R19–R22, confirmação 260–339 gravada uma vez
-- [ ] `validate_content.py` com 0 erro; `card_lint` sem aviso nas Cartas novas
-- [ ] `uv run pytest` verde (suíte completa, pelo coordenador, no pouso)
-- [ ] Guard de FallbackLLM: N/A (nenhum `with_structured_output` novo)
-- [ ] Saves antigos continuam carregando (R10, `test_save_antigo_nao_remonta`, `test_round_trip_save_load_on`)
-- [ ] Smoke §6 executado e registrado em §9
+- [x] R1: `git diff --exit-code main` vazio nos avaliadores (exceto o `--seed-inicio` da Etapa E, em commit de outro agente)
+- [x] R2: snapshot `off` igual para toda criatura não recalibrada (lista das recalibradas no relatório)
+- [x] R9/R10: regra de montagem com testes; população da 332 idêntica; save antigo não remonta
+- [x] R13: 9 chefes em 45–85 % em `off` e `on` nas 0–39; os 4 que estavam na faixa continuam; slots passam no veredito completo — exceto `hospede_do_estomago` e `escavador_das_camaras`, aceitos pelo dono (D-373, 04/11), exceção nominal no portão
+- [x] R16: nenhuma `inf_*` acima de 15 na população inteira, sementes 0–11 e ids de instância; testes da 332 sem exceção (Etapa E2, outro agente)
+- [x] R15: Cartas novas aprovadas por revisor Opus, com veredito por Carta registrado
+- [x] R17: ≥ 250 de 281 no veredito completo (decisão do dono 04/11); zero regressão > 3 pp; ≤ 5 de borda, listadas
+- [x] R18: arena das Posturas 0–19 idêntica depois das Partes A/B
+- [x] Confirmação 40–119 gravada uma vez, com o resultado em §9 (fora da faixa = registro, não reajuste)
+- [x] Parte C (se não migrar para a 369, D9): R19–R22, confirmação 260–339 gravada uma vez
+- [x] `validate_content.py` com 0 erro; `card_lint` sem aviso nas Cartas novas
+- [x] `uv run pytest` verde (suíte completa, pelo coordenador, no pouso)
+- [x] Guard de FallbackLLM: N/A (nenhum `with_structured_output` novo)
+- [x] Saves antigos continuam carregando (R10, `test_save_antigo_nao_remonta`, `test_round_trip_save_load_on`)
+- [x] Smoke §6 executado e registrado em §9
 
 ## 6. Smoke test com LLM real
 
@@ -372,3 +372,4 @@ Esses dois entram no portão `tests/test_spec373_artefatos.py::test_portao_chefe
 - **Sol P2-6 -> SPEC-369:** a emboscada ignora `initiative` (`conflict_resolution.py:141-146`, da 355); decidir se a contrapartida vira mecânica ou se o critério da arena muda. Smoke §6.5 marcado N/A.
 - Sol P2-3 (ruff em `docs/spec373/work`) e P2-5 (+-9 aceito no teste do chefe) não feitos, opcionais.
 - **Smoke real §6 (04/11, `docs/spec373/smoke.md`):** `uvicorn` local, DeepSeek primário, `mock=False`, 3 jogos (`fa04d14a-4bc3-4417-b753-1bd03c56ac96`, `78e84c66-3aa6-4a73-a84e-e817fa86199f`, `e29325bd-475a-47ee-bc73-8ca9a8d6d55a`). Itens 1–4 e 5 (Mão Adiantada grava `initiative` +2; `bomba_estopim` v2 com Fôlego 2 e área 2) OK; 5-emboscada N/A. Cartas da Parte C injetadas no save (sem caminho de API); o spawn do chefe criou 2 instâncias; a descrição da Carta de família no painel não foi vista na UI (só `name` em `revealed_cards`).
+- **Pouso (coordenador, 04/11):** `test_tronco_cartas_por_postura_sem_subclasse_nivel_1` passou de Corruptor 3 para 4 (5ef0d620): contagem de conteúdo, a Mão Adiantada (R21) entra no tronco nível 1, com a mesma forma da exceção do Arcanista. `revisor_voz` passou a `opus-5.5` (formato de identificador do lint).
