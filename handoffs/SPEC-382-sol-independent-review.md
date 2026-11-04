@@ -9,7 +9,7 @@ Revisei as Etapas 1 (golden), 2 (`storyteller_node`) e 4 (`_combat_node`): `agen
 `agents/combat.py`, `tests/spec382_node_*.py`, `tests/test_spec382_node_golden.py`, o fixture,
 `tests/size_budget.json` e o "Registro de execução" da spec (desvios 1–8).
 Ficou fora: a Etapa 3 (`_run_round`, não feita por causa do W1/`spec-373`), a Etapa 5 (W2 A/B de
-evals/playtest, smoke §6, `handoffs/SPEC-382-equivalence.md`), que são do coordenador, e a
+evals/playtest, smoke §6, `docs/spec382/equivalence.md`), que são do coordenador, e a
 verificação do golden commit a commit (conferi só o HEAD e a base).
 
 ### Prova estática de equivalência (o que sustenta o veredito)

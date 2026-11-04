@@ -1,6 +1,6 @@
 # SPEC-382 — Refatoração pura dos nós grandes: `storyteller_node`, `_combat_node` e `_run_round` em fases nomeadas no mesmo módulo
 
-> **Status:** `in-progress` (Etapas 0-parcial, 1, 2 e 4 executadas em 04/11; Etapa 3 pendente por W1 da `spec-373`; Etapa 5 feita para as Etapas 1–2 e 4: W2 verde, revisão Sol APPROVED_WITH_FOLLOWUPS, smoke real ok — `handoffs/SPEC-382-equivalence.md`; antes da Etapa 3, golden mais sensível (Sol P2-1)). Aprovada em 04/11 ( coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = não (follow-up), D2 = 378 já `done`, D3 = aceitar, D4 = aceitar, D5 = smoke local, D6 = já aplicada pela SPEC-387 (guard da 363 com gate de branch), D7 = SPEC-384 D3 é **não**: Etapa 4 preserva `_advance_reinforcements`. Etapa 3 espera a `spec-373` (W1: `services/conflict_orchestrator.py`))
+> **Status:** `in-progress` (Etapas 0-parcial, 1, 2 e 4 executadas em 04/11; Etapa 3 pendente por W1 da `spec-373`; Etapa 5 feita para as Etapas 1–2 e 4: W2 verde, revisão Sol APPROVED_WITH_FOLLOWUPS, smoke real ok — `docs/spec382/equivalence.md`; antes da Etapa 3, golden mais sensível (Sol P2-1)). Aprovada em 04/11 ( coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = não (follow-up), D2 = 378 já `done`, D3 = aceitar, D4 = aceitar, D5 = smoke local, D6 = já aplicada pela SPEC-387 (guard da 363 com gate de branch), D7 = SPEC-384 D3 é **não**: Etapa 4 preserva `_advance_reinforcements`. Etapa 3 espera a `spec-373` (W1: `services/conflict_orchestrator.py`))
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-04
 > **Origem:** auditoria de qualidade de 03/11 (`docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md`
 > §4.2 itens 1–2, §5 letra F, §6 regras W1–W8, §6.3 ordem 7)
@@ -336,7 +336,7 @@ linhas (blocos em ≈2314, ≈2695, ≈2782) e a Etapa 4.0 refaz esta tabela. (O
 
 - **Alterados (produto):** `agents/storyteller.py`, `agents/combat.py`,
   `services/conflict_orchestrator.py` (só reorganização interna; R2/R7/R8).
-- **Novos (teste):** os 3 da §3.4. Evidência de A/B em `handoffs/SPEC-382-equivalence.md` (tabela de
+- **Novos (teste):** os 3 da §3.4. Evidência de A/B em `docs/spec382/equivalence.md` (tabela de
   violações/desfechos por perfil e seed, saída do `evals compare`).
 - **Não tocados:** `playtest/*`, `evals/*`, testes existentes (exceto o commit da D6, se aprovada),
   goldens existentes, `main.py`, `state.py`, `mock_llm.py`.
@@ -363,7 +363,7 @@ pousou no meio é investigado (vale para qualquer spec, não só a 378). O fixtu
    comum acima. [F] No W1 do revisor em 03/11: `spec-371` toca `agents/combat.py` e
    `playtest/{invariants,runner,telemetry}.py`; `spec-374` toca `mock_llm.py`; `spec-214` toca
    `playtest/latency_llm.py` (branch parada pela regra de 7 dias, a listar para o dono arquivar).
-2. Rodar W2-A e gravar em `handoffs/SPEC-382-equivalence.md`, inclusive o hash de `last_mech_log` e da
+2. Rodar W2-A e gravar em `docs/spec382/equivalence.md`, inclusive o hash de `last_mech_log` e da
    sequência de `record_step` por campanha.
 3. Registrar o SHA da `main` usado como A.
 
@@ -439,7 +439,7 @@ tests/test_api_jogadas.py tests/test_spec361_integracao.py tests/test_combat_lif
 ### Etapa 5 — Fechamento
 
 1. Medir R1 por `ast` (comando one-shot no hand-back, não teste permanente).
-2. W2-B e comparação com A no `handoffs/SPEC-382-equivalence.md`.
+2. W2-B e comparação com A no `docs/spec382/equivalence.md`.
 3. `git diff main -- tests/` mostra só os 3 arquivos novos (R9).
 4. Revisão independente (W7): o revisor Sol refaz W2 em pelo menos 1 item e lê o diff de cada commit
    procurando os riscos da §7.
