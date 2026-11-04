@@ -1,6 +1,6 @@
 # SPEC-388 — Workspace, fase 2: guardrails que esperam a onda 375–378
 
-> **Status:** `in-progress` — B e C pousadas; A espera a SPEC-375 (04/11, dono: "vai executando o que puder"; etapas só quando a spec da etapa estiver `done`)
+> **Status:** `done` (04/11: A, B e C pousadas)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** SPEC-386 § Fora de escopo · [auditoria do workspace](../docs/auditorias/auditoria-workspace-2026-11-03.md) §8
 > **Depende de:** **por etapa** (cada etapa só começa quando a spec dela estiver `done` na `main`):
@@ -60,7 +60,7 @@ exige (violação nova em legado vai para a baseline, não é corrigida aqui).
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa A pousada (ou registrada como pendente com o motivo)
+- [x] Etapa A pousada (04/11: `AGENTS.md` 409 → 199 linhas, 25,5 → 12,1 KB; arquitetura/LLM/RAG/persistência/GameState/pastas/playtest em `docs/guias/ARQUITETURA.md`)
 - [x] Etapa B pousada, baseline com diff só aditivo (04/11; legado: BLE001 447, PERF401 173, C901 130, ERA001 66, SIM105 62…; únicas remoções = encolhimentos pré-existentes em `archivist.py`/`prologue.py` e `E741` de `test_mvp.py` pago pela 376)
 - [x] Etapa C pousada (04/11: `tests/test_no_new_fold.py` + `tests/data/fold_allowlist.txt` com as 52 definições que a 378 manteve; falha com `def _fold` sintético)
 - [ ] `uv run pytest` verde a cada pouso de etapa

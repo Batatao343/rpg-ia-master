@@ -1,0 +1,217 @@
+# Arquitetura do motor (referência)
+
+> Movido do `AGENTS.md` pela SPEC-388 Etapa A para o contexto fixo de toda sessão ficar enxuto.
+> Fonte da verdade continua sendo o código (`state.py`, `llm_setup.py`, `main.py`, `rag.py`).
+
+## Arquitetura — grafo LangGraph
+
+```
+START
+  ↓
+campaign_manager      # planeja arcos narrativos (3–5 beats) com RAG de lore
+  ↓
+dm_router             # classifica intenção: STORY | COMBAT | NPC | LOOT
+  ↓ (condicional)
+storyteller           → archivist → END
+combat_agent          → archivist → END
+npc_actor             → archivist → END
+loot_agent            → archivist → END
+```
+
+**archivist** roda em todo fim de turno: atualiza `narrative_summary` (curto prazo) e persiste fatos no FAISS da sessão (longo prazo).
+
+---
+
+## LLM — três tiers + roteamento multi-provider
+
+`llm_setup.py` expõe `get_llm(temperature, tier)`. Sempre usar essa função — nunca instanciar provider direto.
+Cada tier é uma **lista ordenada de candidatos `(provider, modelo)`** (`ROUTES`): o `get_llm`
+devolve um `RoutedLLM` que tenta o preferido e cai pro próximo em qualquer falha
+(429/500/timeout/dep faltando/sem key). Esgotou todos → `AIMessage` de erro (NUNCA levanta) —
+o guard de `FallbackLLM` (`isinstance`/`try`) segue **obrigatório**.
+
+| Tier | Uso | Candidatos default `ROUTES` (ordem = preferência → fallback) |
+|---|---|---|
+| `ModelTier.CLASSIFY` | router, combat (parse/spawn), loot (TradeIntent), librarian — classificação/parse temp 0 | **DeepSeek** → Groq `openai/gpt-oss-120b` → Groq `openai/gpt-oss-20b` → Gemini flash-lite |
+| `ModelTier.FAST` | storyteller, combat (narração), npc_actor, loot (narração), world_simulator, bestiary | **DeepSeek** → Groq gpt-oss-120b → MiniMax → Qwen → Gemini flash |
+| `ModelTier.SMART` | archivist, campaign_manager, character_creator | **DeepSeek** → Groq gpt-oss-120b → Anthropic → Gemini pro |
+
+> **DeepSeek é o primário em TODOS os tiers** (2026-07-16, pós-playtest longo).
+> Groq free segue de fallback vivo; sem key da DeepSeek o jogo continua rodando.
+
+> **Structured output entre providers (achados do smoke real 2026-07-06):**
+> - **Groq usa strict json_schema** e rejeita schema com dict aberto
+>   (`StoryUpdate.payload`). Solução: `RoutedLLM._apply` injeta
+>   **`method="function_calling"`** (tool calling) p/ todo provider OpenAI-compat
+>   (`_OPENAI_COMPAT_PROVIDERS`) — com isso o Groq parseia QUALQUER schema. Logo há
+>   um candidato **Groq grátis em todos os tiers**: o jogo roda 100% no free tier
+>   do Groq (`gpt-oss-20b`/`gpt-oss-120b`) sem provider pago.
+> - **Anthropic (Claude 5):** não aceita `temperature` (omitido no
+>   `_build_anthropic`) nem **prefill** (falha se o prompt termina em `AIMessage`,
+>   ex.: archivist → cai no fallback). OK em nós que terminam com humano.
+
+Trocar modelo/provider = só mudar `ROUTES` (ou `RPG_ROUTES=<json>` sem deploy). Sem tocar nos agentes.
+
+**Overrides (`llm_setup.get_llm`):** `RPG_FORCE_MOCK=1` → MockLLM (suíte); `LLM_PROVIDER=gemini|
+ollama|openai` força TODOS os tiers a um provider único (ignora `ROUTES` — use p/ jogo só-Gemini
+ou 100% local); sem key nenhuma → MockLLM (zero-config) ou `FallbackLLM` (`RPG_NO_MOCK`);
+default → `ROUTES`. Telemetria: `set_llm_telemetry_hook(fn)` recebe `(provider, model, tier,
+latency_ms, fell_back)` por invoke (consumido pela Fase 5.3). Cada provider lê sua env key
+(`GROQ_API_KEY`/`QWEN_API_KEY`/`MINIMAX_API_KEY`/`DEEPSEEK_API_KEY`/`ANTHROPIC_API_KEY`/
+`GOOGLE_API_KEY`; GLM/Kimi seguem no registro p/ uso via `RPG_ROUTES` — ver `.env.example`).
+
+`max_retries=0` (fail-fast) por candidato: `429` de quota não é transitório; o fallback é trocar
+de PROVIDER, não fazer retry no mesmo. Anthropic exige `uv sync --extra anthropic` (ausência da
+dep = candidato pulado). Gemini free tier = **20 req/dia por modelo** — ver `ESTADO_ATUAL.md`.
+
+---
+
+## RAG — sistema híbrido
+
+`rag.py` — `query_rag(query, index_name, game_id)` busca em dois índices:
+
+1. **Global** (`faiss_lore_index/`, `faiss_rules_index/`) — imutável durante o jogo; lore
+   vem do **Codex** (`data/codex/**/*.md` via `services/codex_loader.ingest_codex`, metadados
+   `id/type/tags/visibility` por chunk; Fase 2.5), regras de `data/rules.txt`.
+   `query_rag(..., max_visibility="public")` filtra chunks `hidden`/`secret` do narrador
+2. **Sessão** (`data/saves_memory/{game_id}/`) — dinâmico, criado pelo archivist via `add_memory_to_session()`
+
+Embeddings: `models/text-embedding-004` (Google). Chunks: 500 tokens, overlap 50.
+
+Para re-indexar lore global: `python rag.py` (ou chamar `ingest_file()` diretamente).
+
+---
+
+## Persistência
+
+- Saves em `saves/{game_id}.json` — serializa mensagens LangChain para dicts simples
+- `persistence.py` — `save_game_state()` / `load_game_state()`
+- Memória vetorial por sessão em `data/saves_memory/{game_id}/`
+- `load_game_state()` sem argumento carrega o save mais recente (por `ctime`)
+
+---
+
+## Estado do jogo (GameState)
+
+Definido em `state.py` como TypedDict. Campos principais:
+
+```
+game_id             str          — UUID da sessão, isola memória RAG
+narrative_summary   str          — resumo comprimido (short-term memory)
+archivist_last_run  int          — turno da última execução do arquivista
+chronicle           List[ChronicleChapter] — capítulos (arc_title): milestones do event_log + prosa (persistido)
+player              PlayerStats  — name, class_name, race, vitalidade/max_vitalidade, ferimentos,
+                                   virtudes, entropy/max_entropy, abyss_charge, gold, level, xp,
+                                   inventory/equipment, known_cards/prepared_cards/virtue_cards
+world               WorldState   — current_location(+_id), visited[] (fog of war), world_clock{day,period},
+                                   time_of_day, turn_count, danger_level, weather, quest_plan
+messages            List[BaseMessage]  — histórico LangChain (operator.add)
+campaign_plan       CampaignPlan — location, beats[{description,status}], climax, current_step, last_planned_turn, arc_title
+needs_replan        bool         — força replanejamento no próximo campaign_manager
+enemies             List[EnemyStats]
+npcs                Dict[str, Dict]
+active_npc_name     Optional[str]   — alvo da rota NPC (setado pelo router)
+combat              Optional[Dict]  — {round, active, order[]} do combate determinístico
+combat_target       Optional[str]
+loot_source         Optional[str]   — "TREASURE" | "SHOP" | "CRAFT"
+```
+
+`state.py` é a fonte da verdade do schema. Atributos usam **chaves curtas** (`str/dex/con/int/wis/cha`)
+em runtime; `combat_mechanics.normalize_attr` converte nomes longos/PT que o LLM possa devolver.
+
+---
+
+## Estrutura de pastas
+
+```
+# --- raiz: núcleo do motor ---
+main.py               # grafo LangGraph (build_game_graph, app) + setup UTF-8
+state.py              # GameState e TypedDicts — FONTE DA VERDADE do schema
+llm_setup.py          # get_llm(tier) + MockLLM/FallbackLLM (NUNCA instanciar Gemini direto)
+mock_llm.py           # MockLLM — dados fictícios por agente (modo simulado sem chave)
+rag.py                # query_rag / add_memory_to_session / ingest_file (FAISS + embeddings)
+persistence.py        # save_game_state / load_game_state (serializa mensagens)
+gamedata.py           # carrega data/*.json; ARTIFACTS_DB, CLASSES, ABILITIES, XP_TABLE, helpers de world_map
+combat_mechanics.py   # ponte de Entropia/Carga e compatibilidade residual das classes
+services/conflict_orchestrator.py # NÚCLEO atual: Cartas, 2d10, Reações, Vitalidade/Ferimentos, IA tática
+world_utils.py        # Fase 0: relógio, viagem (fog of war), descanso — determinístico, sem LLM
+character_creator.py  # cria ficha do player (IA + JSON oficial); guard de fallback
+game_engine.py        # CLI interativo (wizard + loop)
+api.py                # FastAPI REST (/game/new, /game/action, /game/state, /data/map) + serve web/dist
+web/                  # FRONTEND PRINCIPAL — React+Vite+TS (src/, build em web/dist; tom Witcher; motion)
+# --- agentes (nós do grafo) ---
+agents/
+  router.py           # dm_router_node — classifica intenção + seta NPC/loot/combat
+  storyteller.py      # storyteller_node — narração + viagem/descanso + avanço de beat
+  combat.py           # combat_node — interpreta/prepara/narra; resolve via conflict_orchestrator
+  npc.py              # npc_actor_node + generate_new_npc()
+  loot.py             # loot_node — loot/craft/shop/treasure
+  archivist.py        # archive_node — memória curto (resumo) / longo prazo (RAG)
+  campaign_manager.py # campaign_manager_node — planejamento de arcos + incrementa turn_count
+  bestiary.py         # generate_new_enemy + cache de bestiário
+  librarian.py        # find_existing_entity — dedupe semântico de entidades
+services/             # serviços determinísticos (Fases 2.5–3.1)
+  graph_resolver.py   # consultas ao grafo de mundo (base − disabled + dynamic, visibility)
+  codex_loader.py     # parse/split/ingest do Codex no FAISS (metadados por chunk)
+  world_validators.py # valida propostas de evento do LLM contra grafo/projection (2.6)
+  event_processor.py  # proposta válida → GameEvent → projection + milestones da crônica (2.6/3.1)
+  rule_engine.py      # cascata sistêmica determinística pós-evento, anti-loop (2.7)
+  context_builder.py  # build_context_pack — contexto ranqueado com orçamento de tokens (2.8)
+  npc_layers.py       # NPCs 3 camadas: traits seeded, gate in_scene, view da API (spec npcs-3-camadas)
+  chronicle.py        # crônica por capítulos: templates de milestone + append/open puros (3.1)
+scripts/
+  migrate_lore_nova.py # gera data/codex/ (inclui timeline/) + entities.json de lore_nova/ (SOBRESCREVE curadoria)
+lore_nova/            # FONTE do lore Valoria (11 .txt, inclui timeline_completa.txt) — editar aqui e re-rodar o script
+data/
+  codex/              # Codex Valoria gerado — .md com frontmatter id/type/tags/visibility
+                      #   timeline/ = história do mundo por era (reveals de secrets.txt ficam visibility:hidden)
+  graph/              # entities.json (gerado) + edges.json/relation_types.json (curados à mão)
+  rules.txt           # regras indexadas para FAISS
+  world_map.json      # grafo de locais — mapa de Valoria, 35 nós (30 + 5 interiores)
+  bestiary.json       # criaturas
+  classes.json        # 5 Posturas diante do Abismo (base_stats+entropy, entropy_trigger/special_rule/abyss, 3 branches)
+  class_themes.json   # allowed/forbidden/style por classe (só flavor do prólogo; gating por LLM aposentado — mecânica é Python)
+  origins.json        # raças e regiões
+  artifacts.json      # artefatos
+  cards/              # Cartas jogáveis e inimigas; substitui player_abilities.json
+  npc_database.json   # cache de NPCs gerados (runtime)
+specs/
+  TEMPLATE.md         # template de spec (desenvolvimento spec-driven — ver seção abaixo)
+  SPEC-NNN-<slug>.md  # specs numeradas; status no cabeçalho (fonte única)
+  index.yaml          # GERADO por scripts/spec_index.py build — não editar à mão
+tests/                # ~350 arquivos test_*.py (suíte offline, MockLLM); camadas em docs/guias/TESTES.md
+  conftest.py         # força RPG_FORCE_MOCK=1, isola saves/memória/cache por tmp_path, xdist-safe
+infrastructure/       # adapters de perfil (legacy/local/hosted): Postgres, Auth, storage, wallet, jobs
+workers/              # jobs assíncronos (arte dinâmica, projeções, crons)
+supabase/             # migrations + config do Supabase (local e staging)
+observability/        # Prometheus/Grafana/OTel/Tempo opcionais
+evals/                # governança + harness de evals (caminhos protegidos em evals/protected-paths.txt)
+project_index/        # grafo do repo gerado localmente sob demanda, não versionado (curados versionados; source é a verdade)
+playtest/             # harness de campanhas longas (14 perfis, invariantes, telemetria)
+handoffs/             # revisões/handoffs por spec (template em docs/templates/handoff-review.md)
+docs/guias/           # guias operacionais (TESTES, BRIEF_SUBAGENTE, AUTORIA, ARTE_VISUAL)
+docs/historico/       # ESTADO/ROADMAP/changelog antigos — só sob demanda
+scripts/dev/          # tooling do workspace: py.sh, env.sh, wt.sh, eval_publish.py, ruff_baseline.py
+scripts/spec_index.py # status de spec: build/check/summary/recent/next-id/estado-size
+conftest.py           # (raiz) injeta pythonpath
+faiss_lore_index/     # índice FAISS gerado — não editar à mão
+faiss_rules_index/    # índice FAISS gerado — não editar à mão
+saves/                # saves JSON por game_id
+data/saves_memory/    # índices FAISS por sessão (gerado em runtime)
+```
+
+## Playtest
+
+**Playtest agêntico (Fase 5):** `playtest/` roda campanhas longas sobre o MESMO
+grafo (`app.invoke`) com 14 perfis determinísticos (`runner.py`/`profiles.py`);
+invariantes de estado por turno (`invariants.py` — HP/ouro/unique/NPC morto/
+fação/relógio/segredo/game_over); telemetria JSONL+summary por campanha
+(`telemetry.py`) + relatório Markdown (`report.py`) + transcrito por turno.
+Saves isolados em `saves_playtest/`, runs em `playtest_runs/` (ambos gitignored).
+`--real` (opt-in, consciente de custo) mede provider/modelo/custo via
+`set_llm_telemetry_hook`, com tetos `--max-requests`/`--max-cost`. **Suíte de
+playtest REAL:** `uv run pytest -m llm_playtest -v -s` — os 4 perfis VITAIS
+(explorador/combate/diplomatico/secret_rusher) jogam 30 turnos no LLM de verdade
+(ROUTES; `RPG_PLAYTEST_TURNS` encurta) e assertam zero erro + zero violação
+`error` + `mock=False`. FORA do `pytest` default (`addopts -m "not
+llm_playtest"`), como os contratos da Fase 11.
