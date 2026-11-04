@@ -542,6 +542,9 @@ def npc_profile_for_archetype(archetype: object) -> dict:
     return deepcopy(_NPC_TACTICAL_PROFILES[key])
 
 
+_NO_RETREAT_ACTIONS = frozenset({"flee", "surrender"})
+
+
 def normalize_runtime_profile(actor: dict, profile: dict | None = None) -> dict:
     """Preenche ``action_key`` dos perfis curados sem interpretar sua prosa.
 
@@ -562,7 +565,10 @@ def normalize_runtime_profile(actor: dict, profile: dict | None = None) -> dict:
         if priority.get("action_key") in TACTICAL_ACTION_KEYS:
             continue
         trigger = _normalize_archetype(priority.get("trigger") or "sempre")
-        priority["action_key"] = actions.get(trigger, fallback)
+        key = actions.get(trigger, fallback)
+        if key in _NO_RETREAT_ACTIONS and priority.get("resistance") == "absoluta":
+            key = fallback if fallback not in _NO_RETREAT_ACTIONS else "attack"  # SPEC-395
+        priority["action_key"] = key
     return normalized
 
 
