@@ -1,6 +1,6 @@
 # SPEC-369 — revisão astra (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 4, `06bd8f39` + `33b08981` + `fd95a2f9`; rodada 3 `APPROVED`; rodada 2 `APPROVED`; rodada 1 `CHANGES_REQUIRED`, corrigida)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 5, `8ef607c0` + `7a75a389` + `65bcd824`; P2-4 e P2-5 antes da Fase C). Rodadas anteriores: 4 `APPROVED_WITH_FOLLOWUPS` (P2-3 fechado em `6ed6815d`), 3 e 2 `APPROVED`, 1 `CHANGES_REQUIRED` (corrigida)
 > **Revisor:** Astra (Opus 5.5, semântica de avaliador; não escreveu o código) · **Data:** 2026-11-04 · **Commit revisado:** `2361ca66` (régua `10935009`)
 
 ## Escopo
@@ -142,4 +142,50 @@ git diff 8fe4e0dd~1 b14c66c1 -- docs/spec369/base-0-19.json docs/spec369/BASE.md
 bash scripts/dev/pt.sh tests/test_spec369_regua.py tests/test_spec369_metas.py → 15 passed, 15 xfailed (-n 2)
 metricas_369.py familias --seeds 0-19 --only predador_apice --levels 3 → idêntico ao commitado (Δ −16,5)
 comparação base-0-19.json × 06bd8f39~1 → só predador_apice|L3 (+ amostra_ampliada) mudou
+```
+
+## Rodada 5 (D-369-10: `8ef607c0`, `7a75a389`, `65bcd824`)
+
+**Veredito: `APPROVED_WITH_FOLLOWUPS`.** Os limites registrados batem com a D-369-10 e com `final-0-19.json`, e o `8ef607c0` não enfraquece a prova do R7. Há 2 P2 na tolerância da Fase C, que devem ser corrigidos **antes** de rodar a Fase C.
+
+1. **Limites × D-369-10 × `final-0-19.json` (de `540deb81`): conferem.**
+   - Uso: `arc1_cal_pulso_medido` 1,0 e `bas_cor_mofo` 0,714.
+   - `med1_fer_garra_de_protese` está em 0,591 no final, abaixo de 60 %, então ficou corretamente **sem** limite (mais estrito que o texto da D-369-10).
+   - p95 total 9, dentro da meta ≤ 10. Médico com p95 16 e timeout 0,8 %.
+   - Razão do Presságio 1,0257, com vitória de `on-faixa` em 59,8 %.
+   - `conjurador` L5: `on` 0,385 e Δ −8,0. `predador_apice` L3: `on` 0,615 e Δ −13,5, com 200 lutas e sementes 0-19.
+   - As outras 3 células continuam com a meta cheia (`_faixa_celula` devolve 45/85/10), e o R13, o R17 e o R19 não mudaram.
+   - O teto do p95 por Postura (Médico 16) vem da frase "limite registrado do … R15" (§8, linha 472). O item 2 da D-369-10 fala só do p95 total. A leitura é razoável, e o registro está explícito no §9.
+2. **A isenção do R14(a) não abre brecha relevante.** `assinatura_gratis` lê `basica` e `custo_folego == 0` do catálogo, sem lista de ids, e só vale para Cartas que já estão na meta (a), as assinaturas básicas. É a regra literal da D-369-10 ("qualquer outra assinatura básica que fique a Fôlego 0"). Uma Carta que fique grátis para escapar da meta (a) continua coberta por:
+   - R14(b): a bandeira `dominante` por Δ continua valendo para ela;
+   - R19: guardas de vitória;
+   - R18: no máximo 8 Cartas e 2 passos, conferido em `passos-0-19.json`.
+
+   `bas_cor_mofo` hoje custa 1 de Fôlego e segue julgada pelo teto de 0,714. A isenção é testada contra o catálogo (`test_d369_10_assinatura_gratis_le_o_catalogo`).
+   - **P3-8 (sem bloqueio):** a isenção lê o catálogo da hora do teste, não o da hora em que o artefato foi medido. Se um custo mudar depois da Fase C, o veredito antigo muda em silêncio. A correção opcional é gravar `custo_folego` por Carta na seção `uso`.
+3. **`8ef607c0` não enfraquece a prova do R7.** A mão passou a ter só golpes e guarda, e o resultado esperado do bot cego é calculado com o custo real. Continuam provados:
+   - troca do último ataque, o mais fraco no empate, pela defesa na mesma posição, com `target_id == "player"`;
+   - a pré-condição de Fôlego (guarda ≤ golpe) passou a ser afirmada explicitamente;
+   - o leitor difere do cego diante da mesma ameaça.
+
+   Saiu só a dependência do custo de `bas_dev_voto`, que não fazia parte da regra.
+4. **A tolerância da Fase C é defensável no tamanho, mas tem dois problemas.**
+   - A Fase C ainda não rodou (`confirmacao.json` ausente), então a tolerância foi declarada antes de ver os números.
+   - Estimativas, com a amostra da Fase B dominando o erro:
+     - uso de `bas_cor_mofo` (n≈301 na Fase B, ≈1.200 na C): erro-padrão da diferença ≈ 0,029, e +0,05 ≈ 1,7 EP;
+     - razão do Presságio (1.800 lutas pareadas contra 7.200): ≈ 0,01, e +0,02 ≈ 2 EP;
+     - família (200 lutas por modo): `on` ≈ 4,9 pp, e ±5 ≈ 1 EP;
+     - p95 é inteiro, e +1 rodada é a menor folga possível.
+
+   Sem folga, um teto igual à estimativa pontual reprovaria cerca de 50 % das vezes só por ruído. Os dois problemas:
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-4 | P2 | `tests/test_spec369_metas.py` (comentário `TOLERANCIA_CONFIRMACAO`), spec §9 linha 485 | Cita "D-369-10 **item 5**", mas a D-369-10 (§8, `d40ff4b4`) tem só 3 itens e diz "a Fase C confirma que nada piorou além do registrado", sem falar em tolerância. A tolerância é uma proposta do autor da régua, e o R11 só deixa limiar mudar por decisão do dono. | Corrigir a citação para "proposta do autor da régua" e registrar no §8, antes da Fase C, o aceite do dono ou do coordenador sob a ordem permanente. O texto pode ser a tabela e as estimativas de EP acima. |
+| P2-5 | P2 | `tests/test_spec369_metas.py` `_faixa_celula` | Em `conjurador` L5, o Δ registrado (−8,0) já **cumpre** a meta cheia de 10, mas `d_max = max(10, 8 + 5) = 13` na confirmação. A tolerância relaxa um Δ que não tinha limite registrado, contra a regra "metas cheias … não ganham tolerância" (§9 linha 494). | Aplicar a tolerância só à dimensão que extrapolou a meta: `d_max = abs(lim) + tol if abs(lim) > d_max else d_max`, e o mesmo para a faixa de `on` (já correto: só alarga o lado violado). Acrescentar um assert em `test_d369_10_limites_registrados_nao_podem_piorar`: `_faixa_celula("conjurador|L5", "confirmacao")[2] == 10.0`. |
+
+```text
+bash scripts/dev/pt.sh tests/test_spec369_regua.py tests/test_spec369_metas.py → 26 passed, 7 xfailed (-n 2; os 7 xfailed são test_r22_confirmacao, confirmacao.json ausente)
+final-0-19.json × LIMITE_* → todos iguais aos valores medidos
+grep "item 5" na spec → só a citação do §9; a D-369-10 tem 3 itens
 ```
