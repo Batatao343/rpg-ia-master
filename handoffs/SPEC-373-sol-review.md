@@ -73,3 +73,58 @@ git diff --stat main...HEAD -- <avaliadores do R1> → vazio
 sondagem forecast_round com RPG_ENEMY_INTENT=on (24 criaturas multi-ação, sementes 0-7) → 38/192 intenções extras com Carta de família/facção (P1-1)
 dials _ajustes.yaml × main → 13 ids mudaram; recalibradas.json = 12 (falta enemy_fantasma, cujo off é idêntico)
 ```
+
+---
+
+## Rodada 2 (04/11)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Sol (Opus) · **Commit revisado:** `7bd8dd1b` (`5df1c8fc..HEAD`, 7 commits)
+
+### P1 da rodada 1
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | **fechado** | `services/enemy_intent.py:189-193` (`6badf9d1`): com `idx >= 1`, a declaração do Presságio roda dentro de `edk.extra_action_deck(sandbox[aid])`. A troca acontece no sandbox, e o `finally` restaura o baralho. `test_pressagio_da_extra_so_usa_carta_propria_com_intent_on` espiona o `enemy_declaration` real com `RPG_ENEMY_INTENT=on`: a 1ª ação vê a família, a extra só vê Cartas próprias, e a ficha real fica intacta. Com `RPG_ENEMY_DECKS=off`, `extra_action_cards` devolve `None` e o contexto vira no-op. Com o intent `off`, as intenções congeladas não são usadas. |
+| P1-2 | **fechado** | `services/conflict_turn.py:253` e `:719` (`bbc151bc`). `test_mao_adiantada_jogada_grava_condicao_de_iniciativa`: sem "sem resolução", grava a condição `initiative` +2, e a Carta vai para `exaurida`. `test_mao_adiantada_vale_na_rolagem_da_rodada_seguinte` espiona o `_initiative_value` real: base + 2 na rodada N+1 com `duracao` 1, sem precisar de `duracao` 2. O inventário da rodada 1 continua valendo: só `cor1_tro_mao_adiantada` tem `buff_iniciativa` como efeito principal de Carta ativa. |
+
+### Flags `off`
+
+Nada muda. Com as Cartas desligadas não há jogada de Carta de jogador, então o `_SUPPORT_EFFECTS` não é alcançado. Com `RPG_ENEMY_DECKS=off`, o contexto novo do `forecast_round` é no-op. O portão `test_portao_off_identico_fora_das_recalibradas` e o snapshot R2 estão verdes.
+
+### Remedição (§9)
+
+Comparei, chave a chave, `posturas-c-0-19.json` e `confirmacao-posturas-260-339.json` de `5df1c8fc` contra `HEAD`. **Só mudam chaves `*/Corruptor/*`.** Devoto, Sangromante, Médico e Arcanista estão idênticos nas duas faixas. Os números do bloco novo do §9 batem com os JSON: 0–19 realista `todas` 47,4 % (sem mudança), `biologia` 53,25 %, `inorganica` 49,1 %, `alma` 45,5 %. 260–339 realista `todas` 48,7 %, `alma` 43,55 %. As duas confirmações foram refeitas uma vez, como "Carta sem mudança numérica" (R3).
+
+### Integridade de eval e stash
+
+- Dos 7 commits, só `7d9da05f` (`test(eval)`) toca caminho de `evals/protected-paths.txt`: `tests/test_spec373_artefatos.py` e `docs/spec373/base/eval/ajustes-dials-base.json`. Nenhum commit de produto toca caminho protegido. O portão de `recalibradas.json` nas duas direções, com base congelada por sha256 e known-good/bad, fecha o P2-2 melhor do que eu pedi. `enemy_fantasma` entrou na lista e na confirmação 40–119 (`c80aa7b8`, `ok`).
+- Stash: nenhum caminho `docs/spec349` nem `wip-mecanica-349` aparece em `git diff main...HEAD --name-only` nem em `5df1c8fc..HEAD`. A árvore está limpa. O único arquivo 349 no diff é `tests/test_spec349_mecanica.py`, da rodada 1 (±9 do D4), que já estava aceito. O `stash@{0}` (`On spec-349: wip-mecanica-349-pre-integration`) continua na lista, então o `pop` não o consumiu. O coordenador decide se o descarta.
+
+### Voz de `cor1_tro_mao_adiantada` (de passagem)
+
+`descricao`: "O Abismo sopra o passo seguinte antes de o inimigo o decidir: quando ele sai da névoa, quem o espera já está de pé." O Abismo é o agente, sem "vem/vir/chega" e sem número. Aceito.
+
+### Achados restantes (nenhum bloqueia)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R2-1 | P2 | `specs/SPEC-373-bestiario-chefes-familia.md:360` | A linha antiga do R22 ainda diz "o bot não a joga (`uso_nao_medido`, 0 %)" e traz os valores de antes (`biologia` 53,1, `inorganica` 49,5, `alma` 45,7 / 43,6). A remedição mudou só o Corruptor, o que indica que o bot joga a Carta às vezes. O bloco novo traz os valores certos, mas o texto antigo contradiz o novo. | Anotar "(antes da correção `bbc151bc`)" na linha 360. Trocar "não a joga" por "uso não medido". |
+| R2-2 | P2 | `data/cards/posturas/corruptor_tronco.json` (`momento`) | "o bônus vale na rolagem da rodada seguinte" é linguagem de regra. Os outros `momento` do tronco descrevem a situação de jogo, não a mecânica. | Opcional: "Melhor jogada na abertura de uma luta longa, quando agir antes do inimigo na próxima troca vale mais que um golpe agora." |
+| R2-3 | P2 | `tests/test_spec373_cartas.py` | O teste pedido na rodada 1 ("o Fôlego é cobrado uma vez") não afirma o Fôlego. | Opcional: afirmar o delta de Fôlego depois de `_jogar_mao_adiantada`. |
+| R2-4 | P2 (fora da spec) | `tests/test_card_lint.py::test_non_numeric_versao_does_not_break_catalog` | Falha isolada (`-k`, sem xdist) e às vezes sob xdist, com `FileNotFoundError` de `_glossario.json`/`_orcamento.json` no `tmp_path`, porque o cache de `card_effects` depende da ordem. **Reproduz igual na `main`**, então é pré-existente. O arquivo inteiro passa sozinho. | Spec ou issue à parte: o teste deve pré-carregar os caches ou copiar `_glossario.json`/`_orcamento.json` para o `tmp_path`. |
+
+Os pontos da rodada 1 seguem como registrados no §9: P2-3 (ruff em `docs/spec373/work`) e P2-5 (±9) ficam opcionais e não feitos. P2-6 vai para a SPEC-369, e o smoke §6.5 está marcado N/A. O smoke §6 continua pendente.
+
+### Comandos rodados (rodada 2)
+
+```text
+pt.sh tests/test_spec373_{acao_extra,artefatos,cartas,montagem}.py tests/test_enemy_intent.py tests/test_enemy_intent_node.py tests/test_enemy_decks.py tests/test_size_budget.py (4 workers) → 120 passed
+pt.sh tests/test_card_lint.py → verde (arquivo sozinho)
+pt.sh tests/test_card_lint.py -k test_non_numeric_versao (sem xdist) → falha, igual na main (R2-4)
+uv run ruff check services/enemy_intent.py services/conflict_turn.py tests/test_spec373_*.py → All checks passed
+dup_helpers.py --diff 5df1c8fc..HEAD → nenhuma duplicata
+diff chave a chave posturas-c-0-19 / confirmacao-posturas-260-339 (5df1c8fc x HEAD) → só Corruptor
+por commit x evals/protected-paths.txt → só 7d9da05f
+git diff main...HEAD --name-only | grep spec349|wip → só tests/test_spec349_mecanica.py (rodada 1)
+```
