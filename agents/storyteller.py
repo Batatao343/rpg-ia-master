@@ -1467,36 +1467,7 @@ def storyteller_node(state: GameState):
             if t.closed_pass:
                 t.travel_note += f" {world_calendar.CROSSING_NOTE} Descreva a travessia dura e a nevasca ao chegar."
     elif t.last_user_input and not t.law_resolved and is_rest(t.last_user_input):
-        from world_utils import weather_effects
-
-        rest_blocked = weather_effects(t.world).get("rest_block", False)  # Fase 6.5
-        # spec refatoracao-sistema-classes (R6): aliado ativo mitiga a Insônia do Devoto.
-        import party as _party_mod
-
-        _rest_allies = _party_mod.active_allies(t.state)
-        t.rested_player, t.world = apply_rest(
-            dict(t.state.get("player", {})), t.world, allies=_rest_allies
-        )
-        # SPEC-233 R7: fações avançam pelo delta REAL do relógio (bloqueado = 1 período).
-        t.world, t.factions, t.world_tick = _world_tick(
-            t.state, t.world_before, t.world, t.factions, t.intel
-        )
-        if not _engine_owns_factions():
-            t.factions, t.faction_events = advance_factions(t.factions, 1 if rest_blocked else 2)
-            t.factions, t.world, t.faction_note = resolve_faction_completions(
-                t.factions, t.world, t.faction_events, t.intel
-            )
-        if rest_blocked:
-            t.rest_note = (
-                f"O jogador TENTOU descansar, mas o clima ({t.world.get('weather', 'o miasma')}) "
-                f"NÃO permite descanso seguro ao relento — NADA foi recuperado e o tempo passou "
-                f"({clock_label(t.world, _cal_of(t.state))}). Narre a noite péssima e a exaustão."
-            )
-        else:
-            t.rest_note = (
-                f"O jogador DESCANSOU. O tempo avançou para {clock_label(t.world, _cal_of(t.state))} e ele recuperou parte das forças. "
-                "Narre a passagem do tempo e o estado do mundo ao acordar."
-            )
+        _story_rest_passage(t)
     _story_world_tick_effects(t)
     _story_membership_and_quests(t)
     _story_scene_and_replan(t)
@@ -1569,6 +1540,40 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_rest_passage(t: _StoryTurn) -> None:
+    """Descanso: recupera o herói, avança o relógio e as fações."""
+    from world_utils import weather_effects
+
+    rest_blocked = weather_effects(t.world).get("rest_block", False)  # Fase 6.5
+    # spec refatoracao-sistema-classes (R6): aliado ativo mitiga a Insônia do Devoto.
+    import party as _party_mod
+
+    _rest_allies = _party_mod.active_allies(t.state)
+    t.rested_player, t.world = apply_rest(
+        dict(t.state.get("player", {})), t.world, allies=_rest_allies
+    )
+    # SPEC-233 R7: fações avançam pelo delta REAL do relógio (bloqueado = 1 período).
+    t.world, t.factions, t.world_tick = _world_tick(
+        t.state, t.world_before, t.world, t.factions, t.intel
+    )
+    if not _engine_owns_factions():
+        t.factions, t.faction_events = advance_factions(t.factions, 1 if rest_blocked else 2)
+        t.factions, t.world, t.faction_note = resolve_faction_completions(
+            t.factions, t.world, t.faction_events, t.intel
+        )
+    if rest_blocked:
+        t.rest_note = (
+            f"O jogador TENTOU descansar, mas o clima ({t.world.get('weather', 'o miasma')}) "
+            f"NÃO permite descanso seguro ao relento — NADA foi recuperado e o tempo passou "
+            f"({clock_label(t.world, _cal_of(t.state))}). Narre a noite péssima e a exaustão."
+        )
+    else:
+        t.rest_note = (
+            f"O jogador DESCANSOU. O tempo avançou para {clock_label(t.world, _cal_of(t.state))} e ele recuperou parte das forças. "
+            "Narre a passagem do tempo e o estado do mundo ao acordar."
+        )
 
 
 def _story_world_tick_effects(t: _StoryTurn) -> None:
