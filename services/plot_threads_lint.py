@@ -9,10 +9,11 @@ usar fixtures sintéticas.
 from __future__ import annotations
 
 import re
-import unicodedata
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from itertools import islice
+
+from services import text as _text
 
 SIM_JACCARD_MAX = 0.35  # [BALANCEAR] limiar de near-duplicate entre fichas (R17c)
 SECRET_WORD_MIN = 5
@@ -49,9 +50,7 @@ _VOCE = re.compile(r"\bvoce\b")
 
 
 def fold(text: object) -> str:
-    nfkd = unicodedata.normalize("NFKD", str(text or ""))
-    stripped = "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
-    return " ".join(stripped.split())
+    return _text.fold(text, collapse=True)
 
 
 def _words(text: str, minlen: int) -> set[str]:
