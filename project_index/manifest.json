@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "0a73a5344a9ef72521f17f6614e389d1c6e8c013",
+  "commit_sha": "ac467946df572bc6d92209da96a9fa65337e5ef1",
   "edge_counts": {
-    "calls": 38450,
-    "contains": 1272,
-    "defines": 18706,
-    "imports": 3100,
-    "likely_test_for": 2251,
+    "calls": 38731,
+    "contains": 1281,
+    "defines": 18837,
+    "imports": 3121,
+    "likely_test_for": 2266,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:4a04dbaf55f2b2d82f7bf36758f0f0220401a41f347c0321cdd635b773bfd937",
+  "graph_hash": "sha256:b0f96e476d3aa6038f2e044254159fb7c3ff202617cb89e70f30b94a64a079f0",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -364,6 +364,7 @@
     "services/audit_redaction.py",
     "services/audit_trace.py",
     "services/auth_sessions.py",
+    "services/axis_text.py",
     "services/bestiary_knowledge.py",
     "services/bestiary_lint.py",
     "services/body_limit.py",
@@ -401,6 +402,7 @@
     "services/conflict_summary.py",
     "services/conflict_turn.py",
     "services/content_validator.py",
+    "services/content_validator_secrets.py",
     "services/context_builder.py",
     "services/context_prefetch.py",
     "services/context_sources.py",
@@ -408,6 +410,7 @@
     "services/creature_art.py",
     "services/creature_gen.py",
     "services/creature_gen_eval.py",
+    "services/creature_gen_helpers.py",
     "services/creature_gen_jobs.py",
     "services/creature_portraits.py",
     "services/creature_variants.py",
@@ -1268,6 +1271,12 @@
     "tests/test_spec371_reacao_inicial.py",
     "tests/test_spec371_saber.py",
     "tests/test_spec371_view.py",
+    "tests/test_spec374_eixos.py",
+    "tests/test_spec374_forma.py",
+    "tests/test_spec374_job_janela.py",
+    "tests/test_spec374_migrate.py",
+    "tests/test_spec374_rag_cli.py",
+    "tests/test_spec374_u14.py",
     "tests/test_spec387_draft.py",
     "tests/test_spec387_generic_spawn.py",
     "tests/test_spec387_guards.py",
@@ -1549,14 +1558,14 @@
   },
   "node_counts": {
     "artifact": 10,
-    "class": 1097,
+    "class": 1103,
     "endpoint": 69,
-    "file": 1494,
-    "function": 5841,
+    "file": 1503,
+    "function": 5874,
     "method": 870,
-    "module": 1272,
-    "test": 10897
+    "module": 1281,
+    "test": 10989
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:db7b6c64f3fdb90eaff3632a6acac3f06b86c5d54fc5c418cb589e6c763ee816"
+  "source_tree_hash": "sha256:02b638ae4d685b09cea75ae8d3c376c9b78e72e894bc29cabbfe98d286ead259"
 }
