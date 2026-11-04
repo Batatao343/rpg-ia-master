@@ -1863,7 +1863,14 @@ _ABSORB_RE = re.compile(r"(?:Proteção(?: \(efeito\))?|Vigília) -(\d+)")
 _PCT_RE = re.compile(r"Rachadura/Torpor ([+-]\d+)%")  # SPEC-387 R28
 
 
-def _retract_omen(out: dict, actor_id: str, actor: dict) -> None:
+def _fire_omen_frustrated(out: dict, actors_by_id: dict, intent: dict, actor_id: str) -> None:
+    """SPEC-330 R3 (helper comum de `_frustrate` e `_retract_omen`): quem era a mira do presságio
+    frustrado reage (`ao_pressagio_frustrado`). Interromper já disparou o gatilho na hora da Carta."""
+    if not intent.get("interrompido_por") and intent.get("alvo_id") in actors_by_id:
+        fx.fire("ao_pressagio_frustrado", sujeito_id=intent["alvo_id"], alvo_id=actor_id, out=out)
+
+
+def _retract_omen(out: dict, actor_id: str, actor: dict, actors_by_id: dict) -> None:
     """SPEC-387 (Sol P1-2): quem caiu antes de agir NÃO cumpriu o presságio: sai de
     `pressagios_cumpridos` (e a linha "cumpre…"), entra em `pressagios_frustrados` (motivo `incapaz`)."""
     done = [p for p in out.get("pressagios_cumpridos") or [] if p.get("actor_id") == actor_id]
@@ -1873,6 +1880,7 @@ def _retract_omen(out: dict, actor_id: str, actor: dict) -> None:
     out.setdefault("pressagios_frustrados", []).append(
         {"actor_id": actor_id, "tipo": done[0].get("tipo"), "motivo": "incapaz"}
     )
+    _fire_omen_frustrated(out, actors_by_id, done[0], actor_id)  # Sol R2-P2-1: mesmo gatilho
     line = f"{_name(actor)} cumpre o que o presságio anunciava."
     if line in out["logs"]:
         out["logs"].remove(line)
@@ -1932,7 +1940,7 @@ def _resolve_actor_turn_inner(
     if _declaration_leaves_engagement(decl):
         _resolve_opportunity_attacks(scene, actor_id, actors_by_id, sides, out, rng)
         if not _can_act(actor):
-            _retract_omen(out, actor_id, actor)
+            _retract_omen(out, actor_id, actor, actors_by_id)
             return
 
     # Janela de Reação sobre um ataque declarado (06 R1) — reator define Guarda na cena.
@@ -1947,7 +1955,7 @@ def _resolve_actor_turn_inner(
             scene, actor_id, acao.target_id, actors_by_id, sides, out, state, rng=rng, step=acao
         )
         if not _can_act(actor):  # SPEC-387: derrubado pela Reação, o atacante não resolve o ataque
-            _retract_omen(out, actor_id, actor)
+            _retract_omen(out, actor_id, actor, actors_by_id)
             return
 
     if acao is not None and acao.kind == "tactic":
@@ -2676,11 +2684,7 @@ def _run_round(
             entry["por"] = intent["interrompido_por"]
             entry["via"] = "interromper"
         out.setdefault("pressagios_frustrados", []).append(entry)
-        if not intent.get("interrompido_por") and intent.get("alvo_id") in actors_by_id:
-            # SPEC-330 R3: quem era a mira do presságio frustrado reage.
-            fx.fire(
-                "ao_pressagio_frustrado", sujeito_id=intent["alvo_id"], alvo_id=actor_id, out=out
-            )
+        _fire_omen_frustrated(out, actors_by_id, intent, actor_id)  # SPEC-330 R3
         out["logs"].append(ei.frustrated_line(intent, actors_by_id))
         from services import mechanics_trace as _mt
 

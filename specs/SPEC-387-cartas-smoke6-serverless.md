@@ -635,3 +635,12 @@ de reverter). Golden 330 e 453+223 testes de motor/sim verdes; **a arena não fo
   o coordenador regrava (`SPEC360_REGEN=1`). (b) `test_objectives` (P1-3). (c) `tests/size_budget.json` teve 2 rebaselines: `4e246c45` (motor,
   App.tsx) e `4ceb5f94` + este (`_resolve_actor_turn_inner` +2 do `_can_act` pós-Reação, `round_registry` +3 do presságio frustrado,
   `round_log` +tradutor): exceções previstas ("spec manda tocar o motor").
+
+**Correções da revisão Sol (rodada 2, 03/11):**
+- R2-P1-1: `_translate_logs` agora diz quem usou cada Carta ("Você usa X." / "<Inimigo> usa X."; o herói reconhecido pelos nomes das suas
+  Cartas via `round_log.hero_card_names(player)`), mantém linhas humanas com número (cura "Você recupera 3 de Vitalidade.", dano contínuo
+  "Você sofre 1 de Sangramento.") e descarta só aritmética de dado/ids. `test_spec387_text.py` troca "sem dígito" por "sem aritmética e sem id"
+  e ganha a sonda com Carta de cura + golpe + Sangramento (`test_off_fallback_keeps_cards_heal_and_dot`).
+- R2-P2-1: helper comum `_fire_omen_frustrated` (usado por `_frustrate` e `_retract_omen`): matar o atacante pela Reação dispara
+  `ao_pressagio_frustrado` uma vez (teste com "Ferro Antes do Ferro" armado: cura 5 -> 8 em 10 sementes). Decisão: dispara.
+- Golden 360: as 3 mensagens (12, 14, 20) mudam como no §9 anterior, agora com "Crescido do Clã usa Punho de Tala." e, na 20, "Você sofre 1 de Sangramento.".

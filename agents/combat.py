@@ -1825,7 +1825,13 @@ def _narrate(
         _log_event("combat", "narrate_failed", level="warning", error=type(e).__name__)
     if fallback_text is not None:  # SPEC-346 R15/R16: legível, sem bullets de log cru
         return fallback_text
-    return round_log.off_fallback_text(logs, str(player.get("name") or ""), spawned_flavor, victory)
+    return round_log.off_fallback_text(
+        logs,
+        str(player.get("name") or ""),
+        spawned_flavor,
+        victory,
+        round_log.hero_card_names(player),
+    )
 
 
 # ==========================================================================

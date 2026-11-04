@@ -224,7 +224,7 @@ def test_off_fallback_keeps_the_facts_of_the_round():
     assert "Você sofre um ferimento grave na perna." in text
     assert "Sua condição Sangramento terminou." in text
     assert "Playtest-explorador" not in text and "⚔️" not in text and "•" not in text
-    assert not ID_RE.search(text) and not re.search(r"\d", text)
+    assert not ID_RE.search(text) and "total" not in text and "->" not in text and "×" not in text
     atk = round_log.off_fallback_text(
         [
             "Playtest-explorador → Goblin: critico (total 12 vs Esquiva 13).",
@@ -238,3 +238,35 @@ def test_off_fallback_keeps_the_facts_of_the_round():
     assert round_log.off_fallback_text(
         ["Você tenta fugir, mas os inimigos te alcançam."], "Playtest-explorador", "", False
     ).startswith("Você tenta fugir")
+
+
+PROBE = [
+    "Usa Bandagem de Campo",
+    "Smoke recupera 3 Vitalidade.",
+    "Usa Golpe Rachado",
+    "Smoke → Goblin: acerto (total 10 vs Esquiva 12).",
+    "dano 6×1=6; Vitalidade 9 -> 3 (excedente 0)",
+    "Smoke sofre 1 de Sangramento (Vit 4).",
+]
+
+
+def test_off_fallback_keeps_cards_heal_and_dot():
+    """Sol R2-P1-1: quem usou cada Carta, cura e dano contínuo com número ficam; só a aritmética sai."""
+    text = round_log.off_fallback_text(
+        PROBE, "Smoke", "", False, {"Bandagem de Campo", "Golpe Rachado"}
+    )
+    assert "Você usa Bandagem de Campo." in text
+    assert "Você recupera 3 de Vitalidade." in text
+    assert "Você usa Golpe Rachado. Você acerta Goblin." in text
+    assert "Você sofre 1 de Sangramento." in text
+    assert not ID_RE.search(text) and "total" not in text and "->" not in text and "×" not in text
+    assert "Smoke" not in text and "Esquiva" not in text
+    enemy = round_log.off_fallback_text(
+        ["Usa Punho de Tala", "Crescido do Clã → Smoke: erro (total 7 vs Esquiva 12)."],
+        "Smoke",
+        "",
+        False,
+    )
+    assert "Crescido do Clã usa Punho de Tala. Crescido do Clã erra você." in enemy
+    heal_only = round_log.off_fallback_text(PROBE[:2], "Smoke", "", False, {"Bandagem de Campo"})
+    assert heal_only.startswith("Você usa Bandagem de Campo. Você recupera 3 de Vitalidade.")

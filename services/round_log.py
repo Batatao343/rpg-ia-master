@@ -893,71 +893,10 @@ WHEEL_TEXT = (
 _RAW_ID_RE = re.compile(r"\b[a-z]+(?:_[a-z0-9]+)+\b")
 
 
-_ATK_LINE_RE = re.compile(r"^(.+?) → (.+?): (acerto|erro|critico|supercritico)\b")
-_WOUND_LINE_RE = re.compile(r"Ferimento (\w+) em (\w+)")
-_VIT_ZERO_RE = re.compile(r"Vitalidade [1-9]\d* -> 0\b")
-_ATK_VERB = {
-    "acerto": "acerta",
-    "erro": "erra",
-    "critico": "acerta em cheio",
-    "supercritico": "acerta de forma devastadora",
-}
-
-
-def _translate_logs(logs: Iterable[str], hero_name: str) -> list[str]:
-    """SPEC-387 (Sol P1-1): o registro técnico do motor em frases na voz "você", SEM descartar fatos
-    (golpe, ferimento, queda de Vitalidade, fuga). Sem id, sem aritmética, sem o nome do herói."""
-    hero = (hero_name or "").strip()
-    out: list[str] = []
-    target = ""  # quem sofreu o último golpe (para o Ferimento/Vitalidade da linha seguinte)
-
-    def who(name: str, subject: bool) -> str:
-        if hero and name == hero:
-            return "Você" if subject else "você"
-        return name
-
-    for raw in logs:
-        line = str(raw or "").strip()
-        if not line:
-            continue
-        m = _ATK_LINE_RE.match(line)
-        if m:
-            target = m.group(2)
-            out.append(f"{who(m.group(1), True)} {_ATK_VERB[m.group(3)]} {who(target, False)}.")
-            continue
-        w = _WOUND_LINE_RE.search(line)
-        v = _VIT_ZERO_RE.search(line)
-        if (w or v) and target:
-            subj = who(target, True)
-            if v:
-                out.append(f"{subj} fica sem Vitalidade.")
-            if w:
-                cat, reg = _cat_pt(w.group(1)), _region_phrase(w.group(2))
-                out.append(f"{subj} sofre um ferimento {cat} {reg}.")
-            continue
-        technical = _is_arith(line) or line.startswith(("Usa ", "dano ")) or re.search(r"\d", line)
-        if technical and not line.startswith("Você"):
-            continue
-        human = _voce(line, hero)
-        if _is_human_line(line) or line.startswith("Você") or not re.search(r"[:]", line):
-            if not _RAW_ID_RE.search(human) and not names_hero(human, hero):
-                out.append(human)
-    return out
-
-
-def off_fallback_text(logs: Iterable[str], hero_name: str, flavor: str, victory: bool) -> str:
-    """SPEC-387 R33: texto do modo `off` sem LLM — só linhas humanas do motor, na voz do jogador
-    ("você"), sem id, sem bullets nem "⚔️"; um parágrafo como `deterministic_outcome_text`."""
-    lines: list[str] = []
-    for human in _translate_logs(logs, hero_name):
-        if human not in lines:
-            lines.append(human)
-    head = [flavor.strip()] if flavor and flavor.strip() else []
-    tail = "Vitória! O campo silencia." if victory else "O que você faz?"
-    return " ".join([*head, *lines]) + ("\n\n" if lines or head else "") + tail
-
-
 def names_hero(text: str, hero_name: str) -> bool:
     """SPEC-387 R33 [D-387-6]: a prosa usou o nome próprio do herói (a voz é "você")."""
     hero = (hero_name or "").strip()
     return bool(hero) and bool(re.search(rf"(?<!\w){re.escape(hero)}(?!\w)", text or ""))
+
+
+from services.off_text import hero_card_names, off_fallback_text  # noqa: E402,F401  (SPEC-387)

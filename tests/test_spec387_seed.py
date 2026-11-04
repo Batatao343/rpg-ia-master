@@ -248,3 +248,31 @@ def test_espolio_has_forja_and_esquecer_visible(saves):
     with sd._legacy(saves):
         st = persistence.load_game_state(persistence.save_path(gid))
     assert st["player"]["forja_esquecer"] == 1 and st["player"].get("deck")
+
+
+def test_reaction_kill_fires_ao_pressagio_frustrado_once(saves, seeded):
+    """Sol R2-P2-1: matar o atacante com a Reação dispara o gatilho como `_frustrate` ("Ferro Antes do Ferro")."""
+    _, st = seeded(13, "reacao")
+    st = {**st, "player": {**st["player"], "vitalidade": 5}}
+    st["combat"] = {**st["combat"], "scene": dict(st["combat"]["scene"])}
+    st["combat"]["scene"]["gatilhos_armados"] = [
+        {
+            "owner_id": "player",
+            "card_id": "dev1_zel_ferro_antes_do_ferro",
+            "efeito": {
+                "kind": "cura",
+                "valor": 3,
+                "alvo": "eu",
+                "quando": "ao_pressagio_frustrado",
+            },
+        }
+    ]
+    guard = {"kind": "maneuver", "maneuver": "guardar", "target_id": None}
+    with sd._legacy(saves):
+        for seed in range(10):
+            out, _text, raw = play(st, [guard], seed, reaction="dev_encaixe")
+            fired = [
+                g for g in raw.get("gatilhos") or [] if g["gatilho"] == "ao_pressagio_frustrado"
+            ]
+            assert len(fired) == 1, (seed, raw.get("gatilhos"))
+            assert out["player"]["vitalidade"] == 8, seed
