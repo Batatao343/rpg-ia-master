@@ -72,6 +72,10 @@ def _promise_of(scene: dict | None, key: str) -> dict:
 
 def pending_call(scene: dict | None, actor: dict, rnd: int) -> dict | None:
     """Promessa de chamado do lider para a rodada `rnd` (precedencia R4/R5), ou `None`."""
+    from services import combat_flags
+
+    if combat_flags.mode("reinforcements") != "on":  # flag off com chamado pendente: não joga
+        return None
     promise = _promise_of(scene, _key(actor))
     if promise.get("tipo") == PROMISE_KIND and int(promise.get("rnd", 0) or 0) == int(rnd):
         return promise
@@ -111,7 +115,11 @@ def telegraph(scene: dict, leader: dict, combat_meta: dict, round_: int, trig: d
     _log_event("combat", "reinforcements_telegraphed", level="info", via=VIA)
 
 
-def _cancel(scene: dict, combat_meta: dict, state: dict, cause: str) -> None:
+def _cancel(
+    scene: dict, combat_meta: dict, state: dict, cause: str, leader: dict | None = None
+) -> None:
+    if leader and state.get("stage") == "telegraphed":  # nunca jogada: não sobra proteção avulsa
+        leader["cartas"] = [c for c in leader.get("cartas") or [] if c != CALL_CARD]
     state.update(cancelled=True, cause=cause)
     combat_meta["reinforcement"] = state
     lid = str(state.get("leader_id"))
@@ -130,7 +138,18 @@ def _called(scene: dict, state: dict, leader: dict, played: dict, res: dict) -> 
     _log_event("combat", "reinforcements_warned", level="info", via=VIA)
 
 
-def _fire(scene, enemies, actors_by_id, sides, combat_meta, state, leader, round_, res) -> None:
+def _fire(
+    scene: dict,
+    enemies: list[dict],
+    actors_by_id: dict,
+    sides: dict,
+    combat_meta: dict,
+    *,
+    state: dict,
+    leader: dict,
+    round_: int,
+    res: dict,
+) -> None:
     trigs = scene.get("reinforcement_triggers") or []
     trig = next((t for t in trigs if t.get("id") == state["trigger_id"]), None)
     new = rf.spawn(trig, combat_meta, enemies, deck_seed=leader.get("deck_seed")) if trig else []
@@ -152,7 +171,16 @@ def _fire(scene, enemies, actors_by_id, sides, combat_meta, state, leader, round
     _log_event("combat", "reinforcements_fired", level="info", via=VIA)
 
 
-def _progress(scene, enemies, actors_by_id, sides, combat_meta, state, round_, res) -> None:
+def _progress(
+    scene: dict,
+    enemies: list[dict],
+    actors_by_id: dict,
+    sides: dict,
+    combat_meta: dict,
+    state: dict,
+    round_: int,
+    res: dict,
+) -> None:
     leader = actors_by_id.get(str(state.get("leader_id"))) or {}
     if state.get("stage") == "telegraphed":
         played = scene.get("chamado_jogado")
@@ -164,14 +192,24 @@ def _progress(scene, enemies, actors_by_id, sides, combat_meta, state, round_, r
             _called(scene, state, leader, played, res)
         elif int(round_) >= int(state.get("call_round", 0) or 0):
             res["logs"].append(f"{leader.get('name', 'O líder')} não chega a chamar o bando.")
-            _cancel(scene, combat_meta, state, "frustrado")
+            _cancel(scene, combat_meta, state, "frustrado", leader)
             return
     if state.get("stage") == "called":
         if not rf.acts(leader):
             _cancel(scene, combat_meta, state, "lider_caido")
             return
         if int(round_) >= int(state.get("arrival_round", 0) or 0):
-            _fire(scene, enemies, actors_by_id, sides, combat_meta, state, leader, round_, res)
+            _fire(
+                scene,
+                enemies,
+                actors_by_id,
+                sides,
+                combat_meta,
+                state=state,
+                leader=leader,
+                round_=round_,
+                res=res,
+            )
             return
     combat_meta["reinforcement"] = state
 
@@ -215,7 +253,14 @@ def advance_card_flow(
 
 
 def advance(
-    scene, enemies, actors_by_id, sides, combat_meta, round_, *, mode="on"
+    scene: dict,
+    enemies: list[dict],
+    actors_by_id: dict,
+    sides: dict,
+    combat_meta: dict,
+    round_: int,
+    *,
+    mode: str = "on",
 ) -> dict[str, Any]:
     """Porta do no de combate: fluxo de Carta quando R1 vale (ou o estado e dele); senao o legado.
     O despacho e por `via == "carta"`, nunca por `warned_round` (espelhado em `called`)."""

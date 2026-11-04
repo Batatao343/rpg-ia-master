@@ -519,3 +519,71 @@ def test_playtest_scenario_card_flow_ends_without_violations(monkeypatch, card_o
     assert result.capability_counts["reinforcements"] >= 1
     reinf = (result.final_state.get("combat") or {}).get("reinforcement") or {}
     assert reinf.get("via") == "carta" and reinf.get("fired") is True
+
+
+# --- Revisão Sol (P2-1, P3-4) ----------------------------------------------------------
+def test_frustrated_call_drops_card_and_never_returns(monkeypatch, card_on):
+    from services import conflict_orchestrator as orch2
+
+    scene, enemies, actors, sides, meta = _telegraphed_world()
+    rc.advance_card_flow(scene, enemies, actors, sides, meta, 1)
+    assert rc.CALL_CARD in enemies[0]["cartas"]
+    rc.advance_card_flow(scene, enemies, actors, sides, meta, 2)  # não jogou: frustrado
+    assert meta["reinforcement"]["cause"] == "frustrado"
+    assert rc.CALL_CARD not in enemies[0]["cartas"]
+    w_scene, w_actors, w_sides = _pure_world()
+    w_actors[LID]["cartas"] = [c for c in w_actors[LID]["cartas"] if c != rc.CALL_CARD]
+    w_scene["prenuncios"] = {}
+    for kind in ("support", "protect", "attack"):
+        _pick(monkeypatch, "sempre", kind)
+        for rnd in range(3, 7):
+            decl = orch2.enemy_declaration(
+                w_scene,
+                LID,
+                w_actors,
+                w_sides,
+                scene_state={"_rodada_decisao": rnd},
+                rng=random.Random(rnd),
+            )
+            assert decl.acao.card_id != rc.CALL_CARD
+
+
+def test_flag_off_with_pending_call_does_not_play_it(monkeypatch, card_on):
+    scene, actors, sides = _pure_world()
+    monkeypatch.setenv("RPG_COMBAT_REINFORCEMENTS", "off")
+    _pick(monkeypatch, "alvo_vulneravel", "attack")
+    assert rc.pending_call(scene, actors[LID], 2) is None
+    assert edk.plan(actors[LID], 2, scene)["assinatura"] != rc.CALL_CARD
+    assert _declare(scene, actors, sides).acao.card_id != rc.CALL_CARD
+    assert rc.payload_fields({"reinforcement": {"via": "carta", "stage": "called"}}) == {}
+
+
+def test_node_frustration_in_payload_and_round_log(monkeypatch, card_on):
+    state, out = _run(monkeypatch)[0]
+    state = _carry(state, out)
+    state["enemies"][0]["cartas"].remove(rc.CALL_CARD)  # o líder não consegue jogar o Chamado
+    state, nxt = step(state, {}, monkeypatch, "espero", declaration=PASS)
+    assert _meta(nxt)["cancelled"] is True and _meta(nxt)["cause"] == "frustrado"
+    payload = _api_payload(state, nxt)["combat"]
+    assert "reinforcement" not in payload and "reinforcement_warning" not in payload
+    assert len(nxt["enemies"]) == 1
+    board = json.dumps(payload.get("registro_rodada") or payload, ensure_ascii=False)
+    assert "Presságio frustrado" in board or "frustrado" in board
+
+
+@pytest.mark.parametrize("rounds", [1, 2])
+def test_save_load_real_persistence(monkeypatch, tmp_path, card_on, rounds):
+    import persistence
+
+    monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
+    state, out = _run(monkeypatch, rounds=rounds)[-1]
+    saved = {k: v for k, v in _carry(state, out).items() if k != "messages"}
+    saved["game_id"] = f"spec391-{rounds}"
+    assert persistence.save_game_state({**state, **saved})
+    loaded = persistence.load_game_state(str(tmp_path / f"spec391-{rounds}.json"))
+    assert loaded["combat"]["reinforcement"] == out["combat"]["reinforcement"]
+    assert loaded["combat"]["scene"].get("prenuncios") == out["combat"]["scene"].get("prenuncios")
+    cont = {**state, **loaded, "messages": state["messages"]}
+    _, nxt = step(cont, {}, monkeypatch, "espero", declaration=PASS)
+    assert _meta(nxt)["stage"] == "called" or _meta(nxt)["fired"]
+    assert nxt["enemies"][0]["cartas"].count(rc.CALL_CARD) == 1
