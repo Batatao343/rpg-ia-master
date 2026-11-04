@@ -255,3 +255,17 @@ def test_r14a_conta_assinatura_basica_fora_do_sangromante():
         falhas = T.r14(json.load(fh))
     assert "(a) bas_cor_mofo uso 0.607" in falhas
     assert not any("bas_cor_golpe" in f or "san" in f for f in falhas)
+
+
+def test_posturas_deterministico_e_igual_a_base_do_emboscada(M):
+    """Revisao Sol P3-5 (Fase B): o `posturas` isolado, repetido, e a base medida DENTRO do
+    `emboscada` dao o mesmo numero; o braco de emboscada e outro protocolo e nao vaza estado."""
+    sel = ["Médico de Campo"]
+    orig = M.orch.run_round
+    a = M.cmd_posturas([0], sel)["posturas"]
+    emb = M.cmd_emboscada([0], None, sel)["posturas"]["Médico de Campo"]["todas"]
+    b = M.cmd_posturas([0], sel)["posturas"]
+    assert a == b  # mesmo comando 2x, com o patch de emboscada no meio
+    assert emb["base_total"] == a["Médico de Campo"]["todas"]["total"]
+    assert M.orch.run_round is orig  # monkeypatch devolvido
+    assert M.E.has_initiative_card is M._orig_has_initiative

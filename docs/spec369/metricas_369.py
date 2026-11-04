@@ -474,8 +474,9 @@ def guarda_r19(posturas: dict) -> dict:
     }
 
 
-def cmd_posturas(seeds: list[int]) -> dict:
-    res = B.posturas(_seed_range(seeds), B._classes_arg(None))
+def cmd_posturas(seeds: list[int], classes: list[str] | None = None) -> dict:
+    """``classes`` (so para teste): recorte de Posturas no formato de ``arena_spec341 --classes``."""
+    res = B.posturas(_seed_range(seeds), B._classes_arg(classes))
     return {"posturas": res, "guarda_r19": guarda_r19(res)}
 
 
@@ -498,10 +499,15 @@ def tem_iniciativa(cls: str, level: int, sub: str) -> bool:
 _orig_has_initiative = E.has_initiative_card
 
 
-def cmd_emboscada(seeds: list[int], base_posturas: dict | None = None) -> dict:
-    """R6 emboscada: o fluxo de ``arena_spec355 emboscada`` + a mistura com o credito D-369-6."""
+def cmd_emboscada(
+    seeds: list[int], base_posturas: dict | None = None, classes_sel: list[str] | None = None
+) -> dict:
+    """R6 emboscada: o fluxo de ``arena_spec355 emboscada`` + a mistura com o credito D-369-6.
+    ``base_total`` = a arena SEM emboscada (igual ao ``posturas``); ``emboscada_total`` = o braco
+    com ``initiator="enemy"`` na 1a rodada, outro protocolo (os prints ``[posturas]`` deste
+    subcomando sao desse braco)."""
     rng = _seed_range(seeds)
-    classes = B._classes_arg(None)
+    classes = B._classes_arg(classes_sel)
     base = base_posturas or B.posturas(rng, classes)
     orig_run_round = orch.run_round
     orch.run_round = E._ambush_round

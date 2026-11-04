@@ -509,4 +509,11 @@ O balanço é determinístico, e a Fase C é a prova dele. O LLM real entra em d
 
 ### Fase B, follow-ups da revisão Sol (04/11)
 
+- **P3-5 (Médico 45,8 × 46,7; autor da régua): sem vazamento, é diferença de protocolo.**
+  - O 46,7 % é o `emboscada_total` do Médico: o braço com emboscada (`initiator="enemy"` na rodada 1). As linhas `[posturas]` que o subcomando `emboscada` imprime são desse braço, e não a base remedida.
+  - A base dentro do `emboscada` (`base_total`) é 45,8 %, igual ao `posturas`.
+  - Remedido nas 0–19 com a Carta do B2 no catálogo: `posturas` saiu idêntico célula a célula à base da Fase A, e o `emboscada` sem `--base` remediu a base dentro do próprio processo e deu `base_total` = `posturas` nas 5 Posturas (Médico 45,8 · emboscada 46,7). A passiva `cor1_tro_faro_do_abismo` não entra no `full_deck`, então não move o `posturas` e só pesa no `realista_369` do Corruptor.
+  - Teste novo: `test_posturas_deterministico_e_igual_a_base_do_emboscada`. Roda `posturas` → `emboscada` → `posturas` e exige o mesmo número nas duas medições e `base_total` igual a ele, além de `orch.run_round` e `has_initiative_card` devolvidos. Para isso `cmd_posturas`/`cmd_emboscada` ganharam o recorte `classes`, só para o teste.
+  - A docstring do `cmd_emboscada` passou a explicar o que é cada total.
+  - A base do R19(d) é estável.
 - P3-1: o cabeçalho do reparo diz "vocabulário, orçamento ou raridade". P3-2: motivo próprio "ajuste de orçamento sem passo possível" quando nenhum passo se aplica (ex.: abaixo da faixa com Fôlego 0), distinto de "não coube em 6 passos"; teste novo. P3-3: `test_reparo_aumenta_quando_abaixo` sem condicional. P3-4: assinatura real de `fit_orcamento` anotada no §3.1.
