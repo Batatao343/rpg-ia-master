@@ -80,7 +80,8 @@ coverage:
     product_paths:
       - web/src/App.tsx
       - web/src/api.ts
-      - web/src/components/Hud.tsx
+      - web/src/components/tabs/CharacterTab.tsx
+      - web/src/components/tabs/hudParts.tsx
       - web/src/components/WorldMap.tsx
     metrics:
       - frontend_critical_journey_pass_rate

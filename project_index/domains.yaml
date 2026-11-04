@@ -117,7 +117,8 @@ domains:
     core:
       - web/src/components/PlayScreen.tsx
       - web/src/components/StoryLog.tsx
-      - web/src/components/Hud.tsx
+      - web/src/components/tabs/CharacterTab.tsx
+      - web/src/components/tabs/hudParts.tsx
     state: []
     tests:
       - web/e2e/visual-cue.spec.ts

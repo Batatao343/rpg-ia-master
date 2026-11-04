@@ -329,7 +329,7 @@ etapa, e as contagens vão para o hand-back.
 
 1. `npm run build` (anotar os bytes de `dist/assets/*.{js,css}`); `npm test` (contagem; 304 em
    `2a6e0945`); `npx eslint src/App.tsx src/components/Hud.tsx` (0 achados).
-2. **Matriz de caracterização do turno** (`handoffs/SPEC-383-turn-matrix.md`). Para cada ramo
+2. **Matriz de caracterização do turno** (`docs/spec383/turn-matrix.md`). Para cada ramo
    abaixo, apontar o e2e que o cobre (`turn-wait.spec.ts:89,195,227` usa `delayStream()`;
    `pending-discard.spec.ts`, `critical-journeys.spec.ts`, `spec364-409.spec.ts`,
    `spec363-board.spec.ts`…):
@@ -534,7 +534,7 @@ Nada foi rejeitado.
 
 ## 10. Registro de execução (04/11, executor) — PARCIAL, etapas 4-5 movidas para a SPEC-392
 
-Entregue (1 commit por etapa, oráculo antes/depois verde): Etapa 1 (`turn-retry.spec.ts`, 7 casos, verdes em dev e `preview`; matriz em `handoffs/SPEC-383-turn-matrix.md`; `lista_base` = 500), Etapa 2 (`useImageQuote`), Etapa 3 (`useSaves` + `loadHistory`), Etapa 7 (split do `Hud.tsx` + remoção dos 2 wrappers), Etapa 8 (4 specs de print apagados, 40 testes; `retrato_marcador_sem_flag_*` movidos; lista final 462 = 500 − 40 + 2; regra R4.1), Etapa 9 (CSS morto), R2 (Context; ver desvio 3). Bundle 843.264 → 844.302 bytes (+0,12 %).
+Entregue (1 commit por etapa, oráculo antes/depois verde): Etapa 1 (`turn-retry.spec.ts`, 7 casos, verdes em dev e `preview`; matriz em `docs/spec383/turn-matrix.md`; `lista_base` = 500), Etapa 2 (`useImageQuote`), Etapa 3 (`useSaves` + `loadHistory`), Etapa 7 (split do `Hud.tsx` + remoção dos 2 wrappers), Etapa 8 (4 specs de print apagados, 40 testes; `retrato_marcador_sem_flag_*` movidos; lista final 462 = 500 − 40 + 2; regra R4.1), Etapa 9 (CSS morto), R2 (Context; ver desvio 3). Bundle 843.264 → 844.302 bytes (+0,12 %).
 
 **Bloqueio (Etapa 4, `useAuthSession`)** — a sonda de lint do §4 reprovou. Ao extrair o hook, o compilador do `react-hooks` v7 passa a analisar `App` e o hook (nos commits 2 e 3 os hooks escaparam da análise por bailout, não porque estejam limpos). Achados, 20 erros no total:
 1. `App`: `react-hooks/refs` em `nativeCtx.current = …` (R1.4(b) cobre) e em `renderedOwner = owner.current` / `renderedSession = session.current` (§3.1 manda parar e reportar, sem disable).

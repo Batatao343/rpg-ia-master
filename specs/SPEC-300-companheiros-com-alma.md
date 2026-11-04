@@ -256,7 +256,7 @@ nenhum bump de `SCHEMA_VERSION`).
   `bond_label` (só a partir de `vinculo`: "vínculo"/"compromisso"). A resposta do
   turno ganha `companion_feedback: list[str]` com as frases da R8 (só as
   `|delta| ≥ 4`, aviso e partida). `web/src/types.ts` (`PartyMember`) e
-  `PartyBars` ([web/src/components/Hud.tsx:359-380](../web/src/components/Hud.tsx))
+  `PartyBars` ([web/src/components/tabs/PartyBars.tsx](../web/src/components/tabs/PartyBars.tsx) (era `Hud.tsx:359-380`; SPEC-383))
   mostram o rótulo; a área de narração mostra as frases de `companion_feedback`.
   Nenhum número.
 - **R30 — Invariantes de playtest.** `playtest/invariants.py` ganha: aprovação em
