@@ -1,6 +1,6 @@
 # SPEC-369 — revisão astra (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (1 P1, 2 P2; o resto é P3 informativo)
+> **Veredito:** `APPROVED` (rodada 2, `ab9a4f15`). Rodada 1: `CHANGES_REQUIRED` (1 P1, 2 P2, 5 P3), tudo corrigido
 > **Revisor:** Astra (Opus 5.5, semântica de avaliador; não escreveu o código) · **Data:** 2026-11-04 · **Commit revisado:** `2361ca66` (régua `10935009`)
 
 ## Escopo
@@ -71,4 +71,31 @@ py.sh docs/spec369/metricas_369.py base --seeds 0-19 --out <scratchpad>/rebase.j
 py.sh -c "r13..r20 do teste de meta contra base-0-19.json" → falham R13, R14, R15, R16, R20; passam R17, R19
 py.sh scripts/dev/dup_helpers.py --diff main...HEAD → nenhuma função nova com nome repetido
 ruff check docs/spec369 tests/test_spec369_*.py → All checks passed
+```
+
+## Rodada 2 (commits `d6a6de69` e `ab9a4f15`)
+
+**Veredito: `APPROVED`.**
+
+| Achado | Situação | Evidência |
+|---|---|---|
+| P1-1 | corrigido | `na_meta_r14a` em `tests/test_spec369_metas.py:68-73` põe a assinatura básica na meta (a). Contra a base, `r14` agora reprova `(a) bas_cor_mofo uso 0.607`. Caso bom e caso ruim em `test_r14a_conta_assinatura_basica_fora_do_sangromante`. |
+| P2-1 | corrigido | `bas_cor_mofo` aparece na tabela das 7 metas, na tabela por categoria e no §9. |
+| P2-2 | corrigido | A exceção de 80 lutas está no título e na linha ⚠ do BASE.md, e no item 4 do pedido ao dono, com três opções decididas antes de ver a Fase B. Conta conferida: com p≈0,7 e n=80 o erro-padrão fica perto de 5 pp por braço e o do Δ perto de 7 pp. |
+| P3-1 | corrigido | Está no item 2(0) do pedido ao dono. |
+| P3-2 | corrigido | Nota de reação, uso 0 e Δ por remoção no BASE.md e no §9. |
+| P3-3 | corrigido | O item 6 do pedido e o §9 exigem 0 xfailed no pouso da Fase B. |
+| P3-4 | corrigido | `test_sem_cartas_tira_e_devolve_catalogo_e_herois`. |
+| P3-5 | corrigido | `cmd_emboscada` restaura o `orch.run_round` que salvou antes do patch. |
+
+Uma observação nova, que não bloqueia:
+
+- **P3-6.** O `na_meta_r14a` deixa de fora, além do golpe, o `bas_*_guarda`. O R14(d) só aceita o golpe como fallback, e a lista de assinaturas da spec (§4, Etapa 4) é `bas_dev_voto`, `bas_cor_mofo`, `bas_arc_vazao` e `bas_med_pressao`. A guarda não está em nenhuma das duas listas. Na base, nenhuma guarda passa de 60 %, então nenhum número muda. Mesmo assim, a Fase B não deveria levar uma guarda acima de 60 % sem que isso apareça. Sugestão: o coordenador acrescenta uma linha ao gate R9c ("guarda básica fica fora da meta (a)?"). Se o dono disser não, a troca é de uma palavra, num commit de autor de eval.
+
+R2 continua limpo (`git diff --exit-code main...HEAD` vazio nos caminhos protegidos). Nenhuma das mudanças da rodada 2 alterou um número de `base-0-19.json`.
+
+```text
+bash scripts/dev/pt.sh tests/test_spec369_regua.py tests/test_spec369_metas.py → 13 passed, 15 xfailed (-n 2)
+ruff check docs/spec369 tests/test_spec369_*.py → All checks passed
+git diff --exit-code main...HEAD -- <R2> → vazio
 ```
