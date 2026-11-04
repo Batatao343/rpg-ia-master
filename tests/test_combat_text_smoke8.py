@@ -76,7 +76,7 @@ def test_voce_resiste_a_provocacao_do_heroi():
     assert rl._voce(other, HERO) == other
 
 
-_RAW_ID = re.compile(r"[a-z]{2,}(?:_[a-z0-9]+)+")
+_RAW_ID = re.compile(r"[a-z]{2,}(?:_[a-z0-9]+)+|\b[0-9a-f]{24}\b")
 _SKIP = {"player_stats", "party", "chronicle", "inventory", "visual", "art_offers"}
 
 
@@ -93,7 +93,11 @@ def _strings(node, key=""):
             yield from _strings(v, key)
 
 
-_TEXT_KEYS = {"message", "text", "registro_rodada", "last_mech_log", "last_turn_log", "efeito"}
+# Superfícies de texto reais do /game/action e /game/history (R1: mech_log incluso); metadado (reason) fica fora.
+_TEXT_KEYS = {
+    "message", "text", "efeito", "mech_log", "content", "texto", "description",
+    "resultado", "title", "label", "sinal", "prenuncio",
+}  # fmt: skip
 
 
 @pytest.mark.parametrize("variant", ["voto", "armadura"])
