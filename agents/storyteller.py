@@ -2127,6 +2127,41 @@ def storyteller_node(state: GameState):
         "</ESTADO_DO_HEROI>"
     )
 
+    _story_prompt_scene_blocks(t)
+
+    _story_system_message(t)
+
+    # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat
+    # que só seria aplicado no caminho feliz).
+    t.turn_bl_pre_llm = t.turn_bl
+    t.companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
+    try:
+        _story_narrate(t)
+
+        _story_guard_narrative(t)
+
+        _story_engine_proposals(t)
+
+        _story_beat_and_npcs(t)
+
+        _story_assemble_base(t)
+
+        _story_assemble_items(t)
+        _story_assemble_events(t)
+
+        _story_assemble_quests(t)
+        return t.updates
+
+    except Exception as e:
+        _log_event("storyteller", "failed", level="error", error=type(e).__name__)
+        return _story_exception_fallback(t)
+
+
+def _story_prompt_scene_blocks(t: _StoryTurn) -> None:
+    """Blocos de fama, vínculo, elenco, companheiros, lei e fauna."""
+    from services import faction_membership as fm
+    from services import fauna as _fauna
+
     # SPEC-298 R25: fama do local atual (rótulo, nunca número) — só se o jogador é conhecido ali.
     from services.reputation import fame_line
 
@@ -2180,33 +2215,6 @@ def storyteller_node(state: GameState):
             t.sim_updates["world_sim"] = _fauna_upd["world_sim"]
         if _fauna_text:
             t.lei_block = "\n".join(p for p in (t.lei_block, _fauna_text) if p)
-
-    _story_system_message(t)
-
-    # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat
-    # que só seria aplicado no caminho feliz).
-    t.turn_bl_pre_llm = t.turn_bl
-    t.companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
-    try:
-        _story_narrate(t)
-
-        _story_guard_narrative(t)
-
-        _story_engine_proposals(t)
-
-        _story_beat_and_npcs(t)
-
-        _story_assemble_base(t)
-
-        _story_assemble_items(t)
-        _story_assemble_events(t)
-
-        _story_assemble_quests(t)
-        return t.updates
-
-    except Exception as e:
-        _log_event("storyteller", "failed", level="error", error=type(e).__name__)
-        return _story_exception_fallback(t)
 
 
 def _story_narrate(t: _StoryTurn) -> None:
