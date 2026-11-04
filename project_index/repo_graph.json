@@ -1,5 +1,5 @@
 {
-  "commit_sha": "212a07cb1f4232ab0e9dc358509c28a09a6a70c3",
+  "commit_sha": "a29ac3d219cf41c40b92374abd3ebefb51e4501c",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -38671,7 +38671,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 7
+        "line": 10
       },
       "source": "file:tests/test_world_rejection_logs.py",
       "target": "file:observability/__init__.py",
@@ -243139,7 +243139,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 7
+        "line": 10
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "module:observability",
@@ -243150,7 +243150,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 17
+        "line": 20
+      },
+      "source": "module:tests.test_world_rejection_logs",
+      "target": "symbol:tests.test_world_rejection_logs._LogCapture",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_world_rejection_logs.py",
+        "line": 49
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs._events",
@@ -243161,7 +243172,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 193
+        "line": 225
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs._literal_text",
@@ -243172,7 +243183,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 13
+        "line": 16
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs._log",
@@ -243183,7 +243194,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 213
+        "line": 245
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs._rejection_messages",
@@ -243194,7 +243205,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 29
+        "line": 61
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs._state",
@@ -243205,7 +243216,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 251
+        "line": 41
+      },
+      "source": "module:tests.test_world_rejection_logs",
+      "target": "symbol:tests.test_world_rejection_logs.capsys",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_world_rejection_logs.py",
+        "line": 283
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_every_real_trade_refusal_has_a_code",
@@ -243216,7 +243238,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 240
+        "line": 272
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_every_real_validator_message_has_a_code",
@@ -243227,7 +243249,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 167
+        "line": 199
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_narrative_rejected_counts",
@@ -243238,7 +243260,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 185
+        "line": 217
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_no_free_text",
@@ -243249,7 +243271,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 70
+        "line": 102
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_reason_code_mapping_and_unknown_is_other",
@@ -243260,7 +243282,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 39
+        "line": 71
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_rejection_has_reason_code",
@@ -243271,7 +243293,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 141
+        "line": 173
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_replan_event_emitted",
@@ -243282,7 +243304,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 114
+        "line": 146
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_replan_reason_logged",
@@ -243293,7 +243315,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 80
+        "line": 112
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_trade_refused_logged",
@@ -243304,7 +243326,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 104
+        "line": 136
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_unique_conflict_event_level",
@@ -243315,7 +243337,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 93
+        "line": 125
       },
       "source": "module:tests.test_world_rejection_logs",
       "target": "symbol:tests.test_world_rejection_logs.test_unique_conflict_logged",
@@ -691660,11 +691682,44 @@
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_world_rejection_logs.py",
+        "line": 28
+      },
+      "source": "symbol:tests.test_world_rejection_logs._LogCapture",
+      "target": "symbol:tests.test_world_rejection_logs._LogCapture.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_world_rejection_logs.py",
+        "line": 33
+      },
+      "source": "symbol:tests.test_world_rejection_logs._LogCapture",
+      "target": "symbol:tests.test_world_rejection_logs._LogCapture.readouterr",
+      "type": "defines"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 14
+        "line": 31
+      },
+      "source": "symbol:tests.test_world_rejection_logs._LogCapture.__init__",
+      "target": "symbol:observability.logging_setup.JsonLineFormatter",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_world_rejection_logs.py",
+        "line": 17
       },
       "source": "symbol:tests.test_world_rejection_logs._log",
       "target": "symbol:observability.logging_setup.configure_logging",
@@ -691675,7 +691730,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 230
+        "line": 262
       },
       "source": "symbol:tests.test_world_rejection_logs._rejection_messages",
       "target": "symbol:tests.test_world_rejection_logs._literal_text",
@@ -691686,7 +691741,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 236
+        "line": 268
       },
       "source": "symbol:tests.test_world_rejection_logs._rejection_messages",
       "target": "symbol:tests.test_world_rejection_logs._literal_text",
@@ -691697,7 +691752,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 254
+        "line": 42
+      },
+      "source": "symbol:tests.test_world_rejection_logs.capsys",
+      "target": "symbol:tests.test_world_rejection_logs._LogCapture",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_world_rejection_logs.py",
+        "line": 286
       },
       "source": "symbol:tests.test_world_rejection_logs.test_every_real_trade_refusal_has_a_code",
       "target": "symbol:tests.test_world_rejection_logs._rejection_messages",
@@ -691708,7 +691774,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 244
+        "line": 276
       },
       "source": "symbol:tests.test_world_rejection_logs.test_every_real_validator_message_has_a_code",
       "target": "symbol:tests.test_world_rejection_logs._rejection_messages",
@@ -691719,7 +691785,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 175
+        "line": 207
       },
       "source": "symbol:tests.test_world_rejection_logs.test_narrative_rejected_counts",
       "target": "symbol:tests.test_world_rejection_logs._events",
@@ -691730,7 +691796,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 55
+        "line": 87
       },
       "source": "symbol:tests.test_world_rejection_logs.test_rejection_has_reason_code",
       "target": "symbol:tests.test_world_rejection_logs._events",
@@ -691741,7 +691807,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 42
+        "line": 74
       },
       "source": "symbol:tests.test_world_rejection_logs.test_rejection_has_reason_code",
       "target": "symbol:tests.test_world_rejection_logs._state",
@@ -691752,7 +691818,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 163
+        "line": 195
       },
       "source": "symbol:tests.test_world_rejection_logs.test_replan_event_emitted",
       "target": "symbol:tests.test_world_rejection_logs._events",
@@ -691763,7 +691829,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 153
+        "line": 185
       },
       "source": "symbol:tests.test_world_rejection_logs.test_replan_event_emitted",
       "target": "symbol:tests.test_world_rejection_logs.test_replan_event_emitted.fake",
@@ -691774,7 +691840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 86
+        "line": 118
       },
       "source": "symbol:tests.test_world_rejection_logs.test_trade_refused_logged",
       "target": "symbol:tests.test_world_rejection_logs._events",
@@ -691785,7 +691851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_world_rejection_logs.py",
-        "line": 101
+        "line": 133
       },
       "source": "symbol:tests.test_world_rejection_logs.test_unique_conflict_logged",
       "target": "symbol:tests.test_world_rejection_logs._events",
@@ -843835,121 +843901,149 @@
       "qualified_name": "tests.test_world_event_proof.test_word_missao_or_injection_is_not_investigation"
     },
     {
+      "id": "symbol:tests.test_world_rejection_logs._LogCapture",
+      "kind": "class",
+      "line": 20,
+      "path": "tests/test_world_rejection_logs.py",
+      "qualified_name": "tests.test_world_rejection_logs._LogCapture"
+    },
+    {
+      "id": "symbol:tests.test_world_rejection_logs._LogCapture.__init__",
+      "kind": "test",
+      "line": 28,
+      "path": "tests/test_world_rejection_logs.py",
+      "qualified_name": "tests.test_world_rejection_logs._LogCapture.__init__"
+    },
+    {
+      "id": "symbol:tests.test_world_rejection_logs._LogCapture.readouterr",
+      "kind": "test",
+      "line": 33,
+      "path": "tests/test_world_rejection_logs.py",
+      "qualified_name": "tests.test_world_rejection_logs._LogCapture.readouterr"
+    },
+    {
       "id": "symbol:tests.test_world_rejection_logs._events",
       "kind": "test",
-      "line": 17,
+      "line": 49,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs._events"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs._literal_text",
       "kind": "test",
-      "line": 193,
+      "line": 225,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs._literal_text"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs._log",
       "kind": "test",
-      "line": 13,
+      "line": 16,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs._log"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs._rejection_messages",
       "kind": "test",
-      "line": 213,
+      "line": 245,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs._rejection_messages"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs._state",
       "kind": "test",
-      "line": 29,
+      "line": 61,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs._state"
     },
     {
+      "id": "symbol:tests.test_world_rejection_logs.capsys",
+      "kind": "test",
+      "line": 41,
+      "path": "tests/test_world_rejection_logs.py",
+      "qualified_name": "tests.test_world_rejection_logs.capsys"
+    },
+    {
       "id": "symbol:tests.test_world_rejection_logs.test_every_real_trade_refusal_has_a_code",
       "kind": "test",
-      "line": 251,
+      "line": 283,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_every_real_trade_refusal_has_a_code"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_every_real_validator_message_has_a_code",
       "kind": "test",
-      "line": 240,
+      "line": 272,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_every_real_validator_message_has_a_code"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_narrative_rejected_counts",
       "kind": "test",
-      "line": 167,
+      "line": 199,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_narrative_rejected_counts"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_no_free_text",
       "kind": "test",
-      "line": 185,
+      "line": 217,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_no_free_text"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_reason_code_mapping_and_unknown_is_other",
       "kind": "test",
-      "line": 70,
+      "line": 102,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_reason_code_mapping_and_unknown_is_other"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_rejection_has_reason_code",
       "kind": "test",
-      "line": 39,
+      "line": 71,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_rejection_has_reason_code"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_replan_event_emitted",
       "kind": "test",
-      "line": 141,
+      "line": 173,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_replan_event_emitted"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_replan_event_emitted.fake",
       "kind": "test",
-      "line": 153,
+      "line": 185,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_replan_event_emitted.fake"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_replan_reason_logged",
       "kind": "test",
-      "line": 114,
+      "line": 146,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_replan_reason_logged"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_trade_refused_logged",
       "kind": "test",
-      "line": 80,
+      "line": 112,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_trade_refused_logged"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_unique_conflict_event_level",
       "kind": "test",
-      "line": 104,
+      "line": 136,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_unique_conflict_event_level"
     },
     {
       "id": "symbol:tests.test_world_rejection_logs.test_unique_conflict_logged",
       "kind": "test",
-      "line": 93,
+      "line": 125,
       "path": "tests/test_world_rejection_logs.py",
       "qualified_name": "tests.test_world_rejection_logs.test_unique_conflict_logged"
     },
@@ -845082,5 +845176,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:ed70996bf34b953c95217c633c888533e82fd0d73d3fd996da31c217bfd8868e"
+  "source_tree_hash": "sha256:c07567947f13e7b1113135ac7ea0d0be5c2afb51aaaf7c73b9d3f61d2fb96854"
 }
