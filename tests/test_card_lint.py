@@ -311,9 +311,10 @@ def test_validator_requires_unique_and_increasing_id_versao_across_files(tmp_pat
 
 
 def test_non_numeric_versao_does_not_break_catalog(tmp_path, monkeypatch):
-    from services import cards
+    from services import card_effects, cards
     from services.content_validator import validate_cards
 
+    card_effects.budget_config()  # orçamento real em cache antes de trocar DATA_DIR (ordem da suíte)
     monkeypatch.setattr(cards.gamedata, "DATA_DIR", str(tmp_path))
     cdir = tmp_path / "cards"
     _write(
