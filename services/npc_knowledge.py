@@ -29,6 +29,7 @@ import re
 import unicodedata
 from typing import Any, Dict, List, Optional, Set, Tuple
 from collections.abc import Collection, Iterable
+from services import text as _text
 
 logger = logging.getLogger("rpg.npc_knowledge")
 
@@ -121,8 +122,7 @@ def _sha(*parts: Any) -> str:
 
 
 def _fold(text: str) -> str:
-    nfkd = unicodedata.normalize("NFKD", str(text or ""))
-    return "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
+    return _text.fold(text)
 
 
 def _int(value: Any) -> int | None:
