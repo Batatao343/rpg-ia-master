@@ -179,6 +179,7 @@ def card_id(cid: str, spec: dict, sig_id: str | None) -> str:
 
 def build_card(cid: str, spec: dict, sig_id: str | None, *, oculta: bool, dano_adj: int) -> dict:
     from services import card_effects as fx
+    from services.card_budget_fit import fit_orcamento
 
     efeitos = [expand_effect(e, dano_adj) for e in spec["e"]]
     card: dict = {
@@ -203,43 +204,7 @@ def build_card(cid: str, spec: dict, sig_id: str | None, *, oculta: bool, dano_a
     card["descricao"] = spec["t"]
     card["oculta"] = oculta
     card["efeito"] = fx.primary_effect(card) or efeitos[0]  # o principal é o que o motor lê
-    return _fit_orcamento(card)
-
-
-def _fit_orcamento(card: dict) -> dict:
-    """Mantém a Carta dentro do orçamento da SPEC-330 depois do ajuste da arena: sobe o Fôlego
-    (faixa maior) e, no limite, tira dano; abaixo da faixa, desce o Fôlego."""
-    from services import card_effects as fx
-
-    for _ in range(40):
-        if not fx.budget_error(card):
-            break
-        band = fx.budget_band(card)
-        if band is None:
-            break
-        fol = fx.custo_folego(card)
-        if fx.power_score(card) > band[1]:
-            if fol < 3:
-                card["custo_folego"] = fol + 1
-                continue
-            alvo = max(
-                (
-                    e
-                    for e in (card.get("efeitos") or [card["efeito"]])
-                    if e.get("kind") == "dano" and e.get("dano_base", 0) > 1
-                ),
-                key=lambda e: int(e["dano_base"]),
-                default=None,
-            )
-            if alvo is None:
-                break
-            alvo["dano_base"] = int(alvo["dano_base"]) - 1
-        elif fol > 0:
-            card["custo_folego"] = fol - 1
-        else:
-            break
-    card["efeito"] = fx.primary_effect(card) or card["efeito"]
-    return card
+    return fit_orcamento(card)
 
 
 def cartas_da_criatura(

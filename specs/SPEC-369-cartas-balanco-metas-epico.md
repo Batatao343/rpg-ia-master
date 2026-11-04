@@ -488,3 +488,9 @@ O balanço é determinístico, e a Fase C é a prova dele. O LLM real entra em d
 - O R9(a) não bate com o JSON da 368 por mudança de catálogo, com a causa isolada.
 - `emboscada` aceita `--base <json>` para reaproveitar o `posturas` já medido, como faz a 355.
 - Cada subcomando grava a sua chave no mesmo JSON de `--out` (mescla).
+
+### Fase B, B1 (04/11, executor Terra/Sonnet)
+
+- **R12 (`draft.py`)**: `_triagem` junta `card_lint.check_budget` e `check_raridade`; o reparo leva `power_score`, `faixa` e `direcao` por Carta reprovada no orçamento; depois do reparo, `_ajustar_orcamento` tenta ≤ 6 passos só de números e marca `ajuste_orcamento` na Carta; o que não couber fica em `rejeitadas` com o motivo "ajuste de orçamento não coube". O guard de FallbackLLM do reparo não mudou.
+- **D-369-5**: `_fit_orcamento` extraído para `services/card_budget_fit.fit_orcamento(card, max_passos=40, passos=None)`; `gerar_mecanica.build_card` o importa. Equivalência: `tests/test_card_draft_orcamento.py::test_fit_equivale_ao_antigo_na_saida_do_bestiario` (cópia congelada do antigo × novo em todas as Cartas de `data/cards/inimigos`, 4 variações de dano cada). Único desvio de forma: o `primary_effect` final só roda se a Carta tem `efeito` (Carta de rascunho só tem `efeitos`).
+- Testes: `test_card_draft_orcamento.py` (novo), `test_card_draft.py`, `test_spec387_draft.py`, `test_spec349_*`, `test_mecanica_orfa.py` verdes.

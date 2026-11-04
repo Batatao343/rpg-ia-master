@@ -13,6 +13,7 @@ só sob demanda do dono; os testes usam um LLM de mentira.
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import os
 import sys
@@ -27,9 +28,11 @@ import gamedata  # noqa: E402
 from observability.telemetry import log_fallback  # noqa: E402
 from services import card_effects as fx  # noqa: E402
 from services import card_lint, cards  # noqa: E402
+from services.card_budget_fit import fit_orcamento  # noqa: E402
 
 DRAFT_DIR = os.path.join(gamedata.DATA_DIR, "cards", "_rascunhos")
 RARIDADES_PADRAO = ("comum", "incomum", "rara")
+MAX_PASSOS_AJUSTE = 6  # SPEC-369 D-369-5
 # patamar/tier/level_req por raridade (lote de entrada; a curadoria ajusta)
 _PATAMAR_POR_RARIDADE = {
     "comum": "inicial",
@@ -259,19 +262,21 @@ def generate(
     aceitas: list[dict] = []
     rejeitadas: list[dict] = []
     vistos: set[str] = set()
-    _triagem(result.cartas, postura, subclasse, onda, aceitas, rejeitadas, vistos)
+    ajustaveis: dict[str, dict] = {}
+    _triagem(result.cartas, postura, subclasse, onda, aceitas, rejeitadas, vistos, ajustaveis)
     chars = len(system) + len(human) + len(result.model_dump_json())
     if rejeitadas:  # SPEC-387 R27: UM pedido de reparo (mesma chamada SMART), com os motivos
         fixed, extra = _reparar(llm, system, human, rejeitadas)
         chars += extra
         antes = {c["id"] for c in aceitas}
         novas: list[dict] = []
-        _triagem(fixed, postura, subclasse, onda, aceitas, novas, vistos)
+        _triagem(fixed, postura, subclasse, onda, aceitas, novas, vistos, ajustaveis)
         consertadas = {c["id"] for c in aceitas} - antes
         ids_rejeitados = {r["id"] for r in rejeitadas}
         rejeitadas = [r for r in rejeitadas if r["id"] not in consertadas] + [
             r for r in novas if r["id"] not in ids_rejeitados
         ]
+        rejeitadas = _ajustar_orcamento(rejeitadas, aceitas, ajustaveis)
     return {
         "cards": aceitas,
         "rejeitadas": rejeitadas,
@@ -290,17 +295,74 @@ def _triagem(
     aceitas: list[dict],
     rejeitadas: list[dict],
     vistos: set[str],
+    ajustaveis: dict[str, dict] | None = None,
 ) -> None:
+    """Vocabulário + orçamento + raridade (SPEC-369 R12a). Cartas reprovadas SÓ no orçamento
+    entram em ``ajustaveis`` (id -> Carta) para o ajuste determinístico."""
     for raw in cartas:
         card = to_card(raw, postura, subclasse, onda)
         problemas = fx.validate_card(card)
+        so_orcamento = not problemas
+        orc = [str(i) for i in card_lint.check_budget(card)] if so_orcamento else []
+        raridade = [str(i) for i in card_lint.check_raridade(card)] if so_orcamento else []
+        problemas += orc + raridade
         if card["id"] in vistos:
             problemas.append("id repetido no lote")
         if problemas:
-            rejeitadas.append({"id": card["id"], "motivos": problemas})
+            rej: dict[str, Any] = {"id": card["id"], "motivos": problemas}
+            if orc:
+                rej.update(_diagnostico_orcamento(card))
+                if ajustaveis is not None and not raridade and card["id"] not in vistos:
+                    ajustaveis[card["id"]] = card
+            rejeitadas.append(rej)
             continue
         vistos.add(card["id"])
         aceitas.append(card)
+
+
+def _diagnostico_orcamento(card: dict) -> dict[str, Any]:
+    """Score atual, faixa [min, max] de (raridade, Fôlego) e a direção do reparo (R12b)."""
+    band = fx.budget_band(card)
+    score = fx.power_score(card)
+    if band is None:
+        return {}
+    if score > band[1]:
+        direcao = f"reduza poder em >= {round(score - band[1], 2)}"
+    else:
+        direcao = f"aumente poder em >= {round(band[0] - score, 2)}"
+    return {"power_score": score, "faixa": [band[0], band[1]], "direcao": direcao}
+
+
+def _ajustar_orcamento(
+    rejeitadas: list[dict], aceitas: list[dict], ajustaveis: dict[str, dict]
+) -> list[dict]:
+    """D-369-5: tenta pôr na faixa, só com números (<= 6 passos), as Cartas que o reparo não
+    resolveu. Sucesso -> ``aceitas`` com ``ajuste_orcamento``; falha -> segue rejeitada, com motivo."""
+    ainda: list[dict] = []
+    vistas = {c["id"] for c in aceitas}
+    for rej in rejeitadas:
+        card = ajustaveis.get(rej["id"])
+        if card is None or rej["id"] in vistas or not _so_orcamento(rej):
+            ainda.append(rej)
+            continue
+        passos: list[str] = []
+        ajustada = fit_orcamento(copy.deepcopy(card), MAX_PASSOS_AJUSTE, passos)
+        if (
+            passos
+            and not card_lint.check_budget(ajustada)
+            and not card_lint.check_raridade(ajustada)
+        ):
+            ajustada["ajuste_orcamento"] = passos
+            aceitas.append(ajustada)
+            vistas.add(ajustada["id"])
+            continue
+        msg = f"ajuste de orçamento não coube em {MAX_PASSOS_AJUSTE} passos"
+        ainda.append({**rej, "motivos": [*rej["motivos"], msg]})
+    return ainda
+
+
+def _so_orcamento(rej: dict) -> bool:
+    return all("orcamento" in m for m in rej["motivos"])
 
 
 def _reparar(
