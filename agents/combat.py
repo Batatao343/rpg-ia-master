@@ -2716,6 +2716,20 @@ def _combat_node(state: GameState):
             manifest=t.combat_meta.get("encounter"),
             source_sink=t.combat_meta,
         )
+    _combat_close_encounter(t)
+    _combat_result_base(t)
+
+    _combat_result_quests(t)
+
+    _combat_result_events(t)
+
+    return t.result
+
+
+def _combat_close_encounter(t: _CombatTurn) -> None:
+    """Fim do encontro (espólio, desfecho) ou confirmação da entrada."""
+    from services import encounter_manifest as em
+
     t.combat_meta["last_tactics"] = list(t.out.get("tactics") or [])
     if t.combat_over:
         from services import cards
@@ -2762,13 +2776,6 @@ def _combat_node(state: GameState):
             t.combat_meta["encounter"] = em.sync_statuses(
                 t.combat_meta["encounter"], t.enemies, int(t.combat_meta.get("round", 0) or 0)
             )
-    _combat_result_base(t)
-
-    _combat_result_quests(t)
-
-    _combat_result_events(t)
-
-    return t.result
 
 
 def _combat_result_base(t: _CombatTurn) -> None:
