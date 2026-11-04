@@ -303,3 +303,5 @@ Sem criatura: `tr_na_documento_da_legiao` (nenhuma ficha de papel/adega no Lama 
 - E22 também confere as frases de `leak_phrases()[secret_id]` (por frase, fold); tokens de nome do núcleo ignoram `COMMON_NAME_WORDS` (`conta`, `senhor`, `senhora`, `mestre`, `velho`, `velha`, `sangue`), regra registrada em `fauna_lint_tramas.py`. NA segue com 0 erro.
 - `revelada` é inalcançável para 6 das 7 tramas (`accepted_secret_ids` só mapeia 4 ids via `SECRET_ENTITY_IDS`): fora de escopo, follow-up para mapear `corpos`, `praga`, `aco_lembra`, `barril`, `elaryin`.
 - Evidências: `docs/spec372/eval-tramas-nova_arcadia.md` (T1–T5, T7, T8 verdes; T2 mín 1,63; T3 n = 15; T4 Δ máx −1,0 %); playtest `explorador` 50 turnos com as 4 flags `on`: 0 erro, 0 violação; `test_campanha_na_lama_mesma_contagem_de_invoke_on_off`; `test_save_load_preserva_trama_id`.
+
+- Smoke real §6 (04/11, `docs/spec372/smoke-real.md`): 60 dias dormente = 0 presença da criatura; conhecendo o NPC âncora, nasce no dia 24 em `na_anel_lama` com `trama_id`; 6 turnos DeepSeek: sinal `rastro` na narração, 0 frase de segredo, nome da criatura só no combate; "Corva" (núcleo) citada no cenário, não nos sinais.
