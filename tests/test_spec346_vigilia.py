@@ -65,3 +65,26 @@ def test_vigilia_holds_in_round_one_at_level_3(monkeypatch):
     monkeypatch.setattr(orch, "run_round", spy)
     combat._combat_node(nxt)
     assert seen["initiator"] is None
+
+
+def _opening_text(monkeypatch, *, vigilia):
+    res = _open(monkeypatch, vigilia=vigilia)
+    return res["messages"][-1].content
+
+
+def test_opening_narration_says_enemy_struck_first(monkeypatch):
+    """SPEC-397 R3: emboscada inimiga aparece na abertura narrada."""
+    assert "ataca primeiro" in _opening_text(monkeypatch, vigilia=False)
+
+
+def test_opening_narration_says_ambush_was_sensed(monkeypatch):
+    """SPEC-397 R3: emboscada negada pela Carta de Iniciativa: o herói percebeu a tempo."""
+    text = _opening_text(monkeypatch, vigilia=True)
+    assert "percebe a emboscada a tempo" in text and "ataca primeiro" not in text
+
+
+def test_opening_without_ambush_has_no_line(monkeypatch):
+    _install_llm(monkeypatch, scan=_scan(("Goblin", 1)))
+    state = _start_state(hint="Goblin")
+    text = combat._combat_node(state)["messages"][-1].content
+    assert "ataca primeiro" not in text and "emboscada" not in text

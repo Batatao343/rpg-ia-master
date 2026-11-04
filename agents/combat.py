@@ -3629,7 +3629,7 @@ def _board_opening_result(
     """SPEC-346 R1: a história abre o tabuleiro. Entrada narrada + mão distribuída; NENHUMA
     rodada resolvida (`round == 0`). Quem age primeiro vem da cena (D4)."""
     from services import encounter_manifest as em
-    from services import prose_guard
+    from services import opening_ambush, prose_guard
 
     world = state.get("world") or {}
     initiator, why = _opening_initiator(world, str(combat_meta.get("origin") or ""), player)
@@ -3685,7 +3685,7 @@ def _board_opening_result(
         aberturas=prose_guard.ultimas_aberturas(messages),
         more_requested=more,
     )
-    narrative = prose_guard.sanitize_meta_preamble(narrative)
+    narrative = opening_ambush.with_ambush(prose_guard.sanitize_meta_preamble(narrative), why)
     combat_meta = em.safe_transition(combat_meta, "active")
     combat_meta["idle_turns"] = 0
     result = {
