@@ -2743,35 +2743,7 @@ def _combat_node(state: GameState):
             "Sua condição atual impede iniciar a fuga; a rodada resolve sua recuperação."
         ]
     if not t.hero_fled:
-        if t.flee_requested:
-            # A tentativa falhou, mas consumiu a Ação do protagonista. Inimigos
-            # ainda resolvem a rodada; não há parse secundário nem ataque oculto.
-            t.decl = TurnDeclaration(
-                actor_id=_PLAYER_ID,
-                acao=TurnStep(kind="pass"),
-            )
-        else:
-            if t.declaration is not None and t.declaration.acao is not None:
-                t.decl = t.declaration
-            else:
-                parse_text, order_only = _player_text_without_order(
-                    t.intent, t.enemies, t.actors_by_id, t.sides
-                )
-                if order_only:  # só a ordem: o herói ataca o 1º inimigo, sem gastar CLASSIFY
-                    t.decl = TurnDeclaration(
-                        actor_id=_PLAYER_ID,
-                        acao=TurnStep(kind="attack", target_id=t.active[0]["id"]),
-                    )
-                else:
-                    t.decl = _parse_turn_declaration(
-                        t.player,
-                        t.active,
-                        parse_text,
-                        t.scene,
-                        piles=t.combat_meta.get("pilhas") if _deck_mode_now() == "on" else None,
-                    )
-        _mark_nonlethal(t.decl, t.intent)
-        t.resolved_decl = t.decl
+        _combat_declare_turn(t)
         _combat_prepare_round(t)
         _combat_run_round(t)
     else:
@@ -3193,6 +3165,39 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_declare_turn(t: _CombatTurn) -> None:
+    """Declaração do herói (fuga falha, estruturada, ordem ou parse)."""
+    if t.flee_requested:
+        # A tentativa falhou, mas consumiu a Ação do protagonista. Inimigos
+        # ainda resolvem a rodada; não há parse secundário nem ataque oculto.
+        t.decl = TurnDeclaration(
+            actor_id=_PLAYER_ID,
+            acao=TurnStep(kind="pass"),
+        )
+    else:
+        if t.declaration is not None and t.declaration.acao is not None:
+            t.decl = t.declaration
+        else:
+            parse_text, order_only = _player_text_without_order(
+                t.intent, t.enemies, t.actors_by_id, t.sides
+            )
+            if order_only:  # só a ordem: o herói ataca o 1º inimigo, sem gastar CLASSIFY
+                t.decl = TurnDeclaration(
+                    actor_id=_PLAYER_ID,
+                    acao=TurnStep(kind="attack", target_id=t.active[0]["id"]),
+                )
+            else:
+                t.decl = _parse_turn_declaration(
+                    t.player,
+                    t.active,
+                    parse_text,
+                    t.scene,
+                    piles=t.combat_meta.get("pilhas") if _deck_mode_now() == "on" else None,
+                )
+    _mark_nonlethal(t.decl, t.intent)
+    t.resolved_decl = t.decl
 
 
 def _combat_prepare_round(t: _CombatTurn) -> None:
