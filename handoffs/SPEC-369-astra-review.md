@@ -1,6 +1,6 @@
 # SPEC-369 — revisão astra (review)
 
-> **Veredito:** `APPROVED` (rodada 3, `8fe4e0dd` + `b14c66c1`; rodada 2 `APPROVED`; rodada 1 `CHANGES_REQUIRED`, corrigida)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 4, `06bd8f39` + `33b08981` + `fd95a2f9`; rodada 3 `APPROVED`; rodada 2 `APPROVED`; rodada 1 `CHANGES_REQUIRED`, corrigida)
 > **Revisor:** Astra (Opus 5.5, semântica de avaliador; não escreveu o código) · **Data:** 2026-11-04 · **Commit revisado:** `2361ca66` (régua `10935009`)
 
 ## Escopo
@@ -116,4 +116,30 @@ git diff --exit-code main...HEAD -- <R2> → vazio
 ```text
 bash scripts/dev/pt.sh tests/test_spec369_regua.py tests/test_spec369_metas.py → 14 passed, 15 xfailed (-n 2)
 git diff 8fe4e0dd~1 b14c66c1 -- docs/spec369/base-0-19.json docs/spec369/BASE.md tests/test_spec369_metas.py → vazio
+```
+
+## Rodada 4 (pós-gate R9c: `06bd8f39`, `33b08981`, `fd95a2f9`)
+
+**Veredito: `APPROVED_WITH_FOLLOWUPS`.** Limiares e remedição estão íntegros. Fica um follow-up P2 de régua, a resolver antes do B6.
+
+1. **Os limiares seguem as respostas do dono (§8, "Resposta do dono ao gate R9c") e não afrouxam nada além delas.**
+   - O `ISENTAS_PISO_R13` isenta só o Sangromante do piso por Postura. O total ≥ 2,00 continua valendo, e o teste confere `total 1.915` na base.
+   - O `LEGADAS_TRAVADAS_R14B` é uma lista fechada de 3 ids. Qualquer outra Carta `dominante`, inclusive `bomba_estopim`, continua reprovando.
+   - A guarda básica sai do R14(a) pelo item 5 da resposta, e isso fecha o P3-6 da rodada 2.
+   - `bas_cor_mofo` continua na meta R14(a), coberto pelo `test_r14a_conta_assinatura_basica_fora_do_sangromante`, que segue verde.
+   - Nenhum outro valor de `LIMIARES` mudou.
+2. **A remedição de `predador_apice` L3 é íntegra.**
+   - Reexecutei `familias --seeds 0-19 --only predador_apice --levels 3` e o resultado saiu idêntico ao JSON: `off` 0,75 e `on` 0,585, 200 lutas por modo, Δ −16,5 pp.
+   - Comparando com `06bd8f39~1`, todas as outras células, `celulas_alvo`, `familias.meta` (0-7) e as demais seções do JSON estão byte-iguais. A amostra de 80 lutas ficou preservada em `amostra_original_0_7`.
+   - Usar as sementes 8-19 respeita o R3: elas estão dentro do conjunto de ajuste 0-19 e longe das 260-267 da confirmação. A célula continua `alvo` com qualquer das duas amostras, então a ampliação não decidiu nada.
+3. **`--levels` não altera a saída padrão.** O default do CLI é `"3,5"`, igual ao default `levels=(3, 5)` de `cmd_familias`.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-3 | P2 | `tests/test_spec369_metas.py` (`r20`, `test_r22_confirmacao`) | A base de `predador_apice` L3 agora tem 200 lutas por modo, nas sementes 0-19. Já o `final-0-19.json` (Fase B, `familias` 0-7) e o `confirmacao.json` (`familias` 260-267, com `meta.seeds == [260, 267]`) medem essa célula com **80** lutas. O `r20` não exige amostra, então o B6 e a Fase C podem aprovar ou reprovar a célula com o erro-padrão de ~7 pp que motivou a ampliação. | Antes do B6, em commit de autor de régua: (a) o `r20` exige `fights >= 200` em cada célula-alvo; (b) a Fase B mede `predador_apice` L3 com `--seeds 0-19 --only predador_apice --levels 3` e a Fase C com `--seeds 260-279`, mesmo critério, sementes novas da faixa de confirmação; (c) a convenção vai para o §9 e para o `test_r22_confirmacao`, aceitando a seção ampliada. |
+
+```text
+bash scripts/dev/pt.sh tests/test_spec369_regua.py tests/test_spec369_metas.py → 15 passed, 15 xfailed (-n 2)
+metricas_369.py familias --seeds 0-19 --only predador_apice --levels 3 → idêntico ao commitado (Δ −16,5)
+comparação base-0-19.json × 06bd8f39~1 → só predador_apice|L3 (+ amostra_ampliada) mudou
 ```
