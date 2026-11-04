@@ -421,7 +421,7 @@ def _advance_reinforcements(
     na seguinte (se o líder ainda age). Id único `<base>_r<N>`; entra no manifesto como `joined`."""
     from services import combat_flags
     from services import encounter_manifest as em
-    from services import reinforcements as rf
+    from services import reinforcement_cards as rf
 
     mode = combat_flags.mode("reinforcements")
     if mode == "off" or not scene:

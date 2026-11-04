@@ -182,9 +182,9 @@ RPG_COMBAT_OBJECTS:
 RPG_COMBAT_REINFORCEMENTS:
   kind: release
   default: "off"
-  spec: SPEC-325
+  spec: SPEC-391
   expires: 2027-01-25
-  note: "reforços no combate"
+  note: "reforço do líder de matilha: legado (R16) com baralho off; Chamado do Bando (Carta) com baralho e baralhos de inimigo on"
 RPG_COMBAT_REVEAL_RESIST:
   kind: release
   default: "shadow"

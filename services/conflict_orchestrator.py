@@ -665,26 +665,23 @@ def enemy_declaration(
         action_key = "attack"  # SPEC-275 R5: quebra de impasse — ataca.
     # SPEC-332: padrao de intencao/assinatura. Gatilho especifico do perfil (vida baixa,
     # alvo vulneravel...) tem precedencia: o plano so vale quando decide o `sempre`.
-    deck_plan = None
-    if (
-        _edk_mod.active()
-        and not forced_attack
-        and action_key not in {"flee", "surrender"}
-        and decision.get("trigger") in (None, "sempre")
-    ):
-        deck_plan = _edk_mod.plan(
-            actor, int(decision_state.get("_rodada_decisao") or cs.tactical_round(scene))
-        )
-        if deck_plan is not None and action_key in {
-            "support",
-            "flank",
-            "protect",
-            "stabilize",
-            "control",
-        }:
-            # Perfil de apoio/flanco (lider de matilha, covarde): o padrao nao troca o carater
-            # dele por ataque; so a assinatura (a jogada memoravel) pode sobrepor.
-            deck_plan["slot"] = "mover"
+    deck_plan = _edk_mod.declaration_plan(  # SPEC-391 R5: o Chamado vale com qualquer gatilho
+        actor,
+        scene,
+        int(decision_state.get("_rodada_decisao") or cs.tactical_round(scene)),
+        trigger=decision.get("trigger"),
+        blocked=forced_attack or action_key in {"flee", "surrender"},
+    )
+    if deck_plan is not None and action_key in {
+        "support",
+        "flank",
+        "protect",
+        "stabilize",
+        "control",
+    }:
+        # Perfil de apoio/flanco (lider de matilha, covarde): o padrao nao troca o carater
+        # dele por ataque; so a assinatura (a jogada memoravel) pode sobrepor.
+        deck_plan["slot"] = "mover"
     if action_key == "control" and not canonical["controle_disponivel"]:
         action_key = "attack"
     if action_key == "flank" and not canonical["sem_flanco"]:

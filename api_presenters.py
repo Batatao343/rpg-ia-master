@@ -13,6 +13,7 @@ from services.checkout_retry import retry_once
 from services import portrait_offer
 from services.portrait_offer_log import log_offer_omitted
 from services import enemy_intent as _enemy_intent
+from services import reinforcement_cards as _reinforcement_cards
 from services import npc_world as _npc_world
 from services import quest_log
 from services import state_views as sv
@@ -1141,14 +1142,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
             view["registro_rodada"] = list(meta["last_round_board"])
     if combat_flags.active("nonlethal"):
         view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
-    reinf = meta.get("reinforcement") or {}
-    if (
-        combat_flags.active("reinforcements")
-        and reinf.get("warned_round") is not None
-        and not reinf.get("fired")
-        and not reinf.get("cancelled")
-    ):
-        view["reinforcement_warning"] = True  # SPEC-325 R16: só depois do aviso (regra de ouro)
+    view.update(_reinforcement_cards.payload_fields(meta))  # SPEC-325 R16 / SPEC-391 R10
     if combat_flags.active("objects"):
         # SPEC-325 R14/D8: so rotulo/custo/usos (nunca `effect`); secreto so depois de descoberto.
         from services import conflict_scene as _cs

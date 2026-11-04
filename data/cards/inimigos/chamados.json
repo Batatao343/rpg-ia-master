@@ -1,0 +1,36 @@
+{
+  "_meta": "SPEC-391: Cartas de chamado (fora dos pools de família; só entram no baralho pelo telegrafo).",
+  "cards": [
+    {
+      "id": "inf_chamado_do_bando",
+      "name": "Chamado do Bando",
+      "origem": "cartas-391",
+      "classe": "Inimigo",
+      "subclasse": "lider_matilha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 1
+      },
+      "descricao": "Chama os seus e se fecha enquanto o bando não chega.",
+      "oculta": true
+    }
+  ],
+  "natureza_por_id": {
+    "enemy_bandido_capitao": "humanoide",
+    "enemy_soldado_legiao_ferro": "humanoide",
+    "mon_auroque_ruinas": "fera",
+    "mon_capita_corda": "humanoide",
+    "mon_carranca_de_proa": "humanoide",
+    "mon_parelha_carmesim": "fera",
+    "mon_tropel_sem_saida": "fera"
+  },
+  "telegrafos": {
+    "fera": "{nome} ergue o focinho e enche o peito para chamar o bando.",
+    "humanoide": "{nome} leva a mão à boca para chamar os seus."
+  }
+}

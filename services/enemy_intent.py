@@ -314,6 +314,7 @@ def public_round(
     SPEC-332 (`RPG_ENEMY_DECKS=on`, com `rnd` = rodada em que estas intenções valem): a primeira
     linha do inimigo ganha `prenuncio` quando a assinatura dele cai na rodada SEGUINTE."""
     from services import enemy_decks as edk
+    from services import reinforcement_cards as rc
 
     rows: list[dict] = []
     for aid, intents in frozen.items():
@@ -323,7 +324,9 @@ def public_round(
             row = public_intent(
                 it, knowledge_level(enemy, it.get("carta_id")), actors_by_id=actors_by_id
             )
-            if warn and i == 0:
+            if edk.active() and it.get("carta_id") == rc.CALL_CARD:  # SPEC-391 R3d/R4
+                row["prenuncio"] = rc.telegraph_text(enemy)
+            elif warn and i == 0:
                 row["prenuncio"] = warn
                 saber = _saber(enemy)  # SPEC-371 R10: so na linha do golpe preparado
                 if saber and saber.get("contra_jogo"):

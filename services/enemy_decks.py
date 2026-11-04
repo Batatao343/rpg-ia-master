@@ -75,7 +75,7 @@ _SLOT_LABEL = {
     "mover": "manobra",
 }
 
-_EXTRA_FILES = frozenset({"chefes"})  # cartas de fase de chefe: não são pool de família
+_EXTRA_FILES = frozenset({"chefes", "chamados"})  # cartas de fase de chefe: não são pool de família
 _LOG = logging.getLogger(__name__)
 _meta_cache: dict | None = None
 _pools_cache: dict | None = None
@@ -393,6 +393,7 @@ def _sig_falls_on(actor: dict, sig: dict, rnd: int) -> bool:
     """A assinatura cai na rodada ``rnd``? Cada criatura tem um desvio próprio (hash do id,
     ou ``desvio`` explícito) para que um bando não dispare todas na mesma rodada. Nunca antes
     da rodada 2: a assinatura sempre tem uma rodada anterior para ser telegrafada."""
+    rnd -= int(actor.get("chegou_na_rodada", 0) or 0)  # SPEC-391 R12: conta da chegada
     n = int(sig["a_cada_n"])
     try:
         off = int(sig["desvio"])
@@ -403,16 +404,21 @@ def _sig_falls_on(actor: dict, sig: dict, rnd: int) -> bool:
     return rnd >= 2 and (rnd + off) % n == 0
 
 
-def plan(actor: dict, rnd: int) -> dict | None:
+def plan(actor: dict, rnd: int, scene: dict | None = None) -> dict | None:
     """Plano da rodada ``rnd`` (1-based): ``{"slot": tipo, "assinatura": carta|None}``.
-    ``None`` quando a criatura não tem padrão nem assinatura."""
+    ``None`` quando a criatura não tem padrão nem assinatura. Com ``scene``, o Chamado do Bando
+    prometido para ``rnd`` (SPEC-391 R4) toma o lugar da assinatura."""
     from services import cards
+    from services import reinforcement_cards as rc
 
+    if rc.pending_call(scene, actor, rnd):
+        return {"slot": "ataque", "assinatura": rc.CALL_CARD, "rnd": rnd}
+    rnd_rel = rnd - int(actor.get("chegou_na_rodada", 0) or 0)  # SPEC-391 R12
     pat = pattern_of(actor)
     sig = assinatura_of(actor)
     if not pat and not sig:
         return None
-    slot = pat[(max(1, rnd) - 1) % len(pat)] if pat else "ataque"
+    slot = pat[(max(1, rnd_rel) - 1) % len(pat)] if pat else "ataque"
     carta = None
     if (
         sig
@@ -422,6 +428,20 @@ def plan(actor: dict, rnd: int) -> dict | None:
     ):
         carta = str(sig["carta"])
     return {"slot": slot, "assinatura": carta, "rnd": rnd}
+
+
+def declaration_plan(
+    actor: dict, scene: dict, rnd: int, *, trigger: str | None, blocked: bool
+) -> dict | None:
+    """Plano do baralho para a declaração do inimigo (SPEC-332). Gatilho específico do perfil
+    tem precedência (só o ``sempre`` deixa o plano valer), exceto o Chamado do Bando (SPEC-391 R5)."""
+    if not active() or blocked:
+        return None
+    from services import reinforcement_cards as rc
+
+    if trigger not in (None, "sempre") and not rc.pending_call(scene, actor, rnd):
+        return None
+    return plan(actor, rnd, scene)
 
 
 def _badly_wounded(actor: dict) -> bool:
@@ -453,7 +473,7 @@ def record_promise(scene: dict | None, actor: dict, rnd_exec: int) -> bool:
     """SPEC-355 R3: grava na CENA a promessa que ``prenuncio(actor, rnd_exec)`` acabou de tornar
     pública (assinatura na rodada ``rnd_exec + 1``). Nunca vai para o ator."""
     texto = prenuncio(actor, rnd_exec) if isinstance(scene, dict) else None
-    if texto is None:
+    if texto is None or _promise_is_call(scene, actor):  # SPEC-391 R4: o chamado já ocupa a vaga
         return False
     sig = assinatura_of(actor)
     key = str(actor.get("id") or actor.get("name"))
@@ -466,6 +486,12 @@ def record_promise(scene: dict | None, actor: dict, rnd_exec: int) -> bool:
 
     fauna_saber.observe_promise(scene, actor, str(sig["carta"]), texto)
     return True
+
+
+def _promise_is_call(scene: dict, actor: dict) -> bool:
+    from services import reinforcement_cards as rc
+
+    return bool(rc._promise_of(scene, rc._key(actor)).get("tipo") == rc.PROMISE_KIND)
 
 
 _FRUSTRACAO_LINHA = {
@@ -499,7 +525,8 @@ def check_promises(
         actor = actors_by_id.get(key)
         if not actor or actor.get("dead") or actor.get("fled") or key not in sides.get("enemy", []):
             continue
-        planned = plan(actor, rnd) or {}
+        # a promessa já saiu da cena (acima): o Chamado (SPEC-391) a vê por uma cena mínima
+        planned = plan(actor, rnd, {"prenuncios": {key: promise}}) or {}
         if planned.get("assinatura") == promise.get("carta"):
             # o plano ainda manda jogar: a promessa só é "cumprida" pela jogada EFETIVA
             # (`note_declaration`); sem ela, `close_promises` frustra no fim da rodada.
@@ -509,6 +536,11 @@ def check_promises(
 
 
 def _frustrate_promise(out: dict, key: str, actor: dict, promise: dict) -> None:
+    if promise.get("tipo") == "chamado":  # SPEC-391 R8: a linha legível sai do fluxo de Carta
+        out.setdefault("pressagios_frustrados", []).append(
+            {"actor_id": key, "tipo": "chamado", "motivo": "impossivel"}
+        )
+        return
     if int(actor.get("fase_idx", 0) or 0) != int(promise.get("fase_idx", 0) or 0):
         motivo = "troca_de_fase"
     elif _badly_wounded(actor):
@@ -535,6 +567,11 @@ def note_declaration(scene: dict | None, actor_id: str, card_id: str | None, rnd
         and card_id == promise.get("carta")
     ):
         del promises[actor_id]
+        if promise.get("tipo") == "chamado":  # SPEC-391 R7
+            from services import reinforcement_cards as rc
+
+            rc.on_declaration(scene, actor_id, card_id, rnd)
+            return
         from services import fauna_saber  # SPEC-371 R2: assinatura cumprida (flag on)
 
         fauna_saber.observe_fulfilled(scene, actor_id, str(card_id), rnd)

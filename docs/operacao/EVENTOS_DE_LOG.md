@@ -117,10 +117,11 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.prep_timeout` | `timeout_s` |
 | `combat.preparing_encounter` | — |
 | `combat.pressagio_forecast_failed` | — |
-| `combat.reinforcements_cancelled` | `cause` |
-| `combat.reinforcements_fired` | — |
+| `combat.reinforcements_cancelled` | `cause`, `via` |
+| `combat.reinforcements_fired` | `via` |
 | `combat.reinforcements_shadow` | `leaders`, `phase` |
-| `combat.reinforcements_warned` | — |
+| `combat.reinforcements_telegraphed` | `via` |
+| `combat.reinforcements_warned` | `via` |
 | `combat.reveal_resist` | `effect` |
 | `combat.reveal_resist_shadow` | `effect` |
 | `combat.revelar_knowledge_failed` | — |

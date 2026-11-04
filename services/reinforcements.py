@@ -108,7 +108,12 @@ def _template_for(trigger: dict) -> dict | None:
     )
 
 
-def spawn(trigger: dict, combat_meta: dict, enemies: list[dict] | None = None) -> list[dict]:
+def spawn(
+    trigger: dict,
+    combat_meta: dict,
+    enemies: list[dict] | None = None,
+    deck_seed: int | str | None = None,
+) -> list[dict]:
     """Instancia o reforco (id unico `<base>_r<N>`, contador em `combat_meta`); lista vazia se o
     orcamento restante do encontro nao comporta o inimigo."""
     import encounter_budget as eb
@@ -129,6 +134,8 @@ def spawn(trigger: dict, combat_meta: dict, enemies: list[dict] | None = None) -
     inst["id"] = f"{base}_r{number}"
     inst["archetype_id"] = base
     inst["status"] = "ativo"
+    if deck_seed is not None:
+        inst["deck_seed"] = deck_seed  # SPEC-391 R12: o reforço herda a semente do baralho do líder
     return [orch.ensure_combat_sheet(inst)]
 
 
@@ -186,7 +193,7 @@ def advance(
     if decision["cancel"]:
         state["cancelled"] = True
         combat_meta["reinforcement"] = state
-        _log_event("combat", "reinforcements_cancelled", level="info")
+        _log_event("combat", "reinforcements_cancelled", level="info", via="legado")
         return res
     for trig in decision["warn"]:
         leader = actors_by_id.get(str(trig["leader_id"])) or {}
@@ -201,13 +208,15 @@ def advance(
             f"{leader.get('name', 'O líder')} está ferido e chama os seus: "
             "passos se aproximam ao longe."
         )
-        _log_event("combat", "reinforcements_warned", level="info")
+        _log_event("combat", "reinforcements_warned", level="info", via="legado")
     for trig in decision["fire"]:
         new = spawn(trig, combat_meta, enemies)
         if not new:
             state["cancelled"] = True
             combat_meta["reinforcement"] = state
-            _log_event("combat", "reinforcements_cancelled", level="info", cause="budget")
+            _log_event(
+                "combat", "reinforcements_cancelled", level="info", cause="budget", via="legado"
+            )
             continue
         pos = _arrival_position(scene, str(trig["leader_id"]))
         for enemy in new:
@@ -220,5 +229,5 @@ def advance(
             res["logs"].append(f"{enemy.get('name', 'Um inimigo')} chega correndo, vindo de longe.")
         res["spawned"] = new
         combat_meta["reinforcement"] = {**state, "fired": True}
-        _log_event("combat", "reinforcements_fired", level="info")
+        _log_event("combat", "reinforcements_fired", level="info", via="legado")
     return res
