@@ -2772,50 +2772,7 @@ def _combat_node(state: GameState):
                     )
         _mark_nonlethal(t.decl, t.intent)
         t.resolved_decl = t.decl
-        t.chase_refusal = _chase_attack_gate(t.combat_meta, t.decl)  # SPEC-325 R11
-        if not t.chase_refusal:  # SPEC-325 R14: objeto inválido/ofensivo contra os seus
-            t.chase_refusal = _guard_object_step(t.decl, t.scene, t.active, t.sides)
-        t.order_decls, t.order_logs = _companion_orders(
-            t.state, t.intent, t.party, t.enemies, t.scene, t.actors_by_id, t.sides
-        )  # SPEC-325 R15
-        # alvo inválido (inimigo já caiu / declaração pré-computada) → 1º inimigo ativo
-        if (
-            t.decl.acao
-            and t.decl.acao.kind == "attack"
-            and t.decl.acao.target_id not in {e["id"] for e in t.active}
-        ):
-            from services import mechanics_trace as _mt
-
-            _mt.record_step(
-                "target_redirect",
-                actor=_PLAYER_ID,
-                target=t.active[0]["id"],
-                reason="target_not_active",
-            )
-            t.decl.acao.target_id = t.active[0]["id"]
-        elif t.decl.acao and t.decl.acao.kind == "card":
-            from services import cards
-
-            declared_card = cards.get_card(t.decl.acao.card_id or "") or {}
-            t.decl.acao.target_id = _card_target_for(
-                declared_card,
-                t.decl.acao.target_id,
-                active_ids=[e["id"] for e in t.active],
-                friendly_ids=[_PLAYER_ID] + [aid for aid in t.ally_ids if aid],
-            )
-        for extra_step in t.decl.jogadas[1:]:  # SPEC-328 R13: mesmas regras de alvo p/ a lista
-            _normalize_extra_play(extra_step, t.active, t.ally_ids)
-        t.round_state = {
-            "player": t.player,
-            "_player_reaction_card_id": t.state.get("player_reaction_card_id"),
-        }
-        deck_mode = _deck_mode_now()
-        if deck_mode != "off" and isinstance(t.combat_meta.get("pilhas"), dict):
-            import copy as _copy
-
-            t.combat_meta["pilhas"] = _copy.deepcopy(t.combat_meta["pilhas"])
-            t.round_state["_piles"] = t.combat_meta["pilhas"]
-            t.round_state["_deck_mode"] = deck_mode
+        _combat_prepare_round(t)
         _combat_run_round(t)
     else:
         t.out = {
@@ -3236,6 +3193,54 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_prepare_round(t: _CombatTurn) -> None:
+    """Recusas, ordens de companheiros, alvos e pilhas da rodada."""
+    t.chase_refusal = _chase_attack_gate(t.combat_meta, t.decl)  # SPEC-325 R11
+    if not t.chase_refusal:  # SPEC-325 R14: objeto inválido/ofensivo contra os seus
+        t.chase_refusal = _guard_object_step(t.decl, t.scene, t.active, t.sides)
+    t.order_decls, t.order_logs = _companion_orders(
+        t.state, t.intent, t.party, t.enemies, t.scene, t.actors_by_id, t.sides
+    )  # SPEC-325 R15
+    # alvo inválido (inimigo já caiu / declaração pré-computada) → 1º inimigo ativo
+    if (
+        t.decl.acao
+        and t.decl.acao.kind == "attack"
+        and t.decl.acao.target_id not in {e["id"] for e in t.active}
+    ):
+        from services import mechanics_trace as _mt
+
+        _mt.record_step(
+            "target_redirect",
+            actor=_PLAYER_ID,
+            target=t.active[0]["id"],
+            reason="target_not_active",
+        )
+        t.decl.acao.target_id = t.active[0]["id"]
+    elif t.decl.acao and t.decl.acao.kind == "card":
+        from services import cards
+
+        declared_card = cards.get_card(t.decl.acao.card_id or "") or {}
+        t.decl.acao.target_id = _card_target_for(
+            declared_card,
+            t.decl.acao.target_id,
+            active_ids=[e["id"] for e in t.active],
+            friendly_ids=[_PLAYER_ID] + [aid for aid in t.ally_ids if aid],
+        )
+    for extra_step in t.decl.jogadas[1:]:  # SPEC-328 R13: mesmas regras de alvo p/ a lista
+        _normalize_extra_play(extra_step, t.active, t.ally_ids)
+    t.round_state = {
+        "player": t.player,
+        "_player_reaction_card_id": t.state.get("player_reaction_card_id"),
+    }
+    deck_mode = _deck_mode_now()
+    if deck_mode != "off" and isinstance(t.combat_meta.get("pilhas"), dict):
+        import copy as _copy
+
+        t.combat_meta["pilhas"] = _copy.deepcopy(t.combat_meta["pilhas"])
+        t.round_state["_piles"] = t.combat_meta["pilhas"]
+        t.round_state["_deck_mode"] = deck_mode
 
 
 def _combat_run_round(t: _CombatTurn) -> None:
