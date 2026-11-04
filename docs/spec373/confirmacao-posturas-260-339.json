@@ -274,34 +274,34 @@
        320
       ],
       "L3 elite": [
-       200,
+       199,
        320
       ],
       "L5 padrao": [
-       42,
+       41,
        320
       ],
       "L5 elite": [
-       36,
+       37,
        320
       ]
      },
      "total": 0.499,
-     "padrao": 0.545,
+     "padrao": 0.544,
      "elite": 0.454
     },
     "biologia": {
      "celulas": {
       "L1 padrao": [
-       257,
+       256,
        320
       ],
       "L1 elite": [
-       222,
+       220,
        320
       ],
       "L3 padrao": [
-       251,
+       249,
        320
       ],
       "L3 elite": [
@@ -309,22 +309,22 @@
        320
       ],
       "L5 padrao": [
-       88,
+       92,
        320
       ],
       "L5 elite": [
-       65,
+       63,
        320
       ]
      },
-     "total": 0.585,
-     "padrao": 0.621,
-     "elite": 0.55
+     "total": 0.584,
+     "padrao": 0.622,
+     "elite": 0.546
     },
     "alma": {
      "celulas": {
       "L1 padrao": [
-       224,
+       225,
        320
       ],
       "L1 elite": [
@@ -332,11 +332,11 @@
        320
       ],
       "L3 padrao": [
-       181,
+       180,
        320
       ],
       "L3 elite": [
-       167,
+       166,
        320
       ],
       "L5 padrao": [
@@ -344,18 +344,18 @@
        320
       ],
       "L5 elite": [
-       38,
+       37,
        320
       ]
      },
-     "total": 0.443,
+     "total": 0.442,
      "padrao": 0.475,
-     "elite": 0.411
+     "elite": 0.409
     },
     "inorganica": {
      "celulas": {
       "L1 padrao": [
-       242,
+       245,
        320
       ],
       "L1 elite": [
@@ -371,17 +371,17 @@
        320
       ],
       "L5 padrao": [
-       27,
+       28,
        320
       ],
       "L5 elite": [
-       27,
+       29,
        320
       ]
      },
-     "total": 0.505,
-     "padrao": 0.531,
-     "elite": 0.479
+     "total": 0.508,
+     "padrao": 0.535,
+     "elite": 0.481
     }
    },
    "Arcanista Cinzento": {
@@ -809,15 +809,15 @@
       "5": 0.3
      },
      "base_total": 0.499,
-     "emboscada_total": 0.459,
+     "emboscada_total": 0.46,
      "realista": {
-      "total": 0.4874,
-      "padrao": 0.5245,
+      "total": 0.4872,
+      "padrao": 0.5241,
       "elite": 0.4504
      },
      "realista_com_contrapartida": {
-      "total": 0.4995,
-      "padrao": 0.5448,
+      "total": 0.499,
+      "padrao": 0.5437,
       "elite": 0.4542
      }
     },
@@ -827,17 +827,17 @@
       "3": 0.3,
       "5": 0.3
      },
-     "base_total": 0.585,
-     "emboscada_total": 0.535,
+     "base_total": 0.584,
+     "emboscada_total": 0.533,
      "realista": {
-      "total": 0.5703,
-      "padrao": 0.6011,
-      "elite": 0.5394
+      "total": 0.5685,
+      "padrao": 0.6012,
+      "elite": 0.5358
      },
      "realista_com_contrapartida": {
-      "total": 0.5854,
-      "padrao": 0.6208,
-      "elite": 0.55
+      "total": 0.5839,
+      "padrao": 0.6219,
+      "elite": 0.5458
      }
     },
     "alma": {
@@ -846,17 +846,17 @@
       "3": 0.3,
       "5": 0.3
      },
-     "base_total": 0.443,
-     "emboscada_total": 0.419,
+     "base_total": 0.442,
+     "emboscada_total": 0.42,
      "realista": {
-      "total": 0.436,
-      "padrao": 0.4709,
-      "elite": 0.4011
+      "total": 0.4355,
+      "padrao": 0.4713,
+      "elite": 0.3997
      },
      "realista_com_contrapartida": {
-      "total": 0.4432,
+      "total": 0.4422,
       "padrao": 0.475,
-      "elite": 0.4115
+      "elite": 0.4094
      }
     },
     "inorganica": {
@@ -865,17 +865,17 @@
       "3": 0.3,
       "5": 0.3
      },
-     "base_total": 0.505,
-     "emboscada_total": 0.483,
+     "base_total": 0.508,
+     "emboscada_total": 0.482,
      "realista": {
-      "total": 0.4986,
-      "padrao": 0.5234,
-      "elite": 0.4739
+      "total": 0.5004,
+      "padrao": 0.5264,
+      "elite": 0.4744
      },
      "realista_com_contrapartida": {
-      "total": 0.5052,
-      "padrao": 0.5312,
-      "elite": 0.4792
+      "total": 0.5083,
+      "padrao": 0.5354,
+      "elite": 0.4813
      }
     }
    },

@@ -262,7 +262,7 @@
     "todas": {
      "celulas": {
       "L1 padrao": [
-       72,
+       71,
        80
       ],
       "L1 elite": [
@@ -270,15 +270,15 @@
        80
       ],
       "L3 padrao": [
-       45,
+       46,
        80
       ],
       "L3 elite": [
-       42,
+       43,
        80
       ],
       "L5 padrao": [
-       10,
+       9,
        80
       ],
       "L5 elite": [
@@ -287,8 +287,8 @@
       ]
      },
      "total": 0.483,
-     "padrao": 0.529,
-     "elite": 0.438
+     "padrao": 0.525,
+     "elite": 0.442
     },
     "biologia": {
      "celulas": {
@@ -324,7 +324,7 @@
     "alma": {
      "celulas": {
       "L1 padrao": [
-       63,
+       61,
        80
       ],
       "L1 elite": [
@@ -336,7 +336,7 @@
        80
       ],
       "L3 elite": [
-       41,
+       42,
        80
       ],
       "L5 padrao": [
@@ -348,14 +348,14 @@
        80
       ]
      },
-     "total": 0.465,
-     "padrao": 0.492,
-     "elite": 0.438
+     "total": 0.463,
+     "padrao": 0.483,
+     "elite": 0.442
     },
     "inorganica": {
      "celulas": {
       "L1 padrao": [
-       64,
+       62,
        80
       ],
       "L1 elite": [
@@ -363,15 +363,15 @@
        80
       ],
       "L3 padrao": [
-       56,
+       57,
        80
       ],
       "L3 elite": [
-       52,
+       51,
        80
       ],
       "L5 padrao": [
-       4,
+       5,
        80
       ],
       "L5 elite": [
@@ -379,9 +379,9 @@
        80
       ]
      },
-     "total": 0.496,
+     "total": 0.494,
      "padrao": 0.517,
-     "elite": 0.475
+     "elite": 0.471
     }
    },
    "Arcanista Cinzento": {
@@ -812,13 +812,13 @@
      "emboscada_total": 0.452,
      "realista": {
       "total": 0.474,
-      "padrao": 0.5154,
-      "elite": 0.4325
+      "padrao": 0.5138,
+      "elite": 0.4342
      },
      "realista_com_contrapartida": {
       "total": 0.4833,
-      "padrao": 0.5292,
-      "elite": 0.4375
+      "padrao": 0.525,
+      "elite": 0.4417
      }
     },
     "biologia": {
@@ -828,10 +828,10 @@
       "5": 0.3
      },
      "base_total": 0.537,
-     "emboscada_total": 0.517,
+     "emboscada_total": 0.521,
      "realista": {
-      "total": 0.5312,
-      "padrao": 0.5692,
+      "total": 0.5325,
+      "padrao": 0.5717,
       "elite": 0.4933
      },
      "realista_com_contrapartida": {
@@ -846,17 +846,17 @@
       "3": 0.3,
       "5": 0.3
      },
-     "base_total": 0.465,
+     "base_total": 0.463,
      "emboscada_total": 0.438,
      "realista": {
-      "total": 0.4565,
-      "padrao": 0.4904,
-      "elite": 0.4225
+      "total": 0.455,
+      "padrao": 0.4846,
+      "elite": 0.4254
      },
      "realista_com_contrapartida": {
-      "total": 0.4646,
-      "padrao": 0.4917,
-      "elite": 0.4375
+      "total": 0.4625,
+      "padrao": 0.4833,
+      "elite": 0.4417
      }
     },
     "inorganica": {
@@ -865,17 +865,17 @@
       "3": 0.3,
       "5": 0.3
      },
-     "base_total": 0.496,
-     "emboscada_total": 0.492,
+     "base_total": 0.494,
+     "emboscada_total": 0.485,
      "realista": {
-      "total": 0.4946,
-      "padrao": 0.5217,
-      "elite": 0.4675
+      "total": 0.4912,
+      "padrao": 0.5204,
+      "elite": 0.4621
      },
      "realista_com_contrapartida": {
-      "total": 0.4958,
+      "total": 0.4938,
       "padrao": 0.5167,
-      "elite": 0.475
+      "elite": 0.4708
      }
     }
    },
