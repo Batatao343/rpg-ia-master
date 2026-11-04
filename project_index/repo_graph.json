@@ -1,5 +1,5 @@
 {
-  "commit_sha": "9b71d9f95bc169695187580cfe442db72947bde3",
+  "commit_sha": "9ddb59b191ebf70ba9d1b306f9012179b0628168",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -74949,7 +74949,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 165
+        "line": 177
       },
       "source": "module:scripts.staging.portrait_offer_measure",
       "target": "symbol:scripts.staging.portrait_offer_measure._gerar_present",
@@ -74982,7 +74982,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 185
+        "line": 197
       },
       "source": "module:scripts.staging.portrait_offer_measure",
       "target": "symbol:scripts.staging.portrait_offer_measure.count_problems",
@@ -74993,7 +74993,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 233
+        "line": 245
       },
       "source": "module:scripts.staging.portrait_offer_measure",
       "target": "symbol:scripts.staging.portrait_offer_measure.fetch_logs",
@@ -75015,7 +75015,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 275
+        "line": 287
       },
       "source": "module:scripts.staging.portrait_offer_measure",
       "target": "symbol:scripts.staging.portrait_offer_measure.main",
@@ -75048,7 +75048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 256
+        "line": 268
       },
       "source": "module:scripts.staging.portrait_offer_measure",
       "target": "symbol:scripts.staging.portrait_offer_measure.run",
@@ -75059,7 +75059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 170
+        "line": 182
       },
       "source": "module:scripts.staging.portrait_offer_measure",
       "target": "symbol:scripts.staging.portrait_offer_measure.sample_from",
@@ -75092,7 +75092,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 205
+        "line": 217
       },
       "source": "module:scripts.staging.portrait_offer_measure",
       "target": "symbol:scripts.staging.portrait_offer_measure.switches_snapshot",
@@ -328147,7 +328147,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 158
+        "line": 170
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.collect_browser",
       "target": "symbol:scripts.staging.portrait_offer_measure.sample_from",
@@ -328158,7 +328158,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 285
+        "line": 298
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.main",
       "target": "symbol:scripts.staging.portrait_offer_measure.run",
@@ -328169,7 +328169,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 260
+        "line": 272
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.run",
       "target": "symbol:scripts.staging.portrait_offer_measure.collect_api",
@@ -328180,7 +328180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 262
+        "line": 274
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.run",
       "target": "symbol:scripts.staging.portrait_offer_measure.collect_browser",
@@ -328191,7 +328191,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 270
+        "line": 282
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.run",
       "target": "symbol:scripts.staging.portrait_offer_measure.count_problems",
@@ -328202,7 +328202,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 264
+        "line": 276
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.run",
       "target": "symbol:scripts.staging.portrait_offer_measure.fetch_logs",
@@ -328213,7 +328213,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 263
+        "line": 275
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.run",
       "target": "symbol:scripts.staging.portrait_offer_measure.join_samples",
@@ -328224,7 +328224,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 269
+        "line": 281
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.run",
       "target": "symbol:scripts.staging.portrait_offer_measure.missing_views",
@@ -328235,7 +328235,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 264
+        "line": 276
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.run",
       "target": "symbol:scripts.staging.portrait_offer_measure.parse_logs",
@@ -328246,7 +328246,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 268
+        "line": 280
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.run",
       "target": "symbol:scripts.staging.portrait_offer_measure.summarize",
@@ -328257,7 +328257,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 258
+        "line": 270
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.run",
       "target": "symbol:scripts.staging.portrait_offer_measure.switches_snapshot",
@@ -328268,7 +328268,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 181
+        "line": 193
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.sample_from",
       "target": "symbol:scripts.staging.portrait_offer_measure._gerar_present",
@@ -328279,7 +328279,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 180
+        "line": 192
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.sample_from",
       "target": "symbol:scripts.staging.portrait_offer_measure.short_hash",
@@ -328290,7 +328290,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/staging/portrait_offer_measure.py",
-        "line": 219
+        "line": 231
       },
       "source": "symbol:scripts.staging.portrait_offer_measure.switches_snapshot",
       "target": "symbol:scripts.staging.portrait_offer_measure.run",
@@ -761317,7 +761317,7 @@
     {
       "id": "symbol:scripts.staging.portrait_offer_measure._gerar_present",
       "kind": "function",
-      "line": 165,
+      "line": 177,
       "path": "scripts/staging/portrait_offer_measure.py",
       "qualified_name": "scripts.staging.portrait_offer_measure._gerar_present"
     },
@@ -761338,14 +761338,14 @@
     {
       "id": "symbol:scripts.staging.portrait_offer_measure.count_problems",
       "kind": "function",
-      "line": 185,
+      "line": 197,
       "path": "scripts/staging/portrait_offer_measure.py",
       "qualified_name": "scripts.staging.portrait_offer_measure.count_problems"
     },
     {
       "id": "symbol:scripts.staging.portrait_offer_measure.fetch_logs",
       "kind": "function",
-      "line": 233,
+      "line": 245,
       "path": "scripts/staging/portrait_offer_measure.py",
       "qualified_name": "scripts.staging.portrait_offer_measure.fetch_logs"
     },
@@ -761359,7 +761359,7 @@
     {
       "id": "symbol:scripts.staging.portrait_offer_measure.main",
       "kind": "function",
-      "line": 275,
+      "line": 287,
       "path": "scripts/staging/portrait_offer_measure.py",
       "qualified_name": "scripts.staging.portrait_offer_measure.main"
     },
@@ -761380,14 +761380,14 @@
     {
       "id": "symbol:scripts.staging.portrait_offer_measure.run",
       "kind": "function",
-      "line": 256,
+      "line": 268,
       "path": "scripts/staging/portrait_offer_measure.py",
       "qualified_name": "scripts.staging.portrait_offer_measure.run"
     },
     {
       "id": "symbol:scripts.staging.portrait_offer_measure.sample_from",
       "kind": "function",
-      "line": 170,
+      "line": 182,
       "path": "scripts/staging/portrait_offer_measure.py",
       "qualified_name": "scripts.staging.portrait_offer_measure.sample_from"
     },
@@ -761408,7 +761408,7 @@
     {
       "id": "symbol:scripts.staging.portrait_offer_measure.switches_snapshot",
       "kind": "function",
-      "line": 205,
+      "line": 217,
       "path": "scripts/staging/portrait_offer_measure.py",
       "qualified_name": "scripts.staging.portrait_offer_measure.switches_snapshot"
     },
@@ -871615,5 +871615,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:0f03ce8c798d70256dbd2e94b26812ce0c2a485ce80ef9d25993c60671b4230a"
+  "source_tree_hash": "sha256:46dc2c6cf1d0341fba06c27f14e3bfa20aace8e3bd2e9af8d3cb5fa8d83c987c"
 }
