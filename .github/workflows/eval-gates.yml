@@ -94,7 +94,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - run: uv sync
-      - run: >-
+      # Push/PR: a suíte completa de validate.yml já cobre estes testes (backend implica test); só dispatch manual os roda aqui.
+      - if: github.event_name == 'workflow_dispatch'
+        run: >-
           uv run pytest
           tests/test_eval_state_rules.py tests/test_eval_routing.py
           tests/test_eval_memory_context.py tests/test_eval_narrative_npc.py
