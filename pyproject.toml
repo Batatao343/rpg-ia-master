@@ -97,6 +97,8 @@ max-complexity = 15
 "tests/test_spec361_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
 "tests/test_spec370_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
 "tests/test_spec372_eval.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"scripts/bestiario/arena.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
+"tests/test_spec373_artefatos.py" = ["C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
 # Arquivos protegidos de eval (evals/protected-paths.txt): hashes travados, não reescrever.
 "evals/core/**" = ["I", "UP", "C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
 "evals/evaluators/**" = ["I", "UP", "C90", "SIM", "PERF", "C4", "PIE", "RET", "ERA", "BLE"]
