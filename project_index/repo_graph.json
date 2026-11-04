@@ -1,5 +1,5 @@
 {
-  "commit_sha": "4e886549a572ccd37b782c493c9a7425f9d6d3ea",
+  "commit_sha": "b6596819726311dfa33acf1582e92a5c18cc6a29",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -248093,6 +248093,17 @@
       },
       "source": "module:tests.test_workspace_hooks",
       "target": "symbol:tests.test_workspace_hooks.test_ruff_hook_ignores_non_python_and_outside_repo",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_workspace_hooks.py",
+        "line": 224
+      },
+      "source": "module:tests.test_workspace_hooks",
+      "target": "symbol:tests.test_workspace_hooks.test_ruff_hook_skips_files_listed_in_protected_paths",
       "type": "defines"
     },
     {
@@ -705315,6 +705326,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_workspace_hooks.py",
+        "line": 234
+      },
+      "source": "symbol:tests.test_workspace_hooks.test_ruff_hook_skips_files_listed_in_protected_paths",
+      "target": "symbol:tests.test_workspace_hooks._run",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_workspace_hooks.py",
         "line": 220
       },
       "source": "symbol:tests.test_workspace_hooks.test_ruff_hook_skips_protected_eval_paths",
@@ -861269,6 +861291,13 @@
       "qualified_name": "tests.test_workspace_hooks.test_ruff_hook_ignores_non_python_and_outside_repo"
     },
     {
+      "id": "symbol:tests.test_workspace_hooks.test_ruff_hook_skips_files_listed_in_protected_paths",
+      "kind": "test",
+      "line": 224,
+      "path": "tests/test_workspace_hooks.py",
+      "qualified_name": "tests.test_workspace_hooks.test_ruff_hook_skips_files_listed_in_protected_paths"
+    },
+    {
       "id": "symbol:tests.test_workspace_hooks.test_ruff_hook_skips_protected_eval_paths",
       "kind": "test",
       "line": 215,
@@ -862761,5 +862790,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:d25e4f468dc83620f08d75082708e5c1da7ca9c712bf8ba9b07f406bea5dd884"
+  "source_tree_hash": "sha256:c983a6b8ced21398c007f11b70c0d341a3df09f8af9640ee8ccbeeb2ed4d44f7"
 }
