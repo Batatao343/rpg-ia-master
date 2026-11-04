@@ -324,11 +324,11 @@ def test_smoke_bodies_parse_and_play(saves, item, variant):
         api.ActionRequest(**body)
         if (item, variant) == (14, "entrega"):  # roteamento real é do CLASSIFY: roda o nó direto
             _assert_entrega_closes(gid, body["input_text"])
-            return None
-        r = TestClient(api.app).post("/game/action", json=body)
-        assert r.status_code == 200, (item, variant, r.text[:300])
-        state = TestClient(api.app).get("/game/state", params={"game_id": gid}).json()
-        _assert_variant_result(item, variant, r.text, state, gid)
+        else:
+            r = TestClient(api.app).post("/game/action", json=body)
+            assert r.status_code == 200, (item, variant, r.text[:300])
+            state = TestClient(api.app).get("/game/state", params={"game_id": gid}).json()
+            _assert_variant_result(item, variant, r.text, state, gid)
 
 
 def _assert_variant_result(item: int, variant: str, text: str, state: dict, gid: str) -> None:
