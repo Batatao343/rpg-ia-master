@@ -2762,6 +2762,17 @@ def _combat_node(state: GameState):
             t.combat_meta["encounter"] = em.sync_statuses(
                 t.combat_meta["encounter"], t.enemies, int(t.combat_meta.get("round", 0) or 0)
             )
+    _combat_result_base(t)
+
+    _combat_result_quests(t)
+
+    _combat_result_events(t)
+
+    return t.result
+
+
+def _combat_result_base(t: _CombatTurn) -> None:
+    """Dict de retorno do turno e campos opcionais."""
     t.result = {
         "messages": [AIMessage(content=t.narrative)],
         "player": t.player,
@@ -2808,12 +2819,6 @@ def _combat_node(state: GameState):
         _bl = record_gain(t.state.get("turn_baseline"), "xp", t.kill_xp, "combat")
         if _bl is not t.state.get("turn_baseline"):
             t.result["turn_baseline"] = _bl
-
-    _combat_result_quests(t)
-
-    _combat_result_events(t)
-
-    return t.result
 
 
 def _combat_result_quests(t: _CombatTurn) -> None:
