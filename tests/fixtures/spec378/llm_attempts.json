@@ -1,0 +1,485 @@
+{
+ "invoke_all_fail": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "_Boom",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invoke_error",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": "transport",
+    "tier": "ModelTier.FAST",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": "_Boom",
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "invoke_error",
+    "provider": "b",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": "transport",
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [],
+  "out": "AIMessage(content='', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])"
+ },
+ "invoke_build_error": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "_Boom",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "build_error",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "b",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "b",
+    "m2",
+    "ModelTier.FAST",
+    "0",
+    "True"
+   ]
+  ],
+  "out": "AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])"
+ },
+ "invoke_circuit": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "forced",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "circuit_open",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "b",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "b",
+    "m2",
+    "ModelTier.FAST",
+    "0",
+    "True"
+   ]
+  ],
+  "out": "AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])"
+ },
+ "invoke_error_fallback": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "_Boom",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "invoke_error",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": "transport",
+    "tier": "ModelTier.FAST",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "b",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "b",
+    "m2",
+    "ModelTier.FAST",
+    "0",
+    "True"
+   ]
+  ],
+  "out": "AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])"
+ },
+ "invoke_kill": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "b",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "b",
+    "m2",
+    "ModelTier.FAST",
+    "0",
+    "True"
+   ]
+  ],
+  "out": "AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])"
+ },
+ "invoke_success": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": null,
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "success",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "a",
+    "m1",
+    "ModelTier.FAST",
+    "0",
+    "False"
+   ]
+  ],
+  "out": "AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])"
+ },
+ "stream_build_error": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "_Boom",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "build_error",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "b",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "b",
+    "m2",
+    "ModelTier.FAST",
+    "0",
+    "True"
+   ]
+  ],
+  "out": "[AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])]"
+ },
+ "stream_circuit": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "forced",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "circuit_open",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "b",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "b",
+    "m2",
+    "ModelTier.FAST",
+    "0",
+    "True"
+   ]
+  ],
+  "out": "[AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])]"
+ },
+ "stream_empty": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": null,
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "success",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "a",
+    "m1",
+    "ModelTier.FAST",
+    "0",
+    "False"
+   ]
+  ],
+  "out": "[]"
+ },
+ "stream_error_fallback": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": "_Boom",
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "stream_error",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   },
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "b",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "b",
+    "m2",
+    "ModelTier.FAST",
+    "0",
+    "True"
+   ]
+  ],
+  "out": "[AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])]"
+ },
+ "stream_kill": {
+  "events": [
+   {
+    "attempt_index": 1,
+    "error": null,
+    "error_type": null,
+    "fell_back": true,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m2",
+    "outcome": "success",
+    "provider": "b",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "b",
+    "m2",
+    "ModelTier.FAST",
+    "0",
+    "True"
+   ]
+  ],
+  "out": "[AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])]"
+ },
+ "stream_success": {
+  "events": [
+   {
+    "attempt_index": 0,
+    "error": null,
+    "error_type": null,
+    "fell_back": false,
+    "http_status": 0,
+    "latency_ms": 0,
+    "model": "m1",
+    "outcome": "success",
+    "provider": "a",
+    "provider_error_code": null,
+    "recovery": null,
+    "structured": false,
+    "structured_failure_code": null,
+    "tier": "ModelTier.FAST",
+    "usage": null
+   }
+  ],
+  "legacy": [
+   [
+    "a",
+    "m1",
+    "ModelTier.FAST",
+    "0",
+    "False"
+   ]
+  ],
+  "out": "[AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[]), AIMessage(content='ok', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])]"
+ }
+}
