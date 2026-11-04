@@ -154,7 +154,8 @@ def fill_encounter(
     i = 0
     while spent < floor and i < 4:
         i += 1
-        entry = wu.pick_encounter_enemy(loc, danger, turn, trama_stages=trama_stages)
+        extra = {"trama_stages": trama_stages} if trama_stages else {}  # SPEC-372
+        entry = wu.pick_encounter_enemy(loc, danger, turn, **extra)
         if not entry or make_instance is None:
             break
         inst = make_instance(entry, len(kept) + i)
