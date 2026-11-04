@@ -132,3 +132,53 @@ rg "pick_encounter_enemy(" (sem tests/specs) → 6 chamadores; 5 com portão
 py.sh -c "pick_encounter_enemy(faction_id=f), 19 facções × 3 anéis" → só poder_kahen cai no pool sem portão (P2-8)
 pytest -n 2 test_spec372_* test_spec360_* test_spec350_* test_spec351_* test_flag_registry test_spec315_* test_spec287_encounter_scale test_spec272_conflito_ligado test_fase64 test_spec289_ameaca_tematica → exit 0
 ```
+
+## Rodada 3: resolução do rebase sobre a SPEC-370 (`8eabcb43` + T7 `83858a40`)
+
+**Veredito da rodada 3:** `APPROVED_WITH_FOLLOWUPS` (sem P0/P1).
+
+Conferi item a item o que o P2-8 pedia:
+- **Recorte no `day_hook`.** O recorte da trama (`fauna_tramas.birth`) roda antes do `_make_room`, e
+  `locais` vazio faz `continue` antes de despejar presença alheia. `trama_id` é gravado na presença
+  antes do `_make_room`. `trama_presenca` e `presenca_nasce` só são logados depois que há vaga
+  (`services/fauna.py`, dentro do `day_hook`).
+- **Ordem em `_weighted_pool`.** Primeiro o migrante × `neutral` da 370, com o P2-6 incluído; o
+  `apply_gate` da 372 roda por último, logo antes do `return` (`world_utils.py:1186`). Ele é sem efeito
+  sem estágios ou com a flag `off`.
+- **Lint.** O E18 continua dentro do `if entries:`, e `lint_tramas` roda depois, fora do bloco, antes
+  do `return errs`. `lint.py --regiao nova_arcadia` dá 0 erro.
+- **`protected-paths.txt`.** É a união dos dois lados: `scripts/fauna/eval.py`,
+  `tests/test_spec360_eval.py` e `tests/test_spec370_eval.py` (da `main`), mais
+  `scripts/fauna/eval_tramas.py` e `tests/test_spec372_eval.py`.
+- **`fauna.json`.** `build.py --check` diz "fresco", então o arquivo saiu do build.
+- **Ligações.** O diff de `nova_arcadia.yaml` contra a `main` tem só as 9 ligações e os 2 sinais
+  reescritos; a migração `suprime` da 370 está preservada (veio da `main`).
+
+**T7 (`83858a40`, autor de eval).** `baseline_360_identical()` agora gera o relatório pelo `main()`
+do avaliador da 360/370 e compara o arquivo inteiro, inclusive a seção da 370. A comparação ficou
+mais estrita, e nenhum limiar mudou. O baseline `docs/spec360/eval-nova_arcadia.md` não muda na branch
+(`git diff main...HEAD -- docs/spec360/` vazio; sha256 `dcb03ea5…a02e`, igual ao do handoff de eval).
+O diff de `scripts/fauna/eval.py`, `tests/test_spec360_eval.py` e `tests/test_spec370_eval.py` contra
+a `main` também está vazio. Ponto para o coordenador: a mudança em `eval_tramas.py` está registrada
+como do autor de eval, em `handoffs/SPEC-372-eval-authoring.md`. Confirme que ela não saiu do executor
+de produto; se saiu, é desvio do contrato, mesmo sendo uma mudança mais estrita.
+
+**`solo_region` e "turno calmo sem vaga" × portão.** Na prática, convivem:
+- Uma presença atrás do portão não decide o encontro. `_fauna_presence` devolve `None` para ela, a
+  regra de Ophidia (que só age sobre presença) não a vê, e o ramo `elif cedo` converte a criatura
+  sorteada, que já passou pelo portão.
+- Hoje só NA tem tramas. Em Ophidia, ou em qualquer região de 1 nó sem catálogo, os estágios saem
+  `{}` e o portão não age.
+
+O caso que sobra:
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-10 | P2 | `services/fauna.py:705` (`n_here`), `day_hook` (`active`), `scene_block` (`presences_at`, `:664`) | Uma presença de criatura que **voltou** para trás do portão continua contando para o teto da região e o `scene_block` ainda mostra os sinais dela. Isso acontece quando o estágio regride (quest `investigar_rumor` falha e a trama volta de `investigada` para `tocada`, criatura com `desde: investigada`). Numa região de 1 nó com trama, o caso futuro, ela ocuparia a única vaga, e se já estiver lida, toda conversão nova vira "turno calmo". | Follow-up: quando o estágio regride, a presença atrás do portão vira `dispersa`, ou é ignorada no `n_here`/`active` e no `scene_block`. Só importa quando houver regiões de 1 nó com tramas (onda 2 da 350). |
+
+```text
+git diff main...HEAD -- docs/spec360/ scripts/fauna/eval.py tests/test_spec3{60,70}_eval.py → vazio
+sha256sum docs/spec360/eval-nova_arcadia.md → dcb03ea5…a02e (= handoff de eval)
+scripts/fauna/build.py --check → fauna.json fresco · lint.py --regiao nova_arcadia → 0 erro
+pytest -n 2 test_spec372_* (com eval) test_spec370_{caps,solo,migrante,suprime,carcaca} test_spec360_{flags_off,sinais,eco,presenca} test_spec350_catalog test_flag_registry → exit 0, 0 FAILED
+```

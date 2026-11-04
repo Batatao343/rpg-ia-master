@@ -87,3 +87,13 @@ Veredito mantido: `APPROVED_WITH_FOLLOWUPS`. As ligações não mudaram, e os tr
   é curta, aceito.
 - As duas reescritas da rodada 1 ("jura que", "livro de dívidas") ficam, mesmo sem o lint exigir:
   não perdem sentido.
+
+## Rodada 3: rebase sobre a SPEC-370 (`8eabcb43`)
+
+Veredito mantido: `APPROVED_WITH_FOLLOWUPS`.
+- O diff de `data/bestiario/fauna/nova_arcadia.yaml` contra a `main` (que já tem a 370) traz só as
+  9 ligações aprovadas e as 2 reescritas de sinal ("jura que", "livro de dívidas").
+- A migração `presas` → `suprime` da 370 (Sorvedouro → Iniciado da Chama Azul) ficou intacta e
+  convive com a ligação do Sorvedouro à Lista de Fornalha. A supressão age pela pressão de caça, não
+  pela presença, então o portão não muda a semântica dela.
+- `lint.py --regiao nova_arcadia` dá 0 erro, com E17/E18 da 370 e E19–E22 da 372 juntos.
