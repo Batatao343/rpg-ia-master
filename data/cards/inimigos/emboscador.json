@@ -151,6 +151,59 @@
       },
       "descricao": "Dois passos para trás, e o escuro o engole.",
       "oculta": true
+    },
+    {
+      "id": "inf_emboscador_golpe_e_sumico",
+      "name": "Golpe e Sumiço",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "esconder",
+          "valor": 2
+        }
+      ],
+      "descricao": "Corta uma vez e já é névoa de novo, antes que a vítima ache de onde veio.",
+      "oculta": true
+    },
+    {
+      "id": "inf_emboscador_veneno_de_espera",
+      "name": "Veneno de Espera",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 3,
+          "dano_tipo": "corrosivo"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enfraquecido",
+          "duracao": 1
+        }
+      ],
+      "descricao": "O veneno da ponta mal arranha, mas o braço amolece no fim do dia.",
+      "oculta": true
     }
   ]
 }

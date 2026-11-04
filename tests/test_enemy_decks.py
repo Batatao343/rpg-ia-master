@@ -262,11 +262,12 @@ def _family_cards():
     return out
 
 
-def test_eleven_families_with_8_to_12_cards_each():
+def test_eleven_families_with_8_to_16_cards_each():
+    # SPEC-332 abriu com 8-12; SPEC-373 R14 soma as comuns que o teto de uso 15 pede (até 16)
     fams = _family_cards()
     assert set(fams) == set(edk.FAMILIAS)
     for fam, lst in fams.items():
-        assert 8 <= len(lst) <= 12, fam
+        assert 8 <= len(lst) <= 16, fam
 
 
 def test_new_enemy_cards_pass_vocabulary_budget_and_voice():

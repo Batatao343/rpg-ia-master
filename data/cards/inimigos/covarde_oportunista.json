@@ -152,6 +152,171 @@
       },
       "descricao": "Morde o tornozelo e recua antes do troco.",
       "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_estocada_e_fuga",
+      "name": "Estocada e Fuga",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "reposicionar",
+          "valor": 2
+        }
+      ],
+      "descricao": "Espeta com a lâmina curta e já está longe, rindo por cima do ombro.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_chute_na_canela",
+      "name": "Chute na Canela",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Um bico baixo e sujo; o alvo manca, e ele já está rindo na sombra.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_chutar_quem_caiu",
+      "name": "Chutar Quem Caiu",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2,
+          "dano_tipo": "perfurante",
+          "se": {
+            "alvo_tem": "cego"
+          }
+        }
+      ],
+      "descricao": "Valente só com quem não enxerga: aí a lâmina entra duas vezes.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_rato_encurralado",
+      "name": "Rato Encurralado",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2,
+          "dano_tipo": "perfurante",
+          "se": {
+            "vitalidade_max_pct": 50
+          }
+        }
+      ],
+      "descricao": "Sem saída e com sangue na boca, morde como bicho de esgoto.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_fingir_de_morto",
+      "name": "Fingir de Morto",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "esconder",
+          "valor": 2
+        },
+        {
+          "kind": "protecao",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Cai de borco na cinza e prende o fôlego até o perigo passar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_moeda_atirada",
+      "name": "Moeda Atirada",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "exposto",
+          "duracao": 1
+        },
+        {
+          "kind": "reposicionar",
+          "valor": 2
+        }
+      ],
+      "descricao": "Joga uma moeda falsa no chão; o alvo olha, e ele escapa pela sombra.",
+      "oculta": true
     }
   ]
 }

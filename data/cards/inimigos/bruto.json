@@ -152,6 +152,115 @@
       },
       "descricao": "O punho cai como pedra de muralha em ruína.",
       "oculta": true
+    },
+    {
+      "id": "inf_bruto_agarrar_e_atirar",
+      "name": "Agarrar e Atirar",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "versatil",
+          "dano_base": 5,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "empurrao",
+          "valor": 3
+        }
+      ],
+      "descricao": "Agarra pela roupa e atira o alvo contra a ruína mais próxima, como quem joga um fardo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_raiva_de_ferido",
+      "name": "Raiva de Ferido",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 3,
+          "dano_tipo": "impactante",
+          "se": {
+            "vitalidade_max_pct": 50
+          }
+        }
+      ],
+      "descricao": "Com sangue escorrendo, bate ainda mais forte, como se a dor fosse lenha.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_cabecada",
+      "name": "Cabeçada",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "exposto",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Testa de osso duro no nariz, e o alvo esquece onde está a guarda.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_couro_e_furia",
+      "name": "Couro e Fúria",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 4
+        },
+        {
+          "kind": "buff_dano",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Bate no peito, cicatriz sobre cicatriz, e espera o golpe sem piscar.",
+      "oculta": true
     }
   ]
 }

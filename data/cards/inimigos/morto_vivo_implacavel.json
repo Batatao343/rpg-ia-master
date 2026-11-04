@@ -151,6 +151,33 @@
       },
       "descricao": "Os mortos não comem, mas o vazio por dentro pede.",
       "oculta": true
+    },
+    {
+      "id": "inf_morto_vivo_implacavel_beber_o_calor",
+      "name": "Beber o Calor",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "morto_vivo_implacavel",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 2,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "cura",
+          "valor": 1,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Os dentes frios mordem, e o pulso do vivo passa a bater no morto.",
+      "oculta": true
     }
   ]
 }

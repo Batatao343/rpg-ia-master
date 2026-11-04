@@ -5,35 +5,35 @@
    "N": 14,
    "M": 45,
    "assinaturas": 2,
-   "comuns": 10,
+   "comuns": 14,
    "S_min": 2,
    "P_min": 14,
    "faltam_assinaturas": 0,
-   "faltam_comuns": 4,
+   "faltam_comuns": 0,
    "pico_assinatura": 11,
-   "pico_comum": 20
+   "pico_comum": 15
   },
   "covarde_oportunista": {
    "N": 12,
    "M": 37,
    "assinaturas": 2,
-   "comuns": 6,
+   "comuns": 12,
    "S_min": 2,
    "P_min": 12,
    "faltam_assinaturas": 0,
-   "faltam_comuns": 6,
+   "faltam_comuns": 0,
    "pico_assinatura": 11,
-   "pico_comum": 24
+   "pico_comum": 15
   },
   "conjurador": {
    "N": 8,
    "M": 21,
    "assinaturas": 2,
-   "comuns": 6,
+   "comuns": 7,
    "S_min": 2,
    "P_min": 7,
    "faltam_assinaturas": 0,
-   "faltam_comuns": 1,
+   "faltam_comuns": 0,
    "pico_assinatura": 6,
    "pico_comum": 15
   },
@@ -41,37 +41,37 @@
    "N": 9,
    "M": 19,
    "assinaturas": 2,
-   "comuns": 6,
+   "comuns": 7,
    "S_min": 2,
    "P_min": 7,
    "faltam_assinaturas": 0,
-   "faltam_comuns": 1,
+   "faltam_comuns": 0,
    "pico_assinatura": 7,
-   "pico_comum": 16
+   "pico_comum": 13
   },
   "bruto": {
    "N": 9,
    "M": 34,
    "assinaturas": 2,
-   "comuns": 6,
+   "comuns": 10,
    "S_min": 2,
    "P_min": 10,
    "faltam_assinaturas": 0,
-   "faltam_comuns": 4,
+   "faltam_comuns": 0,
    "pico_assinatura": 7,
-   "pico_comum": 23
+   "pico_comum": 15
   },
   "guardiao": {
    "N": 7,
    "M": 34,
    "assinaturas": 2,
-   "comuns": 6,
+   "comuns": 9,
    "S_min": 2,
    "P_min": 9,
    "faltam_assinaturas": 0,
-   "faltam_comuns": 3,
+   "faltam_comuns": 0,
    "pico_assinatura": 6,
-   "pico_comum": 19
+   "pico_comum": 14
   },
   "predador_apice": {
    "N": 8,
@@ -89,13 +89,13 @@
    "N": 13,
    "M": 39,
    "assinaturas": 2,
-   "comuns": 6,
+   "comuns": 13,
    "S_min": 2,
    "P_min": 13,
    "faltam_assinaturas": 0,
-   "faltam_comuns": 7,
+   "faltam_comuns": 0,
    "pico_assinatura": 10,
-   "pico_comum": 24
+   "pico_comum": 13
   },
   "lider_matilha": {
    "N": 6,
@@ -113,13 +113,13 @@
    "N": 6,
    "M": 27,
    "assinaturas": 2,
-   "comuns": 6,
+   "comuns": 8,
    "S_min": 2,
    "P_min": 8,
    "faltam_assinaturas": 0,
-   "faltam_comuns": 2,
+   "faltam_comuns": 0,
    "pico_assinatura": 5,
-   "pico_comum": 16
+   "pico_comum": 13
   },
   "abissal": {
    "N": 0,
@@ -137,37 +137,6 @@
  "faccoes": {
   "pico": 5
  },
- "acima_do_teto": {
-  "inf_bruto_empurrao_de_ombro": 17,
-  "inf_bruto_furia_acumulada": 19,
-  "inf_bruto_investida_cega": 18,
-  "inf_bruto_mao_que_esmaga": 20,
-  "inf_bruto_pele_de_couro": 23,
-  "inf_bruto_rugido_de_guerra": 17,
-  "inf_covarde_oportunista_encolher_na_sombra": 21,
-  "inf_covarde_oportunista_gritinho_de_socorro": 20,
-  "inf_covarde_oportunista_mordida_covarde": 24,
-  "inf_covarde_oportunista_pernas_rapidas": 23,
-  "inf_covarde_oportunista_punhado_de_cinza": 21,
-  "inf_covarde_oportunista_sujeira_nos_olhos": 20,
-  "inf_emboscador_recuar_para_o_nada": 16,
-  "inf_emboscador_sumir_na_poeira": 16,
-  "inf_guardiao_empurrar_a_linha": 18,
-  "inf_guardiao_juramento_de_ferro": 18,
-  "inf_guardiao_muralha_de_escudo": 19,
-  "inf_guardiao_olhar_de_sentinela": 17,
-  "inf_guardiao_pulso_da_vigilia": 16,
-  "inf_morto_vivo_implacavel_passo_sem_pressa": 16,
-  "inf_predador_cheiro_de_sangue": 20,
-  "inf_predador_garra_no_rosto": 17,
-  "inf_predador_uivo_de_fome": 16,
-  "inf_predador_volta_de_caca": 18,
-  "inf_tatico_apontar_a_falha": 22,
-  "inf_tatico_cobertura_cerrada": 22,
-  "inf_tatico_golpe_de_oportunidade": 22,
-  "inf_tatico_grito_de_comando": 24,
-  "inf_tatico_ordem_de_flanco": 20,
-  "inf_tatico_rede_de_cordas": 20
- },
- "faltam_total": 28
+ "acima_do_teto": {},
+ "faltam_total": 0
 }

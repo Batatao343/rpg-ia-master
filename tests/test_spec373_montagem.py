@@ -79,7 +79,21 @@ def test_autoral_familia_1_ou_2(monkeypatch):
 
 
 def test_populacao_332_identica(monkeypatch):
+    """R9: a regra de montagem não muda a população da 332. As Cartas novas da R14
+    (`origem: cartas-373`) mudam os pools de propósito, então a identidade vale com os
+    pools da `main` (sem elas)."""
+    from services import cards
+
     monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    pools = edk._pools()
+    novas = {
+        c
+        for ids in pools["familias"].values()
+        for c in ids
+        if (cards.get_card(c) or {}).get("origem") == "cartas-373"
+    }
+    main_fams = {f: [c for c in ids if c not in novas] for f, ids in pools["familias"].items()}
+    monkeypatch.setattr(edk, "_pools_cache", {"familias": main_fams, "faccoes": pools["faccoes"]})
     fixture = json.loads((BASE / "deck-332-main.json").read_text("utf-8"))
     bestiary = load_bestiary()
     assert fixture

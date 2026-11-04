@@ -151,6 +151,195 @@
       },
       "descricao": "Uma ordem seca, e todos miram melhor.",
       "oculta": true
+    },
+    {
+      "id": "inf_tatico_golpe_combinado",
+      "name": "Golpe Combinado",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 3,
+          "dano_tipo": "cortante"
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 2,
+          "dano_tipo": "cortante",
+          "se": {
+            "alvo_tem": "marca"
+          }
+        }
+      ],
+      "descricao": "Quem foi apontado leva a lâmina de todos, uma depois da outra.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_recuar_em_ordem",
+      "name": "Recuar em Ordem",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 3
+        },
+        {
+          "kind": "reposicionar",
+          "valor": 2
+        }
+      ],
+      "descricao": "Escudo de ferro erguido, passo atrás, sem nunca dar as costas.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_desarme_metodico",
+      "name": "Desarme Metódico",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2,
+          "dano_tipo": "cortante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desarmado_risco",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Um corte no pulso, ensaiado mil vezes no pátio da caserna.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_ler_a_guarda",
+      "name": "Ler a Guarda",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "marca",
+          "valor": 2
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "exposto",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Estuda o alvo em silêncio e diz em voz alta onde ele vai falhar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_contra_a_parede",
+      "name": "Contra a Parede",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "empurrao",
+          "valor": 2
+        }
+      ],
+      "descricao": "Empurra com o punho da arma até o alvo bater na trincheira.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_respirar_e_mirar",
+      "name": "Respirar e Mirar",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "buff_acerto",
+          "valor": 1
+        },
+        {
+          "kind": "buff_dano",
+          "valor": 1,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Para um instante, sente o pulso baixar e solta o ar devagar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_ferro_com_ferro",
+      "name": "Ferro com Ferro",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 3,
+          "dano_tipo": "cortante"
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 2,
+          "dano_tipo": "cortante",
+          "se": {
+            "engajado": true
+          }
+        }
+      ],
+      "descricao": "Colado no alvo, troca golpes curtos de lâmina que a guarda não acompanha.",
+      "oculta": true
     }
   ]
 }

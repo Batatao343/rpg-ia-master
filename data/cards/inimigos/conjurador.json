@@ -153,6 +153,31 @@
       },
       "descricao": "Uma fenda abre e fecha ao lado do alvo, arrancando-lhe o fôlego.",
       "oculta": true
+    },
+    {
+      "id": "inf_conjurador_onda_de_recuo",
+      "name": "Onda de Recuo",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "conjurador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "empurrao",
+          "valor": 2
+        },
+        {
+          "kind": "protecao",
+          "valor": 1,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Um gesto seco, e o éter empurra o alvo para longe do conjurador.",
+      "oculta": true
     }
   ]
 }

@@ -226,6 +226,116 @@
         "valor": 4
       },
       "descricao": "Acompanha a presa de lado, baixo, sem pisar em nada que estale."
+    },
+    {
+      "id": "inf_predador_morder_o_marcado",
+      "name": "Morder o Marcado",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "predador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 2,
+          "dano_tipo": "perfurante",
+          "se": {
+            "alvo_tem": "marca"
+          }
+        }
+      ],
+      "descricao": "O faro já escolheu pelo cheiro de sangue; a mandíbula só confirma.",
+      "oculta": true
+    },
+    {
+      "id": "inf_predador_derrubar_a_presa",
+      "name": "Derrubar a Presa",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "predador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Salta sobre o peito do alvo e o prende entre a cinza e o próprio peso.",
+      "oculta": true
+    },
+    {
+      "id": "inf_predador_voltar_ao_mato",
+      "name": "Voltar ao Mato",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "predador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "esconder",
+          "valor": 2
+        },
+        {
+          "kind": "reposicionar",
+          "valor": 2
+        }
+      ],
+      "descricao": "Some na névoa entre as folhas altas e volta pelo lado que ninguém olha.",
+      "oculta": true
+    },
+    {
+      "id": "inf_predador_mordida_que_sangra",
+      "name": "Mordida que Sangra",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "predador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 3,
+          "dano_tipo": "cortante"
+        }
+      ],
+      "descricao": "Morde e solta; o sangue continua a escorrer depois.",
+      "oculta": true
     }
   ]
 }

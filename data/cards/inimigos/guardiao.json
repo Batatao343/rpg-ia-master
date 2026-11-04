@@ -149,6 +149,87 @@
       },
       "descricao": "Um pulso de ferro renova a guarda de quem está ao lado.",
       "oculta": true
+    },
+    {
+      "id": "inf_guardiao_golpe_de_broquel",
+      "name": "Golpe de Broquel",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 3,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "empurrao",
+          "valor": 2
+        }
+      ],
+      "descricao": "A borda de ferro do escudo bate de frente e abre espaço na linha.",
+      "oculta": true
+    },
+    {
+      "id": "inf_guardiao_cobrir_o_companheiro",
+      "name": "Cobrir o Companheiro",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 3
+        },
+        {
+          "kind": "taunt",
+          "valor": 2
+        }
+      ],
+      "descricao": "Põe-se na frente do aliado ferido e chama o golpe para o próprio ferro.",
+      "oculta": true
+    },
+    {
+      "id": "inf_guardiao_resposta_da_vigia",
+      "name": "Resposta da Vigia",
+      "origem": "cartas-373",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 3,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 2,
+          "dano_tipo": "perfurante",
+          "se": {
+            "alvo_tem": "exposto"
+          }
+        }
+      ],
+      "descricao": "Na vigília, viu a brecha antes de todos; agora a pune sem pressa.",
+      "oculta": true
     }
   ]
 }
