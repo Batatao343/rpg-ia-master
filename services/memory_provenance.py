@@ -17,6 +17,7 @@ from collections.abc import Iterable
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 from services.secret_signatures import SECRET_ENTITY_IDS, SECRET_SIGNATURES
+from services import text as _text
 
 MemoryProvenance = Literal[
     "canonical_event",
@@ -239,8 +240,7 @@ def false_player_death_claim(text: str, state: dict) -> bool:
 
 
 def _fold(value: str) -> str:
-    normalized = unicodedata.normalize("NFKD", str(value or ""))
-    return "".join(char for char in normalized if not unicodedata.combining(char)).casefold()
+    return _text.fold(value)
 
 
 def canonical_location_contradiction(text: str) -> dict | None:
