@@ -1,0 +1,301 @@
+{
+  "switches": {
+    "at": "2026-11-04T06:54:40+00:00",
+    "image_generation": true,
+    "audit": [
+      {
+        "key": "image_generation",
+        "previous_enabled": false,
+        "enabled": true,
+        "created_at": "2026-11-04 06:54:09.799697+00:00"
+      },
+      {
+        "key": "image_generation",
+        "previous_enabled": true,
+        "enabled": false,
+        "created_at": "2026-11-04 06:53:38.170362+00:00"
+      },
+      {
+        "key": "image_generation",
+        "previous_enabled": false,
+        "enabled": true,
+        "created_at": "2026-11-04 06:52:45.367592+00:00"
+      },
+      {
+        "key": "image_generation",
+        "previous_enabled": true,
+        "enabled": false,
+        "created_at": "2026-11-04 06:52:01.029643+00:00"
+      },
+      {
+        "key": "image_generation",
+        "previous_enabled": false,
+        "enabled": true,
+        "created_at": "2026-11-04 06:50:55.316599+00:00"
+      }
+    ]
+  },
+  "samples": [
+    {
+      "at": "2026-11-04T06:54:44+00:00",
+      "kind": "api",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "3213329c06524b34a87e9ce13cdb7276",
+      "vercel_id": "gru1::gru1::bbd7w-1793775285429-291bb8eb1096",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "60a00558",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 0.1,
+        "price_cached": true,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:54:45+00:00",
+      "kind": "api",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "6fae34ff09b24108bac4359fd219996c",
+      "vercel_id": "gru1::gru1::nf6s2-1793775286831-89584fdaec0a",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "60a00558",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 1.5,
+        "price_cached": true,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:54:47+00:00",
+      "kind": "api",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "f8412c5f19634d0da69699932d2f1c71",
+      "vercel_id": "gru1::gru1::vrkt7-1793775288190-0b9050331b43",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "60a00558",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 2.9,
+        "price_cached": true,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:54:48+00:00",
+      "kind": "api",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "7f70718e4ddc4b1bbe2bbd5c908cecb4",
+      "vercel_id": "gru1::gru1::z2mmt-1793775289572-c363a5c2a31e",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "60a00558",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 4.3,
+        "price_cached": true,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:54:49+00:00",
+      "kind": "api",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "5b2dd468263e463c8dd81caee9cebeac",
+      "vercel_id": "gru1::gru1::nf6s2-1793775290974-7d7aa01b78ad",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "60a00558",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 0.1,
+        "price_cached": true,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:54:51+00:00",
+      "kind": "api",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "563a4269654d442ca13d11a67c3d94a7",
+      "vercel_id": "gru1::gru1::bkjxk-1793775292352-f00a4dcf0e72",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "60a00558",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 1.5,
+        "price_cached": true,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:54:56+00:00",
+      "kind": "browser:1440",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "6f547e4c56ea",
+      "vercel_id": "gru1::gru1::9755x-1793775297427-f160770a5da8",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "64403721",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 0.2,
+        "price_cached": false,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:54:58+00:00",
+      "kind": "browser:390",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "203bf1e85a9a",
+      "vercel_id": "gru1::gru1::vrhs5-1793775299421-0b736638a4af",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "64403721",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 2.2,
+        "price_cached": true,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:55:00+00:00",
+      "kind": "browser:1440",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "d81dcb712944",
+      "vercel_id": "gru1::gru1::v5l6f-1793775301624-83a0360dc95a",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "64403721",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 4.4,
+        "price_cached": true,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:55:02+00:00",
+      "kind": "browser:1280",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "ac2cb7f08134",
+      "vercel_id": "gru1::gru1::bkjxk-1793775303427-27516da49ef5",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "60a00558",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 0.1,
+        "price_cached": true,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:55:04+00:00",
+      "kind": "browser:1440",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "9cecbaec88f0",
+      "vercel_id": "gru1::gru1::bbd7w-1793775305188-cda0e375697c",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "3724f076",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 0.2,
+        "price_cached": false,
+        "art_live": true
+      }
+    },
+    {
+      "at": "2026-11-04T06:55:06+00:00",
+      "kind": "browser:390",
+      "endpoint": "/game/state",
+      "status": 200,
+      "request_id": "7cc3ca70dc5d",
+      "vercel_id": "gru1::gru1::w9k8m-1793775307254-10bbca2a797b",
+      "game": "b3e050eb",
+      "gerar": true,
+      "offer_view": {
+        "instance": "64403721",
+        "game_ref": "1d01a0ba2ca7f6b8",
+        "offered": 1,
+        "omitted": {},
+        "switch_age_s": 0.2,
+        "price_cached": true,
+        "art_live": true
+      }
+    }
+  ],
+  "summary": {
+    "samples": 12,
+    "with_offer": 12,
+    "causes": {},
+    "per_instance": {
+      "60a00558": {
+        "samples": 7,
+        "offered": 7
+      },
+      "64403721": {
+        "samples": 4,
+        "offered": 4
+      },
+      "3724f076": {
+        "samples": 1,
+        "offered": 1
+      }
+    },
+    "games": [
+      [
+        "api",
+        "b3e050eb",
+        "1d01a0ba2ca7f6b8"
+      ],
+      [
+        "browser",
+        "b3e050eb",
+        "1d01a0ba2ca7f6b8"
+      ]
+    ]
+  },
+  "missing": 0,
+  "problems": []
+}

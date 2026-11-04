@@ -136,7 +136,11 @@ def collect_api(base: str, game_id: str, reads: int, cookie: str) -> list[dict[s
     return samples
 
 
-def collect_browser(base: str, widths: list[int], storage_state: str) -> list[dict[str, Any]]:
+def collect_browser(
+    base: str, widths: list[int], storage_state: str, hero: str = ""
+) -> list[dict[str, Any]]:
+    import re
+
     from playwright.sync_api import sync_playwright
 
     samples = []
@@ -152,6 +156,14 @@ def collect_browser(base: str, widths: list[int], storage_state: str) -> list[di
                 "response", lambda r, bag=seen: bag.append(r) if "/game/state" in r.url else None
             )
             page.goto(base, wait_until="networkidle")
+            if hero:  # o app nao tem link direto: o jogo abre pelo botao do heroi na lista
+                btn = page.get_by_role("button", name=re.compile("^" + re.escape(hero)))
+                btn.first.wait_for(timeout=40000)
+                with page.expect_response(lambda r: "/game/state" in r.url, timeout=40000):
+                    btn.first.click()
+            shots = os.environ.get("PORTRAIT_MEASURE_SHOTS", "")
+            if shots and not seen:  # diagnostico: o que a tela mostra quando nao houve leitura
+                page.screenshot(path=str(Path(shots) / f"no-state-{width}-{len(samples)}.png"))
             for resp in seen[-1:]:  # sem resposta = sem amostra: `count_problems` reprova
                 body = resp.json() if resp.ok else {}
                 samples.append(
@@ -259,7 +271,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     widths = [int(w) for w in args.widths.split(",") if w.strip()]
     samples = collect_api(args.base, args.game_id, args.api_reads, cookie)
     if widths and args.storage_state:
-        samples += collect_browser(args.base, widths, args.storage_state)
+        samples += collect_browser(args.base, widths, args.storage_state, args.hero)
     joined = join_samples(
         samples, parse_logs(fetch_logs(args.since))
     )  # mesma execucao: retencao curta
@@ -277,6 +289,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--base", required=True)
     parser.add_argument("--game-id", required=True)
     parser.add_argument("--storage-state", default="")
+    parser.add_argument("--hero", default="", help="nome do heroi: o navegador abre o jogo por ele")
     parser.add_argument("--api-reads", type=int, default=6)
     parser.add_argument("--widths", default="1440,390,1440,1280,1440,390")
     parser.add_argument("--since", default="20m")
