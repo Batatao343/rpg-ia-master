@@ -10,6 +10,7 @@ evals/eval-case.schema.json
 evals/eval-result.schema.json
 evals/eval-run.schema.json
 evals/eval-run-result.schema.json
+evals/baselines
 web/e2e/contracts
 tests/fixtures/spec330_legacy_golden.json
 scripts/fauna/eval.py
