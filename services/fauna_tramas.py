@@ -150,6 +150,26 @@ def presence_error(p: dict, e: dict) -> str | None:
     return None
 
 
+def disperse_closed(fauna: dict, state: dict, day: int) -> None:
+    """P2-10: presenca ativa de criatura cuja trama regrediu (portao fechado) e dispersa; assim
+    nao ocupa o teto da regiao nem mostra sinal. Muta `fauna`; sem efeito com a flag `off`."""
+    if mode() != "on":
+        return
+    from services import fauna as fa
+
+    cache: dict[str, dict[str, str]] = {}
+    for p in fauna.get("presencas") or []:
+        if not p.get("trama_id") or not fa._active(p, day):
+            continue
+        region = str(p.get("region_id") or "")
+        stages = cache.setdefault(region, region_stages(state, region))
+        if gate_closed(fa.entry(p["creature_id"]), stages):
+            p["status"] = "dispersa"
+            fa._log(
+                "trama_portao", creature=p["creature_id"], thread=p["trama_id"], stage="regrediu"
+            )
+
+
 def log_pull(picked: dict | None, stages: Mapping[str, str] | None, location_id: str) -> None:
     """R14: `trama_puxao` quando a criatura sorteada pesou `TRAMA_MULT` neste local."""
     if not picked or not stages or mode() != "on":

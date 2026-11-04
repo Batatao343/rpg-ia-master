@@ -540,6 +540,7 @@ def day_hook(ctx: Any):
         return result
     sim, day = ctx.sim, int(ctx.day)
     fauna = _expire(_fauna_of(sim), day)
+    fauna_tramas.disperse_closed(fauna, ctx.state or {}, day)  # SPEC-372 P2-10
     regions: set[str] = set()
     try:
         from services import rumors
@@ -661,8 +662,11 @@ def scene_block(state: dict) -> tuple[str, dict]:
     sim = state.get("world_sim") or {}
     day, loc = _day(world), str(world.get("current_location_id") or "")
     pres, e, kind = None, None, None
+    stages = fauna_tramas.stages_for(state, world)  # SPEC-372 P2-10
     for cand in presences_at(sim, loc, day):  # a anunciada continua; esgotada, passa a vez
         e = entry(cand["creature_id"])
+        if fauna_tramas.gate_closed(e, stages):
+            continue  # a trama regrediu: presença atrás do portão não mostra sinal
         kind = _next_sign(e or {}, list(cand.get("sinais_mostrados") or []), cand["pid"])
         if kind:
             pres = cand

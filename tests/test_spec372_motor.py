@@ -400,3 +400,38 @@ def test_rumor_adoption_encounter_hint_respeita_portao(flags):
         if hint:
             seen.add(hint["enemy_id"])
     assert cid in seen
+
+
+def test_trama_regride_dispersa_presenca_e_cala_sinal(flags):
+    """P2-10: presenca ligada cujo portao fecha deixa o teto da regiao e nao mostra sinal."""
+    cid, loc = _pick(list(pt.thread(CORPOS).locations))
+    _link(flags, cid)
+    flags.setattr(fauna, "region_cap", lambda region: 1)  # regiao de 1 vaga
+    pres = {
+        "pid": "p1",
+        "creature_id": cid,
+        "region_id": "nova_arcadia",
+        "locais": [loc],
+        "born_day": 1,
+        "expires_day": 9,
+        "sinais_mostrados": [],
+        "origem": "dia",
+        "status": "ativa",
+        "trama_id": CORPOS,
+    }
+    # tocada: ainda ativa e com sinal
+    st_on = {"npcs": {"npc_tr_pio_ferrugem": {"known_by_player": True}}}
+    st_on["world"] = {"current_location_id": loc, "world_clock": {"day": 2}}
+    st_on["world_sim"] = {"fauna": {"v": 1, "presencas": [dict(pres)], "carcacas": []}}
+    block, _upd = fauna.scene_block(st_on)
+    assert block
+    # a trama regrediu (sem NPC conhecido): sem sinal, e o hook a dispersa
+    st_off = {"npcs": {}, "world": st_on["world"]}
+    st_off["world_sim"] = {"fauna": {"v": 1, "presencas": [dict(pres)], "carcacas": []}}
+    assert fauna.scene_block(st_off) == ("", {})
+    sim = st_off["world_sim"]
+    fa = fauna._fauna_of(sim)
+    fauna_tramas.disperse_closed(fa, st_off, 2)
+    assert fa["presencas"][0]["status"] == "dispersa"
+    active = [p for p in fa["presencas"] if fauna._active(p, 2)]
+    assert len(active) == 0 < fauna.region_cap("nova_arcadia")
