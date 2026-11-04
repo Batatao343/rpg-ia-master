@@ -715,30 +715,6 @@
    "guarda_r19": "nao medida por passo: nenhum log de Posturas por passo de familia; medida uma vez no estado final (posturas 0-19 identicas a antes do B6: Dev 60,2, San 65,0, Cor 60,6, Arc 57,1, Med 55,8)"
   },
   {
-   "bloco": "R15-D369-10",
-   "criatura": "mon_automato_fundicao",
-   "campo": "virtudes.agilidade (esquiva 14 -> 13)",
-   "de": 4,
-   "para": 3,
-   "metricas_antes": {
-    "p95_total": 11,
-    "medico_p95": 17,
-    "medico_timeout_pct": 3.3,
-    "timeout_total_pct": 0.7
-   },
-   "metricas_depois": {
-    "p95_total": 9,
-    "medico_p95": 16,
-    "medico_timeout_pct": 0.8,
-    "timeout_total_pct": 0.2,
-    "vitoria_total_pct": 69.6,
-    "medico_vitoria_pct": 69.7
-   },
-   "guarda_r19": "posturas 0-19 inalteradas (a criatura nao esta na arena de Posturas); Sangromante 65,0 (+0,0 pp)",
-   "mantido": true,
-   "motivo": "D-369-10 item 2: um passo num unico inimigo"
-  },
-  {
    "bloco": "B3",
    "sondagem": true,
    "sondagem_carta": "bas_dev_voto",
@@ -1114,6 +1090,16 @@
    "resultado": "sem movimento",
    "mantido": false,
    "familia": "predador_apice"
+  },
+  {
+   "bloco": "R15-D369-10",
+   "sondagem": true,
+   "sondagem_carta": "mon_automato_fundicao",
+   "campo": "_ajustes.yaml dano",
+   "de": 0,
+   "para": -1,
+   "resultado": "inerte: a criatura e status `retro` e `gerar_mecanica` a pula; bestiary.json e cartas ficaram byte a byte iguais. Passo de agilidade 4 -> 3 revertido (quebrava o hash da 373)",
+   "mantido": false
   }
  ]
 }
