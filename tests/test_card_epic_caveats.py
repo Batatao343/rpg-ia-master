@@ -11,6 +11,7 @@ from langchain_core.messages import AIMessage
 import api
 import persistence
 from services import death_prose_guard, round_log
+from services.death_ending import ACCEPT_TEXT
 from tests.test_death_flow import _state
 
 NAMES = {"player": "Você", "e1": "Goblin 1", "e2": "Goblin 2"}
@@ -38,6 +39,8 @@ def test_accept_replaces_wheel_question_in_message_and_history(tmp_path, monkeyp
     assert r.status_code == 200
     assert "aceitar o fim aqui?" not in r.text and "aceita o fim" in r.text
     saved = persistence.load_game_state(persistence.save_path(gid))
+    assert saved["messages"][-1].content.endswith(ACCEPT_TEXT)
+    assert saved["presentation_history"][-1]["text"].endswith(ACCEPT_TEXT)
     assert all("aceitar o fim aqui?" not in str(m.content) for m in saved["messages"])
     assert all("aceitar o fim aqui?" not in row["text"] for row in saved["presentation_history"])
 
@@ -67,6 +70,17 @@ def test_final_blow_groups_by_author_and_kind_in_order():
     assert text.endswith("termina o serviço: Goblin 2 tomba.")
 
 
+def test_dot_blows_from_different_authors_share_one_sentence():
+    out = {
+        "final_blows": [
+            _blow("e1", by="x", kind="dano_continuo", condition="sangramento"),
+            _blow("e2", by="y", kind="dano_continuo", condition="sangramento"),
+        ]
+    }
+    text = round_log.final_blow_sentence(out, NAMES)
+    assert text.count("termina o serviço") == 1 and "Goblin 1 e Goblin 2 tombam" in text
+
+
 def test_final_blow_single_target_unchanged():
     out = {"final_blows": [_blow("e1")]}
     assert (
@@ -86,8 +100,22 @@ def test_guard_accepts_faithful_prose():
 def test_guard_rejects_wrong_gravity_and_unrecorded_part():
     assert death_prose_guard.check("Sua perna, ferida de forma grave, cede.", LEVE_PERNA)
     assert death_prose_guard.check("Um ferimento no torso rasga você.", LEVE_PERNA)
-    assert death_prose_guard.check("Um ferimento na perna direita sangra.", LEVE_PERNA)
-    assert death_prose_guard.check("Um ferimento na perna sangra.", LEVE_PERNA) is None
+    assert death_prose_guard.check("Um ferimento na sua perna direita sangra.", LEVE_PERNA)
+    assert death_prose_guard.check("Um ferimento na sua perna sangra.", LEVE_PERNA) is None
+
+
+@pytest.mark.parametrize(
+    "prose",
+    [
+        "Sem ferimentos graves na perna, você tomba pelo cansaço.",
+        "Um leve tremor percorre sua perna.",
+        "O lobo, ferido na perna, recua.",
+        "O ferimento no braço do Goblin sangra.",
+    ],
+)
+def test_guard_false_positives_pass(prose):
+    crit_torso = [{"regiao": "torso", "categoria": "critico"}]
+    assert death_prose_guard.check(prose, crit_torso) is None
 
 
 def _death_outcome(monkeypatch, text, player):
@@ -152,7 +180,7 @@ def test_buy_payment_tail_does_not_open_prose_hole(monkeypatch):
 
 
 # --- R5 ----------------------------------------------------------------------------------
-def test_pool_warning_and_strict(tmp_path, capsys):
+def test_pool_warning_lines(tmp_path):
     from scripts import import_bestiary_art as imp
 
     (tmp_path / "criaturas").mkdir()
@@ -162,7 +190,37 @@ def test_pool_warning_and_strict(tmp_path, capsys):
     ]
     assert imp.pool_warnings(tmp_path, {"fantasma"}) == []
     assert "sem fonte local" in imp.pool_warnings(tmp_path, None)[0]
-    assert imp.main([str(tmp_path), "--strict"]) == 2
+
+
+def test_strict_aborts_before_writing_and_plain_run_succeeds(tmp_path, monkeypatch, capsys):
+    import functools
+    import shutil
+    from pathlib import Path
+
+    from scripts import import_bestiary_art as imp
+    from tests.test_import_bestiary_art import _png
+
+    root = Path(imp.ROOT)
+    catalog = tmp_path / "visual_assets.json"
+    shutil.copy(root / "data" / "visual_assets.json", catalog)
+    out_dir = tmp_path / "out"
+    folder = tmp_path / "in"
+    (folder / "criaturas").mkdir(parents=True)
+    (folder / "criaturas" / "bst_fantasma-zz.png").write_bytes(_png(3, 800))
+    monkeypatch.setattr(imp, "known_pool_ids", lambda: {"lobo"})
+    monkeypatch.setattr(
+        imp,
+        "import_folder",
+        functools.partial(imp.import_folder, catalog_path=catalog, out_dir=out_dir),
+    )
+    before = catalog.read_bytes()
+
+    assert imp.main([str(folder), "--strict"]) == 2
+    assert catalog.read_bytes() == before and not out_dir.exists()
+    assert "fora do pool" in capsys.readouterr().out
+
+    assert imp.main([str(folder)]) == 0
+    assert catalog.read_bytes() != before and out_dir.exists()
 
 
 # --- R6 (investigação do Achado 2) -------------------------------------------------------

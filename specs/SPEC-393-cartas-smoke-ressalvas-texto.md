@@ -64,10 +64,10 @@ Nenhuma aberta: é texto e robustez.
 
 ## 9. Registro de implementação
 
-- R1: `services/death_ending.py` (`ACCEPT_TEXT`, `apply_accept_text`) troca `WHEEL_TEXT` na última mensagem da IA e em `presentation_history`; sem pergunta a trocar, anexa o texto. Chamado no ramo `accept` de `resolve_death_choice`.
+- R1: `services/death_ending.py` (`ACCEPT_TEXT`, `apply_accept_text`) troca `WHEEL_TEXT` na última mensagem da IA e em `presentation_history`; sem pergunta a trocar, anexa o texto; troca só a última ocorrência, em mensagens e no histórico. Chamado no ramo `accept` de `resolve_death_choice`.
 - R2: `round_log.final_blow_sentence` agrupa por (autor, tipo, condição); novo `_blow_subject`. Alvo único: byte-idêntico.
-- R3: `services/death_prose_guard.py` (`check`, `wounds_from_player`); só para `death`; ganchado como código de rejeição (`death_prose_guard.codes`) no mesmo ponto da atribuição, para não crescer `combat.py`: fonte `fallback_attribution`, evento existente `outcome_attribution_rejected` e `log_fallback` (sem evento novo, catálogo intacto). Prosa sobre parte do corpo de outro dono ("braço do Goblin") é ignorada.
+- R3: `services/death_prose_guard.py` (`check`, `wounds_from_player`); só para `death`; ganchado como código de rejeição (`death_prose_guard.codes`) no mesmo ponto da atribuição, para não crescer `combat.py`: fonte `fallback_attribution`, evento existente `outcome_attribution_rejected` e `log_fallback`; eventos novos `combat.death_prose.fallback` e `import_bestiary_art.pool.fallback` (catálogo regenerado, 397 eventos). Revisão Sol: o guard só julga sentenças de ferimento, ignora negação, dono de outra parte ("braço do Goblin", "O lobo, ferido na perna") e "leve" fora de contexto de ferimento.
 - R4: grupo opcional `pay` na cauda da gramática de `_card_shop_turn`.
-- R5: `pool_warnings`/`known_pool_ids` (fichas do bestiário como fonte local) e `--strict`; linha em AUTORIA.md.
+- R5: `pool_warnings`/`known_pool_ids` (fichas do bestiário como fonte local) e `--strict` (aborta com rc 2 antes de gravar catálogo ou WebP); linha em AUTORIA.md.
 - R6 (A2): ARTEFATO, não bug. Em `/game/new` com MockLLM a abertura ecoa o pedido ("Você descreva o cenário ao meu redor. Sou um Sangromante de nível 1."); o `continue` restaura exatamente essa narração. Teste `test_continue_restores_checkpoint_narration_not_player_text`.
 - Testes: `tests/test_card_epic_caveats.py` (14). Desvio: §6 (smoke real com LLM) não executado pelo executor (sem chave); coberto por testes com API real + MockLLM, fica para o coordenador.

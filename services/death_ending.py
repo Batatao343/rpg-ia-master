@@ -32,9 +32,10 @@ def apply_accept_text(state: dict) -> dict:
         messages.append(AIMessage(content=ACCEPT_TEXT))
     state["messages"] = messages
     history = copy.deepcopy(state.get("presentation_history") or [])
-    for row in history:
+    for row in reversed(history):  # só a última pergunta, como nas mensagens
         if isinstance(row, dict) and WHEEL_TEXT in str(row.get("text", "")):
             row["text"] = _swap(str(row["text"]))
+            break
     if history:
         state["presentation_history"] = history
     return state

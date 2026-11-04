@@ -167,13 +167,7 @@ def import_folder(
     out_dir: Path = OUT_DIR,
     url_base: str = URL_BASE,
     force: bool = False,
-    warnings: list[str] | None = None,
-    known_pool: set[str] | None = None,
 ) -> dict[str, int]:
-    if warnings is not None:
-        warnings.extend(
-            pool_warnings(folder, known_pool if known_pool is not None else known_pool_ids())
-        )
     names = _bestiary_ids(bestiary_path)
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     original = catalog["assets"]
@@ -249,16 +243,16 @@ def main(argv: list[str] | None = None) -> int:
         "--strict", action="store_true", help="avisos de id fora do pool viram erro"
     )
     args = parser.parse_args(argv)
-    warns: list[str] = []
-    try:
-        stats = import_folder(args.folder, force=args.force, warnings=warns)
-    except ImportErrorArt as exc:
-        print(f"erro: {exc}", file=sys.stderr)
-        return 2
+    warns = pool_warnings(args.folder, known_pool_ids())
     for line in warns:
         print(line)
     if warns and args.strict:
-        print("erro: --strict e ha avisos de pool", file=sys.stderr)
+        print("erro: --strict e ha avisos de pool; nada foi gravado", file=sys.stderr)
+        return 2
+    try:
+        stats = import_folder(args.folder, force=args.force)
+    except ImportErrorArt as exc:
+        print(f"erro: {exc}", file=sys.stderr)
         return 2
     print(f"importado: {stats['added']} · sem mudanca: {stats['unchanged']}")
     return 0

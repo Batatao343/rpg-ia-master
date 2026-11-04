@@ -855,7 +855,8 @@ def final_blow_sentence(last_out: dict | None, names: dict[str, str]) -> str:
         subject = _blow_subject(blow, names)
         if not subject:
             continue
-        key = (blow.get("by_actor_id"), blow.get("kind"), blow.get("condition"))
+        dot = blow.get("kind") == "dano_continuo"  # a condição é o sujeito, não o autor
+        key = (None if dot else blow.get("by_actor_id"), blow.get("kind"), blow.get("condition"))
         targets = groups.setdefault(key, (subject, []))[1]
         targets.append(names.get(tid, "O inimigo"))
     parts = []
