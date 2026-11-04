@@ -1547,72 +1547,7 @@ def storyteller_node(state: GameState):
                 log_fallback("storyteller", "perceived_milestones_failed", exc)
     else:
         t.extra_engine_events_tick = []
-    # --- SPEC-301: o tempo passou -> a fação do jogador pode ter ascendido/sido destruída,
-    # e rivais que já sabem do vínculo reagem (chegada à região deles ou notícia). ---
-    if t.state.get("faction_membership"):
-        _fm_notes: list = []
-        _was_defeated = {f.get("id") for f in (t.state.get("factions") or []) if f.get("defeated")}
-        for _f in list(t.factions):
-            if _f.get("defeated") and _f.get("id") not in _was_defeated:
-                _fm_notes.append(_fm_apply(t, fm.on_faction_defeated(_fm_view(t), _f.get("id"))))
-        _asc_events = fm.new_ascensions(t.state.get("factions"), t.factions, t.faction_events)
-        _asc = fm.ascension_member_note(_fm_view(t), _asc_events)
-        if _asc:
-            _fm_notes.append(_asc)
-        _fm_notes.append(
-            _fm_apply(
-                t,
-                fm.apply_rival_awareness(
-                    _fm_view(t),
-                    str(t.dest["id"]) if t.dest else str(t.world.get("current_location_id") or ""),
-                    arrived=bool(t.dest),
-                ),
-            )
-        )
-        _fm_text = "\n".join(n for n in _fm_notes if n)
-        if _fm_text:
-            t.faction_note = (t.faction_note + "\n" + _fm_text).strip()
-
-    # SPEC-305: quests de mundo (prazo/falha + oferta por percepcao); a lista parcial
-    # `wq_quests` substitui `state["quests"]` em todo o resto do turno.
-    wq_base = {**t.state, "quests": t.fm_extra["quests"]} if "quests" in t.fm_extra else t.state
-    t.wq_quests, t.wq_events, t.wq_created = _world_quests_tick(
-        wq_base, t.world, t.factions, t.intel, t.world_tick, t.perceived_items
-    )
-    t.extra_engine_events_tick += t.wq_events
-    t.extra_engine_events_tick += _world_quest_completions(t.state, t.world, t.wq_quests)
-    t.wq_changed = t.wq_quests != list(t.state.get("quests") or [])  # inclui quests da 301
-    t.rumor_nothing = False  # SPEC-315 §6.2: busca no alvo de boato sem achado devido
-    t.rumor_find = False  # SPEC-315: achado de boato => `world.looted_locations` tem de sobreviver
-    if not t.dest and t.rested_player is None and not t.law_resolved and t.last_user_input:
-        _cache_player, _cache_note, _cache_events = _rumor_cache_trigger(
-            t.state, t.world, t.sim_updates, str(t.last_user_input), t.wq_quests
-        )  # SPEC-315: boato verdadeiro de achado, no alvo, com busca/quest
-        if _cache_player is None:
-            try:
-                from services import rumor_adoption as _ra_n
-
-                t.rumor_nothing = _ra_n.nothing_found(
-                    {**t.state, **t.sim_updates, "world": t.world},
-                    str(t.world.get("current_location_id") or ""),
-                    str(t.last_user_input),
-                )
-            except Exception as exc:
-                from observability.telemetry import log_fallback
-
-                log_fallback("storyteller", "rumor_nothing_failed", exc)
-        if _cache_player is not None:
-            t.rumor_find = True
-            t.discovery_events = list(t.discovery_events) + _cache_events  # claim de unico
-            t.discovery_player = _cache_player
-            t.faction_note = (t.faction_note + " " + _cache_note).strip()
-            t.turn_bl = record_gain(
-                t.turn_bl,
-                "gold",
-                int(_cache_player.get("gold", 0) or 0)
-                - int((t.state.get("player") or {}).get("gold", 0) or 0),
-                "exploration",
-            )
+    _story_membership_and_quests(t)
     _story_scene_and_replan(t)
 
     # --- O tempo passou (viagem/descanso): ou cai em encontro, ou o mundo "respira" ---
@@ -1683,6 +1618,79 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_membership_and_quests(t: _StoryTurn) -> None:
+    """Vínculo de fação (ascensão/rivais), quests de mundo e cache de boato."""
+    from services import faction_membership as fm
+    from services.turn_outcome import record_gain
+
+    # --- SPEC-301: o tempo passou -> a fação do jogador pode ter ascendido/sido destruída,
+    # e rivais que já sabem do vínculo reagem (chegada à região deles ou notícia). ---
+    if t.state.get("faction_membership"):
+        _fm_notes: list = []
+        _was_defeated = {f.get("id") for f in (t.state.get("factions") or []) if f.get("defeated")}
+        for _f in list(t.factions):
+            if _f.get("defeated") and _f.get("id") not in _was_defeated:
+                _fm_notes.append(_fm_apply(t, fm.on_faction_defeated(_fm_view(t), _f.get("id"))))
+        _asc_events = fm.new_ascensions(t.state.get("factions"), t.factions, t.faction_events)
+        _asc = fm.ascension_member_note(_fm_view(t), _asc_events)
+        if _asc:
+            _fm_notes.append(_asc)
+        _fm_notes.append(
+            _fm_apply(
+                t,
+                fm.apply_rival_awareness(
+                    _fm_view(t),
+                    str(t.dest["id"]) if t.dest else str(t.world.get("current_location_id") or ""),
+                    arrived=bool(t.dest),
+                ),
+            )
+        )
+        _fm_text = "\n".join(n for n in _fm_notes if n)
+        if _fm_text:
+            t.faction_note = (t.faction_note + "\n" + _fm_text).strip()
+
+    # SPEC-305: quests de mundo (prazo/falha + oferta por percepcao); a lista parcial
+    # `wq_quests` substitui `state["quests"]` em todo o resto do turno.
+    wq_base = {**t.state, "quests": t.fm_extra["quests"]} if "quests" in t.fm_extra else t.state
+    t.wq_quests, t.wq_events, t.wq_created = _world_quests_tick(
+        wq_base, t.world, t.factions, t.intel, t.world_tick, t.perceived_items
+    )
+    t.extra_engine_events_tick += t.wq_events
+    t.extra_engine_events_tick += _world_quest_completions(t.state, t.world, t.wq_quests)
+    t.wq_changed = t.wq_quests != list(t.state.get("quests") or [])  # inclui quests da 301
+    t.rumor_nothing = False  # SPEC-315 §6.2: busca no alvo de boato sem achado devido
+    t.rumor_find = False  # SPEC-315: achado de boato => `world.looted_locations` tem de sobreviver
+    if not t.dest and t.rested_player is None and not t.law_resolved and t.last_user_input:
+        _cache_player, _cache_note, _cache_events = _rumor_cache_trigger(
+            t.state, t.world, t.sim_updates, str(t.last_user_input), t.wq_quests
+        )  # SPEC-315: boato verdadeiro de achado, no alvo, com busca/quest
+        if _cache_player is None:
+            try:
+                from services import rumor_adoption as _ra_n
+
+                t.rumor_nothing = _ra_n.nothing_found(
+                    {**t.state, **t.sim_updates, "world": t.world},
+                    str(t.world.get("current_location_id") or ""),
+                    str(t.last_user_input),
+                )
+            except Exception as exc:
+                from observability.telemetry import log_fallback
+
+                log_fallback("storyteller", "rumor_nothing_failed", exc)
+        if _cache_player is not None:
+            t.rumor_find = True
+            t.discovery_events = list(t.discovery_events) + _cache_events  # claim de unico
+            t.discovery_player = _cache_player
+            t.faction_note = (t.faction_note + " " + _cache_note).strip()
+            t.turn_bl = record_gain(
+                t.turn_bl,
+                "gold",
+                int(_cache_player.get("gold", 0) or 0)
+                - int((t.state.get("player") or {}).get("gold", 0) or 0),
+                "exploration",
+            )
 
 
 def _story_scene_and_replan(t: _StoryTurn) -> None:
