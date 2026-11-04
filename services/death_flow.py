@@ -18,6 +18,7 @@ from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
+from services import text as _text
 from services.conflict_resolution import roll_kept, virtude_value
 
 # --- Categorias de inimigo (R7) — conteúdo real é conflito-15 ----------------
@@ -405,8 +406,7 @@ _CLAUSE_SPLIT_RE = re.compile(r"[,;.]|\b(?:e|mas|porem|entao)\b")
 
 
 def _fold(text: str) -> str:
-    nfkd = unicodedata.normalize("NFKD", str(text or ""))
-    return "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
+    return _text.fold(text)
 
 
 def nonlethal_declared(text: str) -> bool:
