@@ -1613,34 +1613,7 @@ def storyteller_node(state: GameState):
                 - int((t.state.get("player") or {}).get("gold", 0) or 0),
                 "exploration",
             )
-    # Viagem fecha a cena anterior antes de qualquer encontro ou contexto. Isso
-    # também protege retornos antecipados de combate contra NPCs teleportados.
-    from services import npc_layers
-
-    t.scene_npcs = (
-        npc_layers.reset_scene(t.state.get("npcs", {})) if t.dest else t.state.get("npcs", {})
-    )
-    t.scene_state = {**t.state, "world": t.world, "npcs": t.scene_npcs}
-    t.travel_needs_replan = bool(t.state.get("needs_replan"))
-    if t.dest:
-        from agents.campaign_manager import _same_region
-
-        planned_location = str((t.state.get("campaign_plan") or {}).get("location") or "")
-        if planned_location and not _same_region(
-            planned_location,
-            str(t.world.get("current_location") or ""),
-        ):
-            t.travel_needs_replan = True
-    # SPEC-311 R6-R8: o mundo mudou DIANTE do herói (crise na região, cidade caída, quest dele
-    # falhou) => o arco replaneja. Lê só o que foi percebido hoje; vale em todo caminho de saída.
-    from services.planner_context import world_replan_cause
-
-    t._replan_cause = world_replan_cause(t.scene_state, t.perceived_items, t.wq_events)
-    if t._replan_cause:
-        t.travel_needs_replan = True
-        _log_event("campaign", "world_replan_trigger", cause=t._replan_cause)
-
-    # (Ação livre: o gating é feito pelo PRÓPRIO narrador no prompt — sem chamada extra ao Ruler.)
+    _story_scene_and_replan(t)
 
     # --- O tempo passou (viagem/descanso): ou cai em encontro, ou o mundo "respira" ---
     t.world_note = ""
@@ -1710,6 +1683,38 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_scene_and_replan(t: _StoryTurn) -> None:
+    """Fecha a cena da viagem e decide o replanejamento do arco."""
+    # Viagem fecha a cena anterior antes de qualquer encontro ou contexto. Isso
+    # também protege retornos antecipados de combate contra NPCs teleportados.
+    from services import npc_layers
+
+    t.scene_npcs = (
+        npc_layers.reset_scene(t.state.get("npcs", {})) if t.dest else t.state.get("npcs", {})
+    )
+    t.scene_state = {**t.state, "world": t.world, "npcs": t.scene_npcs}
+    t.travel_needs_replan = bool(t.state.get("needs_replan"))
+    if t.dest:
+        from agents.campaign_manager import _same_region
+
+        planned_location = str((t.state.get("campaign_plan") or {}).get("location") or "")
+        if planned_location and not _same_region(
+            planned_location,
+            str(t.world.get("current_location") or ""),
+        ):
+            t.travel_needs_replan = True
+    # SPEC-311 R6-R8: o mundo mudou DIANTE do herói (crise na região, cidade caída, quest dele
+    # falhou) => o arco replaneja. Lê só o que foi percebido hoje; vale em todo caminho de saída.
+    from services.planner_context import world_replan_cause
+
+    t._replan_cause = world_replan_cause(t.scene_state, t.perceived_items, t.wq_events)
+    if t._replan_cause:
+        t.travel_needs_replan = True
+        _log_event("campaign", "world_replan_trigger", cause=t._replan_cause)
+
+    # (Ação livre: o gating é feito pelo PRÓPRIO narrador no prompt — sem chamada extra ao Ruler.)
 
 
 def _story_roll_encounter(t: _StoryTurn) -> None:
