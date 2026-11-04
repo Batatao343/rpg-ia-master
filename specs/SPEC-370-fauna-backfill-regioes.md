@@ -1,6 +1,6 @@
 # SPEC-370 — Fauna viva nas 11 regiões restantes: backfill autorado por lotes, eval por região e ajustes de escala do motor (filha 360-B)
 
-> **Status:** `in-review` (código e conteúdo prontos; falta a revisão Sol, o playtest e o smoke) — aprovada pelo dono em 03/11 via pedido de execução imediata ("transforme em spec e execute agora"); os defaults da §8 valem até ele dizer o contrário.
+> **Status:** `done` (aprovada pelo dono em 03/11 via pedido de execução imediata; 4 lotes de fauna com revisão Opus independente; revisão Sol APPROVED_WITH_FOLLOWUPS em 2 rodadas; smoke real §6 ok; Ophidia com sinal obrigatório em região de 1 nó por decisão do dono; flags `RPG_FAUNA`/`RPG_FAUNA_SINAIS` seguem off)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Depende de:** SPEC-360 (`done`: schema, lint E1–E16, `services/fauna.py`, `scripts/fauna/*`, flags `RPG_FAUNA`/`RPG_FAUNA_SINAIS`, Nova Arcádia com 38 entradas aprovadas). SPEC-349 (`done`: fichas das 12 regiões em `data/bestiario/fichas/*.yaml` e o legado em `curadoria_legado.yaml`, na `main`).
 > **Desbloqueia:** SPEC-372 (`fauna-tramas`, filha 360-D) nas regiões que ganharem catálogo de trama; ligar `RPG_FAUNA`/`RPG_FAUNA_SINAIS` em staging fora de Nova Arcádia; a filha 360-C (saber e telegrafo) passa a ter sinais em todas as regiões.
@@ -151,12 +151,21 @@ Igual à 360 §3.2, mais o campo opcional:
 
 ```python
 # services/fauna.py
-def region_cap(region_id: str) -> int: ...  # R9: min(MAX_PRESENCAS_REGIAO, nós_raiz * PRESENCAS_POR_NO)
-def _make_room(fauna: FaunaSim, region: str, here_region: str, frequented: list[str], day: int) -> bool: ...  # R10
+def region_cap(
+    region_id: str,
+) -> int: ...  # R9: min(MAX_PRESENCAS_REGIAO, nós_raiz * PRESENCAS_POR_NO)
+def _make_room(
+    fauna: FaunaSim, region: str, here_region: str, frequented: list[str], day: int
+) -> bool: ...  # R10
+
+
 # eco_multiplier: `suprime` entra em _suppressed() só para PRESA_LIBERADA (R11)
 
+
 # scripts/fauna/eval.py (autor de eval)
-def run(seeds: int = DEFAULT_SEEDS, days: int = DEFAULT_DAYS, region: str = "nova_arcadia") -> dict: ...
+def run(
+    seeds: int = DEFAULT_SEEDS, days: int = DEFAULT_DAYS, region: str = "nova_arcadia"
+) -> dict: ...
 def run_all(seeds: int = DEFAULT_SEEDS, days: int = DEFAULT_DAYS) -> dict: ...  # M5 global
 ```
 
@@ -211,25 +220,25 @@ Smoke pelo coordenador; `/spec-land` (suíte completa 1×, pelo coordenador).
 
 ## 5. Critérios de aceite
 
-- [ ] 11 arquivos `data/bestiario/fauna/<regiao>.yaml`; `test_cobertura_regiao` verde nas 12 regiões (R1)
-- [ ] `lint.py` sem `--regiao` com 0 erro; `validate_content.py` com 0 ERRO; E17 e E18 com fixtures boas e ruins (R2, R6, R11)
-- [ ] Toda entrada das 11 regiões com `revisao: aprovada` e `revisor_fauna` ≠ `autor`; parecer por lote no handoff (R3)
-- [ ] Estação do calendário carregada nos legados de `calendar.json:44-49` (R4)
-- [ ] `rumor_seeds.json` regenerado, overrides preservados, `test_spec312_seeds.py` verde (R7)
-- [ ] `bestiary.json` e fichas byte-idênticos; `fauna.json` fresco (R8)
-- [ ] Cap por região e cap global com teste; Ophidia ≤ 1 presença; NA inalterada (R9, R10)
-- [ ] `suprime` com teste; 2 relações de NA migradas; eval de NA verde depois da migração (R11, R22)
-- [ ] Migrante × neutro com teste (R12); carcaça pelo `_combat_node` com teste (R13)
-- [ ] Golden `off` byte-idêntico; 0 chamada LLM nova; latência no teto com ~370 entradas (R14, R15)
-- [ ] Avaliador por região commitado antes do produto, com handoff de eval e `tests/test_spec370_eval.py` protegido; diff dos protegidos vazio depois disso (R16–R21)
-- [ ] Eval por região verde (M1, M2, M3, M4, M6, M7, M8, com os N/A declarados) nas 11 regiões; M5 global em [−20 %, +5 %]; relatórios publicados (R16–R20)
-- [ ] `tests/test_spec360_eval.py` verde do começo ao fim (R22)
-- [ ] Playtest `explorador` 50 turnos `on`: 0 violação `error` e ≥ 1 `fauna.sinal` (R23)
-- [ ] Revisão Sol `APPROVED` ou `APPROVED_WITH_FOLLOWUPS`
-- [ ] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo)
-- [ ] Saves antigos continuam carregando (presença de criatura de região nova em save antigo: não existe; `normalize_fauna_sim` inalterado)
-- [ ] Smoke real da §6 executado e registrado na §9
+- [x] 11 arquivos `data/bestiario/fauna/<regiao>.yaml`; `test_cobertura_regiao` verde nas 12 regiões (R1)
+- [x] `lint.py` sem `--regiao` com 0 erro; `validate_content.py` com 0 ERRO; E17 e E18 com fixtures boas e ruins (R2, R6, R11)
+- [x] Toda entrada das 11 regiões com `revisao: aprovada` e `revisor_fauna` ≠ `autor`; parecer por lote no handoff (R3)
+- [x] Estação do calendário carregada nos legados de `calendar.json:44-49` (R4)
+- [x] `rumor_seeds.json` regenerado, overrides preservados, `test_spec312_seeds.py` verde (R7)
+- [x] `bestiary.json` e fichas byte-idênticos; `fauna.json` fresco (R8)
+- [x] Cap por região e cap global com teste; Ophidia ≤ 1 presença; NA inalterada (R9, R10)
+- [x] `suprime` com teste; 2 relações de NA migradas; eval de NA verde depois da migração (R11, R22)
+- [x] Migrante × neutro com teste (R12); carcaça pelo `_combat_node` com teste (R13)
+- [x] Golden `off` byte-idêntico; 0 chamada LLM nova; latência no teto com ~370 entradas (R14, R15)
+- [x] Avaliador por região commitado antes do produto, com handoff de eval e `tests/test_spec370_eval.py` protegido; diff dos protegidos vazio depois disso (R16–R21)
+- [x] Eval por região verde (M1, M2, M3, M4, M6, M7, M8, com os N/A declarados) nas 11 regiões; M5 global em [−20 %, +5 %]; relatórios publicados (R16–R20) — Ophidia M1 0,9845 após a regra de região de 1 nó (decisão do dono 03/11); M5 global −19,41 % (folga ~0,6 pp, risco na §9)
+- [x] `tests/test_spec360_eval.py` verde do começo ao fim (R22)
+- [x] Playtest `explorador` 50 turnos `on`: 0 violação `error` e ≥ 1 `fauna.sinal` (R23)
+- [x] Revisão Sol `APPROVED` ou `APPROVED_WITH_FOLLOWUPS`
+- [x] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo)
+- [x] Saves antigos continuam carregando (presença de criatura de região nova em save antigo: não existe; `normalize_fauna_sim` inalterado)
+- [x] Smoke real da §6 executado e registrado na §9
 
 ## 6. Smoke test com LLM real
 
