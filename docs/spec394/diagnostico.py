@@ -24,7 +24,9 @@ from services import conflict_orchestrator as orch  # noqa: E402
 def reverter_387() -> None:
     src = inspect.getsource(orch._resolve_actor_turn_inner)
     novo, n = re.subn(
-        r"\n        if not _can_act\(actor\):  # SPEC-387:[^\n]*\n[^\n]*\n            return\n", "\n", src
+        r"\n        if not _can_act\(actor\):  # SPEC-387:[^\n]*\n[^\n]*\n            return\n",
+        "\n",
+        src,
     )
     assert n == 1, n
     exec(compile(novo, "<patched>", "exec"), orch.__dict__)

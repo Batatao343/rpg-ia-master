@@ -1,0 +1,28 @@
+{
+ "regiao": "nova_arcadia",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 7.8,
+ "criaturas": {
+  "mon_portao_que_morde": {
+   "nome": "Portão que Morde",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.91,
+    "L3|on": 0.9
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 91% fora de 45-85%",
+    "L3|on 90% fora de 45-85%"
+   ]
+  }
+ }
+}
