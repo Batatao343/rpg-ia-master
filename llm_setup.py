@@ -729,7 +729,7 @@ def _emit_attempt_telemetry(event: LLMAttemptEvent) -> None:
             _LOG.warning("attempt telemetry hook falhou: %s", type(e).__name__)
 
 
-def _attempt(
+def _attempt_telemetry(
     *,
     provider: str,
     model: str,
@@ -1074,7 +1074,7 @@ class RoutedLLM:
         circuit_reason = _OPEN_CIRCUITS.get((provider, model))
         if circuit_reason:
             errors.append(f"{provider}:{model} circuit")
-            _attempt(
+            _attempt_telemetry(
                 attempt_index=attempt_index,
                 latency_ms=0,
                 outcome="circuit_open",
@@ -1092,7 +1092,7 @@ class RoutedLLM:
         except Exception as e:
             name = type(e).__name__
             errors.append(f"{provider}:{model} {stage}:{name}")
-            _attempt(
+            _attempt_telemetry(
                 attempt_index=attempt_index,
                 latency_ms=int((time.perf_counter() - build_t0) * 1000),
                 outcome="build_error",
@@ -1151,7 +1151,7 @@ class RoutedLLM:
                         and _http_status(e) == 400
                         and perr in _PROVIDER_GENERATION_FAILURES
                     )
-                    _attempt(
+                    _attempt_telemetry(
                         provider=provider,
                         model=model,
                         tier=self.tier,
@@ -1180,7 +1180,7 @@ class RoutedLLM:
                 if not valid:
                     last_failure_code = failure_code or "schema_validation"
                     errors.append(f"{provider}:{model} structured:{last_failure_code}")
-                    _attempt(
+                    _attempt_telemetry(
                         provider=provider,
                         model=model,
                         tier=self.tier,
@@ -1195,7 +1195,7 @@ class RoutedLLM:
                     )
                     attempt_index += 1
                     continue
-                _attempt(
+                _attempt_telemetry(
                     provider=provider,
                     model=model,
                     tier=self.tier,
@@ -1244,7 +1244,7 @@ class RoutedLLM:
                 first = next(it)
             except StopIteration:
                 latency_ms = int((time.perf_counter() - t0) * 1000)
-                _attempt(
+                _attempt_telemetry(
                     provider=provider,
                     model=model,
                     tier=self.tier,
@@ -1260,7 +1260,7 @@ class RoutedLLM:
             except Exception as e:
                 latency_ms = int((time.perf_counter() - t0) * 1000)
                 errors.append(f"{provider}:{model} stream:{type(e).__name__}")
-                _attempt(
+                _attempt_telemetry(
                     provider=provider,
                     model=model,
                     tier=self.tier,
@@ -1282,7 +1282,7 @@ class RoutedLLM:
                     yield chunk
             except GeneratorExit:
                 latency_ms = int((time.perf_counter() - t0) * 1000)
-                _attempt(
+                _attempt_telemetry(
                     provider=provider,
                     model=model,
                     tier=self.tier,
@@ -1297,7 +1297,7 @@ class RoutedLLM:
                 raise
             except Exception as e:  # falha no meio do stream: encerra o que veio
                 latency_ms = int((time.perf_counter() - t0) * 1000)
-                _attempt(
+                _attempt_telemetry(
                     provider=provider,
                     model=model,
                     tier=self.tier,
@@ -1314,7 +1314,7 @@ class RoutedLLM:
                 _open_circuit_if_permanent(provider, model, e)
                 return
             latency_ms = int((time.perf_counter() - t0) * 1000)
-            _attempt(
+            _attempt_telemetry(
                 provider=provider,
                 model=model,
                 tier=self.tier,
@@ -1417,7 +1417,7 @@ class RoutedLLM:
         circuit_reason = _OPEN_CIRCUITS.get((provider, model))
         if circuit_reason:
             errors.append(f"{provider}:{model} circuit")
-            _attempt(
+            _attempt_telemetry(
                 provider=provider,
                 model=model,
                 tier=self.tier,
@@ -1459,7 +1459,7 @@ class RoutedLLM:
                 client = client.bind_tools([schema], tool_choice=tool_name)
         except Exception as e:
             errors.append(f"{provider}:{model} build:{type(e).__name__}")
-            _attempt(
+            _attempt_telemetry(
                 provider=provider,
                 model=model,
                 tier=self.tier,
@@ -1532,7 +1532,7 @@ class RoutedLLM:
                 return _STREAM_CANCELLED
             latency_ms = int((time.perf_counter() - t0) * 1000)
             errors.append(f"{provider}:{model} stream:{type(e).__name__}")
-            _attempt(
+            _attempt_telemetry(
                 provider=provider,
                 model=model,
                 tier=self.tier,
@@ -1564,7 +1564,7 @@ class RoutedLLM:
             failure = "empty"
         if result is None:
             errors.append(f"{provider}:{model} structured:{failure}")
-            _attempt(
+            _attempt_telemetry(
                 provider=provider,
                 model=model,
                 tier=self.tier,
@@ -1583,7 +1583,7 @@ class RoutedLLM:
                 # dele — DEPOIS de mandar `reset` ao cliente (F-1: o parcial invalido nunca fica).
                 return _StreamRetry(provider, model)
             return None
-        _attempt(
+        _attempt_telemetry(
             provider=provider,
             model=model,
             tier=self.tier,
@@ -1679,7 +1679,7 @@ class RoutedLLM:
                 if i == winner or i in ended:
                     continue  # quem ja terminou (falhou) nao e "hedge perdido"
                 cancels[i].set()
-                _attempt(
+                _attempt_telemetry(
                     provider=p,
                     model=m,
                     tier=self.tier,

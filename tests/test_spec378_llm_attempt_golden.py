@@ -1,6 +1,6 @@
 """SPEC-378 E4: golden dos eventos de tentativa do RoutedLLM (invoke/stream).
 
-O golden foi gravado com o codigo anterior a ``_attempt``; refatorar nao pode muda-lo.
+O golden foi gravado com o codigo anterior a ``_attempt_telemetry``; refatorar nao pode muda-lo.
 Regrave so com ``RPG_SPEC378_RECORD=1`` (e justifique no commit).
 """
 

@@ -188,7 +188,8 @@ def test_worker_sse_persiste_mesmo_se_consumidor_fecha(monkeypatch):
     loaded = None
     while time.monotonic() < deadline:
         loaded = persistence.load_game_state(persistence.save_path(gid))
-        if action_id in (loaded.get("processed_action_ids") or []):
+        # None = leitura caiu no meio da troca atômica do save; tenta de novo (corrida do teste).
+        if loaded and action_id in (loaded.get("processed_action_ids") or []):
             break
         time.sleep(0.01)
     assert loaded["world"]["turn_count"] == 1

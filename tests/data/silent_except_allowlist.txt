@@ -36,8 +36,7 @@ persistence.py::list_saves::1
 rag.py::<module>::1
 rag.py::_format_memory_documents::1
 rag.py::_note_degraded::1
-rag.py::add_memory_to_session::1
-rag.py::add_npc_memory::1
+rag.py::_stage_memory::1
 rag.py::prepare_shared_query_vector::1
 rag.py::prepare_shared_query_vector::2
 rag.py::query_rag::1
