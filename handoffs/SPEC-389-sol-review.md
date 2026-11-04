@@ -58,3 +58,47 @@ git diff main...spec-389 -- evals web/e2e/contracts scripts/cards/{lint,sim,prom
 py.sh -c (_combat_block sem inimigos) → 1 offer_view emitido (P2-1)
 py.sh -c (TestClient + smoke_body 14 entrega / 2 frustrar ×6) → q368 completed; pressagio_frustrado no /game/state 6/6
 ```
+
+---
+
+## Rodada 2 (2026-11-04) — commits `0765f494`, `a55af51f`
+
+> **Veredito da rodada 2:** `CHANGES_REQUIRED` (2 P2; política de zero pendência) · **Commit revisado:** `a55af51f`
+
+### Achados da rodada 1, um por um
+
+| ID | Situação | Evidência |
+|---|---|---|
+| P1-1 | **resolvido** | `switches_snapshot` passa `--dsn-env RPG_STAGING_DB_URL --env-file .env.staging`, lê o JSON inteiro, guarda só `image_generation` e as 5 linhas do `audit` dessa chave (`key`, `previous_enabled`, `enabled`, `created_at`; sem `actor_id`/`reason`), e levanta erro com rc≠0 ou saída inválida. Testes com `run` falso |
+| P1-2 | **resolvido** (com o P2-R2-1 abaixo) | `sample_from` faz o hash do `body["game_id"]` real e usa o path real (`urlsplit`). `count_problems` reprova contagem por lado ≠ N e status ≠ 200, e o `main` sai 1 |
+| P2-1 | resolvido | `if enemies:` antes de `begin` (`api.py:2944`). Teste `test_no_offer_view_without_alive_enemy` |
+| P2-2 | resolvido | Precedência `fallback_enemy` > `has_own_art` > `pending` (vira `private_other_game` se a linha `private` estiver presente). Teste pelo `portrait_for` real |
+| P2-3 | resolvido | `INSTANCE = observability.boot.INSTANCE_REF` |
+| P2-4 | resolvido | `_creature_art_live` = `art_cause(...) is None` |
+| P2-5 | **parcial** | Asserção por variante em 8 de 9 corpos. A `14 entrega` deixou de passar pelo `TestClient` (ver P2-R2-2) |
+| P2-6 | resolvido | O teste confere ouro (`QUEST_REWARD_GOLD`), `reward_card` e a técnica `neu1_*`. O §9 item 1 foi reescrito como "por desenho", sem follow-up |
+| P2-7 | resolvido | Docstrings de `_fail_closed_keys` e `unreadable` citam o `stale` |
+
+### Pontos pedidos pelo coordenador
+
+- **`game_ref` no `offer_view`:** está OK quanto a vazamento. É `telemetry.pseudonym(game_id)`, um HMAC-SHA256 com `RPG_TELEMETRY_SECRET` truncado em 16 caracteres. É o mesmo esquema do `game_ref` que a correlação já põe nas outras linhas (`telemetry.py:85-87,289-293`): estável por jogo e sem o id cru. O teste afirma que não há `game_id` nos kwargs. Mas o campo não chega à tabela da medição (P2-R2-1).
+- **`14 entrega` rodando o `npc_actor` direto:** o desvio do nó se justifica. Sob MockLLM, "Entrego…" vai para STORY, e o roteamento real fica para o smoke §6, passo 2. Ainda assim, a cobertura da R8 ficou **menor que na rodada 1**. A R8 pede explicitamente "rodar 1 turno pelo grafo (MockLLM) não gera `campaign.replan reason=region_change`". Na rodada 1 o `TestClient` rodava esse turno (só não conferia o resultado); agora nada passa pelo grafo com a seed `14 entrega`, e o replan só é coberto pela chamada unitária `_replan_reason`. Conferi à mão na rodada 1: o POST com o corpo da `14 entrega` responde 200 e fecha a `q368` pelo storyteller sob MockLLM. Então dá para ter as duas coberturas sem custo (P2-R2-2).
+- **`ruff format --check .`:** 1849 arquivos já formatados. **`ruff check .`:** limpo. **`scripts/dev/size_budget.py`:** rc 0. `api.py` foi de 7973 para 7948 linhas, `agents/npc.py` de 1605 para 1604, e `conflict_orchestrator.py` tem 3049, sem mudança.
+- **Regressão nova:** nenhuma no produto. 357 testes do escopo verdes.
+
+### Achados novos
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-R2-1 | P2 | `scripts/staging/portrait_offer_measure.py:73-82` (`join_samples`) | O `offer_view` agora traz `game_ref`, mas `join_samples` copia só `instance/offered/omitted/switch_age_s/price_cached/art_live`. O `summary["games"]` lê `offer_view.get("game_ref")` e sai **sempre `"None"`**. Conferido: `join_samples([...], [{"request_id":"r","game_ref":"abc",...}])` dá `[('api','h','None')]`. O cruzamento servidor × cliente que a correção anuncia (§9 "offer_view ganhou game_ref") não acontece. Nenhum teste cobre `games` | Incluir `"game_ref"` na tupla de chaves de `join_samples`. Teste: um log com `game_ref="abc"` faz `summarize(...)["games"]` conter `"abc"` |
+| P2-R2-2 | P2 | `tests/test_spec387_seed.py:325-326,360-379` | A `14 entrega` não passa mais pelo `TestClient`. A R8 (1 turno pelo grafo sem `region_change`) e a R18 (cada corpo pelo `TestClient`) ficam sem cobertura no grafo para essa variante | Manter `_assert_entrega_closes` (rota NPC) e **também** fazer o POST do corpo pelo `TestClient`, numa seed nova. Afirmar status 200, `q368` `completed` (qualquer rota sob mock) e nenhum replan por região: `campaign_plan.location == "Brekmar"` e `current_step` sem voltar a 0, ou nenhum `campaign.replan reason=region_change` no `caplog` |
+
+### Comandos rodados (rodada 2)
+
+```text
+git diff cfa1158d..spec-389 → 9 arquivos (+325/−60)
+bash scripts/dev/pt.sh (portrait_offer_causes, quest_delivery_npc, combat_text_smoke7, spec387_seed, size_budget, spec346_board_no_llm, spec196_finops, 352×2, 354_portrait, 363/364/367/387 portrait, 347, 197_daily_cap, boot_log) → 357 passed, 4 skipped
+ruff format --check . → 1849 files already formatted · ruff check . → All checks passed
+bash scripts/dev/py.sh scripts/dev/size_budget.py → rc 0
+py.sh -c (join_samples com game_ref no log) → offer_view sem game_ref; games=[('api','h','None')] (P2-R2-1)
+```
