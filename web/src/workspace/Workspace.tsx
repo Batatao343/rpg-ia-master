@@ -3,7 +3,7 @@ import { forwardRef, useEffect, useImperativeHandle, useReducer, useRef, useStat
 import type { ActionOptions, GameResponse, LogEntry } from "../types";
 import type { TurnWait } from "../turnWait";
 import type { RewardSender } from "../cardRewards";
-import { useVitalityHit, type EquipFn } from "../components/Hud";
+import { useVitalityHit, type EquipFn } from "../components/tabs/hudParts";
 import { ChatSurface, Composer } from "./ChatSurface";
 import { ContextSurface } from "./ContextSurface";
 import { MobileTabBar } from "../components/MobileTabBar";

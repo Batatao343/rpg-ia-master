@@ -1,7 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import * as api from "../../api";
 import type { GameResponse, VisualAsset, WoundTrackView } from "../../types";
-import { FichaTab, type EquipFn } from "../Hud";
+import { FichaTab } from "./FichaTab";
+import type { EquipFn } from "./hudParts";
 import { GeneratedPortrait } from "../GeneratedPortrait";
 import { QuestsTab } from "../QuestsTab";
 import { Sigil } from "../Sigil";

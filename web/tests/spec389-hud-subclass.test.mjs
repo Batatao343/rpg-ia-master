@@ -24,7 +24,7 @@ const data = (cards) => ({ player_stats: { vitalidade: 10, max_vitalidade: 10, e
   virtudes: {}, cards, pending_choices: [] }, inventory: [] });
 
 test('acervo_mostra_subclasse_da_carta', async () => {
-  const { FichaTab } = await load('../src/components/Hud.tsx');
+  const { FichaTab } = await load('../src/components/tabs/FichaTab.tsx');
   const withSub = html(h(FichaTab, { data: data([card({ subclass: 'Mão Sombria' })]), hpHitKey: 0 }));
   assert.match(withSub, /Pó nos Olhos[^<]*· Mão Sombria/);
   const without = html(h(FichaTab, { data: data([card({})]), hpHitKey: 0 }));

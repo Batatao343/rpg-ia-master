@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ActionOptions, BasicActionView, CardView, GameResponse } from "../../types";
-import { CombatTab } from "../../components/Hud";
+import { CombatTab } from "../../components/tabs/CombatTab";
 import { CombatDeckTab } from "../../components/tabs/CombatDeckTab";
 import { CardHand } from "../../components/CardHand";
 import { DeckCombat } from "../../components/combat/DeckCombat";

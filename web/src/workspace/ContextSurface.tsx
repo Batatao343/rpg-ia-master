@@ -1,7 +1,11 @@
 import { Component, useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
 import type { ActionOptions, GameResponse } from "../types";
 import type { RewardSender } from "../cardRewards";
-import { ChronicleTab, FactionsTab, HeardNews, PeopleTab, type EquipFn } from "../components/Hud";
+import { ChronicleTab } from "../components/tabs/ChronicleTab";
+import { FactionsTab } from "../components/tabs/FactionsTab";
+import { HeardNews } from "../components/tabs/HeardNews";
+import { PeopleTab } from "../components/tabs/PeopleTab";
+import type { EquipFn } from "../components/tabs/hudParts";
 import { CodexCategory, CodexTab, DossierCategory, type CodexSection } from "../components/CodexTab";
 import { RovingTablist } from "./RovingTablist";
 import { CONTEXT_TABS, TAB_LABELS, type ContextTab } from "./workspaceModel";

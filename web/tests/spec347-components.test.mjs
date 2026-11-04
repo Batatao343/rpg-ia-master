@@ -50,7 +50,7 @@ test('arena_iniciativa_honesta_e_compact', async () => {
 });
 
 test('hud_rodada_uma_vez_e_sem_zero', async () => {
-  const { CombatTab } = await load('../src/components/Hud.tsx');
+  const { CombatTab } = await load('../src/components/tabs/CombatTab.tsx');
   const c = { ...combatBase, active: true, enemies: [{ id: 'e1', name: 'X', vitalidade: 3, max_vitalidade: 3, esquiva: 5, protecao: 0, conditions: [], revealed_cards: [], revealed_resistances: [] }],
     cooldowns: {}, cards: [] };
   const off = html(h(CombatTab, { c, hitKey: 0, party: [] }));
