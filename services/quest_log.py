@@ -363,6 +363,82 @@ def sync_npc_interaction(quests: list[dict], npc_name: str, *, turn: int = 0) ->
     return out
 
 
+_DELIVERY_RE = re.compile(r"\b(entrego|entregamos|trago|trazemos|devolvo|aqui\s+est(?:a|ao))\b")
+_NEGATION_RE = re.compile(r"\b(nao|nunca|jamais|nem)\b")
+
+
+def _delivery_phrase(action_text: str) -> bool:
+    """Verbo de entrega em 1a pessoa (lista fechada); qualquer negacao no texto barra (SPEC-389 R9)."""
+    folded = _fold_name(action_text)
+    return bool(_DELIVERY_RE.search(folded)) and not _NEGATION_RE.search(folded)
+
+
+def delivery_ready(quests: list[dict], npc_name: str, action_text: str, state: dict) -> list[str]:
+    """PURO (SPEC-389 R9). Ids das quests que a frase de entrega fecha: ativa, nao mecanica nem
+    pessoal, o NPC que fala e a origem, ha verbo de entrega e `has_completion_proof` passa."""
+    who = _fold_name(npc_name)
+    if not who or not _delivery_phrase(action_text):
+        return []
+    entity_ids = {
+        str(npc.get("entity_id") or "")
+        for key, npc in ((state or {}).get("npcs") or {}).items()
+        if isinstance(npc, dict) and who in (_fold_name(key), _fold_name(npc.get("name")))
+    } - {""}
+    ready: list[str] = []
+    for q in quests or []:
+        if (
+            q.get("status") != "active"
+            or q.get("personal_of")
+            or q.get("world_kind") in _MECHANICAL
+        ):
+            continue
+        origin_ok = _fold_name(q.get("origin_name")) == who or (
+            str(q.get("origin_entity_id") or "") in entity_ids
+        )
+        if origin_ok and has_completion_proof(q, state)[0]:
+            ready.append(str(q.get("id")))
+    return ready[:1] if ready and _completion_allowed(state) else []  # 1 por entrega
+
+
+def _completion_allowed(state: dict) -> bool:
+    """Fonte `system` pula o gate de prova do validador, entao o limite de 1 conclusao por turno e o
+    cooldown (`QUEST_COMPLETION_COOLDOWN`) valem aqui, lendo o mesmo `event_log`."""
+    from services.world_validators import QUEST_COMPLETION_COOLDOWN
+
+    turn = _safe_turn(((state or {}).get("world") or {}).get("turn_count", 0))
+    done = [
+        _safe_turn(e.get("turn"))
+        for e in (state or {}).get("event_log") or []
+        if isinstance(e, dict) and e.get("type") == "quest_completed"
+    ]
+    return not any(turn - t < QUEST_COMPLETION_COOLDOWN for t in done if t <= turn)
+
+
+def sync_npc_delivery(
+    quests: list[dict], npc_name: str, action_text: str, state: dict, *, turn: int = 0
+) -> tuple[list[dict], dict]:
+    """Conversa com a origem (evidencia) + entrega pela rota NPC. Devolve (quests, patch do estado):
+    `{}` ou `pending_world_events` com os `quest_completed` do sistema; quem os aplica e o
+    `event_processor` (cooldown, recompensa, tecnica)."""
+    synced = sync_npc_interaction(quests, npc_name, turn=turn)
+    ids = delivery_ready(synced, npc_name, action_text, state)
+    events = [
+        {
+            "type": "quest_completed",
+            "actor_id": "player",
+            "target_id": quest_id,
+            "detail": "Entrega verificada à origem da missão.",
+            "payload": {"quest_id": quest_id},
+            "source": "system",
+        }
+        for quest_id in ids
+    ]
+    if not events:
+        return synced, {}
+    pending = list((state or {}).get("pending_world_events") or [])
+    return synced, {"pending_world_events": pending + events}
+
+
 def _safe_turn(value) -> int:
     try:
         return int(value)

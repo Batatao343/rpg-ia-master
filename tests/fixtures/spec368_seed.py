@@ -350,6 +350,10 @@ def _recipe(item: int, variant: str, state: dict) -> None:
     elif item == 14:
         if variant == "entrega":
             _place_hero(state, "brekmar", "Brekmar")
+            state["world"]["turn_count"] = max(4, int(state["world"].get("turn_count", 0) or 0))
+            for other in (state.get("npcs") or {}).values():  # SPEC-389 R8: só a origem em cena
+                if isinstance(other, dict):
+                    other["in_scene"] = False
             state.setdefault("npcs", {})["Contratante"] = {
                 "name": "Contratante",
                 "id": "contratante",
@@ -362,6 +366,8 @@ def _recipe(item: int, variant: str, state: dict) -> None:
                 "id": "q368",
                 "title": "Caça",
                 "status": "active",
+                "origin_name": "Contratante",
+                "origin_entity_id": "contratante",
                 "created_turn": 1,
                 "location_id": "brekmar",
                 "reward_gold_planned": 25,
@@ -408,6 +414,9 @@ def _place_hero(state: dict, location_id: str, name: str) -> None:
     world = state.setdefault("world", {})
     world["current_location_id"], world["current_location"] = location_id, name
     world["visited"] = list(dict.fromkeys([*(world.get("visited") or []), location_id]))
+    plan = state.get("campaign_plan")
+    if isinstance(plan, dict) and plan.get("location"):  # SPEC-389 R8: sem region_change espúrio
+        plan["location"] = name
 
 
 def _recipe_15(state: dict) -> None:

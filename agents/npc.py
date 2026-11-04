@@ -1501,14 +1501,13 @@ def npc_actor_node(state: GameState):
         if state.get("social_intent"):
             updates["social_intent"] = None
 
-        # Fase 3.3: quem originou a missão é o NPC em cena — resolvido em Python
-        # (não confiado ao LLM). Só title/description/location_id/reward_hint vêm do LLM.
-        # SPEC-223 R1(b): conversa real com quem deu a missão é evidência Python
-        # (entrega/retorno à origem) — registrada antes de novas propostas.
+        # Fase 3.3: a origem da missão é o NPC em cena (Python, não LLM). SPEC-223 R1(b): conversa com
+        # a origem é evidência; SPEC-389 R9: entrega verificada fecha a missão (antes de novas propostas).
         base_quests = list(state.get("quests", []) or [])
-        quests_now = quest_log.sync_npc_interaction(
-            base_quests, npc_data.get("name", npc_name), turn=int(turn or 0)
+        quests_now, _deliver = quest_log.sync_npc_delivery(
+            base_quests, npc_data.get("name", npc_name), str(last_msg), state, turn=int(turn or 0)
         )
+        updates.update(_deliver)  # {} ou pending_world_events com o quest_completed da entrega
         proposals = getattr(res, "proposed_quests", []) or []
         lore_pending: list = []
         if proposals:
@@ -1551,7 +1550,7 @@ def npc_actor_node(state: GameState):
                 updates["factions"] = fm_upd["factions"]
             if fm_events:
                 updates["pending_world_events"] = list(
-                    state.get("pending_world_events", []) or []
+                    updates.get("pending_world_events") or state.get("pending_world_events") or []
                 ) + list(fm_events)
             if fm_note:
                 updates["messages"] = [
