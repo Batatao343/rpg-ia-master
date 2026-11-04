@@ -19,7 +19,7 @@ import pytest
 
 D = Path(__file__).resolve().parents[1] / "docs" / "spec369"
 
-# D-369-3 (defaults aprovados sob "manda bala"; o gate R9c do dono pode trocar, so por autor de eval)
+# D-369-3 (defaults; gate R9c do dono respondido em 04/11 com "ok defaults"). So muda por autor de eval.
 LIMIARES = {
     "cartas_rodada_total_min": 2.00,  # R13
     "cartas_rodada_postura_min": 1.90,  # R13
@@ -38,6 +38,11 @@ LIMIARES = {
     "max_cartas_inimigo_por_familia": 2,  # R18(d)
 }
 FORA_DA_META_R14 = {"sangromante"}  # R4(a): Sangromante e excecao aceita
+# Gate R9c do dono (04/11, "ok defaults"; spec §8 "Resposta do dono ao gate R9c"):
+ISENTAS_PISO_R13 = {"Sangromante"}  # item 2(0): fora do piso por Postura; o total >= 2,00 vale
+# item 2(a): reacoes legadas "travadas pelo golden", fora do R14(b). Lista fechada: outra Carta que
+# ficar `dominante` reprova. Item 2(b): o B4 sai do plano, mas `bomba_estopim` (onda) segue no R14(b).
+LEGADAS_TRAVADAS_R14B = {"arc_cal_valvula", "dev_ombro_porta", "dev_reflexo_bastiao"}
 
 
 def _load(name: str) -> dict | list:
@@ -60,14 +65,16 @@ def r13(data: dict) -> list[str]:
     if r9["total"]["cartas_por_rodada_media"] < LIMIARES["cartas_rodada_total_min"]:
         bad.append(f"total {r9['total']['cartas_por_rodada_media']}")
     for cls, v in r9["por_postura"].items():
+        if cls in ISENTAS_PISO_R13:
+            continue
         if v["cartas_por_rodada_media"] < LIMIARES["cartas_rodada_postura_min"]:
             bad.append(f"{cls} {v['cartas_por_rodada_media']}")
     return bad
 
 
 def na_meta_r14a(cid: str, categoria: str) -> bool:
-    """R14(a)+(d): Carta de onda OU assinatura basica (basica que nao e golpe nem guarda; o golpe
-    basico e aceito como fallback por desenho), sempre fora do Sangromante."""
+    """R14(a)+(d): Carta de onda OU assinatura basica (basica que nao e golpe nem guarda; golpe e,
+    pelo gate R9c item 5, guarda basicos sao aceitos como fallback), sempre fora do Sangromante."""
     if categoria == "onda":
         return True
     return categoria == "basica" and not cid.endswith(("_golpe", "_guarda"))
@@ -80,7 +87,7 @@ def r14(data: dict) -> list[str]:
             continue
         if na_meta_r14a(cid, r["categoria"]) and r["uso"] > LIMIARES["uso_alto"]:
             bad.append(f"(a) {cid} uso {r['uso']}")
-        if "dominante" in r["bandeiras_v2"]:
+        if "dominante" in r["bandeiras_v2"] and cid not in LEGADAS_TRAVADAS_R14B:
             bad.append(f"(b) {cid} delta {r['delta_pp_v2']}")
     return bad
 

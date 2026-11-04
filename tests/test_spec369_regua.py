@@ -269,3 +269,16 @@ def test_posturas_deterministico_e_igual_a_base_do_emboscada(M):
     assert emb["base_total"] == a["Médico de Campo"]["todas"]["total"]
     assert M.orch.run_round is orig  # monkeypatch devolvido
     assert M.E.has_initiative_card is M._orig_has_initiative
+
+
+def test_limiares_do_gate_r9c_contra_a_base():
+    """Gate R9c (04/11): Sangromante fora do piso do R13 (total segue), 3 reacoes legadas fora do
+    R14(b), guarda basica fora do R14(a)."""
+    T = _load("test_spec369_metas_regua", "tests/test_spec369_metas.py")
+    with open(os.path.join(ROOT, "docs", "spec369", "base-0-19.json"), encoding="utf-8") as fh:
+        base = json.load(fh)
+    r13 = T.r13(base)
+    assert "total 1.915" in r13 and not any(f.startswith("Sangromante") for f in r13)
+    r14 = T.r14(base)
+    assert not any(f.startswith("(b)") for f in r14)  # so as 3 legadas travadas eram (b)
+    assert not T.na_meta_r14a("bas_med_guarda", "basica")
