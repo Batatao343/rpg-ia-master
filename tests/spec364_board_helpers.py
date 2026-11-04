@@ -64,10 +64,23 @@ def open_combat(client, saved, gid):
     return st
 
 
-def hand_attack_cards(client, gid):
-    st = client.get("/game/state", params={"game_id": gid}).json()
-    hand = (st.get("combat") or {}).get("pilhas", {}).get("mao") or []
-    return [m for m in hand if m.get("jogavel") and m.get("alvo") == "inimigo"]
+def hand_attack_cards(client, gid, saved=None):
+    """Cartas de ataque jogaveis na mao. Com `saved`, a mao sorteada sem ataque (game_id aleatorio)
+    troca Cartas da compra pela 1a da mao ate aparecer uma, para o teste nao depender do sorteio."""
+
+    def view():
+        st = client.get("/game/state", params={"game_id": gid}).json()
+        hand = (st.get("combat") or {}).get("pilhas", {}).get("mao") or []
+        return [m for m in hand if m.get("jogavel") and m.get("alvo") == "inimigo"]
+
+    cards = view()
+    piles = ((saved or {}).get(gid) or {}).get("combat", {}).get("pilhas") or {}
+    for i in range(len(piles.get("compra") or []) if piles.get("mao") else 0):
+        if cards:
+            break
+        piles["mao"][0], piles["compra"][i] = piles["compra"][i], piles["mao"][0]
+        cards = view()
+    return cards
 
 
 def hide_enemy(state: dict, enemy_id: str) -> None:

@@ -18,7 +18,7 @@ def seeded(monkeypatch):
     other = hp.add_second_enemy(st)
     hp.hide_enemy(st, other)
     saved[gid] = deepcopy(st)
-    cards = hp.hand_attack_cards(client, gid)
+    cards = hp.hand_attack_cards(client, gid, saved)
     assert len(cards) >= 1, "mao sem Carta de ataque jogavel"
     cid = cards[0]["id"]
     plays = [

@@ -14,7 +14,7 @@ def test_enemy_condition_end_on_every_surface(monkeypatch):
     client, saved, gid = hp.api_client(monkeypatch)
     st = hp.open_combat(client, saved, gid)
     enemy_name = next(e["name"] for e in st["enemies"] if not e.get("dead"))
-    cards = hp.hand_attack_cards(client, gid)
+    cards = hp.hand_attack_cards(client, gid, saved)
     assert cards, "mao sem Carta de ataque jogavel"
     target = next(e["id"] for e in st["enemies"] if not e.get("dead"))
     real = orch.run_round
