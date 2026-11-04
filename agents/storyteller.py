@@ -1888,77 +1888,7 @@ def storyteller_node(state: GameState):
                         )
                 return t.updates
 
-            from gamedata import get_location
-
-            loc_node = get_location(t.world.get("current_location_id", "")) or {}
-            t.world.pop("encounter_eff_danger", None)  # SPEC-233 R5: não-combate
-            if t.kind == "trap":
-                from party import active_allies
-
-                helper = next(iter(active_allies(t.state)), None)
-                new_p, trap_logs, info = resolve_trap(
-                    t.base_p,
-                    loc_node,
-                    t.danger,
-                    helper=helper,
-                )
-                t.rested_player = new_p  # reusa o encanamento de player existente
-                t.turn_bl = record_gain(
-                    t.turn_bl,
-                    "xp",
-                    int(new_p.get("xp", 0) or 0) - int(t.base_p.get("xp", 0) or 0),
-                    "exploration",
-                )
-                t.world_note = (
-                    "ENCONTRO NA ESTRADA (armadilha — números JÁ resolvidos, narre-os):\n"
-                    + "\n".join(trap_logs)
-                )
-                if info:
-                    t.extra_engine_events += info.get("level_up_events", [])
-            elif t.kind == "track":
-                from services import lore_quests as _lq
-
-                _track_entry: dict = {}
-
-                def _describe_track(e: dict) -> str | None:
-                    fe = _fauna.entry(str((e or {}).get("id") or ""))
-                    text = ((fe or {}).get("sinais") or {}).get("rastro")
-                    if text:
-                        _track_entry["e"] = fe
-                    return text
-
-                t.track_bk, note, hint = resolve_track(
-                    t.state.get("bestiary_knowledge", {}),
-                    loc_node,
-                    t.danger,
-                    t.turn,
-                    hunt_anchor=_lq.active_hunt_anchor(
-                        {**t.state, "world": t.world}
-                    ),  # SPEC-313 R26
-                    describe=_describe_track if _fauna.sinais_mode() == "on" else None,
-                    trama_stages=_fauna.fauna_tramas.stages_for(t.state, t.world),  # SPEC-372
-                )
-                if hint:
-                    t.world["treasure_hint"] = True
-                t.world_note = f"ENCONTRO NA ESTRADA (rastro): {note}"
-                if _track_entry:  # SPEC-360 R22: o rastro cria/reforça a presença, sem nome
-                    _tnote, _tupd = _fauna.track_signal(
-                        {**t.state, **t.sim_updates, "world": t.world},
-                        _track_entry["e"],
-                        str(t.world.get("current_location_id") or ""),
-                        t._fauna_day,
-                    )
-                    if _tupd.get("world_sim"):
-                        t.sim_updates["world_sim"] = _tupd["world_sim"]
-                    t.world_note += f"\n{_fauna.SCENE_RULE}"
-                    t._fauna_sign_shown = True
-            else:  # social
-                t.world_note = (
-                    "ENCONTRO NA ESTRADA (social): um grupo HOSTIL-MAS-NEGOCIÁVEL aborda o "
-                    "jogador (ligado ao perigo local). Narre a abordagem tensa SEM iniciar "
-                    "combate — eles querem algo (pedágio, informação, escolta). Se surgir um "
-                    "porta-voz, registre-o em introduced_npcs."
-                )
+            _story_noncombat_encounter(t)
         _story_world_pulse(t)
 
     _story_context_blocks(t)
@@ -1995,6 +1925,82 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_noncombat_encounter(t: _StoryTurn) -> None:
+    """Encontro sem combate: armadilha, rastro ou social."""
+    from gamedata import get_location
+    from services import fauna as _fauna
+    from services.turn_outcome import record_gain
+    from world_utils import resolve_track, resolve_trap
+
+    loc_node = get_location(t.world.get("current_location_id", "")) or {}
+    t.world.pop("encounter_eff_danger", None)  # SPEC-233 R5: não-combate
+    if t.kind == "trap":
+        from party import active_allies
+
+        helper = next(iter(active_allies(t.state)), None)
+        new_p, trap_logs, info = resolve_trap(
+            t.base_p,
+            loc_node,
+            t.danger,
+            helper=helper,
+        )
+        t.rested_player = new_p  # reusa o encanamento de player existente
+        t.turn_bl = record_gain(
+            t.turn_bl,
+            "xp",
+            int(new_p.get("xp", 0) or 0) - int(t.base_p.get("xp", 0) or 0),
+            "exploration",
+        )
+        t.world_note = (
+            "ENCONTRO NA ESTRADA (armadilha — números JÁ resolvidos, narre-os):\n"
+            + "\n".join(trap_logs)
+        )
+        if info:
+            t.extra_engine_events += info.get("level_up_events", [])
+    elif t.kind == "track":
+        from services import lore_quests as _lq
+
+        _track_entry: dict = {}
+
+        def _describe_track(e: dict) -> str | None:
+            fe = _fauna.entry(str((e or {}).get("id") or ""))
+            text = ((fe or {}).get("sinais") or {}).get("rastro")
+            if text:
+                _track_entry["e"] = fe
+            return text
+
+        t.track_bk, note, hint = resolve_track(
+            t.state.get("bestiary_knowledge", {}),
+            loc_node,
+            t.danger,
+            t.turn,
+            hunt_anchor=_lq.active_hunt_anchor({**t.state, "world": t.world}),  # SPEC-313 R26
+            describe=_describe_track if _fauna.sinais_mode() == "on" else None,
+            trama_stages=_fauna.fauna_tramas.stages_for(t.state, t.world),  # SPEC-372
+        )
+        if hint:
+            t.world["treasure_hint"] = True
+        t.world_note = f"ENCONTRO NA ESTRADA (rastro): {note}"
+        if _track_entry:  # SPEC-360 R22: o rastro cria/reforça a presença, sem nome
+            _tnote, _tupd = _fauna.track_signal(
+                {**t.state, **t.sim_updates, "world": t.world},
+                _track_entry["e"],
+                str(t.world.get("current_location_id") or ""),
+                t._fauna_day,
+            )
+            if _tupd.get("world_sim"):
+                t.sim_updates["world_sim"] = _tupd["world_sim"]
+            t.world_note += f"\n{_fauna.SCENE_RULE}"
+            t._fauna_sign_shown = True
+    else:  # social
+        t.world_note = (
+            "ENCONTRO NA ESTRADA (social): um grupo HOSTIL-MAS-NEGOCIÁVEL aborda o "
+            "jogador (ligado ao perigo local). Narre a abordagem tensa SEM iniciar "
+            "combate — eles querem algo (pedágio, informação, escolta). Se surgir um "
+            "porta-voz, registre-o em introduced_npcs."
+        )
 
 
 def _story_world_pulse(t: _StoryTurn) -> None:
