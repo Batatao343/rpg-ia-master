@@ -19,7 +19,8 @@ Ao retomar trabalho spec-driven:
    (`specs/index.yaml` é **gerado** por `scripts/spec_index.py build`; consulte com
    `spec_index.py summary`/`check` em vez de abrir o arquivo de 158 KB);
 2. identifique a `SPEC-ID` ativa e confirme que suas dependências estão `done`;
-3. o Project Index não entra no contexto ou fluxo padrão. Use
+3. o Project Index não entra no contexto ou fluxo padrão e não é versionado: gere com
+   `python -m project_index build` antes de consultar. Use
    `project_index/domains.yaml`, `repo_graph`, `state_ownership` ou `eval_map`
    somente em uma consulta explícita e seletiva, com hipótese cross-file clara;
 4. confirme qualquer achado de índice no source real antes de modificar
@@ -55,7 +56,7 @@ explicitamente aprovada; baseline, release e regressão não constituem permiss�
 3. TDD no worktree; Python sempre via `bash scripts/dev/py.sh …` (raiz, UTF-8, venv).
 4. Testes do escopo durante o trabalho (camadas em `docs/guias/TESTES.md`).
 5. Status final só no cabeçalho da spec; revisão independente por outro agente.
-6. Pouso (`/spec-land`): `wt.sh sync` (rebase + `specs/index.yaml` + Project Index na
+6. Pouso (`/spec-land`): `wt.sh sync` (rebase + `specs/index.yaml` na
    branch) → suíte completa 1× (`-n auto`) → `wt.sh land` (ff da `main`).
 7. `ESTADO_ATUAL.md` via `/estado`: substituir, nunca anexar (≤ 8 KB).
 8. Commit em inglês (Conventional Commits) com a linha `Co-Authored-By` do sistema.
@@ -308,12 +309,12 @@ workers/              # jobs assíncronos (arte dinâmica, projeções, crons)
 supabase/             # migrations + config do Supabase (local e staging)
 observability/        # Prometheus/Grafana/OTel/Tempo opcionais
 evals/                # governança + harness de evals (caminhos protegidos em evals/protected-paths.txt)
-project_index/        # grafo do repo GERADO no pouso (consulta seletiva; source é a verdade)
+project_index/        # grafo do repo gerado localmente sob demanda, não versionado (curados versionados; source é a verdade)
 playtest/             # harness de campanhas longas (14 perfis, invariantes, telemetria)
 handoffs/             # revisões/handoffs por spec (template em docs/templates/handoff-review.md)
 docs/guias/           # guias operacionais (TESTES, BRIEF_SUBAGENTE, AUTORIA, ARTE_VISUAL)
 docs/historico/       # ESTADO/ROADMAP/changelog antigos — só sob demanda
-scripts/dev/          # tooling do workspace: py.sh, env.sh, wt.sh, reindex.sh, eval_publish.py, ruff_baseline.py
+scripts/dev/          # tooling do workspace: py.sh, env.sh, wt.sh, eval_publish.py, ruff_baseline.py
 scripts/spec_index.py # status de spec: build/check/summary/recent/next-id/estado-size
 conftest.py           # (raiz) injeta pythonpath
 faiss_lore_index/     # índice FAISS gerado — não editar à mão
@@ -399,7 +400,7 @@ Estado atual das specs: `uv run python scripts/spec_index.py summary`.
   30–100KB cada e estouram o contexto. Usar `Grep` primeiro, `Read` com offset/limit no trecho,
   ou delegar a um subagent (Explore) e trazer só a conclusão. Vale também para `data/*.json`
   grandes (bestiary, npc_database): Grep pelo id/campo, não Read completo.
-- Não editar `specs/index.yaml` nem `project_index/` à mão — são gerados no pouso.
+- Não editar `specs/index.yaml` à mão — é gerado no pouso (`project_index/` curado — yaml — segue editável por spec).
 - Não ler `docs/historico/`, `ESTADO`/`ROADMAP` antigos, transcritos `.jsonl` ou
   `tool-results/` de outros agentes sem necessidade explícita.
 

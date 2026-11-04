@@ -1,4 +1,8 @@
-"""Auditable discovery-only harness for the SPEC-175 Project Index A/B."""
+"""Auditable discovery-only harness for the SPEC-175 Project Index A/B.
+
+Historical benchmark: requires a local ``python -m project_index build`` (artifacts are
+no longer versioned, SPEC-375).
+"""
 
 from __future__ import annotations
 

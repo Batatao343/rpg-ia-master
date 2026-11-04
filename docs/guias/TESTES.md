@@ -10,7 +10,7 @@
 | 0 | `ruff check <arquivos>` + `pytest -q --lf -x` | executor, a cada iteração (`/qa`) | < 30 s |
 | 1 | `pytest -q -p no:cacheprovider tests/test_<escopo>*.py` | executor, antes do hand-back | 1–2 min |
 | 2 | `pytest -q -p no:cacheprovider -n auto` | **coordenador**, 1× por spec no `/spec-land`, em background | ~2 min local (antes ~11 min serial) |
-| 3 | suíte completa `-n auto` + `project_index check` + evals + Playwright | CI | como hoje |
+| 3 | suíte completa `-n auto` + evals + Playwright | CI | como hoje |
 
 Regras: executor **não** roda a camada 2; comando > 2 min vai para background com
 `timeout` explícito; espere com uma notificação, nunca `sleep` em loop.
@@ -29,8 +29,9 @@ Regras: executor **não** roda a camada 2; comando > 2 min vai para background c
 - Markers `infra_local`/`security_local`/`browser_local`/`chaos_local` pulam sem a
   stack local; com stack, rode-os **sem** `-n` (compartilham Postgres/porta).
 - Fuzz da API (SPEC-338, `api_fuzz`, fora do default): `uv sync --group fuzz` e `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider` (~20 s; `RPG_API_FUZZ_MAX_EXAMPLES=5` para iterar). Job `api-fuzz` do CI é bloqueante.
-- `tests/test_project_index.py` acusa "stale" com arquivo **rastreado** editado e
-  não commitado; arquivo não rastreado não conta mais.
+- `project_index/repo_graph.json`/`manifest.json` são artefatos locais não versionados;
+  `python -m project_index check` acusa "stale" com arquivo **rastreado** editado (rode
+  `build`). Os testes do índice real constroem em diretório temporário (`index_dir`).
 
 ## Cobertura (SPEC-379)
 

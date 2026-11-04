@@ -13,7 +13,7 @@ O conteúdo antigo daqui (cópia de `AGENTS.md` + changelog) está preservado em
 
 **Skills do projeto** (versionadas em `.claude/skills/`):
 `/qa` (testes em camadas, token-lean) · `/wrap-up` (fim de tarefa) · `/spec-new` ·
-`/spec-land` · `/estado` · `/reindex` · `/eval-publish` · `/staging-deploy` ·
+`/spec-land` · `/estado` · `/eval-publish` · `/staging-deploy` ·
 `/status-dono` ("o que o dono precisa fazer").
 
 **Subagentes** (`.claude/agents/`): use o tipo certo em vez de `general-purpose` —

@@ -71,7 +71,7 @@ O dono autorizou em 19/10 **tudo que não exige ação externa dele**
   2. Nota no CHANGELOG § 2026-10-19 e linha curta no ESTADO
      (o ESTADO tem **teto de 8 KB**).
   3. `scripts/spec_index.py build`.
-  4. `ruff format` → `project_index build` → `ruff check` + `format --check`.
+  4. `ruff format` → `ruff check` + `format --check`.
   5. Conferir que a spec está `done`.
   6. Suíte completa com `-n auto`, **capturando o exit do pytest e não o
      do `tail`**.

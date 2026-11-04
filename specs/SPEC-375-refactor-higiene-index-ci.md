@@ -433,3 +433,10 @@ Aceites parciais e rejeições:
   na suíte. Montar worktree + rebase com conflito dentro do pytest é caro e frágil no Windows/OneDrive. A
   regressão principal (ressurreição) já é pega por `test_generated_index_artifacts_are_untracked`. Os 4
   cenários ficam como teste manual registrado no handoff.
+
+## 10. Registro de execução (executor, 04/11)
+
+- **Etapa 0:** `main` sem proteção (`required_status_checks` 404, `rules/branches/main` = `[]`) ⇒ R8 entra sem depender de D5. R7 confirmado (`ci_eval_scope` backend ⊂ não-doc; base desconhecida ⇒ `docs_only=false`). R5 opcional (`fetch-depth`) **não** aplicado: `evals/core/hashing.py` usa `git rev-parse/ls-files/status`. W1: `spec-359`/`spec-372`/`spec-373` não tocam `project_index/`, `scripts/dev`, `.claude`, `AGENTS.md`, `CLAUDE.md` vs `main`.
+- **Desvio de R4:** no laço de rebase usa-se `git rm -qf` (remove também da árvore), não `--cached`: sobras do conflito modify/delete ficam untracked e bloqueiam o `pick` seguinte ("untracked working tree files would be overwritten"). Efeito: o índice local gerado some em branch que passe por conflito; basta `python -m project_index build`.
+- **Branches vivas no rebase:** sem commit de sync antigo, nada a resolver; com ele, R4 autorresolve. Teste manual (a)–(d) em repo descartável: todos como esperado.
+- **Etapa 3 (R9):** não executada (D2).

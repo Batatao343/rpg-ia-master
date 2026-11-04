@@ -15,7 +15,7 @@
 set -euo pipefail
 
 cmd="${1:-}"; name="${2:-}"
-[ -n "$cmd" ] && [ -n "$name" ] || { sed -n '2,15p' "$0"; exit 2; }
+[ -n "$cmd" ] && [ -n "$name" ] || { sed -n '2,17p' "$0"; exit 2; }
 case "$name" in [0-9]*) BR="spec-$name";; *) BR="$name";; esac
 
 MAIN="$(git worktree list --porcelain | sed -n '1s/^worktree //p')"
@@ -114,5 +114,5 @@ case "$cmd" in
     git -C "$MAIN" branch -D "$BR" 2>/dev/null || true;;
   path)
     echo "$WT";;
-  *) sed -n '2,15p' "$0"; exit 2;;
+  *) sed -n '2,17p' "$0"; exit 2;;
 esac
