@@ -1,6 +1,6 @@
 # SPEC-382 — Refatoração pura dos nós grandes: `storyteller_node`, `_combat_node` e `_run_round` em fases nomeadas no mesmo módulo
 
-> **Status:** `draft`
+> **Status:** `approved` (04/11, coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = não (follow-up), D2 = 378 já `done`, D3 = aceitar, D4 = aceitar, D5 = smoke local, D6 = já aplicada pela SPEC-387 (guard da 363 com gate de branch), D7 = SPEC-384 D3 é **não**: Etapa 4 preserva `_advance_reinforcements`. Etapa 3 espera a `spec-373` (W1: `services/conflict_orchestrator.py`))
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11 (`docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md`
 > §4.2 itens 1–2, §5 letra F, §6 regras W1–W8, §6.3 ordem 7)
