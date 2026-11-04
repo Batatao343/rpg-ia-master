@@ -662,3 +662,13 @@ As outras células das famílias não pioraram mais de 5 pp (`conjurador` L3 68,
 - **Decisão do dono pendente (metas que o R18 não fecha):** R14 (pulso, mofo e as básicas de Fôlego 0 por desenho), R15 (Médico contra `mon_automato_fundicao`, p95 total 11), R16 (1,026) e as células `conjurador` L5 e `predador_apice` L3. Opções: aceitar os números como estão; liberar o D-369-1 (Fôlego 3); permitir Cartas novas ou mudança de `tier`/`raridade` (hoje fora de escopo); ou afrouxar a meta.
 - **Pendência de Fase A:** os dois testes de `test_spec369_regua.py` citados no B3 precisam ser tornados robustos ao Fôlego das básicas pelo autor da régua.
 
+### Fase B, passo da D-369-10 (R15, `mon_automato_fundicao`)
+
+- **Passo único:** `data/bestiary.json`, `mon_automato_fundicao`, `virtudes.agilidade` 4 -> 3 (esquiva 10 + agilidade: 14 -> 13). As Cartas dele são compartilhadas por outras criaturas, então o passo vai na ficha da própria criatura. Registrado em `passos-0-19.json` como `R15-D369-10` (criatura, sem `carta`; não entra no limite de Cartas de herói, e o limite de inimigo é por família).
+- **Resultado (base 0-19):** p95 total 11 -> **9**; timeout total 0,7 -> 0,2 %; Médico timeout 3,3 -> **0,8 %** (≤ 1 %); Médico p95 17 -> **16** (meta 12, **fica como limite**); vitória total 68,3 -> 69,6 %; Médico 69,7 %.
+- **R19:** as Posturas saem idênticas (a criatura não está na arena de Posturas): Devoto 60,2, Sangromante 65,0 (+0,0 pp), Corruptor 60,6, Arcanista 57,1, Médico 55,8. Aprovado.
+- **Medição final refeita** no estado final (base, uso, posturas, emboscada, pressagio, familias 0-7 e `predador_apice` 0-19): `final-0-19.json`, `passos-0-19.json` e `RELATORIO.md` atualizados.
+- **Números finais:** R13 total 2,153 (Dev 2,003, Cor 2,717, Arc 2,098, Méd 2,133); R14: `arc1_cal_pulso_medido` 1,0 e `bas_cor_mofo` 0,714 (limite), voto e vazão 1,0 isentas, 0 `dominante`, `med1_fer_garra_de_protese` agora abaixo de 0,6; R15 p95 total 9, Médico p95 16 e timeout 0,8 %; R16 1,0257 (vitória de `on-faixa` 59,8 %); R17 60,6 %; R19 dentro; R20 abissal L3 85,0 (+8,0), lider L3 63,0 (+5,0), lider L5 78,5 (+10,0), conjurador L5 38,5 (-8,0), predador_apice L3 61,5 (-13,5).
+- **Correção ao registro anterior:** o R17 final é 60,6 % (`realista_369`), e não 51,9 %.
+- `test_spec369_metas.py` sem edição minha; com os limiares atuais ele ainda reprova R14, R15, R16 e R20 até o autor da régua aplicar a D-369-10.
+
