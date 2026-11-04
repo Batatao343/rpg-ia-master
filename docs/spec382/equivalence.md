@@ -31,5 +31,5 @@ Base `0fdb2a85` (worktree destacado) × ponta `cef757dc` (Etapa 3 + golden refor
 |---|---|
 | `evals run` 13 suítes do `eval-gates.yml`, `--seed 7` + `evals compare` | `passed: true`, `regressions: []`, métricas idênticas |
 | `playtest run --all --turns 10 --seed 0` / `--seed 1` (mock) | 16 perfis, linhas por perfil byte-iguais nas duas sementes |
-| Golden reforçado (66 casos, partes `calls`/`order` estritas) | verde em cada commit (executor) e no HEAD (revisão Sol `handoffs/SPEC-382-sol-etapa3-review.md`, 3 mutações pegas) |
+| Golden reforçado (66 casos, partes `calls`/`order` estritas) | verde em cada commit (executor) e no HEAD (revisão Sol `handoffs/SPEC-382-sol-review.md`, 3 mutações pegas) |
 | Smoke real (`--profile combate --turns 8 --real`, `RPG_CARD_DECK=on`) | 8 turnos, 0 erro, 0 violação; storyteller 4, combat_agent 4; deepseek 12, groq 2; ≈ US$ 0,0042 (`playtest_runs/20261104-194258-258229`, não versionado) |
