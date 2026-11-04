@@ -54,7 +54,7 @@ ROUTE_CLASSES: dict[str, RouteClass] = {
         ),
         _rc("preview", r"^/game/combat/preview$", ("POST",), 120, 60),  # SPEC-334: puro, sem LLM
         _rc("embedding", r"^/game/chronicle/search$", ("POST",), 30, 10),
-        _rc("quote", rf"^/game/{_ID}/art/(quote|confirm|player/confirm)$", ("POST",), 30, 10),
+        _rc("quote", rf"^/game/{_ID}/art/(quote|confirm)$", ("POST",), 30, 10),
         _rc(
             "mutation",
             rf"^/game/(equip|levelup|cards/prepare|espolio|forja|loja-cartas)$|^/game/save/{_ID}$|^/game/{_ID}/art/{_ID}/quality$",

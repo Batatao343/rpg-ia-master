@@ -34,7 +34,7 @@ pytestmark = [pytest.mark.api_fuzz, pytest.mark.timeout(180)]
 #   art confirm/quality: wallet + worker; checkout e google verify: rede.
 EXCLUDED_RE = (
     r"^/(payments/stripe/webhook|account/transcriptions|game/action/stream"
-    r"|game/\{[^}]+\}/art/(confirm|player/confirm|\{[^}]+\}/quality)"
+    r"|game/\{[^}]+\}/art/(confirm|\{[^}]+\}/quality)"
     r"|account/checkout|account/purchases/google/verify)$"
 )
 # R8: rotas caras (grafo + MockLLM) com orçamento menor.

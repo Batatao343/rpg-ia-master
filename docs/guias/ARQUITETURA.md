@@ -136,7 +136,6 @@ combat_mechanics.py   # ponte de Entropia/Carga e compatibilidade residual das c
 services/conflict_orchestrator.py # NÚCLEO atual: Cartas, 2d10, Reações, Vitalidade/Ferimentos, IA tática
 world_utils.py        # Fase 0: relógio, viagem (fog of war), descanso — determinístico, sem LLM
 character_creator.py  # cria ficha do player (IA + JSON oficial); guard de fallback
-game_engine.py        # CLI interativo (wizard + loop)
 api.py                # FastAPI REST (/game/new, /game/action, /game/state, /data/map) + serve web/dist
 web/                  # FRONTEND PRINCIPAL — React+Vite+TS (src/, build em web/dist; tom Witcher; motion)
 # --- agentes (nós do grafo) ---

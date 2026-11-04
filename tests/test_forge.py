@@ -187,6 +187,14 @@ def _cicatriz(st):
     return scar
 
 
+def test_maldicao_da_cicatriz_nao_se_esquece():
+    """SPEC-333 R8 (guarda em card_rewards.forget): Cicatriz só sai com Purgar."""
+    st = _state()
+    _cicatriz(st)
+    res = cr.forget(st, "mld_cicatriz_braco", "templo")
+    assert not res["ok"] and "Purgar" in res["error"]
+
+
 def test_purgar_no_templo_e_com_medico_custa_ouro():
     st = _state()
     _cicatriz(st)
