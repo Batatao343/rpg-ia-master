@@ -1,7 +1,7 @@
 # SPEC-387 — revisão sol (review)
 
-> **Veredito (rodada 3):** `CHANGES_REQUIRED` (rodadas 1 e 2: `CHANGES_REQUIRED`)
-> **Revisor:** Opus 5.5 / papel Sol · **Data:** 2026-11-03 · **Commits revisados:** rodada 1 `4ceb5f94` (`a965031e..4ceb5f94`, base `8ff8d674`); rodada 2 `07116abd` (`eb11d4a9..07116abd`); rodada 3 `1557736e` (`e53d525d..1557736e`)
+> **Veredito (rodada 4):** `APPROVED` (rodadas 1–3: `CHANGES_REQUIRED`)
+> **Revisor:** Opus 5.5 / papel Sol · **Data:** 2026-11-03 · **Commits revisados:** rodada 1 `4ceb5f94` (`a965031e..4ceb5f94`, base `8ff8d674`); rodada 2 `07116abd` (`eb11d4a9..07116abd`); rodada 3 `1557736e` (`e53d525d..1557736e`); rodada 4 `6476db8f` (`19b9f937..6476db8f`)
 
 ## Escopo
 
@@ -242,4 +242,58 @@ py.sh -c "import services.off_text" → ImportError (circular; R3-P2-1)
 dump golden 360 (base × 1557736e) → diff só nas mensagens 12, 14, 20
 fingerprint 360 × 371 (FAUNA_SABER=off) na branch → iguais; só `messages` difere do golden
 ruff check (off_text, round_log, orchestrator, combat) → ok
+```
+
+---
+
+## Rodada 4 (commit `6476db8f`, diff `19b9f937..6476db8f`)
+
+**Veredito da rodada 4: `APPROVED`.** Os achados das rodadas 1–3 estão fechados e não há regressão nova.
+
+### Estado dos achados da rodada 3
+
+| ID | Estado | Evidência |
+|---|---|---|
+| R3-P1-1 | Resolvido | `off_text._translate_logs` tira o autor de "Usa X" de `out["cards_used"]`: em ordem, cada "Usa X" casa com a próxima entrada daquela Carta e usa o `actor_id` dela. Sem correspondência, a frase não tem ator ("X é usada."); o herói nunca é o padrão. `hero_card_names` foi removido. `_combat_node` passa `off_ctx=_off_text.context_from(out, actors_by_id)`. O 1º `_narrate` (queda do herói) sempre tem `fallback_text`, então não precisa do contexto. |
+| R3-P2-1 | Resolvido | A reexportação no fim de `round_log.py` foi removida. `bash scripts/dev/py.sh -c "import services.off_text"` → ok. Há teste em subprocess (`tests/test_spec387_text.py:342`). |
+| R3-P3-1 | Resolvido | `off_text.for_round` monta os argumentos. `_narrate` voltou a ≤ 100 linhas e saiu do `size_budget.json`. |
+
+### Os 3 casos de colisão, de novo (com `cards_used` no contexto)
+
+| Caso | Saída |
+|---|---|
+| Carta de apoio do inimigo + linha sem sujeito | "Goblin usa Pele de Veterano. Goblin coordena o próximo ataque de Lobo." |
+| Duas Cartas inimigas seguidas | "Goblin usa Pele de Veterano. Goblin usa Grito de Guerra. Goblin ganha a condição Fúria." |
+| Carta homônima (Golpe Básico) usada pelo inimigo no fim | "Goblin erra você. Goblin usa Golpe Básico." |
+| Extra: homônima usada pelo herói e pelo inimigo na mesma rodada | "Você usa Golpe Básico. Você acerta Goblin. Goblin usa Golpe Básico. Goblin erra você." |
+| Extra: Carta de apoio do herói, sem golpe | "Você usa Bandagem de Campo. Você recupera 3 de Vitalidade com Bandagem de Campo." |
+| Extra: sem contexto | "Pele de Veterano é usada." (sem ator, sem mentira) |
+
+Todos corretos. Nenhuma frase sem sujeito, e nenhuma Carta é atribuída ao herói por palpite.
+
+### Goldens 360 / 371
+
+- **360:** comparei de novo as mensagens dos 30 turnos (base `8ff8d674` × `6476db8f`). Só mudam as **mensagens 12, 14 e 20**
+  (índice 0), todas do fallback `off`. O texto é idêntico ao da rodada 3: com o motor real, "Crescido do Clã usa Punho de
+  Tala." agora vem de `cards_used`.
+- **371:** a impressão digital com `RPG_FAUNA_SABER=off` é igual à da 360, e a única chave diferente do golden é `messages`.
+- **O coordenador pode regravar o golden 360 agora** (`SPEC360_REGEN=1`). Isso não viola integridade: o arquivo não está em
+  `evals/protected-paths.txt` e a mudança vem do R33 aprovado. A regravação conserta
+  `test_spec360_flags_off::test_golden_flags_off_byte_identico` e `test_spec371_flags_off::test_golden_360_inalterado_com_a_flag_off`.
+  Depois de regravar, conferir no `git diff` do JSON que só muda o hash de `messages`.
+
+### Observação aceita (não bloqueia)
+
+- `tests/size_budget.json`: `_combat_node` passa de 1036 para 1037 (+1 é o argumento `off_ctx`) sem motivo no commit
+  `6476db8f`. Aceito como exceção: é o mínimo para passar a autoria do motor ao texto `off`, e o arquivo `agents/combat.py`
+  encolheu no total (3732 → 3729). Esta nota faz o papel do motivo.
+
+### Comandos rodados (rodada 4)
+
+```text
+bash scripts/dev/pt.sh tests/test_spec387_*.py test_objectives test_enemy_intent test_spec355_{golpe_reacao,guardas} test_spec353_registry test_spec364_registry_voice test_spec367_{omen_voice,condition_end} test_card_effects_grammar test_spec353_golden_guard test_spec364_golden_guard test_spec371_eval test_spec346_board_no_llm test_spec346_outcome test_spec364_flee_surfaces test_size_budget test_log_event_registry test_card_sim_v2 test_spec362_run_round test_scene_cards_node → 357 passed, 2 skipped, 1 xfailed
+py.sh -c "import services.off_text" → ok
+sondas off_fallback_text com cards_used (6 casos) → todos com o autor certo
+dump golden 360 (base × 6476db8f) → diff só nas mensagens 12, 14, 20 (igual à rodada 3); fingerprint 360 = 371, só `messages` difere
+ruff check (off_text, round_log, combat) → ok; grep hero_card_names / round_log.off_fallback_text → nenhuma sobra; git status → limpo
 ```
