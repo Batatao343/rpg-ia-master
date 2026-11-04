@@ -2350,24 +2350,9 @@ def _combat_node(state: GameState):
         if e.get("dead") or e.get("status") == "morto" or e.get("xp_awarded")
     }
 
-    if not t.player.get("conscious", True) and not t.combat_meta.get("active"):
-        return {
-            "messages": [
-                AIMessage(
-                    content=(
-                        "Você está inconsciente e não pode iniciar outro conflito. "
-                        "É preciso descansar ou receber tratamento primeiro."
-                    )
-                )
-            ],
-            "player": t.player,
-            "enemies": [],
-            "combat": {**t.combat_meta, "active": False, "scene": None},
-            "combat_target": None,
-            "next": None,
-            "archive_due": False,
-            "combat_declaration": None,
-        }
+    _early = _combat_unconscious_refusal(t)
+    if _early is not None:
+        return _early
 
     last_msg = t.messages[-1]
     t.is_start = isinstance(last_msg, SystemMessage) and "COMBAT START" in str(last_msg.content)
@@ -2936,6 +2921,29 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_unconscious_refusal(t: _CombatTurn) -> dict | None:
+    """Inconsciente não inicia outro conflito."""
+    if not t.player.get("conscious", True) and not t.combat_meta.get("active"):
+        return {
+            "messages": [
+                AIMessage(
+                    content=(
+                        "Você está inconsciente e não pode iniciar outro conflito. "
+                        "É preciso descansar ou receber tratamento primeiro."
+                    )
+                )
+            ],
+            "player": t.player,
+            "enemies": [],
+            "combat": {**t.combat_meta, "active": False, "scene": None},
+            "combat_target": None,
+            "next": None,
+            "archive_due": False,
+            "combat_declaration": None,
+        }
+    return None
 
 
 def _combat_freetext_refusal(t: _CombatTurn) -> dict | None:
