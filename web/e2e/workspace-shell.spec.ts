@@ -294,7 +294,8 @@ test.describe("desktop 1440", () => {
     await assertA11y(page);
     await panel.getByRole("button", { name: /Aparar/ }).click();
     await panel.getByRole("button", { name: "Jogar Carta" }).click();
-    await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
+    // SPEC-354: o painel "O desfecho" repete a narração de propósito; aqui vale a da Crônica.
+    await expect(page.getByRole("region", { name: "Narrativa" }).getByText("O último saqueador cai; o combate termina.")).toBeVisible();
     // D2: encerrado, a aba Combate continua aberta com o pós-combate.
     await expect(page.getByRole("tab", { name: "Combate" })).toHaveAttribute("aria-selected", "true");
     await expect(panel.getByRole("note")).toContainText("Combate encerrado");
