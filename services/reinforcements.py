@@ -83,14 +83,14 @@ GENERIC_ID = "capanga_do_bando"
 GENERIC_NAME = "Capanga do bando"
 
 
-def _template_for(trigger: dict) -> dict | None:
+def _template_for(trigger: dict, generic: bool = False) -> dict | None:
     """Lacaio REAL (ficha de Lacaio) de combate: o da MESMA faccao do lider (nunca outro lider de
     matilha); sem ele, um Lacaio generico `bruto` da escala de Lacaio. Nunca a ficha do Elite nem o
     nome do lider (coordenador, D-P1-1/D-P1-2/D-P2-2)."""
     from agents.bestiary import load_bestiary, materialize_enemy_concept, template_by_id
 
     level = int(trigger.get("encounter_level", 1) or 1)
-    faction = str(trigger.get("faction") or "")
+    faction = "" if generic else str(trigger.get("faction") or "")  # generic: SPEC-391 L3
     if faction:
         for bid, entry in sorted(load_bestiary().items()):
             if (
@@ -114,13 +114,14 @@ def spawn(
     enemies: list[dict] | None = None,
     deck_seed: int | str | None = None,
     slack: int = 0,
+    generic: bool = False,
 ) -> list[dict]:
     """Instancia o reforco (id unico `<base>_r<N>`, contador em `combat_meta`); lista vazia se o
     orcamento restante do encontro nao comporta o inimigo."""
     import encounter_budget as eb
     from services import conflict_orchestrator as orch
 
-    template = _template_for(trigger)
+    template = _template_for(trigger, generic)
     if not template:
         return []
     cost = eb.tier_cost(template)

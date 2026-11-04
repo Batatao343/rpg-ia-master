@@ -171,7 +171,14 @@ def _fire(
     trigs = scene.get("reinforcement_triggers") or []
     trig = next((t for t in trigs if t.get("id") == state["trigger_id"]), None)
     new = (
-        rf.spawn(trig, combat_meta, enemies, deck_seed=leader.get("deck_seed"), slack=_slack())
+        rf.spawn(
+            trig,
+            combat_meta,
+            enemies,
+            deck_seed=leader.get("deck_seed"),
+            slack=_slack(),
+            generic=True,
+        )
         if trig
         else []
     )

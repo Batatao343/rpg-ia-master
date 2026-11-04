@@ -638,3 +638,14 @@ def test_l2_arrival_recovers_breath_and_skips_first_action(monkeypatch, card_on)
     new4 = next(e for e in out4["enemies"] if e["id"].endswith("_r1"))
     assert not new4.get("active_conditions")  # expirou depois de negar a ação
     assert not any((new4.get("enemy_card_usage") or {}).values())  # não jogou Carta
+
+
+def test_l3_card_flow_reinforcement_is_always_generic_capanga(card_on):
+    """L3 (gate 3): mesmo líder com facção, o reforço do fluxo de Carta é o Capanga do bando."""
+    scene, enemies, actors, sides, meta = _telegraphed_world()
+    assert enemies[0]["faction"] == "legiao_ferro"
+    rc.advance_card_flow(scene, enemies, actors, sides, meta, 1)
+    rc.on_declaration(scene, LID, rc.CALL_CARD, 2)
+    rc.advance_card_flow(scene, enemies, actors, sides, meta, 2)
+    rc.advance_card_flow(scene, enemies, actors, sides, meta, 3)
+    assert enemies[-1]["id"] == f"{rf.GENERIC_ID}_r1"

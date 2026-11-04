@@ -514,6 +514,9 @@ a ficar congelado a partir do commit desta emenda.
 - **L2 aplicada após gate 2 reprovar (+10,6 pp; Corruptor +17,9):** cumulativa com a L1. O reforço chega com a
   condição "Recuperando o fôlego" (controle `stun`, 1 rodada, visível no chip/payload): perde a ação da rodada
   seguinte à chegada e a condição expira. Efeito colateral: o presságio do `_r1` só volta 1 rodada depois. L3 não aplicada.
+- **L3 aplicada após gate 3 reprovar (+10,4 pp; Corruptor +17,4):** cumulativa com L1+L2. O reforço do fluxo de
+  Carta é sempre o "Capanga do bando" de Lacaio (`rf.spawn(..., generic=True)`), nunca o Lacaio da facção; o
+  legado (baralho `off`) segue com o Lacaio da facção. Se o gate 4 reprovar, a flag fica `off` (D-391-5).
 - **Playtest (R17):** `combate_reforco` com os 3 `on` e a flag: 8 turnos, 0 erro, 0 violação, `fired via=carta`.
 
 ## 5. Critérios de aceite
