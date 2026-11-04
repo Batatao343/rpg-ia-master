@@ -117,7 +117,7 @@ langchain-core==1.7.0
     #   langgraph-prebuilt
     #   langgraph-sdk
     #   rpg-ia-master
-langchain-google-genai==3.2.0
+langchain-google-genai==4.4.2
     # via rpg-ia-master
 langchain-openai==1.7.3
     # via rpg-ia-master
