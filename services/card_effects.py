@@ -305,6 +305,11 @@ def _alive(actor: dict | None) -> bool:
     )
 
 
+def _in_fight(actor: dict | None) -> bool:
+    """Alvo/aliado de efeito de Carta: vivo e que nao se rendeu (SPEC-377 R15)."""
+    return _alive(actor) and not (actor or {}).get("surrendered")
+
+
 def is_down(actor: dict | None) -> bool:
     """Caiu (morto, terminal, incapacitado, Última Ação pendente) ou atordoado."""
     if not actor:
@@ -407,14 +412,14 @@ def _opponents(ctx: Ctx, actor_id: str) -> list[str]:
         side = _card_side(aid, ctx.sides)
         if side is None:
             side = "heroes" if a.get("is_player") or a.get("player") else "enemy"
-        if side != mine and _alive(a):
+        if side != mine and _in_fight(a):
             out.append(aid)
     return sorted(out)
 
 
 def _allies(ctx: Ctx, actor_id: str) -> list[str]:
     opp = set(_opponents(ctx, actor_id))
-    return sorted(aid for aid, a in ctx.actors_by_id.items() if aid not in opp and _alive(a))
+    return sorted(aid for aid, a in ctx.actors_by_id.items() if aid not in opp and _in_fight(a))
 
 
 # --------------------------------------------------------------------------
