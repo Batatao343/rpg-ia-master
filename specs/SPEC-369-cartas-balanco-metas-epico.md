@@ -465,7 +465,24 @@ Os limiares de `tests/test_spec369_metas.py` que mudam por estas respostas (isen
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
 
-**`<sha-A>` = `65a1a483`** (último commit de autor da régua, já na base do pouso por fast-forward). Histórico: `10935009` → `d6a6de69` (branch) → `8985c4c0` (`main`, pouso da Fase A); emendas de autor de eval aprovadas pela Astra (rodada 3): `683fac5e` (teste de crédito de iniciativa robusto à Carta do B2) e `65a1a483` (determinismo do `posturas`, P3-5 do Sol), sem mudança de números (`base-0-19.json`, `BASE.md` e `test_spec369_metas.py` sem diff). Arquivos: `docs/spec369/metricas_369.py`, `docs/spec369/bot_pressagio.py`, `docs/spec369/base-0-19.json`, `docs/spec369/BASE.md`, `tests/test_spec369_regua.py` e `tests/test_spec369_metas.py`. A prova do R1 na Fase B usa este sha. Papéis: o autor da régua (Opus) e o executor da Fase B (Sonnet) foram agentes distintos; nenhum commit de B1/B2 toca esses arquivos.
+**`<sha-A>` = `33b08981`** (último commit de autor da régua, depois do gate R9c, na branch `spec-369`; a Fase B3+ prova o R1 contra este sha).
+
+Emendas pós-gate R9c (04/11), em 2 commits de autor da régua, antes de qualquer passo do B3:
+- `06bd8f39`: `predador_apice` L3 remedida só nessa célula com as sementes **0-19** (200 lutas por modo; as sementes 8-19 são novas para a arena de famílias, e a confirmação segue nas 260-267). Deu `off` 75,0 %, `on` 58,5 %, Δ **−16,5 pp**. A célula **continua no R20**. A medição de 80 lutas fica em `amostra_original_0_7`, e o subcomando `familias` ganhou `--levels`.
+- `33b08981`: limiares de `test_spec369_metas.py` pelo gate:
+  - Sangromante isento do piso de 1,90 do R13 (`ISENTAS_PISO_R13`); o total ≥ 2,00 continua;
+  - as 3 reações legadas fora do R14(b), numa lista fechada (`LEGADAS_TRAVADAS_R14B`);
+  - guarda básica fora do R14(a);
+  - B4 fora do plano, mas `bomba_estopim` segue no R14(b) por ser de onda.
+- Contra a base, com os limiares novos, ainda reprovam:
+  - R13: total 1,915; Devoto 1,799, Corruptor 1,864, Arcanista 1,876;
+  - R14(a): `arc1_cal_pulso_medido`, `med1_fer_lente_de_protese` e `bas_cor_mofo`;
+  - R15: p95 12; Médico p95 19 com 4,4 % de timeout;
+  - R16: 1,034;
+  - R20: as 5 células.
+- Passam R17 e R19.
+
+Histórico anterior (`<sha-A>` = `65a1a483`, já na base do pouso por fast-forward): `10935009` → `d6a6de69` (branch) → `8985c4c0` (`main`, pouso da Fase A); emendas de autor de eval aprovadas pela Astra (rodada 3): `683fac5e` (teste de crédito de iniciativa robusto à Carta do B2) e `65a1a483` (determinismo do `posturas`, P3-5 do Sol), sem mudança de números (`base-0-19.json`, `BASE.md` e `test_spec369_metas.py` sem diff). Arquivos: `docs/spec369/metricas_369.py`, `docs/spec369/bot_pressagio.py`, `docs/spec369/base-0-19.json`, `docs/spec369/BASE.md`, `tests/test_spec369_regua.py` e `tests/test_spec369_metas.py`. A prova do R1 na Fase B usa este sha. Papéis: o autor da régua (Opus) e o executor da Fase B (Sonnet) foram agentes distintos; nenhum commit de B1/B2 toca esses arquivos.
 
 **Etapa 0**
 - `lote-v2` aceita Carta do catálogo como lote: sim. `sim.injected` sobrescreve com `fx.materialize` (idempotente, `services/card_effects.py:217-226`), `build_arms` tira a Carta para montar o `sem` e devolve (`scripts/cards/sim.py:324-336`), e o catálogo sai intacto (conferido). O `uso` chama `sim.simulate_batch(..., protocolo="v2")` com os parâmetros de `PROTOCOLO_LOTE` e as sementes do `--seeds`. Em 0-19, isso é exatamente `simulate_protocolo_lote([carta], protocolo="v2")`. Não foi preciso leave-one-out.
