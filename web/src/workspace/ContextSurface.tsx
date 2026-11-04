@@ -10,9 +10,9 @@ import { CodexCategory, CodexTab, DossierCategory, type CodexSection } from "../
 import { RovingTablist } from "./RovingTablist";
 import { CONTEXT_TABS, TAB_LABELS, type ContextTab } from "./workspaceModel";
 import { ariaShortcut, detectPlatform, titleWithShortcut } from "./shortcuts";
-import { PersonagemTab } from "./tabs/PersonagemTab";
+import { CharacterTab } from "../components/tabs/CharacterTab";
 import { CombateTab } from "./tabs/CombateTab";
-import { BestiarioTab } from "./tabs/BestiarioTab";
+import { BestiaryTab } from "../components/tabs/BestiaryTab";
 import { MapTab } from "./tabs/MapTab";
 
 const LAB_EMPTY = "Laboratório de combate: sem campanha, este registro fica vazio.";
@@ -125,7 +125,7 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
   const open = active && tab === id;
   switch (id) {
     case "personagem":
-      return <PersonagemTab data={data} hitKey={hitKey} onEquip={props.onEquip} busy={busy} artPanel={props.artPanel} />;
+      return <CharacterTab data={data} hitKey={hitKey} onEquip={props.onEquip} busy={busy} artPanel={props.artPanel} />;
     case "combate":
       return <CombateTab data={data} busy={busy} blocked={blocked} hitKey={hitKey} ended={props.combatEnded} touch={!!props.mobile}
         reactionCardId={props.reactionCardId} onReaction={props.onReaction} onAction={props.onAction}
@@ -133,7 +133,7 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
         dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult}
         lastNarration={props.lastNarration} onShowChat={props.onShowChat} />;
     case "bestiario":
-      return <BestiarioTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={open}
+      return <BestiaryTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={open}
         unavailable={simulation ? LAB_EMPTY : undefined} />;
     case "mapa":
       if (simulation) return <div><h3 className="hud__label">Mapa do mundo</h3><p className="combat-empty">{LAB_EMPTY}</p></div>;
