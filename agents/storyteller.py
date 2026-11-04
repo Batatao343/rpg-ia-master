@@ -2817,70 +2817,73 @@ def storyteller_node(state: GameState):
 
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
-        fallback = {
-            **t.sim_updates,
-            "messages": [
-                AIMessage(
-                    content=_deterministic_story_fallback(
-                        (t.travel_note, t.rest_note, t.world_note, t.faction_note, t.weather_note),
-                        t._ll,
-                    )
-                )
-            ],
-        }
-        if t.dest:
-            # viagem mecânica sobrevive ao LLM flaky: mundo anda e a cena esvazia
-            from services import npc_layers
+        return _story_exception_fallback(t)
 
-            fallback["world"] = t.world
-            fallback["needs_replan"] = t.travel_needs_replan
-            fallback["npcs"] = npc_layers.reset_scene(t.state.get("npcs", {}))
-        # SPEC-233 R8: TODA mecânica já aplicada sobrevive à exceção — o texto não pode
-        # prometer descanso/achado que o estado não registra (nem o inverso).
-        applied_player = t.rested_player if t.rested_player is not None else t.discovery_player
-        if applied_player is not None:
-            fallback["player"] = applied_player
-        if t._replan_cause:  # SPEC-311 R7: o gatilho do mundo também sobrevive ao fallback
-            fallback["needs_replan"] = t.travel_needs_replan
-        if t.rumor_find:
-            fallback["world"] = t.world
-        if t.dest or t.rested_player is not None:
-            fallback["world"] = t.world
-            fallback["factions"] = t.factions
-            fallback["archive_due"] = True
-        for _k, _v in t.fm_extra.items():  # SPEC-301: a mecânica já aplicada sobrevive à exceção
-            fallback[_k] = _v
-        if t.discovery_events or t.extra_engine_events or t.fm_events:
-            fallback["pending_world_events"] = (
-                (t.state.get("pending_world_events", []) or [])
-                + list(t.discovery_events)
-                + list(t.extra_engine_events)
-                + list(t.fm_events)
+
+def _story_exception_fallback(t: _StoryTurn) -> dict:
+    """Fallback do except: a mecânica já aplicada sobrevive à falha do narrador."""
+    fallback = {
+        **t.sim_updates,
+        "messages": [
+            AIMessage(
+                content=_deterministic_story_fallback(
+                    (t.travel_note, t.rest_note, t.world_note, t.faction_note, t.weather_note),
+                    t._ll,
+                )
             )
-        if t.wq_changed:
-            fallback["quests"] = t.wq_quests
-        if t.turn_bl_pre_llm is not t.state.get("turn_baseline"):
-            fallback["turn_baseline"] = t.turn_bl_pre_llm
-        if t.track_bk is not None:  # rastro narrado no fallback também chega ao Codex
-            fallback["bestiary_knowledge"] = t.track_bk
-        if t.rested_player is not None and t.rested_player.get("dead"):
-            fallback["death_pending"] = True
-            fallback["archive_due"] = True
-            fallback["pending_world_events"] = list(
-                fallback.get("pending_world_events")
-                or t.state.get("pending_world_events", [])
-                or []
-            ) + [
-                {
-                    "type": "player_downed",
-                    "actor_id": "player",
-                    "target_id": "player",
-                    "detail": "O herói tombou numa armadilha durante a viagem.",
-                    "payload": {
-                        "location": t.world.get("current_location", ""),
-                        "cause": "armadilha",
-                    },
-                    "source": "trap",
-                }
-            ]
-        return fallback
+        ],
+    }
+    if t.dest:
+        # viagem mecânica sobrevive ao LLM flaky: mundo anda e a cena esvazia
+        from services import npc_layers
+
+        fallback["world"] = t.world
+        fallback["needs_replan"] = t.travel_needs_replan
+        fallback["npcs"] = npc_layers.reset_scene(t.state.get("npcs", {}))
+    # SPEC-233 R8: TODA mecânica já aplicada sobrevive à exceção — o texto não pode
+    # prometer descanso/achado que o estado não registra (nem o inverso).
+    applied_player = t.rested_player if t.rested_player is not None else t.discovery_player
+    if applied_player is not None:
+        fallback["player"] = applied_player
+    if t._replan_cause:  # SPEC-311 R7: o gatilho do mundo também sobrevive ao fallback
+        fallback["needs_replan"] = t.travel_needs_replan
+    if t.rumor_find:
+        fallback["world"] = t.world
+    if t.dest or t.rested_player is not None:
+        fallback["world"] = t.world
+        fallback["factions"] = t.factions
+        fallback["archive_due"] = True
+    for _k, _v in t.fm_extra.items():  # SPEC-301: a mecânica já aplicada sobrevive à exceção
+        fallback[_k] = _v
+    if t.discovery_events or t.extra_engine_events or t.fm_events:
+        fallback["pending_world_events"] = (
+            (t.state.get("pending_world_events", []) or [])
+            + list(t.discovery_events)
+            + list(t.extra_engine_events)
+            + list(t.fm_events)
+        )
+    if t.wq_changed:
+        fallback["quests"] = t.wq_quests
+    if t.turn_bl_pre_llm is not t.state.get("turn_baseline"):
+        fallback["turn_baseline"] = t.turn_bl_pre_llm
+    if t.track_bk is not None:  # rastro narrado no fallback também chega ao Codex
+        fallback["bestiary_knowledge"] = t.track_bk
+    if t.rested_player is not None and t.rested_player.get("dead"):
+        fallback["death_pending"] = True
+        fallback["archive_due"] = True
+        fallback["pending_world_events"] = list(
+            fallback.get("pending_world_events") or t.state.get("pending_world_events", []) or []
+        ) + [
+            {
+                "type": "player_downed",
+                "actor_id": "player",
+                "target_id": "player",
+                "detail": "O herói tombou numa armadilha durante a viagem.",
+                "payload": {
+                    "location": t.world.get("current_location", ""),
+                    "cause": "armadilha",
+                },
+                "source": "trap",
+            }
+        ]
+    return fallback
