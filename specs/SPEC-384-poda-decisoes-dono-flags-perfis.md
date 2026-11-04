@@ -1,6 +1,6 @@
 # SPEC-384 — Poda que depende do dono: flags aposentáveis, reforços, combate sem tabuleiro, perfis portable/hosted, CLI, `set_deck`, aliases e métrica antiga
 
-> **Status:** `draft`
+> **Status:** `approved` (04/11: dono decidiu D1–D9, ver "Decisões do dono"; cada D com a sua trava no §4)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11 (`docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md`
 > §4.1 itens 2, 4 e 9 · §4.2 item 5 · §4.3 item 1 · §4.4 item 5 · §5 letras K, L, M e N · §6 W1–W8)
