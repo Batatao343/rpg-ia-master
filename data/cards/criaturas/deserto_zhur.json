@@ -1650,7 +1650,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "pesada",
-        "dano_base": 1,
+        "dano_base": 2,
         "dano_tipo": "impactante"
       },
       "descricao": "A mão do corpo ereto no alto aponta e o monte inteiro desce de uma vez.",

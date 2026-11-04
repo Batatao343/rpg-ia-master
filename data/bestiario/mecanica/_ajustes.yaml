@@ -19,11 +19,11 @@ ajustes:
     forca: 0
     sig: 4
   enemy_boss_general_escorpiao:
-    arena: L5|off 90% | L5|on 56% (arena final, 40 seeds)
+    arena: L5|off 72% | L5|on 60% (SPEC-373 passo manual dano -6 sig -3)
     corpo: 0
-    dano: -7
+    dano: -6
     forca: 0
-    sig: -2
+    sig: -3
   enemy_djinn_menor:
     arena: L3|off 70% | L3|on 70% (arena final, 40 seeds)
     dano: 1
