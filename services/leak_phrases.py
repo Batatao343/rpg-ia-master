@@ -9,16 +9,16 @@ from __future__ import annotations
 
 import json
 import os
-import unicodedata
 from functools import lru_cache
+
+from services import text as _text
 
 LEAK_PHRASES_PATH = os.path.join("data", "world", "leak_phrases.json")
 _DERIVED = {"arauto": "arauto_identidade", "pacto": "pacto_valerius"}
 
 
 def fold(text: object) -> str:
-    nfkd = unicodedata.normalize("NFKD", str(text or ""))
-    return "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
+    return _text.fold(text)
 
 
 @lru_cache(maxsize=1)
