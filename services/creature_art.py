@@ -174,7 +174,12 @@ def variant_url(variants: Any) -> str | None:
 
 
 def _registry_src(
-    registry: PortraitRegistry, key: str, *, game_id: str, sign: SignFn | None = None
+    registry: PortraitRegistry,
+    key: str,
+    *,
+    game_id: str,
+    sign: SignFn | None = None,
+    reasons: list[str] | None = None,
 ) -> tuple[str | None, bool]:
     """(src, pending). Visibilidade: `game` so para o jogo de origem; `shared` para todos.
 
@@ -187,6 +192,8 @@ def _registry_src(
         return None, False
     if row.get("status") == "ready":
         if row.get("store") == "private" and row.get("origin_game_id") != game_id:
+            if reasons is not None:
+                reasons.append("private_other_game")  # SPEC-389 R1: causa medida, sem log extra
             return None, True  # P2-1: objeto ainda em users/{owner}/ so serve ao jogo de origem
         thumb = (row.get("object_keys") or {}).get("thumb")
         signer = sign or getattr(registry, "sign", None)
@@ -225,12 +232,17 @@ def portrait_for(
     quote_price: int | None = None,
     quote_milli: int | None = None,
     sign: SignFn | None = None,
+    reasons: list[str] | None = None,
 ) -> CreaturePortrait:
     """Ordem: (a) arte própria do importante -> (b) curada da criatura -> (c) registro do tipo ->
     (d) curada da família -> (e) marcador. `gerar` só com a flag `on`, preço conhecido (hosted) e sem
     arte própria da chave nem geração pendente."""
     registry = registry or EmptyRegistry()
-    if is_fallback_enemy(enemy):  # SPEC-367 R10: nunca lê o registro nem oferece geração
+    if is_fallback_enemy(enemy):
+        if reasons is not None:
+            reasons.append(
+                "fallback_enemy"
+            )  # SPEC-367 R10: nunca lê o registro nem oferece geração
         family = family_of(enemy)
         src = _curated("creature_family", family)
         return {
@@ -254,11 +266,15 @@ def portrait_for(
         if key.startswith("npc:"):
             own_src = _curated("npc", key[4:])
         if own_src is None:
-            own_src, pending = _registry_src(registry, key, game_id=game_id, sign=sign)
+            own_src, pending = _registry_src(
+                registry, key, game_id=game_id, sign=sign, reasons=reasons
+            )
     curated_creature = _curated("creature", bid) or (
         _curated("creature", f"bst:{pool_id}") if pool_id else None
     )
-    type_src, type_pending = _registry_src(registry, _type_key(enemy), game_id=game_id, sign=sign)
+    type_src, type_pending = _registry_src(
+        registry, _type_key(enemy), game_id=game_id, sign=sign, reasons=reasons
+    )
     src = own_src or curated_creature or type_src or _curated("creature_family", family)
     if not important:
         pending = pending or (type_pending and not (curated_creature or type_src))
@@ -267,6 +283,11 @@ def portrait_for(
 
     type_has_art = bool(curated_creature or type_src)
     has_own_art = own_src is not None if important else type_has_art
+    if reasons is not None:
+        if pending:
+            reasons.append("pending")
+        elif has_own_art:
+            reasons.append("has_own_art")
     gerar: GerarOffer | None = None
     if mode() == "on" and quote_price is not None and not pending and not has_own_art:
         gerar = {"preco_estilhas": int(quote_price), "escopo": "unico" if important else "tipo"}

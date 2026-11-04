@@ -75,6 +75,7 @@ from persistence import (
 )
 from services import combat_flags
 from services.checkout_retry import retry_once
+from services import portrait_offer
 from services.portrait_offer_log import log_offer_omitted
 from services import enemy_intent as _enemy_intent
 from services import npc_world as _npc_world
@@ -2875,26 +2876,8 @@ def _creature_art_live() -> bool:
 
 
 def _image_effect_open() -> bool:
-    """SPEC-363 R2: mesmo portão da cotação (`_guard_image_effect`) como predicado sem exceção.
-
-    Oferta `retrato.gerar` só existe se a cotação não vai responder 503."""
-    from services.finops_alerts import require_paid_effect
-    from services.kill_switches import IMAGE, get_switches
-    from services.shard_pricing import PricingUnavailable
-
-    try:
-        switches = get_switches()
-        if not switches.is_enabled(IMAGE):
-            if switches.unreadable:
-                log_offer_omitted("switches_unreadable")
-            return False
-        require_paid_effect("image")
-    except PricingUnavailable:
-        return False
-    except Exception as exc:  # leitura do store falhou: sem oferta (fail-closed)
-        log_offer_omitted("image_gate_failed", exc)
-        return False
-    return True
+    """SPEC-363 R2: mesmo portão da cotação como predicado sem exceção (SPEC-389: causa no tally)."""
+    return portrait_offer.gate()[0]
 
 
 def _portrait_offer_price() -> int | None:
@@ -2905,24 +2888,8 @@ def _portrait_offer_price() -> int | None:
 
 
 def _portrait_price_estilhas() -> int | None:
-    """R11: teto da cotação em Estilhas INTEIRAS (arredonda p/ cima), só leitura, cache de 60 s."""
-    now = time.monotonic()
-    if now - float(_PORTRAIT_PRICE_CACHE["at"]) < 60:
-        return _PORTRAIT_PRICE_CACHE["value"]
-    value: int | None = None
-    try:
-        from infrastructure.runtime import get_runtime
-        from services.image_quotes import ImageQuoteRepository
-
-        repo = ImageQuoteRepository(get_runtime().resources[0])
-        milli = retry_once(lambda: repo.peek_ceiling("monster"))  # SPEC-387 R6
-        value = -(-int(milli) // 1000) if milli else None
-        _PORTRAIT_PRICE_CACHE["milli"] = int(milli) if milli else None
-    except Exception as exc:
-        log_offer_omitted("price_peek_failed", exc)
-        return None  # SPEC-387 R5: falha nunca vai para o cache (a próxima view tenta de novo)
-    _PORTRAIT_PRICE_CACHE.update(at=now, value=value)
-    return value
+    """R11: teto da cotação em Estilhas INTEIRAS, só leitura, cache de 60 s só para preço válido."""
+    return portrait_offer.price_estilhas(_PORTRAIT_PRICE_CACHE)
 
 
 def _portrait_offer_milli(estilhas: int | None) -> int | None:
@@ -2977,6 +2944,7 @@ def _portrait_manifest_ctx(state: dict, meta: dict) -> tuple[dict | None, str | 
 
 def _portrait_registry(state: dict, meta: dict, enemies: list[dict]):
     """R11: UMA leitura do registro por resposta (nunca uma por inimigo). `None` fora do perfil com banco."""
+    portrait_offer.begin(_creature_art_live())  # abre o tally da resposta (SPEC-389)
     if not _creature_art_live():
         return None
     from services import creature_art as _art
@@ -3015,7 +2983,8 @@ def _enemy_portrait(
         registry = None
     manifest, npc_entity_id = _portrait_manifest_ctx(state, meta)
     offer_price = _portrait_offer_price() if registry is not None else None
-    return dict(
+    reasons: list[str] = []
+    portrait = dict(
         _art.portrait_for(
             enemy,
             manifest,
@@ -3025,8 +2994,16 @@ def _enemy_portrait(
             quote_price=offer_price,
             quote_milli=_portrait_offer_milli(offer_price),
             sign=_portrait_sign if registry is not None else None,
+            reasons=reasons,
         )
     )
+    portrait_offer.record(
+        portrait,
+        reasons,
+        registry is not None,
+        portrait_offer.art_cause(_art.mode() == "on", _database_profile()),
+    )
+    return portrait
 
 
 class _ParticipantNames(dict):
@@ -3160,9 +3137,9 @@ def _combat_block(state: dict) -> dict[str, Any]:
                 ],
             }
         )
-        portrait = _enemy_portrait(state, meta, enemy, portrait_registry)
-        if portrait is not None:
+        if (portrait := _enemy_portrait(state, meta, enemy, portrait_registry)) is not None:
             enemy_views[-1]["retrato"] = portrait
+    portrait_offer.finish()  # SPEC-389 R2: 1 offer_view por resposta
 
     chase = meta.get("chase") or {}
     chase_view = (

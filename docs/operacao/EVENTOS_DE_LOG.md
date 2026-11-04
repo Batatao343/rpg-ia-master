@@ -154,6 +154,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `context_builder.fallback` | — |
 | `creature_portrait.fallback` | — |
 | `creature_portrait.offer_omitted` | `cause`, `error_class` |
+| `creature_portrait.offer_view` | — |
 | `cron.auth_rejected` | `reason` |
 | `cron.failed` | `duration_s`, `error_type`, `stack`, `task` |
 | `cron.item_failed` | `error_type`, `item_kind`, `item_ref`, `task` |
@@ -204,6 +205,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `job.failed` | `attempt`, `error_code`, `error_type`, `kind`, `next_run_in_s`, `will_retry` |
 | `job.lease_lost` | `attempt`, `kind` |
 | `job.started` | `attempt`, `kind` |
+| `kill_switches.load_failed` | `error_class`, `snapshot_age_s` |
 | `law.claims_failed` | `error` |
 | `law.claims_rejected` | `count` |
 | `law.crime_registered` | `crime_type`, `jurisdiction`, `reports`, `status`, `witnesses` |

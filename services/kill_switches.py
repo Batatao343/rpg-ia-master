@@ -14,7 +14,6 @@ Keys: ``image_generation``, ``stt_fallback_expensive``, ``model:<provider>/<mode
 
 from __future__ import annotations
 
-import logging
 import os
 import re
 import threading
@@ -23,14 +22,17 @@ from typing import Protocol
 from collections.abc import Callable, Mapping
 
 from observability.metrics import metrics
+from observability.telemetry import log_event
 from services.env import is_database_profile
 from services.checkout_retry import retry_once
+
+# SPEC-389 R4: idade maxima do ultimo snapshot bom enquanto a releitura falha (constante, nao env).
+MAX_STALE_SECONDS = 60.0
 
 KEY_RE = re.compile(
     r"^(image_generation|stt_fallback_expensive|model:[A-Za-z0-9._/-]{1,200}"
     r"|decision_backend:[a-z0-9_]{1,40}|new_purchases(:[a-z_]{1,40})?)$"
 )
-log = logging.getLogger("rpg.kill_switches")
 IMAGE = "image_generation"
 STT_FALLBACK = "stt_fallback_expensive"
 JEV = "decision_backend:jev"
@@ -146,6 +148,7 @@ class KillSwitches:
         self._cache: dict[str, bool] = {}
         self._loaded_at: float | None = None
         self._ever_loaded = False
+        self._loaded_ok_at: float | None = None
         self._load_failed = False
         self._lock = threading.Lock()
 
@@ -169,22 +172,48 @@ class KillSwitches:
                     if store is not None:
                         self._cache = retry_once(store.load)  # SPEC-387 R6: 1 retry de checkout
                         self._ever_loaded = True
+                    self._loaded_ok_at = now
                     self._load_failed = False
                 except Exception as exc:  # fail-safe: keep last good snapshot, never disable
                     self._load_failed = True
-                    log.warning("kill_switch_load_failed error=%s", type(exc).__name__)
+                    log_event(
+                        "kill_switches",
+                        "load_failed",
+                        level="warning",
+                        error_class=type(exc).__name__,
+                        snapshot_age_s=self._age(now),
+                    )
                     metrics.increment(
                         "rpg_kill_switch_load_errors_total", {"error": type(exc).__name__}
                     )
                 self._loaded_at = now  # back off on failure too
             state = dict(self._cache)
-            unreadable = self._load_failed and not self._ever_loaded
+            unreadable = (self._load_failed and not self._ever_loaded) or self._is_stale(now)
         if unreadable:  # opt-in fail-closed: no cached value to fall back on
             for key in _fail_closed_keys():
                 state[key] = False
         for key in _env_off():
             state[key] = False
         return state
+
+    def _age(self, now: float) -> float | None:
+        return None if self._loaded_ok_at is None else round(max(0.0, now - self._loaded_ok_at), 1)
+
+    def _is_stale(self, now: float) -> bool:
+        """SPEC-389 R4: releitura falhando ha mais de 60 s desde a ultima leitura boa."""
+        age = self._age(now)
+        return bool(
+            self._load_failed and self._ever_loaded and age is not None and age > MAX_STALE_SECONDS
+        )
+
+    @property
+    def age_s(self) -> float | None:
+        """Idade (s) do ultimo snapshot lido com sucesso (`None` se nunca leu)."""
+        return self._age(self._clock())
+
+    @property
+    def stale(self) -> bool:
+        return self._is_stale(self._clock())
 
     @property
     def unreadable(self) -> bool:
