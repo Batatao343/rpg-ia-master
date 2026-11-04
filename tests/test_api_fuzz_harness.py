@@ -14,6 +14,7 @@ from fastapi.testclient import TestClient
 
 import api
 from scripts.ci_docs_only import DOC_TEST_PATTERN
+from tests.api_sources import api_source_text
 from tests.fakes.api_fuzz import (
     EXCLUDED_503,
     INTENTIONAL_503,
@@ -38,7 +39,7 @@ def test_api_fuzz_file_is_not_a_doc_test():
 
 
 def test_intentional_503_allowlist_matches_source():
-    source = (ROOT / "api.py").read_text(encoding="utf-8")
+    source = api_source_text()
     codes = set(re.findall(r"HTTPException\(\s*503,\s*(?:detail=)?\"([a-z_]+)\"", source))
     assert codes, "regex não achou nenhum 503"
     assert codes <= INTENTIONAL_503 | EXCLUDED_503, codes - (INTENTIONAL_503 | EXCLUDED_503)

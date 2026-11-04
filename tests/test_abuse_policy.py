@@ -18,6 +18,7 @@ from infrastructure.local_adapters import MemoryRateLimiter
 from infrastructure.request_context import reset_current_principal, set_current_principal
 from services import abuse_policy as ap
 from services.auth_sessions import CsrfSigner
+from tests.api_sources import api_source_text
 
 ORIGIN = "http://localhost:5173"
 SECRET = "s" * 32
@@ -155,7 +156,7 @@ def test_account_security_and_captcha_use_client_ip(monkeypatch):
     monkeypatch.setenv("RPG_TRUSTED_PROXY_HOPS", "1")
     r = _req({"x-forwarded-for": "6.6.6.6, 203.0.113.5"})
     assert account_security._remote(r) == "203.0.113.5"
-    assert "remote_ip=_client_ip(request)" in Path("api.py").read_text(encoding="utf-8")
+    assert "remote_ip=_client_ip(request)" in api_source_text()
 
 
 # --- R3: cota diaria (memoria) ----------------------------------------------------------------
@@ -383,7 +384,7 @@ def test_replay_by_action_id_does_not_consume_quota(env, monkeypatch):
 
 def test_stream_and_post_share_the_single_per_turn_check():
     """R10: o SSE reaproveita _execute_action (1 consumo por turno, nao por chunk)."""
-    tree = ast.parse(Path("api.py").read_text(encoding="utf-8"))
+    tree = ast.parse(api_source_text())
     functions = {fn.name: fn for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)}
 
     def calls(name):
@@ -405,9 +406,7 @@ def test_stream_and_post_share_the_single_per_turn_check():
 
 
 def test_quota_error_reaches_sse_payload_with_retry():
-    assert "retry_after_seconds=exc.retry_after_seconds" in Path("api.py").read_text(
-        encoding="utf-8"
-    )
+    assert "retry_after_seconds=exc.retry_after_seconds" in api_source_text()
 
 
 def test_quota_exceeded_http_body_and_header(env, monkeypatch):

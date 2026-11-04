@@ -8,6 +8,7 @@ import re
 import pytest
 
 from services import law
+from tests.api_sources import api_rel_files
 from tests.spec299_helpers import base_state
 
 
@@ -69,7 +70,7 @@ def test_no_graph_caller():
     root = pathlib.Path(__file__).resolve().parent.parent
     pattern = re.compile(r"\b(?:deliver_prisoner|prisoner_bounty)\b")
     offenders = []
-    for folder in ("agents", "services", "api.py", "main.py", "world_utils.py", "playtest"):
+    for folder in ("agents", "services", *api_rel_files(), "main.py", "world_utils.py", "playtest"):
         target = root / folder
         files = [target] if target.is_file() else list(target.rglob("*.py"))
         for path in files:

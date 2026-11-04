@@ -1,0 +1,4790 @@
+[
+ {
+  "file": "tests/fakes/two_principals.py",
+  "line": 135,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/fakes/two_principals.py",
+  "line": 156,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/fakes/two_principals.py",
+  "line": 245,
+  "name": "_DOCS_PATHS",
+  "kind": "read"
+ },
+ {
+  "file": "tests/fakes/two_principals.py",
+  "line": 248,
+  "name": "CONTENT_SECURITY_POLICY",
+  "kind": "read"
+ },
+ {
+  "file": "tests/fakes/two_principals.py",
+  "line": 261,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/fakes/two_principals.py",
+  "line": 270,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/fakes/two_principals.py",
+  "line": 274,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/fixtures/spec368_seed.py",
+  "line": 514,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/fixtures/spec368_seed.py",
+  "line": 531,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/spec364_board_helpers.py",
+  "line": 39,
+  "name": "save_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/spec364_board_helpers.py",
+  "line": 40,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/spec364_board_helpers.py",
+  "line": 41,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/spec364_board_helpers.py",
+  "line": 26,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_abuse_logging.py",
+  "line": 107,
+  "name": "app",
+  "kind": "from_import"
+ },
+ {
+  "file": "tests/test_abuse_logging.py",
+  "line": 120,
+  "name": "app",
+  "kind": "from_import"
+ },
+ {
+  "file": "tests/test_abuse_logging.py",
+  "line": 168,
+  "name": "_owner_rate_limit",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 205,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 355,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 356,
+  "name": "_resolve_save_file",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 357,
+  "name": "_await_projection_db",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 358,
+  "name": "_begin_turn_operation",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 359,
+  "name": "_action_already_processed",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 360,
+  "name": "_apply_action_options",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 361,
+  "name": "_projection_owner",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 362,
+  "name": "_run_turn",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 78,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 208,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 331,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 370,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 207,
+  "name": "_authfail_until",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 214,
+  "name": "_authfail_until",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 348,
+  "name": "_enforce_owner_budget",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 419,
+  "name": "_enforce_owner_budget",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 417,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 305,
+  "name": "_enforce_owner_budget",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 306,
+  "name": "QuotaExceeded",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 307,
+  "name": "_enforce_owner_budget",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 315,
+  "name": "_enforce_owner_budget",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 316,
+  "name": "QuotaExceeded",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 317,
+  "name": "_enforce_owner_budget",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 329,
+  "name": "_enforce_owner_budget",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 333,
+  "name": "_enforce_owner_budget",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 376,
+  "name": "_execute_action",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 377,
+  "name": "_execute_action",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 378,
+  "name": "QuotaExceeded",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 379,
+  "name": "_execute_action",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 373,
+  "name": "_execute_action",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 422,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 431,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 422,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_abuse_policy.py",
+  "line": 432,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_account_api.py",
+  "line": 29,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_account_api.py",
+  "line": 70,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_account_api.py",
+  "line": 95,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_account_api.py",
+  "line": 105,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_account_api.py",
+  "line": 73,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_account_api.py",
+  "line": 130,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_account_lifecycle_security.py",
+  "line": 78,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_account_lifecycle_security.py",
+  "line": 80,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_ambient_consumers.py",
+  "line": 201,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_ambient_consumers.py",
+  "line": 198,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_access_log.py",
+  "line": 19,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_access_log.py",
+  "line": 155,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_access_log.py",
+  "line": 15,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_access_log.py",
+  "line": 66,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_access_log.py",
+  "line": 140,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_access_log.py",
+  "line": 67,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_access_log.py",
+  "line": 68,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_access_log.py",
+  "line": 74,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 76,
+  "name": "_schedule_chronicle_jobs",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 163,
+  "name": "_log_turn",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 193,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 244,
+  "name": "_begin_create_operation",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 245,
+  "name": "_create_game",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 16,
+  "name": "_llm_turn_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 17,
+  "name": "_llm_attempt_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 19,
+  "name": "_attempt_telemetry_hook",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 32,
+  "name": "_attempt_telemetry_hook",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 45,
+  "name": "_telemetry_hook",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 46,
+  "name": "_llm_log_fields",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 77,
+  "name": "GameResponse",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 96,
+  "name": "_commit_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 143,
+  "name": "_attempt_telemetry_hook",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 169,
+  "name": "_run_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 197,
+  "name": "_meter_auxiliary_operation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 198,
+  "name": "_attempt_telemetry_hook",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 228,
+  "name": "_attempt_telemetry_hook",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 250,
+  "name": "new_game",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 48,
+  "name": "_llm_turn_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 49,
+  "name": "_llm_attempt_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 46,
+  "name": "_llm_turn_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_attempt_telemetry.py",
+  "line": 46,
+  "name": "_llm_attempt_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_fuzz_harness.py",
+  "line": 51,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_fuzz_schemathesis.py",
+  "line": 90,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_fuzz_schemathesis.py",
+  "line": 59,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 38,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 340,
+  "name": "save_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 341,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 29,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 39,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 51,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 71,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 86,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 112,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 170,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 239,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 319,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 348,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 45,
+  "name": "PlayStepRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 60,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 174,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_jogadas.py",
+  "line": 66,
+  "name": "PlayStepRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_api_npc_knowledge_private.py",
+  "line": 57,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_art_offer_label.py",
+  "line": 17,
+  "name": "_public_art_offer",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_art_offer_label.py",
+  "line": 25,
+  "name": "_public_art_offer",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_art_offer_label.py",
+  "line": 31,
+  "name": "_public_art_offer",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_audit_export.py",
+  "line": 47,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_audit_export.py",
+  "line": 46,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_audit_export_local.py",
+  "line": 122,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_audit_export_local.py",
+  "line": 49,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_audit_export_local.py",
+  "line": 48,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_audit_export_local.py",
+  "line": 157,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_audit_fixes.py",
+  "line": 177,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_audit_fixes.py",
+  "line": 23,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_audit_fixes.py",
+  "line": 203,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_audit_fixes.py",
+  "line": 22,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_audit_fixes.py",
+  "line": 198,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_audit_fixes.py",
+  "line": 199,
+  "name": "_RATE_WINDOW_S",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_audit_fixes.py",
+  "line": 201,
+  "name": "_rate_hits",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_audit_fixes.py",
+  "line": 205,
+  "name": "_rate_hits",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_audit_fixes.py",
+  "line": 206,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_boot_policy.py",
+  "line": 136,
+  "name": "reload",
+  "kind": "reload"
+ },
+ {
+  "file": "tests/test_boot_policy.py",
+  "line": 134,
+  "name": "reload",
+  "kind": "reload"
+ },
+ {
+  "file": "tests/test_boot_policy.py",
+  "line": 320,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_boot_policy.py",
+  "line": 341,
+  "name": "reload",
+  "kind": "reload"
+ },
+ {
+  "file": "tests/test_boot_policy.py",
+  "line": 347,
+  "name": "reload",
+  "kind": "reload"
+ },
+ {
+  "file": "tests/test_boot_policy.py",
+  "line": 353,
+  "name": "health_check",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_boot_policy.py",
+  "line": 356,
+  "name": "health_check",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_boot_policy.py",
+  "line": 342,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_boot_policy.py",
+  "line": 364,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 41,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 42,
+  "name": "_failed_pending_operation",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 66,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 67,
+  "name": "_failed_pending_operation",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 78,
+  "name": "_begin_state_mutation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 92,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 134,
+  "name": "CreateCharacterRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 151,
+  "name": "game_graph",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 158,
+  "name": "game_graph",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 54,
+  "name": "_begin_state_mutation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 89,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 127,
+  "name": "_abyss_tier_view",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 128,
+  "name": "_abyss_tier_view",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_api_pending_erros.py",
+  "line": 166,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_combate_modificadores.py",
+  "line": 443,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_combate_modificadores.py",
+  "line": 444,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_combate_modificadores.py",
+  "line": 446,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_combate_modificadores.py",
+  "line": 447,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_finops_wallet_jobs.py",
+  "line": 170,
+  "name": "_llm_log_fields",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 328,
+  "name": "_game_lock",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 329,
+  "name": "_game_lock",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 26,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 97,
+  "name": "_death_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 146,
+  "name": "_commit_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 169,
+  "name": "_commit_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 239,
+  "name": "_require_saved",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 240,
+  "name": "_schedule_chronicle_jobs",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 267,
+  "name": "_death_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 25,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 144,
+  "name": "_prepare_checkpoint",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 148,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 168,
+  "name": "_prepare_checkpoint",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 171,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 188,
+  "name": "_game_lock",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 188,
+  "name": "_game_lock",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 242,
+  "name": "_commit_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_morte_checkpoint.py",
+  "line": 244,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_bug_mundo_perigo_luz_clima.py",
+  "line": 195,
+  "name": "save_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_bug_mundo_perigo_luz_clima.py",
+  "line": 196,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_bug_mundo_perigo_luz_clima.py",
+  "line": 197,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_card_shop_api.py",
+  "line": 27,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_card_shop_api.py",
+  "line": 26,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_cards_prepare_api.py",
+  "line": 19,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_cards_prepare_api.py",
+  "line": 229,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_cards_prepare_api.py",
+  "line": 18,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_cards_prepare_api.py",
+  "line": 228,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_cards_prepare_api.py",
+  "line": 237,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_ci_eval_gates.py",
+  "line": 140,
+  "name": "health_check",
+  "kind": "from_import"
+ },
+ {
+  "file": "tests/test_client_error_beacon.py",
+  "line": 123,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_client_error_beacon.py",
+  "line": 131,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_client_error_beacon.py",
+  "line": 164,
+  "name": "_CLIENT_ERROR_LOG_MAX_PER_MIN",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_client_error_beacon.py",
+  "line": 30,
+  "name": "_client_error_window",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_client_error_beacon.py",
+  "line": 34,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_client_error_beacon.py",
+  "line": 28,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_client_error_beacon.py",
+  "line": 29,
+  "name": "_client_error_last",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_client_error_beacon.py",
+  "line": 113,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_client_error_beacon.py",
+  "line": 115,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_combat_preview.py",
+  "line": 87,
+  "name": "_resolve_save_file",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_combat_preview.py",
+  "line": 88,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_combat_preview.py",
+  "line": 90,
+  "name": "save_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_combat_preview.py",
+  "line": 21,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_preview.py",
+  "line": 91,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 19,
+  "name": "CombatSimulatorRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 136,
+  "name": "save_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 137,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 27,
+  "name": "CombatSimulatorRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 31,
+  "name": "combat_simulator_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 47,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 94,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 145,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 177,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 195,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 201,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 33,
+  "name": "gamedata",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_combat_simulator.py",
+  "line": 38,
+  "name": "gamedata",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 35,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 269,
+  "name": "save_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 270,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 20,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 36,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 151,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 227,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 241,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 243,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 205,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 218,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 235,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_targeting.py",
+  "line": 280,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_text_smoke7.py",
+  "line": 106,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_xp_outside_prose.py",
+  "line": 155,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_xp_outside_prose.py",
+  "line": 175,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_xp_outside_prose.py",
+  "line": 177,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_xp_outside_prose.py",
+  "line": 152,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_combat_xp_outside_prose.py",
+  "line": 154,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_conflito16_frontend.py",
+  "line": 75,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_conflito16_frontend.py",
+  "line": 105,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_conflito16_frontend.py",
+  "line": 116,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_conflito16_frontend.py",
+  "line": 159,
+  "name": "_death_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_conflito_virtudes.py",
+  "line": 300,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_conflito_virtudes.py",
+  "line": 299,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_cron_logging.py",
+  "line": 17,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_death_flow.py",
+  "line": 20,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_death_flow.py",
+  "line": 19,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_dossiers_api.py",
+  "line": 58,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_dossiers_api.py",
+  "line": 155,
+  "name": "_npcs_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_dossiers_api.py",
+  "line": 156,
+  "name": "_npcs_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_encounter_lifecycle_reload.py",
+  "line": 140,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_encounter_lifecycle_reload.py",
+  "line": 178,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_encounter_manifest.py",
+  "line": 302,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_encounter_manifest.py",
+  "line": 333,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_encounter_manifest.py",
+  "line": 339,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_encounter_manifest.py",
+  "line": 342,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_enemy_intent_node.py",
+  "line": 65,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_enemy_intent_node.py",
+  "line": 68,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_error_envelope.py",
+  "line": 147,
+  "name": "_execute_action",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_error_envelope.py",
+  "line": 169,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_error_envelope.py",
+  "line": 91,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_error_envelope.py",
+  "line": 88,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_error_envelope.py",
+  "line": 122,
+  "name": "_blocked_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_factories.py",
+  "line": 34,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_factories.py",
+  "line": 35,
+  "name": "uuid",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_factories.py",
+  "line": 36,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fallback_logging.py",
+  "line": 61,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fallback_logging.py",
+  "line": 97,
+  "name": "_release_failed",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fallback_logging.py",
+  "line": 125,
+  "name": "load_game_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fallback_logging.py",
+  "line": 60,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_fallback_logging.py",
+  "line": 110,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_fallback_logging.py",
+  "line": 125,
+  "name": "_resolve_save_file",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fallback_logging.py",
+  "line": 112,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 58,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 170,
+  "name": "_CORS_ORIGINS",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 181,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 195,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 68,
+  "name": "_resolve_save_file",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 69,
+  "name": "_resolve_save_file",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 180,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 185,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 194,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_fase10.py",
+  "line": 171,
+  "name": "_CORS_ORIGINS",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase2.py",
+  "line": 303,
+  "name": "_factions_block",
+  "kind": "from_import"
+ },
+ {
+  "file": "tests/test_fase2.py",
+  "line": 333,
+  "name": "_factions_block",
+  "kind": "from_import"
+ },
+ {
+  "file": "tests/test_fase31.py",
+  "line": 359,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase31.py",
+  "line": 375,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase32.py",
+  "line": 460,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase32.py",
+  "line": 439,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase33.py",
+  "line": 481,
+  "name": "_quest_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase33.py",
+  "line": 497,
+  "name": "_quest_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase34.py",
+  "line": 335,
+  "name": "_factions_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase34.py",
+  "line": 359,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase34.py",
+  "line": 371,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase34.py",
+  "line": 379,
+  "name": "_factions_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase43.py",
+  "line": 319,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_fase43.py",
+  "line": 320,
+  "name": "save_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_fase43.py",
+  "line": 306,
+  "name": "_inventory_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase43.py",
+  "line": 321,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase61.py",
+  "line": 290,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fase61.py",
+  "line": 293,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_fix_vitalidade_terminal.py",
+  "line": 349,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_forge.py",
+  "line": 226,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_forge.py",
+  "line": 225,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 105,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 140,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 178,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 209,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 210,
+  "name": "save_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 19,
+  "name": "CombatSimulatorRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 25,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 106,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 179,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 180,
+  "name": "_stream_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 231,
+  "name": "_llm_attempt_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 233,
+  "name": "_attempt_telemetry_hook",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 234,
+  "name": "_llm_log_fields",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 211,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 236,
+  "name": "_llm_attempt_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 258,
+  "name": "CreateCharacterRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 234,
+  "name": "_llm_attempt_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 247,
+  "name": "gamedata",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 20,
+  "name": "gamedata",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 22,
+  "name": "gamedata",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 145,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_hardening_persistencia_sse.py",
+  "line": 248,
+  "name": "load_json_data",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_cookie_flags.py",
+  "line": 146,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_cors.py",
+  "line": 18,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_cors.py",
+  "line": 23,
+  "name": "_CORS_ORIGINS",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_cors.py",
+  "line": 23,
+  "name": "_CORS_ORIGINS",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_cors.py",
+  "line": 23,
+  "name": "_CORS_ORIGINS",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_error_leakage.py",
+  "line": 118,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_http_error_leakage.py",
+  "line": 12,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_error_leakage.py",
+  "line": 52,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_http_error_leakage.py",
+  "line": 96,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_error_leakage.py",
+  "line": 119,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_idor_offline.py",
+  "line": 217,
+  "name": "_image_finance",
+  "kind": "string"
+ },
+ {
+  "file": "tests/test_http_idor_offline.py",
+  "line": 29,
+  "name": "_database_profile",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_idor_offline.py",
+  "line": 32,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_security_headers.py",
+  "line": 154,
+  "name": "_DOCS_PATHS",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_http_security_headers.py",
+  "line": 67,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_http_security_headers.py",
+  "line": 177,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_http_security_headers.py",
+  "line": 26,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_security_headers.py",
+  "line": 78,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_security_headers.py",
+  "line": 185,
+  "name": "CONTENT_SECURITY_POLICY",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_http_security_headers.py",
+  "line": 60,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_image_quotes.py",
+  "line": 44,
+  "name": "_enqueue_art_generation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes.py",
+  "line": 96,
+  "name": "_offer_brief_for_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes.py",
+  "line": 103,
+  "name": "_offer_brief_for_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes.py",
+  "line": 143,
+  "name": "_public_art_refs",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes.py",
+  "line": 79,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes.py",
+  "line": 99,
+  "name": "_offer_brief_for_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes.py",
+  "line": 111,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes.py",
+  "line": 122,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes.py",
+  "line": 45,
+  "name": "_enqueue_art_generation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 493,
+  "name": "_image_finance",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 496,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 497,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 498,
+  "name": "_resolve_save_file",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 635,
+  "name": "_enqueue_art_generation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 511,
+  "name": "create_image_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 512,
+  "name": "ArtConfirmRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 515,
+  "name": "confirm_player_art",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 545,
+  "name": "create_image_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 565,
+  "name": "create_image_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 566,
+  "name": "ArtConfirmRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 639,
+  "name": "create_image_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 642,
+  "name": "ArtConfirmRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 645,
+  "name": "confirm_player_art",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 661,
+  "name": "dynamic_art_status",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 662,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 663,
+  "name": "confirm_player_art",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 511,
+  "name": "ArtQuoteRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 545,
+  "name": "ArtQuoteRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 565,
+  "name": "ArtQuoteRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 570,
+  "name": "confirm_player_art",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 640,
+  "name": "ArtQuoteRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 517,
+  "name": "confirm_player_art",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 521,
+  "name": "confirm_player_art",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_image_quotes_local.py",
+  "line": 523,
+  "name": "ArtConfirmRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_itens_vivos.py",
+  "line": 414,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 97,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 40,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 45,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 84,
+  "name": "ClientLatencyReport",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 111,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 126,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 125,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 131,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 130,
+  "name": "_rate_hits",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_client_endpoint.py",
+  "line": 130,
+  "name": "_rate_hits",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 139,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 178,
+  "name": "load_game_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 184,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 383,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 469,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 514,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 525,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 33,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 114,
+  "name": "CombatSimulatorRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 120,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 385,
+  "name": "_game_lock",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 438,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 472,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 473,
+  "name": "_stream_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 32,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 141,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 441,
+  "name": "_run_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 517,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 526,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 391,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 115,
+  "name": "gamedata",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_latency_metrics_compat.py",
+  "line": 117,
+  "name": "gamedata",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_llm_logging.py",
+  "line": 188,
+  "name": "_llm_log_fields",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_log_correlation.py",
+  "line": 28,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_log_correlation.py",
+  "line": 24,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_logging_review_239_245.py",
+  "line": 36,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_logging_review_239_245.py",
+  "line": 32,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_logging_setup.py",
+  "line": 84,
+  "name": "_log_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_map_view.py",
+  "line": 205,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_map_view.py",
+  "line": 294,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_map_view.py",
+  "line": 204,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_map_view.py",
+  "line": 290,
+  "name": "_session_scoped_path",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_map_view.py",
+  "line": 291,
+  "name": "_session_scoped_path",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_map_view.py",
+  "line": 292,
+  "name": "_session_scoped_path",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_mapa_interiores.py",
+  "line": 241,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_mapa_interiores.py",
+  "line": 253,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_mapa_interiores.py",
+  "line": 259,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_npc_camadas.py",
+  "line": 333,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_observability_stack.py",
+  "line": 15,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_onboarding.py",
+  "line": 110,
+  "name": "app",
+  "kind": "from_import"
+ },
+ {
+  "file": "tests/test_payment_logging.py",
+  "line": 50,
+  "name": "_stripe_payments",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_payment_logging.py",
+  "line": 145,
+  "name": "_google_play",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_payment_logging.py",
+  "line": 168,
+  "name": "_google_play",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_payment_logging.py",
+  "line": 32,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_payment_logging.py",
+  "line": 31,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_player_knowledge.py",
+  "line": 497,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_polish_sessao.py",
+  "line": 107,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_polish_sessao.py",
+  "line": 216,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_polish_sessao.py",
+  "line": 218,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_polish_sessao.py",
+  "line": 104,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 138,
+  "name": "_portrait_price_estilhas",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 139,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 142,
+  "name": "_portrait_registry",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 170,
+  "name": "_portrait_registry",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 171,
+  "name": "_creature_art_live",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 172,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 41,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 42,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 154,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 168,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 173,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 467,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 48,
+  "name": "_portrait_price_estilhas",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 50,
+  "name": "_portrait_price_estilhas",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 52,
+  "name": "_portrait_price_estilhas",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 58,
+  "name": "_portrait_price_estilhas",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 49,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 49,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 483,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_portrait_offer_causes.py",
+  "line": 484,
+  "name": "_creature_art_live",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_projection_api.py",
+  "line": 27,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_projection_api.py",
+  "line": 233,
+  "name": "_drain_projection",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_projection_api.py",
+  "line": 268,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_projection_api.py",
+  "line": 24,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_projection_api.py",
+  "line": 65,
+  "name": "_game_lock",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_projection_api.py",
+  "line": 265,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_projection_db_local.py",
+  "line": 415,
+  "name": "_drain_projection_db",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_projection_db_local.py",
+  "line": 428,
+  "name": "_drain_projection_db",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_projection_db_local.py",
+  "line": 327,
+  "name": "_await_projection_db",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_projection_db_local.py",
+  "line": 343,
+  "name": "_pre_drain_in_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_prologue.py",
+  "line": 143,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_prologue.py",
+  "line": 167,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_prologue.py",
+  "line": 170,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_prompt_guard.py",
+  "line": 209,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_prompt_guard.py",
+  "line": 211,
+  "name": "game_graph",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_prompt_guard.py",
+  "line": 217,
+  "name": "game_graph",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_prompt_guard.py",
+  "line": 208,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_scene_cards_node.py",
+  "line": 88,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_scene_cards_node.py",
+  "line": 92,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_session_hardening.py",
+  "line": 70,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_session_hardening.py",
+  "line": 72,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_session_hardening.py",
+  "line": 189,
+  "name": "_session_boundary",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_session_hardening_local.py",
+  "line": 80,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_session_hardening_local.py",
+  "line": 82,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_speaker_contract.py",
+  "line": 32,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_speaker_contract.py",
+  "line": 29,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_spec192_cron_endpoints.py",
+  "line": 19,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec194_native_backend.py",
+  "line": 138,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec194_native_backend.py",
+  "line": 166,
+  "name": "_google_play",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec194_native_backend.py",
+  "line": 20,
+  "name": "_CORS_ORIGINS",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec194_native_backend.py",
+  "line": 146,
+  "name": "_google_play",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec194_native_backend.py",
+  "line": 151,
+  "name": "_google_play",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec194_native_backend.py",
+  "line": 154,
+  "name": "_google_play",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec194_native_backend.py",
+  "line": 171,
+  "name": "google_play_verify",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec194_native_backend.py",
+  "line": 172,
+  "name": "GooglePlayVerifyRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec195_reconciliation.py",
+  "line": 417,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_spec196_finops.py",
+  "line": 491,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec196_finops.py",
+  "line": 831,
+  "name": "_image_finance",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec196_finops.py",
+  "line": 838,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec196_finops.py",
+  "line": 379,
+  "name": "_image_finance",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec196_finops.py",
+  "line": 830,
+  "name": "_image_finance",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec196_finops.py",
+  "line": 837,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_spec196_finops.py",
+  "line": 770,
+  "name": "google_play_profile",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec196_finops.py",
+  "line": 775,
+  "name": "google_play_profile",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec196_finops.py",
+  "line": 381,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec197_daily_cap.py",
+  "line": 258,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec197_daily_cap.py",
+  "line": 266,
+  "name": "QuotaExceeded",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec197_daily_cap.py",
+  "line": 267,
+  "name": "_enforce_owner_budget",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec197_legal_pages.py",
+  "line": 18,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec222_transparency.py",
+  "line": 44,
+  "name": "CONTENT_SECURITY_POLICY",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec222_transparency.py",
+  "line": 43,
+  "name": "CONTENT_SECURITY_POLICY",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec235_reclaim_local.py",
+  "line": 197,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec235_reclaim_local.py",
+  "line": 226,
+  "name": "_begin_state_mutation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec235_reclaim_local.py",
+  "line": 246,
+  "name": "_begin_state_mutation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec235_reclaim_local.py",
+  "line": 206,
+  "name": "_failed_pending_operation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec235_reclaim_local.py",
+  "line": 233,
+  "name": "_failed_pending_operation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec235_reclaim_local.py",
+  "line": 245,
+  "name": "_failed_pending_operation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec235_reclaim_local.py",
+  "line": 219,
+  "name": "_begin_state_mutation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec265_legacy_mana_saves.py",
+  "line": 24,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec267_static_mount.py",
+  "line": 19,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec267_static_mount.py",
+  "line": 15,
+  "name": "_ROOT",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec267_static_mount.py",
+  "line": 11,
+  "name": "app",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_spec267_static_mount.py",
+  "line": 25,
+  "name": "_ROOT",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec290_chefe_sobrevivencia.py",
+  "line": 129,
+  "name": "CombatSimulatorRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec290_chefe_sobrevivencia.py",
+  "line": 200,
+  "name": "CombatSimulatorRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec290_chefe_sobrevivencia.py",
+  "line": 203,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec290_chefe_sobrevivencia.py",
+  "line": 135,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec293_rotulo_faccao.py",
+  "line": 211,
+  "name": "_resolve_save_file",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec293_rotulo_faccao.py",
+  "line": 212,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec293_rotulo_faccao.py",
+  "line": 213,
+  "name": "_load_unlocked_or_locked",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec293_rotulo_faccao.py",
+  "line": 242,
+  "name": "_execute_action",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec293_rotulo_faccao.py",
+  "line": 210,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_spec293_rotulo_faccao.py",
+  "line": 214,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec293_rotulo_faccao.py",
+  "line": 240,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec293_rotulo_faccao.py",
+  "line": 147,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec294_followups.py",
+  "line": 192,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec298_visibilidade.py",
+  "line": 91,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec298_visibilidade.py",
+  "line": 102,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec298_visibilidade.py",
+  "line": 108,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec298_visibilidade.py",
+  "line": 119,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec299_wanted_signals.py",
+  "line": 242,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec300_persistence_api.py",
+  "line": 106,
+  "name": "_companion_labels",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec300_persistence_api.py",
+  "line": 78,
+  "name": "_companion_labels",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec300_persistence_api.py",
+  "line": 113,
+  "name": "_companion_labels",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec300_persistence_api.py",
+  "line": 126,
+  "name": "_companion_feedback",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec300_persistence_api.py",
+  "line": 111,
+  "name": "_companion_labels",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec301_api.py",
+  "line": 18,
+  "name": "_factions_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec301_api.py",
+  "line": 60,
+  "name": "_factions_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec302_perception.py",
+  "line": 255,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec302_review_fixes.py",
+  "line": 66,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec303_perception_api.py",
+  "line": 166,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec303_perception_api.py",
+  "line": 171,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec304_beliefs.py",
+  "line": 247,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec304_beliefs.py",
+  "line": 160,
+  "name": "_npcs_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec304_playtest.py",
+  "line": 85,
+  "name": "_npcs_block",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec304_review.py",
+  "line": 89,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec305_surfaces.py",
+  "line": 35,
+  "name": "_quest_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec307_display_api.py",
+  "line": 91,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec307_display_api.py",
+  "line": 149,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec307_display_api.py",
+  "line": 131,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec307_display_api.py",
+  "line": 96,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec307_display_api.py",
+  "line": 105,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec307_display_api.py",
+  "line": 118,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec307_display_api.py",
+  "line": 119,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec307_display_api.py",
+  "line": 97,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec308_oraculo.py",
+  "line": 108,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec310_no_leak.py",
+  "line": 135,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec312_perception.py",
+  "line": 195,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec312_perception.py",
+  "line": 210,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec313_dead_surfaces.py",
+  "line": 113,
+  "name": "_quest_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec315_resolution.py",
+  "line": 154,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec325_abandon.py",
+  "line": 124,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec325_nonlethal.py",
+  "line": 277,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec325_nonlethal.py",
+  "line": 279,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec325_objects.py",
+  "line": 74,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec325_orders.py",
+  "line": 180,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec325_orders.py",
+  "line": 183,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec325_reinforcements.py",
+  "line": 75,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec325_resist.py",
+  "line": 194,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec325_resist.py",
+  "line": 98,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec339_duracao_condicoes.py",
+  "line": 237,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec342_nonlethal_jogadas.py",
+  "line": 89,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec342_nonlethal_jogadas.py",
+  "line": 87,
+  "name": "PlayStepRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec342_scene_view.py",
+  "line": 14,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec345_combat_view.py",
+  "line": 12,
+  "name": "_build_combat_simulator_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec345_combat_view.py",
+  "line": 29,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec345_combat_view.py",
+  "line": 44,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec345_combat_view.py",
+  "line": 67,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec345_combat_view.py",
+  "line": 58,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec346_board_no_llm.py",
+  "line": 329,
+  "name": "_apply_action_options",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec347_creature_art.py",
+  "line": 198,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec347_creature_art.py",
+  "line": 210,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec351_api.py",
+  "line": 110,
+  "name": "save_game_state",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec351_api.py",
+  "line": 111,
+  "name": "save_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec351_api.py",
+  "line": 29,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 177,
+  "name": "_creature_art_live",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 178,
+  "name": "_portrait_price_estilhas",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 179,
+  "name": "_portrait_sign",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 180,
+  "name": "_portrait_store",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 187,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 195,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 208,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 226,
+  "name": "_creature_art_live",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 201,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_portraits.py",
+  "line": 218,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 78,
+  "name": "_guard_image_effect",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 89,
+  "name": "_portrait_store",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 97,
+  "name": "_portrait_store",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 106,
+  "name": "_portrait_store",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 124,
+  "name": "_portrait_store",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 133,
+  "name": "_portrait_store",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 146,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 147,
+  "name": "load_game_state",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 150,
+  "name": "_resolve_save_file",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 37,
+  "name": "ArtQuoteRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 98,
+  "name": "_monster_quote_inputs",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 134,
+  "name": "_monster_quote_inputs",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 42,
+  "name": "ArtQuoteRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 48,
+  "name": "create_image_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 60,
+  "name": "create_image_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 66,
+  "name": "create_image_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 80,
+  "name": "create_image_quote",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 91,
+  "name": "_monster_quote_inputs",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 117,
+  "name": "_monster_quote_inputs",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 126,
+  "name": "_monster_quote_inputs",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 165,
+  "name": "dynamic_art_quality",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 66,
+  "name": "ArtQuoteRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec352_creature_quote_api.py",
+  "line": 166,
+  "name": "ArtQualityRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec353_misc.py",
+  "line": 19,
+  "name": "_ParticipantNames",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec353_misc.py",
+  "line": 42,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec353_misc.py",
+  "line": 66,
+  "name": "_cards_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec353_misc.py",
+  "line": 69,
+  "name": "_deck_view",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec353_misc.py",
+  "line": 47,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec353_misc.py",
+  "line": 68,
+  "name": "_prepared_slots",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec353_misc.py",
+  "line": 72,
+  "name": "_prepared_slots",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec354_final_round_view.py",
+  "line": 26,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec354_final_round_view.py",
+  "line": 31,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec354_final_round_view.py",
+  "line": 39,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec354_final_round_view.py",
+  "line": 48,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec354_portrait_always.py",
+  "line": 14,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec354_portrait_always.py",
+  "line": 54,
+  "name": "_enemy_portrait",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec361_integracao.py",
+  "line": 317,
+  "name": "_drain_creature_gen",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec361_integracao.py",
+  "line": 319,
+  "name": "_game_lock",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec361_integracao.py",
+  "line": 324,
+  "name": "_execute_action",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_ids.py",
+  "line": 110,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_ids.py",
+  "line": 109,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 34,
+  "name": "_portrait_price_estilhas",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 49,
+  "name": "_portrait_price_estilhas",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 59,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 89,
+  "name": "_portrait_price_estilhas",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 90,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 138,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 97,
+  "name": "_enemy_portrait",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 144,
+  "name": "_enemy_portrait",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 39,
+  "name": "_portrait_offer_price",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 44,
+  "name": "_portrait_offer_price",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 50,
+  "name": "_portrait_offer_price",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 55,
+  "name": "_portrait_offer_price",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 62,
+  "name": "_creature_art_live",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 71,
+  "name": "_image_effect_open",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 102,
+  "name": "_guard_image_effect",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec363_portrait_offer.py",
+  "line": 98,
+  "name": "_creature_art_live",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec364_portrait_debit.py",
+  "line": 55,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec364_portrait_debit.py",
+  "line": 58,
+  "name": "_portrait_price_estilhas",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec364_portrait_debit.py",
+  "line": 68,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec364_portrait_debit.py",
+  "line": 71,
+  "name": "_portrait_price_estilhas",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec364_portrait_debit.py",
+  "line": 59,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec364_portrait_debit.py",
+  "line": 61,
+  "name": "_enemy_portrait",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec364_portrait_debit.py",
+  "line": 72,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec364_portrait_debit.py",
+  "line": 74,
+  "name": "_enemy_portrait",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec367_fallback_portrait.py",
+  "line": 137,
+  "name": "_portrait_store",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_spec367_fallback_portrait.py",
+  "line": 144,
+  "name": "ArtQuoteRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec367_fallback_portrait.py",
+  "line": 146,
+  "name": "_monster_quote_inputs",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec367_omen_voice.py",
+  "line": 117,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec368_discard.py",
+  "line": 110,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec368_discard.py",
+  "line": 119,
+  "name": "_apply_play_list",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec368_discard.py",
+  "line": 124,
+  "name": "PlayStepRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec368_discard.py",
+  "line": 113,
+  "name": "PlayStepRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec368_discard.py",
+  "line": 114,
+  "name": "PlayStepRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec368_rollback.py",
+  "line": 37,
+  "name": "_cards_block",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec368_seed.py",
+  "line": 182,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_portrait_offer.py",
+  "line": 43,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_portrait_offer.py",
+  "line": 44,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_portrait_offer.py",
+  "line": 61,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_portrait_offer.py",
+  "line": 50,
+  "name": "_portrait_price_estilhas",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_portrait_offer.py",
+  "line": 51,
+  "name": "_PORTRAIT_PRICE_CACHE",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_portrait_offer.py",
+  "line": 52,
+  "name": "_portrait_price_estilhas",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_portrait_offer.py",
+  "line": 58,
+  "name": "_portrait_price_estilhas",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_portrait_offer.py",
+  "line": 62,
+  "name": "_portrait_price_estilhas",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_portrait_offer.py",
+  "line": 105,
+  "name": "_portrait_price_estilhas",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_scene_cards_cold.py",
+  "line": 130,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_seed.py",
+  "line": 324,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_seed.py",
+  "line": 432,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_seed.py",
+  "line": 328,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_spec387_seed.py",
+  "line": 330,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_speech_api.py",
+  "line": 28,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_speech_api.py",
+  "line": 76,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_speech_api.py",
+  "line": 90,
+  "name": "game_graph",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_speech_api.py",
+  "line": 93,
+  "name": "game_graph",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 207,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 298,
+  "name": "_sse_log",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 304,
+  "name": "_sse_log",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 321,
+  "name": "_sse_log",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 423,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 443,
+  "name": "_commit_turn",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 461,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 497,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 518,
+  "name": "_commit_turn",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 530,
+  "name": "_commit_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 535,
+  "name": "_commit_turn",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 538,
+  "name": "_commit_turn",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 658,
+  "name": "_sse_log",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 659,
+  "name": "_sse_log",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 677,
+  "name": "_sse_log",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 730,
+  "name": "_resolve_save_file",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 80,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 185,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 226,
+  "name": "_turn_logger",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 244,
+  "name": "_telemetry_hook",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 249,
+  "name": "_telemetry_hook",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 554,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 555,
+  "name": "_stream_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 77,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 184,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 191,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 243,
+  "name": "_llm_turn_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 246,
+  "name": "_llm_turn_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 423,
+  "name": "game_graph",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 497,
+  "name": "game_graph",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 248,
+  "name": "_llm_turn_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 250,
+  "name": "_llm_turn_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_streaming.py",
+  "line": 245,
+  "name": "_llm_turn_events",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_stripe_checkout_api.py",
+  "line": 25,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_stripe_checkout_api.py",
+  "line": 51,
+  "name": "_stripe_payments",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_stripe_checkout_api.py",
+  "line": 135,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_stripe_checkout_api.py",
+  "line": 57,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_stripe_checkout_api.py",
+  "line": 138,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_stripe_checkout_api.py",
+  "line": 68,
+  "name": "_CORS_ORIGINS",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 34,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 35,
+  "name": "_load_metrics_sql",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 45,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 46,
+  "name": "_load_metrics_sql",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 61,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 68,
+  "name": "_load_metrics_sql",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 75,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 239,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 240,
+  "name": "_load_metrics_sql",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 22,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 27,
+  "name": "_metrics_sql_cache",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 29,
+  "name": "_metrics_sql_cache",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 77,
+  "name": "_metrics_sql_cache",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 243,
+  "name": "_metrics_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_surfaces_221.py",
+  "line": 250,
+  "name": "_metrics_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_turn_logs_no_game_content.py",
+  "line": 21,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_logs_no_game_content.py",
+  "line": 20,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_turn_outcome_endpoints.py",
+  "line": 110,
+  "name": "game_graph",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_turn_outcome_endpoints.py",
+  "line": 68,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_outcome_endpoints.py",
+  "line": 111,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_outcome_endpoints.py",
+  "line": 67,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 171,
+  "name": "_execute_action",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 211,
+  "name": "_database_profile",
+  "kind": "setattr"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 106,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 141,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 144,
+  "name": "_stream_turn",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 232,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 251,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 265,
+  "name": "GameResponse",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 267,
+  "name": "ActionRequest",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 270,
+  "name": "_begin_turn_operation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 103,
+  "name": "_rate_hits",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 236,
+  "name": "_begin_turn_operation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 255,
+  "name": "_begin_turn_operation",
+  "kind": "read"
+ },
+ {
+  "file": "tests/test_turn_trace_logs.py",
+  "line": 263,
+  "name": "GameResponse",
+  "kind": "attr_object"
+ },
+ {
+  "file": "tests/test_weather_global.py",
+  "line": 97,
+  "name": "_world_block",
+  "kind": "from_import"
+ },
+ {
+  "file": "playtest/invariants.py",
+  "line": 2891,
+  "name": "_combat_block",
+  "kind": "read"
+ },
+ {
+  "file": "playtest/invariants.py",
+  "line": 2620,
+  "name": "_world_block",
+  "kind": "read"
+ },
+ {
+  "file": "playtest/invariants.py",
+  "line": 2177,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "playtest/invariants.py",
+  "line": 2518,
+  "name": "_npcs_block",
+  "kind": "read"
+ },
+ {
+  "file": "evals/core/adapters.py",
+  "line": 1194,
+  "name": "format_response",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/audit_local_server.py",
+  "line": 56,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/dev/api_surface_dump.py",
+  "line": 90,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/latency_baseline.py",
+  "line": 512,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/latency_baseline.py",
+  "line": 255,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/smoke/spec351_opening.py",
+  "line": 97,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/smoke_local_profile.py",
+  "line": 68,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/smoke_local_profile.py",
+  "line": 107,
+  "name": "app",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/staging/auth_config.py",
+  "line": 181,
+  "name": "get",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/staging/auth_config.py",
+  "line": 200,
+  "name": "try_patch",
+  "kind": "read"
+ },
+ {
+  "file": "scripts/staging/auth_config.py",
+  "line": 204,
+  "name": "get",
+  "kind": "read"
+ },
+ {
+  "file": "services/lore_quests.py",
+  "line": 741,
+  "name": "truth_of",
+  "kind": "read"
+ },
+ {
+  "file": "services/lore_quests.py",
+  "line": 344,
+  "name": "investigable",
+  "kind": "read"
+ },
+ {
+  "file": "services/lore_quests.py",
+  "line": 746,
+  "name": "mark_resolved",
+  "kind": "read"
+ },
+ {
+  "file": "services/lore_quests.py",
+  "line": 520,
+  "name": "investigable",
+  "kind": "read"
+ },
+ {
+  "file": "services/lore_quests.py",
+  "line": 640,
+  "name": "investigable",
+  "kind": "read"
+ },
+ {
+  "file": "services/opening_threads.py",
+  "line": 227,
+  "name": "plot_doors",
+  "kind": "read"
+ },
+ {
+  "file": "services/opening_threads.py",
+  "line": 229,
+  "name": "threads_for_region",
+  "kind": "read"
+ },
+ {
+  "file": "services/opening_threads.py",
+  "line": 444,
+  "name": "catalog",
+  "kind": "read"
+ },
+ {
+  "file": "services/world_quests.py",
+  "line": 357,
+  "name": "investigable",
+  "kind": "read"
+ },
+ {
+  "file": "services/world_quests.py",
+  "line": 937,
+  "name": "instance",
+  "kind": "read"
+ },
+ {
+  "file": "services/world_quests.py",
+  "line": 306,
+  "name": "active_perils",
+  "kind": "read"
+ },
+ {
+  "file": "vercel_app.py",
+  "line": 16,
+  "name": "app",
+  "kind": "from_import"
+ }
+]

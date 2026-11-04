@@ -21,6 +21,7 @@ from services import visual_catalog
 from services.art_brief import build_creature_art_brief, render_image_prompt
 from services.art_triggers import ArtGenerationRequest, reserve_request
 from services.asset_pipeline import shared_object_key
+from tests.api_sources import api_source_text
 from tests.fakes.fake_image_generator import FakeImageGenerator
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -407,7 +408,7 @@ def test_only_owner_module_writes():
             rel = path.relative_to(ROOT).as_posix()
             if rel not in allowed and pattern.search(path.read_text(encoding="utf-8")):
                 offenders.append(rel)
-    assert not [p for p in (ROOT / "api.py",) if pattern.search(p.read_text(encoding="utf-8"))]
+    assert not pattern.search(api_source_text())
     assert offenders == []
 
 

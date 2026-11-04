@@ -11,6 +11,7 @@ from uuid import uuid4
 import pytest
 
 from infrastructure.runtime import RuntimeConfig
+from tests.api_sources import API_FILES, api_source_text
 from tests.test_hosted_supabase_contract import hosted_env
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -254,10 +255,11 @@ def test_rate_limiter_is_system_only():
 
 def test_api_request_queries_only_use_granted_tables():
     """api.py: as conexoes de request restantes tocam so tabelas que `rpg_api` possui."""
-    source = (ROOT / "api.py").read_text(encoding="utf-8")
+    source = api_source_text()
     assert source.count("admin_connection(") >= 3
-    for _, expr in _direct_connection_calls(ROOT / "api.py"):
-        assert expr.endswith("resources[0].connection")
+    for path in API_FILES:
+        for _, expr in _direct_connection_calls(path):
+            assert expr.endswith("resources[0].connection")
 
 
 def test_lease_heartbeat_thread_inherits_the_request_principal():

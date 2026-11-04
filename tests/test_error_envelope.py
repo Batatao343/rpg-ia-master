@@ -8,9 +8,10 @@ from pathlib import Path
 import pytest
 
 from services import error_codes as ec
+from tests.api_sources import api_rel_files
 
 ROOT = Path(__file__).resolve().parents[1]
-FILES = ["api.py", "services/cron_internal.py", "services/account_security.py"]
+FILES = [*api_rel_files(), "services/cron_internal.py", "services/account_security.py"]
 # Expressões dinâmicas aceitas como ``detail`` (já são códigos fechados por construção).
 DYNAMIC_OK = {
     "code",

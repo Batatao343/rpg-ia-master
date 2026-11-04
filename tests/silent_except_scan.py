@@ -11,9 +11,11 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+from tests.api_sources import api_rel_files
+
 ROOT = Path(__file__).resolve().parents[1]
 SCAN_DIRS = ("agents", "services", "infrastructure", "workers")
-SCAN_FILES = ("api.py", "llm_setup.py", "rag.py", "persistence.py")
+SCAN_FILES = (*api_rel_files(), "llm_setup.py", "rag.py", "persistence.py")
 
 
 # chamadas que contam como "deixa rastro" (log, metrica, telemetria de tentativa, liberacao de lease)

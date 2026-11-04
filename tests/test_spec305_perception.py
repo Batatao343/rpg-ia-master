@@ -9,6 +9,7 @@ import pytest
 
 from services import quest_log as ql
 from services import world_quests as wq
+from tests.api_sources import API_FILES
 from tests.spec305_helpers import add_crisis, base_state, crisis_item
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -151,7 +152,7 @@ def test_only_world_quests_module_builds_world_kind():
     allowed = {"services/world_quests.py"}
     offenders = []
     for path in (
-        list(ROOT.glob("services/*.py")) + list(ROOT.glob("agents/*.py")) + [ROOT / "api.py"]
+        list(ROOT.glob("services/*.py")) + list(ROOT.glob("agents/*.py")) + list(API_FILES)
     ):
         rel = path.relative_to(ROOT).as_posix()
         if rel in allowed:

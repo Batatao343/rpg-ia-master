@@ -10,6 +10,7 @@ import pytest
 from observability import logging_setup
 from observability.telemetry import request_scope
 from services import abuse_policy
+from tests.api_sources import api_source_text
 
 ROOT = Path(__file__).resolve().parents[1]
 IP = "203.0.113.77"
@@ -182,7 +183,7 @@ def _calls_in(node: ast.AST) -> set[str]:
 
 def test_every_429_records_block():
     """Toda funcao de api.py que responde 429/413 chama record_block / log de body (R2)."""
-    tree = ast.parse((ROOT / "api.py").read_text(encoding="utf-8"))
+    tree = ast.parse(api_source_text())
     offenders = []
     for fn in ast.walk(tree):
         if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):

@@ -5,11 +5,13 @@ estoura no model_dump)."""
 import ast
 from pathlib import Path
 
+from tests.api_sources import API_FILES
+
 ROOT = Path(__file__).resolve().parent.parent
 FILES = (
     list((ROOT / "agents").glob("*.py"))
     + list((ROOT / "services").glob("*.py"))
-    + [ROOT / "character_creator.py", ROOT / "api.py"]
+    + [ROOT / "character_creator.py", *API_FILES]
 )
 # allowlist justificada: (arquivo, funcao) -> motivo
 ALLOW: dict[tuple[str, str], str] = {

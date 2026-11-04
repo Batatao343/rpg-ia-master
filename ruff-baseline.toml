@@ -154,7 +154,7 @@
 "services/chronicle_search.py" = ["I001"]
 "services/codex_loader.py" = ["F401", "PERF401", "UP035"]
 "services/combat_origin.py" = ["F401", "UP035"]
-"services/combat_preview.py" = ["C901", "PERF401", "SIM102", "SIM401"]
+"services/combat_preview.py" = ["C901", "SIM102", "SIM401"]
 "services/combat_targeting.py" = ["F401", "PERF401", "SIM102", "UP035"]
 "services/companion_prompt.py" = ["C901", "PERF401"]
 "services/companion_soul.py" = ["BLE001", "C901", "SIM102"]
