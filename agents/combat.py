@@ -2809,6 +2809,15 @@ def _combat_node(state: GameState):
         if _bl is not t.state.get("turn_baseline"):
             t.result["turn_baseline"] = _bl
 
+    _combat_result_quests(t)
+
+    _combat_result_events(t)
+
+    return t.result
+
+
+def _combat_result_quests(t: _CombatTurn) -> None:
+    """Progresso de quests de mundo e de caça pela vitória."""
     # SPEC-305 R11: vitoria no alvo de quest de mundo (cerco/ocupacao/ascensao/objeto) = 1
     # evidencia `combat_won` por combate.
     if (
@@ -2847,10 +2856,6 @@ def _combat_node(state: GameState):
         )
         if _hunted != list(t.result.get("quests", t.state.get("quests") or [])):
             t.result["quests"] = _hunted
-
-    _combat_result_events(t)
-
-    return t.result
 
 
 def _combat_result_events(t: _CombatTurn) -> None:
