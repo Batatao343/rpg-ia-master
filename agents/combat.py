@@ -2518,6 +2518,24 @@ def _combat_node(state: GameState):
     _combat_aftermath(t)
 
     _combat_outcome_summary(t)
+    _combat_narrate(t)
+
+    _combat_close_round_meta(t)
+    _combat_close_round_log(t)
+    _combat_close_encounter(t)
+    _combat_result_base(t)
+
+    _combat_result_quests(t)
+
+    _combat_result_events(t)
+
+    return t.result
+
+
+def _combat_narrate(t: _CombatTurn) -> None:
+    """Narração da rodada: tabuleiro, queda, simulação ou LLM."""
+    from services import prose_guard
+
     t.narrative = ""
     if t.board_on:
         pass  # compõe o REGISTRO depois que `status_logs` fecha (SPEC-346 R4/R5)
@@ -2603,17 +2621,6 @@ def _combat_node(state: GameState):
         prose_guard.log_if_repeats(
             t.narrative, t.aberturas[0] if t.aberturas else "", where="combate"
         )
-
-    _combat_close_round_meta(t)
-    _combat_close_round_log(t)
-    _combat_close_encounter(t)
-    _combat_result_base(t)
-
-    _combat_result_quests(t)
-
-    _combat_result_events(t)
-
-    return t.result
 
 
 def _combat_close_round_meta(t: _CombatTurn) -> None:
