@@ -312,6 +312,14 @@ def test_d369_10_limites_registrados_nao_podem_piorar():
     assert {"Médico de Campo": med["timeout_pct"]} == T.LIMITE_TIMEOUT_POSTURA
     bloco = final["pressagio"]["conhecida"]["decks_on"]
     assert bloco["razao_faixa_cego"] == T.LIMITE_PRESSAGIO_RAZAO
+    # P3-9 (Astra rodada 6): todo teto de uso do R14(a) e o `on` do conjurador L5 = o medido
+    usos = final["uso"]["cartas"]
+    assert {cid: usos[cid]["uso"] for cid in T.LIMITE_USO_R14A} == T.LIMITE_USO_R14A
+    for cid in ("arc1_cal_pulso_medido", "med1_fer_garra_de_protese"):
+        assert usos[cid]["uso"] == T.LIMITE_USO_R14A[cid], cid
+    conj = final["familias"]["cells"]["conjurador|L5"]
+    assert conj["on"]["win"] == T.LIMITE_FAMILIA["conjurador|L5"]["on_win"]
+    assert conj["delta_pp"] == T.LIMITE_FAMILIA["conjurador|L5"]["delta_pp"]
     assert T.r15(final) == [] and T.r16(final) == []
     med["p95_rodadas_conflito"] = 18.0
     r9["total"]["p95_rodadas_conflito"] = 12.0
