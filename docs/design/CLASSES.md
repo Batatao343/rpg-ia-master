@@ -129,8 +129,10 @@ capacidade fora da lista. Cada tronco tem 2 (do doc-fonte); cada subclasse ≥1.
 Passiva/utilitária ficam FORA dos chips de combate e do catálogo do parser
 (`_allowed_ability_ids`); no HUD levam selo ✦ (passiva) / ⚒ (utilitária).
 
-> ⚠️ Não execute `scripts/gen_classes_v2.py` como fluxo de autoria atual: o
-> catálogo jogável é o de Cartas e segue `docs/design/CARTAS.md`.
+> `data/classes.json` é a fonte; o gerador `gen_classes_v2.py` foi removido pela SPEC-376
+> (recriava `player_abilities.json`). `scripts/gen_tiers_5_plus.py` fica só em `--check`
+> (`--write` exige seleção humana, SPEC-355 R6). O catálogo jogável é o de Cartas
+> (`docs/design/CARTAS.md`).
 
 ---
 
