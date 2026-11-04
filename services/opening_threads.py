@@ -16,6 +16,7 @@ from functools import lru_cache
 from typing import Any, TypedDict
 
 from observability.telemetry import log_event as _log_event
+from services.env import env_choice
 from services.prompt_guard import wrap_player_input
 
 MENU_MAX_DOORS = 6
@@ -48,8 +49,7 @@ class ThreadMenu(TypedDict):
 
 def mode() -> str:
     """`RPG_OPENING_THREAD` = off | shadow | on (default on; inválido → on)."""
-    raw = str(os.getenv("RPG_OPENING_THREAD", "on") or "on").strip().lower()
-    return raw if raw in _MODES else "on"
+    return env_choice("RPG_OPENING_THREAD", _MODES, "on")
 
 
 def _fold(text: object) -> str:
