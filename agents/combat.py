@@ -2656,54 +2656,7 @@ def _combat_node(state: GameState):
         # O teto mede tentativas consecutivas dentro deste conflito.
         t.combat_meta.pop("flee_attempts", None)
 
-    t.combat_meta["round"] = int(t.combat_meta.get("round", 0)) + 1
-    t.combat_meta["active"] = True
-    t.combat_meta["idle_turns"] = 0
-    t.combat_meta["scene_allies"] = t.scene_tr
-    # RNG = módulo global (semeado pelo harness/persistência) → reprodutível por seed.
-    t.rng = random
-
-    t.hero_fled = False
-    t.logs: list[str] = []
-    t.flee_lines: list[str] = []  # SPEC-346: linhas humanas da fuga para o registro
-    t.flee_roll: dict | None = None  # SPEC-353 R39b: dado da fuga desta rodada, para o mech_log
-    t.order_logs: list[str] = []
-    t.weather_logs: list[str] = []
-    t.world_out = None
-    t.world = t.state.get("world") or {}
-    from world_utils import DARK_COMBAT_PENALTY, light_level, weather_effects
-
-    weather_fx = weather_effects(t.world)
-    light_fx = light_level(t.world, t.player)
-    weather_attack = int(weather_fx.get("combat_attack_mod", 0) or 0)
-    hero_light_attack = int(light_fx.get("combat_mod", 0) or 0)
-    enemy_light_attack = DARK_COMBAT_PENALTY if light_fx.get("natural_dark") else 0
-    t.player["_env_attack_mod"] = weather_attack + hero_light_attack
-    for ally in t.allies:
-        ally["_env_attack_mod"] = weather_attack + hero_light_attack
-    for enemy in t.active:
-        enemy["_env_attack_mod"] = weather_attack + enemy_light_attack
-    surprise = t.world.get("encounter_surprise")
-    t.initiator = "heroes" if surprise == "player" else ("enemy" if surprise == "enemy" else None)
-    if int(t.combat_meta.get("round", 0) or 0) == 1 and "initiator_reason" in t.combat_meta:
-        # SPEC-346 D4: a abertura já decidiu pela cena (inclusive "anulada pela vigília" = None);
-        # a surpresa crua do mundo não vale de novo.
-        t.initiator = t.combat_meta.get("initiator")
-    t.initiator = _early_game_reaction_initiator(
-        t.state, t.player, t.initiator, combat_round=int(t.combat_meta.get("round", 1) or 1)
-    )
-    locked = (
-        t.combat_meta.get("initiator") if int(t.combat_meta.get("round", 0) or 0) == 1 else None
-    )
-    if locked in ("enemy", "heroes"):  # SPEC-346 D4: a cena decidiu quem age primeiro
-        t.initiator = locked
-    if "encounter_surprise" in t.world:
-        t.world_out = dict(t.world)
-        t.world_out.pop("encounter_surprise", None)
-    t.weather_logs = _apply_weather_hazard(t.player, t.world, rng=t.rng)
-    _register_environmental_damage_terminal(t.player, t.weather_logs)
-    if isinstance(t.combat_meta.get("pilhas"), dict):  # SPEC-331 P1-1: cartas de objeto no turno
-        _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)
+    _combat_environment(t)
     _combat_attempt_flee(t)
     if not t.hero_fled:
         _combat_declare_turn(t)
@@ -3128,6 +3081,58 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_environment(t: _CombatTurn) -> None:
+    """Rodada, clima, luz, iniciativa e surpresa."""
+    t.combat_meta["round"] = int(t.combat_meta.get("round", 0)) + 1
+    t.combat_meta["active"] = True
+    t.combat_meta["idle_turns"] = 0
+    t.combat_meta["scene_allies"] = t.scene_tr
+    # RNG = módulo global (semeado pelo harness/persistência) → reprodutível por seed.
+    t.rng = random
+
+    t.hero_fled = False
+    t.logs: list[str] = []
+    t.flee_lines: list[str] = []  # SPEC-346: linhas humanas da fuga para o registro
+    t.flee_roll: dict | None = None  # SPEC-353 R39b: dado da fuga desta rodada, para o mech_log
+    t.order_logs: list[str] = []
+    t.weather_logs: list[str] = []
+    t.world_out = None
+    t.world = t.state.get("world") or {}
+    from world_utils import DARK_COMBAT_PENALTY, light_level, weather_effects
+
+    weather_fx = weather_effects(t.world)
+    light_fx = light_level(t.world, t.player)
+    weather_attack = int(weather_fx.get("combat_attack_mod", 0) or 0)
+    hero_light_attack = int(light_fx.get("combat_mod", 0) or 0)
+    enemy_light_attack = DARK_COMBAT_PENALTY if light_fx.get("natural_dark") else 0
+    t.player["_env_attack_mod"] = weather_attack + hero_light_attack
+    for ally in t.allies:
+        ally["_env_attack_mod"] = weather_attack + hero_light_attack
+    for enemy in t.active:
+        enemy["_env_attack_mod"] = weather_attack + enemy_light_attack
+    surprise = t.world.get("encounter_surprise")
+    t.initiator = "heroes" if surprise == "player" else ("enemy" if surprise == "enemy" else None)
+    if int(t.combat_meta.get("round", 0) or 0) == 1 and "initiator_reason" in t.combat_meta:
+        # SPEC-346 D4: a abertura já decidiu pela cena (inclusive "anulada pela vigília" = None);
+        # a surpresa crua do mundo não vale de novo.
+        t.initiator = t.combat_meta.get("initiator")
+    t.initiator = _early_game_reaction_initiator(
+        t.state, t.player, t.initiator, combat_round=int(t.combat_meta.get("round", 1) or 1)
+    )
+    locked = (
+        t.combat_meta.get("initiator") if int(t.combat_meta.get("round", 0) or 0) == 1 else None
+    )
+    if locked in ("enemy", "heroes"):  # SPEC-346 D4: a cena decidiu quem age primeiro
+        t.initiator = locked
+    if "encounter_surprise" in t.world:
+        t.world_out = dict(t.world)
+        t.world_out.pop("encounter_surprise", None)
+    t.weather_logs = _apply_weather_hazard(t.player, t.world, rng=t.rng)
+    _register_environmental_damage_terminal(t.player, t.weather_logs)
+    if isinstance(t.combat_meta.get("pilhas"), dict):  # SPEC-331 P1-1: cartas de objeto no turno
+        _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)
 
 
 def _combat_attempt_flee(t: _CombatTurn) -> None:
