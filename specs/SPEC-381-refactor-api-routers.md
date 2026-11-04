@@ -1,6 +1,6 @@
 # SPEC-381 — Fatiar `api.py` em routers por domínio, DTOs e montagem de resposta (refatoração pura)
 
-> **Status:** `draft`
+> **Status:** `approved` (04/11, dono: "vai executando o que puder"; D1–D10 = recomendações do §8)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03 (revisão independente aplicada: `handoffs/SPEC-381-independent-review.md`; ver "Resposta à revisão" no fim)
 > **Origem:** `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §4.1 itens 1, 8 e 9, §3 R8, §5 letra E e §6 inteiro (letra E → SPEC-381; regras W1–W8, W1 na versão revisada)
 > **Depende de:** SPEC-367 e SPEC-368 **pousadas**. A revisão confirmou que já pousaram as edições de `api.py`: `566a4efc` e `061c330b`. SPEC-378 **recomendada antes** (helpers comuns), com a condição D10: a 378 não toca `api.py`.

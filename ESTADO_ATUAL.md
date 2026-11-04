@@ -81,7 +81,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - Notas 27/10–02/11 → `CHANGELOG.md`.
-- 04/11: 375/376/378 `done`, 377/379 pousadas, 388 B+C. **Index local** (375): `reindex.sh` saiu; `python -m project_index build`; nunca `--theirs` em `project_index/`.
+- 04/11: 375/376/378/388 `done`, 377/379 pousadas. **`api.py` travado pela SPEC-381 em voo (D8)**: não editar até ela pousar. **Index local** (375): `reindex.sh` saiu; `python -m project_index build`; nunca `--theirs` em `project_index/`.
 
 
 ## Como rodar
