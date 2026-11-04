@@ -13,6 +13,7 @@ from typing import Dict, List, Literal, Optional, Tuple, TypedDict
 
 from gamedata import load_json_data
 from services import graph_resolver as gr
+from services import text as _text
 
 COMPANION_TEMPLATES: dict[str, dict] = load_json_data("companions.json") or {}
 
@@ -92,8 +93,7 @@ _NPC_V4_COPY_FIELDS = (
 
 
 def _fold(s: str) -> str:
-    n = unicodedata.normalize("NFKD", str(s or ""))
-    return "".join(c for c in n if not unicodedata.combining(c)).lower()
+    return _text.fold(s, case="lower")
 
 
 def _archetype_for(npc: dict) -> str:
