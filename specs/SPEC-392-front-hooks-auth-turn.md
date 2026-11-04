@@ -1,11 +1,12 @@
-# SPEC-392 — front-hooks-auth-turn
+# SPEC-392 — Front: extrair `useAuthSession` e `useTurn` do `App.tsx` (Etapas 4–5 da SPEC-383)
 
 > **Status:** `draft`
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
-> **Risco:** `baixo` | `médio` | `alto` (define a revisão — AGENTS.md § Qualidade, revisão e evidência)
-> **Evidência:** <teste que falha antes / oráculo de equivalência / smoke que prova o comportamento>
+> **Origem:** SPEC-383 Etapas 4–5, saídas em 04/11 por decisão do coordenador: o lint do compilador `react-hooks` v7 reprova a extração (20 erros: `react-hooks/refs`, `immutability` nos refs do `core`, `exhaustive-deps`); revisão Sol da 383 P2-2 (oráculo fraco do caso 401 em `web/e2e/turn-retry.spec.ts:41-43`, reforçar antes de mover). Rascunho na branch local `spec-383-etapa4-wip` (não pousar).
+> **Depende de:** SPEC-383 `done`
+> **Desbloqueia:** `App.tsx` ≤ 350 linhas (meta R1 da 383)
+> **Risco:** `médio` (auth e turno do front; refatoração pura)
+> **Evidência:** oráculo de equivalência da 383 (`turn-retry` reforçado, npm test, typecheck, build, e2e do escopo) + lint do compilador sem erro novo
 
 ---
 
