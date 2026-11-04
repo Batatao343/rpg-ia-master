@@ -526,6 +526,10 @@ def test_todo_bestiario_curado_normaliza_para_action_keys_fechadas():
         assert all(
             priority.get("action_key") in tp.TACTICAL_ACTION_KEYS for priority in priorities
         ), enemy_id
+        # SPEC-395: resistencia absoluta nunca sai com fuga/rendicao pela tabela
+        for priority in priorities:
+            if priority.get("resistance") == "absoluta":
+                assert priority["action_key"] not in {"flee", "surrender"}, enemy_id
 
 
 def test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte():
@@ -612,3 +616,34 @@ def test_cartas_inimigas_usam_catalogo_e_economia_propria_com_reacao_uma_vez():
     )
     assert second["reactions"] == []
     assert enemy["enemy_card_usage"]["bst_bote_certeiro"]["used_this_scene"] == 1
+
+
+def test_absoluta_nao_vira_fuga_pela_tabela():
+    """SPEC-395: `absoluta` nao foge; `flexivel` no mesmo arquetipo continua fugindo."""
+
+    def norm(resistance: str) -> str:
+        profile = {
+            "priorities": [
+                {"trigger": "muito_ferido", "resistance": resistance},
+                {"trigger": "sempre", "resistance": "flexivel"},
+            ]
+        }
+        out = tp.normalize_runtime_profile({"arquetipo": "abissal"}, profile)
+        return out["priorities"][0]["action_key"]
+
+    assert norm("absoluta") == "attack"
+    assert norm("flexivel") == "flee"
+
+
+def test_portao_ferido_nao_foge():
+    """SPEC-395: o Portao que Morde ferido (<= 35%) nao declara fuga."""
+    raw = bestiary._read_json(bestiary.BESTIARY_FILE)["mon_portao_que_morde"]
+    gate = orch.ensure_combat_sheet(dict(raw))
+    hero = _player()
+    gate["max_vitalidade"] = 20
+    gate["vitalidade"] = 5
+    actors = {"gate": gate, "player": hero}
+    sides = {"ally": ["player"], "enemy": ["gate"]}
+    decl = orch.enemy_declaration(_scene("gate", "player"), "gate", actors, sides)
+    assert getattr(decl.acao, "maneuver", None) != "flee"
+    assert decl.acao.kind != "move"
