@@ -208,7 +208,7 @@
     },
     {
       "id": "inf_covarde_oportunista_chutar_quem_caiu",
-      "name": "Chutar Quem Caiu",
+      "name": "Chutar o Cego",
       "origem": "cartas-373",
       "classe": "Inimigo",
       "subclasse": "covarde_oportunista",
