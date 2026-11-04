@@ -1343,24 +1343,9 @@ def storyteller_node(state: GameState):
         and is_travel_intent(str(t.last_user_input), t.world)
     )
     t.dest = find_travel_destination(t.world, t.last_user_input) if t.travel_intent else None
-    if t.travel_intent and not t.dest:
-        try:
-            from world_utils import invalid_travel_message
-
-            refusal = invalid_travel_message(t.world, str(t.last_user_input))
-        except (ImportError, AttributeError):
-            refusal = ""
-        if refusal:
-            from services.intent_guard import log_intent_guard
-
-            log_intent_guard("travel_refused", "no_route", str(t.last_user_input))
-            # Recusa canônica antes da LLM: destino impossível nunca aparece como
-            # chegada na mensagem, no resumo nem na memória.
-            return {
-                "messages": [AIMessage(content=refusal)],
-                "world": t.world,
-                "archive_due": False,
-            }
+    _early = _story_travel_refusal(t)
+    if _early is not None:
+        return _early
     t.travel_periods = 0
     t.closed_pass = False
     t.discovered_routes: list[str] = []
@@ -1456,6 +1441,29 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_travel_refusal(t: _StoryTurn) -> dict | None:
+    """Destino impossível: recusa canônica antes da LLM."""
+    if t.travel_intent and not t.dest:
+        try:
+            from world_utils import invalid_travel_message
+
+            refusal = invalid_travel_message(t.world, str(t.last_user_input))
+        except (ImportError, AttributeError):
+            refusal = ""
+        if refusal:
+            from services.intent_guard import log_intent_guard
+
+            log_intent_guard("travel_refused", "no_route", str(t.last_user_input))
+            # Recusa canônica antes da LLM: destino impossível nunca aparece como
+            # chegada na mensagem, no resumo nem na memória.
+            return {
+                "messages": [AIMessage(content=refusal)],
+                "world": t.world,
+                "archive_due": False,
+            }
+    return None
 
 
 def _story_travel_passage(t: _StoryTurn) -> None:
