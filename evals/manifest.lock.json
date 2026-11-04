@@ -1,5 +1,6 @@
 {
   "datasets": {
+    "datasets/regression/cards_combat.jsonl": "sha256:28f1766506bb8e1fd63ff837c7a6525087d0a7772676a5a66d537e40f24f89af",
     "datasets/regression/dossier_leak.jsonl": "sha256:24fd16573b0adcc1ce113413860a849d61108480e01a05228f733b942046f4f4",
     "datasets/regression/encounter_manifest.jsonl": "sha256:d8695e7f76563c1ab02bc0614cf9e50be77b1c8d41991d85e3c34c59f072549b",
     "datasets/regression/gameplay_gate.jsonl": "sha256:9f4d184fa308cbf04f70ac6631423e1b617efd10b0d66878e7d106098072e0c9",
@@ -18,7 +19,8 @@
   "ruler_sources": {
     "__main__.py": "sha256:6c5b7e2332e90c91f55be9cc3909db0973eeb9067b351870b3b81ca07d2b8f76",
     "core/__init__.py": "sha256:d5815280b433f039fbf05976bb50d84f6e75c6ca07dcf7c89d19296824d86077",
-    "core/adapters.py": "sha256:8906ea76252b41a51d171d53e44e99bf7d12a2d21a5eec3b2349d76947ac7eae",
+    "core/adapters.py": "sha256:dcb0f4752ce4dc4b81bd6a5d93aa2e550f180cce0f877f0cbc1acb9714d482a7",
+    "core/cards_combat.py": "sha256:dccb329ab028a538eba4b467e28780bc23fd7a4afc622813ae0f1b760203009d",
     "core/compare.py": "sha256:3baeff2f0297ef7fbb9e3bf161a251ff66088ac1b2c99440d0b38e2f215853ef",
     "core/governance.py": "sha256:7d349216ac55315fb823a01b9a562493c372a9fea121b85b7b6a8b26d6994300",
     "core/hashing.py": "sha256:2f5cdff5235b59f94a94eb39a76e1114adbb4256917ee5533e3b7853ead6b620",
