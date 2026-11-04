@@ -79,6 +79,7 @@
 "progression.py" = ["C901", "F401", "UP035"]
 "project_index/generator.py" = ["C901", "SIM114"]
 "rag.py" = ["BLE001", "F401", "I001", "SIM105", "UP035"]
+"routes/play.py" = ["I001"]
 "scripts/admin_orphan_games.py" = ["I001"]
 "scripts/benchmark_turn_pipeline_real.py" = ["B023", "BLE001", "I001"]
 "scripts/bestiario/calibrar.py" = ["C901"]
