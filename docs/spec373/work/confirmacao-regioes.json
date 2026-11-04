@@ -1,0 +1,50 @@
+{
+"aethelgard": [
+"enemy_esqueleto_mago",
+"mon_cacao_de_lastro",
+"mon_ourico_de_lajedo",
+"mon_aspirante_de_coral"
+],
+"brekmar": [
+"mon_casco_de_costelas"
+],
+"costa_negra": [
+"mon_hospede_do_estomago"
+],
+"deserto_zhur": [
+"enemy_aranha_de_cristal",
+"mon_maos_de_cinzel",
+"enemy_boss_general_escorpiao"
+],
+"floresta_sussurros": [
+"mon_toldo_das_clareiras"
+],
+"montanhas_afiadas": [
+"mon_peso_dos_vencidos"
+],
+"nova_arcadia": [
+"mon_roda_de_mandibulas"
+],
+"ophidia": [
+"mon_desbotado_da_nevoa",
+"mon_turu_de_casco",
+"mon_vela_sem_barco",
+"mon_arpeu_de_bracos",
+"mon_mastro_dos_ultimos"
+],
+"pantano_melancolia": [
+"mon_borda_que_anda",
+"mon_cisne_de_patina"
+],
+"pradaria_ruinas": [
+"mon_cobra_de_legua",
+"mon_chifres_travados"
+],
+"selva_xylos": [
+"mon_escavador_das_camaras",
+"enemy_vinha_estranguladora"
+],
+"skallgard": [
+"mon_colecionador_de_poses"
+]
+}

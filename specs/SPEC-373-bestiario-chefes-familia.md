@@ -1,7 +1,7 @@
 # SPEC-373 — Bestiário: chefes na faixa com Cartas `on` e teto de uso das Cartas de família de volta
 
-> **Status:** `approved` (dono, 03/11: "transforme em spec e execute agora"; decisões do autor em §8 valem como aprovadas e são revogáveis)
-> **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
+> **Status:** `in-review` (era `approved`; dono, 03/11: "transforme em spec e execute agora"; decisões do autor em §8 valem como aprovadas e são revogáveis)
+> **Criada:** 2026-11-03 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** SPEC-349 (`done`: 281 criaturas, `scripts/bestiario/{arena,calibrar,gerar_mecanica}.py`), SPEC-332 (baralhos de família/facção, `services/enemy_decks.py`), SPEC-358 (`done`: `lote-v2` opt-in), SPEC-362 (`done`: Arcanista 49,7 % na 180–259). SPEC-336 (`in-progress`) **não** bloqueia: esta spec escreve as Cartas de família que a 336 deixou pendentes.
 > **Desbloqueia:** ligar `RPG_ENEMY_DECKS=on` sem exceção de chefe; SPEC-349 §9 item 8 (a) e (b); follow-ups do ESTADO "bomba_estopim dominante" e "Corruptor sem carta anti-emboscada" (Parte C, ver D9).
@@ -123,7 +123,7 @@ Princípios: mecânica é Python (o motor monta o baralho; o LLM não entra); av
   - unicidade: nenhuma Carta nova com a mesma assinatura mecânica `(kinds, palavras-chave, gatilho, condição, custo)` de outra da mesma família (lint de redundância da 336);
   - nada de reforço/invocação (`test_enemy_cards_never_call_reinforcements`), nada de dano arcano/abissal/elemental em família só-melee sem conferir `_fits_creature`.
 
-  Autor: subagente Opus (`model: "opus"`). Revisor: outro subagente Opus, com o checklist acima e veredito por Carta em `handoffs/SPEC-373-cartas-review.md`. O executor (Terra) não escreve texto de Carta.
+  Autor: subagente Opus (`model: "opus"`). Revisor: outro subagente Opus, com o checklist acima e veredito por Carta em `handoffs/SPEC-373-astra-review.md`. O executor (Terra) não escreve texto de Carta.
 - **R16 — Meta da Parte B.** Com a população inteira (sem pular `bestiario-349`), `on`, nenhuma `inf_*` em mais de 15 criaturas, nas sementes 0–11 e nos ids de instância (`tests/test_enemy_decks.py:358-371`); `bst_bote_certeiro` ≤ 15 como hoje (`:453-468`).
 - **R17 — Regressão das 272.** Arena completa (12 regiões, 0–39, `off,on`) depois de B1+B2+A:
   - `off`: idêntico à base para toda criatura não recalibrada (R2);
@@ -162,7 +162,7 @@ Princípios: mecânica é Python (o motor monta o baralho; o LLM não entra); av
 - `docs/spec373/diag_chefes.py` (R6), `docs/spec373/uso_familia.py` (R7): scripts de diagnóstico, só importam.
 - `docs/spec373/RELATORIO.md`, `docs/spec373/base/*.json`, `diag-chefes-0-39.json`, `uso-familia.json`, `arena-<regiao>.{json,md}` (pós), `confirmacao-40-119.json`, `bomba-0-19.json`, `posturas-0-19.json`, `confirmacao-posturas-260-339.json`.
 - `tests/test_spec373_montagem.py`, `tests/test_spec373_cartas.py`, `tests/test_spec373_artefatos.py` (e `tests/test_spec373_acao_extra.py` se o R12 acionar).
-- `handoffs/SPEC-373-cartas-review.md` (Opus), `handoffs/SPEC-373-sol-review.md`.
+- `handoffs/SPEC-373-astra-review.md` (Opus), `handoffs/SPEC-373-sol-review.md`.
 
 **Arquivos alterados**
 - `services/enemy_decks.py`: `_autoral(creature) -> bool` (R9: ≥ 2 `cartas_autorais` e `tactical_profile.assinatura.carta`); `build_enemy_deck` com o ramo do R9; `apply_deck` com a regra de "já montada" do R10.
@@ -259,7 +259,7 @@ Python sempre por `bash scripts/dev/py.sh …`. Testes do escopo com `-n 2` no m
 
 ### Etapa 8 — revisões
 
-1. Opus: Cartas novas (R15/R21), já feito nas Etapas 3/7; o registro fica em `handoffs/SPEC-373-cartas-review.md`.
+1. Opus: Cartas novas (R15/R21), já feito nas Etapas 3/7; o registro fica em `handoffs/SPEC-373-astra-review.md`.
 2. Sol: motor (R9/R10/R12), integridade (R1, R3), artefatos e relatório → `handoffs/SPEC-373-sol-review.md`.
 
 ## 5. Critérios de aceite
@@ -327,9 +327,36 @@ Registrar `game_id`, provider por chamada e `mock=False` em `docs/spec373/smoke.
 ### Para o dono confirmar (não bloqueiam a execução)
 
 1. D1 (emenda ao R3 da 332 para criaturas com Cartas autorais).
-2. D9: Parte C aqui ou na 369.
+2. D9: Parte C aqui ou na 369 (ficou aqui; ver §9).
 3. D8: teto de 60 Cartas novas antes de parar.
 
 ## 9. Registro de execução
 
-_(vazio; o executor preenche: commits, números da Etapa 0, rodadas do calibrador, Cartas aprovadas/recusadas, confirmação, smoke)_
+**Commits** (Terra/Sonnet, 04/11): partes A+B `23b87ce9..9e98b241`; 28 Cartas de família `5e58c5f8`, arena `75b73e2b`; revisão astra `a041cce7`; R8 do `enemy_esqueleto_mago`; renome P2-3; Parte C `d34ccbc3`; confirmações e este registro no commit final.
+
+**Decisões do dono (04/11).** Portão do veredito cheio congelado em 250/281. **D-373 (aceita pelo dono, "aceito assim"):** `mon_hospede_do_estomago` e `mon_escavador_das_camaras` ficam fora da faixa, sem outra alavanca (R11.4).
+
+**Chefes fora da faixa (R11.4), números finais.**
+
+| Chefe | 0–39 `L5\|off` / `L5\|on` | Confirmação 40–119 `L5\|off` / `L5\|on` | Leitura |
+|---|---|---|---|
+| `mon_hospede_do_estomago` | 43,5 % / 38,5 % | 44,5 % / 39,8 % | Os dois modos abaixo de 45 %; as Cartas próprias pesam mais que o dial permite. |
+| `mon_escavador_das_camaras` | 65,5 % / 40,0 % | 64,5 % / 37,8 % | `off` na faixa; só o `on` cai (−25 pp), pelas Cartas autorais. |
+
+Só esses dois mantêm vermelho `tests/test_spec373_artefatos.py::test_portao_chefes_na_faixa_off_e_on`. Os outros 11 chefes e os 2 slots passam em 0–39. Na confirmação, `mon_toldo_das_clareiras` fica em 44,3 % no `L5|off` (passava em 0–39), registrado sem reajuste (R3).
+
+**Veredito final da arena (0–39):** 253/281 (portão ≥ 250 verde). Regressões de borda: `test_portao_regressoes_de_borda` verde. `off` idêntico fora das 12 recalibradas, Posturas idênticas depois de A+B (`posturas-ab-0-19.json`).
+
+**R8 do `enemy_esqueleto_mago` (P1-1 da revisão).** 1 rodada do `calibrar.py`: `dano` −2 → −3 (`_ajustes.yaml`). `L3|off` 48 → 58,5 %, `L3|on` 49 → 55 %; o delta de `L3|on` caiu de 11,5 para 5,5 pp, mas `L3|off` passou a +9,5 pp (> 8) e continua reprovado no veredito cheio, agora por 1,5 pp (dentro da borda de 3 pp). A Carta `beber_o_calor` não foi mexida. Confirmação 40–119: `off` 58,3 % (delta 9,3).
+
+**Revisão astra (Opus), follow-ups.** P2-3 feito: `Chutar Quem Caiu` renomeada `Chutar o Cego` (só o nome; id e condição `cego` iguais, sem remedir). P2-7: a lista exata das 27 criaturas remedidas da mesclagem não foi versionada; as que mudaram de célula entre `9e98b241` e `75b73e2b` (80, inclui reajuste de ruído) estão em `docs/spec373/criaturas-com-celula-alterada-pelas-cartas.json`. **Para a SPEC-369:** P2-1 (teto de comum = a comum mais forte da família; vigiar `turno` 3+2 do tático e `raiva_de_ferido`), P2-2 (`ferro_com_ferro` quase clone de `golpe_combinado`), P2-4 (margem de uso: `pico_comum` 15 em predador, covarde, conjurador e bruto), P2-5 (teste do que muda na 332 com os pools cheios).
+
+**Desvios do autor das Cartas (registrados).** (a) Teto de tamanho da família em `tests/test_enemy_decks.py`: 8–12 → 8–16 (o R14 cresce as famílias; o novo teto é o máximo observado, predador 16). (b) `test_spec373_montagem.py` compara `populacao_332` com os pools da `main` (sem as Cartas `cartas-373`). (c) `tests/test_spec373_cartas.py` novo (a §3 o declara), com `_familias` próprio e `card_lint` sem `momento`/`tier`; `test_assinaturas_373_telegrafo` virou `test_r14_nao_cria_assinatura_nova` (nenhuma assinatura nova). (d) Nome do registro de revisão: `handoffs/SPEC-373-astra-review.md` (o nome `cartas` reprova `tests/test_handoff_names.py`).
+
+**Parte C.**
+- R19 (`bomba-0-19.json`, `bomba-0-19-v2.json`): `lote` já `dominante` (uso 69 %, delta +12,5 pp); `lote-v2` +5,0 pp com `uso_alto`.
+- R20, 2 passos (`versao` 2): efeito em área `valor` 3 → 2 (delta +10,0, uso 71 %, ainda dominante) e `custo_folego` 1 → 2. Depois: `lote` uso 53 %, delta −5,0 pp, sem `dominante` (`bomba-lote-depois.json`). Arcanista 0–19: `todas` 52,3 % (base 55,8 %; piso 46,5 % ok), `improvisador` padrão 63,7 % (≤ 75 % ok). Confirmação 260–339: `todas` 51,1 %, `improvisador` padrão 60,8 %.
+- R21: Carta `cor1_tro_mao_adiantada` ("Mão Adiantada", `buff_iniciativa` 2, tronco, `subclasse: ""`, tier 3). Entra no `full_deck` em L1/L3/L5 × 4 subclasses (`test_corruptor_tem_buff_iniciativa_no_full_deck`). O slug foi escolhido entre sete candidatos porque o desempate do `full_deck` é por hash; só ele entrou nas 12 células. **Desvio:** autoria feita pelo executor (Sonnet), não por um subagente Opus (sem ferramenta de spawn). **Revisão Opus de voz e orçamento pendente** (`nota_voz` em `_ondas.yaml` registra isso). `card_lint` sem erro, `validate_content` 0 erro.
+- R22 (0–19): Corruptor emboscada realista `todas` 47,4 % (≥ 46,5 ok), `biologia` 53,1 %, `inorganica` 49,5 %, `alma` 45,7 %. Confirmação 260–339: `todas` 48,7 % (≥ 45,0 ok), `alma` 43,6 %. Corruptor base `todas` 0–19: 51,9 → 48,3 % (faixa 45–85 ok): a Carta ocupa um lugar do baralho e o bot não a joga (`uso_nao_medido`, 0 %). Devoto, Sangromante e Médico idênticos à base nas 0–19 (`posturas-c-0-19.json`); Corruptor e Arcanista mudam por construção. Não há baseline congelada de 260–339 para comparar as 3 Posturas intactas; os valores estão em `confirmacao-posturas-260-339.json`.
+
+**Etapas pendentes.** E2 (teto de volta nos testes), Etapa 8.2 (revisão Sol), smoke §6 e o registro da D-373 no portão `chefes_na_faixa` (autor de eval separado).

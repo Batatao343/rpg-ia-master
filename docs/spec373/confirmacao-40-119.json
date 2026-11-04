@@ -1,0 +1,300 @@
+{
+ "seeds": 80,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "seed_inicio": 40,
+ "criaturas": {
+  "enemy_esqueleto_mago": {
+   "nome": "Iniciado Refratado",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.583,
+    "L3|on": 0.542
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off delta 9.3 pp > 8"
+   ]
+  },
+  "mon_cacao_de_lastro": {
+   "nome": "Cação de Lastro",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.688,
+    "L5|on": 0.613
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ourico_de_lajedo": {
+   "nome": "Ouriço de Lajedo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.708,
+    "L3|on": 0.743
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_aspirante_de_coral": {
+   "nome": "Aspirante de Coral",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.468,
+    "L3|on": 0.828
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_casco_de_costelas": {
+   "nome": "Casco de Costelas",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.625,
+    "L5|on": 0.555
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_hospede_do_estomago": {
+   "nome": "Hóspede do Estômago",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.445,
+    "L5|on": 0.398
+   },
+   "ok": false,
+   "motivos": [
+    "L5|off 44% fora de 45-85%",
+    "L5|on 40% fora de 45-85%"
+   ]
+  },
+  "enemy_aranha_de_cristal": {
+   "nome": "Braceiro da Borda Sul",
+   "categoria": "chefe",
+   "status": "reinventada",
+   "cells": {
+    "L5|off": 0.573,
+    "L5|on": 0.545
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_maos_de_cinzel": {
+   "nome": "Mãos de Cinzel",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.557,
+    "L3|on": 0.688
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_boss_general_escorpiao": {
+   "nome": "Trono de Ajoelhados",
+   "categoria": "chefe",
+   "status": "reinventada",
+   "cells": {
+    "L5|off": 0.637,
+    "L5|on": 0.497
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_toldo_das_clareiras": {
+   "nome": "Toldo das Clareiras",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.443,
+    "L5|on": 0.482
+   },
+   "ok": false,
+   "motivos": [
+    "L5|off 44% fora de 45-85%"
+   ]
+  },
+  "mon_peso_dos_vencidos": {
+   "nome": "Peso dos Vencidos",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.662,
+    "L5|on": 0.468
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_roda_de_mandibulas": {
+   "nome": "Roda de Mandíbulas",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.655,
+    "L5|on": 0.625
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_desbotado_da_nevoa": {
+   "nome": "Desbotado da Névoa",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.573,
+    "L3|on": 0.625
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_turu_de_casco": {
+   "nome": "Turu de Casco",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.52,
+    "L3|on": 0.713
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_vela_sem_barco": {
+   "nome": "Vela sem Barco",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.655,
+    "L3|on": 0.632
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_arpeu_de_bracos": {
+   "nome": "Arpéu de Braços",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.578,
+    "L3|on": 0.695
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mastro_dos_ultimos": {
+   "nome": "Mastro dos Últimos",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.76,
+    "L5|on": 0.627
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_borda_que_anda": {
+   "nome": "Borda que Anda",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.718,
+    "L5|on": 0.545
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cisne_de_patina": {
+   "nome": "Cisne de Pátina",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.66,
+    "L3|on": 0.715
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cobra_de_legua": {
+   "nome": "Cobra de Légua",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.64,
+    "L3|on": 0.828
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_chifres_travados": {
+   "nome": "Chifres Travados",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.585,
+    "L5|on": 0.535
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_escavador_das_camaras": {
+   "nome": "Escavador das Câmaras",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.645,
+    "L5|on": 0.378
+   },
+   "ok": false,
+   "motivos": [
+    "L5|on 38% fora de 45-85%"
+   ]
+  },
+  "enemy_vinha_estranguladora": {
+   "nome": "Serpente Cipó Constritora",
+   "categoria": "elite",
+   "status": "adotada",
+   "cells": {
+    "L3|off": 0.618,
+    "L3|on": 0.828
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_colecionador_de_poses": {
+   "nome": "Colecionador de Poses",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.665,
+    "L5|on": 0.598
+   },
+   "ok": true,
+   "motivos": []
+  }
+ },
+ "regioes": [
+  "aethelgard",
+  "brekmar",
+  "costa_negra",
+  "deserto_zhur",
+  "floresta_sussurros",
+  "montanhas_afiadas",
+  "nova_arcadia",
+  "ophidia",
+  "pantano_melancolia",
+  "pradaria_ruinas",
+  "selva_xylos",
+  "skallgard"
+ ]
+}
