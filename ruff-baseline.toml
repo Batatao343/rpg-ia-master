@@ -79,7 +79,6 @@
 "scripts/staging/s192.py" = ["F401", "I001"]
 "scripts/staging/schema_diff.py" = ["E741", "I001"]
 "scripts/staging/smoke_ab.py" = ["I001"]
-"scripts/staging/spec279_usage_survives_delete.py" = ["F401", "I001"]
 "scripts/staging/synthetic_data.py" = ["F401", "I001"]
 "scripts/staging/two_user_smoke.py" = ["F401"]
 "scripts/staging/vercel_smoke.py" = ["F401", "I001"]
