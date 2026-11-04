@@ -505,7 +505,34 @@ A tolerância da D-369-11 continua igual. A Fase C confirma.
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
 
-**`<sha-A>` = `3f0f14f7`** (último commit de autor da régua: follow-ups da rodada 5 da Astra).
+**`<sha-A>` = `4aa0baea`** (último commit de autor da régua: limites da D-369-10 com os valores da D-369-13, medidos no `final-0-19.json` de `9acb4c82`).
+
+Limites registrados finais (`tests/test_spec369_metas.py`, constantes no topo). Todo limite é exatamente o valor medido, e o teste da régua confere essa igualdade com o artefato:
+
+| Item | Meta cheia | Limite registrado (D-369-13) | Tolerância na Fase C (D-369-11) |
+|---|---|---|---|
+| R14(a) `arc1_cal_pulso_medido` | uso ≤ 0,60 | 1,0 | +0,05 |
+| R14(a) `bas_cor_mofo` | uso ≤ 0,60 | 0,718 | +0,05 |
+| R14(a) `med1_fer_garra_de_protese` | uso ≤ 0,60 | 0,604 | +0,05 |
+| R15 p95 total | ≤ 10 | 11 | +1 rodada |
+| R15 p95 do Médico | ≤ 12 | 17 | +1 rodada |
+| R15 timeout do Médico | ≤ 1,0 % | 3,3 % | nenhuma (a D-369-11 não prevê timeout) |
+| R16 razão `on-faixa`/`on-cego` | ≤ 0,95 | 1,0355 | +0,02 |
+| R20 `conjurador` L5, vitória `on` | 45–85 % | ≥ 39,5 % | −5 pp |
+| R20 `conjurador` L5, \|Δ\| | ≤ 10 | meta cheia (−7,0 cumpre) | nenhuma |
+
+- **De volta à meta cheia, sem limite:** `predador_apice` L3 (72,0 %, −3,0), `abissal` L3, `lider_matilha` L3/L5, o p95 e o timeout das outras Posturas, e as demais Cartas.
+- **Isenções que continuam:** as assinaturas a Fôlego 0 (snapshot do artefato ou catálogo) e o Sangromante.
+- `test_d369_10_limites_registrados_nao_podem_piorar` foi reescrito sobre os valores novos. Ele prova:
+  - cada limite é igual ao medido;
+  - um passo pior reprova: p95 total 12, Médico 18, timeout 3,4, razão 1,036, `conjurador` `on` 39,0 % ou \|Δ\| 10,5;
+  - a tolerância só vale na confirmação e não vale para timeout;
+  - uma Postura sem limite (timeout 1,1 %) reprova na meta cheia;
+  - as 4 células que passam têm a faixa cheia.
+- O caso "só o Δ fora" do P2-5 passou a ser provado com uma célula sintética.
+- **Testes:** régua e metas dão 28 passed e 7 xfailed (todos do R22). Fora do R22, 0 xfailed.
+
+Antes: **`<sha-A>` = `3f0f14f7`** (follow-ups da rodada 5 da Astra).
 
 Follow-ups da rodada 5 da Astra (`3f0f14f7`):
 - **P2-5:** `_faixa_celula` só alarga a dimensão da célula que já estava fora da meta na Fase B. Exemplo: no `conjurador` L5 só a vitória `on` ganha limite e tolerância, e o |Δ| continua ≤ 10. Teste: `test_d369_11_tolerancia_so_na_dimensao_fora_da_meta`.
