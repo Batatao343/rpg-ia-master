@@ -1766,46 +1766,7 @@ def storyteller_node(state: GameState):
                 t._fauna_sign_shown = True
                 t.enc = None
         if t.enc:
-            t.world["last_encounter_turn"] = t.turn
-            t.world["last_encounter_id"] = t.enc.get("hint")
-            t.world["last_encounter_loc"] = t.world.get("current_location_id")
-            t.danger = effective_danger(t.world)
-            t.base_p = (
-                t.rested_player
-                if t.rested_player is not None
-                else dict(t.discovery_player or t.state.get("player") or {})
-            )
-
-            # Fase 6.4 (R1): percepção decide surpresa; (R2): nem todo perigo é combate.
-            # Reforço/fação dominante SEMPRE é combate (eles vieram POR você).
-            from world_utils import (
-                detection_check,
-                light_level,
-                resolve_track,
-                resolve_trap,
-                roll_encounter_type,
-                weather_effects,
-            )
-
-            # Fase 6.5: neblina/vendaval atrapalham a percepção.
-            # spec itens-vivos-e-luz (R3): escuridão sem luz também penaliza.
-            _perc_mod = weather_effects(t.world).get("perception_mod", 0) + light_level(
-                t.world, t.base_p
-            ).get("perception_mod", 0)
-            if t.enc.get("presence_id"):  # SPEC-360 R18: quem leu os sinais se prepara
-                _perc_mod += _fauna.detection_bonus(
-                    t.sim_updates.get("world_sim") or t.state.get("world_sim") or {},
-                    str(t.enc["presence_id"]),
-                )
-            t.det = detection_check(t.base_p, t.danger, perception_mod=_perc_mod)
-            if t.enc.get("reason") == "caca":  # R20: quem caça chega primeiro
-                t.det = {**t.det, "perceived": True}
-            t.kind = (
-                "combat"
-                if t.enc.get("reason") in ("reinforcements", "controlled", "bounty_hunters")
-                or t.enc.get("always_combat")
-                else roll_encounter_type(t.danger)
-            )
+            _story_encounter_kind(t)
 
             if t.kind == "combat":
                 return _story_combat_start(t)
@@ -1847,6 +1808,53 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_encounter_kind(t: _StoryTurn) -> None:
+    """Percepção, surpresa e tipo do encontro."""
+    from services import fauna as _fauna
+    from world_utils import effective_danger
+
+    t.world["last_encounter_turn"] = t.turn
+    t.world["last_encounter_id"] = t.enc.get("hint")
+    t.world["last_encounter_loc"] = t.world.get("current_location_id")
+    t.danger = effective_danger(t.world)
+    t.base_p = (
+        t.rested_player
+        if t.rested_player is not None
+        else dict(t.discovery_player or t.state.get("player") or {})
+    )
+
+    # Fase 6.4 (R1): percepção decide surpresa; (R2): nem todo perigo é combate.
+    # Reforço/fação dominante SEMPRE é combate (eles vieram POR você).
+    from world_utils import (
+        detection_check,
+        light_level,
+        resolve_track,
+        resolve_trap,
+        roll_encounter_type,
+        weather_effects,
+    )
+
+    # Fase 6.5: neblina/vendaval atrapalham a percepção.
+    # spec itens-vivos-e-luz (R3): escuridão sem luz também penaliza.
+    _perc_mod = weather_effects(t.world).get("perception_mod", 0) + light_level(
+        t.world, t.base_p
+    ).get("perception_mod", 0)
+    if t.enc.get("presence_id"):  # SPEC-360 R18: quem leu os sinais se prepara
+        _perc_mod += _fauna.detection_bonus(
+            t.sim_updates.get("world_sim") or t.state.get("world_sim") or {},
+            str(t.enc["presence_id"]),
+        )
+    t.det = detection_check(t.base_p, t.danger, perception_mod=_perc_mod)
+    if t.enc.get("reason") == "caca":  # R20: quem caça chega primeiro
+        t.det = {**t.det, "perceived": True}
+    t.kind = (
+        "combat"
+        if t.enc.get("reason") in ("reinforcements", "controlled", "bounty_hunters")
+        or t.enc.get("always_combat")
+        else roll_encounter_type(t.danger)
+    )
 
 
 def _story_combat_start(t: _StoryTurn) -> dict:
