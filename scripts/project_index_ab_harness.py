@@ -36,12 +36,16 @@ ALLOWED_DIRS = (
     "web/src/",
     "web/e2e/",
     "infrastructure/",
+    "routes/",
     "playtest/",
     "evals/",
 )
 ALLOWED_DIR_ROOTS = frozenset(path.rstrip("/") for path in ALLOWED_DIRS)
 ALLOWED_ROOT_FILES = {
     "api.py",
+    "api_core.py",
+    "api_models.py",
+    "api_presenters.py",
     "main.py",
     "state.py",
     "persistence.py",

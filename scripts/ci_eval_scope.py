@@ -25,8 +25,15 @@ AI_SERVICE_PREFIXES = (
     "services/actor_",
     "services/conflict_",
 )
-FRONTEND_PREFIXES = ("web/",)
-FRONTEND_FILES = {"api.py", "services/presentation_history.py", "services/auth_sessions.py"}
+FRONTEND_PREFIXES = ("web/", "routes/")  # SPEC-381: routes/ = rotas fatiadas de api.py
+FRONTEND_FILES = {
+    "api.py",
+    "api_core.py",
+    "api_models.py",
+    "api_presenters.py",
+    "services/presentation_history.py",
+    "services/auth_sessions.py",
+}
 
 
 def _normalized(paths: list[str]) -> list[str]:

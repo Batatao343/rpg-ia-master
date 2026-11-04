@@ -26,8 +26,17 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.ci_eval_scope import classify, git_changed  # noqa: E402
 
-PRODUCT_PREFIXES = ("agents/", "services/", "infrastructure/", "workers/", "web/src/")
-PRODUCT_FILES = {"api.py", "main.py", "state.py", "persistence.py", "llm_setup.py"}
+PRODUCT_PREFIXES = ("agents/", "services/", "infrastructure/", "workers/", "web/src/", "routes/")
+PRODUCT_FILES = {
+    "api.py",
+    "api_core.py",
+    "api_models.py",
+    "api_presenters.py",
+    "main.py",
+    "state.py",
+    "persistence.py",
+    "llm_setup.py",
+}
 
 
 def _run(*args: str) -> tuple[int, str]:
