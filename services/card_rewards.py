@@ -295,11 +295,8 @@ def _add_to_deck(player: dict, card_id: str) -> str:
     if card_id not in known:
         known.append(card_id)
     player["known_cards"] = known
-    if _is_passive(card_id):  # SPEC-397 R5: passiva não ocupa slot nem baralho
-        prepared = list(player.get("prepared_cards") or [])
-        if card_id not in prepared:
-            player["prepared_cards"] = prepared + [card_id]  # `_has_vigilia` lê daqui
-        return "preparadas"
+    if _is_passive(card_id):  # SPEC-397 R5: passiva não entra no baralho nem em slot
+        return "acervo"
     if player.get("deck"):
         if _deck_room(player, card_id):
             player["deck"] = list(player["deck"]) + [card_id]

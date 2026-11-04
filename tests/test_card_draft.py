@@ -126,6 +126,7 @@ def test_batch_is_cut_at_n(draft):
         FakeLLM(draft.LoteRascunho(cartas=cartas)), "Médico de Campo", "boticario", 4, lore=[]
     )
     assert len(out["cards"]) == 4 and out["entregues"] == 4 and out["pedidas"] == 4
+    assert "2 Carta(s) aprovada(s)" in out["aviso"]
 
 
 def test_frequencia_is_closed_enum(draft):

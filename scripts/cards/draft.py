@@ -279,11 +279,14 @@ def generate(
             r for r in novas if r["id"] not in ids_rejeitados
         ]
         rejeitadas = _ajustar_orcamento(rejeitadas, aceitas, ajustaveis)
+    descartadas = max(len(aceitas) - max(n, 0), 0)
     aceitas = aceitas[: max(n, 0)]  # SPEC-397 R1: o lote nunca passa de `n`
     return {
         "cards": aceitas,
         "rejeitadas": rejeitadas,
-        "aviso": "",
+        "aviso": (
+            f"{descartadas} Carta(s) aprovada(s) além de n={n} descartada(s)" if descartadas else ""
+        ),
         "pedidas": n,
         "entregues": len(aceitas),
         "custo_usd_estimado": round(chars / 4 * 0.6e-6, 4),  # ~0,6 US$/M tokens, ordem de grandeza

@@ -50,3 +50,56 @@ def test_faro_do_abismo_by_reward_is_listed_and_negates_ambush(client):
     assert any(c["id"] == FARO for c in _cards_block(player))
     assert _has_vigilia(player)
     assert _opening_initiator({"encounter_surprise": "enemy"}, "", player)[0] is None
+
+
+def _reward_faro(client, gid, mutate=None):
+    import persistence
+
+    state = _load(gid)
+    if mutate:
+        mutate(state["player"])
+    state["player"]["espolio_pendente"] = {
+        "id": "c1",
+        "ofertas": [FARO],
+        "origem": "vitoria",
+        "turno": 1,
+        "recusa_ouro": 15,
+    }
+    assert persistence.save_game_state(state)
+    r = client.post("/game/espolio", json={"game_id": gid, "card_id": FARO})
+    assert r.status_code == 200, r.text
+    return _load(gid)["player"]
+
+
+def test_passive_reward_keeps_four_of_four_and_prepare_still_works(client):
+    """P1-1: nível 1 com 4 Preparadas: a passiva não toma slot; reenviar a lista atual passa."""
+    from agents.combat import _has_vigilia
+    from services import cards
+
+    gid = _new_game(client, "Corruptor", "Smoke397")
+    player = _reward_faro(client, gid)
+    assert len(player["prepared_cards"]) == 4 and FARO not in player["prepared_cards"]
+    assert FARO not in (player.get("deck") or [])
+    assert _has_vigilia(player)
+    state = _load(gid)
+    assert cards.set_prepared(state, list(player["prepared_cards"]))["ok"]
+
+
+def test_passive_reward_with_deck_on_before_first_conflict(client):
+    """Baralho on sem `deck` ainda (compra antes do 1º conflito): a passiva vale mesmo assim."""
+    from agents.combat import _has_vigilia
+
+    gid = _new_game(client, "Corruptor", "Smoke397")
+    player = _reward_faro(client, gid, lambda p: p.pop("deck", None))
+    assert not player.get("deck") and _has_vigilia(player)
+
+
+def test_deactivate_deck_keeps_the_passive_effect(client):
+    from agents.combat import _has_vigilia
+    from services import card_piles
+
+    gid = _new_game(client, "Corruptor", "Smoke397")
+    player = _reward_faro(client, gid)
+    player["prepared_cards_pre_deck"] = list(player["prepared_cards"])
+    card_piles.deactivate_deck(player)
+    assert _has_vigilia(player)
