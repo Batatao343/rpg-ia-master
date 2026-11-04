@@ -1,6 +1,6 @@
 # SPEC-378 — Refatoração: helpers comuns (fold, leitor de flag, structured output, telemetria do LLM, memória do RAG, perfil runtime)
 
-> **Status:** `in-progress` (código das E1, E2, E4, E5, E6 na branch; E3 cancelada por R21; falta a revisão W7 e o W2 do revisor) (04/11 madrugada, dono: "vai executando o que puder"; D1=a, D2=a, D3=sim, D4=a, D5=a, D6=a — recomendações do §8)
+> **Status:** `done` (revisão Sol APPROVED_WITH_FOLLOWUPS; P2-1/2/3 fechados; suíte completa no pouso) (04/11 madrugada, dono: "vai executando o que puder"; D1=a, D2=a, D3=sim, D4=a, D5=a, D6=a — recomendações do §8)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de código de 03/11 ([docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md)): §3 R6; §4.1 itens 3, 5 e 7; §4.2 itens 3 e 6; §4.3 itens 2 a 4; regras da onda §6 (W1–W8). Letra **D** do §6.1.
 > **Depende de:** SPEC-376 e SPEC-377 pousadas (W6: uma spec de refatoração em voo por vez; a 377 mexe em `services/law.py`, `faction_gate.py` e `faction_display.py`, que têm cópias de `_fold`). **SPEC-379 pousada com a remoção da contagem textual de `tests/test_spec192_vercel_packaging.py:81-82`**: é condição dura dos sub-itens `rag.py`/`persistence.py` da E6 (P0-2 da revisão). Por etapa, as travas seguem a W1 revisada (§6.2 da auditoria: branches vivas, mudanças não commitadas e specs `in-progress` direto na `main`). As specs 367 e 368 commitam direto na `main`, então a trava delas é pelo **status `done`** da spec, não pela branch: `agents/loot.py` (367), `persistence.py`/`services/card_*.py` (368). Branches: `agents/combat.py`, `services/enemy_*.py`, `playtest/*` (371); `rag.py`, `mock_llm.py`, `services/creature_gen.py` (374); `world_utils.py`, `services/fauna.py` (370). Tabela completa na §3.7.
@@ -782,3 +782,16 @@ falta nelas não toca os arquivos desta spec: 377 = só o item 2 (custo de Fôle
 `services/law.py`, `faction_gate.py`, `faction_display.py`, `rag.py` e `persistence.py` para E1–E6
 (regra W1: "o executor pode liberar um arquivo se a spec que o tocou estiver done e a sessão ociosa";
 aqui a parte que tocava esses arquivos está pousada e não há sessão ativa nelas).
+
+## Fechamento dos follow-ups da revisão Sol (04/11)
+
+- **P2-1:** `llm_attempts_ext.json` (structured com retry semântico, sempre inválido, 429,
+  `tool_use_failed`, timeout, erro dentro de `_apply` real, todos falham, `stream_structured`,
+  falha antes do 1º chunk, hedge) gerado no merge-base `e88d0e11` e idêntico na HEAD.
+- **P2-2:** os 4 leitores de `latency_flags` entraram em `flag_readers.json` (gerado na base).
+- **P2-3:** `rag._faiss_add` extraído; `_add_memory` com 43 linhas; golden do RAG idêntico.
+  Baseline de tamanho regravada (`rag.py` 1649 contra 1817 na base).
+- **Smoke real §6:** `docs/spec378/smoke-real.md` (4 turnos, DeepSeek, US$ 0,0039, 0 falhas).
+- **P2-4/5/6** ficam como follow-up (corpus `*.yaml`, asserção de `tmp_path` no golden do RAG,
+  nota sobre `strip`/caixa nos folds B/D, já provada equivalente pelo revisor).
+
