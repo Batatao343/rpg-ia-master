@@ -22,8 +22,16 @@ Em processo (sem uvicorn), `app.invoke` real, DeepSeek primário (`deepseek-v4-f
 
 `sinais_vistos = ["resto", "rastro"]`. Presenças ativas em Ophidia no fim: 0 (a única virou `encontrada`; `region_cap("ophidia") == 1` está em `tests/test_spec370_caps.py`). Nenhum combate antes do primeiro sinal.
 
-## Limites desta rodada
+## Rodada 2 (04/11) — presença nascida pelo `day_hook`, viagem e custo `on` × `off`
 
-- Presença injetada, não nascida pelo `day_hook`; a conversão de presença nova de Ophidia (decisão do dono) está provada por `tests/test_spec370_solo.py` e pelo eval (M1 0,9845).
-- Passos 6 (viagem Skallgard→Ophidia pelo mapa) e 7 (custo `on` × `off` do mesmo roteiro com telemetria) não foram feitos nesta rodada: o custo observado foi 2 a 4 chamadas por turno, e o turno da caça custou um início de combate comum (4).
-- Bloco com 0 token nos turnos sem sinal (turnos 3 e 4 de Ophidia, 2 de Skallgard).
+Mesmo método (em processo, DeepSeek, `.env` copiado e apagado), sem nenhuma presença injetada. Roteiro fixo a partir de Brekmar: 8 × "descanso para me recuperar", "Viajo para Ophidia.", "exploro a área em volta", "continuo explorando". Rodado com as flags `on` e com `off`.
+
+- **(a) Nascida pelo `day_hook`:** no dia 4 (Manhã), depois de 7 descansos, nasceu em Brekmar `mon_penhorado_do_poco` (`origem: dia`, região nova, `ativa`) e a cena já mostrou o 1º sinal (`marca`).
+- **(b) Viagem entre regiões:** "Viajo para Ophidia." chegou em `ophidia`; a presença da região (`mon_ossada_de_pomes`, `origem: conversao`) nasceu **com 1 sinal já mostrado** (`marca`), sem combate, e depois ganhou `som` e `resto` nas duas ações seguintes. Ophidia ficou com 1 presença ativa; a de Brekmar seguiu ativa.
+- **(c) Custo `on` × `off`:** 29 chamadas LLM nos dois, **idênticas turno a turno** (2,2,3,2,3,2,2,2,3,2,2); **0 chamada originada em `services/fauna.py`** (verificado pela pilha de chamada no hook de telemetria). Nesta trajetória não houve luta, então não há diferença de trajetória a explicar.
+
+## Limites das rodadas
+
+- Na rodada 1 a presença foi injetada (Skallgard e Ophidia); a rodada 2 cobre o nascimento real.
+- Houve timeouts de transporte do DeepSeek na rodada 1, com queda para Groq em alguns nós; na rodada 2 todas as chamadas foram DeepSeek.
+- Bloco com 0 token nos turnos sem sinal.
