@@ -1,6 +1,6 @@
 # SPEC-375 — Higiene do repositório: Project Index fora do git, CI sem passos repetidos, lixo local
 
-> **Status:** `draft`
+> **Status:** `approved` (04/11 madrugada, dono: "vai executando o que puder"; D1=tirar do git, D2=nenhum item respondido ⇒ Etapa 3 NÃO roda (tudo fica), D3=(b), D4=recomendação (só `workflow_dispatch`), D5: se a Etapa 0 cair no caso, R8 fica pendente do dono (marcar `npm-audit-full` obrigatório no GitHub))
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03 (revisão independente aplicada, ver §9)
 > **Origem:** [auditoria 03/11](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md) §4.4 itens 1, 2, 6 · regras da onda §6.2 (W1 revisada, W2–W8) · correções §6.5
 > **Depende de:** nenhuma sessão ativa usando `scripts/dev/reindex.sh` ou `scripts/dev/wt.sh` no checkout principal no momento do pouso (a SPEC-367 roda `reindex.sh` direto na `main`: commits `4b03a430`, `b278f6af`, `2a6e0945`). A antiga dependência "SPEC-368 pousada" já está cumprida: os commits da 368 estão na `main` e não há mais branch `spec-367`/`spec-368`.
