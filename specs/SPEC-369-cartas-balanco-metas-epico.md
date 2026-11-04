@@ -471,18 +471,41 @@ A Fase B esgotou as alavancas do R18 com R13, R17, R19 e 3 de 5 células do R20 
 
 `tests/test_spec369_metas.py` passa a refletir isto num commit do autor da régua: a isenção do R14(a), o limite registrado do R14(a)/R15/R16 e das 2 células do R20 como valores máximos que não podem piorar, e o resto inalterado. O pouso continua exigindo 0 xfailed. A Fase C confirma que nada piorou além do registrado.
 
+### D-369-11 — tolerância da Fase C
+
+Proposta do autor da régua; aceite do dono pendente.
+
+Na confirmação (R22, sementes novas 260-339; famílias em 260-267 e `predador_apice` L3 em 260-279), cada **limite registrado** pela D-369-10 ganha a tolerância de amostra abaixo (`TOLERANCIA_CONFIRMACAO` em `tests/test_spec369_metas.py`):
+
+| Limite registrado | Tolerância | Justificativa (cerca de 1 erro-padrão da amostra da Fase C) |
+|---|---|---|
+| uso (R14a: `arc1_cal_pulso_medido`, `bas_cor_mofo`) | +0,05 | O uso é uma proporção com n de algumas centenas de mãos por Carta (1.800 lutas × 4 com 80 sementes). Com p ≈ 0,7 e n ≈ 300, o erro-padrão fica entre 0,026 e 0,03; somando a variação entre níveis e encontros, dá cerca de 0,05. |
+| p95 do Médico (R15) | +1 rodada | O p95 é discreto, em rodadas inteiras, e o quantil 95 muda pelo menos 1 rodada de uma amostra para outra (de 16 para 17 com 1 luta a mais na cauda). |
+| razão `on-faixa`/`on-cego` (R16) | +0,02 | O dano médio por luta tem desvio de cerca de 8 em média de 13, com 7.200 lutas pareadas. O erro-padrão da razão pareada fica perto de 0,01, e 0,02 é cerca de 2 erros-padrão. |
+| célula de família (R20) | ±5 pp | A vitória com 200 lutas e p ≈ 0,4–0,6 tem erro-padrão de cerca de 3,5 pp. O Δ entre dois braços independentes fica em cerca de 4,9 pp. |
+
+A tolerância vale **só na dimensão que já estava fora da meta na Fase B** (Astra P2-5). Exemplo: o Δ do `conjurador` L5 (−8,0) cumpre a meta cheia, então continua com |Δ| ≤ 10 na confirmação, e só a vitória `on` (38,5 %) ganha 38,5 − 5. As metas cheias e os pisos absolutos (R13, o p95 total ≤ 10, os timeouts, o R17 e o R19) não ganham tolerância. O aceite é registrado pelo coordenador.
+
 ## 9. Registro de implementação
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
 
-**`<sha-A>` = `7a75a389`** (último commit de autor da régua: aplica a D-369-10 em `tests/test_spec369_metas.py`, com as constantes no topo marcadas "D-369-10").
+**`<sha-A>` = `3f0f14f7`** (último commit de autor da régua: follow-ups da rodada 5 da Astra).
+
+Follow-ups da rodada 5 da Astra (`3f0f14f7`):
+- **P2-5:** `_faixa_celula` só alarga a dimensão da célula que já estava fora da meta na Fase B. Exemplo: no `conjurador` L5 só a vitória `on` ganha limite e tolerância, e o |Δ| continua ≤ 10. Teste: `test_d369_11_tolerancia_so_na_dimensao_fora_da_meta`.
+- **P2-4:** a citação passa a ser "D-369-11 (tolerância da Fase C)", no código e aqui, com a seção própria no §8.
+- **P3-8:** o `uso` do `metricas_369.py` passa a gravar o snapshot `custo_folego` em cada linha, e a isenção do R14(a) lê esse snapshot quando ele existe. Teste: `test_p3_8_isencao_le_snapshot_do_artefato`. **Limitação:** o `final-0-19.json` (540deb81) foi gravado antes do campo e não foi regravado, então a Fase B ainda lê o catálogo. A `confirmacao.json` da Fase C já sai com o snapshot.
+- **Testes:** régua e metas dão 28 passed e 7 xfailed (todos do R22, porque `confirmacao.json` ainda não existe). `ruff` limpo.
+
+Antes: **`<sha-A>` = `7a75a389`** (aplica a D-369-10 em `tests/test_spec369_metas.py`, com as constantes no topo marcadas "D-369-10").
 
 O que mudou com a D-369-10:
 - **R14(a):** uma Carta básica com `custo_folego` 0 no catálogo fica isenta (`assinatura_gratis`, lida do catálogo, sem lista de ids). Hoje isso cobre `bas_dev_voto`, `bas_arc_vazao` e `bas_cor_guarda`. Ganham teto registrado `arc1_cal_pulso_medido` 1,0 e `bas_cor_mofo` 0,714 (`LIMITE_USO_R14A`). Qualquer outra Carta na meta acima de 60 % reprova, e o R14(b) segue igual.
 - **R15:** o p95 total ≤ 10 e o timeout ≤ 1 % seguem como meta. O Médico ganha teto de p95 16 (`LIMITE_P95_POSTURA`).
 - **R16:** teto de 1,0257 (`LIMITE_PRESSAGIO_RAZAO`). A vitória de `on-faixa` continua em 45–85 %.
 - **R20:** `conjurador` L5 (`on` 38,5 %, Δ −8,0) e `predador_apice` L3 (`on` 61,5 %, Δ −13,5) ganham limite registrado: a faixa só se alarga até o valor da Fase B. As 3 outras células continuam com a meta cheia, e as 200 lutas e as sementes da fase continuam valendo.
-- **Fase C (`test_r22_confirmacao`, D-369-10 item 5):** os **limites registrados** ganham uma tolerância de amostra, cerca de 1 erro-padrão da Fase C (`TOLERANCIA_CONFIRMACAO`):
+- **Fase C (`test_r22_confirmacao`, D-369-11, tolerância da Fase C):** os **limites registrados** ganham uma tolerância de amostra, cerca de 1 erro-padrão da Fase C (`TOLERANCIA_CONFIRMACAO`):
 
   | Limite registrado | Tolerância |
   |---|---|
