@@ -9,6 +9,7 @@ import types
 import pytest
 
 import api
+import api_core
 from services import creature_art, portrait_offer
 from services import kill_switches as ks
 
@@ -136,7 +137,7 @@ def _wire_live(monkeypatch, *, switch: bool, price):
 
     monkeypatch.setattr(fa, "require_paid_effect", lambda *a, **k: None)
     monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: price)
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1")
     monkeypatch.setattr(creature_art, "mode", lambda: "on")
     monkeypatch.setattr(api, "_portrait_registry", _registry(creature_art.EmptyRegistry()))
@@ -169,7 +170,7 @@ def test_offer_view_levels(monkeypatch):
     assert seen[0]["offered"] == 1 and seen[0]["omitted"] == {} and seen[0]["level"] == "info"
     monkeypatch.setattr(api, "_portrait_registry", _registry(None))
     monkeypatch.setattr(api, "_creature_art_live", lambda: False)
-    monkeypatch.setattr(api, "_database_profile", lambda: False)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: False)
     api._combat_block(_combat_state(1))
     assert seen[1]["omitted"] == {"art_not_live:profile": 1} and seen[1]["level"] == "info"
 
@@ -480,7 +481,7 @@ def test_art_live_single_source(monkeypatch):
             for env in ("1", "0"):
                 monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", env)
                 monkeypatch.setattr(creature_art, "mode", lambda m=mode_on: "on" if m else "off")
-                monkeypatch.setattr(api, "_database_profile", lambda d=db: d)
+                monkeypatch.setattr(api_core, "_database_profile", lambda d=db: d)
                 assert api._creature_art_live() is (portrait_offer.art_cause(mode_on, db) is None)
 
 

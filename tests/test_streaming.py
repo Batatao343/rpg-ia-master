@@ -725,9 +725,9 @@ def test_npc_route_tokens_do_not_replace(client, monkeypatch):
     state["npcs"] = {"Velho Tomás": {"name": "Velho Tomás", "in_scene": True, "relationship": 5}}
     from langchain_core.messages import HumanMessage  # noqa: F401
 
-    import api
+    import api_core
 
-    monkeypatch.setattr(api, "_resolve_save_file", lambda gid_: path)
+    monkeypatch.setattr(api_core, "_resolve_save_file", lambda gid_: path)
     with open(path, encoding="utf-8") as fh:
         saved = json.load(fh)
     saved["npcs"] = state["npcs"]

@@ -13,6 +13,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from infrastructure.local_adapters import MemoryRateLimiter
 from infrastructure.request_context import reset_current_principal, set_current_principal
@@ -203,7 +204,7 @@ def env(monkeypatch):
     monkeypatch.setenv("RPG_SESSION_SECRET", SECRET)
     monkeypatch.delenv("RPG_RATE_LIMIT", raising=False)  # a suite liga 0; aqui queremos o real
     monkeypatch.delenv("RPG_DAILY_TURN_QUOTA", raising=False)
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
     api._authfail_until.clear()
     client = TestClient(api.app, raise_server_exceptions=False)
@@ -329,7 +330,7 @@ def test_daily_quota_zero_disables_and_legacy_profile_skips(env, monkeypatch):
         for _ in range(5):
             api._enforce_owner_budget("turn", minute=False)
         monkeypatch.setenv("RPG_DAILY_TURN_QUOTA", "1")
-        monkeypatch.setattr(api, "_database_profile", lambda: False)  # R11: legacy so IP
+        monkeypatch.setattr(api_core, "_database_profile", lambda: False)  # R11: legacy so IP
         for _ in range(5):
             api._enforce_owner_budget("turn", minute=True)
     finally:
@@ -353,11 +354,11 @@ def test_quota_backend_failure_does_not_take_the_game_down(env):
 
 def _patched_execute(monkeypatch, receipt):
     state = {"game_id": GAME}
-    monkeypatch.setattr(api, "load_game_state", lambda _f: state)
-    monkeypatch.setattr(api, "_resolve_save_file", lambda _g: "x")
+    monkeypatch.setattr(api_core, "load_game_state", lambda _f: state)
+    monkeypatch.setattr(api_core, "_resolve_save_file", lambda _g: "x")
     monkeypatch.setattr(api, "_await_projection_db", lambda s, _g: s)
     monkeypatch.setattr(api, "_begin_turn_operation", lambda s, r: (None, "h", receipt))
-    monkeypatch.setattr(api, "_action_already_processed", lambda s, a: False)
+    monkeypatch.setattr(api_core, "_action_already_processed", lambda s, a: False)
     monkeypatch.setattr(api, "_apply_action_options", lambda s, r: None)
     monkeypatch.setattr(api, "_projection_owner", lambda: None)
     monkeypatch.setattr(api, "_run_turn", lambda *a, **k: "TURN-RESPONSE")

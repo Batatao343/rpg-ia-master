@@ -13,6 +13,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from infrastructure.local_adapters import MemoryRateLimiter
 from services.auth_sessions import CsrfSigner, SessionTokens
@@ -67,7 +68,7 @@ def hardened(monkeypatch):
     monkeypatch.setenv("RPG_SESSION_SECRET", SECRET)
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_REQUIRED", "0")
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_MODE", "app")
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
     client = TestClient(api.app, raise_server_exceptions=False)
     client.headers["Origin"] = ORIGIN

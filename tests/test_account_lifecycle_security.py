@@ -10,6 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from infrastructure.local_adapters import MemoryRateLimiter
 from infrastructure.supabase_identity import AuthEmailDeliveryError, SupabaseIdentityProvider
@@ -75,7 +76,7 @@ def account_client(monkeypatch):
     monkeypatch.setenv("RPG_SESSION_SECRET", "s" * 32)
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_REQUIRED", "0")
     monkeypatch.setenv("RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED", "1")
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
     client = TestClient(api.app)
     client.headers["Origin"] = "http://localhost:5173"

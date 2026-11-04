@@ -7,6 +7,7 @@ from fastapi import HTTPException
 from pydantic import ValidationError
 
 import api
+import api_core
 from services import visual_catalog
 
 
@@ -143,11 +144,11 @@ def test_quality_monster_422(monkeypatch):
     import infrastructure.runtime as rt
     import services.dynamic_art as da
 
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(
-        api, "load_game_state", lambda _p: {"game_id": "0a1b2c3d-0000-4000-8000-000000000001"}
+        api_core, "load_game_state", lambda _p: {"game_id": "0a1b2c3d-0000-4000-8000-000000000001"}
     )
-    monkeypatch.setattr(api, "_resolve_save_file", lambda g: g)
+    monkeypatch.setattr(api_core, "_resolve_save_file", lambda g: g)
     monkeypatch.setattr(rt, "get_runtime", lambda: SimpleNamespace(resources=(object(),)))
     monkeypatch.setattr(rc, "current_principal", lambda: SimpleNamespace(user_id="u"))
 

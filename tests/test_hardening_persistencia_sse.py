@@ -11,6 +11,7 @@ from langchain_core.messages import AIMessage
 from pydantic import ValidationError
 
 import api
+import api_core
 import persistence
 from llm_setup import LLMAttemptEvent, ModelTier
 
@@ -207,7 +208,7 @@ def test_falha_de_persistencia_no_turno_retorna_500(monkeypatch):
             return out
 
     monkeypatch.setattr(api, "game_graph", Graph())
-    monkeypatch.setattr(api, "save_game_state", lambda _state: False)
+    monkeypatch.setattr(api_core, "save_game_state", lambda _state: False)
     response = TestClient(api.app).post(
         "/game/action",
         json={"game_id": gid, "input_text": "avanço", "action_id": str(uuid.uuid4())},

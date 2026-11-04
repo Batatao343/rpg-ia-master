@@ -11,6 +11,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from services.auth_sessions import CsrfSigner
 from services.speech_to_text import MAX_AUDIO_BYTES, Candidate, ProviderReading
@@ -25,7 +26,7 @@ def speech_client(monkeypatch):
     csrf = CsrfSigner(secret).issue()
     monkeypatch.setenv("RPG_SESSION_SECRET", secret)
     monkeypatch.setenv("RPG_SPEECH_ENABLED", "1")
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
 
     def verify(cookie):
         if cookie != "valid":

@@ -9,6 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 from services import combat_preview as cpv
 from services.conflict_resolution import resolve_attack
 from tests.test_combat_simulator import _request
@@ -84,10 +85,10 @@ def test_preview_recusa_entradas_invalidas(monkeypatch, card, target, reason):
 def test_endpoint_puro_e_codigos(monkeypatch):
     state = _state(monkeypatch)
     eid = str(state["enemies"][0]["id"])
-    monkeypatch.setattr(api, "_resolve_save_file", lambda gid: "x")
-    monkeypatch.setattr(api, "load_game_state", lambda f: state)
+    monkeypatch.setattr(api_core, "_resolve_save_file", lambda gid: "x")
+    monkeypatch.setattr(api_core, "load_game_state", lambda f: state)
     saved = []
-    monkeypatch.setattr(api, "save_game_state", lambda *a, **k: saved.append(1), raising=False)
+    monkeypatch.setattr(api_core, "save_game_state", lambda *a, **k: saved.append(1), raising=False)
     client = TestClient(api.app, raise_server_exceptions=False)
     ok = client.post("/game/combat/preview", json={"card_id": GOLPE, "target_id": eid})
     assert ok.status_code == 200 and ok.json()["chance_acerto_pct"] > 0

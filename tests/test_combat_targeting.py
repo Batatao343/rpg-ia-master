@@ -8,6 +8,7 @@ import pytest
 from fastapi import HTTPException
 
 import api
+import api_core
 from services import combat_targeting as ct
 from tests.test_combat_simulator import _request
 
@@ -266,8 +267,8 @@ def _client(monkeypatch):
     def forbidden(*_a, **_k):
         raise AssertionError("sem LLM/RAG")
 
-    monkeypatch.setattr(api, "save_game_state", save)
-    monkeypatch.setattr(api, "load_game_state", load)
+    monkeypatch.setattr(api_core, "save_game_state", save)
+    monkeypatch.setattr(api_core, "load_game_state", load)
     for mod, name in (
         (character_creator, "get_llm"),
         (character_creator, "query_rag"),

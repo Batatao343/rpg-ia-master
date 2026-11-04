@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 import api
+import api_core
 from services import kill_switches
 from services.shard_pricing import PricingUnavailable
 
@@ -56,7 +57,7 @@ def test_offer_open_when_gate_open(monkeypatch):
 
 
 def test_offer_requires_dynamic_art_env(monkeypatch):
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.delenv("RPG_DYNAMIC_ART_ENABLED", raising=False)
     monkeypatch.setenv("RPG_CREATURE_ART", "on")
     assert api._creature_art_live() is False
@@ -87,7 +88,7 @@ def test_offer_implies_quote_ok(monkeypatch, live, db, env, switch, fresh, price
     sobre a view que monta a oferta (`_enemy_portrait`): `gerar` presente => a cotação não recusa."""
     _wire(monkeypatch, switch=switch, pricing=fresh)
     monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: price)
-    monkeypatch.setattr(api, "_database_profile", lambda: db)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: db)
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1" if env else "0")
     from services import creature_art
 
@@ -135,7 +136,7 @@ def test_art_preflight_causes():
 
 def test_offer_present_when_everything_open(monkeypatch):
     _wire(monkeypatch, switch=True, pricing=True)
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1")
     from services import creature_art
 

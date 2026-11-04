@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage, HumanMessage
 
 import api
+import api_core
 import gamedata
 from services import encounter_manifest as em
 from services import faction_display as fd
@@ -208,9 +209,11 @@ def client(monkeypatch):
     state = _combat_state()
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
-    monkeypatch.setattr(api, "_resolve_save_file", lambda *_a, **_k: "x")
-    monkeypatch.setattr(api, "load_game_state", lambda *_a, **_k: copy.deepcopy(state))
-    monkeypatch.setattr(api, "_load_unlocked_or_locked", lambda *_a, **_k: copy.deepcopy(state))
+    monkeypatch.setattr(api_core, "_resolve_save_file", lambda *_a, **_k: "x")
+    monkeypatch.setattr(api_core, "load_game_state", lambda *_a, **_k: copy.deepcopy(state))
+    monkeypatch.setattr(
+        api_core, "_load_unlocked_or_locked", lambda *_a, **_k: copy.deepcopy(state)
+    )
     return TestClient(api.app), state
 
 

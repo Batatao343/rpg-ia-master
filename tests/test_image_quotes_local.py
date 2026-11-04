@@ -476,6 +476,7 @@ def bind_api(case, monkeypatch):
     from copy import deepcopy
 
     import api
+    import api_core
     import infrastructure.runtime
     from infrastructure.postgres_turns import PostgresTurnCoordinator
 
@@ -493,9 +494,9 @@ def bind_api(case, monkeypatch):
     monkeypatch.setattr(
         api, "_image_finance", lambda *, guard=True: (runtime, case.owner, case.repo)
     )
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
-    monkeypatch.setattr(api, "load_game_state", loaded)
-    monkeypatch.setattr(api, "_resolve_save_file", lambda _: None)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "load_game_state", loaded)
+    monkeypatch.setattr(api_core, "_resolve_save_file", lambda _: None)
     monkeypatch.setattr(infrastructure.runtime, "get_runtime", lambda: runtime)
     return api, runtime
 

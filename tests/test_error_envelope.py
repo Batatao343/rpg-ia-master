@@ -165,10 +165,10 @@ def test_sse_error_event_envelope(client, monkeypatch):
 
 
 def test_error_responses_never_echo_exception_text(client, monkeypatch):
-    import api
+    import api_core
 
     monkeypatch.setattr(
-        api,
+        api_core,
         "load_game_state",
         lambda *a, **k: (_ for _ in ()).throw(RuntimeError("SEGREDO-NA-EXCECAO")),
     )

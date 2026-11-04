@@ -189,12 +189,13 @@ def test_equip_and_levelup_gate_pending_operation_against_real_operations(infra,
     from fastapi import HTTPException
 
     import api
+    import api_core
     from infrastructure import request_context, runtime
 
     store, _, coordinator, _ = infra
     principal, game = _principal(), uuid4()
     created = store.create(principal, _state(game))
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(request_context, "current_principal", lambda: principal)
     monkeypatch.setattr(
         runtime,
@@ -203,7 +204,7 @@ def test_equip_and_levelup_gate_pending_operation_against_real_operations(infra,
     )
     try:
         state = {"game_id": str(game), "_storage_version": created.version}
-        assert api._failed_pending_operation(state) is None
+        assert api_core._failed_pending_operation(state) is None
         failed_op = uuid4()
         claim = coordinator.claim(
             principal,
@@ -230,7 +231,7 @@ def test_equip_and_levelup_gate_pending_operation_against_real_operations(infra,
         coordinator.fail(death, "test_release")
         # Outro dono não enxerga a falha alheia.
         monkeypatch.setattr(request_context, "current_principal", _principal)
-        assert api._failed_pending_operation(state) is None
+        assert api_core._failed_pending_operation(state) is None
         monkeypatch.setattr(request_context, "current_principal", lambda: principal)
         # Um turno posterior concluído supera a falha e libera equip.
         later = coordinator.claim(
@@ -242,7 +243,7 @@ def test_equip_and_levelup_gate_pending_operation_against_real_operations(infra,
             base_version=created.version,
         )
         coordinator.complete(later, committed_version=created.version, receipt={})
-        assert api._failed_pending_operation(state) is None
+        assert api_core._failed_pending_operation(state) is None
         ok, _, receipt = api._begin_state_mutation(
             state, action_id=str(uuid4()), kind="equip", payload={"kind": "equip"}
         )

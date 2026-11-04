@@ -312,12 +312,13 @@ def test_equip_endpoint(monkeypatch):
     from fastapi.testclient import TestClient
 
     import api as api_mod
+    import api_core
 
     p = make_player(inventory=inv.add_item([], "espada_gasta", 1))
     fake_state = {"player": p, "messages": [], "world": {}}
     saved = {}
-    monkeypatch.setattr(api_mod, "load_game_state", lambda f=None: dict(fake_state))
-    monkeypatch.setattr(api_mod, "save_game_state", lambda s: (saved.update(s), True)[1])
+    monkeypatch.setattr(api_core, "load_game_state", lambda f=None: dict(fake_state))
+    monkeypatch.setattr(api_core, "save_game_state", lambda s: (saved.update(s), True)[1])
     client = TestClient(api_mod.app)
 
     r = client.post("/game/equip", json={"item_id": "espada_gasta"})

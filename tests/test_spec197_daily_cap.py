@@ -245,6 +245,7 @@ def test_turn_returns_503_when_text_cap_exceeded(monkeypatch):
     from uuid import uuid4
 
     import api
+    import api_core
     from infrastructure.contracts import Principal
     from infrastructure.request_context import reset_current_principal, set_current_principal
     from services import daily_spend_cap as cap
@@ -255,7 +256,7 @@ def test_turn_returns_503_when_text_cap_exceeded(monkeypatch):
     runtime = SimpleNamespace(
         game_store=SimpleNamespace(pool=None), rate_limiter=None, daily_quota=None
     )
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
     monkeypatch.setattr(
         "infrastructure.finops_reader.PostgresFinopsReader", lambda pool: reader("20")

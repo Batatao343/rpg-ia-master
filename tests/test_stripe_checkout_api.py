@@ -8,6 +8,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from services.auth_sessions import CsrfSigner
 from tests.test_stripe_checkout import SECRET, signed
@@ -22,7 +23,7 @@ def checkout_http(monkeypatch):
             raise Unauthorized("session required")
         return owner
 
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(
         "infrastructure.runtime.get_runtime",
         lambda: SimpleNamespace(identity_verifier=SimpleNamespace(verify=verify)),
@@ -132,7 +133,7 @@ def test_default_disabled_without_provider_or_database_access(monkeypatch):
             raise AssertionError("disabled checkout imported optional Postgres dependency")
         return original_import(name, *args, **kwargs)
 
-    monkeypatch.setattr(api, "_database_profile", lambda: False)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: False)
     monkeypatch.delenv("RPG_STRIPE_ENABLED", raising=False)
     monkeypatch.setattr(builtins, "__import__", import_without_postgres)
     client = TestClient(api.app)

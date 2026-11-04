@@ -17,6 +17,7 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 
 import api
+import api_core
 import persistence
 from llm_setup import LLMAttemptEvent, ModelTier, _emit_attempt_telemetry
 from observability import latency as lat
@@ -175,13 +176,13 @@ def test_ack_metric_measures_after_yield(client, monkeypatch):
     gid = _new_game(client)
     clock = FakeClock()
     lat.set_clock(clock)
-    real_load = api.load_game_state
+    real_load = api_core.load_game_state
 
     def slow_load(*args, **kwargs):
         clock.advance(1.5)  # atraso injetado no handler, antes do stream
         return real_load(*args, **kwargs)
 
-    monkeypatch.setattr(api, "load_game_state", slow_load)
+    monkeypatch.setattr(api_core, "load_game_state", slow_load)
     ack_key = "rpg_sse_ack_seconds{'route': '/game/action/stream'}"
     old_key = "rpg_sse_first_event_seconds{'route': '/game/action/stream'}"
     ack_before = _snap("rpg_sse_ack_seconds").get(ack_key + ".sum", 0.0)
@@ -382,7 +383,7 @@ def test_lock_wait_measured(monkeypatch, caplog):
     assert persistence.save_game_state(_state(gid))
     monkeypatch.setattr(api, "game_graph", _Graph())
     caplog.set_level(logging.INFO, logger="rpg.turn")
-    lock = api._game_lock(gid)
+    lock = api_core._game_lock(gid)
     holder_has = threading.Event()
     done = threading.Event()
 

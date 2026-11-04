@@ -96,6 +96,7 @@ def pg(monkeypatch):
 @pytest.fixture()
 def world(pg, monkeypatch):
     import api
+    import api_core
     from infrastructure.contracts import Principal, Unauthorized
     from infrastructure.local_adapters import MemoryRateLimiter
     from infrastructure.postgres import PostgresGameStore
@@ -119,7 +120,7 @@ def world(pg, monkeypatch):
         identity_verifier=Identity(), rate_limiter=MemoryRateLimiter(), game_store=store
     )
     monkeypatch.setenv("RPG_SESSION_SECRET", "s" * 32)
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
 
     game_id = uuid.UUID(str(state["game_id"]))

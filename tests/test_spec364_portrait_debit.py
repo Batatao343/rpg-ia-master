@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import api
+import api_core
 from services import creature_art
 from tests.test_image_quotes_local import (  # noqa: F401
     confirm,
@@ -52,7 +53,7 @@ def test_portrait_for_carries_exact_ceiling(monkeypatch):
 
 def test_offer_has_preco_milli(monkeypatch):
     _wire(monkeypatch, switch=True, pricing=True)
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1")
     monkeypatch.setattr(creature_art, "mode", lambda: "on")
     monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: 1)
@@ -65,7 +66,7 @@ def test_offer_has_preco_milli(monkeypatch):
 
 def test_offer_ignores_stale_milli(monkeypatch):
     _wire(monkeypatch, switch=True, pricing=True)
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1")
     monkeypatch.setattr(creature_art, "mode", lambda: "on")
     monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: 3)

@@ -19,6 +19,7 @@ def api_client(monkeypatch, hero: str = "Smoke4A"):
     from fastapi.testclient import TestClient
 
     import api
+    import api_core
 
     for key in CARD_FLAGS:
         monkeypatch.setenv(key, "on")
@@ -36,8 +37,8 @@ def api_client(monkeypatch, hero: str = "Smoke4A"):
         gid = path.replace("\\", "/").rsplit("/", 1)[-1].removesuffix(".json")
         return deepcopy(saved.get(gid))
 
-    monkeypatch.setattr(api, "save_game_state", save)
-    monkeypatch.setattr(api, "load_game_state", load)
+    monkeypatch.setattr(api_core, "save_game_state", save)
+    monkeypatch.setattr(api_core, "load_game_state", load)
     client = TestClient(api.app)
     new = client.post(
         "/game/new",

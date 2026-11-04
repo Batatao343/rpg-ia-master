@@ -7,6 +7,7 @@ from uuid import uuid4
 import pytest
 
 import api
+import api_core
 from infrastructure.contracts import OperationClaim, Principal
 from infrastructure.request_context import principal_scope
 from llm_setup import LLMAttemptEvent, ModelTier
@@ -190,7 +191,7 @@ def test_auxiliary_prologue_collects_llm_usage_without_response_text(monkeypatch
         def complete(self, _claim, **kwargs):
             captured.update(kwargs)
 
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(
         runtime, "get_runtime", lambda: SimpleNamespace(turn_coordinator=Coordinator())
     )
@@ -241,7 +242,7 @@ def test_failed_new_game_records_player_creation_attempt(monkeypatch):
         )
         raise RuntimeError("creation failed")
 
-    monkeypatch.setattr(api, "_begin_create_operation", lambda _req: (claim, "a" * 64, None))
+    monkeypatch.setattr(api_core, "_begin_create_operation", lambda _req: (claim, "a" * 64, None))
     monkeypatch.setattr(api, "_create_game", fail_create)
     monkeypatch.setattr(
         runtime, "get_runtime", lambda: SimpleNamespace(turn_coordinator=Coordinator())

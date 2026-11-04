@@ -105,6 +105,7 @@ def test_campaign_planner_error_logs_template_used(capsys, monkeypatch):
 
     import agents.campaign_manager as cm
     import api
+    import api_core
 
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
     api._rate_hits.clear()
@@ -122,7 +123,7 @@ def test_campaign_planner_error_logs_template_used(capsys, monkeypatch):
         )
         .json()["game_id"]
     )
-    state = api.load_game_state(api._resolve_save_file(gid))
+    state = api_core.load_game_state(api_core._resolve_save_file(gid))
     state["campaign_plan"] = {}  # sem plano anterior => template
 
     class _Boom:

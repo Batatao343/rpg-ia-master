@@ -12,6 +12,7 @@ from fastapi.testclient import TestClient
 import agents.campaign_manager as campaign_manager
 import agents.combat as combat_agent
 import api
+import api_core
 import character_creator
 import persistence
 
@@ -133,8 +134,8 @@ def test_endpoint_cria_e_turno_livre_usa_ataque_basico_sem_llm_ou_rag(monkeypatc
     def forbidden(*_args, **_kwargs):
         raise AssertionError("simulador não pode chamar LLM/RAG")
 
-    monkeypatch.setattr(api, "save_game_state", save)
-    monkeypatch.setattr(api, "load_game_state", load)
+    monkeypatch.setattr(api_core, "save_game_state", save)
+    monkeypatch.setattr(api_core, "load_game_state", load)
     monkeypatch.setattr(character_creator, "get_llm", forbidden)
     monkeypatch.setattr(character_creator, "query_rag", forbidden)
     monkeypatch.setattr(campaign_manager, "get_llm", forbidden)

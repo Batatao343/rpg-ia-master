@@ -60,9 +60,9 @@ def _load(gid):
 
 
 def _wait_lock(gid):
-    import api
+    import api_core
 
-    with api._game_lock(gid):
+    with api_core._game_lock(gid):
         pass
 
 

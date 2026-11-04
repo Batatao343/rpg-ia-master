@@ -9,7 +9,7 @@
   "agents/combat.py": 3729,
   "agents/npc.py": 1604,
   "agents/storyteller.py": 2723,
-  "api.py": 7661,
+  "api.py": 7007,
   "combat_mechanics.py": 1089,
   "infrastructure/wallet.py": 1001,
   "llm_setup.py": 1896,

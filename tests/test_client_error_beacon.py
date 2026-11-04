@@ -118,17 +118,17 @@ def test_rate_limited_per_ip(client, monkeypatch):
 
 def test_public_in_db_profile_without_session(client, monkeypatch):
     """Erro na tela de login (sem sessao) tambem precisa chegar: rota fora da fronteira de sessao."""
-    import api
+    import api_core
 
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     r = client.post("/telemetry/client-error", json=GOOD)
     assert r.status_code == 204
 
 
 def test_cross_origin_rejected(client, monkeypatch):
-    import api
+    import api_core
 
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     r = client.post(
         "/telemetry/client-error", json=GOOD, headers={"Origin": "https://evil.example"}
     )

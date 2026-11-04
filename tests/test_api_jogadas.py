@@ -10,6 +10,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 import agents.combat as combat_agent
 import api
+import api_core
 from services import card_piles as cp
 from tests.test_combat_simulator import _request
 
@@ -337,8 +338,8 @@ def test_api_action_com_jogadas_e_pilhas_na_resposta(monkeypatch):
         gid = path.replace("\\", "/").rsplit("/", 1)[-1].removesuffix(".json")
         return deepcopy(saved.get(gid))
 
-    monkeypatch.setattr(api, "save_game_state", save)
-    monkeypatch.setattr(api, "load_game_state", load)
+    monkeypatch.setattr(api_core, "save_game_state", save)
+    monkeypatch.setattr(api_core, "load_game_state", load)
     monkeypatch.setattr("services.checkpoints.maybe_write", lambda *a, **k: None)
     state = _state(monkeypatch)
     state["game_id"] = "0d8f5b1e-4c3a-4f6e-9b7a-2e1d3c4b5a69"

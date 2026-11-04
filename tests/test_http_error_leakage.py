@@ -5,6 +5,7 @@ from __future__ import annotations
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 
 
 def test_422_does_not_echo_input(monkeypatch):
@@ -115,7 +116,7 @@ def test_unhandled_500_is_generic(monkeypatch):
     def boom(*_a, **_k):
         raise RuntimeError("segredo-interno C:\\x")
 
-    monkeypatch.setattr(api, "load_game_state", boom)
+    monkeypatch.setattr(api_core, "load_game_state", boom)
     client = TestClient(api.app, raise_server_exceptions=False)
     out = client.get("/game/state")
     assert out.status_code == 500

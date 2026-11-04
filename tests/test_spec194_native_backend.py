@@ -6,6 +6,7 @@ from uuid import uuid4
 import pytest
 
 import api
+import api_core
 from infrastructure.contracts import Principal
 from infrastructure.google_play_payments import GooglePlayPurchases
 from services.google_play import obfuscated_account_id
@@ -135,7 +136,7 @@ def test_checklist_forbids_fake_play_flag_in_production():
 def test_api_google_play_refuses_fake_flag_on_vercel_and_missing_key(monkeypatch):
     from fastapi import HTTPException
 
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(
         "infrastructure.runtime.get_runtime",
         lambda: type("R", (), {"game_store": type("G", (), {"pool": None})()})(),

@@ -301,6 +301,7 @@ def test_drenagem_fora_do_lock_do_jogo(gen_on, monkeypatch):
     import time
 
     import api
+    import api_core
     from services import creature_gen_jobs as cgj
 
     rodou = []
@@ -316,7 +317,7 @@ def test_drenagem_fora_do_lock_do_jogo(gen_on, monkeypatch):
     t0 = time.perf_counter()
     api._drain_creature_gen()
     assert time.perf_counter() - t0 < 0.2  # devolve na hora
-    lock = api._game_lock("g-lock")
+    lock = api_core._game_lock("g-lock")
     assert lock.acquire(timeout=0.1)  # a próxima ação do jogo não espera o job
     lock.release()
     cgj.aguardar_drenagem(5)

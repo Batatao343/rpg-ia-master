@@ -11,6 +11,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from observability.metrics import metrics
 from services.auth_sessions import CsrfSigner
@@ -94,7 +95,7 @@ def test_requires_csrf_and_session(monkeypatch):
     monkeypatch.setenv("RPG_SESSION_SECRET", secret)
     monkeypatch.setenv("RPG_CLIENT_LATENCY_REPORT", "1")
     monkeypatch.setenv("RPG_RATE_LIMIT", "0")
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
 
     def verify(cookie):
         if cookie != "valid":

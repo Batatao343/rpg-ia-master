@@ -71,13 +71,14 @@ def _client(monkeypatch, identity, pool):
     from fastapi.testclient import TestClient
 
     import api
+    import api_core
     from infrastructure.postgres_turns import PostgresRateLimiter
 
     runtime = SimpleNamespace(identity_verifier=identity, rate_limiter=PostgresRateLimiter(pool))
     monkeypatch.setenv("RPG_SESSION_SECRET", "s" * 32)
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_MODE", "app")
     monkeypatch.setenv("RPG_AUTH_CAPTCHA_REQUIRED", "0")
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
     client = TestClient(api.app, raise_server_exceptions=False)
     client.headers["Origin"] = ORIGIN

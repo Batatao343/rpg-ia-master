@@ -15,6 +15,7 @@ from langchain_core.messages import (
 )
 
 import api
+import api_core
 import persistence
 from services import checkpoints as cp
 from tests.test_death_flow import _state
@@ -185,7 +186,7 @@ def test_commit_turn_marks_after_checkpoint_success():
 def test_lock_latest_serializes_with_uuid():
     gid = str(uuid.uuid4())
     persistence.save_game_state(_state(gid, hp=20, gold=1))
-    assert api._game_lock(None) is api._game_lock(gid)
+    assert api_core._game_lock(None) is api_core._game_lock(gid)
 
 
 def test_stream_resolves_latest_once(client):
@@ -236,7 +237,7 @@ def test_crash_between_checkpoint_and_save_discards_ahead_checkpoint(client, mon
         raise RuntimeError("crash simulado após o checkpoint")
 
     with monkeypatch.context() as m:
-        m.setattr(api, "_require_saved", _crash)
+        m.setattr(api_core, "_require_saved", _crash)
         m.setattr(api, "_schedule_chronicle_jobs", lambda *_a, **_k: None)
         with pytest.raises(RuntimeError):
             api._commit_turn(
@@ -325,8 +326,8 @@ def test_action_without_game_id_resolves_latest_once(client, monkeypatch):
 
     monkeypatch.setattr(persistence, "get_latest_save_file", _counting)
     seen = []
-    orig_lock = api._game_lock
-    monkeypatch.setattr(api, "_game_lock", lambda g: seen.append(g) or orig_lock(g))
+    orig_lock = api_core._game_lock
+    monkeypatch.setattr(api_core, "_game_lock", lambda g: seen.append(g) or orig_lock(g))
     r = client.post("/game/action", json={"input_text": "olho ao redor"})
     assert r.status_code == 200, r.text
     assert len(calls) == 1

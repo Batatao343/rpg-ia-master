@@ -63,10 +63,10 @@ def test_endpoint_400_com_game_id_invalido():
 
 
 def test_game_id_none_resolve_para_none():
-    import api
+    import api_core
 
-    assert api._resolve_save_file(None) is None
-    assert api._resolve_save_file("") is None
+    assert api_core._resolve_save_file(None) is None
+    assert api_core._resolve_save_file("") is None
 
 
 # ---------------------------------------------------------------------------

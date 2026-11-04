@@ -11,6 +11,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 import persistence
 from services.body_limit import BodyLimitMiddleware, safe_attachment_filename
 
@@ -31,7 +32,7 @@ def _reset_cache():
 
 # ---- R1-R3 -----------------------------------------------------------------
 def test_metrics_db_profile_sem_token_ou_errado_404(client, monkeypatch):
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(api, "_load_metrics_sql", lambda: None)
     monkeypatch.setenv("RPG_METRICS_TOKEN", TOKEN)
     assert client.get("/metrics").status_code == 404
@@ -42,7 +43,7 @@ def test_metrics_db_profile_sem_token_ou_errado_404(client, monkeypatch):
 
 
 def test_metrics_db_profile_sem_env_ou_token_curto_fecha(client, monkeypatch):
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(api, "_load_metrics_sql", lambda: None)
     monkeypatch.delenv("RPG_METRICS_TOKEN", raising=False)
     assert client.get("/metrics").status_code == 404
@@ -58,7 +59,7 @@ def test_metrics_legacy_sem_env_aberto_e_com_env_exige(client, monkeypatch):
 
 
 def test_metrics_sql_cacheado_e_erro_vira_gauge(client, monkeypatch):
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setenv("RPG_METRICS_TOKEN", TOKEN)
     calls = []
 
@@ -72,7 +73,7 @@ def test_metrics_sql_cacheado_e_erro_vira_gauge(client, monkeypatch):
     assert len(calls) == 1
 
     monkeypatch.undo()
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setenv("RPG_METRICS_TOKEN", TOKEN)
     api._metrics_sql_cache.reset()
     import infrastructure.runtime as rt
@@ -236,7 +237,7 @@ def test_stt_8mib_e_stripe_nao_cortados_pelo_middleware(client):
 
 def test_metrics_rate_limit_so_para_sondas_scraper_autenticado_livre(client, monkeypatch):
     """Revisao Sol: scrape de 5 s (12/min) do stack SPEC-106 nao pode cair em 429."""
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(api, "_load_metrics_sql", lambda: None)
     monkeypatch.setenv("RPG_METRICS_TOKEN", TOKEN)
     monkeypatch.setenv("RPG_RATE_LIMIT", "30")

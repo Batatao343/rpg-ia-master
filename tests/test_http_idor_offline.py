@@ -25,8 +25,9 @@ def _a_state(tp):
 
 def test_fixture_is_database_profile(two_principals):
     import api
+    import api_core
 
-    assert api._database_profile()
+    assert api_core._database_profile()
     from fastapi.testclient import TestClient
 
     anon = TestClient(api.app, raise_server_exceptions=False)

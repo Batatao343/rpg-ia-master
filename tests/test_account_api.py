@@ -8,6 +8,7 @@ from uuid import uuid4
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from infrastructure.request_context import current_principal
 
@@ -26,7 +27,7 @@ def test_account_requires_session_and_never_uses_client_owner(monkeypatch):
     runtime = SimpleNamespace(
         identity_verifier=Identity(), game_store=SimpleNamespace(pool=object())
     )
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
 
     class Reader:
@@ -68,7 +69,9 @@ def test_account_requires_session_and_never_uses_client_owner(monkeypatch):
         ],
     }
     monkeypatch.setattr(
-        api, "load_game_state", lambda _path: state if current_principal().user_id == a else None
+        api_core,
+        "load_game_state",
+        lambda _path: state if current_principal().user_id == a else None,
     )
     client = TestClient(api.app)
     assert client.get("/account/balance").status_code == 401
@@ -92,7 +95,7 @@ def test_account_requires_session_and_never_uses_client_owner(monkeypatch):
 def test_history_survives_financial_projection_failure(monkeypatch):
     owner = uuid4()
     gid = str(uuid4())
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(
         "infrastructure.runtime.get_runtime",
         lambda: SimpleNamespace(
@@ -103,7 +106,7 @@ def test_history_survives_financial_projection_failure(monkeypatch):
         ),
     )
     monkeypatch.setattr(
-        api,
+        api_core,
         "load_game_state",
         lambda _path: {
             "game_id": gid,

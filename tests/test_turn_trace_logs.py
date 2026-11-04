@@ -203,12 +203,12 @@ class _FakeRuntime:
 
 
 def _patch_db(monkeypatch, coordinator):
-    import api
+    import api_core
     from infrastructure import request_context, runtime
     from infrastructure.contracts import Principal
 
     principal = Principal(uuid.uuid4(), "iss", "sub")
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(runtime, "get_runtime", lambda: _FakeRuntime(coordinator))
     monkeypatch.setattr(request_context, "current_principal", lambda **k: principal)
 

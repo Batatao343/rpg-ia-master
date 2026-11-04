@@ -9,6 +9,7 @@ from fastapi.routing import APIRoute
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 from tests.fakes.two_principals import (  # noqa: F401  (fixtures)
     HSTS_VALUE,
     assert_security_headers,
@@ -64,7 +65,7 @@ def _surface_response(name: str, monkeypatch, client_factory, two_principals_fix
             last = client.post("/game/action", json={})
         return last, "/game/action"
     if name == "server_500":
-        monkeypatch.setattr(api, "load_game_state", _boom)
+        monkeypatch.setattr(api_core, "load_game_state", _boom)
         return client_factory().get("/game/state"), "/game/state"
     if name == "stream":
         return (

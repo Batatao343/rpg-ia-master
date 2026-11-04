@@ -35,11 +35,12 @@ def test_reclaim_strict_for_running_and_completed_and_foreign():
 
 def test_equip_with_failed_pending_409(monkeypatch):
     import api
+    import api_core
     from infrastructure import request_context, runtime
 
     gid = str(uuid.uuid4())
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
-    monkeypatch.setattr(api, "_failed_pending_operation", lambda state: "op-falha")
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_failed_pending_operation", lambda state: "op-falha")
     monkeypatch.setattr(
         request_context, "current_principal", lambda: SimpleNamespace(user_id=uuid.uuid4())
     )
@@ -61,11 +62,12 @@ def test_equip_with_failed_pending_409(monkeypatch):
 
 def test_death_not_gated_by_failed_pending(monkeypatch):
     import api
+    import api_core
     from infrastructure import request_context, runtime
 
-    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setattr(
-        api, "_failed_pending_operation", lambda state: pytest.fail("death não é gated")
+        api_core, "_failed_pending_operation", lambda state: pytest.fail("death não é gated")
     )
     monkeypatch.setattr(
         request_context, "current_principal", lambda: SimpleNamespace(user_id=uuid.uuid4())

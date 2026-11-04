@@ -6,6 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import api_core
 import persistence
 from services import shared_pool as sp
 from services.shared_pool_models import PoolNamespace, PoolStatus
@@ -107,8 +108,10 @@ def test_submit_after_persist_and_failure_does_not_break_new_game(client, tmp_pa
     store = make_store(tmp_path)
     monkeypatch.setattr(sp, "get_store", lambda: store)
     order: list[str] = []
-    real_save = api.save_game_state
-    monkeypatch.setattr(api, "save_game_state", lambda s: (order.append("save"), real_save(s))[1])
+    real_save = api_core.save_game_state
+    monkeypatch.setattr(
+        api_core, "save_game_state", lambda s: (order.append("save"), real_save(s))[1]
+    )
     real_submit = sp.submit
     body = _prologue(client)
     mine = body["scenario"]["personal_npc"]["name"]
