@@ -39,11 +39,11 @@ def _rank(stage: str) -> int:
 
 def reached(entry: dict | None, stages: Mapping[str, str] | None) -> list[str]:
     """Ids das tramas ligadas cujo estagio ja atingiu o `desde` (ordem do autor)."""
-    out = []
-    for link in normalize_tramas((entry or {}).get("tramas")):
-        if _rank((stages or {}).get(link["id"], "dormente")) >= _rank(link["desde"]):
-            out.append(link["id"])
-    return out
+    return [
+        link["id"]
+        for link in normalize_tramas((entry or {}).get("tramas"))
+        if _rank((stages or {}).get(link["id"], "dormente")) >= _rank(link["desde"])
+    ]
 
 
 def gate_closed(entry: dict | None, stages: Mapping[str, str] | None) -> bool:

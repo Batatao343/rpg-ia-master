@@ -69,7 +69,13 @@ CASES = [
     ("codex", "GET", "/game/codex", None, {"game_id": "{gid}"}),
     ("dossiers", "GET", "/game/codex/dossiers", None, {"game_id": "{gid}"}),
     ("history", "GET", "/game/history", None, {"game_id": "{gid}"}),
-    ("chron_search", "POST", "/game/chronicle/search", {"game_id": "{gid}", "query": "espada longa"}, None),
+    (
+        "chron_search",
+        "POST",
+        "/game/chronicle/search",
+        {"game_id": "{gid}", "query": "espada longa"},
+        None,
+    ),
     ("chron_export", "GET", "/game/chronicle/export", None, {"game_id": "{gid}"}),
     (
         "action",

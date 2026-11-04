@@ -151,9 +151,7 @@ def test_only_world_quests_module_builds_world_kind():
     """R7: nenhum outro modulo monta dict com `world_kind` (so le/propaga)."""
     allowed = {"services/world_quests.py"}
     offenders = []
-    for path in (
-        list(ROOT.glob("services/*.py")) + list(ROOT.glob("agents/*.py")) + list(API_FILES)
-    ):
+    for path in list(ROOT.glob("services/*.py")) + list(ROOT.glob("agents/*.py")) + list(API_FILES):
         rel = path.relative_to(ROOT).as_posix()
         if rel in allowed:
             continue

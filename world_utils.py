@@ -1477,7 +1477,7 @@ def _fauna_presence(
         return None
     day = int((world.get("world_clock") or {}).get("day", 1) or 1)
     pres = fauna.presence_at(world_sim, loc_id, day)
-    if pres and trama_stages:  # SPEC-372: presença de criatura atrás do portão não decide nada
+    if pres and trama_stages:  # noqa: SIM102  SPEC-372: presença de criatura atrás do portão não decide nada
         if fauna.fauna_tramas.gate_closed(fauna.entry(pres["creature_id"]), trama_stages):
             return None
     return pres

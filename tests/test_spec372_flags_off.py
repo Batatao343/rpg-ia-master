@@ -9,7 +9,8 @@ from services import plot_threads as pt
 def test_registrada_off_no_registro():
     import yaml
 
-    reg = yaml.safe_load(open("config/flags.yaml", encoding="utf-8"))
+    with open("config/flags.yaml", encoding="utf-8") as fh:
+        reg = yaml.safe_load(fh)
     flags = reg.get("flags", reg)
     assert flags["RPG_FAUNA_TRAMAS"]["default"] == "off"
 

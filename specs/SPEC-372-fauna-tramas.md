@@ -140,13 +140,19 @@ O id da criatura é escolhido pelo autor na Etapa 4; o exemplo usa só um id rea
 Stage = Literal["dormente", "tocada", "investigada", "revelada"]
 STAGES: tuple[Stage, ...] = ("dormente", "tocada", "investigada", "revelada")
 
+
 def plot_stage(state: dict, thread_id: str) -> Stage: ...
 def plot_stages(state: dict, region_id: str) -> dict[str, Stage]: ...
 
+
 # services/fauna.py
 TRAMAS_MODES = ("off", "on")
+
+
 def tramas_mode() -> str: ...  # "off" se RPG_FAUNA != on ou RPG_PLOT_THREADS != on
 def trama_factor(entry: dict, ctx: EcoCtx) -> tuple[float, str | None]: ...
+
+
 # EcoCtx ganha: trama_stages: Mapping[str, str] (default vazio => sem efeito)
 # Presenca ganha: trama_id: NotRequired[str]
 ```

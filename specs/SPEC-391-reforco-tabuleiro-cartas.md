@@ -256,18 +256,18 @@ Chamado; **N+2** = rodada da chegada [D-391-2 define a chegada; o texto abaixo u
 
 ```python
 class ReinforcementCallState(TypedDict, total=False):
-    trigger_id: str            # "reinf_<leader_id>" (igual ao R16)
+    trigger_id: str  # "reinf_<leader_id>" (igual ao R16)
     leader_id: str
-    via: Literal["carta", "legado"]   # ausente = legado (saves do R16)
+    via: Literal["carta", "legado"]  # ausente = legado (saves do R16)
     stage: Literal["telegraphed", "called"]
-    telegraphed_round: int     # N
-    call_round: int            # N+1
-    called_round: int          # N+1, só depois da jogada efetiva
-    arrival_round: int         # N+2 [D-391-2]
-    warned_round: int          # espelho de called_round (compat. invariante/API legado) [H, R10]
+    telegraphed_round: int  # N
+    call_round: int  # N+1
+    called_round: int  # N+1, só depois da jogada efetiva
+    arrival_round: int  # N+2 [D-391-2]
+    warned_round: int  # espelho de called_round (compat. invariante/API legado) [H, R10]
     fired: bool
     cancelled: bool
-    cause: str                 # "frustrado" | "lider_caido" | "budget"
+    cause: str  # "frustrado" | "lider_caido" | "budget"
 ```
 
 Promessa na cena (mesmo dicionário da SPEC-355, chave = id do líder):
@@ -310,13 +310,25 @@ fera/humanoide é um campo determinístico do bestiário, a confirmar na Etapa 0
 
 ```python
 # services/reinforcement_cards.py
-def eligible() -> bool: ...                          # R1
-def telegraph(scene: dict, leader: dict, combat_meta: dict, round_: int) -> list[str]: ...   # R3
-def on_declaration(scene: dict, actor_id: str, card_id: str | None, round_: int,
-                   combat_meta: dict) -> None: ...   # R7 (chamado por enemy_decks.note_declaration)
-def advance_card_flow(scene: dict, enemies: list[dict], actors_by_id: dict, sides: dict,
-                      combat_meta: dict, round_: int, *, mode: str) -> dict[str, Any]: ...
+def eligible() -> bool: ...  # R1
+def telegraph(scene: dict, leader: dict, combat_meta: dict, round_: int) -> list[str]: ...  # R3
+def on_declaration(
+    scene: dict, actor_id: str, card_id: str | None, round_: int, combat_meta: dict
+) -> None: ...  # R7 (chamado por enemy_decks.note_declaration)
+def advance_card_flow(
+    scene: dict,
+    enemies: list[dict],
+    actors_by_id: dict,
+    sides: dict,
+    combat_meta: dict,
+    round_: int,
+    *,
+    mode: str,
+) -> dict[str, Any]:
+    ...
     # mesmo contrato de reinforcements.advance: {"logs", "spawned", "warned", "telegraphed"}
+
+
 def public_view(combat_meta: dict) -> dict | None: ...  # R10
 ```
 
