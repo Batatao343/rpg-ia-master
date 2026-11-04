@@ -137,3 +137,16 @@ def test_round_trip_save_load_on(monkeypatch):
     stripped = json.loads(json.dumps(e))
     stripped.pop("_deck332")
     assert orch.ensure_combat_sheet(stripped)["cartas"] == before
+
+
+def test_autoral_sem_carta_dos_pools_no_template():
+    """P2-4 (Sol): R10 conta 1 Carta dos pools como 'já montada'; nenhuma autoral pode ter
+    uma no template do bestiário, senão pularia a montagem da família."""
+    pools = edk._pools()
+    known = {c for ids in (*pools["familias"].values(), *pools["faccoes"].values()) for c in ids}
+    sujas = {
+        cid: sorted(known & set(e.get("cartas") or []))
+        for cid, e in _autorais().items()
+        if known & set(e.get("cartas") or [])
+    }
+    assert sujas == {}
