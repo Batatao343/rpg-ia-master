@@ -30,7 +30,7 @@ check "GET /data/map"     200 "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/d
 # Body via arquivo (--data-binary): o curl do Git Bash no Windows corrompe UTF-8
 # passado inline com -d (acentos viram bytes cp1252 → 422 "error parsing the body").
 body="$(mktemp)"
-printf '%s' '{"name":"Smoke","race":"Humano","class_name":"Guerreiro","region":"Nova Arcádia","level":1,"backstory":"smoke test"}' > "$body"
+printf '%s' '{"name":"Smoke","race":"Humano","class_name":"Devoto do Abismo","region":"Nova Arcádia","level":1,"backstory":"smoke test"}' > "$body"
 new=$(curl -s -X POST "$BASE/game/new" -H "Content-Type: application/json" --data-binary "@$body")
 rm -f "$body"
 game_id=$(printf '%s' "$new" | python -c "import sys,json;print(json.load(sys.stdin).get('game_id',''))" 2>/dev/null)
