@@ -209,13 +209,14 @@ def public_outcome(outcome: dict | None) -> dict:
             }
         )
     quests = []
+    quest_titles = outcome.get("quest_titles") or {}
     for q in outcome.get("quests_completed") or []:
         if isinstance(q, dict):
             quests.append(
                 {"id": str(q.get("id") or ""), "title": str(q.get("title") or q.get("id") or "")}
             )
         else:
-            quests.append({"id": str(q), "title": str(q)})
+            quests.append({"id": str(q), "title": str(quest_titles.get(str(q)) or q)})
     return {
         "receipt_id": str(outcome["receipt_id"]),
         "turn": int(outcome.get("turn", 0) or 0),
@@ -226,6 +227,15 @@ def public_outcome(outcome: dict | None) -> dict:
         "items_gained": named,
         "quests_completed": quests,
         "source": str(outcome.get("source") or _source(outcome)),
+    }
+
+
+def _quest_titles(state: dict, ids: list[str]) -> dict[str, str]:
+    wanted = set(ids)
+    return {
+        str(q["id"]): str(q["title"])
+        for q in (state.get("quests") or [])
+        if isinstance(q, dict) and str(q.get("id")) in wanted and q.get("title")
     }
 
 
@@ -248,6 +258,9 @@ def finalize_outcome(state: dict) -> dict:
         f"{state.get('game_id', '')}|{repr(sorted(outcome.items()))}".encode()
     ).hexdigest()[:20]
     outcome["level_after"] = now["level"]
+    titles = _quest_titles(state, outcome["quests_completed"])  # SPEC-390 R2: fora do receipt_id
+    if titles:
+        outcome["quest_titles"] = titles
     outcome["source"] = _source(outcome, baseline.get("gain_origins"))
     outcome["player_message"] = render_player_message(_last_ai_text(state), outcome)
     # SPEC-202 R9: quem respondeu (público). Fora do receipt_id, que permanece

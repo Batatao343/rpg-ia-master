@@ -1,6 +1,6 @@
 # SPEC-390 — Cartas: 3 arestas de texto do 8º smoke (Voto na voz "você", pronome da Provocação no herói, título da missão no recibo)
 
-> **Status:** `approved` (04/11, coordenador, autorização do dono "manda bala"; escopo só de texto/apresentação)
+> **Status:** `in-progress` (04/11, coordenador, autorização do dono "manda bala"; escopo só de texto/apresentação)
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-327
 > **Origem:** smoke local da SPEC-389 ([docs/spec389/smoke-local.md](../docs/spec389/smoke-local.md), achados 1, 2 e 4; resumo em
@@ -82,4 +82,4 @@ Nenhuma decisão aberta: é só texto.
 
 ## 9. Registro de implementação
 
-(a preencher)
+04/11: R1 em `round_log._voce` (troca o herói por "você" na linha do desvio); R3 em `round_log._taunt_lines` (ramo da vítima "Você"); R2 em `turn_outcome` (`quest_titles` aditivo, escrito depois do `receipt_id`; `public_outcome` lê, fallback id). Front sem mudança (`outcomeToast` já usa `title`). Testes: `tests/test_spec390_text.py` (R1, R2, R3, R4 pela API real com MockLLM). Nenhum teste antigo precisou de ajuste. Smoke §6 real (LLM) fica com o coordenador.

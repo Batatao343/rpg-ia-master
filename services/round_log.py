@@ -246,6 +246,10 @@ def _voce(line: str, hero_name: str) -> str:
         if m:
             return f"Sua condição {_cap_cond(m.group(1))} terminou."
         text = "Você" + text[len(hero) :]
+    if hero:  # SPEC-390 R1: o desvio do Voto/Provocação fala "você", nunca o nome do herói
+        m = re.match(rf"^(.+?), provocado por {re.escape(hero)}, muda de alvo\.$", text)
+        if m:
+            return f"{m.group(1)}, provocado por você, muda de alvo."
     m = re.match(r"^(.+?): ganha condição (.+?)\.?$", text)
     if m:
         return f"{m.group(1)} ganha a condição {_cap_cond(m.group(2))}."
@@ -337,9 +341,12 @@ def _taunt_lines(out: dict, names: dict[str, str]) -> list[str]:
         if novo.get("control") == "taunt" and str(novo.get("victim_id")) not in settled:
             src = names.get(str(novo.get("source_id")), "alguém")
             alvo = "você" if src == "Você" else src
+            victim = names.get(str(novo.get("victim_id")), "Alguém")
+            if victim == "Você":  # SPEC-390 R3: sem "a próxima intenção dele" para o herói
+                lines.append(f"Você está provocado por {src}.")
+                continue
             lines.append(
-                f"{names.get(str(novo.get('victim_id')), 'Alguém')} está provocado: "
-                f"a próxima intenção dele mira {alvo} (com chance)."
+                f"{victim} está provocado: a próxima intenção dele mira {alvo} (com chance)."
             )
     return lines
 
