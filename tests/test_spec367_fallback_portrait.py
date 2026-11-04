@@ -9,6 +9,7 @@ import pytest
 from fastapi import HTTPException
 
 import api
+import api_presenters
 from scripts import retire_creature_portrait as rcp
 from services import creature_art as art
 from services.creature_portraits import SnapshotRegistry
@@ -134,7 +135,7 @@ class _Store:
 
 def test_quote_refuses_fallback_409(monkeypatch):
     store = _Store()
-    monkeypatch.setattr(api, "_portrait_store", lambda runtime=None: store)
+    monkeypatch.setattr(api_presenters, "_portrait_store", lambda runtime=None: store)
     state = {
         "game_id": "0a1b2c3d-0000-4000-8000-000000000001",
         "enemies": [{"id": "fallback_criatura_hostil_1", "name": "Criatura hostil"}],

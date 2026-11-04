@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import api
+import api_presenters
 import api_core
 from services import creature_art
 from tests.test_image_quotes_local import (  # noqa: F401
@@ -56,7 +57,7 @@ def test_offer_has_preco_milli(monkeypatch):
     monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1")
     monkeypatch.setattr(creature_art, "mode", lambda: "on")
-    monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: 1)
+    monkeypatch.setattr(api_presenters, "_portrait_price_estilhas", lambda: 1)
     monkeypatch.setitem(api._PORTRAIT_PRICE_CACHE, "milli", 15)
     enemy = {"id": "enemy_goblin_1", "name": "Goblin", "categoria": "padrao"}
     view = api._enemy_portrait({"game_id": "g364", "combat": {}}, {}, enemy, registry=_Registry())
@@ -69,7 +70,7 @@ def test_offer_ignores_stale_milli(monkeypatch):
     monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1")
     monkeypatch.setattr(creature_art, "mode", lambda: "on")
-    monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: 3)
+    monkeypatch.setattr(api_presenters, "_portrait_price_estilhas", lambda: 3)
     monkeypatch.setitem(api._PORTRAIT_PRICE_CACHE, "milli", 15)  # 15 milli => 1 Estilha != 3
     enemy = {"id": "enemy_goblin_1", "name": "Goblin", "categoria": "padrao"}
     view = api._enemy_portrait({"game_id": "g364", "combat": {}}, {}, enemy, registry=_Registry())

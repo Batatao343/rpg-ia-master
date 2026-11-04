@@ -11,6 +11,7 @@ from uuid import uuid4
 import pytest
 
 import api
+import api_presenters
 import workers.dynamic_art_jobs as art_jobs
 from infrastructure.contracts import BlobMetadata, Unauthorized
 from infrastructure.file_blob import FileBlobStore
@@ -175,10 +176,10 @@ def _combat_state(n=3):
 def _live(monkeypatch, rows=None, price=3):
     reg = _CountingRegistry(rows or {})
     monkeypatch.setenv("RPG_CREATURE_ART", "on")
-    monkeypatch.setattr(api, "_creature_art_live", lambda: True)
-    monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: price)
-    monkeypatch.setattr(api, "_portrait_sign", _sign)
-    monkeypatch.setattr(api, "_portrait_store", lambda runtime=None: reg)
+    monkeypatch.setattr(api_presenters, "_creature_art_live", lambda: True)
+    monkeypatch.setattr(api_presenters, "_portrait_price_estilhas", lambda: price)
+    monkeypatch.setattr(api_presenters, "_portrait_sign", _sign)
+    monkeypatch.setattr(api_presenters, "_portrait_store", lambda runtime=None: reg)
     return reg
 
 
@@ -224,7 +225,7 @@ def test_view_without_dynamic_art_never_offers(monkeypatch):
     monkeypatch.setenv("RPG_CREATURE_ART", "on")
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "local")
     monkeypatch.delenv("RPG_DYNAMIC_ART_ENABLED", raising=False)
-    assert api._creature_art_live() is False
+    assert api_presenters._creature_art_live() is False
 
 
 # --- brief ------------------------------------------------------------------------------------

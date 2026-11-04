@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 import api
+import api_presenters
 import api_core
 from services import kill_switches
 from services.shard_pricing import PricingUnavailable
@@ -32,7 +33,7 @@ def _wire(monkeypatch, *, switch: bool, pricing: bool):
     import services.finops_alerts as fa
 
     monkeypatch.setattr(fa, "require_paid_effect", _require)
-    monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: 3)
+    monkeypatch.setattr(api_presenters, "_portrait_price_estilhas", lambda: 3)
 
 
 def test_offer_requires_image_switch(monkeypatch):
@@ -47,7 +48,7 @@ def test_offer_requires_fresh_pricing(monkeypatch):
 
 def test_offer_requires_price(monkeypatch):
     _wire(monkeypatch, switch=True, pricing=True)
-    monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: None)
+    monkeypatch.setattr(api_presenters, "_portrait_price_estilhas", lambda: None)
     assert api._portrait_offer_price() is None
 
 
@@ -60,7 +61,7 @@ def test_offer_requires_dynamic_art_env(monkeypatch):
     monkeypatch.setattr(api_core, "_database_profile", lambda: True)
     monkeypatch.delenv("RPG_DYNAMIC_ART_ENABLED", raising=False)
     monkeypatch.setenv("RPG_CREATURE_ART", "on")
-    assert api._creature_art_live() is False
+    assert api_presenters._creature_art_live() is False
 
 
 def test_offer_store_error_is_closed(monkeypatch):
@@ -87,7 +88,7 @@ def test_offer_implies_quote_ok(monkeypatch, live, db, env, switch, fresh, price
     """Propriedade (2^5 x preço): switch, rate card e preço variam de forma INDEPENDENTE e a afirmação é
     sobre a view que monta a oferta (`_enemy_portrait`): `gerar` presente => a cotação não recusa."""
     _wire(monkeypatch, switch=switch, pricing=fresh)
-    monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: price)
+    monkeypatch.setattr(api_presenters, "_portrait_price_estilhas", lambda: price)
     monkeypatch.setattr(api_core, "_database_profile", lambda: db)
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1" if env else "0")
     from services import creature_art
@@ -96,7 +97,7 @@ def test_offer_implies_quote_ok(monkeypatch, live, db, env, switch, fresh, price
     state = {"game_id": "g363", "combat": {}}
     enemy = {"id": "enemy_goblin_1", "name": "Goblin", "categoria": "padrao"}
     view = api._enemy_portrait(
-        state, {}, enemy, registry=_Registry() if api._creature_art_live() else None
+        state, {}, enemy, registry=_Registry() if api_presenters._creature_art_live() else None
     )
     gerar = (view or {}).get("gerar")
     if gerar:

@@ -7,7 +7,7 @@ api.py::_access_log::1
 api.py::_attempt_telemetry_hook::1
 api_core.py::_bind_corr::1
 api.py::_correlation_boundary::1
-api.py::_death_block::1
+api_presenters.py::_death_block::1
 api.py::_emit_turn_latency_metrics::1
 api_core.py::_game_lock::1
 api.py::_latency_log_fields::1

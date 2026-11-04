@@ -7,6 +7,7 @@ from fastapi import HTTPException
 from pydantic import ValidationError
 
 import api
+import api_presenters
 import api_core
 from services import visual_catalog
 
@@ -87,7 +88,7 @@ def test_quote_enemy_not_in_conflict_422(monkeypatch, enemy_id):
     state = _state()
     if enemy_id == "enemy_goblin_1":
         state["combat"] = {"active": False}
-    monkeypatch.setattr(api, "_portrait_store", lambda runtime=None: _Store())
+    monkeypatch.setattr(api_presenters, "_portrait_store", lambda runtime=None: _Store())
     with pytest.raises(HTTPException) as exc:
         api._monster_quote_inputs(state, _req(enemy_id=enemy_id), None)
     assert exc.value.status_code == 422 and exc.value.detail == "enemy_not_in_conflict"
@@ -95,7 +96,7 @@ def test_quote_enemy_not_in_conflict_422(monkeypatch, enemy_id):
 
 def test_quote_recomputes_key_server_side(monkeypatch):
     store = _Store()
-    monkeypatch.setattr(api, "_portrait_store", lambda runtime=None: store)
+    monkeypatch.setattr(api_presenters, "_portrait_store", lambda runtime=None: store)
     trigger, brief = api._monster_quote_inputs(_state(), _req(enemy_id="enemy_goblin_1"), None)
     assert trigger.trigger_kind == "creature_portrait" and trigger.subject_type == "monster"
     assert trigger.subject_id == "tipo:enemy_goblin" == store.keys[0]
@@ -104,7 +105,7 @@ def test_quote_recomputes_key_server_side(monkeypatch):
 
 
 def test_quote_curated_409(monkeypatch):
-    monkeypatch.setattr(api, "_portrait_store", lambda runtime=None: _Store())
+    monkeypatch.setattr(api_presenters, "_portrait_store", lambda runtime=None: _Store())
     monkeypatch.setattr(
         visual_catalog,
         "visual_for",
@@ -122,7 +123,7 @@ def test_quote_curated_409(monkeypatch):
 @pytest.mark.parametrize("status", ["pending", "ready"])
 def test_quote_existing_409_without_issuing(monkeypatch, status):
     store = _Store({"tipo:enemy_goblin": {"status": status}})
-    monkeypatch.setattr(api, "_portrait_store", lambda runtime=None: store)
+    monkeypatch.setattr(api_presenters, "_portrait_store", lambda runtime=None: store)
     with pytest.raises(HTTPException) as exc:
         api._monster_quote_inputs(_state(), _req(enemy_id="enemy_goblin_1"), None)
     assert exc.value.status_code == 409 and exc.value.detail == "creature_portrait_exists"
@@ -131,7 +132,7 @@ def test_quote_existing_409_without_issuing(monkeypatch, status):
 def test_important_enemy_gets_own_key(monkeypatch):
     state = _state()
     state["enemies"].append({"id": "enemy_goblin_3", "name": "Grishnak", "categoria": "padrao"})
-    monkeypatch.setattr(api, "_portrait_store", lambda runtime=None: _Store())
+    monkeypatch.setattr(api_presenters, "_portrait_store", lambda runtime=None: _Store())
     trigger, brief = api._monster_quote_inputs(state, _req(enemy_id="enemy_goblin_3"), None)
     assert trigger.subject_id == f"unico:{state['game_id']}:goblin:grishnak"
     assert "Grishnak" in brief["subject"]

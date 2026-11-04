@@ -9,6 +9,7 @@ import pytest
 from psycopg_pool import PoolTimeout
 
 import api
+import api_presenters
 from services import kill_switches as ks
 from services.checkout_retry import retry_once
 
@@ -47,19 +48,19 @@ def price_env(monkeypatch):
 
 def test_price_failure_not_cached(price_env):
     price_env.outcomes = [RuntimeError("boom"), 15]
-    assert api._portrait_price_estilhas() is None
+    assert api_presenters._portrait_price_estilhas() is None
     assert api._PORTRAIT_PRICE_CACHE["at"] == 0.0  # nada guardado
-    assert api._portrait_price_estilhas() == 1  # próxima view tenta de novo e acha
+    assert api_presenters._portrait_price_estilhas() == 1  # próxima view tenta de novo e acha
     assert price_env.calls == 2
 
 
 def test_checkout_retry_once_price_registry_switches(price_env):
     price_env.outcomes = [PoolTimeout("checkout"), 15]
-    assert api._portrait_price_estilhas() == 1
+    assert api_presenters._portrait_price_estilhas() == 1
     assert price_env.calls == 2
     price_env.outcomes = [PoolTimeout("a"), PoolTimeout("b")]
     api._PORTRAIT_PRICE_CACHE["at"] = 0.0
-    assert api._portrait_price_estilhas() is None  # 2ª falha: sem oferta, sem exceção
+    assert api_presenters._portrait_price_estilhas() is None  # 2ª falha: sem oferta, sem exceção
 
     state = {"n": 0}
 
@@ -102,7 +103,7 @@ def test_offer_omitted_event_cause(price_env, monkeypatch):
 
     monkeypatch.setattr(pol, "log_event", lambda *a, **k: seen.append((a, k)))
     price_env.outcomes = [RuntimeError("boom")]
-    assert api._portrait_price_estilhas() is None
+    assert api_presenters._portrait_price_estilhas() is None
     ((args, kw),) = seen
     assert args == ("creature_portrait", "offer_omitted")
     assert kw["cause"] == "price_peek_failed" and kw["error_class"] == "RuntimeError"
