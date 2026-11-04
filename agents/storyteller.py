@@ -2590,89 +2590,7 @@ def storyteller_node(state: GameState):
         if t.leveled_player is not None:  # Fase 4.1: XP do beat (inclui o descanso, se houve)
             t.updates["player"] = t.leveled_player
 
-        # Fase 4.3 (R5): item narrado ENTRA no inventário — só se resolver no
-        # ARTIFACTS_DB (storyteller não cria item; isso é papel do loot_node).
-        gained = [
-            g
-            for g in (
-                [] if t.quarantine_llm_payload else (getattr(t.update, "items_gained", []) or [])
-            )
-            if str(g).strip()
-        ]
-        rejected_claims: list[str] = []
-        rejected_item_codes: list[str] = []
-        if gained:
-            from inventory import add_item, get_qty, is_unique, resolve_item_name
-            from services.economy import claim_event, is_unique_available
-
-            proj = t.state.get("world_projection") or {}
-            cur_p = dict(t.updates.get("player") or t.state.get("player") or {})
-            inv = list(cur_p.get("inventory") or [])
-            changed = False
-            seen_unique: set[str] = set()
-            for g in gained:
-                if _is_monetary_claim(g):
-                    # O valor válido já foi aplicado pela exploração/economia.
-                    # Texto do provider nunca concede nem rejeita moeda.
-                    continue
-                iid = resolve_item_name(str(g))
-                if not iid:
-                    _log_event("storyteller", "unknown_item_ignored", level="warning")
-                    rejected_claims.append(str(g))
-                    rejected_item_codes.append("unknown_item")
-                    continue
-                # Fase 6.2: único já reclamado NUNCA re-entra pela narrativa
-                unique = is_unique(iid)
-                if unique and iid in seen_unique:
-                    # Name/ID aliases in one payload represent one grant, not a
-                    # second rejection that would erase the valid first grant.
-                    continue
-                if unique:
-                    seen_unique.add(iid)
-                if unique and (get_qty(inv, iid) > 0 or not is_unique_available(iid, proj)):
-                    _log_event(
-                        "storyteller", "unique_item_claimed_ignored", level="warning", item_id=iid
-                    )
-                    rejected_claims.append(str(g))
-                    rejected_item_codes.append("unique_claimed")
-                    _log_event(
-                        "economy",
-                        "unique_claim_conflict",
-                        level="warning",
-                        source="narrative",
-                        item_id=iid,
-                    )
-                    continue
-                inv = add_item(inv, iid, 1)
-                changed = True
-                if unique:
-                    t.rep_events.append(claim_event(iid, "player"))
-            if changed:
-                cur_p["inventory"] = inv
-                t.updates["player"] = cur_p
-        if rejected_item_codes:
-            _log_narrative_rejected("item", rejected_item_codes)
-        if rejected_claims:
-            clean = prose_guard.remove_rejected_claims(t.narrative_text, rejected_claims)
-            clean = clean or "A busca não produz nenhum objeto utilizável."
-            rejection_note = (
-                "Nenhum outro objeto foi acrescentado aos seus pertences."
-                if changed
-                else "Ao conferir seus pertences, você percebe que nada novo foi obtido."
-            )
-            clean = f"{clean}\n\n{rejection_note}"
-            t.updates["messages"] = [AIMessage(content=clean)]
-            t.updates["narrative_rejections"] = [
-                f"item_rejected:{name}" for name in dict.fromkeys(rejected_claims)
-            ]
-            from persistence import normalize_rejected_item_claims
-
-            t.updates["rejected_item_claims"] = normalize_rejected_item_claims(
-                [
-                    *list(t.state.get("rejected_item_claims") or []),
-                    *rejected_claims,
-                ]
-            )
+        _story_assemble_items(t)
         _story_assemble_events(t)
 
         _story_assemble_quests(t)
@@ -2681,6 +2599,93 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_assemble_items(t: _StoryTurn) -> None:
+    """Itens narrados: só entram os que resolvem no ARTIFACTS_DB."""
+    from services import prose_guard
+
+    # Fase 4.3 (R5): item narrado ENTRA no inventário — só se resolver no
+    # ARTIFACTS_DB (storyteller não cria item; isso é papel do loot_node).
+    gained = [
+        g
+        for g in ([] if t.quarantine_llm_payload else (getattr(t.update, "items_gained", []) or []))
+        if str(g).strip()
+    ]
+    rejected_claims: list[str] = []
+    rejected_item_codes: list[str] = []
+    if gained:
+        from inventory import add_item, get_qty, is_unique, resolve_item_name
+        from services.economy import claim_event, is_unique_available
+
+        proj = t.state.get("world_projection") or {}
+        cur_p = dict(t.updates.get("player") or t.state.get("player") or {})
+        inv = list(cur_p.get("inventory") or [])
+        changed = False
+        seen_unique: set[str] = set()
+        for g in gained:
+            if _is_monetary_claim(g):
+                # O valor válido já foi aplicado pela exploração/economia.
+                # Texto do provider nunca concede nem rejeita moeda.
+                continue
+            iid = resolve_item_name(str(g))
+            if not iid:
+                _log_event("storyteller", "unknown_item_ignored", level="warning")
+                rejected_claims.append(str(g))
+                rejected_item_codes.append("unknown_item")
+                continue
+            # Fase 6.2: único já reclamado NUNCA re-entra pela narrativa
+            unique = is_unique(iid)
+            if unique and iid in seen_unique:
+                # Name/ID aliases in one payload represent one grant, not a
+                # second rejection that would erase the valid first grant.
+                continue
+            if unique:
+                seen_unique.add(iid)
+            if unique and (get_qty(inv, iid) > 0 or not is_unique_available(iid, proj)):
+                _log_event(
+                    "storyteller", "unique_item_claimed_ignored", level="warning", item_id=iid
+                )
+                rejected_claims.append(str(g))
+                rejected_item_codes.append("unique_claimed")
+                _log_event(
+                    "economy",
+                    "unique_claim_conflict",
+                    level="warning",
+                    source="narrative",
+                    item_id=iid,
+                )
+                continue
+            inv = add_item(inv, iid, 1)
+            changed = True
+            if unique:
+                t.rep_events.append(claim_event(iid, "player"))
+        if changed:
+            cur_p["inventory"] = inv
+            t.updates["player"] = cur_p
+    if rejected_item_codes:
+        _log_narrative_rejected("item", rejected_item_codes)
+    if rejected_claims:
+        clean = prose_guard.remove_rejected_claims(t.narrative_text, rejected_claims)
+        clean = clean or "A busca não produz nenhum objeto utilizável."
+        rejection_note = (
+            "Nenhum outro objeto foi acrescentado aos seus pertences."
+            if changed
+            else "Ao conferir seus pertences, você percebe que nada novo foi obtido."
+        )
+        clean = f"{clean}\n\n{rejection_note}"
+        t.updates["messages"] = [AIMessage(content=clean)]
+        t.updates["narrative_rejections"] = [
+            f"item_rejected:{name}" for name in dict.fromkeys(rejected_claims)
+        ]
+        from persistence import normalize_rejected_item_claims
+
+        t.updates["rejected_item_claims"] = normalize_rejected_item_claims(
+            [
+                *list(t.state.get("rejected_item_claims") or []),
+                *rejected_claims,
+            ]
+        )
 
 
 def _story_assemble_events(t: _StoryTurn) -> None:
