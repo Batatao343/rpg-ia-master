@@ -632,3 +632,18 @@ só nessas 4 linhas, em commit próprio com o motivo).
 8. *W1 (04/11):* `spec-373` (conflict_orchestrator, dados de cartas; worktree sujo), `spec-359`, `spec-383-etapa4-wip` (web):
    sem interseção com `agents/storyteller.py`/`agents/combat.py`; `spec-393` mexia em `combat._narrate_outcome` e já pousou
    (rebase feito).
+
+## Registro de execução (04/11, executor — Etapa 3)
+
+`_run_round` 484 → 82 linhas (R1 ≤ 150); `services/conflict_orchestrator.py` 3.046 → 3.283 linhas (baseline de
+`tests/size_budget.json` atualizada só nessa linha e na remoção de `_run_round`, em commit próprio). Commits:
+`_RoundIntents` (3.1), `_round_new_out/_round_refusal/_round_scene_start` (3.2),
+`_round_start_of_round/_round_sequence` (3.3), `_round_actor_loop` (3.4), `_round_end` (3.5). Golden e a lista da
+Etapa 3 verdes a cada passo. Maior helper novo: `_round_actor_loop` (60).
+
+**Desvios (sem mudança de comportamento):** (1) helpers extras para caber em ≤ 60 linhas: `_round_class_mechanics`
+(mecânica de classe do início da rodada, fora de `_round_start_of_round`), `_round_extra_action`,
+`_round_resolve_actor`, `_round_close` (fim de rodada após `_round_end`) e `_RoundIntents.frustrate_pending`
+(o trio `intent_mode == "on" … next_intent … frustrate "incapaz"/"atordoado"` repetido no laço). (2) `declare_extra`
+recebe `lambda aid, a: intents.enemy_decl(aid, a)` em vez do método ligado: o espião do golden distingue
+`function` de `method` na parte `calls`. (3) D6: o gate de branch já existia (SPEC-387); passo 0 dispensado.
