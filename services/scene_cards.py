@@ -18,12 +18,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import unicodedata
 from pathlib import Path
 from typing import Any
 
 from observability.telemetry import log_event as _log_event
+from services.env import env_choice
 
 _CATALOG_PATH = Path(__file__).resolve().parent.parent / "data" / "combat" / "cartas_de_cena.json"
 
@@ -55,8 +55,7 @@ TEMP_PREFIX = "cena_"
 # Flag
 # ==========================================================================
 def mode() -> str:
-    raw = str(os.getenv("RPG_SCENE_CARDS", "off") or "off").strip().lower()
-    return raw if raw in ("off", "shadow", "on") else "off"
+    return env_choice("RPG_SCENE_CARDS", ("off", "shadow", "on"), "off")
 
 
 def active() -> bool:
