@@ -2,7 +2,7 @@
 
 > Gerado por `scripts/cards/painel.py` (SPEC-336). Não edite à mão.
 
-- Cartas de jogador: **523** (meta de 12 meses: ~1200).
+- Cartas de jogador: **526** (meta de 12 meses: ~1200).
 - Cartas de inimigo: **977**.
 - Meta por onda mensal: +60 de jogador e +20 de inimigo (cortes permitidos).
 
@@ -10,11 +10,11 @@
 
 | Valor | Cartas |
 |---|---|
-| Arcanista Cinzento | 96 |
+| Arcanista Cinzento | 97 |
 | Corruptor | 95 |
+| Devoto do Abismo | 95 |
+| Médico de Campo | 95 |
 | Sangromante | 95 |
-| Devoto do Abismo | 94 |
-| Médico de Campo | 94 |
 | Neutra | 40 |
 | Cicatriz | 5 |
 | Ferimento | 3 |
@@ -24,7 +24,7 @@
 
 | Valor | Cartas |
 |---|---|
-| comum | 244 |
+| comum | 247 |
 | incomum | 159 |
 | abissal | 67 |
 | rara | 53 |
@@ -33,7 +33,7 @@
 
 | Valor | Cartas |
 |---|---|
-| 1 | 216 |
+| 1 | 219 |
 | 3 | 105 |
 | 4 | 54 |
 | 5 | 36 |
@@ -48,10 +48,10 @@
 | Valor | Cartas |
 |---|---|
 | dano | 146 |
-| aplicar_condicao | 65 |
+| aplicar_condicao | 67 |
 | protecao | 44 |
 | cura | 41 |
-| contra_ataque | 28 |
+| contra_ataque | 29 |
 | dot | 27 |
 | utilitaria | 25 |
 | torpor | 22 |
@@ -110,4 +110,4 @@
 
 | Valor | Cartas |
 |---|---|
-| 1 | 236 |
+| 1 | 239 |
