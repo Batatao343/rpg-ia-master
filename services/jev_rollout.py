@@ -35,6 +35,7 @@ from concurrent.futures import TimeoutError as FutureTimeout
 from dataclasses import dataclass
 from typing import Any, Literal, cast
 
+from services.env import env_choice
 from services.jev_decision import (
     ChoiceAnswer,
     DecisionBackend,
@@ -123,8 +124,8 @@ def _emit(event: JevRolloutEvent) -> None:
 
 
 def rollout_mode() -> RolloutMode:
-    value = os.getenv("RPG_JEV_ROUTER_MODE", "off").strip().lower()
-    return cast(RolloutMode, value) if value in {"off", "shadow", "primary"} else "off"
+    value = env_choice("RPG_JEV_ROUTER_MODE", {"off", "shadow", "primary"}, "off")
+    return cast(RolloutMode, value)
 
 
 def _threshold() -> float | None:
