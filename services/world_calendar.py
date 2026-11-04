@@ -18,11 +18,11 @@ encontros, pressao); nao cria mecanica paralela. `RPG_CALENDAR=off|shadow|on` (v
 from __future__ import annotations
 
 import hashlib
-import os
 from typing import Any, Literal
 
 from services import world_director as wd
 from services import world_pressures as wp
+from services.env import env_choice
 
 SEASONS: tuple[str, ...] = ("primavera", "verao", "outono", "inverno")
 MODES = ("off", "shadow", "on")
@@ -37,8 +37,7 @@ def mode() -> Literal["off", "shadow", "on"]:
     """R25: `off` se motor ou calendario `off`; `shadow` se qualquer um `shadow`; senao `on`."""
     from services import world_engine
 
-    raw = os.getenv("RPG_CALENDAR", "").strip().lower()
-    cal = raw if raw in MODES else "on"
+    cal = env_choice("RPG_CALENDAR", MODES, "on")
     eng = world_engine.mode()
     if "off" in (eng, cal):
         return "off"
