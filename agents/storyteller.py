@@ -2673,72 +2673,7 @@ def storyteller_node(state: GameState):
                     *rejected_claims,
                 ]
             )
-        reward_note = _reward_confirmation(
-            t.reward_player_before,
-            t.updates.get("player") or t.state.get("player") or {},
-        )
-        if reward_note:
-            current_text = str(t.updates["messages"][0].content or "").rstrip()
-            t.updates["messages"] = [AIMessage(content=f"{current_text}\n\n{reward_note}")]
-        if t.fm_post_notes:  # SPEC-301: resultado do motor sobre a intenção (entrada/recusa/missão)
-            current_text = str(t.updates["messages"][0].content or "").rstrip()
-            t.updates["messages"] = [
-                AIMessage(content=f"{current_text}\n\n" + "\n".join(t.fm_post_notes))
-            ]
-        if t.invalid_story_events:
-            from services.world_validators import reason_code as _reason_code
-
-            _log_narrative_rejected(
-                "event", [_reason_code(e.get("reason")) for e in t.invalid_story_events]
-            )
-            t.updates["narrative_rejections"] = [
-                *list(t.updates.get("narrative_rejections") or []),
-                *[
-                    f"event_rejected:{entry['type']}:{entry['target_id']}"
-                    for entry in t.invalid_story_events
-                ],
-            ]
-        # Viagem/descanso/beat concluído = evento relevante → pede arquivamento.
-        if t.dest or t.rested_player is not None or t.beat_done:
-            t.updates["archive_due"] = True
-        if t.track_bk is not None:  # Fase 6.4: rastro alimenta o Codex (3.2)
-            t.updates["bestiary_knowledge"] = t.track_bk
-        # Fase 2.6: enfileira propostas de evento estruturado (motor valida no archivist).
-        # Fase 3.4: reputation_changed (Python) entra na mesma fila. 4.1: level_up idem.
-        # Fase 6.4: XP de esquiva de armadilha pode ter gerado level_up.
-        pending = (
-            t.pending_llm_events
-            + t.rep_events
-            + t.fm_events
-            + t.level_up_events
-            + t.extra_engine_events
-            + t.discovery_events
-        )
-        if pending:
-            t.updates["pending_world_events"] = (
-                t.state.get("pending_world_events", []) or []
-            ) + pending
-            t.updates["archive_due"] = True  # mudança de mundo é evento relevante
-        if t.rested_player is not None and t.rested_player.get("dead"):
-            t.updates["death_pending"] = True
-            t.updates["archive_due"] = True
-            t.updates["pending_world_events"] = list(
-                t.updates.get("pending_world_events")
-                or t.state.get("pending_world_events", [])
-                or []
-            ) + [
-                {
-                    "type": "player_downed",
-                    "actor_id": "player",
-                    "target_id": "player",
-                    "detail": "O herói tombou numa armadilha durante a viagem.",
-                    "payload": {
-                        "location": t.world.get("current_location", ""),
-                        "cause": "armadilha",
-                    },
-                    "source": "trap",
-                }
-            ]
+        _story_assemble_events(t)
 
         _story_assemble_quests(t)
         return t.updates
@@ -2746,6 +2681,74 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_assemble_events(t: _StoryTurn) -> None:
+    """Recibo de recompensa, notas do motor, eventos pendentes e morte em armadilha."""
+    reward_note = _reward_confirmation(
+        t.reward_player_before,
+        t.updates.get("player") or t.state.get("player") or {},
+    )
+    if reward_note:
+        current_text = str(t.updates["messages"][0].content or "").rstrip()
+        t.updates["messages"] = [AIMessage(content=f"{current_text}\n\n{reward_note}")]
+    if t.fm_post_notes:  # SPEC-301: resultado do motor sobre a intenção (entrada/recusa/missão)
+        current_text = str(t.updates["messages"][0].content or "").rstrip()
+        t.updates["messages"] = [
+            AIMessage(content=f"{current_text}\n\n" + "\n".join(t.fm_post_notes))
+        ]
+    if t.invalid_story_events:
+        from services.world_validators import reason_code as _reason_code
+
+        _log_narrative_rejected(
+            "event", [_reason_code(e.get("reason")) for e in t.invalid_story_events]
+        )
+        t.updates["narrative_rejections"] = [
+            *list(t.updates.get("narrative_rejections") or []),
+            *[
+                f"event_rejected:{entry['type']}:{entry['target_id']}"
+                for entry in t.invalid_story_events
+            ],
+        ]
+    # Viagem/descanso/beat concluído = evento relevante → pede arquivamento.
+    if t.dest or t.rested_player is not None or t.beat_done:
+        t.updates["archive_due"] = True
+    if t.track_bk is not None:  # Fase 6.4: rastro alimenta o Codex (3.2)
+        t.updates["bestiary_knowledge"] = t.track_bk
+    # Fase 2.6: enfileira propostas de evento estruturado (motor valida no archivist).
+    # Fase 3.4: reputation_changed (Python) entra na mesma fila. 4.1: level_up idem.
+    # Fase 6.4: XP de esquiva de armadilha pode ter gerado level_up.
+    pending = (
+        t.pending_llm_events
+        + t.rep_events
+        + t.fm_events
+        + t.level_up_events
+        + t.extra_engine_events
+        + t.discovery_events
+    )
+    if pending:
+        t.updates["pending_world_events"] = (
+            t.state.get("pending_world_events", []) or []
+        ) + pending
+        t.updates["archive_due"] = True  # mudança de mundo é evento relevante
+    if t.rested_player is not None and t.rested_player.get("dead"):
+        t.updates["death_pending"] = True
+        t.updates["archive_due"] = True
+        t.updates["pending_world_events"] = list(
+            t.updates.get("pending_world_events") or t.state.get("pending_world_events", []) or []
+        ) + [
+            {
+                "type": "player_downed",
+                "actor_id": "player",
+                "target_id": "player",
+                "detail": "O herói tombou numa armadilha durante a viagem.",
+                "payload": {
+                    "location": t.world.get("current_location", ""),
+                    "cause": "armadilha",
+                },
+                "source": "trap",
+            }
+        ]
 
 
 def _story_assemble_quests(t: _StoryTurn) -> None:
