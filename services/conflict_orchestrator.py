@@ -2560,6 +2560,185 @@ def run_round(
         fx.unbind(token)
 
 
+class _RoundIntents:
+    """SPEC-382: estado de Presságio/Provocação de UMA rodada (antes, 7 closures de `_run_round`).
+    Guarda as MESMAS referências que os locais guardavam (identidade preservada)."""
+
+    def __init__(
+        self, scene, actors_by_id, sides, out, rng, scene_state, intent_mode, frozen, intent_cursor
+    ):
+        self.scene = scene
+        self.actors_by_id = actors_by_id
+        self.sides = sides
+        self.out = out
+        self.rng = rng
+        self.scene_state = scene_state
+        self.intent_mode = intent_mode
+        self.frozen = frozen
+        self.intent_cursor = intent_cursor
+        self.taunt_spend: dict[
+            str, list[dict]
+        ] = {}  # SPEC-355 R2: Provocações a gastar APÓS a ação
+        self.acted: set[str] | None = None  # ligado onde o laço o cria
+
+    def tf_acted(self) -> set[str] | None:
+        return self.acted if (self.intent_mode == "on" and self.frozen is not None) else None
+
+    def next_intent(self, actor_id: str) -> dict | None:
+        i = self.intent_cursor.get(actor_id, 0)
+        self.intent_cursor[actor_id] = i + 1
+        lst = (self.frozen or {}).get(actor_id) or []
+        return lst[i] if i < len(lst) else None
+
+    def frustrate(self, actor_id: str, intent: dict, motivo: str) -> None:
+        from services import enemy_intent as ei
+
+        # R4/R5: presságio que ficou impossível (gancho da keyword "Interromper", SPEC-330).
+        a = self.actors_by_id.get(actor_id) or {}
+        entry = {"actor_id": actor_id, "tipo": intent["tipo"], "motivo": motivo}
+        if intent.get("interrompido_por"):
+            # SPEC-330 Interromper: o gatilho já rodou na hora da Carta.
+            entry["por"] = intent["interrompido_por"]
+            entry["via"] = "interromper"
+        self.out.setdefault("pressagios_frustrados", []).append(entry)
+        _fire_omen_frustrated(self.out, self.actors_by_id, intent, actor_id)  # SPEC-330 R3
+        self.out["logs"].append(ei.frustrated_line(intent, self.actors_by_id))
+        from services import mechanics_trace as _mt
+
+        _mt.record_step("pressagio_frustrado", actor=actor_id, reason=motivo, card_id=None)
+        logger.info("pressagio_frustrado actor=%s motivo=%s name=%s", actor_id, motivo, _name(a))
+
+    def spend_taunt(self, actor_id: str, actor: dict) -> None:
+        """Cada Provocação desta rodada que decidiu/rolou perde 1 de duração depois da ação do
+        inimigo; zerada, sai com a linha "terminou" (depois do ataque no registro)."""
+        spent = self.taunt_spend.pop(actor_id, None)
+        if not spent:
+            return
+        survivors = []
+        for c in actor.get("active_conditions") or []:
+            if any(c is s for s in spent):
+                c["duration"] = int(c.get("duration", 0) or 0) - 1
+                if c["duration"] <= 0:
+                    self.out["logs"].append(
+                        f"{_name(actor)}: {c.get('name', 'Provocação')} terminou."
+                    )
+                    continue
+            survivors.append(c)
+        actor["active_conditions"] = survivors
+
+    def taunt_same_round(self, actor_id: str, actor: dict, intent: dict) -> tuple[dict, str | None]:
+        """SPEC-355 R2: Provocação aplicada NESTA rodada desvia a intenção de ataque congelada
+        (uma declaração por aplicação). Devolve (declaração, novo alvo ou None)."""
+        decl = intent["declaration"]
+        if intent["tipo"] not in ("ataque", "ataque_multiplo"):
+            return decl, None
+        fresh_sources = {
+            str(n.get("source_id") or "")
+            for n in self.out.get("condicoes_novas") or []
+            if n.get("victim_id") == actor_id and n.get("control") == "taunt"
+        }
+        if not fresh_sources:
+            return decl, None
+        orig = intent.get("alvo_id")
+        candidates = [
+            t for t in _opposing_ids(actor_id, self.sides) if _alive(self.actors_by_id.get(t))
+        ]
+        # só as Provocações NOVAS desta rodada (as antigas de outra fonte não rolam nem gastam)
+        fresh = [
+            c
+            for c in actor.get("active_conditions") or []
+            if c.get("control") == "taunt"
+            and str(c.get("source_actor_id") or "") in candidates
+            and (str(c.get("source_actor_id") or "") in fresh_sources or "" in fresh_sources)
+        ]
+        sources = {str(c.get("source_actor_id") or "") for c in fresh}
+        if not sources or sources == {str(orig)}:
+            return decl, None  # sem fonte válida, ou o alvo já é o provocador: não rola
+        shim = {**actor, "active_conditions": fresh}
+        new = _taunt_target(shim, candidates, self.actors_by_id, self.rng, self.scene)
+        self.taunt_spend.setdefault(actor_id, []).extend(fresh)
+        if not new or new == orig:
+            by = self.actors_by_id.get(sorted(sources)[0]) or {}
+            self.out["logs"].append(
+                f"{_name(actor)} resiste à provocação de {_name(by)}."
+            )  # SPEC-387
+            return decl, None
+
+        def swap(node):
+            if isinstance(node, dict):
+                return {
+                    k: (new if k == "target_id" and v == orig else swap(v)) for k, v in node.items()
+                }
+            if isinstance(node, list):
+                return [swap(v) for v in node]
+            return node
+
+        self.out.setdefault("pressagios_desviados", []).append(
+            {"actor_id": actor_id, "alvo_original": orig, "alvo_novo": new, "por": new}
+        )
+        self.out["logs"].append(
+            f"{_name(actor)}, provocado por {_name(self.actors_by_id[new])}, muda de alvo."
+        )
+        return swap(decl), new
+
+    def enemy_decl(self, actor_id: str, actor: dict):
+        decl = self.enemy_decl_inner(actor_id, actor)
+        _edk_mod.note_declaration(  # SPEC-355 R3: cumprida pela jogada efetiva
+            self.scene,
+            actor_id,
+            getattr(getattr(decl, "acao", None), "card_id", None),
+            cs.tactical_round(self.scene),
+        )
+        return decl
+
+    def enemy_decl_inner(self, actor_id: str, actor: dict):
+        from services import enemy_intent as ei
+
+        def late():
+            return enemy_declaration(
+                self.scene,
+                actor_id,
+                self.actors_by_id,
+                self.sides,
+                scene_state=self.scene_state,
+                rng=self.rng,
+            )
+
+        if self.frozen is None:
+            return late()
+        intent = self.next_intent(actor_id)
+        if self.intent_mode == "shadow":
+            decl_late = late()
+            if intent is not None:
+                sh = self.out.setdefault("intent_shadow", {"total": 0, "changed": 0})
+                sh["total"] += 1
+                sh["changed"] += int(intent["declaration"] != decl_late.model_dump())
+            return decl_late
+        if intent is None or actor.get("_forced_attack"):
+            return late()
+        if intent.get("interrompido_por"):
+            # SPEC-330 Interromper: presságio frustrado não se cumpre (nunca nos dois).
+            self.frustrate(actor_id, intent, "interrompido")
+            return ct.TurnDeclaration(actor_id=actor_id)
+        if ei.still_possible(intent, self.actors_by_id, self.scene):
+            if intent["tipo"] == "render-se":
+                actor["surrendered"] = True
+            decl_dict, desviado = self.taunt_same_round(actor_id, actor, intent)
+            self.out.setdefault("pressagios_cumpridos", []).append(
+                {
+                    "actor_id": actor_id,
+                    "tipo": intent["tipo"],
+                    "alvo_id": desviado or intent.get("alvo_id"),
+                    "carta_id": intent.get("carta_id"),  # SPEC-387 R30
+                }
+            )
+            if not desviado:  # desviado: a linha "muda de alvo" já diz o que acontece
+                self.out["logs"].append(f"{_name(actor)} cumpre o que o presságio anunciava.")  # R8
+            return ct.TurnDeclaration(**decl_dict)
+        self.frustrate(actor_id, intent, "impossivel")
+        return late()
+
+
 def _run_round(
     scene: dict,
     actors_by_id: dict[str, dict],
@@ -2666,146 +2845,9 @@ def _run_round(
             else ei.forecast_round(scene, actors_by_id, sides, rng, scene_state=scene_state)
         )
 
-    def _next_intent(actor_id: str) -> dict | None:
-        i = intent_cursor.get(actor_id, 0)
-        intent_cursor[actor_id] = i + 1
-        lst = (frozen or {}).get(actor_id) or []
-        return lst[i] if i < len(lst) else None
-
-    def _frustrate(actor_id: str, intent: dict, motivo: str) -> None:
-        # R4/R5: presságio que ficou impossível (gancho da keyword "Interromper", SPEC-330).
-        a = actors_by_id.get(actor_id) or {}
-        entry = {"actor_id": actor_id, "tipo": intent["tipo"], "motivo": motivo}
-        if intent.get("interrompido_por"):
-            # SPEC-330 Interromper: o gatilho já rodou na hora da Carta.
-            entry["por"] = intent["interrompido_por"]
-            entry["via"] = "interromper"
-        out.setdefault("pressagios_frustrados", []).append(entry)
-        _fire_omen_frustrated(out, actors_by_id, intent, actor_id)  # SPEC-330 R3
-        out["logs"].append(ei.frustrated_line(intent, actors_by_id))
-        from services import mechanics_trace as _mt
-
-        _mt.record_step("pressagio_frustrado", actor=actor_id, reason=motivo, card_id=None)
-        logger.info("pressagio_frustrado actor=%s motivo=%s name=%s", actor_id, motivo, _name(a))
-
-    taunt_spend: dict[str, list[dict]] = {}  # SPEC-355 R2: Provocações a gastar APÓS a ação
-
-    def _spend_taunt(actor_id: str, actor: dict) -> None:
-        """Cada Provocação desta rodada que decidiu/rolou perde 1 de duração depois da ação do
-        inimigo; zerada, sai com a linha "terminou" (depois do ataque no registro)."""
-        spent = taunt_spend.pop(actor_id, None)
-        if not spent:
-            return
-        survivors = []
-        for c in actor.get("active_conditions") or []:
-            if any(c is s for s in spent):
-                c["duration"] = int(c.get("duration", 0) or 0) - 1
-                if c["duration"] <= 0:
-                    out["logs"].append(f"{_name(actor)}: {c.get('name', 'Provocação')} terminou.")
-                    continue
-            survivors.append(c)
-        actor["active_conditions"] = survivors
-
-    def _taunt_same_round(actor_id: str, actor: dict, intent: dict) -> tuple[dict, str | None]:
-        """SPEC-355 R2: Provocação aplicada NESTA rodada desvia a intenção de ataque congelada
-        (uma declaração por aplicação). Devolve (declaração, novo alvo ou None)."""
-        decl = intent["declaration"]
-        if intent["tipo"] not in ("ataque", "ataque_multiplo"):
-            return decl, None
-        fresh_sources = {
-            str(n.get("source_id") or "")
-            for n in out.get("condicoes_novas") or []
-            if n.get("victim_id") == actor_id and n.get("control") == "taunt"
-        }
-        if not fresh_sources:
-            return decl, None
-        orig = intent.get("alvo_id")
-        candidates = [t for t in _opposing_ids(actor_id, sides) if _alive(actors_by_id.get(t))]
-        # só as Provocações NOVAS desta rodada (as antigas de outra fonte não rolam nem gastam)
-        fresh = [
-            c
-            for c in actor.get("active_conditions") or []
-            if c.get("control") == "taunt"
-            and str(c.get("source_actor_id") or "") in candidates
-            and (str(c.get("source_actor_id") or "") in fresh_sources or "" in fresh_sources)
-        ]
-        sources = {str(c.get("source_actor_id") or "") for c in fresh}
-        if not sources or sources == {str(orig)}:
-            return decl, None  # sem fonte válida, ou o alvo já é o provocador: não rola
-        shim = {**actor, "active_conditions": fresh}
-        new = _taunt_target(shim, candidates, actors_by_id, rng, scene)
-        taunt_spend.setdefault(actor_id, []).extend(fresh)
-        if not new or new == orig:
-            by = actors_by_id.get(sorted(sources)[0]) or {}
-            out["logs"].append(f"{_name(actor)} resiste à provocação de {_name(by)}.")  # SPEC-387
-            return decl, None
-
-        def swap(node):
-            if isinstance(node, dict):
-                return {
-                    k: (new if k == "target_id" and v == orig else swap(v)) for k, v in node.items()
-                }
-            if isinstance(node, list):
-                return [swap(v) for v in node]
-            return node
-
-        out.setdefault("pressagios_desviados", []).append(
-            {"actor_id": actor_id, "alvo_original": orig, "alvo_novo": new, "por": new}
-        )
-        out["logs"].append(
-            f"{_name(actor)}, provocado por {_name(actors_by_id[new])}, muda de alvo."
-        )
-        return swap(decl), new
-
-    def _enemy_decl(actor_id: str, actor: dict):
-        decl = _enemy_decl_inner(actor_id, actor)
-        _edk_mod.note_declaration(  # SPEC-355 R3: cumprida pela jogada efetiva
-            scene,
-            actor_id,
-            getattr(getattr(decl, "acao", None), "card_id", None),
-            cs.tactical_round(scene),
-        )
-        return decl
-
-    def _enemy_decl_inner(actor_id: str, actor: dict):
-        def late():
-            return enemy_declaration(
-                scene, actor_id, actors_by_id, sides, scene_state=scene_state, rng=rng
-            )
-
-        if frozen is None:
-            return late()
-        intent = _next_intent(actor_id)
-        if intent_mode == "shadow":
-            decl_late = late()
-            if intent is not None:
-                sh = out.setdefault("intent_shadow", {"total": 0, "changed": 0})
-                sh["total"] += 1
-                sh["changed"] += int(intent["declaration"] != decl_late.model_dump())
-            return decl_late
-        if intent is None or actor.get("_forced_attack"):
-            return late()
-        if intent.get("interrompido_por"):
-            # SPEC-330 Interromper: presságio frustrado não se cumpre (nunca nos dois).
-            _frustrate(actor_id, intent, "interrompido")
-            return ct.TurnDeclaration(actor_id=actor_id)
-        if ei.still_possible(intent, actors_by_id, scene):
-            if intent["tipo"] == "render-se":
-                actor["surrendered"] = True
-            decl_dict, desviado = _taunt_same_round(actor_id, actor, intent)
-            out.setdefault("pressagios_cumpridos", []).append(
-                {
-                    "actor_id": actor_id,
-                    "tipo": intent["tipo"],
-                    "alvo_id": desviado or intent.get("alvo_id"),
-                    "carta_id": intent.get("carta_id"),  # SPEC-387 R30
-                }
-            )
-            if not desviado:  # desviado: a linha "muda de alvo" já diz o que acontece
-                out["logs"].append(f"{_name(actor)} cumpre o que o presságio anunciava.")  # R8
-            return ct.TurnDeclaration(**decl_dict)
-        _frustrate(actor_id, intent, "impossivel")
-        return late()
+    intents = _RoundIntents(
+        scene, actors_by_id, sides, out, rng, scene_state, intent_mode, frozen, intent_cursor
+    )
 
     player = _find_player(actors_by_id, sides)
     player_id = _player_id(sides)
@@ -2905,9 +2947,7 @@ def _run_round(
     seq += extra
     denied: set[str] = set()
     acted: set[str] = set()
-
-    def _tf_acted() -> set[str] | None:
-        return acted if (intent_mode == "on" and frozen is not None) else None
+    intents.acted = acted
 
     for actor_id in seq:
         actor = actors_by_id.get(actor_id)
@@ -2917,18 +2957,20 @@ def _run_round(
             # aplicado no meio da rodada vale para a próxima, como para todos.
             if actor is None or not _can_act(actor) or actor_id in denied:
                 if intent_mode == "on" and frozen is not None and actor_id not in denied:
-                    _it = _next_intent(actor_id)
+                    _it = intents.next_intent(actor_id)
                     if _it is not None and _it.get("interrompido_por"):
-                        _frustrate(actor_id, _it, "incapaz")  # SPEC-330 Interromper
+                        intents.frustrate(actor_id, _it, "incapaz")  # SPEC-330 Interromper
                 continue
             _mark = _extra_mark(out)
-            decl = _edk_mod.declare_extra(actor, _enemy_decl, actor_id)  # SPEC-373 R12
+            decl = _edk_mod.declare_extra(
+                actor, lambda aid, a: intents.enemy_decl(aid, a), actor_id
+            )  # SPEC-373 R12
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
             _close_extra_action(out, actor, _mark)  # SPEC-387 R29
-            _spend_taunt(actor_id, actor)
+            intents.spend_taunt(actor_id, actor)
             _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
             _mark_fresh_conditions(
-                _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
+                _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=intents.tf_acted()
             )
             continue
         acted.add(actor_id)
@@ -2936,9 +2978,9 @@ def _run_round(
             denied.add(actor_id)
             _note_denied_span(out, actor_id)
             if intent_mode == "on" and frozen is not None:
-                _it = _next_intent(actor_id)
+                _it = intents.next_intent(actor_id)
                 if _it is not None:
-                    _frustrate(actor_id, _it, "incapaz")
+                    intents.frustrate(actor_id, _it, "incapaz")
             continue
         # Controle é observado ANTES do tick: duration=1 precisa negar exatamente
         # esta ação e só então expirar. O fluxo anterior removia stun/sleep antes
@@ -2951,33 +2993,33 @@ def _run_round(
         _check_terminal(actor, actor_id, out, damage_applied=dot_applied, record=True)
         if not _can_act(actor):
             if intent_mode == "on" and frozen is not None:
-                _it = _next_intent(actor_id)
+                _it = intents.next_intent(actor_id)
                 if _it is not None:
-                    _frustrate(actor_id, _it, "incapaz")
+                    intents.frustrate(actor_id, _it, "incapaz")
             continue
         if stunned_this_turn:
             denied.add(actor_id)
             _note_denied_span(out, actor_id)
             out["logs"].append(f"{_name(actor)} está atordoado e perde o turno.")
             if intent_mode == "on" and frozen is not None:
-                _it = _next_intent(actor_id)
+                _it = intents.next_intent(actor_id)
                 if _it is not None:
-                    _frustrate(actor_id, _it, "atordoado")
+                    intents.frustrate(actor_id, _it, "atordoado")
             _expire_stat_conditions(actor, present_at_start, out)
             continue
         decl = declarations.get(actor_id)
         if decl is None:
-            decl = _enemy_decl(actor_id, actor)
+            decl = intents.enemy_decl(actor_id, actor)
         if actor_id == player_id and _deck.deck_mode(state) == "on":
             _deck.resolve_player_plays(
                 scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng
             )
         else:
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
-        _spend_taunt(actor_id, actor)
+        intents.spend_taunt(actor_id, actor)
         _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
         _mark_fresh_conditions(
-            _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
+            _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=intents.tf_acted()
         )
         _expire_stat_conditions(actor, present_at_start, out)
 
@@ -2996,7 +3038,9 @@ def _run_round(
                 _declared[player_id] = _step.target_id
                 break
     _resolve_last_stands(scene, actors_by_id, sides, out, rng, preferred_targets=_declared)
-    _mark_fresh_conditions(_cond_before, actors_by_id, None, sides, taunt_frozen_acted=_tf_acted())
+    _mark_fresh_conditions(
+        _cond_before, actors_by_id, None, sides, taunt_frozen_acted=intents.tf_acted()
+    )
 
     # Estabilização do Estado Terminal disparado nesta rodada (07, R6=A).
     resolve_terminals(actors_by_id, sides, out, scene=scene, rng=rng)
