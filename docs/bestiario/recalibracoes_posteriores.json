@@ -1,0 +1,17 @@
+{
+  "_doc": "Recalibracoes de dial (data/bestiario/mecanica/_ajustes.yaml) feitas DEPOIS da SPEC-373, por spec propria. Os portoes da 373 (tests/test_spec373_artefatos.py, tests/test_spec373_montagem.py) descontam estas ids e seguem exigindo o resto. Protegido (evals/protected-paths.txt): so o autor de eval da spec citada acrescenta. Guarda: a id precisa constar em docs/specNNN/RELATORIO.md ou no arquivo da spec citada, e nao pode estar em docs/spec373/recalibradas.json.",
+  "recalibracoes": {
+    "mon_anzolado_da_casa": {
+      "spec": "SPEC-394",
+      "motivo": "derivada da 387 reprovada (F) na base pos-373; dials c2 d1 f1 s0 -> c2 d2 f1 s1, voltou ao ok"
+    },
+    "mon_armador_de_fosso": {
+      "spec": "SPEC-394",
+      "motivo": "derivada da 387 reprovada (F) na base pos-373; dials c1 d0 f0 s0 -> c2 d2 f0 s4, excecao registrada no relatorio"
+    },
+    "mon_escuta_do_sinal": {
+      "spec": "SPEC-394",
+      "motivo": "derivada da 387 reprovada (F) na base pos-373; dials c1 d1 f0 s2 -> c1 d1 f1 s3, excecao registrada no relatorio"
+    }
+  }
+}

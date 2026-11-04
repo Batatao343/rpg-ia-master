@@ -26,3 +26,4 @@ tests/test_spec372_eval.py
 scripts/bestiario/arena.py
 tests/test_spec373_artefatos.py
 docs/spec373/base/eval
+docs/bestiario/recalibracoes_posteriores.json

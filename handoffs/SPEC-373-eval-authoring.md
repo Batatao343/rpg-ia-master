@@ -223,3 +223,29 @@ e que nenhum commit de produto mexe nesses caminhos.
   Observação: `test_arena_seed_inicio_default_identico` falhou uma vez sob `-n 2`
   (`FileNotFoundError` no `tmp_path`, provável efeito do `os.chdir` do `arena.py` no worker) e
   passou isolado e na rodada seguinte; não é desta mudança.
+
+## 10. Adendo (04/11): recalibrações de specs posteriores (SPEC-394, depois 395)
+
+- **Problema:** a SPEC-394 recalibrou de propósito `mon_anzolado_da_casa`, `mon_armador_de_fosso` e
+  `mon_escuta_do_sinal` (dials em `_ajustes.yaml`, `docs/spec394/RELATORIO.md`, §9 da spec). O
+  portão R8 (`test_portao_recalibradas_igual_aos_dials_mudados`) e o snapshot R2
+  (`test_spec373_montagem.py::test_snapshot_off_existe_e_bate`, não protegido) reprovavam, e
+  travariam toda recalibração futura (a 395 vem a seguir).
+- **Desenho:** registro versionado e **protegido** `docs/bestiario/recalibracoes_posteriores.json`
+  (`recalibracoes: {id: {spec, motivo}}`). Os dois testes descontam **só** essas ids; o resto segue
+  igual. `recalibradas.json`, a base congelada e o hash dos dials não mudam. Rejeitei incluir as ids
+  em `recalibradas.json`: ela define o conjunto da confirmação 40-119 da 373 e misturaria trabalho de
+  outra spec no oráculo dela.
+- **Guarda (`test_registro_de_posteriores_valido`, `avaliar_posteriores`):** cada entrada precisa de
+  `spec` `SPEC-NNN` (≠ 373) e `motivo`; a id está no denominador da 373 (base de dials), **não** está
+  em `recalibradas.json` (desconto não pode afrouxar a lista da 373) e aparece em
+  `docs/specNNN/RELATORIO.md` ou em `specs/SPEC-NNN-*.md`. O `_ajustes.yaml` não cita spec, então
+  não serve de prova.
+- **Known-good/known-bad (`test_posteriores_known_good_e_bad`):** entrada citada passa; id não citada,
+  spec errada, motivo vazio, sem spec, id da 373 e id fora do denominador reprovam; outra id com dial
+  mudado fora do registro segue reprovando no R8. Mutação manual: trocar `mon_escuta_do_sinal` por
+  outra id no registro faz o R8 reprovar de novo.
+- **Regra:** quem acrescenta ao registro é o autor de eval da spec citada, não o executor de produto.
+  A 395 entra aqui quando tiver relatório.
+- **Testes:** `test_spec373_*`, `test_bestiario_calibragem`, `test_ruff_protected_exempt`,
+  `test_handoff_names` (`-n 2`): 59 passed.

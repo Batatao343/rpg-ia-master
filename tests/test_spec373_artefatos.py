@@ -10,6 +10,8 @@ não existem (é o alvo da spec, não um teste quebrado):
   criatura que passava passa a falhar por mais de 3 pp; no máximo 5 falham por até 3 pp (borda);
 - R2/R17 ``off``: células ``off`` idênticas à base para toda criatura fora de
   ``docs/spec373/recalibradas.json`` (lista de ids que o R8 recalibrou; ``[]`` se nenhuma);
+  dial mudado por spec posterior só sai do portão R8 se estiver em
+  ``docs/bestiario/recalibracoes_posteriores.json`` (protegido, validado aqui);
 - R13 chefes: os 13 chefes da esteira com ``L5|off`` e ``L5|on`` em 45-85 %; slots com ``ok``;
   exceção nominal D-373 (dono, 04/11) por célula em ``EXCECOES_CHEFE_D373``, sem piorar > 3 pp;
 - R18 Posturas: ``docs/spec373/posturas-ab-0-19.json`` (``arena_spec355.py base --seeds 0:20``, depois
@@ -306,11 +308,75 @@ def test_base_de_dials_congelada():
 
 
 def test_portao_recalibradas_igual_aos_dials_mudados():
-    """``recalibradas.json`` == ids com dial mudado contra a base, nas duas direções."""
+    """``recalibradas.json`` == ids com dial mudado contra a base, nas duas direções.
+
+    Só desconta as recalibrações de specs posteriores (registro protegido, disjunto da lista da 373)."""
     base = _load(DIALS_BASE)["dials"]
     pos = yaml.safe_load(AJUSTES.read_text("utf-8"))["ajustes"]
     recal = set(_load(DOCS / "recalibradas.json"))
-    assert avaliar_recalibradas(recal, ids_com_dial_mudado(base, pos)) == []
+    mudados = ids_com_dial_mudado(base, pos) - set(posteriores())
+    assert avaliar_recalibradas(recal, mudados) == []
+
+
+# --- Recalibrações posteriores à 373 (adendo, ``handoffs/SPEC-373-eval-authoring.md``) --------
+# Registro versionado e protegido: id -> {spec, motivo}. Os portões da 373 descontam só estas ids.
+POSTERIORES = ROOT / "docs" / "bestiario" / "recalibracoes_posteriores.json"
+
+
+def posteriores() -> dict[str, dict]:
+    return _load(POSTERIORES)["recalibracoes"]
+
+
+def _textos_da_spec(spec: str) -> str:
+    """Relatório ``docs/specNNN/RELATORIO.md`` + arquivo da spec; vazio se nada existir."""
+    num = spec.removeprefix("SPEC-")
+    fontes = [ROOT / "docs" / f"spec{num}" / "RELATORIO.md", *ROOT.glob(f"specs/{spec}-*.md")]
+    return "\n".join(p.read_text("utf-8") for p in fontes if p.is_file())
+
+
+def avaliar_posteriores(
+    reg: dict[str, dict], recal373: set[str], base_ids: set[str], textos: dict[str, str]
+) -> list[str]:
+    """Registro não é lista livre: spec citada, motivo, id conhecida, fora da lista da 373, citada."""
+    erros = []
+    for bid, rec in sorted(reg.items()):
+        spec, motivo = str(rec.get("spec", "")), str(rec.get("motivo", "")).strip()
+        if not spec.startswith("SPEC-") or not motivo:
+            erros.append(f"{bid}: precisa de spec SPEC-NNN e motivo")
+        elif spec == "SPEC-373" or bid in recal373:
+            erros.append(f"{bid}: é da 373 (vai em recalibradas.json, não no registro)")
+        elif bid not in base_ids:
+            erros.append(f"{bid}: fora do denominador da 373")
+        elif bid not in textos.get(spec, ""):
+            erros.append(f"{bid}: não consta no relatório nem na spec {spec}")
+    return erros
+
+
+def test_posteriores_known_good_e_bad():
+    base_ids, recal = {"a", "b", "c"}, {"c"}
+    textos = {"SPEC-900": "| a | 50 / 60 |"}
+    ok = {"a": {"spec": "SPEC-900", "motivo": "m"}}
+    assert avaliar_posteriores(ok, recal, base_ids, textos) == []
+    assert avaliar_posteriores({"b": {"spec": "SPEC-900", "motivo": "m"}}, recal, base_ids, textos)
+    assert avaliar_posteriores({"a": {"spec": "SPEC-901", "motivo": "m"}}, recal, base_ids, textos)
+    assert avaliar_posteriores({"a": {"spec": "SPEC-900", "motivo": " "}}, recal, base_ids, textos)
+    assert avaliar_posteriores({"a": {"motivo": "m"}}, recal, base_ids, textos)
+    assert avaliar_posteriores({"c": {"spec": "SPEC-900", "motivo": "m"}}, recal, base_ids, textos)
+    assert avaliar_posteriores({"z": {"spec": "SPEC-900", "motivo": "z"}}, recal, base_ids, textos)
+    # o desconto é só das ids registradas: outra id com dial mudado segue reprovando
+    mudados = {"a", "c", "x"} - set(ok)
+    assert avaliar_recalibradas(recal, mudados) == [
+        "dial mudado fora da lista (sem confirmação 40-119): ['x']"
+    ]
+
+
+def test_registro_de_posteriores_valido():
+    reg = posteriores()
+    specs = {str(r.get("spec", "")) for r in reg.values()}
+    textos = {s: _textos_da_spec(s) for s in specs}
+    recal = set(_load(DOCS / "recalibradas.json"))
+    base_ids = set(_load(DIALS_BASE)["dials"])
+    assert avaliar_posteriores(reg, recal, base_ids, textos) == []
 
 
 def test_portao_confirmacao_cobre_as_recalibradas():

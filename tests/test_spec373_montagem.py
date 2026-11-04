@@ -37,6 +37,9 @@ def test_snapshot_off_existe_e_bate(monkeypatch):
     bestiary = load_bestiary()
     assert set(snap) == set(bestiary)
     recal = set(json.loads((BASE.parent / "recalibradas.json").read_text("utf-8")))  # R8
+    # Recalibrações de specs posteriores (registro protegido, validado em test_spec373_artefatos).
+    reg = BASE.parents[1] / "bestiario" / "recalibracoes_posteriores.json"
+    recal |= set(json.loads(reg.read_text("utf-8"))["recalibracoes"])
     for bid, entry in bestiary.items():
         if bid in recal:
             continue
