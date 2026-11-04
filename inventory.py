@@ -17,6 +17,7 @@ import unicodedata
 from typing import Dict, List, Optional, Tuple
 
 from gamedata import ARTIFACTS_DB
+from services import text as _text
 
 UNKNOWN_ID = "item_desconhecido"
 SLOTS = ("weapon", "armor", "accessory")
@@ -32,8 +33,7 @@ _SLOT_TYPES = {
 
 
 def _fold(s: str) -> str:
-    nfkd = unicodedata.normalize("NFKD", str(s or ""))
-    return "".join(c for c in nfkd if not unicodedata.combining(c)).strip().lower()
+    return _text.fold(s, case="lower", strip=True)
 
 
 def resolve_item_name(name: str) -> str | None:
