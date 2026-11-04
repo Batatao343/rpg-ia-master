@@ -24,6 +24,7 @@ from typing import Any, Literal
 from uuid import UUID, uuid4
 
 from observability.telemetry import log_event
+from services.env import env_choice
 from services.npc_seed import NpcSeed, seed_signature
 from services.shared_pool_models import (
     PoolEvaluation,
@@ -47,8 +48,7 @@ _NS_SHORT = {
 # Flag e parâmetros
 # --------------------------------------------------------------------------- #
 def pool_mode() -> Literal["off", "shadow", "on"]:
-    raw = str(os.getenv("RPG_SHARED_POOL", "off") or "").strip().lower()
-    return raw if raw in MODES else "off"  # type: ignore[return-value]
+    return env_choice("RPG_SHARED_POOL", MODES, "off")  # type: ignore[return-value]
 
 
 def enabled() -> bool:
