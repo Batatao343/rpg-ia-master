@@ -446,4 +446,36 @@ O balanço é determinístico, e a Fase C é a prova dele. O LLM real entra em d
 
 ## 9. Registro de implementação
 
-(vazio — preencher por fase: Etapa 0, `<sha-A>`, base, passos, final, confirmação, desvios)
+### Fase A (04/11, executor Sol/Opus; revisão Astra pendente)
+
+**`<sha-A>` = `10935009`** (branch `spec-369`): `docs/spec369/metricas_369.py`, `docs/spec369/bot_pressagio.py`, `docs/spec369/base-0-19.json`, `docs/spec369/BASE.md`, `tests/test_spec369_regua.py` e `tests/test_spec369_metas.py`. Se a revisão pedir correção, o sha final de pouso substitui este.
+
+**Etapa 0**
+- `lote-v2` aceita Carta do catálogo como lote: sim. `sim.injected` sobrescreve com `fx.materialize` (idempotente, `services/card_effects.py:217-226`), `build_arms` tira a Carta para montar o `sem` e devolve (`scripts/cards/sim.py:324-336`), e o catálogo sai intacto (conferido). O `uso` chama `sim.simulate_batch(..., protocolo="v2")` com os parâmetros de `PROTOCOLO_LOTE` e as sementes do `--seeds`. Em 0-19, isso é exatamente `simulate_protocolo_lote([carta], protocolo="v2")`. Não foi preciso leave-one-out.
+- `ct._DANO_BASICO_DEFAULT` vale **3**, não 4 (`services/conflict_turn.py:233`). O bot usa a constante, como o R7.2 manda, então o valor 3 vale. A docstring do bot registra isso.
+- Passiva nas preparadas: `_has_vigilia` lê `deck` + `prepared_cards` e aceita qualquer Carta com `buff_iniciativa`, de qualquer `tipo` (`agents/combat.py:1933-1938`). O herói da arena só prepara o que a ficha inicial traz (ex.: `dev_conviccao`, `san_pacto`), e passivas novas não entram sozinhas. Por isso o crédito do D-369-6 é analítico, na mistura da 355 (`metricas_369.tem_iniciativa`).
+- Passo de teste em `basicas.json` (`bas_med_golpe` dano 3 → 4, revertido): equivalência das 308 legadas e snapshot de texto verdes. O R18(b) vale.
+- `custo_folego` explícito numa legada (`arc_descarga` = 2, derivado 1, revertido): golden e snapshot verdes. O D-369-4 é viável sem tocar o golden.
+
+**Base (R9)**
+- R9(a): a `base` **diverge** da 368 porque o catálogo mudou depois de 03/11 (reações iniciais da SPEC-371: `arc1_ini_cinza_nos_olhos`, `dev1_ini_dor_devolvida` e `med1_ini_pinca_no_tendao`). Sem essas 3 Cartas (catálogo em memória e cache de heróis), a mesma execução reproduz r9 e r10 **byte a byte**, como registram `equivalencia_368_sem_cartas_pos_368` e o teste. Vale a base nova.
+- As 7 metas (detalhe em `docs/spec369/BASE.md`):
+  - (1) 1,915 Cartas/rodada, Devoto 1,799;
+  - (2) 15 Cartas com uso > 60 %; R14(a) falha por `arc1_cal_pulso_medido` e `med1_fer_lente_de_protese`; R14(b) falha só por 3 **legadas** (`arc_cal_valvula` +10,0, `dev_ombro_porta` +8,8, `dev_reflexo_bastiao` +8,7); `bomba_estopim` tem +5,0, sem bandeira;
+  - (3) p95 12, Médico 19 com 4,4 % de timeout;
+  - (4) `on-faixa`/`on-cego` = 1,034 (`conhecida`, decks `on`). `on-368` é idêntico a `on-cego`, e o leitor do R7 piora o dano;
+  - (5) não é medida pela régua (§6);
+  - (6) Corruptor realista 50,7 %: **já passa**;
+  - (7) 5 células-alvo: abissal L3, conjurador L5, lider_matilha L3/L5 e predador_apice L3.
+- R19 na base: tudo dentro.
+- Gate do dono (R9c) pendente, com o pedido no fim do BASE.md (D-369-2/3/7, mais as legadas do R14b, o B4 sem alvo e o R17 já atingido).
+
+**Testes**
+- `tests/test_spec369_regua.py`: 11 testes verdes. Inclui o artefato da base (equivalência isolada e o laço próprio do `pressagio`, que reproduz o R10 nos braços `off`/`on-368`).
+- `tests/test_spec369_metas.py` (R11): limiares em `LIMIARES`. Artefato ausente (`final-0-19.json`, `passos-0-19.json`, `confirmacao.json`) → `pytest.xfail`. A suíte default fica verde (15 xfailed), e com `--runxfail` o teste falha pelo motivo certo (`FileNotFoundError`). Rodado contra a base, reprova R13, R14, R15, R16 e R20 e aprova R17 e R19.
+
+**Desvios**
+- `test_spec369_metas.r17` confere só o piso do Corruptor. "Nenhuma outra Postura muda" vale no commit do B2 e fica com a revisão (o B3 move as outras Posturas de propósito).
+- O R9(a) não bate com o JSON da 368 por mudança de catálogo, com a causa isolada.
+- `emboscada` aceita `--base <json>` para reaproveitar o `posturas` já medido, como faz a 355.
+- Cada subcomando grava a sua chave no mesmo JSON de `--out` (mescla).
