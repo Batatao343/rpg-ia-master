@@ -752,12 +752,24 @@ def _static_leaks(forbidden: dict[str, set[str]]) -> list[tuple]:
 
 
 def baseline_360_identical() -> dict:
-    """T7: com a flag `off` (tramas do mundo ligadas), o relatorio da 360 e o baseline."""
+    """T7: com a flag `off` (tramas do mundo ligadas), o relatorio de NA gerado pelo MESMO
+    caminho do `main()` do avaliador da 360/370 (`--regiao nova_arcadia`, arquivo inteiro,
+    secao "SPEC-370 — por regiao" inclusa) e byte-identico ao baseline versionado."""
+    import tempfile
+
     ev = _ev360()
-    with _env(RPG_FAUNA_TRAMAS="off", RPG_PLOT_THREADS="on"):
-        text = ev.render(ev.run(ev.DEFAULT_SEEDS, ev.DEFAULT_DAYS))
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp) / "eval-nova_arcadia.md"
+        with _env(RPG_FAUNA_TRAMAS="off", RPG_PLOT_THREADS="on"):
+            code = ev.main(["--regiao", REGION, "--out", str(out)])
+        text = out.read_text(encoding="utf-8")
     base = BASELINE_360.read_text(encoding="utf-8")
-    return {"identical": text == base, "chars": len(text), "baseline_chars": len(base)}
+    return {
+        "identical": text == base,
+        "chars": len(text),
+        "baseline_chars": len(base),
+        "exit_code": code,
+    }
 
 
 # --------------------------------------------------------------------------- relatorio

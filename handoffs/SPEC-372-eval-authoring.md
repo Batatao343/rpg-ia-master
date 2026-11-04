@@ -63,3 +63,15 @@ bash scripts/dev/py.sh -m pytest tests/test_spec372_eval.py -q -p no:randomly �
 produto falso (scratchpad, fora do repo) run(20,30): correto → T1–T5/T8 ok; sem portão → T1/T2/T3 FALHOU
 bash scripts/dev/py.sh scripts/check_handoff_names.py → ok
 ```
+
+## Correção do T7 após o rebase sobre a SPEC-370 (2026-11-04)
+
+**Motivo.** A SPEC-370 passou a gerar o baseline `docs/spec360/eval-nova_arcadia.md` pelo `main()` do avaliador da 360/370 com `--regiao nova_arcadia`, que acrescenta a seção "SPEC-370 — por região" no fim. O T7 ainda montava o texto com `ev.render(ev.run())`, o caminho só da 360, e por isso faltavam as linhas finais no diff. O relatório da 360 em si não mudou.
+
+**Correção.** `baseline_360_identical()` agora chama `ev.main(["--regiao", "nova_arcadia", "--out", <tmp>])`, o mesmo caminho que gera o baseline. A chamada roda com `RPG_FAUNA_TRAMAS=off` e `RPG_PLOT_THREADS=on`, e o **arquivo inteiro** é comparado byte a byte com o baseline. Não houve afrouxamento: nenhum limiar, cenário ou medida mudou. A comparação ficou mais estrita, porque passa a cobrir também a seção da 370. O código de saída do `main()` vai no resultado só como informação.
+
+**Baseline novo.** sha256 `dcb03ea52e0febb623b4314121717cd3b381be36fa7899217373d6bda4fca02e`. O revisor Sol confere que esse arquivo não muda na branch.
+
+```text
+bash scripts/dev/py.sh -m pytest tests/test_spec372_eval.py -q -p no:randomly → 16 passed (T1–T8 verdes no tip 8eabcb43 + esta correção)
+```
