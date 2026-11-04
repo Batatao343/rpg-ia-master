@@ -159,9 +159,9 @@ def test_identical_repeat_sampled_but_counted(client, capsys):
 
 
 def test_global_line_ceiling(client, capsys, monkeypatch):
-    import api
+    import routes.ops
 
-    monkeypatch.setattr(api, "_CLIENT_ERROR_LOG_MAX_PER_MIN", 2)
+    monkeypatch.setattr(routes.ops, "_CLIENT_ERROR_LOG_MAX_PER_MIN", 2)
     for i in range(4):
         body = {**GOOD, "request_id": f"req{i:09d}"}
         assert client.post("/telemetry/client-error", json=body).status_code == 204
