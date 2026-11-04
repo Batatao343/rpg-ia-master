@@ -99,6 +99,18 @@ def _isolated_saves_and_memory(monkeypatch, tmp_path):
 
 
 @pytest.fixture(autouse=True)
+def _isolated_log_correlation():
+    """SPEC-240: handlers chamados direto fazem ``bind_correlation`` sem escopo na thread
+    principal (em producao cada request tem contexto proprio). Sem isto, o ``game_ref`` de um
+    teste vazava para os eventos dos seguintes (golden da SPEC-382 divergia por ordem)."""
+    from observability import telemetry
+
+    token = telemetry._correlation.set({})
+    yield
+    telemetry._correlation.reset(token)
+
+
+@pytest.fixture(autouse=True)
 def _no_real_embeddings(monkeypatch, request):
     """Desliga embeddings REAIS na suíte offline. Com uma key viva no `.env`
     (ex.: Jina desde a spec embeddings-provider), `query_rag`/archivist
