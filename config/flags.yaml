@@ -198,11 +198,10 @@ RPG_COMPANION_ORDERS:
   expires: 2027-01-25
   note: "ordens a companheiro"
 RPG_COMPANION_ROMANCE:
-  kind: release
+  kind: kill_switch
   default: "on"
   spec: SPEC-300
-  expires: 2027-01-25
-  note: "romance de companheiro"
+  note: "desligamento de conteúdo/classificação etária (romance de companheiro); SPEC-384 D1"
 RPG_COMPANION_SOUL:
   kind: release
   default: "on"

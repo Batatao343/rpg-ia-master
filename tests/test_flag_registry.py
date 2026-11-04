@@ -101,3 +101,9 @@ def test_scan_ignores_truncated_prefix_tokens(tmp_path):
     found = fr.scan_sources(tmp_path)
     assert "RPG_DB_POOL_" not in found
     assert "RPG_REAL_FLAG" in found
+
+
+def test_flag_companion_romance_kill_switch():
+    """SPEC-384 D1: RPG_COMPANION_ROMANCE vira kill_switch (alavanca permanente, sem validade); `off` continua desligando."""
+    entry = fr.load()["RPG_COMPANION_ROMANCE"]
+    assert entry["kind"] == "kill_switch" and not entry.get("expires")
