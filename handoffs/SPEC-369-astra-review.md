@@ -1,6 +1,6 @@
 # SPEC-369 — revisão astra (review)
 
-> **Veredito:** `APPROVED` (rodada 2, `ab9a4f15`). Rodada 1: `CHANGES_REQUIRED` (1 P1, 2 P2, 5 P3), tudo corrigido
+> **Veredito:** `APPROVED` (rodada 3, `8fe4e0dd` + `b14c66c1`; rodada 2 `APPROVED`; rodada 1 `CHANGES_REQUIRED`, corrigida)
 > **Revisor:** Astra (Opus 5.5, semântica de avaliador; não escreveu o código) · **Data:** 2026-11-04 · **Commit revisado:** `2361ca66` (régua `10935009`)
 
 ## Escopo
@@ -98,4 +98,22 @@ R2 continua limpo (`git diff --exit-code main...HEAD` vazio nos caminhos protegi
 bash scripts/dev/pt.sh tests/test_spec369_regua.py tests/test_spec369_metas.py → 13 passed, 15 xfailed (-n 2)
 ruff check docs/spec369 tests/test_spec369_*.py → All checks passed
 git diff --exit-code main...HEAD -- <R2> → vazio
+```
+
+## Rodada 3 (pós-pouso: `8fe4e0dd` e `b14c66c1`, autor da régua)
+
+**Veredito: `APPROVED`.** A prova ficou igual ou mais forte, e nenhum número da base mudou.
+
+- **`8fe4e0dd`: a prova ficou mais forte.** Antes, o teste afirmava "o Corruptor não tem Carta `buff_iniciativa`", um fato de catálogo que o B2 tornou falso. Agora ele faz duas coisas:
+  - sob `sem_cartas(ini)`, reproduz o estado da base e exige que não haja crédito;
+  - para cada Carta `buff_iniciativa` do Corruptor, exige `tipo == "passiva"`, nenhum crédito da 355 (`full_deck`) e crédito pelo D-369-6 no `level_req`.
+
+  Isso também garante que a Carta do B2 só pesa no `realista_369`. Os casos do Devoto e do Sangromante não mudaram.
+- **`b14c66c1`: a saída padrão não muda.** O recorte `classes` / `classes_sel` tem default `None`, e `_classes_arg(None)` continua devolvendo todas as Posturas. O `_dispatch` chama `cmd_posturas(seeds)` e `cmd_emboscada(seeds, base)` sem o recorte (`metricas_369.py:620,626`). O teste novo prova duas coisas: `posturas` dá o mesmo resultado antes e depois do `emboscada` (o patch não vaza estado), e `base_total` é igual a `posturas`. Ele também confere que `orch.run_round` e `has_initiative_card` foram devolvidos. A explicação do Médico (45,8 % é a base e 46,7 % é o braço `initiator="enemy"`) é coerente com o código.
+- **Números:** `git diff 8fe4e0dd~1 b14c66c1 -- base-0-19.json BASE.md test_spec369_metas.py` sai vazio. Limiares e artefatos estão intactos.
+- **P3-7 (novo, para o coordenador):** o §9 registra `<sha-A>` = `8985c4c0`, mas a régua mudou depois. Assim, o `git diff --exit-code <sha-A> -- <arquivos da Fase A>` da Etapa 8 deixa de sair vazio. Há duas saídas: registrar no §9 que `8fe4e0dd`/`b14c66c1` são emendas de autor de eval e passar a usar como `<sha-A>` efetivo o último commit da régua (equivalente pós-rebase de `b14c66c1`), ou listar esses dois commits como exceção na prova do R1. O `git log` do R1 também mostra que estes commits são do autor da régua, não do executor da Fase B. Confirme que foram agentes distintos.
+
+```text
+bash scripts/dev/pt.sh tests/test_spec369_regua.py tests/test_spec369_metas.py → 14 passed, 15 xfailed (-n 2)
+git diff 8fe4e0dd~1 b14c66c1 -- docs/spec369/base-0-19.json docs/spec369/BASE.md tests/test_spec369_metas.py → vazio
 ```
