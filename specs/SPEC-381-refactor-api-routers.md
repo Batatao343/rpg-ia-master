@@ -583,7 +583,7 @@ Na Etapa 8 (`billing`) entra a troca `app.routes` → `request.app.routes` (R21)
 - [x] R13b: `patch_liveness` antes = depois; mutação dos não-callable falha antes e depois
 - [x] R14: contagens dos 13 scanners iguais ao base
 - [x] Catálogo de eventos byte-igual (R8)
-- [x] R15/R16/R17: bundle, gates por caminho e baseline do Ruff conforme
+- [x] R15/R16/R17: bundle, gates por caminho e baseline do Ruff conforme, exceto R17(b): ~106 imports mortos em `api.py` (follow-up, revisão Sol P2-1)
 - [x] R18: golden de 404 igual; lista de sites não convertidos no handoff
 - [x] `api.py` ≤ ~1.300 linhas; maior módulo novo é `routes/turn.py`
 - [x] W2 completo: suíte, evals `compare` sem diferença, playtest com mesma contagem
