@@ -2389,58 +2389,7 @@ def _combat_node(state: GameState):
 
     t.active = [e for e in t.enemies if e.get("status") == "ativo" and not e.get("dead")]
     if not t.active:
-        import party as party_mod
-
-        t.party = party_mod.backfill_party(t.state.get("party") or [])
-        t.enemy_refs = [
-            str(value)
-            for enemy in t.enemies
-            for value in (enemy.get("id"), enemy.get("name"))
-            if value
-        ]
-        t.scene_tr = t.combat_meta.get("scene_allies") or party_mod.scene_allies(
-            t.state, excluded=t.enemy_refs
-        )
-        t.allies = [
-            orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.party if a.get("active")
-        ] + [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.scene_tr]
-        # Saves legados podem ter somente o status textual. O summary precisa das
-        # flags canônicas usadas por build_summary.
-        for participant in t.enemies + t.allies:
-            status = str(participant.get("status") or "").lower()
-            if status == "morto":
-                participant["dead"] = True
-                participant["conscious"] = False
-            elif status == "fugiu":
-                participant["fled"] = True
-            elif status == "rendido":
-                participant["surrendered"] = True
-        t.conflict_sum = summ.build_summary(
-            [t.player] + t.enemies + t.allies,
-            scene=t.scene,
-            extras={"turn": t.turn, "conflict_id": t.combat_meta.get("instance_id")},
-        )
-        t.combat_meta["last_player_action"] = _canonical_player_action(None, {}, attempted=False)
-        early_outcome = _encounter_outcome(
-            player=t.player, enemies=t.enemies, hero_fled=False, player_dead=False
-        )
-        t.combat_meta = _finish_encounter(
-            t.combat_meta, t.enemies, early_outcome, loot=not t.is_simulation
-        )
-        return {
-            "messages": [AIMessage(content="O silêncio retorna ao campo. Vitória.")],
-            "next": "loot",
-            "combat_target": None,
-            "enemies": [],
-            "conflict_summary": t.conflict_sum,
-            "combat": {
-                **t.combat_meta,
-                "active": False,
-                "round": t.combat_meta.get("round", 0),
-                "scene": None,
-            },
-            "archive_due": True,
-        }
+        return _combat_no_active_result(t)
 
     _combat_assemble_sides(t)
     if opening_board:
@@ -2503,6 +2452,59 @@ def _combat_node(state: GameState):
     _combat_result_events(t)
 
     return t.result
+
+
+def _combat_no_active_result(t: _CombatTurn) -> dict:
+    """Sem inimigo ativo: encerra o encontro com vitória silenciosa."""
+    import party as party_mod
+
+    t.party = party_mod.backfill_party(t.state.get("party") or [])
+    t.enemy_refs = [
+        str(value) for enemy in t.enemies for value in (enemy.get("id"), enemy.get("name")) if value
+    ]
+    t.scene_tr = t.combat_meta.get("scene_allies") or party_mod.scene_allies(
+        t.state, excluded=t.enemy_refs
+    )
+    t.allies = [
+        orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.party if a.get("active")
+    ] + [orch.ensure_combat_sheet(dict(a), is_ally=True) for a in t.scene_tr]
+    # Saves legados podem ter somente o status textual. O summary precisa das
+    # flags canônicas usadas por build_summary.
+    for participant in t.enemies + t.allies:
+        status = str(participant.get("status") or "").lower()
+        if status == "morto":
+            participant["dead"] = True
+            participant["conscious"] = False
+        elif status == "fugiu":
+            participant["fled"] = True
+        elif status == "rendido":
+            participant["surrendered"] = True
+    t.conflict_sum = summ.build_summary(
+        [t.player] + t.enemies + t.allies,
+        scene=t.scene,
+        extras={"turn": t.turn, "conflict_id": t.combat_meta.get("instance_id")},
+    )
+    t.combat_meta["last_player_action"] = _canonical_player_action(None, {}, attempted=False)
+    early_outcome = _encounter_outcome(
+        player=t.player, enemies=t.enemies, hero_fled=False, player_dead=False
+    )
+    t.combat_meta = _finish_encounter(
+        t.combat_meta, t.enemies, early_outcome, loot=not t.is_simulation
+    )
+    return {
+        "messages": [AIMessage(content="O silêncio retorna ao campo. Vitória.")],
+        "next": "loot",
+        "combat_target": None,
+        "enemies": [],
+        "conflict_summary": t.conflict_sum,
+        "combat": {
+            **t.combat_meta,
+            "active": False,
+            "round": t.combat_meta.get("round", 0),
+            "scene": None,
+        },
+        "archive_due": True,
+    }
 
 
 def _combat_assemble_sides(t: _CombatTurn) -> None:
