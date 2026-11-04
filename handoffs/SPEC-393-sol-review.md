@@ -55,3 +55,44 @@ pt.sh test_card_epic_caveats, spec353_registry, spec355_golpe_reacao, spec363_ou
 sondas do guard (7 frases) → 3 falsos positivos (negação, "leve" adjetivo, inimigo minúsculo)
 import_bestiary_art.main([pasta com png inválido]) sem --strict → rc 2 (o teste do --strict é vácuo)
 ```
+
+## Rodada 2 (commit `bed61b3d`)
+
+> **Veredito:** `CHANGES_REQUIRED` (um P2 no guard do R3, correção de uma linha) · **Data:** 2026-11-04
+
+Corrigidos e verificados:
+
+- **P1-1:** `events.py` agora tem só +2 linhas sobre a `main`; `ruff format --check` está limpo.
+- **P2-1:** o `--strict` aborta antes de gravar.
+- **P2-3:** o teste agora usa PNG válido e catálogo e saída em `tmp_path`, e prova rc 2 sem gravar e rc 0 sem `--strict`.
+- **P3-1/2/4/5:** feitos (§9, `_side` removido, troca só da última ocorrência, DoT agrupado por condição).
+- **P3-3:** o `_fold` agora vem de `services.economy`, que o reexporta. Seria mais limpo importar do módulo de origem, mas não bloqueia.
+
+**Sobre a dúvida do coordenador ("marcador do herói"):** o guard **não** exige "sua". A troca do teste para "na sua perna" foi cosmética: "Um ferimento na perna direita sangra." continua rejeitado (`parte_fora_do_registro:perna`). O caso do smoke continua pego. Sondas com registro = leve na perna esquerda:
+
+| Prosa | Resultado |
+|---|---|
+| Você cai de joelhos, a perna com ferimento grave. (smoke) | `gravidade:grave` ✔ |
+| O ferimento grave na perna arde enquanto você tomba. | `gravidade:grave` ✔ |
+| Você tomba, o ferimento grave da perna cobrando seu preço. | `gravidade:grave` ✔ |
+| O braço ferido pende inútil enquanto a escuridão chega. | `parte_fora_do_registro:braco` ✔ |
+| O ferimento crítico na cabeça te derruba. | `gravidade:critico` ✔ |
+| **A perna, ferida de forma grave, cede sob você.** | `None` ✘ |
+| **A cabeça, ferida, latejando, cede.** | `None` ✘ |
+| **A ferida grave na perna esquerda sangra sem parar.** | `None` ✘ |
+| Com a perna gravemente ferida, você cai. | `None` (sinônimo fora do vocabulário) |
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-4 | P2 | services/death_prose_guard.py:17 | A correção do P2-2 introduziu uma regressão: `_THIRD_PARTY` (`^(o\|a\|…) \w+(?: \w+)?, ferid`) trata a **parte do corpo** como terceiro. Por isso "A perna, ferida de forma grave…" e "A cabeça, ferida…" passam, e essa é a forma mais comum na voz "você". | Excluir as partes do corpo do sujeito: `^(?:o\|a\|os\|as\|um\|uma) (?!(?:braco\|perna\|torso\|cabeca)s?\b)\w+(?: \w+)?, ferid`. Testes: as duas frases acima devem ser rejeitadas, e "O lobo, ferido na perna, recua." continua passando. |
+| P2-5 | P2 | services/death_prose_guard.py:18,45 | `_NEGATION` vale para a sentença inteira, então "sem parar" ou "não" em qualquer ponto anula o guard. | Exigir a negação a até ~2 palavras antes do termo de ferimento ou gravidade, por exemplo `\b(?:sem\|nenhum\|nenhuma\|nao)\s+(?:\w+\s+){0,2}(?:ferid\|ferimento\|leve\|grave\|critico)`. Teste: "A ferida grave na perna esquerda sangra sem parar." deve ser rejeitada, e "Sem ferimentos graves na perna…" continua passando. |
+| P3-6 | P3 | services/death_prose_guard.py:12 | "gravemente"/"criticamente" ficam fora do vocabulário. | Opcional: `(leve\|grave\|critico)(?:s\|mente)?`. |
+
+Comandos (rodada 2):
+
+```text
+sondas death_prose_guard.check (14 frases) → smoke pego; 3 falsos negativos (P2-4, P2-5)
+ruff format --check events.py, death_prose_guard.py, import_bestiary_art.py → formatted
+ruff check (arquivos alterados) → All checks passed
+pt.sh card_epic_caveats, import_bestiary_art, spec353_registry, spec355_golpe_reacao, spec363_outcome_text, spec346_outcome, death_flow, checkpoints, log_event_registry, size_budget, no_silent_except → 201 passed
+```
