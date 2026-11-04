@@ -265,7 +265,7 @@ uuid-utils==0.17.0
     #   langsmith
 uvicorn==0.52.4
     # via rpg-ia-master
-websockets==16.1.1
+websockets==17.2
     # via
     #   google-genai
     #   langgraph-sdk
