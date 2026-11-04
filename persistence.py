@@ -30,6 +30,7 @@ from services.conflict_summary import (
     normalize_consumed_conflict_ids,
 )
 from services.entity_identity import coalesce_runtime_npcs
+from services.env import is_database_profile
 from services.memory_provenance import (
     MAX_MEMORY_PROMOTIONS,
     MAX_MEMORY_REJECTIONS,
@@ -384,7 +385,7 @@ def list_saves() -> list[dict[str, Any]]:
     """Resumo de todos os saves de `saves/*.json`, ordenado por mtime desc.
     Leitura TOLERANTE: arquivo corrompido/ilegível é pulado, nunca derruba a
     lista (R1)."""
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
 
@@ -442,7 +443,7 @@ def delete_save(game_id: str) -> bool:
     """Remove o save E o índice de memória da sessão (senão vira lixo órfão).
     ValueError se game_id não é UUID (mesmo padrão do save_path — Fase 10);
     False se o save não existe."""
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         from infrastructure.request_context import current_principal
         from infrastructure.runtime import get_runtime
 
@@ -780,7 +781,7 @@ def save_game_state(state: dict[str, Any]) -> bool:
     if not state:
         return False
 
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         try:
             from infrastructure.request_context import current_principal
             from infrastructure.runtime import get_runtime
@@ -840,7 +841,7 @@ def load_game_state(specific_file: str = None) -> dict[str, Any]:
     Carrega o jogo. Se specific_file não for passado, carrega o mais recente.
     """
     _t0 = time.monotonic()
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         try:
             from infrastructure.request_context import current_principal
             from infrastructure.runtime import get_runtime
@@ -1205,7 +1206,7 @@ def save_checkpoint(state: dict[str, Any]) -> bool:
         state.get("continuity"),
         canonical_turn=int((state.get("world") or {}).get("turn_count", 0) or 0),
     )
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         try:
             from infrastructure.request_context import current_principal
             from infrastructure.runtime import get_runtime
@@ -1270,7 +1271,7 @@ def save_checkpoint(state: dict[str, Any]) -> bool:
 
 def has_checkpoint(game_id: str) -> bool:
     """True só se o slot existe E é um save legível (SPEC-228 R1)."""
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         return load_checkpoint(game_id) is not None
     path = _safe_save_path(game_id, suffix=".checkpoint")
     if not os.path.exists(path):
@@ -1304,7 +1305,7 @@ def ensure_synthetic_checkpoint(state: dict[str, Any]) -> bool:
         return False
     if (state.get("combat_simulation") or {}).get("enabled"):
         return False
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         return False
     gid = str(state["game_id"])
     turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
@@ -1334,7 +1335,7 @@ def load_checkpoint(game_id: str) -> dict[str, Any] | None:
     """Carrega o checkpoint do `game_id` (None se não houver). Reconstrói via
     `_raw_to_state` (mesmo pipeline de migrations do save vivo)."""
     _t0 = time.monotonic()
-    if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy":
+    if is_database_profile():
         try:
             from infrastructure.request_context import current_principal
             from infrastructure.runtime import get_runtime
