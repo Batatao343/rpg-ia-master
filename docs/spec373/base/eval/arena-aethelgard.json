@@ -1,0 +1,291 @@
+{
+ "regiao": "aethelgard",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 150.7,
+ "criaturas": {
+  "mon_doador_inacabado": {
+   "nome": "Doador Inacabado",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.59,
+    "L3|on": 0.61
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_dentado_de_eras": {
+   "nome": "Dentado de Eras",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.695,
+    "L3|on": 0.725
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_avesso_de_oghma": {
+   "nome": "Avesso de Oghma",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.58,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_fervido_da_corrente": {
+   "nome": "Fervido da Corrente",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.605,
+    "L3|on": 0.735
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_esqueleto_mago": {
+   "nome": "Iniciado Refratado",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.475,
+    "L3|on": 0.545
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_fantasma": {
+   "nome": "Nadador Transparente",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.625,
+    "L3|on": 0.54
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_golem_carne": {
+   "nome": "Encomenda Costurada",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.71,
+    "L3|on": 0.66
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cacao_de_lastro": {
+   "nome": "Cação de Lastro",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.695,
+    "L5|on": 0.625
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_bigua_de_vidro": {
+   "nome": "Biguá de Vidro",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.775,
+    "L3|on": 0.78
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_aranha_de_bolha": {
+   "nome": "Aranha de Bolha",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.585,
+    "L3|on": 0.83
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lesma_de_penacho": {
+   "nome": "Lesma de Penacho",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.8,
+    "L3|on": 0.655
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ourico_de_lajedo": {
+   "nome": "Ouriço de Lajedo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.79,
+    "L3|on": 0.825
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cupinzeiro_de_vidro": {
+   "nome": "Cupinzeiro de Vidro",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.735,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_camarao_faxineiro": {
+   "nome": "Camarão Faxineiro",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.755,
+    "L3|on": 0.835
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_quimera_cristal": {
+   "nome": "Ariranha de Arcada",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.79,
+    "L3|on": 0.71
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on delta 9.0 pp > 8"
+   ]
+  },
+  "mon_peito_de_sino": {
+   "nome": "Peito de Sino",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.67,
+    "L3|on": 0.83
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mao_de_oghma": {
+   "nome": "Mão de Oghma",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.71,
+    "L3|on": 0.52
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_alambique_de_carne": {
+   "nome": "Alambique de Carne",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.625,
+    "L3|on": 0.705
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_aspirante_de_coral": {
+   "nome": "Aspirante de Coral",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.565,
+    "L3|on": 0.82
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_comedor_de_alga": {
+   "nome": "Comedor de Alga",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.58,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lambedor_de_aboboda": {
+   "nome": "Lambedor de Abóbada",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.67,
+    "L3|on": 0.81
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_pernalta_do_conselho": {
+   "nome": "Pernalta do Conselho",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.62,
+    "L3|on": 0.615
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_veu_faminto": {
+   "nome": "Véu Faminto",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.58,
+    "L3|on": 0.715
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_novelo_de_anzois": {
+   "nome": "Novelo de Anzóis",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.66,
+    "L3|on": 0.83
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_subida_de_cracas": {
+   "nome": "Subida de Cracas",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.585,
+    "L3|on": 0.81
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

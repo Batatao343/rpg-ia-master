@@ -1,0 +1,238 @@
+{
+ "regiao": "ophidia",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 114.3,
+ "criaturas": {
+  "mon_nadador_escaldado": {
+   "nome": "Nadador Escaldado",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.795,
+    "L3|on": 0.675
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ossada_de_pomes": {
+   "nome": "Ossada de Pomes",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.76,
+    "L3|on": 0.725
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cabeleira_de_vidro": {
+   "nome": "Cabeleira de Vidro",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.725,
+    "L3|on": 0.835
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_vazado_da_mare": {
+   "nome": "Vazado da Maré",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.595,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_desbotado_da_nevoa": {
+   "nome": "Desbotado da Névoa",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.845,
+    "L3|on": 0.74
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_turu_de_casco": {
+   "nome": "Turu de Casco",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.57,
+    "L3|on": 0.83
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_vela_sem_barco": {
+   "nome": "Vela sem Barco",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.475,
+    "L3|on": 0.815
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lagarto_espirrador": {
+   "nome": "Lagarto Espirrador",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.84,
+    "L3|on": 0.71
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_bucho_de_praia": {
+   "nome": "Bucho de Praia",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.645,
+    "L3|on": 0.775
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cobra_de_sangria": {
+   "nome": "Cobra de Sangria",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.71,
+    "L3|on": 0.745
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_escorpena_de_basalto": {
+   "nome": "Escorpena de Basalto",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.7,
+    "L3|on": 0.6
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_tatuzinho_de_afogado": {
+   "nome": "Tatuzinho de Afogado",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.685,
+    "L3|on": 0.805
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_doente_de_encomenda": {
+   "nome": "Doente de Encomenda",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.795,
+    "L3|on": 0.695
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_puxado_do_oeste": {
+   "nome": "Puxado do Oeste",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.41,
+    "L3|on": 0.84
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 41% fora de 45-85%"
+   ]
+  },
+  "mon_vigia_de_cor_errada": {
+   "nome": "Vigia de Cor Errada",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.465,
+    "L3|on": 0.91
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 91% fora de 45-85%"
+   ]
+  },
+  "mon_trepano_de_borda": {
+   "nome": "Trépano de Borda",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.7,
+    "L3|on": 0.78
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_arpeu_de_bracos": {
+   "nome": "Arpéu de Braços",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.82,
+    "L3|on": 0.72
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ninho_dos_mergulhadores": {
+   "nome": "Ninho dos Mergulhadores",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.625,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mastro_dos_ultimos": {
+   "nome": "Mastro dos Últimos",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.785,
+    "L5|on": 0.525
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_remora_de_conves": {
+   "nome": "Rêmora de Convés",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.805,
+    "L3|on": 0.73
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}
