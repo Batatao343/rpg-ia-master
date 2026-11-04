@@ -20,12 +20,12 @@ from __future__ import annotations
 
 import hashlib
 import math
-import os
 from dataclasses import dataclass, field
 from typing import Any
 
 from services import world_director as wd
 from services import world_pressures as wp
+from services.env import env_choice
 
 MODES = ("off", "shadow", "on")
 DEFAULT_MODE = "on"
@@ -69,8 +69,7 @@ def combat_counts(kind: str) -> bool:
 
 def mode() -> str:
     """`RPG_WORLD_QUESTS`; so vale `on`/`shadow` com o motor de mundo em `on` (R26)."""
-    raw = os.getenv("RPG_WORLD_QUESTS", "").strip().lower()
-    m = raw if raw in MODES else DEFAULT_MODE
+    m = env_choice("RPG_WORLD_QUESTS", MODES, DEFAULT_MODE)
     from services import world_engine
 
     return m if world_engine.mode() == "on" else "off"
