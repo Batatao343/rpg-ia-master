@@ -156,20 +156,17 @@ def _run_post_turn(monkeypatch, caplog, graph, text="avanço", gid=None):
 # --- compat de metricas ------------------------------------------------------
 
 
-def test_old_sse_metric_still_registered_and_observed(client):
-    assert "rpg_sse_first_event_seconds" in LABELS
+def test_old_sse_metric_removida(client):
+    """SPEC-384 D9: `rpg_sse_first_event_seconds` saiu; so `rpg_sse_ack_seconds` fica."""
+    assert "rpg_sse_first_event_seconds" not in LABELS
+    assert "rpg_sse_ack_seconds" in LABELS
     gid = _new_game(client)
-    before = _snap("rpg_sse_first_event_seconds").get(
-        "rpg_sse_first_event_seconds{'route': '/game/action/stream'}.count", 0
-    )
     with client.stream(
         "POST", "/game/action/stream", json={"input_text": "olho ao redor", "game_id": gid}
     ) as r:
         _sse(r)
-    after = _snap("rpg_sse_first_event_seconds")[
-        "rpg_sse_first_event_seconds{'route': '/game/action/stream'}.count"
-    ]
-    assert after == before + 1
+    assert _snap("rpg_sse_first_event_seconds") == {}
+    assert "rpg_sse_first_event_seconds" not in client.get("/metrics").text
 
 
 def test_ack_metric_measures_after_yield(client, monkeypatch):
@@ -185,9 +182,7 @@ def test_ack_metric_measures_after_yield(client, monkeypatch):
 
     monkeypatch.setattr(api_core, "load_game_state", slow_load)
     ack_key = "rpg_sse_ack_seconds{'route': '/game/action/stream'}"
-    old_key = "rpg_sse_first_event_seconds{'route': '/game/action/stream'}"
     ack_before = _snap("rpg_sse_ack_seconds").get(ack_key + ".sum", 0.0)
-    old_before = _snap("rpg_sse_first_event_seconds").get(old_key + ".sum", 0.0)
     try:
         with client.stream(
             "POST", "/game/action/stream", json={"input_text": "olho", "game_id": gid}
@@ -196,9 +191,7 @@ def test_ack_metric_measures_after_yield(client, monkeypatch):
     finally:
         lat.set_clock(None)
     ack_delta = _snap("rpg_sse_ack_seconds")[ack_key + ".sum"] - ack_before
-    old_delta = _snap("rpg_sse_first_event_seconds")[old_key + ".sum"] - old_before
     assert ack_delta >= 1.5
-    assert old_delta < 0.5
 
 
 def test_labels_closed_for_new_metrics():

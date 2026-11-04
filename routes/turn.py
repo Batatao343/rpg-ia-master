@@ -1621,16 +1621,8 @@ def _stream_turn_events(
     Se o consumidor desconectar, a thread termina o save e o ``action_id`` torna
     seguro o fallback POST. O gerador apenas apresenta eventos já produzidos.
     """
-    stream_started = time.monotonic()
     from observability.metrics import metrics
 
-    # DEPRECATED (SPEC-200 R7): mede so o enfileiramento de `accepted`; mantida
-    # para nao abrir buraco em series. A medida honesta e `rpg_sse_ack_seconds`.
-    metrics.observe(
-        "rpg_sse_first_event_seconds",
-        {"route": _STREAM_ROUTE},
-        time.monotonic() - stream_started,
-    )
     outcome["phase"] = "accepted"
     yield _sse("accepted", {"game_id": accepted_game_id})
     timeline.mark("accepted")  # retomada do gerador = proxy de flush
