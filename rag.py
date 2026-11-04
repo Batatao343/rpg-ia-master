@@ -1387,6 +1387,33 @@ def _log_memory_failed(scope: str, exc: Exception) -> None:
         _log_event("rag", "session_memory_failed", level="error", error=type(exc).__name__)
 
 
+def _faiss_add(scope: str, path: str, texts, metadatas, st: dict):
+    """Carrega ou cria o indice FAISS e acrescenta ``texts``; ``None`` = sem embeddings.
+
+    ``st["provider"]`` recebe o provider ja resolvido, mesmo se uma etapa seguinte falhar.
+    """
+    if _has_faiss_index(path):
+        # Índice existente: usa somente o provider pinado.
+        st["provider"] = (_read_meta(path) or {}).get("provider", _LEGACY_PROVIDER)
+        embeddings = _embeddings_for_index(path)
+        if not embeddings:
+            return None
+        db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+        if metadatas is None:
+            db.add_texts(texts)
+        else:
+            db.add_texts(texts, metadatas=metadatas)
+        return db
+    embeddings = get_embeddings()
+    st["provider"] = active_provider() or _resolve_provider()
+    if not embeddings or not st["provider"]:
+        return None
+    os.makedirs(os.path.dirname(path) if scope == "npc" else SAVES_DIR, exist_ok=True)
+    if metadatas is None:
+        return FAISS.from_texts(texts, embeddings)
+    return FAISS.from_texts(texts, embeddings, metadatas=metadatas)
+
+
 def _add_memory(
     scope: str, game_id: str, npc_id: str | None, texts, *, metadatas: list[dict] | None
 ) -> bool:
@@ -1409,48 +1436,27 @@ def _add_memory(
 
     npc_id = npc_id if scope == "npc" else None
     path = ""
-    provider: str | None = None
+    st: dict = {"provider": None}
     common = {"facts_count": facts_count, "metadatas": metadatas}
     try:
         path = _get_npc_path(game_id, npc_id) if scope == "npc" else _get_session_path(game_id)
-        if _has_faiss_index(path):
-            # Índice existente: usa somente o provider pinado.
-            provider = (_read_meta(path) or {}).get("provider", _LEGACY_PROVIDER)
-            embeddings = _embeddings_for_index(path)
-            if not embeddings:
-                return _memory_result(
-                    scope, False, game_id, npc_id, path=path, provider=provider,
-                    error="embeddings_unavailable", **common,
-                )  # fmt: skip
-            db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
-            if metadatas is None:
-                db.add_texts(texts)
-            else:
-                db.add_texts(texts, metadatas=metadatas)
-        else:
-            embeddings = get_embeddings()
-            provider = active_provider() or _resolve_provider()
-            if not embeddings or not provider:
-                return _memory_result(
-                    scope, False, game_id, npc_id, path=path, provider=provider,
-                    error="embeddings_unavailable", **common,
-                )  # fmt: skip
-            os.makedirs(os.path.dirname(path) if scope == "npc" else SAVES_DIR, exist_ok=True)
-            if metadatas is None:
-                db = FAISS.from_texts(texts, embeddings)
-            else:
-                db = FAISS.from_texts(texts, embeddings, metadatas=metadatas)
-
-        _save_index(db, path, provider)
+        db = _faiss_add(scope, path, texts, metadatas, st)
+        if db is None:
+            return _memory_result(
+                scope, False, game_id, npc_id, path=path, provider=st["provider"],
+                error="embeddings_unavailable", **common,
+            )  # fmt: skip
+        _save_index(db, path, st["provider"])
         _log_memory_saved(scope, facts_count)
         return _memory_result(
-            scope, True, game_id, npc_id, path=path, provider=provider, error=None, **common
+            scope, True, game_id, npc_id, path=path, provider=st["provider"], error=None, **common
         )
     except Exception as exc:
         _log_memory_failed(scope, exc)
         return _memory_result(
-            scope, False, game_id, npc_id, path=path, provider=provider, error=str(exc), **common
-        )
+            scope, False, game_id, npc_id, path=path, provider=st["provider"],
+            error=str(exc), **common,
+        )  # fmt: skip
 
 
 def add_memory_to_session(
