@@ -1,0 +1,149 @@
+{
+ "regiao": "nova_arcadia",
+ "seeds": 80,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 116.1,
+ "criaturas": {
+  "mon_portao_que_morde": {
+   "nome": "Portão que Morde",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.53,
+    "L3|on": 0.527
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_odre_de_oleo": {
+   "nome": "Odre de Óleo",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.372,
+    "L3|on": 0.458
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 37% fora de 45-85%"
+   ]
+  },
+  "mon_sorvedouro_do_codigo": {
+   "nome": "Sorvedouro do Código",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.472,
+    "L3|on": 0.52
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_pavio_da_lista": {
+   "nome": "Pavio da Lista",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.598,
+    "L3|on": 0.63
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_fervente_de_ferrugem": {
+   "nome": "Fervente de Ferrugem",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.573,
+    "L3|on": 0.647
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_porca_da_queda": {
+   "nome": "Porca da Queda",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.64,
+    "L3|on": 0.73
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_dedos_de_colheita": {
+   "nome": "Dedos de Colheita",
+   "categoria": "padrao",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.507,
+    "L3|on": 0.492
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lencol_de_chamine": {
+   "nome": "Lençol de Chaminé",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.507,
+    "L3|on": 0.507
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_estivador_das_facas": {
+   "nome": "Estivador das Facas",
+   "categoria": "padrao",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.608,
+    "L3|on": 0.752
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lacrador_de_saidas": {
+   "nome": "Lacrador de Saídas",
+   "categoria": "padrao",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.615,
+    "L3|on": 0.743
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mastro_de_trofeus": {
+   "nome": "Mastro de Troféus",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.665,
+    "L3|on": 0.757
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_monte_de_alheios": {
+   "nome": "Monte de Alheios",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.625,
+    "L3|on": 0.738
+   },
+   "ok": true,
+   "motivos": []
+  }
+ },
+ "seed_inicio": 40
+}

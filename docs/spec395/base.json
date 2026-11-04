@@ -1,0 +1,158 @@
+{
+ "regiao": "nova_arcadia",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 132.6,
+ "criaturas": {
+  "mon_portao_que_morde": {
+   "nome": "Portão que Morde",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.61,
+    "L3|on": 0.635
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_odre_de_oleo": {
+   "nome": "Odre de Óleo",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.565,
+    "L3|on": 0.53
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_sorvedouro_do_codigo": {
+   "nome": "Sorvedouro do Código",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.085,
+    "L3|on": 0.12
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 8% fora de 45-85%",
+    "L3|on 12% fora de 45-85%"
+   ]
+  },
+  "mon_pavio_da_lista": {
+   "nome": "Pavio da Lista",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.02,
+    "L3|on": 0.025
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 2% fora de 45-85%",
+    "L3|on 2% fora de 45-85%"
+   ]
+  },
+  "mon_fervente_de_ferrugem": {
+   "nome": "Fervente de Ferrugem",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.585,
+    "L3|on": 0.68
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_porca_da_queda": {
+   "nome": "Porca da Queda",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.07,
+    "L3|on": 0.11
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 7% fora de 45-85%",
+    "L3|on 11% fora de 45-85%"
+   ]
+  },
+  "mon_dedos_de_colheita": {
+   "nome": "Dedos de Colheita",
+   "categoria": "padrao",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.085,
+    "L3|on": 0.11
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 8% fora de 45-85%",
+    "L3|on 11% fora de 45-85%"
+   ]
+  },
+  "mon_lencol_de_chamine": {
+   "nome": "Lençol de Chaminé",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.6,
+    "L3|on": 0.6
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_estivador_das_facas": {
+   "nome": "Estivador das Facas",
+   "categoria": "padrao",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.635,
+    "L3|on": 0.745
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lacrador_de_saidas": {
+   "nome": "Lacrador de Saídas",
+   "categoria": "padrao",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.645,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mastro_de_trofeus": {
+   "nome": "Mastro de Troféus",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.665,
+    "L3|on": 0.78
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_monte_de_alheios": {
+   "nome": "Monte de Alheios",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.685,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

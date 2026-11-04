@@ -21433,9 +21433,9 @@
     "categoria": "padrao",
     "arquetipo": "covarde_oportunista",
     "attributes": {
-      "str": 16,
+      "str": 10,
       "dex": 12,
-      "con": 16,
+      "con": 12,
       "int": 12,
       "wis": 10,
       "cha": 10
@@ -21465,18 +21465,18 @@
       "cri_dedos_de_colheita_nuvem_vermelha"
     ],
     "virtudes": {
-      "forca": 4,
+      "forca": 1,
       "agilidade": 2,
-      "corpo": 4,
+      "corpo": 2,
       "mente": 2,
       "carisma": 1
     },
-    "max_vitalidade": 14,
-    "vitalidade": 14,
+    "max_vitalidade": 10,
+    "vitalidade": 10,
     "ferimento_espacos": {
-      "leve": 4,
-      "grave": 3,
-      "critico": 2
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
     },
     "ferimentos": {
       "leve": [],
@@ -24834,9 +24834,9 @@
     "categoria": "padrao",
     "arquetipo": "bruto",
     "attributes": {
-      "str": 16,
+      "str": 14,
       "dex": 10,
-      "con": 16,
+      "con": 12,
       "int": 10,
       "wis": 10,
       "cha": 8
@@ -24867,18 +24867,18 @@
       "cri_porca_da_queda_pele_de_lama"
     ],
     "virtudes": {
-      "forca": 4,
+      "forca": 3,
       "agilidade": 1,
-      "corpo": 4,
+      "corpo": 2,
       "mente": 1,
       "carisma": 0
     },
-    "max_vitalidade": 14,
-    "vitalidade": 14,
+    "max_vitalidade": 10,
+    "vitalidade": 10,
     "ferimento_espacos": {
-      "leve": 4,
-      "grave": 3,
-      "critico": 2
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
     },
     "ferimentos": {
       "leve": [],
@@ -25030,7 +25030,7 @@
     "attributes": {
       "str": 18,
       "dex": 12,
-      "con": 14,
+      "con": 8,
       "int": 14,
       "wis": 10,
       "cha": 10
@@ -25063,16 +25063,16 @@
     "virtudes": {
       "forca": 5,
       "agilidade": 2,
-      "corpo": 3,
+      "corpo": 0,
       "mente": 3,
       "carisma": 1
     },
-    "max_vitalidade": 12,
-    "vitalidade": 12,
+    "max_vitalidade": 6,
+    "vitalidade": 6,
     "ferimento_espacos": {
-      "leve": 4,
-      "grave": 2,
-      "critico": 2
+      "leve": 2,
+      "grave": 1,
+      "critico": 1
     },
     "ferimentos": {
       "leve": [],
@@ -25125,9 +25125,9 @@
     "categoria": "elite",
     "arquetipo": "conjurador",
     "attributes": {
-      "str": 14,
+      "str": 12,
       "dex": 12,
-      "con": 18,
+      "con": 12,
       "int": 16,
       "wis": 10,
       "cha": 10
@@ -25158,18 +25158,18 @@
       "cri_pavio_da_lista_gaiola_quente"
     ],
     "virtudes": {
-      "forca": 3,
+      "forca": 2,
       "agilidade": 2,
-      "corpo": 5,
+      "corpo": 2,
       "mente": 4,
       "carisma": 1
     },
-    "max_vitalidade": 16,
-    "vitalidade": 16,
+    "max_vitalidade": 10,
+    "vitalidade": 10,
     "ferimento_espacos": {
-      "leve": 5,
-      "grave": 3,
-      "critico": 3
+      "leve": 3,
+      "grave": 2,
+      "critico": 1
     },
     "ferimentos": {
       "leve": [],

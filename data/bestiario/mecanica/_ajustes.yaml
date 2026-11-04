@@ -475,10 +475,10 @@ ajustes:
     forca: 0
     sig: 0
   mon_dedos_de_colheita:
-    arena: L3|off 79% | L3|on 77% (arena final, 40 seeds)
-    corpo: 2
+    arena: L3|off 57% | L3|on 59%
+    corpo: 0
     dano: 2
-    forca: 1
+    forca: -2
     sig: 0
   mon_deitado_na_parede:
     arena: L3|off 82% | L3|on 74% (arena final, 40 seeds)
@@ -917,10 +917,10 @@ ajustes:
   mon_patinador_de_oleo:
     arena: L3|off 76% | L3|on 82% (arena final, 40 seeds)
   mon_pavio_da_lista:
-    arena: L3|off 73% | L3|on 80% (arena final, 40 seeds)
-    corpo: 1
-    dano: 1
-    forca: 1
+    arena: L3|off 55% | L3|on 64%
+    corpo: -2
+    dano: -2
+    forca: 0
     sig: 0
   mon_peito_de_geodo:
     arena: L3|off 81% | L3|on 82% (arena final, 40 seeds)
@@ -965,7 +965,11 @@ ajustes:
     dano: 1
     sig: -1
   mon_porca_da_queda:
-    arena: L3|off 75% | L3|on 68% (arena final, 40 seeds)
+    arena: L3|off 70% | L3|on 74%
+    corpo: -2
+    dano: -2
+    forca: -1
+    sig: 0
   mon_portao_que_morde:
     arena: L3|off 61% | L3|on 63% (arena final, 40 seeds)
     corpo: -2
@@ -1100,8 +1104,8 @@ ajustes:
     dano: 1
     sig: 2
   mon_sorvedouro_do_codigo:
-    arena: L3|off 70% | L3|on 71% (arena final, 40 seeds)
-    corpo: 0
+    arena: L3|off 59% | L3|on 59%
+    corpo: -5
     dano: 4
     forca: 4
     sig: 2

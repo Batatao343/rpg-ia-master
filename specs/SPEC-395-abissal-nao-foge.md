@@ -1,6 +1,6 @@
 # SPEC-395 — Tabela tática respeita `resistance: absoluta` (abissal e outras que não fogem)
 
-> **Status:** `approved` — dono, 04/11: "Executar com padrões" (D1–D4 nos defaults); Lençol de Chaminé deixa de fugir (ajuste de texto em spec futura).
+> **Status:** `in-review` — dono, 04/11: "Executar com padrões" (D1–D4 nos defaults); Lençol de Chaminé deixa de fugir (ajuste de texto em spec futura).
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** SPEC-394 (`in-review`; diagnóstico em `rpg-spec-394/docs/spec394/RELATORIO.md:7-35`, dials atuais do `_ajustes.yaml`), SPEC-373 `done` (congela `arena.py`)
@@ -92,13 +92,13 @@ R7, uma vez. A §9 recebe a tabela antes/depois e os dials.
 
 ## 5. Critérios de aceite
 
-- [ ] Os 3 testes novos falham na base e passam depois (commit de testes separado)
-- [ ] R3: snapshot fora de A idêntico; em A, só muda o `action_key` da prioridade `absoluta`
-- [ ] R4/R6: `base.json` e `arena-final.json` gravados; F com `ok` ou exceção nominal na §9
-- [ ] R7: `confirmacao-40-119.json` na §9, sem reajuste
-- [ ] R8: `git diff --exit-code` no avaliador e no teste da 394
-- [ ] `validate_content.py` verde; `uv run pytest` verde (coordenador, no pouso)
-- [ ] Saves antigos carregam: `ensure_combat_sheet` renormaliza o perfil ao montar a ficha (`conflict_orchestrator.py:132`)
+- [x] Os 3 testes novos falham na base e passam depois (commit de testes separado)
+- [x] R3: snapshot fora de A idêntico; em A, só muda o `action_key` da prioridade `absoluta`
+- [x] R4/R6: `base.json` e `arena-final.json` gravados; F com `ok` ou exceção nominal na §9
+- [x] R7 (odre_de_oleo fora em 40-119, ver §9): `confirmacao-40-119.json` na §9, sem reajuste
+- [x] R8: `git diff --exit-code` no avaliador e no teste da 394
+- [x] `validate_content.py` verde; `uv run pytest` verde (coordenador, no pouso)
+- [x] Saves antigos carregam: `ensure_combat_sheet` renormaliza o perfil ao montar a ficha (`conflict_orchestrator.py:132`)
 
 ## 6. Smoke test
 
@@ -123,4 +123,10 @@ Sem LLM: as rodadas de Cartas não chamam IA e a arena é determinística, entã
 
 ## 9. Resultado
 
-(preencher na execução)
+Ver `docs/spec395/RELATORIO.md`. Correcao R1 em `normalize_runtime_profile` (8 criaturas em A, nao 5: so o
+portao e abissal; as outras 7 sao conjurador/bruto/predador/covarde com `absoluta`+`muito_ferido`).
+F = sorvedouro, pavio, porca, dedos: de 2-12 % para a faixa em 1 execucao do `calibrar.py` (so dials).
+Portao 61/63,5: sai das excecoes da 394. Confirmacao 40-119: tudo `ok` exceto **odre_de_oleo** (L3 off 37 %,
+nao recalibrado por R7; excecao nominal / candidato a ajuste futuro). Avaliador e teste da 394 sem diff.
+Ids recalibrados (para `recalibracoes_posteriores.json`): mon_sorvedouro_do_codigo, mon_pavio_da_lista,
+mon_porca_da_queda, mon_dedos_de_colheita.
