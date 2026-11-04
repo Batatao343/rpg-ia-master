@@ -96,3 +96,32 @@ ruff format --check events.py, death_prose_guard.py, import_bestiary_art.py → 
 ruff check (arquivos alterados) → All checks passed
 pt.sh card_epic_caveats, import_bestiary_art, spec353_registry, spec355_golpe_reacao, spec363_outcome_text, spec346_outcome, death_flow, checkpoints, log_event_registry, size_budget, no_silent_except → 201 passed
 ```
+
+## Rodada 3 (commit `86215cce`)
+
+> **Veredito:** `APPROVED` (fica um P3 como follow-up opcional) · **Data:** 2026-11-04
+
+Corrigidos e verificados:
+
+- **P2-4:** `_THIRD_PARTY` agora exclui as partes do corpo do sujeito.
+- **P2-5:** a negação só vale até 2 palavras antes do termo de ferimento ou gravidade.
+- **P3-6:** "gravemente", "levemente" e "criticamente" entram no vocabulário, e `critic` é normalizado para `critico`.
+
+As regex são limitadas (`{0,2}?`, alternâncias fechadas), sem risco de ReDoS.
+
+Sondas (25 frases de prosa de morte). Registro = leve na perna esquerda, salvo indicação:
+
+- **Rejeitadas corretamente (10/10):** o caso do smoke ("a perna com ferimento grave"), "A perna, ferida de forma grave, cede sob você.", "A cabeça, ferida, latejando, cede.", "A ferida grave na perna esquerda sangra sem parar.", "Com a perna gravemente ferida, você cai.", "O braço ferido pende inútil…", "…o ferimento grave da perna cobrando seu preço.", "A perna esquerda, criticamente ferida, não aguenta mais.", "O torso, ferido, arqueja; você cai sem forças." e "O ferimento grave na perna arde…".
+- **Passam corretamente (11/12):** "Um ferimento leve na perna esquerda arde.", "A perna, ferida de leve, cede sob você.", "Sem ferimentos graves na perna…", "Nenhum ferimento grave na perna; …", "Um leve tremor percorre sua perna.", "A perna levemente ferida treme…", "O lobo, ferido na perna, recua.", "A criatura, ferida no braço, uiva.", "O ferimento no braço do Goblin sangra.", "A cabeça do lobo, ferida, pende." e "Você tomba sem um grito, a perna ferida latejando." Com registro = crítico no torso, "O ferimento crítico no torso…" e "O torso, criticamente ferido, cede." passam, e "A perna, ferida, cede." é rejeitada.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-7 | P3 | services/death_prose_guard.py:19 | Falso positivo restante: terceiro ferido **sem vírgula** ("O goblin ferido na cabeça ri enquanto você tomba." → `parte_fora_do_registro:cabeca`). O efeito é só cair no texto determinístico. | Opcional: também aceitar `^(?:o\|a\|…) <não-parte> ferid` sem vírgula, ou checar os nomes dos inimigos (em fold) antes de "ferid". |
+
+Comandos (rodada 3):
+
+```text
+sondas death_prose_guard.check (25 frases) → 10/10 contradições pegas; 1 falso positivo (P3-7)
+pt.sh card_epic_caveats, import_bestiary_art, spec353_registry, spec355_golpe_reacao, spec363_outcome_text, spec346_outcome, death_flow, checkpoints, log_event_registry, size_budget, no_silent_except → 202 passed
+ruff format --check / ruff check (arquivos alterados) → limpo
+```
