@@ -1023,6 +1023,8 @@ def _combat_block(state: dict) -> dict[str, Any]:
         )
         if (portrait := _enemy_portrait(state, meta, enemy, portrait_registry)) is not None:
             enemy_views[-1]["retrato"] = portrait
+        if enemy.get("chegou_na_rodada") is not None:  # SPEC-391 R11c: marca "acabou de chegar"
+            enemy_views[-1]["chegou_na_rodada"] = int(enemy["chegou_na_rodada"])
     portrait_offer.finish()  # SPEC-389 R2: 1 offer_view por resposta
 
     chase = meta.get("chase") or {}

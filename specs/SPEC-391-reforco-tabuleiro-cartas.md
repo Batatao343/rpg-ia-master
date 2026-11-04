@@ -474,19 +474,45 @@ não traz tempo (o tempo vai para o stderr), então o JSON é determinístico. T
 `off` e 2 sementes: L3 morte 35,7 %, vitória 62,9 %; L5 morte 28,6 %, vitória 68,6 %. Com a flag `on` e sem
 o módulo, o resultado sai idêntico ao `off` (`card_flow: false`).
 
+### Execução — Etapas 2, 3 e 4 (04/11, executor; commits `61a465d2`, `83252abf` e o da Etapa 4)
+
+- **Módulo:** `services/reinforcement_cards.py` (~260 l.). `advance` é a porta do nó (escolhe legado × Carta
+  por `via == "carta"`, nunca por `warned_round`); `advance_card_flow` é a da arena. O nó só trocou o import
+  `reinforcements as rf` → `reinforcement_cards as rf` em `_advance_reinforcements` (combat.py 3.957 → 3.957).
+  `conflict_orchestrator.py` 3.049 → 3.046 (o guard do plano virou `enemy_decks.declaration_plan`).
+- **Desvio 1 (assinatura):** `on_declaration(scene, actor_id, card_id, rnd)` sem `combat_meta`: o orquestrador
+  não o conhece. Ela grava `scene["chamado_jogado"]`; `advance_card_flow` consome a marca no fim da rodada e
+  põe `stage: "called"`/`called_round`/`warned_round` (R7). `telegraph` recebe também o `trigger`.
+- **Desvio 2 (R10, presenter):** o bloco virou `reinforcement_cards.payload_fields(meta)` (o `api_presenters.py`
+  é > 1.000 l. e não cresce); inclui o aviso legado (`warned_round`) e o objeto `reinforcement`.
+- **Desvio 3 (R11c):** a marca "acabou de chegar" é uma nota `role="note"` do `DeckCombat`
+  (`data-arrived`), alimentada por `chegou_na_rodada` no `EnemyView`; não é um selo dentro do chip do alvo.
+  A nota legada de `CombateTab` cede quando existe `combat.reinforcement`.
+- **R12:** o reforço herda `deck_seed` (parâmetro novo `deck_seed` em `rf.spawn`, só o fluxo de Carta passa) e
+  guarda `chegou_na_rodada`; `plan`/`_sig_falls_on` contam o padrão a partir dela (`off` byte-idêntico: chave ausente).
+- **R4:** `plan(actor, rnd, scene)` devolve o chamado; `record_promise` não sobrescreve a promessa de chamado;
+  `enemy_intent.public_round` põe o telegrafo do chamado na linha da Carta. `check_promises` passa uma cena
+  mínima ao `plan`, porque a promessa já saiu da cena nesse ponto.
+- **Eventos:** `via` em `warned/fired/cancelled` (legado grava `"legado"`) + `combat.reinforcements_telegraphed`;
+  catálogo regenerado por `scripts/gen_event_catalog.py`. `config/flags.yaml`: `spec: SPEC-391`, nota nova.
+- **Arena (só observação, sem gate):** com `RPG_CARD_DECK/ENEMY_DECKS/ENEMY_INTENT=on` a arena exige os 3 `on`
+  (sem `RPG_ENEMY_DECKS` o chamado nunca é jogado e tudo cancela). 2 sementes, L3: 70 lutas, 70 telegrafados,
+  70 chamados, 47 chegadas, 0 cancelados; morte 51 % (OFF de sanidade da Etapa 1: 35,7 %). O gate §8 é do coordenador.
+- **Playtest (R17):** `combate_reforco` com os 3 `on` e a flag: 8 turnos, 0 erro, 0 violação, `fired via=carta`.
+
 ## 5. Critérios de aceite
 
-- [ ] R1–R20 com teste verde (lista da Etapa 2/3/4)
-- [ ] Oráculo da Etapa 1 verde; `docs/spec391/arena_reforco_cartas.py` sem diff desde o commit da Etapa 1
+- [x] R1–R20 com teste verde (lista da Etapa 2/3/4; `tests/test_reinforcement_cards.py`, 32 testes; R11 por unidade web)
+- [x] Oráculo da Etapa 1 verde; `docs/spec391/arena_reforco_cartas.py` sem diff desde o commit da Etapa 1 (diff vazio nas Etapas 2-4)
 - [ ] Flag `off`: JSONs regerados das arenas 285/332/355/368 idênticos à `main` de partida (R14)
 - [ ] `scripts/cards/sim.py`, as arenas antigas e os arquivos de família de `data/cards/inimigos/` byte-idênticos
-- [ ] `tests/test_size_budget.py` verde: `agents/combat.py`, `conflict_orchestrator.py`, `card_effects.py` e
+- [x] `tests/test_size_budget.py` verde (Etapas 2-4): `agents/combat.py`, `conflict_orchestrator.py`, `card_effects.py` e
       o router de combate com crescimento líquido ≤ 0
 - [ ] Gate §8 aprovado pelo critério do D-391-4 (ou flag `off` com a medida registrada)
 - [ ] `config/flags.yaml` atualizado; gate de flags (SPEC-340) verde
 - [ ] `uv run pytest` verde (suíte completa offline, coordenador, 1×)
-- [ ] Nenhum `with_structured_output` novo (não há LLM no fluxo); 0 LLM por rodada medido
-- [ ] Saves antigos (sem campo e com estado do R16) continuam carregando
+- [x] Nenhum `with_structured_output` novo (não há LLM no fluxo); 0 LLM por rodada medido
+- [x] Saves antigos (sem campo e com estado do R16) continuam carregando
 - [ ] Smoke §6 feito e registrado
 - [ ] Revisão independente `spec-reviewer` (Sol/Opus) APPROVED
 

@@ -28,5 +28,17 @@ export function orderChips(combat: CombatBlock | undefined | null): ConflictChip
   })));
 }
 
+/** Com o Chamado do Bando (SPEC-391) a nota é a do tabuleiro (`callNote`); esta fica só para o legado. */
 export const reinforcementNote = (combat: CombatBlock | undefined | null): string | null =>
-  combat?.reinforcement_warning ? REINFORCEMENT_NOTE : null;
+  combat?.reinforcement_warning && !combat.reinforcement ? REINFORCEMENT_NOTE : null;
+
+/** SPEC-391 R11b: entre o chamado e a chegada. */
+export const callNote = (combat: CombatBlock | undefined | null, leaderName: string | undefined): string | null =>
+  combat?.reinforcement?.stage === "called"
+    ? `Reforço a caminho: chega no fim da próxima rodada. Derrube ${leaderName ?? "o líder"} para impedir.`
+    : null;
+
+/** SPEC-391 R11c: o recém-chegado é marcado na rodada da chegada. */
+export const arrivalNotes = (combat: CombatBlock | undefined | null): string[] =>
+  (combat?.enemies ?? []).filter((e) => e.chegou_na_rodada != null && e.chegou_na_rodada === combat?.round)
+    .map((e) => `${e.name} acabou de chegar.`);

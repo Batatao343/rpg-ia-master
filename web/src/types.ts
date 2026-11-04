@@ -280,8 +280,7 @@ export interface QuestBlock {
 export interface Condition {
   name: string; id?: string; // SPEC-389 R13: id = nome gravado no save; name/label = rótulo humano
   label?: string;
-  dot: number;
-  duration: number;
+  dot: number; duration: number;
 }
 
 export interface EnemyView {
@@ -301,6 +300,7 @@ export interface EnemyView {
   revealed_resistances: string[];
   /** SPEC-347 R13: retrato (só com a flag `on` ou arte curada). */
   retrato?: CreaturePortrait;
+  chegou_na_rodada?: number; // SPEC-391 R11c: rodada da chegada do reforço (só depois dela)
 }
 
 export interface CardView {
@@ -393,9 +393,8 @@ export interface ChaseView {
 }
 
 export interface InitiativeSlot {
-  name: string;
+  name: string; init: number;
   side: string; // "hero" | "enemy"
-  init: number;
 }
 
 export interface CombatBlock {
@@ -423,6 +422,7 @@ export interface CombatBlock {
   companion_orders?: { id: string; name: string }[];
   /** SPEC-325 R16: presente (true) só depois do aviso de reforço, até a chegada ou o cancelamento. */
   reinforcement_warning?: boolean;
+  reinforcement?: { stage: "telegraphed" | "called"; leader_id: string; chega_na_rodada: number | null }; // SPEC-391 R10
   scene: ConflictSceneView;
   wounds: WoundTrackView;
   chase: ChaseView;

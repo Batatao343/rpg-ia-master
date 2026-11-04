@@ -503,3 +503,19 @@ def test_payload_never_leaks_template(monkeypatch, card_on):
             "leader_id",
             "chega_na_rodada",
         }
+
+
+# --- R17: playtest -----------------------------------------------------------------------
+def test_playtest_scenario_card_flow_ends_without_violations(monkeypatch, card_on):
+    """O cenário `combate_reforco` com o baralho `on` termina em chamado + chegada, sem violação."""
+    from playtest import scenarios
+    from playtest.runner import run_campaign
+
+    result = run_campaign(
+        scenarios.profile_for("combate_reforco"), turns=8, seed=0, scenario="combate_reforco"
+    )
+    errors = [v for v in result.violations if v.get("severity") == "error"]
+    assert not errors and not result.errors, (errors, result.errors)
+    assert result.capability_counts["reinforcements"] >= 1
+    reinf = (result.final_state.get("combat") or {}).get("reinforcement") or {}
+    assert reinf.get("via") == "carta" and reinf.get("fired") is True

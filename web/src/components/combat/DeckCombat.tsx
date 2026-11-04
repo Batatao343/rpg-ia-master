@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { CombatBlock, HandCard, OmenView } from "../../types";
 import * as api from "../../api";
 import { subscribeRejectedPlay } from "../../lib/rejectedPlay";
+import { arrivalNotes, callNote } from "../../combat/conflictChips";
 import { BLOCK_TEXT, blockReason, cardTargets, discardReason, dropRejectedPlay, visibleEnemyIds, endText, enqueue, enqueueDiscard, folegoState, keywordRules, move, omenView, remove, togglePick, toJogadas, type QueuedPlay } from "../../combat/deck";
 import type { DeckArm } from "../../combat/useDeckArm";
 import { useGlossary } from "../../combat/useGlossary";
@@ -207,6 +208,10 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
     <div className="deck-combat" ref={rootRef} data-aim-safe data-omens={omens ? "on" : undefined} data-armed={armedCard ? "" : undefined}>
       <SceneStrip round={combat.round} cena={combat.cena} objetivo={combat.objetivo} pressagios={combat.pressagios_cena} />
       <RoundBoard entries={combat.registro_rodada} round={combat.round} compact={touch} />
+      {callNote(combat, nameOf(combat.reinforcement?.leader_id ?? "")) && (
+        <p className="ws-combat__ended" role="note" data-reinforcement-call>{callNote(combat, nameOf(combat.reinforcement?.leader_id ?? ""))}</p>
+      )}
+      {arrivalNotes(combat).map((text) => <p key={text} className="ws-combat__ended" role="note" data-arrived>{text}</p>)}
       {arena(omens)}
       <Hand piles={piles} glossary={glossary} reasons={reasons} armedIndex={armed?.index ?? null} busy={busy} onPlay={play}
         head={<FolegoPips piles={piles} state={fol} />} onStuck={onStuck} discardReasons={discardReasons} onDiscard={discard} />

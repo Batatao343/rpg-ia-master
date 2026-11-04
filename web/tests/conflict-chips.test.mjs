@@ -40,3 +40,21 @@ test('sem os campos da API (flag fora de on) nao ha chip nem nota', async () => 
   }
   assert.match(reinforcementNote(combat), /reforços/);
 });
+
+test('SPEC-391: nota do Chamado so entre o chamado e a chegada; telegrafado e cancelado ficam sem nota', async () => {
+  const { callNote, reinforcementNote } = await load();
+  const called = { ...combat, reinforcement: { stage: 'called', leader_id: 'cap_1', chega_na_rodada: 3 } };
+  assert.equal(callNote(called, 'Capitao Teste'),
+    'Reforço a caminho: chega no fim da próxima rodada. Derrube Capitao Teste para impedir.');
+  assert.equal(callNote({ ...called, reinforcement: { ...called.reinforcement, stage: 'telegraphed', chega_na_rodada: null } }, 'X'), null);
+  for (const c of [undefined, null, {}, { ...combat, reinforcement: undefined }]) assert.equal(callNote(c, 'X'), null);
+  assert.equal(reinforcementNote(called), null); // a nota legada cede ao tabuleiro de cartas
+});
+
+test('SPEC-391: marca "acabou de chegar" so na rodada da chegada', async () => {
+  const { arrivalNotes } = await load();
+  const c = { round: 3, enemies: [{ id: 'a', name: 'Capitao' }, { id: 'b_r1', name: 'Capanga do bando', chegou_na_rodada: 3 }] };
+  assert.deepEqual(arrivalNotes(c), ['Capanga do bando acabou de chegar.']);
+  assert.deepEqual(arrivalNotes({ ...c, round: 4 }), []);
+  assert.deepEqual(arrivalNotes(undefined), []);
+});
