@@ -142,3 +142,18 @@ Uma onda por spec (≤ 12–14 NPCs novos; qualidade > volume).
 7. `uv run python rag.py` (reindex) + smoke real na região; então `waves[...].status = "done"`.
 8. Ligar em jogo: `RPG_PLOT_THREADS=on` (prompt do NPC + roster da região atual).
 
+
+## Fluxo F — Cartas e classes (SPEC-376)
+
+`data/` é a fonte. Não existe gerador: `gen_cards_v4.py` e `gen_classes_v2.py` foram removidos pela
+SPEC-376 porque regravavam do zero e apagavam curadoria (`momento`, `raridade`, `reacao_inicial`;
+medição em `docs/spec376/deriva.md`).
+
+1. **Carta de classe:** editar `data/cards/{classe}.json` à mão. Carta publicada mudou de efeito →
+   objeto novo com o mesmo `id` e `versao` + 1 (detalhes em `docs/design/CARTAS.md`).
+2. **Onda de Cartas por Postura:** esteira da SPEC-336, `scripts/cards/draft.py` → `lint.py` →
+   `sim.py` → `promote.py` (grava em `data/cards/posturas/`).
+3. **Classe:** editar `data/classes.json` (`docs/design/CLASSES.md`). `gen_tiers_5_plus.py` só em
+   `--check`; `--write` exige seleção humana (SPEC-355 R6).
+4. **Bestiário legado:** `scripts/migrate_bestiary_v4.py` sobrescreve curadoria e só grava com `--write`.
+5. Validar: `uv run python scripts/cards/lint.py` e `bash scripts/dev/pt.sh tests/test_conflito_autoria_cartas.py`.

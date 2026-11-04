@@ -2,6 +2,7 @@
 
 > **Status:** `draft` — **NÃO RECOMENDADA (decisão do dono 2026-10-18: não executar)**. Revisão independente 2026-10-18: UNSAFE — os dois geradores são passos obrigatórios da pipeline de autoria (ver §8).
 > **Criada:** 2026-10-18 · **Atualizada:** 2026-10-18
+> **Adendo 2026-11-04:** R2 superado para `gen_cards_v4`/`gen_classes_v2` pela SPEC-376 (deriva em `docs/spec376/deriva.md`): os dois foram removidos.
 > **Origem:** auditoria ponytail 2026-10-18 ([relatório](../docs/auditorias/ponytail-poda-2026-10-18.md))
 > **Depende de:** —
 > **Desbloqueia:** —
