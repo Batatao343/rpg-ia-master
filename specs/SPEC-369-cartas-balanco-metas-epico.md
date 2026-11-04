@@ -473,7 +473,7 @@ A Fase B esgotou as alavancas do R18 com R13, R17, R19 e 3 de 5 células do R20 
 
 ### D-369-11 — tolerância da Fase C
 
-Proposta do autor da régua; aceite do dono pendente.
+Proposta do autor da régua. **Aceita pelo dono em 04/11** ("Aceito a folga"), antes de qualquer número da Fase C.
 
 Na confirmação (R22, sementes novas 260-339; famílias em 260-267 e `predador_apice` L3 em 260-279), cada **limite registrado** pela D-369-10 ganha a tolerância de amostra abaixo (`TOLERANCIA_CONFIRMACAO` em `tests/test_spec369_metas.py`):
 
@@ -485,6 +485,10 @@ Na confirmação (R22, sementes novas 260-339; famílias em 260-267 e `predador_
 | célula de família (R20) | ±5 pp | A vitória com 200 lutas e p ≈ 0,4–0,6 tem erro-padrão de cerca de 3,5 pp. O Δ entre dois braços independentes fica em cerca de 4,9 pp. |
 
 A tolerância vale **só na dimensão que já estava fora da meta na Fase B** (Astra P2-5). Exemplo: o Δ do `conjurador` L5 (−8,0) cumpre a meta cheia, então continua com |Δ| ≤ 10 na confirmação, e só a vitória `on` (38,5 %) ganha 38,5 − 5. As metas cheias e os pisos absolutos (R13, o p95 total ≤ 10, os timeouts, o R17 e o R19) não ganham tolerância. O aceite é registrado pelo coordenador.
+
+### D-369-12 — limite de passos do R18 na Fase B (04/11, dono: "Aceitar + Fase C guarda")
+
+A revisão Sol da Fase B (P1-2) contou as sondagens feitas em árvore descartável: 11 Cartas de herói contra o teto de 8, 3 tentativas em `bas_cor_mofo` contra o teto de 2, e 3 famílias com mais de 2 Cartas. O pacote que ficou no jogo está dentro dos limites. O dono aceitou, com a Fase C (sementes 260–339, nunca usadas) como guarda contra overfit. As sondagens ficam registradas em `passos-0-19.json` (`mantido: false`, `sondagem: true`), e o R18 fica como "pacote final dentro, processo fora". Se a Fase C reprovar, a decisão volta ao dono.
 
 ## 9. Registro de implementação
 
