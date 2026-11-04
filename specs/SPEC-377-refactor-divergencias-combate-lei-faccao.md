@@ -474,6 +474,7 @@ pedidas foram aplicadas:
 | P2-1 | R9/R10: número real (2 Cartas, motivo (b), lint igual). D2 fica recomendada como adotada na aprovação e a arena base saiu do item 2. **Ressalva:** o modo (iii) (Ruptura/evolução) continua obrigatório, porque a revisão não o mediu. |
 | P2-2 | R6: guard `world_engine.mode()=="on"` dentro do hook; a frase do modelo `npc_world` saiu. |
 | P2-3 | R2/D1: o efeito é "só após suborno"; pena, multa e decaimento natural não mudam. |
+| Falha de ordem no pouso | Não era flake: `test_spec371_eval` (SPEC-371) chama `scripts/fauna/arena_saber._arena()`, que carrega `docs/spec332/arena_familias.py`, que carrega a arena 285 com `logging.disable(CRITICAL)` global sem restaurar; o worker do xdist ficava sem log e `test_world_rejection_logs`/`test_turn_trace_logs` falhavam. Correção na origem: `arena_familias.py` e `docs/spec328/arena_deck.py` restauram o estado (padrão de `scripts/cards/sim.py`); guarda estático `tests/test_arena_loaders_keep_logging.py` (falha sem a correção). Prova dinâmica: 371 + rejeição no mesmo processo falha sem e passa com. |
 | P2-4 | §4 item 1 passo 4: o playtest é guarda de regressão, não prova. |
 | P2-5 | R15: 3 caminhos mais a rodada seguinte; a arena do item 3 virou obrigatória. |
 | P2-6 | R13/R16: a nuance de `ct._targetable(terminal) is True` entrou na tabela e no teste. |

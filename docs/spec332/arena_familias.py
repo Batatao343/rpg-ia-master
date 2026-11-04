@@ -17,6 +17,7 @@ import argparse
 import importlib.util
 import json
 import os
+import logging
 import random
 import sys
 import time
@@ -28,7 +29,12 @@ _spec = importlib.util.spec_from_file_location(
     "arena285", os.path.join("docs", "spec285", "arena_lethality.py")
 )
 A = importlib.util.module_from_spec(_spec)
+# A arena da 285 faz `logging.disable(CRITICAL)` global ao ser importada; sem restaurar,
+# quem importa este módulo dentro do pytest silencia o log do worker inteiro (os testes de
+# log seguintes falham conforme a distribuição do xdist). Mesmo padrão de scripts/cards/sim.py.
+_prev_disable = logging.root.manager.disable
 _spec.loader.exec_module(A)  # type: ignore[union-attr]
+logging.disable(_prev_disable)
 
 from agents.bestiary import load_bestiary  # noqa: E402
 from combat_mechanics import normalize_categoria  # noqa: E402
@@ -117,7 +123,9 @@ def main() -> None:
             for mode in ("off", "on"):
                 c = {"fights": 0, "win": 0, "death": 0, "timeout": 0, "rounds": 0}
                 for bid in pick(ids, args.per_family):
-                    n = A.group_size(cat_of[bid] if cat_of[bid] in A.CATEGORIES else "padrao", level)
+                    n = A.group_size(
+                        cat_of[bid] if cat_of[bid] in A.CATEGORIES else "padrao", level
+                    )
                     for cls in A.CLASSES:
                         for seed in range(args.seeds):
                             outcome, rounds = fight(bid, n, cls, level, seed, mode)
