@@ -105,3 +105,57 @@ py.sh -c "fauna.day_hook × 30 dias; encounter_distribution × 50 (368 entradas,
 git diff f2c1751e~1 f2c1751e -- docs/spec360/eval-global.md → M5 global −0,1798 → −0,1951 (só Ophidia mudou)
 git merge-tree --write-tree --name-only HEAD spec-372 → conflito em 5 arquivos
 ```
+
+## Rodada 2 (`9cceb55e` smoke, `4c9a9822` P2)
+
+**Veredito da rodada 2:** `APPROVED_WITH_FOLLOWUPS` (sem P0/P1).
+
+- **P2-1 fechado.** 1,05× por rota (história e combate) e roteador conferido por turno
+  (`tests/test_spec360_flags_off.py:155-162`); a igualdade estrita segue no lockstep.
+- **P2-3 fechado.** `solo_region()` (`services/fauna.py:175`) converte qualquer presença sem sinal na
+  região de 1 nó, independente da constante; a constante global vale só para `cedo`
+  (`world_utils.py:1487`). O custo de Ophidia (−37 %) ficou registrado na §9.
+- **P2-4/P2-5 fechados.** `_cap_presences(protect=)` saiu. `_add_presence` respeita `region_cap` e o
+  cap global e só descarta ativa ainda não lida (`fauna.py:678-684`, `_drop_oldest_unread` em
+  `:181`).
+- **P2-6 fechado** (`world_utils.py:1158`). **P2-7:** a docstring adota "visitada mais recente".
+- **P2-2:** M5 global −19,41 %, folga ~0,6 pp, registrado como risco; limiar intocado.
+
+**"Turno calmo sem vaga" engole encontro?** Não engole **luta**: o turno só chega a
+`convert_to_signal` depois que `_fauna_encounter` já decidiu trocar o encontro por sinal
+(`fauna_convert`). Antes desta rodada ele já não seria combate. O que se perde é o **sinal**. Sem vaga,
+`agents/storyteller.py:1597-1617` carimba o cooldown (`last_encounter_turn`) e devolve `enc = None`, e o
+turno fica vazio. Medi com o simulador do eval (10 seeds × 60 dias, `_add_presence` instrumentado):
+
+| Região | Conversões | Sem vaga (turno calmo) |
+|---|---|---|
+| ophidia | 88 | 0 |
+| skallgard | 103 | 1 (1 %) |
+| montanhas_afiadas | 152 | 10 (6,6 %) |
+
+O caso real: a região já está no teto (3 em Montanhas), todas as presenças foram lidas e chega uma
+criatura `cedo` diferente. Isso não quebra R10 nem M5 (o eval já conta conversão como não luta), mas
+gasta o slot de encontro e o cooldown sem dar nada ao jogador.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-9 | P2 | `services/fauna.py:709`, `agents/storyteller.py:1597-1617` | Sem vaga, a conversão vira turno vazio e ainda consome o cooldown de encontro: ~6,6 % das conversões em Montanhas. | Follow-up: quando `convert_to_signal` devolve vazio, manter o encontro como luta, isto é, não zerar `enc` nem carimbar `fauna_sinal`. A criatura que não pôde ser anunciada ataca, como uma `imediato`, e isso ainda devolve um pouco de folga ao M5. Outra saída é mostrar o sinal de uma presença já ativa no local. Decisão do coordenador; o eval precisa contar do mesmo jeito. |
+| P2-10 | P2 | `services/fauna.py:678-684` | Se o teto da região libera vaga descartando uma não lida, mas o cap global não tem o que tirar, a função devolve `None` depois de já ter removido aquela presença: uma some e nenhuma nasce. Só acontece com 12 ativas lidas no mundo. | Conferir o global antes de descartar na região, ou devolver a removida. |
+
+**Flag `off`:** segue byte-idêntica. Todas as mudanças estão em caminhos que só rodam com
+`RPG_FAUNA_SINAIS=on` (`_add_presence`, `convert_to_signal`, `track_signal`, `_fauna_encounter`) ou com
+`fauna_on` (o neutro do migrante). O golden de Skallgard e `test_spec360_flags_off` estão verdes.
+
+**Integridade das evals regeneradas:**
+- `git diff ac2004ec..HEAD -- scripts/fauna/eval.py tests/test_spec3{60,70}_eval.py evals/` sai vazio.
+- Regenerei `eval-ophidia.md` e `eval-montanhas_afiadas.md` com o avaliador congelado, num diretório
+  temporário: os dois saíram byte-idênticos aos commitados.
+- As mudanças nos 12 relatórios (M1 e M8 se mexem em todas as regiões) são o efeito esperado do teto
+  na conversão, e todos os limiares seguem verdes.
+
+```text
+pytest -n 2 test_spec370_{caps,solo,migrante,carcaca,suprime} test_spec360_{flags_off,sinais,presenca,caca,eco,saves} → exit 0
+pytest -n 2 -m "not slow" test_spec370_eval.py test_spec360_eval.py → exit 0, 0 FAILED
+scripts/fauna/eval.py --regiao {ophidia,montanhas_afiadas} --out <tmp> ; cmp → idênticos
+py.sh -c "ev.run(10,60,r) com _add_presence instrumentado" → tabela acima
+```
