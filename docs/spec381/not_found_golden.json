@@ -1,0 +1,1127 @@
+{
+ "action:omitted": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "action:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "art_quality:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "art_status:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "cards_prepare:omitted": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "cards_prepare:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "chron_export:omitted": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "chron_export:unknown": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "chron_search:omitted": {
+  "body": {
+   "code": "validation_failed",
+   "detail": [
+    {
+     "loc": [
+      "body",
+      "game_id"
+     ],
+     "msg": "Field required",
+     "type": "missing"
+    }
+   ]
+  },
+  "status": 422
+ },
+ "chron_search:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "codex:omitted": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "codex:unknown": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "confirm:unknown": {
+  "body": {
+   "code": "image_quotes_unavailable",
+   "detail": "image_quotes_unavailable"
+  },
+  "status": 503
+ },
+ "death:omitted": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "death:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "dossiers:omitted": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "dossiers:unknown": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "equip:omitted": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "equip:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "espolio:omitted": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "espolio:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "game_map:omitted": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "game_map:unknown": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "history:omitted": {
+  "body": {
+   "code": "validation_failed",
+   "detail": [
+    {
+     "loc": [
+      "query",
+      "game_id"
+     ],
+     "msg": "Field required",
+     "type": "missing"
+    }
+   ]
+  },
+  "status": 422
+ },
+ "history:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "levelup:omitted": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "levelup:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "loja_cartas:omitted": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "loja_cartas:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "operation_status:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "preview:omitted": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "preview:unknown": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "quote:unknown": {
+  "body": {
+   "code": "image_quotes_unavailable",
+   "detail": "image_quotes_unavailable"
+  },
+  "status": 503
+ },
+ "state:omitted": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "state:unknown": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ },
+ "stream:omitted": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "stream:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "turn_cost:unknown": {
+  "body": {
+   "code": "game_not_found",
+   "detail": "Jogo não encontrado."
+  },
+  "status": 404
+ },
+ "world_map:omitted": {
+  "body": {
+   "locations": [
+    {
+     "connections": [
+      "na_anel_dourado",
+      "na_anel_ferro",
+      "na_anel_lama",
+      "pantano_melancolia",
+      "pradaria_ruinas",
+      "deserto_zhur",
+      "brekmar"
+     ],
+     "coords": {
+      "x": 38,
+      "y": 55
+     },
+     "craft_tags": [],
+     "danger": 1,
+     "economy_tags": [
+      "comercio"
+     ],
+     "id": "nova_arcadia",
+     "lore_seed": "A maior cidade de Valoria, erguida na confluência de rios e governada por Valerius sob o Código de Ferro; a Legião patrulha portões que separam os anéis — e as classes.",
+     "name": "Nova Arcádia",
+     "region": "Nova Arcádia",
+     "region_id": "nova_arcadia",
+     "start": true,
+     "tags": [
+      "cidade",
+      "seguro",
+      "comércio",
+      "codigo_de_ferro"
+     ],
+     "travel_times": {
+      "brekmar": 2,
+      "deserto_zhur": 2,
+      "na_anel_dourado": 0,
+      "na_anel_ferro": 0,
+      "na_anel_lama": 0
+     }
+    },
+    {
+     "connections": [
+      "nova_arcadia",
+      "na_anel_ferro"
+     ],
+     "coords": {
+      "x": 35,
+      "y": 52
+     },
+     "craft_tags": [
+      "laboratorio"
+     ],
+     "danger": 1,
+     "economy_tags": [
+      "comercio"
+     ],
+     "id": "na_anel_dourado",
+     "lore_seed": "Pedra polida e obsidiana que não reflete nada; o Palácio de Obsidiana sangra quando o Lorde se irrita, e nos Jardins Suspensos flores impossíveis perfumam a fumaça da favela abaixo.",
+     "name": "Anel Dourado",
+     "region": "Nova Arcádia",
+     "region_id": "nova_arcadia",
+     "tags": [
+      "cidade",
+      "nobreza",
+      "obsidiana"
+     ],
+     "travel_times": {
+      "na_anel_ferro": 0,
+      "nova_arcadia": 0
+     }
+    },
+    {
+     "connections": [
+      "nova_arcadia",
+      "na_anel_dourado",
+      "na_anel_lama"
+     ],
+     "coords": {
+      "x": 41,
+      "y": 52
+     },
+     "craft_tags": [
+      "forja",
+      "laboratorio"
+     ],
+     "danger": 2,
+     "economy_tags": [],
+     "id": "na_anel_ferro",
+     "lore_seed": "As Fundições Valerianas nunca param: fuligem que vira Tosse de Ferro, o Mercado de Carne vendendo contratos de servidão, e o Oubliette — torre invertida onde o Cego ouve cada respiração.",
+     "name": "Anel de Ferro",
+     "region": "Nova Arcádia",
+     "region_id": "nova_arcadia",
+     "tags": [
+      "cidade",
+      "industrial",
+      "fuligem"
+     ],
+     "travel_times": {
+      "na_anel_dourado": 0,
+      "na_anel_lama": 0,
+      "nova_arcadia": 0
+     }
+    },
+    {
+     "connections": [
+      "nova_arcadia",
+      "na_anel_ferro",
+      "na_taverna_javali"
+     ],
+     "coords": {
+      "x": 38,
+      "y": 60
+     },
+     "craft_tags": [],
+     "danger": 3,
+     "economy_tags": [],
+     "id": "na_anel_lama",
+     "lore_seed": "A Fossa fora das muralhas, onde o Código de Ferro não chega: o Beco dos Desdentados vende Pó de Sonho, a Catedral Afundada abriga leprosos e o Fosso dos Cães diverte quem nada tem.",
+     "name": "Anel de Lama",
+     "region": "Nova Arcádia",
+     "region_id": "nova_arcadia",
+     "tags": [
+      "favela",
+      "fora_da_lei",
+      "lama"
+     ],
+     "travel_times": {
+      "na_anel_ferro": 0,
+      "nova_arcadia": 0
+     }
+    },
+    {
+     "connections": [
+      "nova_arcadia",
+      "pm_profundezas",
+      "floresta_sussurros",
+      "pradaria_ruinas"
+     ],
+     "coords": {
+      "x": 55,
+      "y": 55
+     },
+     "craft_tags": [
+      "altar"
+     ],
+     "danger": 3,
+     "economy_tags": [
+      "ervas"
+     ],
+     "id": "pantano_melancolia",
+     "lore_seed": "Nasceu da batalha final contra Malagor: Éter de mortos demais afundou a pradaria. A água oleosa convida a deitar e dormir para sempre; só os Druidas do Ciclo Cinzento trabalham aqui, em turnos de duas semanas.",
+     "name": "Pântano da Melancolia",
+     "region": "Pântano da Melancolia",
+     "region_id": "pantano_melancolia",
+     "start": true,
+     "tags": [
+      "pântano",
+      "éter",
+      "mortos_vivos",
+      "melancolia"
+     ]
+    },
+    {
+     "connections": [
+      "pantano_melancolia",
+      "pm_cripta_afogada"
+     ],
+     "coords": {
+      "x": 60,
+      "y": 58
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "pm_profundezas",
+     "lore_seed": "Camadas de lama sobre décadas de equipamento de guerra da coalizão — riqueza real guardada por mortos-vivos ancorados no Éter, resíduo sem inteligência mas com número.",
+     "name": "Profundezas do Pântano",
+     "region": "Pântano da Melancolia",
+     "region_id": "pantano_melancolia",
+     "tags": [
+      "pântano",
+      "espólio",
+      "mortos_vivos"
+     ],
+     "treasure": {
+      "gold": 40,
+      "items": [
+       "espada_curta",
+       "pocao_cura_maior"
+      ]
+     }
+    },
+    {
+     "connections": [
+      "nova_arcadia",
+      "dz_borda_do_vazio"
+     ],
+     "coords": {
+      "x": 45,
+      "y": 80
+     },
+     "craft_tags": [],
+     "danger": 3,
+     "economy_tags": [],
+     "id": "deserto_zhur",
+     "lore_seed": "O Mar de Vidro: areia vitrificada pelo impacto da lua que matou Urath. Tempestades de Navalha esfolam a carne, fragmentos do demônio pulsam sob o vidro e os Devoradores de Sol caçam forasteiros pela água do corpo.",
+     "name": "Deserto de Zhur",
+     "region": "Deserto de Zhur",
+     "region_id": "deserto_zhur",
+     "start": true,
+     "tags": [
+      "deserto",
+      "vidro",
+      "cristais",
+      "devoradores_de_sol"
+     ],
+     "travel_times": {
+      "nova_arcadia": 2
+     }
+    },
+    {
+     "connections": [
+      "deserto_zhur"
+     ],
+     "coords": {
+      "x": 48,
+      "y": 92
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "dz_borda_do_vazio",
+     "lore_seed": "Onde o deserto termina em queda para o nada. Um som sem nome sobe da borda — não é vento, não é eco. Nem os Devoradores de Sol se aproximam.",
+     "name": "Borda do Vazio",
+     "region": "Deserto de Zhur",
+     "region_id": "deserto_zhur",
+     "tags": [
+      "deserto",
+      "vazio",
+      "fim_do_mundo",
+      "apex"
+     ]
+    },
+    {
+     "connections": [
+      "pantano_melancolia",
+      "aethelgard",
+      "fs_fronteira_xylos"
+     ],
+     "coords": {
+      "x": 72,
+      "y": 55
+     },
+     "craft_tags": [
+      "altar"
+     ],
+     "danger": 3,
+     "economy_tags": [
+      "ervas"
+     ],
+     "id": "floresta_sussurros",
+     "lore_seed": "Criada por Thessavar como esconderijo do escuro: árvores que bloqueiam a luz com precisão intencional, silêncio que é presença, e vozes chamando seu nome com a voz de mortos conhecidos.",
+     "name": "Floresta dos Sussurros",
+     "region": "Floresta dos Sussurros",
+     "region_id": "floresta_sussurros",
+     "start": true,
+     "tags": [
+      "floresta",
+      "místico",
+      "thessavar",
+      "escuridão"
+     ]
+    },
+    {
+     "connections": [
+      "floresta_sussurros",
+      "selva_xylos"
+     ],
+     "coords": {
+      "x": 80,
+      "y": 58
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "fs_fronteira_xylos",
+     "lore_seed": "O lugar mais estranho do leste: onde o escuro seco da floresta encontra o escuro úmido da selva. As criaturas de um lado não cruzam para o outro — e ninguém sabe o que ambas temem.",
+     "name": "Fronteira com Xylos",
+     "region": "Floresta dos Sussurros",
+     "region_id": "floresta_sussurros",
+     "tags": [
+      "floresta",
+      "fronteira",
+      "estranho"
+     ],
+     "travel_times": {
+      "selva_xylos": 2
+     }
+    },
+    {
+     "connections": [
+      "fs_fronteira_xylos",
+      "sx_cidades_hospedeiros",
+      "sx_profundezas"
+     ],
+     "coords": {
+      "x": 88,
+      "y": 60
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "selva_xylos",
+     "lore_seed": "Calor de bafo vivo, ar que corrói metal e o ciclo acelerado: frutas apodrecem em uma hora, e parar tempo demais significa ser incorporado ao substrato. Para os Hospedeiros é lar; para o resto, morte tranquila e eficiente.",
+     "name": "Selva de Xylos",
+     "region": "Selva de Xylos",
+     "region_id": "selva_xylos",
+     "tags": [
+      "selva",
+      "ciclo_acelerado",
+      "ácido",
+      "hospedeiros"
+     ],
+     "travel_times": {
+      "fs_fronteira_xylos": 2
+     }
+    },
+    {
+     "connections": [
+      "selva_xylos"
+     ],
+     "coords": {
+      "x": 85,
+      "y": 54
+     },
+     "craft_tags": [],
+     "danger": 2,
+     "economy_tags": [],
+     "id": "sx_cidades_hospedeiros",
+     "lore_seed": "Plataformas suspensas nas árvores gigantes, arquitetura crescida tanto quanto construída. As colônias de Xylos sentem qualquer intruso a duzentos metros — os Hospedeiros comerciam resina nas bordas, sem explicar de onde vem.",
+     "name": "Cidades nas Copas",
+     "region": "Selva de Xylos",
+     "region_id": "selva_xylos",
+     "start": true,
+     "tags": [
+      "cidade",
+      "hospedeiros",
+      "copas"
+     ]
+    },
+    {
+     "connections": [
+      "selva_xylos"
+     ],
+     "coords": {
+      "x": 92,
+      "y": 66
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "sx_profundezas",
+     "lore_seed": "Abaixo das copas, abaixo do chão, onde a luz nunca chegou: Morrakh, o dragão do contágio. Hospedeiros que desceram fundo demais voltaram com o parasita operando em padrões que a colmeia não reconhece.",
+     "name": "Profundezas de Morrakh",
+     "region": "Selva de Xylos",
+     "region_id": "selva_xylos",
+     "tags": [
+      "selva",
+      "dragão",
+      "contágio",
+      "apex"
+     ]
+    },
+    {
+     "connections": [
+      "montanhas_afiadas",
+      "sk_fortaleza_vorr",
+      "sk_farol_chama_negra",
+      "sk_salao_do_jarl"
+     ],
+     "coords": {
+      "x": 45,
+      "y": 8
+     },
+     "craft_tags": [
+      "forja"
+     ],
+     "danger": 2,
+     "economy_tags": [
+      "mineracao"
+     ],
+     "id": "skallgard",
+     "lore_seed": "Cidade do Ermo Branco onde o frio é condição do Abismo, não clima. Clãs tecnológicos que nunca pegam em arma e clãs de combate que exportam mercenários — todos hostis a forasteiros de 'vidas quentes'.",
+     "name": "Skallgard",
+     "region": "Skallgard",
+     "region_id": "skallgard",
+     "start": true,
+     "tags": [
+      "cidade",
+      "gelo",
+      "clãs",
+      "noite_eterna"
+     ],
+     "travel_times": {
+      "montanhas_afiadas": 2
+     }
+    },
+    {
+     "connections": [
+      "skallgard"
+     ],
+     "coords": {
+      "x": 35,
+      "y": 5
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "sk_fortaleza_vorr",
+     "lore_seed": "Construção dos Gigantes: degraus na altura da cintura, portas de vinte metros. As 'estátuas' são aventureiros congelados pelo Sopro de Vorr — e ainda estão conscientes.",
+     "name": "Fortaleza de Vorr",
+     "region": "Skallgard",
+     "region_id": "skallgard",
+     "tags": [
+      "ruína",
+      "gigantes",
+      "gelo",
+      "apex"
+     ]
+    },
+    {
+     "connections": [
+      "skallgard"
+     ],
+     "coords": {
+      "x": 55,
+      "y": 4
+     },
+     "craft_tags": [],
+     "danger": 3,
+     "economy_tags": [],
+     "id": "sk_farol_chama_negra",
+     "lore_seed": "Ergue anti-luz sobre o gelo, e a aurora do norte muda de ritmo ao redor. Um guardião que não fala e que ninguém alcança. Para quê, ninguém sabe.",
+     "name": "Farol da Chama Negra",
+     "region": "Skallgard",
+     "region_id": "skallgard",
+     "tags": [
+      "farol",
+      "gigantes",
+      "anti_luz"
+     ]
+    },
+    {
+     "connections": [
+      "pradaria_ruinas",
+      "floresta_sussurros",
+      "ae_ruinas_submersas"
+     ],
+     "coords": {
+      "x": 68,
+      "y": 40
+     },
+     "craft_tags": [],
+     "danger": 2,
+     "economy_tags": [],
+     "id": "aethelgard",
+     "lore_seed": "O Lago sem nome sobre a cidade que implodiu numa noite. Nas bordas a água é cristalina sobre arcos submersos; sobre o coração de Aethelgard, escura — a luz simplesmente não desce até Oghma.",
+     "name": "Margem de Aethelgard",
+     "region": "Aethelgard",
+     "region_id": "aethelgard",
+     "start": true,
+     "tags": [
+      "lago",
+      "ruínas",
+      "éter"
+     ]
+    },
+    {
+     "connections": [
+      "aethelgard",
+      "ae_camara_seca"
+     ],
+     "coords": {
+      "x": 72,
+      "y": 44
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "ae_ruinas_submersas",
+     "lore_seed": "Corredores élficos onde o Éter guarda as últimas memórias das vítimas da Destilação. Os Afogados patrulham em rotas coordenadas, Morvath observa e comenta, e Thessrak — selado — ainda fala.",
+     "name": "Ruínas Submersas de Aethelgard",
+     "region": "Aethelgard",
+     "region_id": "aethelgard",
+     "tags": [
+      "ruínas",
+      "submerso",
+      "afogados",
+      "thessrak"
+     ],
+     "treasure": {
+      "gold": 55,
+      "items": [
+       "arco_de_caca",
+       "art_oghma_coracao_aethelgard"
+      ]
+     }
+    },
+    {
+     "connections": [
+      "brekmar"
+     ],
+     "coords": {
+      "x": 5,
+      "y": 60
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "ophidia",
+     "lore_seed": "Vulcões que fumegam em cores que não existem, ilhas que não estão onde estavam ontem. Barcos que se aproximam não naufragam — simplesmente deixam de existir no registro do que pode ser rastreado.",
+     "name": "Ophidia",
+     "region": "Ophidia",
+     "region_id": "ophidia",
+     "start": true,
+     "tags": [
+      "arquipélago",
+      "vulcânico",
+      "mistério"
+     ],
+     "travel_times": {
+      "brekmar": 3
+     }
+    },
+    {
+     "connections": [
+      "brekmar",
+      "cn_o_trono"
+     ],
+     "coords": {
+      "x": 12,
+      "y": 38
+     },
+     "craft_tags": [],
+     "danger": 3,
+     "economy_tags": [
+      "porto"
+     ],
+     "id": "costa_negra",
+     "lore_seed": "Quilômetros de praia sob costelas do tamanho de árvores: gerações de leviatãs caçados pelos Osshari. O Éter das carcaças atrai demônios menores, e o âmbar cinza dos Caranguejeiros vale fortunas.",
+     "name": "Costa Negra — Cemitério de Leviatãs",
+     "region": "Costa Negra",
+     "region_id": "costa_negra",
+     "start": true,
+     "tags": [
+      "costa",
+      "ossadas",
+      "éter",
+      "osshari"
+     ],
+     "travel_times": {
+      "brekmar": 2
+     }
+    },
+    {
+     "connections": [
+      "costa_negra"
+     ],
+     "coords": {
+      "x": 7,
+      "y": 35
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "cn_o_trono",
+     "lore_seed": "A maior carcaça do Cemitério — crânio com câmaras do tamanho de uma vila, costelas em arcos de vinte metros. Dizem que ainda respira em ciclos de seis horas. Os Osshari dizem apenas: ele não terminou de morrer.",
+     "name": "O Trono",
+     "region": "Costa Negra",
+     "region_id": "costa_negra",
+     "tags": [
+      "ossadas",
+      "leviatã",
+      "proibido",
+      "apex"
+     ]
+    },
+    {
+     "connections": [
+      "pradaria_ruinas",
+      "skallgard",
+      "ma_saidas_baixas",
+      "ma_boca"
+     ],
+     "coords": {
+      "x": 45,
+      "y": 22
+     },
+     "craft_tags": [],
+     "danger": 3,
+     "economy_tags": [
+      "mineracao"
+     ],
+     "id": "montanhas_afiadas",
+     "lore_seed": "Rasgaram o chão num terremoto na Era 2 — os Anões emergiram junto. Passagens labirínticas que deslizamentos redesenham; só guias Cinzéus atravessam com segurança, porque não sentem dor suficiente para se importar.",
+     "name": "Montanhas Afiadas",
+     "region": "Montanhas Afiadas",
+     "region_id": "montanhas_afiadas",
+     "start": true,
+     "tags": [
+      "montanha",
+      "passagens",
+      "labirinto"
+     ],
+     "travel_times": {
+      "skallgard": 2
+     }
+    },
+    {
+     "connections": [
+      "montanhas_afiadas",
+      "ma_boca"
+     ],
+     "coords": {
+      "x": 40,
+      "y": 28
+     },
+     "craft_tags": [],
+     "danger": 3,
+     "economy_tags": [
+      "mineracao"
+     ],
+     "id": "ma_saidas_baixas",
+     "lore_seed": "Bocas das passagens tomadas por Orcs e Goblins que saíram do Reino Subterrâneo quando o Rei despertou. Acampam, atacam grupos pequenos, fogem de grupos grandes — primeiro e último obstáculo de qualquer travessia.",
+     "name": "Saídas Baixas",
+     "region": "Montanhas Afiadas",
+     "region_id": "montanhas_afiadas",
+     "tags": [
+      "montanha",
+      "orcs",
+      "goblins"
+     ]
+    },
+    {
+     "connections": [
+      "montanhas_afiadas",
+      "ma_saidas_baixas",
+      "ma_forja_profunda"
+     ],
+     "coords": {
+      "x": 52,
+      "y": 25
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "ma_boca",
+     "lore_seed": "A entrada mais conhecida do Reino Subterrâneo perdido dos Anões. Quem desce entra num labirinto de câmaras idênticas com algo imenso que não ataca — mas está sempre presente, em qualquer direção que você olhe.",
+     "name": "A Boca",
+     "region": "Montanhas Afiadas",
+     "region_id": "montanhas_afiadas",
+     "tags": [
+      "caverna",
+      "reino_subterrâneo",
+      "rei",
+      "apex"
+     ]
+    },
+    {
+     "connections": [
+      "nova_arcadia",
+      "montanhas_afiadas",
+      "pantano_melancolia",
+      "aethelgard",
+      "pr_vaelorn",
+      "pr_solvhen",
+      "pr_ruinas_assombradas"
+     ],
+     "coords": {
+      "x": 48,
+      "y": 38
+     },
+     "craft_tags": [],
+     "danger": 2,
+     "economy_tags": [],
+     "id": "pradaria_ruinas",
+     "lore_seed": "Onde as civilizações Élficas e Cinzéus floresceram e a Guerra do Céu Vermelho as destruiu. Fundações afloram da grama alta; nômades circulam — e não há como saber, de longe, se são comércio ou ameaça.",
+     "name": "Pradaria das Ruínas",
+     "region": "Pradaria das Ruínas",
+     "region_id": "pradaria_ruinas",
+     "start": true,
+     "tags": [
+      "pradaria",
+      "ruínas",
+      "nômades"
+     ]
+    },
+    {
+     "connections": [
+      "pradaria_ruinas"
+     ],
+     "coords": {
+      "x": 42,
+      "y": 34
+     },
+     "craft_tags": [
+      "forja"
+     ],
+     "danger": 1,
+     "economy_tags": [],
+     "id": "pr_vaelorn",
+     "lore_seed": "A maior cidade Élfica restante, construída sobre fundações de uma cidade-estado morta — impossível dizer onde termina a ruína e começa a reconstrução. Mercado de itens mágicos e arquivo da memória coletiva Élfica.",
+     "name": "Vaelorn",
+     "region": "Pradaria das Ruínas",
+     "region_id": "pradaria_ruinas",
+     "tags": [
+      "cidade",
+      "elfos",
+      "magia"
+     ]
+    },
+    {
+     "connections": [
+      "pradaria_ruinas"
+     ],
+     "coords": {
+      "x": 55,
+      "y": 35
+     },
+     "craft_tags": [],
+     "danger": 1,
+     "economy_tags": [],
+     "id": "pr_solvhen",
+     "lore_seed": "A cidade Cinzéu: paredes cobertas de frases em preto sobre cinza, séculos de contemplação em pergaminho. O lugar mais silencioso da Pradaria — e o mais perturbador para quem não conhece o peso do silêncio Cinzéu.",
+     "name": "Solvhen",
+     "region": "Pradaria das Ruínas",
+     "region_id": "pradaria_ruinas",
+     "tags": [
+      "cidade",
+      "cinzéus",
+      "silêncio"
+     ]
+    },
+    {
+     "connections": [
+      "pradaria_ruinas"
+     ],
+     "coords": {
+      "x": 52,
+      "y": 42
+     },
+     "craft_tags": [],
+     "danger": 4,
+     "economy_tags": [],
+     "id": "pr_ruinas_assombradas",
+     "lore_seed": "As ruínas mais antigas, onde a vegetação tomou tudo e as almas da Guerra do Céu Vermelho ficaram ancoradas no Éter. Um Elfo espectral pode ser belo e mortal ao mesmo tempo; um Cinzéu espectral, imóvel por horas — e então rápido demais.",
+     "name": "Ruínas Assombradas",
+     "region": "Pradaria das Ruínas",
+     "region_id": "pradaria_ruinas",
+     "tags": [
+      "ruínas",
+      "espectros",
+      "éter"
+     ]
+    },
+    {
+     "connections": [
+      "nova_arcadia",
+      "costa_negra",
+      "ophidia",
+      "bk_docas_velhas"
+     ],
+     "coords": {
+      "x": 15,
+      "y": 50
+     },
+     "craft_tags": [
+      "laboratorio"
+     ],
+     "danger": 2,
+     "economy_tags": [
+      "porto"
+     ],
+     "id": "brekmar",
+     "lore_seed": "O porto sem lei que ninguém fundou: tudo que não pode passar por Nova Arcádia passa por aqui. Não há governo — há Kahen, o sangrinomante no navio ancorado, árbitro de última instância que ouve antes de falar.",
+     "name": "Brekmar",
+     "region": "Brekmar",
+     "region_id": "brekmar",
+     "start": true,
+     "tags": [
+      "porto",
+      "sem_lei",
+      "comércio",
+      "piratas"
+     ],
+     "travel_times": {
+      "bk_docas_velhas": 0,
+      "costa_negra": 2,
+      "nova_arcadia": 2,
+      "ophidia": 3
+     }
+    },
+    {
+     "connections": [
+      "brekmar"
+     ],
+     "coords": {
+      "x": 10,
+      "y": 53
+     },
+     "craft_tags": [],
+     "danger": 3,
+     "economy_tags": [],
+     "id": "bk_docas_velhas",
+     "lore_seed": "As extremidades do porto: mais Osshari, mais violência casual, mais negócios que não se discutem em voz alta. Quem chega novo aprende rápido que as docas velhas são outro território — e que a distinção importa.",
+     "name": "Docas Velhas",
+     "region": "Brekmar",
+     "region_id": "brekmar",
+     "tags": [
+      "docas",
+      "violência",
+      "contrabando"
+     ],
+     "travel_times": {
+      "brekmar": 0
+     }
+    }
+   ],
+   "start_location": "nova_arcadia"
+  },
+  "status": 200
+ },
+ "world_map:unknown": {
+  "body": {
+   "code": "no_saved_game",
+   "detail": "Nenhum jogo salvo encontrado."
+  },
+  "status": 404
+ }
+}
