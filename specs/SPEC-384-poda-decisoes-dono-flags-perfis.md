@@ -10,6 +10,7 @@
 > SPEC-376 exclui `set_deck`); D8/D9 esperam a **SPEC-381** (`api.py` em routers). D1/D3 também esperam a
 > SPEC-374 (W1 de 03/11: `config/flags.yaml`).
 > **Desbloqueia:** nada obrigatório. A SPEC-378 já exclui as flags do D1 (`specs/SPEC-378-…md:199-201`).
+> **Decisões do dono (04/11):** D1 = recomendação [R] (aposentar LORE_QUESTS, WORLD_QUESTS, RUMORS, CALENDAR, COMPANION_SOUL, NPC_TWO_PHASE, REPLAN_AFTER; reclassificar COMPANION_ROMANCE e NPC_SELF `kill_switch`, CONTEXT_PREFETCH `ops`; adiar WORLD_ENGINE e OPENING_THREAD) · D2 = recomendação [R] (9 → `on` em spec futura; ROUTER_DETERMINISTIC_NPC fica `shadow`; RUMORS_ADOPTED junto com RUMORS_PROPOSED) · D3 em discussão (dono gosta da mecânica) · D4–D9 pendentes
 > **Revisão:** `handoffs/SPEC-384-independent-review.md` (CHANGES_REQUIRED, 03/11). Correções aplicadas;
 > ver "Resposta à revisão" no fim.
 > **EXECUTOR_MODEL:** `Terra` · **REVIEW_MODEL:** `Sol` · **REVIEW_REQUIRED:** `true` · **EVAL_AUTHORING_REQUIRED:** `false`
