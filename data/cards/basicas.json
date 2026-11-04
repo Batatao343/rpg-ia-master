@@ -49,14 +49,15 @@
       "subclasse": "",
       "patamar": "inicial",
       "custo_entropia": 0,
-      "custo_folego": 1,
+      "custo_folego": 0,
       "frequencia": "turno",
       "virtude_permitida": ["carisma"],
       "efeito": { "kind": "taunt", "valor": 2 },
       "descricao": "Chama para si o olhar que o Abismo lançaria sobre os outros.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "versao": 2
     },
     {
       "id": "bas_san_golpe",
@@ -145,14 +146,15 @@
       "subclasse": "",
       "patamar": "inicial",
       "custo_entropia": 0,
-      "custo_folego": 1,
+      "custo_folego": 0,
       "frequencia": "livre",
       "virtude_permitida": ["corpo"],
       "efeito": { "kind": "protecao", "valor": 2 },
       "descricao": "A pele seca e racha em placas cinzentas; nada que o toque quer ficar perto.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "versao": 2
     },
     {
       "id": "bas_cor_mofo",
@@ -222,7 +224,7 @@
       "subclasse": "",
       "patamar": "inicial",
       "custo_entropia": 0,
-      "custo_folego": 1,
+      "custo_folego": 0,
       "frequencia": "turno",
       "virtude_permitida": ["mente"],
       "efeito": { "kind": "buff_acerto", "valor": 1 },
@@ -230,7 +232,8 @@
       "mecanica_classe": { "resfria_caldeira": true },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "versao": 2
     },
     {
       "id": "bas_med_golpe",
@@ -245,11 +248,12 @@
       "custo_folego": 1,
       "frequencia": "livre",
       "virtude_permitida": ["agilidade", "mente"],
-      "efeito": { "kind": "dano", "categoria_arma": "leve", "dano_base": 3 },
+      "efeito": { "kind": "dano", "categoria_arma": "leve", "dano_base": 5 },
       "descricao": "Mão que cose a carne também sabe onde ela cede.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "versao": 3
     },
     {
       "id": "bas_med_guarda",

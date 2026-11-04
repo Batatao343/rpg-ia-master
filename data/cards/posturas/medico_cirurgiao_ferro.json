@@ -42,7 +42,7 @@
       "patamar": "inicial",
       "raridade": "comum",
       "custo_entropia": 1,
-      "custo_folego": 0,
+      "custo_folego": 1,
       "frequencia": "cena",
       "virtude_permitida": [
         "mente",
@@ -61,7 +61,7 @@
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "med1_fer_pistao_de_campo",

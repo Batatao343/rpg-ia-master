@@ -577,3 +577,38 @@ Histórico anterior (`<sha-A>` = `65a1a483`, já na base do pouso por fast-forwa
   - A docstring do `cmd_emboscada` passou a explicar o que é cada total.
   - A base do R19(d) é estável.
 - P3-1: o cabeçalho do reparo diz "vocabulário, orçamento ou raridade". P3-2: motivo próprio "ajuste de orçamento sem passo possível" quando nenhum passo se aplica (ex.: abaixo da faixa com Fôlego 0), distinto de "não coube em 6 passos"; teste novo. P3-3: `test_reparo_aumenta_quando_abaixo` sem condicional. P3-4: assinatura real de `fit_orcamento` anotada no §3.1.
+
+### Fase B, B3 (04/11, executor Terra/Sonnet; sha-A = `6ed6815d`)
+
+**Passos mantidos** (um por vez, `base` 0-19 + `posturas` da Postura afetada depois de cada um; detalhe em `docs/spec369/passos-0-19.json`):
+
+| # | Carta | Passo | Cartas/rodada (total) | p95 total | Efeito |
+|---|---|---|---|---|---|
+| 0 | (base) | - | 1,915 | 12 | - |
+| 1 | `bas_med_golpe` | dano 3 -> 4 | 1,918 | 11 | Médico p95 19 -> 18, timeout 4,4 -> 3,6 %, Postura 45,8 -> 51,5 % |
+| 2 | `bas_med_golpe` | dano 4 -> 5 | 1,919 | 11 | Médico p95 16, timeout 3,1 %, Postura 56,0 % |
+| 3 | `bas_dev_voto` | Fôlego 1 -> 0 | 1,963 | 11 | Devoto 1,799 -> 2,007; Postura 60,2 % |
+| 4 | `bas_arc_vazao` | Fôlego 1 -> 0 | 1,999 | 11 | Arcanista 1,876 -> 2,097; Postura 57,1 % |
+| 5 | `bas_cor_guarda` | Fôlego 1 -> 0 | 2,159 | 11 | Corruptor 1,864 -> 2,717; Postura 60,6 % |
+| 6 | `med1_fer_lente_de_protese` | Fôlego 0 -> 1 | 2,150 | 11 | `uso` 1,0 -> 0,333 (R14a); Postura 55,8 % |
+
+Cada Carta recebeu `versao` + 1 (as básicas sem `versao` passaram a 2). `bas_med_golpe` teve 2 passos na mesma versão.
+
+**Estado final das metas do B3 (0-19, `final-0-19.json`):**
+- **R13 passa:** total 2,150; Devoto 2,007, Corruptor 2,717, Arcanista 2,097, Médico 2,122 (Sangromante 1,792, isento do piso).
+- **R14 não passa**, e não fecha dentro do R18: `arc1_cal_pulso_medido` 1,0, `bas_cor_mofo` 0,718, `bas_dev_voto` 1,0, `bas_arc_vazao` 1,0 e `med1_fer_garra_de_protese` 0,604. Nenhuma bandeira `dominante` por delta fora das 3 legadas travadas. Contagem literal de Cartas com uso > 60 %: 15 -> 19 (básica 4 -> 7, legada 5 -> 6, onda 2 -> 2, Sangromante 4).
+- **R15 não passa:** p95 total 11 (meta 10), Médico p95 17 e timeout 3,3 %. Os 12 timeouts do Médico são todos contra `mon_automato_fundicao` (esquiva 14, `protect` quando ferido); dano do golpe e acerto da lente não os resolvem.
+- **R19 passa:** Devoto 60,2, Sangromante 65,0 (+0,0 pp), Corruptor 60,6, Arcanista 57,1, Médico 55,8; nenhuma subclasse padrão acima de 75 %; vitória agregada da `base` 68,3 %.
+
+**Por que R13 e R14(a) conflitam (achado):** a Carta que o bot joga com Fôlego 0 é jogada sempre que está na mão, então `uso` = 1,0. Para subir as cartas por rodada só há Cartas de Fôlego 0, e as básicas que não são golpe nem guarda (voto, vazão) entram na meta (a). A guarda a Fôlego 0 não conta no (a), mas libera Fôlego para os ataques e empurra `bas_cor_mofo`/`arc1_cal_pulso_medido`.
+- `bas_cor_mofo` (uso 0,607 na base, 0,718 agora) só cai abaixo de 0,6 com `dano_base` 1, que o lint recusa (`dano_base` < base da arma `leve` = 3). Frequência (`turno`, `cena`) e `custo_entropia` não mexem no `uso`.
+- `arc1_cal_pulso_medido` com Fôlego 1 e dano 3 dá `uso` 0,616 sem a guarda livre e 0,755 com ela; nenhum par de passos fecha.
+
+**Sondagens descartadas (feitas em árvore de trabalho, fora do `passos-0-19.json`; declaro por transparência, o revisor decide se contam no limite de 8 Cartas):**
+- Trajetória "guardas livres": `bas_dev_guarda`, `bas_arc_guarda`, `bas_med_guarda` e `bas_cor_guarda` a Fôlego 0 dão 2,54 de total, mas o Devoto/consagrado vai a 79,2 % (R19a reprova), `arc1_des_garganta`, `dev1_tro_palavra_que_corta`, `dev1_zel_mao_na_frente` e `med1_fer_garra_de_protese` passam de 0,6, e o Presságio fica em 0,997.
+- `bas_med_pressao` cura 3 -> 2 -> 1: não move a duração; `arc1_cal_pulso_medido` (Fôlego 1, dano 3), `bas_cor_mofo` (frequência, dano 2 e 1) e `med1_fer_lente_de_protese` valor 3 -> 5 (sem efeito).
+
+**Conflito com a Fase A (R1, não editado):** `tests/test_spec369_regua.py::test_braco_cego_nao_le_pressagio` e `::test_bot_faixa_troca_ataque_por_defesa` fixam a mão `HAND_DEV` com `bas_dev_voto` a Fôlego 1. Com o passo 3, o bot joga o voto de graça e a declaração esperada muda. O autor da régua precisa tornar esses dois testes robustos ao Fôlego das básicas (como fez no B2).
+
+**Teste de produto tocado:** `tests/test_card_piles.py::test_basicas_tres_por_postura_e_lint_limpo` exigia "todas as básicas a Fôlego 1"; agora exige exatamente `bas_dev_voto`, `bas_arc_vazao` e `bas_cor_guarda` a 0 (R18b).
+

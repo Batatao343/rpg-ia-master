@@ -73,7 +73,10 @@ def test_basicas_tres_por_postura_e_lint_limpo():
         assert len(b["golpe"]) == 1 and len(b["guarda"]) == 1 and len(b["assinatura"]) == 1, cls
     basics = [c for c in cards.all_cards().values() if c.get("basica")]
     assert len(basics) == 15
-    assert all(cards.custo_folego(c) == 1 for c in basics)
+    # SPEC-369 R18(b): 3 basicas passaram a Folego 0 (cartas por rodada); as demais seguem em 1
+    folego0 = {"bas_dev_voto", "bas_arc_vazao", "bas_cor_guarda"}
+    assert {c["id"] for c in basics if cards.custo_folego(c) == 0} == folego0
+    assert all(cards.custo_folego(c) == 1 for c in basics if c["id"] not in folego0)
     errors = [f for f in content_validator.validate_cards() if f.severity == "error"]
     assert errors == []
 
