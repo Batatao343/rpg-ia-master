@@ -3,6 +3,7 @@
 import copy
 import json
 import os
+import shutil
 
 import pytest
 
@@ -311,12 +312,16 @@ def test_validator_requires_unique_and_increasing_id_versao_across_files(tmp_pat
 
 
 def test_non_numeric_versao_does_not_break_catalog(tmp_path, monkeypatch):
-    from services import card_effects, cards
+    from services import cards
     from services.content_validator import validate_cards
 
-    card_effects.budget_config()  # orçamento real em cache antes de trocar DATA_DIR (ordem da suíte)
-    monkeypatch.setattr(cards.gamedata, "DATA_DIR", str(tmp_path))
+    real_cards = os.path.join(cards.gamedata.DATA_DIR, "cards")
     cdir = tmp_path / "cards"
+    cdir.mkdir(parents=True, exist_ok=True)
+    for name in os.listdir(real_cards):  # configs (_orcamento, _roda_posturas…) lidas sob demanda
+        if name.startswith("_") and name.endswith(".json"):
+            shutil.copy(os.path.join(real_cards, name), cdir / name)
+    monkeypatch.setattr(cards.gamedata, "DATA_DIR", str(tmp_path))
     _write(
         cdir, "a.json", [card(id="med_v", versao="dois"), card(id="med_w", name="W", versao=None)]
     )
