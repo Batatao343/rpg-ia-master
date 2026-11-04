@@ -475,7 +475,26 @@ A Fase B esgotou as alavancas do R18 com R13, R17, R19 e 3 de 5 células do R20 
 
 ### Fase A (04/11, executor Sol/Opus; revisão Astra `CHANGES_REQUIRED` em `handoffs/SPEC-369-astra-review.md`, corrigida em `d6a6de69`)
 
-**`<sha-A>` = `8ef607c0`** (último commit de autor da régua; a prova do R1 da Fase B usa este sha). Emenda em `8ef607c0`, só em teste, sem mexer no bot do R7 nem em número:
+**`<sha-A>` = `7a75a389`** (último commit de autor da régua: aplica a D-369-10 em `tests/test_spec369_metas.py`, com as constantes no topo marcadas "D-369-10").
+
+O que mudou com a D-369-10:
+- **R14(a):** uma Carta básica com `custo_folego` 0 no catálogo fica isenta (`assinatura_gratis`, lida do catálogo, sem lista de ids). Hoje isso cobre `bas_dev_voto`, `bas_arc_vazao` e `bas_cor_guarda`. Ganham teto registrado `arc1_cal_pulso_medido` 1,0 e `bas_cor_mofo` 0,714 (`LIMITE_USO_R14A`). Qualquer outra Carta na meta acima de 60 % reprova, e o R14(b) segue igual.
+- **R15:** o p95 total ≤ 10 e o timeout ≤ 1 % seguem como meta. O Médico ganha teto de p95 16 (`LIMITE_P95_POSTURA`).
+- **R16:** teto de 1,0257 (`LIMITE_PRESSAGIO_RAZAO`). A vitória de `on-faixa` continua em 45–85 %.
+- **R20:** `conjurador` L5 (`on` 38,5 %, Δ −8,0) e `predador_apice` L3 (`on` 61,5 %, Δ −13,5) ganham limite registrado: a faixa só se alarga até o valor da Fase B. As 3 outras células continuam com a meta cheia, e as 200 lutas e as sementes da fase continuam valendo.
+- **Fase C (`test_r22_confirmacao`, D-369-10 item 5):** os **limites registrados** ganham uma tolerância de amostra, cerca de 1 erro-padrão da Fase C (`TOLERANCIA_CONFIRMACAO`):
+
+  | Limite registrado | Tolerância |
+  |---|---|
+  | uso | +0,05 |
+  | p95 | +1 rodada |
+  | razão | +0,02 |
+  | célula de família | ±5 pp |
+
+  As metas cheias e os pisos absolutos não ganham tolerância.
+- **Resultado:** `test_spec369_metas.py` (contra `final-0-19.json` de 540deb81) dá 8 passed e 7 xfailed. Os 8 passed são R13–R20 e R18. Os 7 xfailed são todos `test_r22_confirmacao`, porque `confirmacao.json` ainda não existe; fora do R22, 0 xfailed. A régua dá 18 passed, incluindo 2 testes novos da D-369-10 (isenção lida do catálogo; limites que não podem piorar, e com tolerância só na confirmação).
+
+Antes: **`<sha-A>` = `8ef607c0`**. Emenda em `8ef607c0`, só em teste, sem mexer no bot do R7 nem em número:
 - **Motivo:** a Fase B (c2d05130) pôs `bas_dev_voto`, `bas_arc_vazao` e `bas_cor_guarda` a Fôlego 0, e dois testes da régua quebraram. `test_bot_faixa_troca_ataque_por_defesa` e `test_braco_cego_nao_le_pressagio` fixavam uma mão com `bas_dev_voto`. Com custo 0, o voto (taunt, que o R7 conta como ataque de dano 0) entra na declaração, vira o "ataque mais fraco" e a troca deixa de caber.
 - **Correção:** a mão do teste agora é só de golpes e guarda básicos, e a declaração esperada do bot cego é calculada com o custo real do catálogo (`fx.custo_folego`). O teste também afirma a pré-condição da situação provada: a guarda não custa mais que o golpe. A prova continua a mesma: troca do golpe mais fraco pela defesa, e o leitor diferente do cego diante da mesma ameaça.
 
