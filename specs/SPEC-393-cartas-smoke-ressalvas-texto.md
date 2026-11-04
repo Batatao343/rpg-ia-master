@@ -1,6 +1,6 @@
 # SPEC-393 — Cartas: arestas do smoke das ressalvas (texto da morte aceita, golpe final múltiplo, prosa de morte fiel ao registro, compra com cauda de ouro, aviso do import)
 
-> **Status:** `approved` (04/11, coordenador, ordem permanente do dono "manda bala" e política de zero pendência)
+> **Status:** `done` (04/11, coordenador; revisão Sol APPROVED na rodada 3, smoke real em `docs/spec393/smoke.md` com o achado do R1 corrigido em `17a45893`)
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-327
 > **Origem:** [docs/smoke-ressalvas-cartas/smoke-local.md](../docs/smoke-ressalvas-cartas/smoke-local.md) § Achados 1–6.
