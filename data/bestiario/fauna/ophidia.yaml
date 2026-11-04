@@ -25,8 +25,8 @@ criaturas:
     contra_jogo: "Levá-lo para a pedra seca e aguentar o começo; seco, ele racha e bate como qualquer um."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_ossada_de_pomes:
     fonte: ficha
@@ -49,8 +49,8 @@ criaturas:
     contra_jogo: "Esperar o assobio e responder com um golpe só, firme; ele não consegue afundar para fugir."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_cabeleira_de_vidro:
     fonte: ficha
@@ -72,8 +72,8 @@ criaturas:
     contra_jogo: "Ficar do lado de onde o vento vem e chegar por ali; de perto e a favor do vento, a crina voa para longe e o corpo fica descoberto."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_vazado_da_mare:
     fonte: ficha
@@ -93,8 +93,8 @@ criaturas:
     contra_jogo: "Não mirar o peito; os furos não têm carne, a borda tem. Golpe baixo, nas pernas, ou contorná-lo."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_desbotado_da_nevoa:
     fonte: ficha
@@ -116,8 +116,8 @@ criaturas:
     contra_jogo: "Andar pela areia seca em vez do raso; se alguém for preso, outro herói gasta a ação puxando junto, ou corta os dedos frouxos, que soltam como massa."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   # ============================== BESTAS DA ENTROPIA ==============================
   mon_turu_de_casco:
@@ -134,13 +134,13 @@ criaturas:
       som: "Um rangido de broca girando dentro da madeira, sob os pés, e o tremor dos remos parado."
       cheiro: "Lona e couro sumindo sem cheiro de podre nenhum, só um sal limpo, estranho num barco velho."
       marca: "Na praia, a carcaça de um barco oca por dentro, inteira por fora, que cede ao primeiro toque."
-      aproximacao: "De dentro do seu próprio escudo rompe uma cabeça de conchas girando, e um corpo branco e mole vem atrás."
+      aproximacao: "De dentro do seu próprio escudo rompe uma ponta dura e serrilhada, e atrás dela sai um corpo branco e mole do comprimento de um homem."
       rumor: "os barqueiros dizem que perto das ilhas barco não afunda: é comido até não sobrar o que afundar"
     contra_jogo: "Metal e pedra o atrasam; arrancá-lo antes que entre inteiro, porque dentro do furo ele tampa a entrada com a cauda."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_vela_sem_barco:
     fonte: ficha
@@ -163,8 +163,8 @@ criaturas:
     contra_jogo: "Cortar os cordões perto da bolsa, não perto de si; furada a bolsa, ela tomba e para de puxar. À noite, apagar as lanternas."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_lagarto_espirrador:
     fonte: ficha
@@ -187,8 +187,8 @@ criaturas:
     contra_jogo: "Dar a volta pela cortina, não atravessá-la, ou cobrir os olhos e passar de uma vez; de perto eles fogem pelas frestas em vez de lutar."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_bucho_de_praia:
     fonte: ficha
@@ -208,8 +208,8 @@ criaturas:
     contra_jogo: "Preso, não lutar contra os fios; ficar quieto uma rodada e eles soltam. Não bater na ponta de trás, ou fazê-lo gastar as tripas em outra coisa."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_cobra_de_sangria:
     fonte: ficha
@@ -227,13 +227,13 @@ criaturas:
       som: "Um chapinhar leve de cauda achatada e um sugar rápido, que para de repente."
       cheiro: "Sangue fresco na água e escama lisa, um cheiro de peixaria lavada às pressas."
       marca: "Na beira das ilhas, peles trocadas listradas de cinza e de um amarelo que cansa os olhos."
-      aproximacao: "Na água, bichos compridos listrados de amarelo e cinza vêm em grupo, e uma delas crava as presas e começa a puxar."
-      rumor: "os pescadores de Brekmar acham bichos do mar listrados com o pescoço cheio de sangue, e ninguém sabe de quem"
+      aproximacao: "Na água, serpentes listradas de amarelo e cinza vêm em grupo, e uma delas crava as presas e começa a puxar."
+      rumor: "os pescadores de Brekmar acham serpentes do mar listradas com o pescoço cheio de sangue, e ninguém sabe de quem"
     contra_jogo: "Furar a bolsa do pescoço; furada, a cobra fica e luta até morrer, mas não leva nada."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_escorpena_de_basalto:
     fonte: ficha
@@ -254,8 +254,8 @@ criaturas:
     contra_jogo: "Olhar onde pisa e tocar as pedras com a ponta da lança antes de avançar; descoberto, ele é lento e mole por baixo."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_tatuzinho_de_afogado:
     fonte: ficha
@@ -279,8 +279,8 @@ criaturas:
     contra_jogo: "Estancar o sangue apaga o rastro; fogo ou água doce os dispersa, e fechados em bola eles não mordem."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
   mon_doente_de_encomenda:
@@ -304,8 +304,8 @@ criaturas:
     contra_jogo: "Fechar a distância e torcer as torneiras; ele não luta de perto, e cada espirro custa o sangue dele."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_puxado_do_oeste:
     fonte: ficha
@@ -325,8 +325,8 @@ criaturas:
     contra_jogo: "Ficar a leste dele e de lado, nunca entre ele e a água; quebrar a agulha não o mata, mas o deixa parado, sem saber para onde ir."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_vigia_de_cor_errada:
     fonte: ficha
@@ -347,8 +347,8 @@ criaturas:
     contra_jogo: "Derrubá-lo primeiro, cortando o cordame onde os pés se prendem; no chão, ele vê demais e não sabe para onde olhar."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_trepano_de_borda:
     fonte: ficha
@@ -370,8 +370,8 @@ criaturas:
     contra_jogo: "Quebrar os frascos do peito; cada um que quebra devolve o frio para ele, e com poucos inteiros ele não aguenta o próprio Éter."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
   mon_arpeu_de_bracos:
@@ -394,8 +394,8 @@ criaturas:
     contra_jogo: "Cortar o cabo encarnado antes das mãos; sem ele, as mãos se soltam sozinhas. Não bater com raiva no que está preso."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_ninho_dos_mergulhadores:
     fonte: ficha
@@ -415,8 +415,8 @@ criaturas:
     contra_jogo: "Não meter a mão; se preso, largar o que tem e sair, ou entrar já de mãos vazias. Para levar a pedra, furar os pulmões de fora, pela borda, um por um."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_mastro_dos_ultimos:
     fonte: ficha
@@ -436,8 +436,8 @@ criaturas:
     contra_jogo: "Cortar a base, não o topo; os de baixo sustentam, e sem eles a coluna não se levanta depois de cair. Sair da linha da queda."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_remora_de_conves:
     fonte: ficha
@@ -457,8 +457,8 @@ criaturas:
     contra_jogo: "Arrancá-la com lâmina por baixo do palato, ou encostar as costas em brasa; quem luta de costas para um companheiro não é escolhido."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   # ============================== LEGADO (valoria) ==============================
   mon_caranguejo_cinza:
@@ -475,13 +475,13 @@ criaturas:
       som: "Um clicar de garras quentes e um chiado de vapor quando a casca encosta na água."
       cheiro: "Pó de vulcão morno e vapor de água salgada, um cheiro de fogueira apagada na beira do mar."
       marca: "Na encosta, tocas cercadas por muretas de pó vulcânico empilhado com cuidado, como trincheira."
-      aproximacao: "Da toca sai um bicho de casca coberta de pó vulcânico, e ergue garras que soltam vapor."
+      aproximacao: "De trás da mureta de pó sai de lado um bicho coberto de pó vulcânico morno, e as garras soltam vapor quando você chega perto."
       rumor: "os náufragos dizem que nas ilhas até os bichos da praia guardam a casa como soldado"
     contra_jogo: "Não brigar perto da toca que ele guarda: ele se fecha em defesa, empurra com a maré e não persegue além do posto; contornar."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_fumaca_de_cor_errada:
     fonte: legado
@@ -504,8 +504,8 @@ criaturas:
     contra_jogo: "Não esperar que recue, porque não recua: ela avança no mais próximo e amedronta com o grito; acabar rápido com força bruta."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_leviata_caldeira:
     fonte: legado
@@ -528,8 +528,8 @@ criaturas:
     contra_jogo: "Proteger o curador e o conjurador, que ele abate primeiro, e guardar a melhor defesa para o golpe de mestre; à beira da morte, recua."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_moreia_vulcanica:
     fonte: legado
@@ -550,8 +550,8 @@ criaturas:
     contra_jogo: "Não remar nem ficar perto do tubo de lava com a guarda baixa: ela ataca da ocultação, empurra com a maré e foge ferida; cercar o tubo."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_oraculo_coral:
     fonte: legado
@@ -571,8 +571,8 @@ criaturas:
     contra_jogo: "Colar nele: recua para atacar de longe, se esconde entre os mortos com o mimetismo e empurra com a maré; foge se a linha cair."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_os_que_voltaram_e_nao_eram_eles:
     fonte: legado
@@ -592,8 +592,8 @@ criaturas:
     contra_jogo: "Não esperar que recuem, porque não recuam: golpear com força em vez de ponta, que entra pouco, e aguentar o toque gelado."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
 
   mon_sereia_de_ophidia:
     fonte: legado
@@ -616,5 +616,5 @@ criaturas:
     contra_jogo: "Não esperar que recue, porque não recua: golpear com força em vez de ponta, que entra pouco, e tirar de perto quem está ouvindo o canto."
     tramas: []
     autor: opus-370-lote4
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote4
+    revisao: aprovada
