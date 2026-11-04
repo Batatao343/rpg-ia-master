@@ -334,7 +334,7 @@ def next_commands(path: str, onda: int) -> list[str]:
     return [
         f"{run}/lint.py {rel}",
         f"{run}/sim.py --lote {rel} --protocolo lote-v2 --json --out {rep}",
-        f"{run}/promote.py {rel} --onda {onda} --protocolo lote-v2 --sim-report {rep}",
+        f"{run}/promote.py {rel} --onda {onda} --protocolo lote-v2 --sim-report {rep} --voz-pendente",  # SPEC-389 R19
     ]
 
 

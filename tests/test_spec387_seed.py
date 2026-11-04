@@ -276,3 +276,95 @@ def test_reaction_kill_fires_ao_pressagio_frustrado_once(saves, seeded):
             ]
             assert len(fired) == 1, (seed, raw.get("gatilhos"))
             assert out["player"]["vitalidade"] == 8, seed
+
+
+def test_escort_fail_50_seeds(saves, seeded, monkeypatch):
+    """SPEC-389 R16: `4 falha` — o inimigo mira o escoltado (Vit 1) e o objetivo FALHA em toda semente."""
+    monkeypatch.setattr(combat, "_fast_text", lambda *a, **k: "")  # texto determinístico
+    _, st = seeded(4, "falha")
+    assert st["party"][0]["id"] == "escoltado"
+
+    def check(out, text, raw, seed):
+        assert (raw.get("objetivo") or {}).get("resultado") == "falhou", (seed, raw.get("objetivo"))
+        assert "O objetivo se perdeu: Escoltado não resistiu." in text, (seed, text)
+        for bad in ("perde os sentidos", "apaga", "Você tomba"):
+            assert bad not in text, (seed, text)
+        assert out["player"]["vitalidade"] > 0, seed
+
+    _all_seeds(saves, st, [], check)
+
+
+def test_hostile_fallback_seed(seeded, monkeypatch):
+    """SPEC-389 R17: com CLASSIFY esgotado, "Ataco o goblin" abre COMBAT por `hostility_fallback`
+    sem depender do narrador ao vivo (a regra da SPEC-355 R5 não muda)."""
+    from langchain_core.messages import HumanMessage
+
+    import agents.router as router
+    from llm_setup import FallbackLLM
+
+    monkeypatch.setattr(router, "get_llm", lambda **k: FallbackLLM("esgotado"))
+    _, st = seeded(12, "hostil")
+    assert not (st.get("combat") or {}).get("active")
+    state = {**st, "messages": [*st["messages"], HumanMessage(content="Ataco o goblin")]}
+    payload = router.dm_router_node(state)
+    assert payload["next"] == "combat_agent"
+    assert router.last_decision()["route_source"] == "hostility_fallback"
+
+
+@pytest.mark.parametrize(("item", "variant"), sorted(sd._BODIES))
+def test_smoke_bodies_parse_and_play(saves, item, variant):
+    """SPEC-389 R18: cada corpo do roteiro passa pelo `ActionRequest` e o `TestClient` (MockLLM) joga."""
+    from fastapi.testclient import TestClient
+
+    import api
+
+    gid = sd.seed_save(item, variant=variant, saves_dir=saves)
+    with sd._legacy(saves):
+        body = sd.smoke_body(item, variant, gid)
+        api.ActionRequest(**body)
+        r = TestClient(api.app).post("/game/action", json=body)
+        assert r.status_code == 200, (item, variant, r.text[:300])
+        if (item, variant) == (13, "armadura"):
+            state = TestClient(api.app).get("/game/state", params={"game_id": gid}).json()
+            conds = [c for e in state["combat"]["enemies"] for c in e["conditions"]]
+            assert any(c["name"] == c["label"] == "Armadura Comprometida" for c in conds), conds
+        if (item, variant) == (13, "reacao"):
+            assert "reage com Encaixe do Golpe" in r.text, r.text[:400]
+
+
+def test_printed_promote_passes_reviewer_check(monkeypatch):
+    """SPEC-389 R19: a linha impressa do `promote` não é recusada por falta de revisor (D-389-6)."""
+    import argparse
+    import importlib.util
+    import shlex
+    import sys
+    from pathlib import Path
+
+    from scripts.cards import draft
+
+    root = Path(draft.__file__).resolve().parents[2]
+    cmd = draft.next_commands(str(root / "data/cards/_rascunhos/onda389_x_y.json"), 389)[2]
+    argv = shlex.split(cmd)
+    script = next(a for a in argv if a.endswith("promote.py"))
+    seen: dict = {}
+    orig = argparse.ArgumentParser.parse_args
+
+    class _Stop(Exception):
+        pass
+
+    def spy(self, a=None, ns=None):
+        seen["ns"] = orig(self, a, ns)
+        raise _Stop
+
+    monkeypatch.setattr(argparse.ArgumentParser, "parse_args", spy)
+    spec = importlib.util.spec_from_file_location("cards_promote_389", root / script)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = mod
+    spec.loader.exec_module(mod)
+    with pytest.raises(_Stop):
+        mod.main(argv[argv.index(script) + 1 :])
+    ns = seen["ns"]
+    assert (
+        ns.voz_pendente and not ns.revisor_voz
+    )  # mesma regra de `promote()`: pendente XOR revisor
+    assert ns.voz_pendente or mod.revisor_valido(ns.revisor_voz)

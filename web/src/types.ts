@@ -278,9 +278,7 @@ export interface QuestBlock {
 }
 
 export interface Condition {
-  /** SPEC-389 R13: nome gravado no save (estável); `name`/`label` são o rótulo humano. */
-  id?: string;
-  name: string;
+  name: string; id?: string; // SPEC-389 R13: id = nome gravado no save; name/label = rótulo humano
   label?: string;
   dot: number;
   duration: number;

@@ -405,4 +405,32 @@ executor segue a recomendação se o dono não vetar até a aprovação.
 
 ## 9. Registro de implementação
 
-(vazio até a implementação)
+Executor (Sonnet), 04/11. Decisões D-389-1..8 pelas recomendações (a). Commits na branch `spec-389`: R1-R5 (oferta), R8-R10
+(entrega), R11-R15 (texto/UI), R16-R19 (seeds/`draft`) e este registro.
+
+**Feito (R -> teste)**
+- R1/R2 -> `tests/test_portrait_offer_causes.py::{test_every_omission_has_one_cause,test_gate_causes,test_gate_env_off,test_art_cause,test_offer_view_once_per_response,test_offer_view_levels}`. Módulo novo `services/portrait_offer.py` (decisão, tally por resposta com `ContextVar` em `services/portrait_offer_log.py`, `INSTANCE`, `offer_view`); `creature_art.portrait_for(..., reasons=)` devolve o motivo; `api.py` ficou 15 linhas menor.
+- R3 -> `test_price_absent_not_cached`, `test_price_absent_cause_in_tally`. R4 -> `test_switch_recovers_on_within_ttl`, `test_switch_stale_after_60s_fail_closed`, `test_switch_age_and_structured_log`, `test_gate_reports_stale_cause` (`MAX_STALE_SECONDS = 60`, `age_s`, `stale`, `kill_switches.load_failed` por `log_event`).
+- R5 -> `scripts/staging/portrait_offer_measure.py` (+ `test_measure_join_by_request_id`, `test_measure_fails_without_offer_view`). Eventos novos no catálogo: `creature_portrait.offer_view`, `kill_switches.load_failed` (`gen_event_catalog.py`).
+- R8-R10 -> `tests/test_quest_delivery_npc.py` (18 testes: seed coerente, entrega à origem, outro NPC, negação, mecânica/pessoal/encerrada, cooldown, 1 por turno, nó `npc_actor` com MockLLM, `region_change` real mantido). `quest_log.delivery_ready/sync_npc_delivery`; `agents/npc.py` 1605 -> 1604 linhas.
+- R11-R15 -> `tests/test_combat_text_smoke7.py` (50 sementes: frustrado no painel, Voto, Reação na prosa; unit: Provocação antes da ação mantém a linha; `conditions[].id/name/label`; nenhum consumidor do front compara nome de condição com id), `web/tests/spec389-round-frustrado.test.mjs`, `web/tests/spec389-hud-subclass.test.mjs`, `web/e2e/spec389-hud-subclass.spec.ts` (390 e 1440, verde).
+- R16-R19 -> em `tests/test_spec387_seed.py`: `test_escort_fail_50_seeds`, `test_hostile_fallback_seed`, `test_smoke_bodies_parse_and_play` (9 corpos), `test_printed_promote_passes_reviewer_check`. `spec368_seed.smoke_body`.
+- R21-R26 -> `test_spec346_board_no_llm`, `test_spec389_integrity_and_no_new_flag` (guarda de branch), `test_size_budget` verdes; nenhuma flag nova.
+
+**Desvios / achados da implementação**
+1. **R9, cooldown.** A premissa da spec ("2ª entrega no mesmo turno ou dentro do cooldown é recusada pelo validador de hoje") é falsa para `source: "system"`: `ENGINE_SOURCES` pula `_proof_gate` (e com ele o limite de 1/turno e o cooldown de 3 turnos; o `sync_action_progress` do storyteller tem a mesma folga). A regra foi replicada em `quest_log._completion_allowed` (lê o mesmo `event_log` e `QUEST_COMPLETION_COOLDOWN`) e `delivery_ready` devolve no máximo 1 quest. O caminho do storyteller não foi mexido (fora de escopo; follow-up).
+2. **R14 / fecho.** O ataque da Reação só carrega o nome em `atk["fora_de_turno"]` (o `label` não é gravado no dict do ataque). `_attack_line` casa esse nome com as Reações de `out["reactions"]`. A frase "Sua reação termina o serviço" só sai no fecho determinístico quando há golpe final por Reação, então o teste de 50 sementes confere "reage com Encaixe do Golpe" na linha do registro e deixa o fecho ao teste existente (`final_blow_sentence`).
+3. **R12.** A linha humana nova é `, provocado por .+, muda de alvo\.$` (mais estreita que `muda de alvo\.$`). "Resolvido" = `pressagios_desviados` ou `special:taunt_resisted` na mesma rodada.
+4. **R16 `4 falha`.** Precisou de 3 ajustes além da spec: classe `Devoto do Abismo` (com o Sangromante o goblin só "flanqueia" o herói e nenhuma semente o faz mirar o escoltado), escoltado como ator ANTES do presságio e posto na cena depois (como o Ketil do Voto), e `ferimento_espacos={critico:1}` + `last_stand_resolved=True` (sem isso o escoltado entra em Última Ação/Estado Terminal e o objetivo só falha na rodada seguinte; 9/20 sementes falhavam na 1ª). Resultado: 50/50 `falhou`, herói de pé, sem "perde os sentidos".
+5. **R18.** `smoke_body` da `13 reacao` usa a manobra `guardar` em `jogadas` (como o teste da 387) e não `bas_dev_golpe`: o golpe do herói mataria o goblin (Vit 1) antes de ele agir e não haveria o que reagir. Ids confirmados pelo `TestClient`.
+6. **R8.** `turn_count` da seed `14 entrega` passou a `max(4, atual)`; só a origem fica `in_scene`; `_place_hero` agora alinha `campaign_plan.location` (afeta também a `15`, sem teste vermelho).
+7. **R13.** `name` da view virou o rótulo; nenhum teste antigo precisou mudar (conferido com grep + 7 arquivos de teste que leem a view). Front: `Condition.id?` novo.
+8. **Etapa 0 (anotações).** Sem acesso ao script de amostragem/logs do coordenador: S7-1 fica para a medição da R5. Código lido confirma: `/game/state` é o mesmo endpoint para API e navegador; `KillSwitches` sem limite de idade era real e foi corrigido; `peek_ceiling` `None` ficava 60 s no cache (corrigido, R3). L4/L7/L8 confirmados no source (itens 5 e 6 da Etapa 0 e a nota 4 acima). Itens 1-3 da Etapa 0 (hora do `on`, nível de log do staging, linhas `private`) ficam com o coordenador.
+
+**Condicionado à medição do staging (coordenador; NÃO feito)**
+- **R6**: a correção final de S7-1. Hipóteses a decidir pela tabela de `offer-measure-*.json`: `switches_stale`/`switch_off` (já tratados por R4), `private_other_game` (hoje a linha `ready` com `store=private` de outro jogo vira `pending` e some a oferta; o código só passou a REPORTAR a causa, o efeito não mudou; mudar exige o teste de linha `private` de outro `origin_game_id` e a conferência de idempotência do registro) e amostragem (script exige `game_id`: já exige `--game-id`). Se a causa for outra, entra aqui com teste.
+- **R7**: a explicação navegador x API (endpoint/`game_id` de cada lado) sai da mesma tabela.
+- **Etapa 0.2**: confirmar `RPG_LOG_LEVEL` do staging <= `info` (o `offer_view` normal é `info`; causa inesperada é `warning`). Não mexi em `staging_flags.json` (guarda de integridade).
+- **R20**: nota L11 para a §1 da SPEC-369 (o coordenador integra): "`draft.py` real reprovou 2 de 4 Cartas por orçamento no lint; avaliar o prompt/orçamento, sem mudar `lint`/`sim`/`promote`".
+- §6 inteiro (smoke com LLM real), a revisão `Sol` e o e2e do restante do bloco.
+

@@ -318,6 +318,32 @@ def _conditions_after_cards(out: dict, hero_name: str) -> dict[str, list[str]]:
     return by_card
 
 
+def _reaction_names(out: dict) -> frozenset[str]:
+    return frozenset(
+        n for n in (_card_name(r.get("card_id")) for r in out.get("reactions") or []) if n
+    )
+
+
+def _taunt_lines(out: dict, names: dict[str, str]) -> list[str]:
+    """SPEC-353 R39a: a Provocação diz o que faz. SPEC-389 R12: quem já foi desviado/resistiu na
+    rodada não ganha a promessa ("próxima intenção"): só o desfecho aparece."""
+    settled = {str(d.get("actor_id")) for d in out.get("pressagios_desviados") or []} | {
+        str(m.get("actor_id"))
+        for m in out.get("class_mechanics") or []
+        if m.get("kind") == "special:taunt_resisted"
+    }
+    lines = []
+    for novo in out.get("condicoes_novas") or []:
+        if novo.get("control") == "taunt" and str(novo.get("victim_id")) not in settled:
+            src = names.get(str(novo.get("source_id")), "alguém")
+            alvo = "você" if src == "Você" else src
+            lines.append(
+                f"{names.get(str(novo.get('victim_id')), 'Alguém')} está provocado: "
+                f"a próxima intenção dele mira {alvo} (com chance)."
+            )
+    return lines
+
+
 def round_registry(
     out: dict,
     actors_by_id: dict[str, dict],
@@ -330,9 +356,7 @@ def round_registry(
     from services.combat_preview import chrono_events
 
     names = _names(actors_by_id)
-    reaction_names = frozenset(
-        n for n in (_card_name(r.get("card_id")) for r in out.get("reactions") or []) if n
-    )
+    reaction_names = _reaction_names(out)
     hero_name = next(
         (str(a.get("name") or "") for a in actors_by_id.values() if a.get("is_player")), ""
     )
@@ -383,21 +407,7 @@ def round_registry(
             event_lines += after_card.pop(str(card.get("name") or ""), [])
 
     dot_lines: list[str] = []
-    settled = {  # SPEC-389 R12: quem já foi desviado/resistiu na rodada: só o desfecho aparece
-        str(d.get("actor_id")) for d in out.get("pressagios_desviados") or []
-    } | {
-        str(m.get("actor_id"))
-        for m in out.get("class_mechanics") or []
-        if m.get("kind") == "special:taunt_resisted"
-    }
-    for novo in out.get("condicoes_novas") or []:  # SPEC-353 R39a: a Provocação diz o que faz
-        if novo.get("control") == "taunt" and str(novo.get("victim_id")) not in settled:
-            src = names.get(str(novo.get("source_id")), "alguém")
-            alvo = "você" if src == "Você" else src
-            dot_lines.append(
-                f"{names.get(str(novo.get('victim_id')), 'Alguém')} está provocado: "
-                f"a próxima intenção dele mira {alvo} (com chance)."
-            )
+    dot_lines += _taunt_lines(out, names)
     for fase in (
         out.get("fases") or []
     ):  # SPEC-387 R29: a troca de fase do chefe é visível, 1× por fase

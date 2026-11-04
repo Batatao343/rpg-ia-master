@@ -291,3 +291,43 @@ def test_measure_fails_without_offer_view():
 
     joined = m.join_samples([{"request_id": "zzz", "gerar": False}], [])
     assert len(m.missing_views(joined)) == 1
+
+
+# --- R22/R24: guardas de pouso (só valem na branch da spec; depois outras specs mexem nesses arquivos) ---
+
+
+def _diff_names(*paths: str) -> list[str]:
+    import shutil
+    import subprocess
+    from pathlib import Path
+
+    git, root = shutil.which("git"), Path(__file__).resolve().parents[1]
+    if git is None or not (root / ".git").exists():
+        pytest.skip("sem git")
+
+    def run(*a):
+        return subprocess.run([git, *a], cwd=root, capture_output=True, text=True).stdout.strip()
+
+    if run("rev-parse", "--abbrev-ref", "HEAD") != "spec-389":
+        pytest.skip("guarda da SPEC-389: só na branch spec-389")
+    base = run("merge-base", "main", "HEAD")
+    if not base:
+        pytest.skip("merge-base com a main indisponível")
+    return [x for x in run("diff", "--name-only", base, "HEAD", "--", *paths).splitlines() if x]
+
+
+def test_spec389_integrity_and_no_new_flag():
+    assert (
+        _diff_names(
+            "tests/spec330_equivalence.py",
+            "tests/fixtures/spec330_legacy_golden.json",
+            "evals",
+            "web/e2e/contracts",
+            "scripts/cards/lint.py",
+            "scripts/cards/sim.py",
+            "scripts/cards/promote.py",
+            "config/flags.yaml",
+            "scripts/staging/staging_flags.json",
+        )
+        == []
+    )

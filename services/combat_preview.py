@@ -490,6 +490,16 @@ def _effect_text(card: dict) -> str:
     return label
 
 
+def frustrated_entries(out: dict, names: dict, queda_entry: Any) -> list[dict[str, Any]]:
+    """SPEC-389 R11: "Presságio frustrado: Nome" no painel; sem Carta (ainda oculta) nem id."""
+    rows = []
+    for fr in out.get("pressagios_frustrados") or []:
+        aid = str(fr.get("actor_id"))
+        text = f"Presságio frustrado: {names.get(aid, 'Alguém')}"
+        rows.append({**queda_entry(aid, text), "tipo": "pressagio_frustrado"})
+    return rows
+
+
 def round_board(
     out: dict,
     actors: list[dict],
@@ -662,16 +672,8 @@ def round_board(
                 seen_pressagio.add(actor_id)
                 entries.append(pressagio_entry(pressagios[actor_id]))
             entries.append(attack_entry(atk, reaction=reaction))
-    for fr in (
-        out.get("pressagios_frustrados") or []
-    ):  # SPEC-389 R11: sem Carta nem id (ainda oculta)
-        entry = queda_entry(
-            str(fr.get("actor_id")),
-            f"Presságio frustrado: {names.get(str(fr.get('actor_id')), 'Alguém')}",
-        )
-        entries.append({**entry, "tipo": "pressagio_frustrado"})
-    for aid in out.get("deaths") or []:
-        entries.append(queda_entry(str(aid), "morre"))
+    entries += frustrated_entries(out, names, queda_entry)  # SPEC-389 R11
+    entries += [queda_entry(str(aid), "morre") for aid in out.get("deaths") or []]
     for aid in out.get("terminal") or []:
         if aid not in (out.get("deaths") or []):
             entries.append(queda_entry(str(aid), "cai, à beira da morte"))

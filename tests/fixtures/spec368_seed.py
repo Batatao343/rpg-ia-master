@@ -26,15 +26,21 @@ ITEMS: dict[int, tuple[str, ...]] = {
     1: ("", "rollback"),
     2: ("", "frustrar"),
     3: ("", "rachadura", "eco", "inelegivel"),
-    4: ("",),
+    4: ("", "falha"),  # SPEC-389 R16: o inimigo MIRA o escoltado (falha por seed)
     5: ("", "chefe", "nova", "chefe_fase"),
     6: ("", "espolio"),
     7: ("", "medico"),
-    12: ("",),
+    12: (
+        "",
+        "hostil",
+    ),  # SPEC-389 R17: combate FECHADO + última fala da IA cita o goblin com ameaça
     13: ("", "leitura", "armadura", "renegado", "reacao", "voto", "condicao_carta"),
     14: ("", "entrega"),
     15: ("", "vg_ouro"),  # SPEC-387 R23: loja com saldo para o V-G do ouro
 }
+HOSTIL_NARRATION = (  # SPEC-389 R17: texto fixo — a regra da SPEC-355 R5 exige citação + ameaça
+    "Um goblin sai da sombra da estrada, rosnando uma ameaça, e bloqueia o seu caminho."
+)
 _CLASS = {
     (3, "rachadura"): "Corruptor",
     (7, ""): "Corruptor",
@@ -49,6 +55,10 @@ _CLASS = {
     (5, "chefe_fase"): "Devoto do Abismo",
     (13, "voto"): "Devoto do Abismo",
     (13, "condicao_carta"): "Devoto do Abismo",
+    (
+        4,
+        "falha",
+    ): "Devoto do Abismo",  # SPEC-389 R16: com o Sangromante o goblin só "flanqueia" o herói
 }
 
 
@@ -225,13 +235,19 @@ def _learn(state: dict, *ids: str) -> None:
                 p[key].append(cid)
 
 
-def _escort(state: dict) -> None:
-    """SPEC-387 R19/R21: o protegido é um aliado ATOR do conflito (`party`), não só um NPC da cena."""
+def _new_escort() -> dict:
     import party as party_mod
-    from services import conflict_scene as cs
 
     comp = party_mod.make_companion_from_npc({"id": "escoltado", "name": "Escoltado"}, "Escoltado")
     comp["active"] = True
+    return comp
+
+
+def _escort(state: dict, comp: dict | None = None) -> dict:
+    """SPEC-387 R19/R21: o protegido é um aliado ATOR do conflito (`party`), não só um NPC da cena."""
+    from services import conflict_scene as cs
+
+    comp = comp or _new_escort()
     state["party"] = [comp]
     scene = state["combat"]["scene"]
     ref = next(iter((scene.get("positions") or {}).values()), {})
@@ -239,6 +255,7 @@ def _escort(state: dict) -> None:
     cs.freeze(scene)
     scene["allies"] = [comp["id"]]
     scene["objetivo"] = {"tipo": "proteger", "alvo": comp["id"]}
+    return comp
 
 
 def _soft(state: dict, vitality: int | None = None) -> None:
@@ -283,6 +300,19 @@ def _recipe(item: int, variant: str, state: dict) -> None:
     elif item == 3:
         _learn(state, "san1_exp_segundo_ato")
         _reseed(state, "enemy_goblin", 1, hand=["san1_exp_segundo_ato", g])
+    elif item == 4 and variant == "falha":
+        # SPEC-389 R16: o escoltado é ator ANTES do presságio (como o Ketil do Voto), posto na cena depois
+        comp = _new_escort()
+        comp["vitalidade"], comp["esquiva_penalidade"] = 1, 30
+        # sem espaço de Ferimento e sem Última Ação: o 1º golpe o derruba no mesmo round (objetivo falha)
+        comp["ferimento_espacos"], comp["last_stand_resolved"] = (
+            {"leve": 0, "grave": 0, "critico": 1},
+            True,
+        )
+        state["party"] = [comp]
+        _reseed(state, "enemy_goblin", 1, allies=[comp], want_alvo=comp["id"])
+        _soft(state, 60)  # o inimigo não morre antes de agir
+        _escort(state, comp)
     elif item == 4:
         _reseed(state, "enemy_goblin", 2)
         _escort(state)
@@ -308,6 +338,10 @@ def _recipe(item: int, variant: str, state: dict) -> None:
         _reseed(state, "enemy_degolador_mao_sombria", 2, hand=["sts_dor_surda", g])
     elif item == 7:
         _reseed(state, "enemy_goblin", 2)
+    elif item == 12 and variant == "hostil":
+        from langchain_core.messages import AIMessage
+
+        state["messages"] = [*state.get("messages", []), AIMessage(content=HOSTIL_NARRATION)]
     elif item == 12:
         _reseed(state, "enemy_goblin", 1, hand=[g, "bas_san_guarda"], enemy_vitality=1)
     elif item == 13 and variant in {"voto", "condicao_carta"}:
@@ -473,7 +507,9 @@ def seed_save(
 
     if item not in ITEMS or variant not in ITEMS[item]:
         raise ValueError(f"item/variante sem seed: {item}/{variant!r} (validos: {ITEMS})")
-    combat_scene = not (item in (14, 15) or (item, variant) in {(1, "rollback"), (6, "espolio")})
+    combat_scene = not (
+        item in (14, 15) or (item, variant) in {(1, "rollback"), (6, "espolio"), (12, "hostil")}
+    )
     with _legacy(saves_dir):
         client = TestClient(api.app)
         gid = _new_game(client, _CLASS.get((item, variant), "Sangromante"), hero)
@@ -495,3 +531,57 @@ def view(gid: str, saves_dir: str | None = None) -> dict[str, Any]:
         r = TestClient(api.app).get("/game/state", params={"game_id": gid})
         assert r.status_code == 200, r.text
         return r.json()
+
+
+# (item, variante) -> (texto, jogadas, extras do corpo). `{E}` = id do 1º inimigo do save (SPEC-389 R18).
+_BODIES: dict[tuple[int, str], tuple[str, list[dict], dict]] = {
+    (2, "frustrar"): (
+        "Encerro a rodada",
+        [{"card_id": "arc1_des_estouro_contido", "target_id": "{E}"}],
+        {},
+    ),
+    (3, "eco"): (
+        "Encerro a rodada",
+        [
+            {"card_id": "bas_san_golpe", "target_id": "{E}"},
+            {"card_id": "san1_exp_segundo_ato", "target_id": "{E}"},
+        ],
+        {},
+    ),
+    (4, "falha"): ("Encerro a rodada", [{"action_kind": "pass"}], {}),
+    (12, "hostil"): ("Ataco o goblin", [], {}),
+    (13, "voto"): ("Encerro a rodada", [{"card_id": "bas_dev_voto", "target_id": "{E}"}], {}),
+    (13, "condicao_carta"): (
+        "Encerro a rodada",
+        [{"card_id": "neu1_er_lanca_de_gancho", "target_id": "{E}"}],
+        {},
+    ),
+    (13, "armadura"): (  # a Ruptura vai NA jogada (`PlayStepRequest.ruptura`)
+        "Encerro a rodada",
+        [{"card_id": "cor_ino_fadiga", "target_id": "{E}", "ruptura": True}],
+        {},
+    ),
+    (
+        13,
+        "reacao",
+    ): (  # a Reação vai NO NÍVEL DE CIMA (`ActionRequest.reaction_card_id`), não em `jogadas`
+        "Encerro a rodada",
+        [{"action_kind": "maneuver", "maneuver": "guardar"}],
+        {"reaction_card_id": "dev_encaixe"},
+    ),
+    (14, "entrega"): ("Entrego a prova da caça ao contratante", [], {}),
+}
+
+
+def smoke_body(item: int, variant: str, game_id: str) -> dict[str, Any]:
+    """SPEC-389 R18: o corpo EXATO do `POST /game/action` do roteiro de cada variante (rodar dentro de
+    `_legacy(...)` quando o save não estiver no diretório padrão: o id do inimigo vem do save)."""
+    text, steps, extra = _BODIES.get((item, variant), ("Encerro a rodada", [], {}))
+    enemy_id = ""
+    if any("{E}" in str(v) for step in steps for v in step.values()):
+        enemy_id = str(_load(game_id)["enemies"][0]["id"])
+    jogadas = [{k: (enemy_id if v == "{E}" else v) for k, v in step.items()} for step in steps]
+    body: dict[str, Any] = {"game_id": game_id, "input_text": text, **extra}
+    if jogadas:
+        body["jogadas"] = jogadas
+    return body
