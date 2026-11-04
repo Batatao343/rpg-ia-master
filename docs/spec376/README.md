@@ -20,3 +20,11 @@ Fontes: (1) branches vivas `spec-370/372/373/374` (+ `bst-*`, `spec-359`, `spec-
 - evals (12 suites do eval-gates, `--seed 7`): `eval-20261104T035202Z-90becbce` passed, hard_failures=[] (saida fora do repo).
 - playtest `--all --turns 10 --seed 0`: run `20261104-005214-332601`; segunda rodada identica (assinatura por perfil: turnos, erros, violacoes, mortes, nivel, ouro, rotas, replans) -> deterministico.
 - R23 matriz de import (8 ordens, subprocess novo, `RPG_FORCE_MOCK=1`): todas as 6 identidades `True` ANTES.
+
+## Etapa C (04/11) — W2 B apos cada etapa
+- C1 `tick_conditions` (+ teste proprio e `SURVIVING_FUNCTIONS`, D7), C2 `escort_stop`/`region_pressure`/`faction_relation`/`relation_label` (D6), C3 `_overlay_path`/`_npc_db_path`/`_infer_tier_from_name`, C4 stubs `ImportError` (`bestiary`, `npc`, `world_simulator`).
+- Cada etapa: `evals run` (12 suites, seed 7) vs A: `passed`, `regressions: []`, deltas 0; playtest `--all --turns 10 --seed 0`: assinatura por perfil identica a A.
+- R23: matriz de 8 ordens de import, 6 identidades `True` antes (C0) e depois (C4).
+- C5 nao executada (D5: manter `resolve_card`/`valid_effect_kind`). C3: a nota do tier virou comentario curto na linha porque `generate_new_enemy`/`generate_new_npc` estavam no teto do size budget.
+- Pendente: A3 (AUTORIA.md + adendo SPEC-273) espera a SPEC-374 (branch viva); A4 cancelada (D2).
+- Adendo SPEC-273 deve ser feito junto da A3 (R8).

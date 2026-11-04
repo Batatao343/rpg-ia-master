@@ -1,6 +1,6 @@
 # SPEC-376 — Refatoração: fonte única de Cartas/classes (geradores-armadilha) e poda de scripts e código sem chamador
 
-> **Status:** `approved` (04/11 madrugada, dono: "vai executando o que puder"; D1=a, D2=sim (A4 só se a W1 liberar), D3=sim, D4=apagar só B1 (B2/B3 ficam), D5=manter os dois, D6=apagar + adendo na 302, D7=aceitar)
+> **Status:** `in-progress` (A3 pendente: espera SPEC-374; A4 cancelada pela D2; restante entregue em 04/11; antes `approved` 04/11 madrugada, dono: "vai executando o que puder"; D1=a, D2=sim (A4 só se a W1 liberar), D3=sim, D4=apagar só B1 (B2/B3 ficam), D5=manter os dois, D6=apagar + adendo na 302, D7=aceitar)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11 ([relatório](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md)): §3 R1, §4.2 itens 4 e 6, §4.3 item 5, §4.4 itens 3–4; plano da onda §6 (regras **W1–W8**, ordem §6.3, itens que saíram §6.4). Letra **B** do §5 mais a parte "sem chamador" de D/§4.
 > **Depende de:** nenhuma spec para começar (§6.3: "já"). Cada etapa obedece à **W1 revisada** (R1). A SPEC-368 já pousou (`dff4c27c`, `061c330b`), então a C5 (opcional, D5) não espera mais por ela, só pela W1. A etapa A4 (`_meta` dos JSON de classe) espera a SPEC-367, que commita **direto na `main`** (`b278f6af`, `4b03a430`), e a SPEC-369 (`draft`, balanço de Cartas). A etapa A3 espera a SPEC-374, que hoje trava `docs/guias/AUTORIA.md`. A C2 tem ordem com a SPEC-377 item 1 (mesmo `services/world_engine.py`, R19).
