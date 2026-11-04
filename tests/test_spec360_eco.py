@@ -146,6 +146,10 @@ def test_sem_entrada_fator_neutro_relativo(monkeypatch):
     """P1-1 (Sol): sem fauna, o fator e a MEDIA das candidatas com fauna no mesmo contexto,
     e a fatia de quem nao tem fauna fica a <= 1,5x da fatia com a flag `off`."""
     cid = "enemy_assassino_cinzeu"
+    # SPEC-370 deu entrada a todas as fichas/legados; o teste simula uma criatura sem fauna
+    # (ex.: gerada em runtime, SPEC-361) tirando a dele do carregador.
+    sem = {k: v for k, v in fauna.load().items() if k != cid}
+    monkeypatch.setattr(fauna, "load", lambda: sem)
     assert fauna.entry(cid) is None
     for loc_id in ("nova_arcadia", LAMA, FERRO, DOURADO):
         for period in ("Manhã", "Noite"):
@@ -219,7 +223,7 @@ def test_off_byte_identico(monkeypatch):
         assert a["id"] == b["id"]
 
 
-def test_carcaca_registrada_e_expira(on):
+def test_carcaca_registrada_e_expira(on, monkeypatch):
     sim = fauna.record_kill({}, "mon_porca_da_queda", LAMA, 3)
     assert sim["fauna"]["carcacas"] == [
         {"loc": LAMA, "day": 3, "creature_id": "mon_porca_da_queda"}
@@ -234,4 +238,6 @@ def test_carcaca_registrada_e_expira(on):
     for _d in range(30):
         sim = fauna.record_kill(sim, "mon_porca_da_queda", LAMA, 3)
     assert len(sim["fauna"]["carcacas"]) == fauna.const("MAX_CARCACAS")
+    sem = {k: v for k, v in fauna.load().items() if k != "enemy_assassino_cinzeu"}
+    monkeypatch.setattr(fauna, "load", lambda: sem)  # sem entrada de fauna: nao grava
     assert fauna.record_kill({}, "enemy_assassino_cinzeu", LAMA, 3) == {}

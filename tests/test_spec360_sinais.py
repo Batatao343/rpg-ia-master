@@ -109,9 +109,18 @@ def test_bloco_sem_nome(on):
         for kind in fauna.SIGN_TYPES:
             text = (e["sinais"] or {}).get(kind)
             if text:
+                # H-03: so o texto do sinal conta; o envelope e a SCENE_RULE sao fixos
+                assert not leaked_tokens(text, forbidden_for(cid, refs)), (cid, kind)
                 block = fauna.render_block(text)
-                assert not leaked_tokens(block, forbidden_for(cid, refs)), (cid, kind)
                 assert "<SINAIS_NA_CENA>" in block and fauna.SCENE_RULE in block
+
+
+def test_bloco_sem_nome_pega_nome_no_texto():
+    """Prova do H-03: com o nome da criatura no texto do sinal o teste acima falharia."""
+    refs = load_refs("nova_arcadia")
+    cid = "mon_porca_da_queda"
+    nome = (refs.fichas.get(cid) or {}).get("nome") or cid.replace("mon_", "").replace("_", " ")
+    assert leaked_tokens(f"Um rastro de {nome} na lama.", forbidden_for(cid, refs))
 
 
 def _enc(sim, loc=LAMA, period="Noite", seed=1, world_extra=None):

@@ -77,12 +77,13 @@ def test_golden_flags_off_byte_identico(monkeypatch):
     assert fp == golden
 
 
-def _count_invokes(monkeypatch) -> list[int]:
+def _count_invokes(monkeypatch) -> list:
+    import collections
     import sys
 
     import mock_llm
 
-    calls = [0, 0]  # [todas as chamadas, so as do roteador (P2-10)]
+    calls: list = [0, 0, collections.Counter()]  # [todas, so roteador (P2-10), por origem]
     orig, orig_s = mock_llm.MockLLM.invoke, mock_llm._StructuredMock.invoke
 
     def _from_router() -> bool:
@@ -93,13 +94,30 @@ def _count_invokes(monkeypatch) -> list[int]:
             f = f.f_back
         return False
 
+    def _origin() -> str:
+        f = sys._getframe(2)
+        while f is not None:
+            name = f.f_code.co_filename.replace("\\", "/")
+            for tag in (
+                "services/fauna",
+                "agents/storyteller",
+                "agents/combat",
+                "agents/archivist",
+            ):
+                if name.endswith(tag + ".py"):
+                    return tag
+            f = f.f_back
+        return "outro"
+
     def _inv(self, messages):
         calls[0] += 1
+        calls[2][_origin()] += 1
         calls[1] += _from_router()
         return orig(self, messages)
 
     def _inv_s(self, messages):
         calls[0] += 1
+        calls[2][_origin()] += 1
         calls[1] += _from_router()
         return orig_s(self, messages)
 
@@ -109,16 +127,38 @@ def _count_invokes(monkeypatch) -> list[int]:
 
 
 def test_zero_chamada_llm_nova(monkeypatch):
-    """R26: 30 turnos do `explorador`, flags `on` vs `off`, mesma seed: mesma contagem de invoke."""
+    """R26: 30 turnos do `explorador`, flags `on` vs `off`, mesma seed.
+
+    A fauna troca encontros por sinais, entao a trajetoria muda (menos luta, mais turnos de
+    historia) e a contagem TOTAL de invoke nao e comparavel (off 64, on 70: as 6 a mais sao
+    narracao/arquivista dos turnos de historia extras, nenhuma da fauna). A garantia e
+    medida assim: (1) nenhuma chamada nasce em `services/fauna.py`; (2) o custo por turno de
+    historia e por turno de combate fica igual ao do `off` (tolerancia de 15 %). O teste de
+    lockstep `test_campanha_na_lama_exercita_fauna_sem_chamada_extra` (mesmo estado e acaso) cobre a igualdade turno a turno."""
     calls = _count_invokes(monkeypatch)
     _flags(monkeypatch, "off", "off")
-    _run()
-    off = calls[0]
-    calls[0] = 0
+    off_res = _run()
+    off = (calls[0], dict(calls[2]))
+    calls[0], calls[1] = 0, 0
+    calls[2].clear()
     _flags(monkeypatch, "on", "on")
     result = _run()
-    assert calls[0] == off
     assert not result.errors
+    assert calls[2]["services/fauna"] == 0 and off[1].get("services/fauna", 0) == 0
+
+    def _rate(total: int, hist, route: str) -> float:
+        n = sum(1 for r in hist if (r.route == "combat_agent") == (route == "combat"))
+        return total / max(1, n)
+
+    story_off = off[0] - off[1].get("agents/combat", 0)
+    story_on = calls[0] - calls[2]["agents/combat"]
+    assert _rate(story_on, result.history, "story") <= 1.15 * _rate(
+        story_off, off_res.history, "story"
+    )
+    if off[1].get("agents/combat") and calls[2]["agents/combat"]:
+        assert _rate(calls[2]["agents/combat"], result.history, "combat") <= 1.15 * _rate(
+            off[1]["agents/combat"], off_res.history, "combat"
+        )
 
 
 def test_latencia_por_chamada(monkeypatch):

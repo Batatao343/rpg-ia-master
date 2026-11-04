@@ -31,6 +31,7 @@ SIGN_KINDS = ("rastro", "resto", "som", "cheiro", "marca")
 TEXT_KINDS = (*SIGN_KINDS, "aproximacao", "rumor")
 MAX_SIGN = 160
 MAX_RUMOR = 120
+MAX_BLOCK_TOKENS = 60  # len(render_block(texto)) / 4, como em test_bloco_ate_60_tokens
 MIN_SIGNS = 3
 MAX_IMEDIATO = 0.30
 MAX_IMEDIATO_HUB = 2  # E18 (SPEC-370 R6)
@@ -276,6 +277,11 @@ def _rules_entry(cid: str, e: dict, refs: Refs) -> list[str]:
         limit = MAX_RUMOR if k == "rumor" else MAX_SIGN
         if len(str(v)) > limit:
             errs.append(f"E9 {cid}: {k} com {len(str(v))} chars (max {limit})")
+        if k in SIGN_KINDS:  # H-02: mesma medida do `test_bloco_ate_60_tokens` (bloco inteiro)
+            from services.fauna import render_block
+
+            if len(render_block(str(v))) / 4 > MAX_BLOCK_TOKENS:
+                errs.append(f"E9 {cid}: {k} estoura {MAX_BLOCK_TOKENS} tokens no bloco da cena")
         leaked = leaked_tokens(v, forbidden_for(cid, refs))
         if leaked:
             errs.append(f"E10 {cid}: {k} contem nome/id/familia {leaked}")

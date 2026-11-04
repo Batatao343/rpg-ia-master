@@ -1478,8 +1478,10 @@ def _fauna_encounter(res: dict, entry: dict | None, presence: dict | None, world
     cedo = (fe.get("sinais") or {}).get("antecedencia") == "cedo"
     if presence and presence.get("creature_id") == cid:
         res["presence_id"] = presence["pid"]
-        if cedo and not presence.get("sinais_mostrados") and fauna.const("ANUNCIA_PRESENCA_NOVA"):
-            res["fauna_convert"] = True  # R16 (§9): presença ainda sem sinal anuncia antes
+        if not presence.get("sinais_mostrados"):
+            solo = fauna.anuncia_presenca_nova(str(presence.get("region_id") or ""))
+            if solo and (cedo or not fauna.const("ANUNCIA_PRESENCA_NOVA")):
+                res["fauna_convert"] = True  # R16 (§9): presença ainda sem sinal anuncia antes
     elif cedo:
         # R16: sem presença no local (ou com a de OUTRA criatura, P2-6 do Sol) a criatura
         # sorteada não foi anunciada: o encontro vira o 1º sinal dela.

@@ -1,6 +1,6 @@
 # SPEC-370 — Fauna viva nas 11 regiões restantes: backfill autorado por lotes, eval por região e ajustes de escala do motor (filha 360-B)
 
-> **Status:** `approved` — aprovada pelo dono em 03/11 via pedido de execução imediata ("transforme em spec e execute agora"); os defaults da §8 valem até ele dizer o contrário.
+> **Status:** `in-review` (código e conteúdo prontos; falta a revisão Sol, o playtest e o smoke) — aprovada pelo dono em 03/11 via pedido de execução imediata ("transforme em spec e execute agora"); os defaults da §8 valem até ele dizer o contrário.
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Depende de:** SPEC-360 (`done`: schema, lint E1–E16, `services/fauna.py`, `scripts/fauna/*`, flags `RPG_FAUNA`/`RPG_FAUNA_SINAIS`, Nova Arcádia com 38 entradas aprovadas). SPEC-349 (`done`: fichas das 12 regiões em `data/bestiario/fichas/*.yaml` e o legado em `curadoria_legado.yaml`, na `main`).
 > **Desbloqueia:** SPEC-372 (`fauna-tramas`, filha 360-D) nas regiões que ganharem catálogo de trama; ligar `RPG_FAUNA`/`RPG_FAUNA_SINAIS` em staging fora de Nova Arcádia; a filha 360-C (saber e telegrafo) passa a ter sinais em todas as regiões.
@@ -301,3 +301,11 @@ Contagens do HEAD (fichas = `status` nova/reinventada/adotada; legado = `classe:
 - Eval de NA depois da migração e do motor: todos os limiares verdes (M1 0,7508, M3 sem os 2 pares migrados, M5 −16,9 %, M7 igual, M8 0,3146); `docs/spec360/eval-nova_arcadia.md` regenerado. `test_spec360_eval.py` e `test_spec370_eval.py` verdes (25 passed, 99 skipped por falta de fauna das outras regiões).
 - **Achado `services/ecology.py:59` (`random.Random()` sem semente): NÃO corrigido.** O caminho `on` com `why` vazio (pool sem fauna) e todo o `off` usam o RNG global de propósito; semear só o `on` desloca o sorteio relativo ao `off` e quebra `test_zero_chamada_llm_nova` (72 × 64 chamadas na mesma seed), e semear o `off` quebra o byte-idêntico. Fica como follow-up (precisa decidir se o `off` pode mudar de fonte de acaso); o `on` com fauna no pool já é semeado desde a 360.
 - D8 (Víbora, R2-02) não aplicado: é prosa já aprovada; fica para o autor do lote 1.
+
+### Etapas finais de código (03/11, executor)
+
+- **Ophidia (dono, 03/11):** em região de 1 nó raiz toda presença nova deixa 1 sinal antes de virar luta. Implementação: `fauna.anuncia_presenca_nova(region)` (`ANUNCIA_PRESENCA_NOVA` ou região com 1 nó raiz) e `_fauna_encounter` converte a presença ainda sem sinal em sinal (também `imediato`, que nas outras regiões segue sem anúncio). Nas outras regiões nada muda (golden `off` e eval de NA idênticos; `tests/test_spec370_solo.py`). Ophidia M1: 0,6229 → **0,9845** sem tocar no avaliador; M5 da região −37 % (informativo, alerta; o global barra).
+- **H-03:** `test_bloco_sem_nome` checa só o texto do sinal; teste novo prova que o nome no texto ainda é pego. **H-02:** o E9 mede `len(render_block(texto))/4 ≤ 60` para `rastro/resto/som/cheiro/marca` (constante `MAX_BLOCK_TOKENS`); 12 regiões com 0 erro.
+- **`test_zero_chamada_llm_nova` (70 × 64):** diagnóstico por origem da chamada: 0 chamadas em `services/fauna.py`; as 6 a mais vêm de turnos de história a mais (a fauna converte o encontro em sinal, a trajetória muda: off 19 história/11 combate, on 24/6; o `archivist`/`storyteller` chamam 1× por turno de história). O teste agora exige 0 chamadas da fauna e custo por turno (história e combate) ≤ 1,15× o do `off`; o lockstep `test_campanha_na_lama_exercita_fauna_sem_chamada_extra` segue provando igualdade no mesmo estado.
+- **Eval global (12 regiões):** M5 global −19,51 % (faixa −20 % a +5 %: passa com folga de 0,5 pt), combates/100 ações off 15,06 → on 12,12. `docs/spec360/eval-global.md` e `eval-ophidia.md` regenerados.
+- Rebase em `main` (371 incluída): `build.py --check` fresco.

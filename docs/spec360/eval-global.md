@@ -2,8 +2,8 @@
 
 Gerado por `scripts/fauna/eval.py --todas` (avaliador da Etapa 1; não editar à mão).
 
-- Regiões com fauna: 12 · M5 global (o que barra, R17): -0.1798 (faixa -0.2 a +0.05) → ok.
-- Combates por 100 ações: off 15.062 · on 12.354.
+- Regiões com fauna: 12 · M5 global (o que barra, R17): -0.1951 (faixa -0.2 a +0.05) → ok.
+- Combates por 100 ações: off 15.062 · on 12.123.
 
 | Região | M1 próprio | M1 antigo | M2 | M3 | M4 | M5 (info) | M6 | M7 | M8 | Veredito |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -18,4 +18,4 @@ Gerado por `scripts/fauna/eval.py --todas` (avaliador da Etapa 1; não editar à
 | `selva_xylos` | 0.7910 | 0.7977 | ok | ok | ok | -0.1729 | ok | ok | 0.3071 | ok |
 | `deserto_zhur` | 0.8185 | 0.8336 | ok | ok | ok | -0.1770 | ok | ok | 0.2913 | ok |
 | `costa_negra` | 0.8238 | 0.8515 | ok | ok | ok | -0.1992 | ok | ok | 0.2863 | ok |
-| `ophidia` | 0.6229 | 0.6229 | ok | ok | N/A | -0.1895 | ok | ok | 0.2121 | FALHOU |
+| `ophidia` | 0.9845 | 0.9845 | ok | ok | N/A | -0.3734 (alerta) | ok | ok | 0.2569 | ok |

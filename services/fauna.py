@@ -178,6 +178,12 @@ def region_cap(region_id: str) -> int:
     return max(1, min(top, nodes * int(const("PRESENCAS_POR_NO"))))
 
 
+def anuncia_presenca_nova(region_id: str) -> bool:
+    """SPEC-370 (dono, 03/11): em regiao de 1 no raiz (Ophidia) toda presenca nova deixa 1
+    sinal antes de poder virar luta; nas demais vale `ANUNCIA_PRESENCA_NOVA`."""
+    return bool(const("ANUNCIA_PRESENCA_NOVA")) or _root_counts().get(region_id, 0) == 1
+
+
 def _make_room(
     fauna: FaunaSim, region: str, here_region: str, frequented: list[str], day: int
 ) -> bool:
