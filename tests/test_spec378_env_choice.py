@@ -35,6 +35,10 @@ READERS = [
     ("services.jev_rollout", "rollout_mode", "RPG_JEV_ROUTER_MODE"),
     ("services.enemy_decks", "mode", "RPG_ENEMY_DECKS"),
     ("services.enemy_intent", "mode", "RPG_ENEMY_INTENT"),
+    ("services.latency_flags", "two_phase_on", "RPG_NPC_TWO_PHASE"),
+    ("services.latency_flags", "replan_after_on", "RPG_REPLAN_AFTER"),
+    ("services.latency_flags", "day_digest_inline", "RPG_DAY_DIGEST"),
+    ("services.latency_flags", "archive_policy", "RPG_ARCHIVE_POLICY"),
 ]
 
 
