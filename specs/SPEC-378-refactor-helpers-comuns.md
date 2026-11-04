@@ -741,3 +741,12 @@ Revisão independente: [handoffs/SPEC-378-independent-review.md](../handoffs/SPE
 | P2-6 nome `flags.mode()` × `env_choice` | **Aceito em parte.** A 378 fica com `services.env.env_choice` (o nome `flags` sugere ler `config/flags.yaml`, o que a R13 rejeita). Alinhar 382/384 cabe ao coordenador, porque esta tarefa não pode editar outras specs | R13 |
 | Commit base e contagens | **Aceito.** Base `b278f6af`; `prose_guard._fold_gold` incluído (39 funções); ~60 `setattr` | rótulos, §3.1, R25 |
 | Adendo do coordenador | **Aceito.** `_infer_tier_from_name` e stubs `ImportError` são da 376 | Fora de escopo |
+
+## Liberação W1 pelo coordenador (04/11)
+
+A W1 fonte 3 viu SPEC-377 e SPEC-379 `in-progress`. As duas já pousaram o código na `main`; o que
+falta nelas não toca os arquivos desta spec: 377 = só o item 2 (custo de Fôlego em Cartas, espera
+`/eval-publish` do dono); 379 = só a Etapa 8 (baseline de cobertura do CI). O coordenador libera
+`services/law.py`, `faction_gate.py`, `faction_display.py`, `rag.py` e `persistence.py` para E1–E6
+(regra W1: "o executor pode liberar um arquivo se a spec que o tocou estiver done e a sessão ociosa";
+aqui a parte que tocava esses arquivos está pousada e não há sessão ativa nelas).
