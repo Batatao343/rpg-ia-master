@@ -648,8 +648,7 @@ def generate_new_enemy(
     if not lore:
         lore = "Standard RPG Monster."
 
-    # SPEC-223 R7: o nome vindo do jogador não escala o tier (sempre FAST).
-    llm = get_llm(temperature=0.5, tier=ModelTier.FAST)
+    llm = get_llm(temperature=0.5, tier=ModelTier.FAST)  # SPEC-223 R7
 
     sys_msg = SystemMessage(
         content=f"""
