@@ -1688,14 +1688,6 @@ def storyteller_node(state: GameState):
                     "npcs": scene_npcs,
                     "needs_replan": travel_needs_replan,
                 }
-                if enc.get("reason") == "bounty_hunters":
-                    updates.update(
-                        _law_mod.mark_hunters(
-                            state,
-                            str(enc.get("jurisdiction_id") or ""),
-                            _law_mod.clock_of({**state, "world": world}),
-                        )
-                    )
                 if rested_player is not None:
                     updates["player"] = rested_player  # já curou no descanso antes da emboscada
                 elif discovery_player is not None:
@@ -1706,6 +1698,14 @@ def storyteller_node(state: GameState):
                     updates["turn_baseline"] = turn_bl
                 # `npcs` do patch ja esta em `scene_npcs` (com o reset_scene da viagem): nao sobrescrever
                 updates.update({k: v for k, v in sim_updates.items() if k != "npcs"})
+                if enc.get("reason") == "bounty_hunters":  # SPEC-377 R7: depois do merge da poda
+                    updates.update(
+                        _law_mod.mark_hunters(
+                            state,
+                            str(enc.get("jurisdiction_id") or ""),
+                            _law_mod.clock_of({**state, "world": world}),
+                        )
+                    )
                 if wq_changed:
                     updates["quests"] = wq_quests
                 if discovery_events or extra_engine_events:
