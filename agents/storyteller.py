@@ -1808,85 +1808,7 @@ def storyteller_node(state: GameState):
             )
 
             if t.kind == "combat":
-                from services.combat_origin import from_encounter
-
-                # surpresa: percebeu -> herói embosca; falhou -> inimigo age antes
-                t.world["encounter_surprise"] = "player" if t.det["perceived"] else "enemy"
-                # R5: percebeu = tem AGÊNCIA — pode golpear OU recuar (a fuga já é
-                # mecânica no combate: "fujo/corro/recuo"). Surpreendido = sem saída.
-                sur_txt = (
-                    "Você os percebe ANTES — há tempo de golpear primeiro OU RECUAR "
-                    "(diga que foge/corre/recua para escapar)."
-                    if t.det["perceived"]
-                    else "Eles saem do nada — você é pego de surpresa, sem chance de recuar."
-                )
-                t.updates = {
-                    "messages": [
-                        SystemMessage(content=f"COMBAT START. {t.enc['flavor']} {sur_txt}")
-                    ],
-                    "world": t.world,
-                    "factions": t.factions,
-                    "combat_target": t.enc["hint"],
-                    "combat_encounter_hint": encounter_handoff(t.enc),
-                    "combat_origin_hint": from_encounter(
-                        t.enc,
-                        t.world,
-                        trigger=("rest" if t.rested_player is not None else "travel"),
-                    ),
-                    "next": "combat_agent",
-                    "archive_due": True,  # emboscada = evento relevante
-                    "npcs": t.scene_npcs,
-                    "needs_replan": t.travel_needs_replan,
-                }
-                if t.rested_player is not None:
-                    t.updates["player"] = t.rested_player  # já curou no descanso antes da emboscada
-                elif t.discovery_player is not None:
-                    t.updates["player"] = t.discovery_player
-                # spec loot-exploracao: claim de único do baú curado não se perde
-                # se um encontro disparar na mesma chegada.
-                if t.turn_bl is not t.state.get("turn_baseline"):
-                    t.updates["turn_baseline"] = t.turn_bl
-                # `npcs` do patch ja esta em `scene_npcs` (com o reset_scene da viagem): nao sobrescrever
-                t.updates.update({k: v for k, v in t.sim_updates.items() if k != "npcs"})
-                if t.enc.get("reason") == "bounty_hunters":  # SPEC-377 R7: depois do merge da poda
-                    t.updates.update(
-                        _law_mod.mark_hunters(
-                            t.state,
-                            str(t.enc.get("jurisdiction_id") or ""),
-                            _law_mod.clock_of({**t.state, "world": t.world}),
-                        )
-                    )
-                if t.wq_changed:
-                    t.updates["quests"] = t.wq_quests
-                if t.discovery_events or t.extra_engine_events:
-                    t.updates["pending_world_events"] = (
-                        (t.state.get("pending_world_events", []) or [])
-                        + t.discovery_events
-                        + list(t.extra_engine_events)
-                    )
-                # Fase 3.2 (R3): criatura nomeada no hint ANTES do combate = rumor.
-                enemy_id = t.enc.get("enemy_id")
-                if enemy_id:
-                    t.updates["bestiary_knowledge"] = disc.record_rumor(
-                        t.state.get("bestiary_knowledge", {}), enemy_id, t.turn
-                    )
-                if t.enc.get("presence_id"):  # SPEC-360 R23: o sinal visto ganha dono
-                    _fsim, _shown = _fauna.mark_encountered(
-                        t.updates.get("world_sim") or t.state.get("world_sim") or {},
-                        str(t.enc["presence_id"]),
-                        t._fauna_day,
-                        status="cacada" if t.enc.get("reason") == "caca" else "encontrada",
-                    )
-                    t.updates["world_sim"] = _fsim
-                    if enemy_id and _shown:
-                        t.updates["bestiary_knowledge"] = disc.record_sinais(
-                            t.updates.get("bestiary_knowledge")
-                            or t.state.get("bestiary_knowledge"),
-                            str(enemy_id),
-                            _shown,
-                            t.turn,
-                        )
-                return t.updates
+                return _story_combat_start(t)
 
             _story_noncombat_encounter(t)
         _story_world_pulse(t)
@@ -1925,6 +1847,87 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_combat_start(t: _StoryTurn) -> dict:
+    """Encontro de combate: monta o dict COMBAT START do turno."""
+    from services import fauna as _fauna
+    from services.combat_origin import from_encounter
+
+    # surpresa: percebeu -> herói embosca; falhou -> inimigo age antes
+    t.world["encounter_surprise"] = "player" if t.det["perceived"] else "enemy"
+    # R5: percebeu = tem AGÊNCIA — pode golpear OU recuar (a fuga já é
+    # mecânica no combate: "fujo/corro/recuo"). Surpreendido = sem saída.
+    sur_txt = (
+        "Você os percebe ANTES — há tempo de golpear primeiro OU RECUAR "
+        "(diga que foge/corre/recua para escapar)."
+        if t.det["perceived"]
+        else "Eles saem do nada — você é pego de surpresa, sem chance de recuar."
+    )
+    t.updates = {
+        "messages": [SystemMessage(content=f"COMBAT START. {t.enc['flavor']} {sur_txt}")],
+        "world": t.world,
+        "factions": t.factions,
+        "combat_target": t.enc["hint"],
+        "combat_encounter_hint": encounter_handoff(t.enc),
+        "combat_origin_hint": from_encounter(
+            t.enc,
+            t.world,
+            trigger=("rest" if t.rested_player is not None else "travel"),
+        ),
+        "next": "combat_agent",
+        "archive_due": True,  # emboscada = evento relevante
+        "npcs": t.scene_npcs,
+        "needs_replan": t.travel_needs_replan,
+    }
+    if t.rested_player is not None:
+        t.updates["player"] = t.rested_player  # já curou no descanso antes da emboscada
+    elif t.discovery_player is not None:
+        t.updates["player"] = t.discovery_player
+    # spec loot-exploracao: claim de único do baú curado não se perde
+    # se um encontro disparar na mesma chegada.
+    if t.turn_bl is not t.state.get("turn_baseline"):
+        t.updates["turn_baseline"] = t.turn_bl
+    # `npcs` do patch ja esta em `scene_npcs` (com o reset_scene da viagem): nao sobrescrever
+    t.updates.update({k: v for k, v in t.sim_updates.items() if k != "npcs"})
+    if t.enc.get("reason") == "bounty_hunters":  # SPEC-377 R7: depois do merge da poda
+        t.updates.update(
+            _law_mod.mark_hunters(
+                t.state,
+                str(t.enc.get("jurisdiction_id") or ""),
+                _law_mod.clock_of({**t.state, "world": t.world}),
+            )
+        )
+    if t.wq_changed:
+        t.updates["quests"] = t.wq_quests
+    if t.discovery_events or t.extra_engine_events:
+        t.updates["pending_world_events"] = (
+            (t.state.get("pending_world_events", []) or [])
+            + t.discovery_events
+            + list(t.extra_engine_events)
+        )
+    # Fase 3.2 (R3): criatura nomeada no hint ANTES do combate = rumor.
+    enemy_id = t.enc.get("enemy_id")
+    if enemy_id:
+        t.updates["bestiary_knowledge"] = disc.record_rumor(
+            t.state.get("bestiary_knowledge", {}), enemy_id, t.turn
+        )
+    if t.enc.get("presence_id"):  # SPEC-360 R23: o sinal visto ganha dono
+        _fsim, _shown = _fauna.mark_encountered(
+            t.updates.get("world_sim") or t.state.get("world_sim") or {},
+            str(t.enc["presence_id"]),
+            t._fauna_day,
+            status="cacada" if t.enc.get("reason") == "caca" else "encontrada",
+        )
+        t.updates["world_sim"] = _fsim
+        if enemy_id and _shown:
+            t.updates["bestiary_knowledge"] = disc.record_sinais(
+                t.updates.get("bestiary_knowledge") or t.state.get("bestiary_knowledge"),
+                str(enemy_id),
+                _shown,
+                t.turn,
+            )
+    return t.updates
 
 
 def _story_noncombat_encounter(t: _StoryTurn) -> None:
