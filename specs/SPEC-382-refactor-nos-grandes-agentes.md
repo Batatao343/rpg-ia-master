@@ -1,6 +1,6 @@
 # SPEC-382 — Refatoração pura dos nós grandes: `storyteller_node`, `_combat_node` e `_run_round` em fases nomeadas no mesmo módulo
 
-> **Status:** `in-progress` (Etapas 0-parcial, 1, 2 e 4 executadas em 04/11; Etapa 3 pendente por W1 da `spec-373`; Etapa 5 pendente). Aprovada em 04/11 ( coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = não (follow-up), D2 = 378 já `done`, D3 = aceitar, D4 = aceitar, D5 = smoke local, D6 = já aplicada pela SPEC-387 (guard da 363 com gate de branch), D7 = SPEC-384 D3 é **não**: Etapa 4 preserva `_advance_reinforcements`. Etapa 3 espera a `spec-373` (W1: `services/conflict_orchestrator.py`))
+> **Status:** `in-progress` (Etapas 0-parcial, 1, 2 e 4 executadas em 04/11; Etapa 3 pendente por W1 da `spec-373`; Etapa 5 feita para as Etapas 1–2 e 4: W2 verde, revisão Sol APPROVED_WITH_FOLLOWUPS, smoke real ok — `handoffs/SPEC-382-equivalence.md`; antes da Etapa 3, golden mais sensível (Sol P2-1)). Aprovada em 04/11 ( coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = não (follow-up), D2 = 378 já `done`, D3 = aceitar, D4 = aceitar, D5 = smoke local, D6 = já aplicada pela SPEC-387 (guard da 363 com gate de branch), D7 = SPEC-384 D3 é **não**: Etapa 4 preserva `_advance_reinforcements`. Etapa 3 espera a `spec-373` (W1: `services/conflict_orchestrator.py`))
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-04
 > **Origem:** auditoria de qualidade de 03/11 (`docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md`
 > §4.2 itens 1–2, §5 letra F, §6 regras W1–W8, §6.3 ordem 7)
