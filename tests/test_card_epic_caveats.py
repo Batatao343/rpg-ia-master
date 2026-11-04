@@ -104,6 +104,15 @@ def test_guard_rejects_wrong_gravity_and_unrecorded_part():
     assert death_prose_guard.check("Um ferimento na sua perna sangra.", LEVE_PERNA) is None
 
 
+def test_guard_own_body_part_subject_and_far_negation_are_checked():
+    assert death_prose_guard.check("A perna, ferida de forma grave, cede sob você.", LEVE_PERNA)
+    assert death_prose_guard.check("A cabeça, ferida, latejando, cede.", LEVE_PERNA)
+    assert death_prose_guard.check("A ferida grave na perna esquerda sangra sem parar.", LEVE_PERNA)
+    assert death_prose_guard.check("Sua perna, ferida gravemente, cede.", LEVE_PERNA)
+    assert death_prose_guard.check("Sua perna, ferida criticamente, cede.", LEVE_PERNA)
+    assert death_prose_guard.check("Sua perna, ferida levemente, cede.", LEVE_PERNA) is None
+
+
 @pytest.mark.parametrize(
     "prose",
     [

@@ -10,13 +10,17 @@ import re
 from services.economy import _fold
 
 _REGION = re.compile(r"\b(cabeca|torso|braco|perna)s?(?: (esquerd|direit)[oa])?\b")
-_GRAVITY = re.compile(r"\b(leve|grave|critico)s?\b")
+_GRAVITY = re.compile(r"\b(leve|grave|critic)(?:o|a|s|os|as|mente|amente)?\b")
 _WOUND_WORD = re.compile(r"\b(ferimento|ferimentos|ferid[oa]s?|ferir|feriu)\b")
 _OTHER_OWNER = re.compile(
     r"\b(?:braco|perna|torso|cabeca)s?(?: (?:esquerd|direit)[oa])? d[oae]s? (?!corpo\b)\w"
 )
-_THIRD_PARTY = re.compile(r"^(?:o|a|os|as|um|uma) \w+(?: \w+)?, ferid")
-_NEGATION = re.compile(r"\b(?:sem|nenhum|nenhuma|nao)\b")
+_THIRD_PARTY = re.compile(
+    r"^(?:o|a|os|as|um|uma) (?!(?:braco|perna|torso|cabeca)s?\b)\w+(?: \w+)?, ferid"
+)
+_NEGATION = re.compile(
+    r"\b(?:sem|nenhum|nenhuma|nao)\b(?: \w+){0,2}? (?:ferimentos?|ferid\w*|leves?|graves?|criticos?)\b"
+)
 _SPLIT = re.compile(r"[.!?\n]+")
 
 
@@ -46,7 +50,8 @@ def _sentence_reason(sent: str, keys: list[tuple[str, str, str]]) -> str | None:
     recorded = [
         k for k in keys if any(k[0] == b and (not s or not k[1] or k[1] == s) for b, s in regions)
     ]
-    for gravity in {m.group(1) for m in _GRAVITY.finditer(sent)}:
+    for raw_gravity in {m.group(1) for m in _GRAVITY.finditer(sent)}:
+        gravity = "critico" if raw_gravity == "critic" else raw_gravity
         if not any(k[2] == gravity for k in recorded):
             return f"gravidade:{gravity}"
     return None if recorded else "parte_fora_do_registro:" + regions[0][0]
