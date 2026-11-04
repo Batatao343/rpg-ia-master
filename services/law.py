@@ -17,11 +17,11 @@ import math
 import os
 import random
 import re
-import unicodedata
 from typing import Any, TypedDict
 
 from observability.telemetry import log_event as _log_event
 from services import law_codes
+from services import text as _text
 
 _LOG = logging.getLogger("rpg.law")
 
@@ -159,8 +159,7 @@ def mode() -> str:
 
 
 def _fold(text: Any) -> str:
-    nfkd = unicodedata.normalize("NFKD", str(text or ""))
-    return "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
+    return _text.fold(text)
 
 
 def _sha(*parts: Any) -> str:
