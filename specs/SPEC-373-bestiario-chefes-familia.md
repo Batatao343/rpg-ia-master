@@ -176,8 +176,10 @@ Princípios: mecânica é Python (o motor monta o baralho; o LLM não entra); av
 **Assinaturas**
 ```python
 # services/enemy_decks.py
-def _autoral(creature: dict) -> bool: ...          # R9
-def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]: ...  # assinatura pública inalterada
+def _autoral(creature: dict) -> bool: ...  # R9
+def build_enemy_deck(
+    creature: dict, seed: int | str = 0
+) -> list[str]: ...  # assinatura pública inalterada
 ```
 
 **Exemplo (R9), `mon_peso_dos_vencidos` (`predador_apice`, 3 autorais, assinatura própria `cri_peso_dos_vencidos_soco_de_cima`):** hoje `3 próprias + assinatura da família + 2–4 comuns` (5–8 Cartas da família/facção); depois `3 próprias + 1–2 comuns de predador_apice + 0–3 da facção`.
