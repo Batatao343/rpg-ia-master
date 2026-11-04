@@ -23,6 +23,7 @@ from typing import Protocol
 from collections.abc import Callable, Mapping
 
 from observability.metrics import metrics
+from services.env import is_database_profile
 from services.checkout_retry import retry_once
 
 KEY_RE = re.compile(
@@ -151,7 +152,7 @@ class KillSwitches:
     def _resolve_store(self) -> SwitchStore | None:
         if self._store is not None:
             return self._store
-        if os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() == "legacy":
+        if not is_database_profile():
             return None
         from infrastructure.kill_switch_store import PostgresSwitchStore
         from infrastructure.runtime import get_runtime
