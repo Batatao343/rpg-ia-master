@@ -1,0 +1,84 @@
+{
+ "com_faro_preparado": {
+  "abertura_message": "O silêncio do amanhecer se rompe quando o goblin irrompe entre os arbustos secos, arrastando os pés tortos e fungando o ar com os dentes à mostra — e você já gira o corpo na direção dele, punho erguido, o peso mudando para a perna da frente. Ele percebe o movimento, encolhe os ombros e crava os calcanhares no chão, a lâmina curta e enferrujada tremendo na mão enquanto os olhos amarelos se fixam em você. Por um instante nenhum dos dois cede: o goblin agacha, rosnando baixo, pronto para saltar.",
+  "pressagios_abertura": [
+   {
+    "actor_id": "enemy_goblin_1",
+    "tipo": "ataque",
+    "alvo_id": "player",
+    "valor_estimado": null,
+    "faixa": null,
+    "carta_nome": null,
+    "sinal": "Um rosnado baixo, dentes à mostra: Goblin vai saltar sobre você."
+   }
+  ],
+  "rodadas": [
+   {
+    "r": "i2_com_r1.json",
+    "phase": "active",
+    "mech_log": [
+     "Você · Mofo Lento → Goblin · 3d10 6 + 8 +4 = 18 vs 12 · acerto · Proteção −1 · 5 dano",
+     "Você · Unha de Ferrugem → Goblin · 2d10 10 + 8 +1 = 19 vs 12 · acerto · Proteção −1 · 5 dano",
+     "Goblin · Agarrar e Atirar → Você · 2d10 4 + 3 +3 = 10 vs 12 · erro"
+    ]
+   },
+   {
+    "r": "i2_com_r2.json",
+    "phase": "ended",
+    "mech_log": [
+     "Você · Ataque de Oportunidade → Goblin · 2d10 1 + 3 +1 = 5 vs 12 · erro",
+     "Transformação (Podridão) → Você · dano contínuo · 1 dano",
+     "Você · Unha de Ferrugem → Goblin · 2d10 2 + 5 +1 = 8 vs 12 · erro",
+     "Você · Unha de Ferrugem → Goblin · 2d10 3 + 9 +1 = 13 vs 12 · acerto · 6 dano"
+    ]
+   }
+  ]
+ },
+ "sem_faro": {
+  "abertura_message": "O goblin irrompe da sombra do beco com um guincho rasgado, arrastando a lâmina curta e enferrujada pelo chão de pedra enquanto seus olhos amarelos se fixam em você. Você firma o peso do corpo e ergue a arma, o ar da manhã ainda frio cortando seu rosto — e por um instante os dois se medem, o goblin agachado como um animal pronto para saltar, os dentes à mostra, cada músculo tenso à espera do primeiro movimento.",
+  "pressagios_abertura": [
+   {
+    "actor_id": "enemy_goblin_1",
+    "tipo": "ataque",
+    "alvo_id": "player",
+    "valor_estimado": 5,
+    "faixa": [
+     5,
+     10
+    ],
+    "carta_nome": "Agarrar e Atirar",
+    "sinal": "Um rosnado baixo, dentes à mostra: Goblin vai saltar sobre você."
+   }
+  ],
+  "rodadas": [
+   {
+    "r": "i2_sem_r1.json",
+    "phase": "active",
+    "mech_log": [
+     "Goblin · Agarrar e Atirar → Você · 2d10 7 + 1 +3 = 11 vs 12 · erro",
+     "Você · Unha de Ferrugem → Goblin · 3d10 1 + 2 +1 = 4 vs 12 · erro",
+     "Você · Toque da Decadência → Goblin · 2d10 6 + 3 +4 = 13 vs 12 · acerto"
+    ]
+   },
+   {
+    "r": "i2_sem_r2.json",
+    "phase": "active",
+    "mech_log": [
+     "Toque da Decadência → Goblin · dano contínuo · 3 dano",
+     "Goblin · Pancada Esmagadora → Você · 2d10 1 + 9 +3 = 13 vs 12 · acerto · Proteção −2 · 8 dano",
+     "Transformação (Podridão) → Você · dano contínuo · 1 dano",
+     "Você · Mofo Lento → Goblin · 2d10 5 + 8 +4 = 17 vs 12 · acerto · Proteção −1 · 5 dano",
+     "Você · Unha de Ferrugem → Goblin · 2d10 1 + 4 +1 = 6 vs 12 · erro"
+    ]
+   },
+   {
+    "r": "i2_sem_r3.json",
+    "phase": "ended",
+    "mech_log": [
+     "Transformação (Podridão) → Você · dano contínuo · 1 dano",
+     "Você · Unha de Ferrugem → Goblin · 2d10 10 + 2 +1 = 13 vs 12 · acerto · Proteção −1 · 5 dano"
+    ]
+   }
+  ]
+ }
+}

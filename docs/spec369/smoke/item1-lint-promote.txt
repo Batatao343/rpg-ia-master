@@ -1,0 +1,19 @@
+Saidas reproduzidas do terminal (rodadas na copia; promote move as verdes para o pool DA COPIA e as tira do rascunho,
+por isso um segundo lint do mesmo arquivo mostra so as reprovadas).
+
+== lint onda369_medico_de_campo_boticario.json
+6 cartas: 4 verdes, 2 reprovadas
+- boticario_tintura_de_cicatriz
+    [error] schema: frequência inválida: 'rodada'
+    [warn] voz: descrição sem nenhum termo de sabor de Valoria
+- boticario_cataplasma_de_cinza
+    [error] redundancia: provável duplicata de bas_med_guarda (mesma assinatura mecânica, momento 0.00)
+
+== lint onda369_corruptor_alma.json
+4 cartas: 4 verdes, 0 reprovadas
+
+== sim --protocolo lote-v2: rc=0 nos dois lotes (aviso "uso_baixo" em cartas do Corruptor)
+== promote --voz-pendente: lote 1 = 4 promovidas, 2 recusadas (as 2 reprovadas do lint); lote 2 = 4 promovidas, 0 recusadas
+
+== rejeitada na triagem do draft (vocabulario), fora das 6
+{"id": "boticario_dedos_limpos", "motivos": ["efeitos sem efeito principal (ao_jogar, sem condição)"]}

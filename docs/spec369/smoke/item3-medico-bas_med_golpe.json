@@ -1,0 +1,46 @@
+{
+ "carta_na_mao": [
+  {
+   "id": "bas_med_golpe",
+   "name": "Bisturi de Campanha",
+   "tipo": "ativa",
+   "custo_folego": 1,
+   "custo_entropia": 0,
+   "jogavel": true,
+   "alvo": "inimigo",
+   "texto": "Causa 8 de dano (5 da Carta + 2 de herói iniciante + 1 de bônus).",
+   "palavras_chave": [],
+   "valid_targets": [
+    "enemy_goblin_1",
+    "enemy_goblin_2"
+   ],
+   "invalid_reason": null
+  }
+ ],
+ "rodadas_mech_log": [
+  [
+   "Você · Bisturi de Campanha → Goblin 1 · 2d10 7 + 5 +1 = 13 vs 12 · acerto · Proteção −1 · 7 dano",
+   "Você · Bisturi de Campanha → Goblin 1 · 2d10 1 + 4 +1 = 6 vs 12 · erro",
+   "Goblin 1 · Investida Cega → Você · 2d10 9 + 10 +3 = 22 vs 11 · acerto · 6 dano",
+   "Goblin 2 · Pancada Esmagadora → Você · 2d10 7 + 9 +3 = 19 vs 11 · acerto · 10 dano"
+  ],
+  [
+   "Goblin 2 · Agarrar e Atirar → Você · 2d10 1 + 9 +3 = 13 vs 11 · acerto · 5 dano",
+   "Sutura de Campo → Você · cura · 5 Vitalidade",
+   "Pressão sobre a Ferida → Você · cura · 4 Vitalidade"
+  ],
+  [
+   "Você · Bisturi de Campanha → Goblin 1 · 2d10 3 + 8 +1 = 12 vs 12 · acerto · 8 dano"
+  ],
+  [
+   "Você · Bisturi de Campanha → Goblin 2 · 2d10 5 + 9 +1 = 15 vs 12 · acerto · 8 dano",
+   "Goblin 2 → Você · 2d10 2 + 6 +3 = 11 vs 11 · acerto · 5 dano",
+   "O ferimento abre espaço no Baralho: Dor Surda."
+  ],
+  [
+   "Sangramento → Você · dano contínuo · 1 dano",
+   "Você · Bisturi de Campanha → Goblin 2 · 2d10 8 + 10 +1 = 19 vs 12 · acerto · 8 dano"
+  ]
+ ],
+ "mensagem_final": "Sangramento corrói Você: 1 de dano contínuo.\nVocê joga Bisturi de Campanha em Goblin 2: Mão que cose a carne também sabe onde ela cede. Acerta — 8 de dano, ferimento grave na cabeça do Goblin 2.\nO Abismo se aproxima.\nSua condição Sangramento terminou.\nGoblin 2 já está fora do conflito.\nPresságio frustrado: Goblin 2\nGoblin 2 morre.\n\nO Bisturi de Campanha encontra a cabeça do Goblin 2 e o derruba de vez, o último da dupla que já tinha perdido o companheiro antes. O silêncio que se segue é seu, mesmo com o sangramento ainda corroendo seu corpo e o gosto de ferro na boca. Você permanece de pé por pura teimosia, a Serra Cirúrgica pesada na mão, os ferimentos leves na cabeça e no braço ardendo sob o claro da manhã. À beira do colapso, você venceu — e o amanhecer de Malagor é testemunha disso.\n\nCorda de Cânhamo (15m) e +8 de ouro"
+}

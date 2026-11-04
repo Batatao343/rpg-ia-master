@@ -1,0 +1,18 @@
+attempt deepseek deepseek-v4-flash combat_agent invoke_error OpenAITimeoutError 12026
+attempt deepseek deepseek-v4-flash dm_router invoke_error OpenAITimeoutError 6531
+0.00868 {'deepseek': 13, 'groq': 2} 15
+('0151318281e2d171', 2, 2, False)
+('0151318281e2d171', 3, 0, False)
+('0151318281e2d171', 4, 2, True)
+('cf65aeff932c0505', 2, 2, False)
+('cf65aeff932c0505', 3, 0, False)
+('cf65aeff932c0505', 4, 0, False)
+('cf65aeff932c0505', 5, 2, False)
+('2a08f8f394639c1a', 3, 0, False)
+('2a08f8f394639c1a', 4, 0, False)
+('2a08f8f394639c1a', 5, 0, False)
+('2a08f8f394639c1a', 6, 0, False)
+('2a08f8f394639c1a', 7, 2, False)
+('2a08f8f394639c1a', 8, 3, True)
+('2a08f8f394639c1a', 9, 0, False)
+('2a08f8f394639c1a', 10, 2, False)

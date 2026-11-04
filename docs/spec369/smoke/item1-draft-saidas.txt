@@ -1,0 +1,8 @@
+== batch1 Medico/boticario
+6 cartas (1 fora do vocabulário) -> C:\Users\guilh\AppData\Local\Temp\s369\data\cards\_rascunhos\onda369_medico_de_campo_boticario.json
+pedidas=4 entregues=6 rejeitadas=1 custo_estimado=US$ 0.0029
+Próximos passos:
+== batch2 Corruptor/alma
+4 cartas (0 fora do vocabulário) -> C:\Users\guilh\AppData\Local\Temp\s369\data\cards\_rascunhos\onda369_corruptor_alma.json
+pedidas=4 entregues=4 rejeitadas=0 custo_estimado=US$ 0.0027
+Próximos passos:

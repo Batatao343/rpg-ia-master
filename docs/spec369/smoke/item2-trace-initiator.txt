@@ -1,0 +1,4 @@
+saves/31d02a0a-25c2-4094-8e1c-59a3f584f0be.json:"initiator": null
+saves/31d02a0a-25c2-4094-8e1c-59a3f584f0be.json:"initiator_reason": "ambush_negated_vigilia"
+saves/fdcdffc8-63a0-492f-8d4d-fcf3d1eae2fa.json:"initiator": "enemy"
+saves/fdcdffc8-63a0-492f-8d4d-fcf3d1eae2fa.json:"initiator_reason": "ambush"

@@ -1,0 +1,37 @@
+{
+ "abertura_pressagios": [
+  {
+   "actor_id": "enemy_goblin_1",
+   "tipo": "ataque",
+   "alvo_id": "player",
+   "valor_estimado": null,
+   "faixa": [
+    4,
+    8
+   ],
+   "carta_nome": null,
+   "sinal": "Um rosnado baixo, dentes à mostra: Goblin vai saltar sobre você."
+  }
+ ],
+ "r1_mech": [
+  "Goblin · Raiva de Ferido → Você · 2d10 3 + 4 +3 = 10 vs 11 · erro"
+ ],
+ "r1_pressagios_proxima_rodada": [
+  {
+   "actor_id": "enemy_goblin_1",
+   "tipo": "ataque",
+   "alvo_id": "player",
+   "valor_estimado": 10,
+   "faixa": [
+    10,
+    20
+   ],
+   "carta_nome": "Pancada Esmagadora",
+   "sinal": "Um rosnado baixo, dentes à mostra: Goblin vai saltar sobre você."
+  }
+ ],
+ "r2_mech": [
+  "Goblin · Pancada Esmagadora → Você · 2d10 3 + 9 +3 = 15 vs 11 · acerto · Proteção −2 · 8 dano",
+  "Última Ação: Você → Goblin · 3d10 5 + 8 +1 = 14 vs 12 · acerto · 9 dano"
+ ]
+}
