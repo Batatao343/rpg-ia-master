@@ -1495,58 +1495,7 @@ def storyteller_node(state: GameState):
                 f"O jogador DESCANSOU. O tempo avançou para {clock_label(t.world, _cal_of(t.state))} e ele recuperou parte das forças. "
                 "Narre a passagem do tempo e o estado do mundo ao acordar."
             )
-    t.perceived_items: list = []
-    t.wq_created: list = []
-    if t.world_tick is not None:
-        if getattr(t.world_tick, "state_patch", None):
-            # SPEC-304: escritas dos hooks (npc_sim, party/npcs de destino de companheiro...):
-            # entram no estado do turno ANTES do resto (cena, contexto, quests leem `state`).
-            t.sim_updates.update(t.world_tick.state_patch)
-            t.state = {**t.state, **t.world_tick.state_patch}
-        if t.world_tick.world_sim is not None:
-            if t.closed_pass:  # SPEC-303 R27: telemetria de travessia de passo fechado
-                _ps = t.world_tick.world_sim.setdefault("perceived_stats", {})
-                _ps["pass_crossings"] = int(_ps.get("pass_crossings", 0)) + 1
-            t.sim_updates[t.world_tick.sim_key] = t.world_tick.world_sim
-            t.world, t.perceived_items = _perceive_world(
-                t.state, t.world, t.factions, t.intel, t.world_tick
-            )
-            if t.discovered_routes:  # F2: o bloqueio descoberto entra no livro-razao do heroi
-                _sim = t.world_tick.world_sim
-                _sim["perceived_ids"] = [*(_sim.get("perceived_ids") or []), *t.discovered_routes][
-                    -400:
-                ]
-            # SPEC-309 R7/R8: o que o heroi percebeu hoje vira memoria canonica (texto de
-            # template, nunca a prosa da LLM), haja ou nao narracao do dia
-            from services.perceived_world import day_memory_facts
-
-            _day_facts = day_memory_facts(
-                _perception_state(t.state, t.world, t.factions, t.intel), t.perceived_items
-            )
-            if _day_facts:
-                t.sim_updates["memory_canonical_facts"] = list(
-                    dict.fromkeys([*(t.state.get("memory_canonical_facts") or []), *_day_facts])
-                )
-                t.sim_updates["archive_due"] = True
-        t.extra_engine_events_tick = list(t.world_tick.pending_events)
-        t.extra_engine_events_tick += _npc_beliefs_update(
-            t.state, t.world, t.sim_updates, t.perceived_items
-        )
-        if (
-            t.perceived_items or "npc_beliefs" in t.sim_updates
-        ):  # SPEC-308 R6: marco de evento do motor percebido so agora
-            try:
-                from services.chronicle import perceived_milestones
-
-                _chron = perceived_milestones({**t.state, **t.sim_updates, "world": t.world})
-                if _chron is not None:
-                    t.sim_updates["chronicle"] = _chron
-            except Exception as exc:
-                from observability.telemetry import log_fallback
-
-                log_fallback("storyteller", "perceived_milestones_failed", exc)
-    else:
-        t.extra_engine_events_tick = []
+    _story_world_tick_effects(t)
     _story_membership_and_quests(t)
     _story_scene_and_replan(t)
 
@@ -1618,6 +1567,62 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_world_tick_effects(t: _StoryTurn) -> None:
+    """Efeitos do tick do mundo: state_patch, percepção, crônica."""
+    t.perceived_items: list = []
+    t.wq_created: list = []
+    if t.world_tick is not None:
+        if getattr(t.world_tick, "state_patch", None):
+            # SPEC-304: escritas dos hooks (npc_sim, party/npcs de destino de companheiro...):
+            # entram no estado do turno ANTES do resto (cena, contexto, quests leem `state`).
+            t.sim_updates.update(t.world_tick.state_patch)
+            t.state = {**t.state, **t.world_tick.state_patch}
+        if t.world_tick.world_sim is not None:
+            if t.closed_pass:  # SPEC-303 R27: telemetria de travessia de passo fechado
+                _ps = t.world_tick.world_sim.setdefault("perceived_stats", {})
+                _ps["pass_crossings"] = int(_ps.get("pass_crossings", 0)) + 1
+            t.sim_updates[t.world_tick.sim_key] = t.world_tick.world_sim
+            t.world, t.perceived_items = _perceive_world(
+                t.state, t.world, t.factions, t.intel, t.world_tick
+            )
+            if t.discovered_routes:  # F2: o bloqueio descoberto entra no livro-razao do heroi
+                _sim = t.world_tick.world_sim
+                _sim["perceived_ids"] = [*(_sim.get("perceived_ids") or []), *t.discovered_routes][
+                    -400:
+                ]
+            # SPEC-309 R7/R8: o que o heroi percebeu hoje vira memoria canonica (texto de
+            # template, nunca a prosa da LLM), haja ou nao narracao do dia
+            from services.perceived_world import day_memory_facts
+
+            _day_facts = day_memory_facts(
+                _perception_state(t.state, t.world, t.factions, t.intel), t.perceived_items
+            )
+            if _day_facts:
+                t.sim_updates["memory_canonical_facts"] = list(
+                    dict.fromkeys([*(t.state.get("memory_canonical_facts") or []), *_day_facts])
+                )
+                t.sim_updates["archive_due"] = True
+        t.extra_engine_events_tick = list(t.world_tick.pending_events)
+        t.extra_engine_events_tick += _npc_beliefs_update(
+            t.state, t.world, t.sim_updates, t.perceived_items
+        )
+        if (
+            t.perceived_items or "npc_beliefs" in t.sim_updates
+        ):  # SPEC-308 R6: marco de evento do motor percebido so agora
+            try:
+                from services.chronicle import perceived_milestones
+
+                _chron = perceived_milestones({**t.state, **t.sim_updates, "world": t.world})
+                if _chron is not None:
+                    t.sim_updates["chronicle"] = _chron
+            except Exception as exc:
+                from observability.telemetry import log_fallback
+
+                log_fallback("storyteller", "perceived_milestones_failed", exc)
+    else:
+        t.extra_engine_events_tick = []
 
 
 def _story_membership_and_quests(t: _StoryTurn) -> None:
