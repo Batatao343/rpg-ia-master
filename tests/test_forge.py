@@ -187,18 +187,6 @@ def _cicatriz(st):
     return scar
 
 
-def test_maldicao_da_cicatriz_nao_se_esquece_nem_sai_do_baralho_por_set_deck():
-    st = _state()
-    _cicatriz(st)
-    p = st["player"]
-    assert p["deck"].count("mld_cicatriz_braco") == 1
-    assert not cr.forget(st, "mld_cicatriz_braco", "templo")["ok"]
-    sem = [c for c in p["deck"] if c != "mld_cicatriz_braco"]
-    res = cards.set_deck(st, sem)
-    assert not res["ok"] and "Purgar" in res["error"]
-    assert cards.set_deck(st, list(p["deck"]))["ok"]  # com a maldição, o baralho vale
-
-
 def test_purgar_no_templo_e_com_medico_custa_ouro():
     st = _state()
     _cicatriz(st)
@@ -345,10 +333,6 @@ def test_purgar_tambem_limpa_prepared_cards():
     assert "mld_cicatriz_braco" in p["prepared_cards"]
     st["party"] = [{"class_name": "Médico de Campo", "active": True}]
     assert cr.purge_curse(st, "scar_braco_0", "medico")["ok"]
-    assert "mld_cicatriz_braco" not in p["prepared_cards"]
-    # set_deck também não "mantém" status/maldição na Preparação
-    p["prepared_cards"].append("mld_cicatriz_braco")
-    assert cards.set_deck(st, list(p["deck"]))["ok"]
     assert "mld_cicatriz_braco" not in p["prepared_cards"]
 
 

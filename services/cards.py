@@ -492,63 +492,6 @@ def basicas_for_class(class_name: str) -> dict[str, list[str]]:
     return {"golpe": golpe, "guarda": guarda, "assinatura": sig}
 
 
-def set_deck(state: dict, deck: list[str]) -> dict:
-    """Aplica um novo Baralho de Conflito (R1). Valida: reorganização permitida, ids no
-    Acervo ou nas básicas da Postura, tipo jogável, 12–24 cartas, cópias ≤ 2 (comum) /
-    ≤ 1 (rara+). Básicas não têm teto de cópias. `prepared_cards` fica derivado (R4)."""
-    if not can_reorganize(state):
-        return {"ok": False, "error": "Não é seguro reorganizar o Baralho agora.", "log": ""}
-    player = state.get("player") or {}
-    known = set(player.get("known_cards") or [])
-    basics = {
-        cid for ids in basicas_for_class(str(player.get("class_name", ""))).values() for cid in ids
-    }
-    deck = [str(c) for c in deck]
-    curses = scar_curse_ids(player)  # SPEC-333 R8: maldicao de Cicatriz e permanente ate Purgar
-    fora = sorted({c for c in deck if c not in known and c not in basics and c not in curses})
-    if fora:
-        return {"ok": False, "error": f"Cartas fora do Acervo: {fora}.", "log": ""}
-    for cid in set(curses):
-        if deck.count(cid) < curses.count(cid):
-            return {
-                "ok": False,
-                "error": f"'{(get_card(cid) or {}).get('name', cid)}' é uma Cicatriz: "
-                "só sai com Purgar.",
-                "log": "",
-            }
-    if not DECK_MIN <= len(deck) <= DECK_MAX:
-        return {
-            "ok": False,
-            "error": f"O Baralho precisa ter de {DECK_MIN} a {DECK_MAX} Cartas (tem {len(deck)}).",
-            "log": "",
-        }
-    counts: dict[str, int] = {}
-    for cid in deck:
-        card = get_card(cid) or {}
-        if cid in curses:
-            continue
-        if card.get("tipo") not in _DECK_TIPOS:
-            return {"ok": False, "error": f"'{cid}' não entra no Baralho.", "log": ""}
-        counts[cid] = counts.get(cid, 0) + 1
-        if cid in basics:
-            continue
-        limite = 2 if card.get("patamar") in _COMMON_PATAMARES and not card.get("apex") else 1
-        if counts[cid] > limite:
-            return {
-                "ok": False,
-                "error": f"'{card.get('name', cid)}': no máximo {limite} cópia(s) no Baralho.",
-                "log": "",
-            }
-    player["deck"] = deck
-    keep = [
-        c
-        for c in (player.get("prepared_cards") or [])
-        if (get_card(c) or {}).get("tipo") not in (_DECK_TIPOS | STATUS_TIPOS)
-    ]
-    player["prepared_cards"] = list(dict.fromkeys(deck + keep))
-    return {"ok": True, "error": None, "log": f"Baralho atualizado ({len(deck)} Cartas)."}
-
-
 # --------------------------------------------------------------------------
 # Uso / frequência
 # --------------------------------------------------------------------------

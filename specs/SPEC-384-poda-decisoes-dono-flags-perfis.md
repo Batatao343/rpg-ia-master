@@ -605,3 +605,9 @@ mudam o jogo; para eles, o smoke é o item 4.
 | P2-7 `/game/map` vs `/data/map` | **Aceito.** Registrado em "Fora de escopo": as duas rotas ficam, porque cada uma tem consumidor. |
 | P2-8 rollbacks documentados | **Aceito.** As linhas foram citadas no §7, e o corpo de cada commit do D1 anota a troca por `git revert`. |
 | P2-9 contagens/linhas | **Aceito.** COMPANION_SOUL = 4, NPC_SELF = 6, CARD_DECK = 33, e as linhas foram atualizadas (`cards.py:≈493`, `api.py:≈5053/≈7139`). A Etapa 0 manda recontar. |
+
+## Execução (04/11, executor Sonnet)
+
+Provas de zero chamadores = grep em toda a árvore (produção, scripts/, web/src, playtest/, config, workflows, `.env.example`), excluindo só `specs/`, `docs/`, `handoffs/` (histórico).
+
+- **D7 `set_deck`** — grep `set_deck`: 0 ocorrências fora de `services/cards.py` (definição) e dos 5 testes próprios. Apagados: `services/cards.py::set_deck`; `tests/test_card_piles.py::test_set_deck_valida_tamanho_copias_e_acervo`, `::test_set_deck_recusa_em_combate` (+ helper `_state`, usado só por eles); `tests/test_forge.py::test_maldicao_da_cicatriz_nao_se_esquece_nem_sai_do_baralho_por_set_deck`; e o trecho final de `test_purgar_tambem_limpa_prepared_cards` (3 linhas que só exercitavam `set_deck`; asserções anteriores intactas). `DECK_MIN/DECK_MAX` e `_DECK_TIPOS/_COMMON_PATAMARES` ficam (usados por `api_presenters`, `card_piles`, `card_rewards`, `scripts/cards/sim.py`). Novo: `test_set_deck_removido`.

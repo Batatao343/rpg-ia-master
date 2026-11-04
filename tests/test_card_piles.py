@@ -296,34 +296,6 @@ def test_movimento_e_gratis():
     assert cp.plan_plays(piles, p, [_Step("move")] * 9)["ok"]
 
 
-# ------------------------------------------------------------------ set_deck (R1)
-def _state(p):
-    return {"player": p, "world": {"danger_level": 1}, "combat": {}}
-
-
-def test_set_deck_valida_tamanho_copias_e_acervo():
-    p = _player()
-    st = _state(p)
-    basics = cards.basicas_for_class("Sangromante")
-    ids = basics["golpe"] * 6 + basics["guarda"] * 6
-    assert cards.set_deck(st, ids)["ok"]  # basicas sem teto de copias
-    assert p["deck"] == ids and set(ids) <= set(p["prepared_cards"])
-    assert not cards.set_deck(st, ids[:11])["ok"]  # < 12
-    assert not cards.set_deck(st, ids + basics["golpe"] * 20)["ok"]  # > 24
-    outsider = next(c for c in cards.all_cards() if c not in p["known_cards"] and "dev_" in c)
-    assert not cards.set_deck(st, ids[:11] + [outsider])["ok"]
-    known = p["known_cards"][0]
-    assert cards.set_deck(st, ids[:10] + [known, known])["ok"]  # comum: ate 2
-    assert not cards.set_deck(st, ids[:9] + [known] * 3)["ok"]
-
-
-def test_set_deck_recusa_em_combate():
-    p = _player()
-    st = _state(p)
-    st["combat"] = {"active": True}
-    assert not cards.set_deck(st, p["deck"])["ok"]
-
-
 def test_visao_publica_nao_vaza_a_ordem_do_monte():
     p = _player()
     view = cp.public_view(cp.start_piles(p, 1))
@@ -350,3 +322,8 @@ def test_folego_padrao_calibrado_e_env(monkeypatch):
     assert cp._folego_base_from_env() == 4
     monkeypatch.setenv("RPG_FOLEGO_BASE", "x")
     assert cp._folego_base_from_env() == 2
+
+
+def test_set_deck_removido():
+    """SPEC-384 D7: sem chamador de produção; a montagem de baralho volta como spec de feature."""
+    assert not hasattr(cards, "set_deck")
