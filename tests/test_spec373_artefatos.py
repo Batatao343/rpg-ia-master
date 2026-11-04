@@ -5,7 +5,7 @@ Os portões leem artefatos que o executor gera com o avaliador sem mudança e fa
 não existem (é o alvo da spec, não um teste quebrado):
 
 - R17 veredito cheio: ``docs/spec373/arena-<regiao>.json`` (12 regiões, sementes 0-39, ``off,on``,
-  ``--baseline docs/spec349/arena-slots-baseline.json``) com >= 256 de 281 no ``ok`` do ``arena.py``;
+  ``--baseline docs/spec349/arena-slots-baseline.json``) com >= 250 de 281 no ``ok`` do ``arena.py``;
 - R17 regressões: contra a linha de base congelada ``docs/spec373/base/eval/arena-<regiao>.json``, nenhuma
   criatura que passava passa a falhar por mais de 3 pp; no máximo 5 falham por até 3 pp (borda);
 - R2/R17 ``off``: células ``off`` idênticas à base para toda criatura fora de
@@ -72,7 +72,7 @@ SLOTS = ("enemy_aranha_de_cristal", "enemy_boss_general_escorpiao")
 FAIXA = (0.45, 0.85)
 DELTA_MAX_PP = 8.0
 TOTAL_CRIATURAS = 281
-MIN_OK = 256  # 247 da SPEC-349 + os 9 chefes
+MIN_OK = 250  # 241 da main 9468d058 + os 9 chefes (decisão do dono 04/11; era 256 = 247 + 9)
 BORDA_PP = 3.0
 MAX_BORDA = 5
 CONF_INICIO, CONF_SEEDS = 40, 80
@@ -210,7 +210,7 @@ def test_linha_de_base_congelada_tem_281():
     assert set(CHEFES) <= set(base)
 
 
-def test_portao_veredito_cheio_256_de_281():
+def test_portao_veredito_cheio_250_de_281():
     base, pos = _arena_dir(BASE), _arena_dir(DOCS)
     assert set(pos) == set(base), "denominador congelado: mesmas 281 criaturas"
     n_ok = sum(r["ok"] for r in pos.values())

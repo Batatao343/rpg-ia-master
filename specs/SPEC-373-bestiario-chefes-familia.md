@@ -129,7 +129,7 @@ Princípios: mecânica é Python (o motor monta o baralho; o LLM não entra); av
   - `off`: idêntico à base para toda criatura não recalibrada (R2);
   - nenhuma criatura que passava no veredito do `arena.py` passa a falhar por mais de 3 pp fora da faixa;
   - no máximo 5 criaturas passam a falhar por até 3 pp (borda), listadas no relatório e recalibradas pelo R8 se o executor conseguir em até 2 rodadas do `calibrar.py`;
-  - o total de criaturas que passam no veredito completo fica ≥ 247 + 9 = **256 de 281** (base da 349: 247, `SPEC-349:672`).
+  - o total de criaturas que passam no veredito completo fica ≥ 241 + 9 = **250 de 281**. Decisão do dono 04/11: a base é a `main` `9468d058` (241, medida pelo autor de eval em `docs/spec373/base/eval/`), não os 247 da 349 (`SPEC-349:672`); as 7 criaturas que derivaram depois da 349 (SPEC-387) vão para uma spec própria (`handoffs/SPEC-373-eval-authoring.md` §4).
 - **R18 — Posturas intactas pelas Partes A/B.** `arena_spec355.py base --seeds 0:20` dá o mesmo JSON da Etapa 0 (R5), célula a célula. Se divergir, o executor registra a causa (a arena das Posturas usa criaturas do bestiário como encontro) e para.
 
 ### Parte C — Cartas de jogador (D9)
@@ -270,7 +270,7 @@ Python sempre por `bash scripts/dev/py.sh …`. Testes do escopo com `-n 2` no m
 - [ ] R13: 9 chefes em 45–85 % em `off` e `on` nas 0–39; os 4 que estavam na faixa continuam; slots passam no veredito completo
 - [ ] R16: nenhuma `inf_*` acima de 15 na população inteira, sementes 0–11 e ids de instância; testes da 332 sem exceção (Etapa E2, outro agente)
 - [ ] R15: Cartas novas aprovadas por revisor Opus, com veredito por Carta registrado
-- [ ] R17: ≥ 256 de 281 no veredito completo; zero regressão > 3 pp; ≤ 5 de borda, listadas
+- [ ] R17: ≥ 250 de 281 no veredito completo (decisão do dono 04/11); zero regressão > 3 pp; ≤ 5 de borda, listadas
 - [ ] R18: arena das Posturas 0–19 idêntica depois das Partes A/B
 - [ ] Confirmação 40–119 gravada uma vez, com o resultado em §9 (fora da faixa = registro, não reajuste)
 - [ ] Parte C (se não migrar para a 369, D9): R19–R22, confirmação 260–339 gravada uma vez

@@ -33,7 +33,7 @@ Unidade: vitória do herói por célula, 5 Posturas × 40 sementes = 200 lutas.
 
 | Teste | Lê | Passa se |
 |---|---|---|
-| `test_portao_veredito_cheio_256_de_281` | `docs/spec373/arena-<r>.json` × 12 | mesmos 281 ids da base; `ok` do `arena.py` em **≥ 256** |
+| `test_portao_veredito_cheio_250_de_281` | `docs/spec373/arena-<r>.json` × 12 | mesmos 281 ids da base; `ok` do `arena.py` em **≥ 250** (decisão do dono 04/11; era 256) |
 | `test_portao_regressoes_de_borda` | idem + base | para quem tinha `ok` na base e perdeu: excesso ≤ **3,0 pp** e no máximo **5** casos. Excesso = pior célula fora de 45–85 %, ou \|delta\| − 8 pp nos slots de `arena-slots-baseline.json` cujo valor antes estava na faixa (a mesma regra do `arena.py`). O teste confere também que a leitura bate com o `ok` gravado. |
 | `test_portao_off_identico_fora_das_recalibradas` | idem + `docs/spec373/recalibradas.json` | toda célula `|off` igual à base, salvo os ids da lista (R8; `[]` se nenhum) |
 | `test_portao_chefes_na_faixa_off_e_on` | idem | os 13 chefes com `L5|off` e `L5|on` em 45–85 %; os 2 slots com `ok` (R13) |
@@ -93,14 +93,35 @@ O quadro da §1 da spec se mantém: 9 fora, 4 dentro (o `colecionador` com só 2
 **Posturas** (`arena_spec355.py base --seeds 0:20`, total `todas`): Devoto 60,2 %, Sangromante
 65,0 %, Corruptor 51,9 %, Arcanista 55,8 %, Médico 45,8 %. Arquivo: `base/eval/posturas-0-19.json`.
 
-## 4. Achado para o coordenador (não corrigido; decisão fora do meu papel)
+## 4. Portão do veredito cheio: 250/281 (decisão do dono 04/11)
 
-**O 256 da spec ficou mais difícil.** O R17 fixa 256 = 247 + 9, mas a base de hoje é 241. Mantive
-256, como a spec manda (o autor de eval não afrouxa limiar). Para chegar lá o executor precisa
-de +15 criaturas: os 9 chefes e mais 6, que podem vir das 7 que a SPEC-387 tirou da faixa (o R9
-tende a deixar o `on` mais difícil, o que puxa de volta as que saíram por `on` alto). As
-regressões contam contra a base de hoje (241), não contra a 349. Se o dono preferir
-241 + 9 = **250**, é uma emenda à spec, feita por agente de eval, antes do produto.
+O R17 fixava 256 = 247 + 9, com a base da 349. A base de hoje (`main` `9468d058`) é 241. O dono
+decidiu em 04/11: o portão passa a **250 = 241 + 9** e a deriva vai para uma spec própria. A
+emenda está em `tests/test_spec373_artefatos.py` (`MIN_OK`) e na spec (R17 e critério de
+aceite), num commit próprio de eval, antes de qualquer produto. As regressões já contavam
+contra a base de hoje; nada mais mudou.
+
+**As 7 criaturas que derivaram** (tinham `ok` na 349 e não têm na base de hoje; L3, `off`/`on`):
+
+| criatura | região | 349 | hoje | motivo |
+|---|---|---|---|---|
+| `mon_anzolado_da_casa` | brekmar | 72,5 / 83,0 | 72,5 / 86,0 | `on` acima de 85 % |
+| `mon_lacrador_de_saidas` | deserto_zhur | 56,0 / 81,5 | 64,5 / 89,0 | `on` acima (e `off` +8,5 pp) |
+| `mon_bracos_de_tenaz` | montanhas_afiadas | 59,5 / 72,0 | 59,5 / 87,0 | `on` acima |
+| `mon_armador_de_fosso` | montanhas_afiadas | 78,5 / 78,5 | 78,5 / 96,5 | `on` acima |
+| `mon_portao_que_morde` | nova_arcadia | 61,0 / 63,0 | 91,0 / 93,5 | `off` e `on` acima |
+| `mon_carregador_de_ganchos` | pradaria_ruinas | 54,5 / 82,0 | 54,5 / 86,0 | `on` acima |
+| `mon_escuta_do_sinal` | skallgard | 46,5 / 83,0 | 46,5 / 89,5 | `on` acima |
+
+(No outro sentido, `mon_aguadeiro_de_bucho` entrou: `on` 88,0 → 75,0.)
+
+**Causa provável** (não investigada a fundo): as mudanças do motor de combate depois da 349,
+na SPEC-387 (`3f0be849` "one playable predicate…", `03d457dc` "registry order, phase lines…
+off fallback", `1e208ac9` "attacker downed by a Reaction does not resolve its attack"). Cinco
+das sete mudaram só no `on` (o herói ficou mais forte contra baralho de Cartas), o que bate com
+o atacante derrubado por Reação não resolver o ataque. `mon_portao_que_morde` e
+`mon_lacrador_de_saidas` mudaram também no `off`, então há uma segunda causa (o fallback do
+`off` ou dado da criatura); vale conferir na spec própria.
 
 ## 5. Comandos para o executor
 
