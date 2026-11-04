@@ -10,7 +10,7 @@
       "tipo": "ativa",
       "patamar": "inicial",
       "custo_entropia": 0,
-      "frequencia": "turno",
+      "frequencia": "cena",
       "virtude_permitida": [],
       "efeito": {
         "kind": "dano",
@@ -19,7 +19,8 @@
         "dano_tipo": "arcano"
       },
       "descricao": "O éter se dobra em feixe e rasga o ar até o alvo.",
-      "oculta": true
+      "oculta": true,
+      "versao": 2
     },
     {
       "id": "inf_conjurador_nevoa_sufocante",

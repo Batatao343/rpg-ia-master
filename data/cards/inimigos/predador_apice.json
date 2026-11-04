@@ -49,7 +49,7 @@
       "tipo": "ativa",
       "patamar": "inicial",
       "custo_entropia": 0,
-      "frequencia": "turno",
+      "frequencia": "cena",
       "virtude_permitida": [],
       "efeito": {
         "kind": "dano",
@@ -58,7 +58,8 @@
         "dano_tipo": "cortante"
       },
       "descricao": "Rasga o que a presa tinha de mais fundo.",
-      "oculta": true
+      "oculta": true,
+      "versao": 2
     },
     {
       "id": "inf_predador_apice_olhar_de_fome",

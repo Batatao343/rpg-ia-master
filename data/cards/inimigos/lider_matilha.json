@@ -33,11 +33,12 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 5,
+        "dano_base": 6,
         "dano_tipo": "perfurante"
       },
       "descricao": "O alfa quebra osso antes de a matilha chegar.",
-      "oculta": true
+      "oculta": true,
+      "versao": 2
     },
     {
       "id": "inf_lider_matilha_cercar_a_presa",

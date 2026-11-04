@@ -129,11 +129,12 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "versatil",
-        "dano_base": 6,
+        "dano_base": 7,
         "dano_tipo": "abissal"
       },
       "descricao": "O ar racha, e o que vem de dentro não é deste mundo.",
-      "oculta": true
+      "oculta": true,
+      "versao": 2
     },
     {
       "id": "inf_abissal_silencio_do_vazio",

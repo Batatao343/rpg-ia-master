@@ -618,3 +618,26 @@ A primária falhou na base (1,034) e segue falhando: **1,026** (`on-faixa` 12,77
 - Passo tentado: `protecao` 2 -> 3 em `bas_dev_guarda`, `bas_arc_guarda` e `bas_med_guarda` (R18b). Medido num único braço com as 3 juntas (desvio de "um passo por vez": cada medição de `pressagio` leva cerca de 10 minutos). Razão 1,026 -> 1,026: não move, **revertido** e contado no limite (3 Cartas, que com as 5 do B3 chegam a 8).
 - Sondagem anterior, descartada: as 4 guardas a Fôlego 0 dão 0,997. Nenhuma combinação dentro do R18 chega a 0,95, e as Cartas já estão no teto de 8. **R16 não fecha; devolvido sem forçar.**
 
+### Fase B, B6 (famílias, R20)
+
+Medida `familias --seeds 0-7` (200 lutas por modo e célula) e, para `predador_apice` L3, `--seeds 0-19` (200 lutas). As células de família não dependem das Cartas de herói do B3 (a base saiu idêntica antes dos passos).
+
+| Célula | Passo mantido | `on` antes -> depois | Δ antes -> depois | Fecha? |
+|---|---|---|---|---|
+| `abissal` L3 | `inf_abissal_rachar_a_realidade` dano 6 -> 7 (2º passo, 7 -> 8, não move: revertido) | 86,0 -> 85,0 | +9,0 -> +8,0 | **sim** (85,0 é o limite inclusivo) |
+| `lider_matilha` L3 | `inf_lider_matilha_mordida_do_alfa` dano 5 -> 6 | 70,0 -> 63,0 | +12,0 -> +5,0 | **sim** |
+| `lider_matilha` L5 | o mesmo passo | 80,0 -> 78,5 | +11,5 -> +10,0 | **sim** (|Δ| = 10,0 é o limite inclusivo) |
+| `conjurador` L5 | `inf_conjurador_raio_de_eter` frequência `turno` -> `cena` | 36,5 -> 38,5 | -10,0 -> -8,0 | **não** (`on` < 45) |
+| `predador_apice` L3 | `inf_predador_apice_dilacerar` frequência `turno` -> `cena` | 58,5 -> 61,5 | -16,5 -> -13,5 | **não** (|Δ| > 10) |
+
+As outras células das famílias não pioraram mais de 5 pp (`conjurador` L3 68,5 -> 68,5; `abissal` L5 fora de escopo, 35,5 -> 35,5).
+
+**`conjurador` L5 e `predador_apice` L3 não fecham dentro do R18.** O que o lint deixa mexer:
+- o `dano_base` não pode ficar abaixo da base da arma (`pulso_de_fenda` e `investida_de_caca` são `versatil` = 6, `sentenca_do_apice` é `pesada`); logo só sobram frequência e `valor` de Cartas que não são de dano;
+- combinações testadas, todas sem fechar: `raio_de_eter` + `pulso_de_fenda` em `cena` (L5 `on` 39,0, Δ -7,5); `escudo_de_cinzas` valor 4 e 3 (L5 38,5); `brasa_viva` valor 1; `sentenca_do_apice` + `dilacerar` em `cena` (Δ -13,5); `pele_de_veterano` valor 5 e 4 (Δ -16,0); `marca_do_territorio` valor 3.
+- Mantive os dois passos parciais (melhoram o número e não pioram nada), mas a meta fica aberta para o dono.
+
+**Sondagem fora do registro:** testei um passo em várias Cartas da mesma família para achar a que se move (`toque_do_abismo` 9, `dissolver`, `sede_de_entropia`, `golpe_de_ponta` 7/8 e frequência, `sentenca_do_apice` 8, `investida_de_caca`). Nenhuma moveu a célula, ou o lint recusou. Só o que ficou está no `passos-0-19.json`; as famílias respeitam o máximo de 2 Cartas.
+
+**Erro corrigido no caminho (sem efeito no produto):** a primeira rodada de `conjurador` e `predador_apice` usou um arquivo JSON quebrado pelo meu editor de teste (família ignorada) e deu números falsos; as duas foram refeitas com o JSON válido e é o que está acima.
+
