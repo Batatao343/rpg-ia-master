@@ -109,7 +109,7 @@ Sem LLM: as rodadas de Cartas não chamam IA e a arena é determinística, entã
 
 ## 7. Riscos & compatibilidade
 
-- **Saves com combate em curso:** o perfil é renormalizado ao montar a ficha. Um ator já montado mantém o `flee` até a próxima montagem. É só balanço, sem risco de corromper o save.
+- **Saves com combate em curso:** o perfil é renormalizado ao montar a ficha. Um ator já montado mantém o `flee` também na remontagem (Sol P2-1): `ensure_combat_sheet` grava o perfil normalizado no ator e, ao remontar, esse `flee` conta como `action_key` explícito. Só afeta combates salvos antes da correção. É só balanço, sem risco de corromper o save. Marcar a origem da chave fica para uma spec futura.
 - **`lencol_de_chamine`:** a dica é "foge do fogo aceso", mas a prioridade é `absoluta`. Pela R1 ele deixa de fugir, porque o dado vence a prosa. Se a intenção era fugir, a correção é na ficha e vai para outra spec.
 - **A pode sair da faixa:** as 7 criaturas que não são abissais estavam calibradas fugindo. Algumas podem precisar dos dials, o que aumenta o custo da arena em cerca de 2–3 min por região.
 - **MockLLM/quota:** nenhum impacto (caminho determinístico).
@@ -132,3 +132,9 @@ Ids recalibrados (para `recalibracoes_posteriores.json`): mon_sorvedouro_do_codi
 mon_porca_da_queda, mon_dedos_de_colheita.
 Ids de A com ficha `off` mudada sem dial (R3, secao `fichas` do registro, so o snapshot R2 da 373
 desconta): mon_portao_que_morde, mon_odre_de_oleo, mon_fervente_de_ferrugem, mon_lencol_de_chamine.
+- **Decisão do dono (04/11): `mon_odre_de_oleo` fica como exceção nominal.** Nas sementes 0–39 deu 56,5/53; na confirmação 40–119, 37,2/45,8; na soma das 120 sementes, `off` ≈ 43,6 %, fora da faixa. Pela revisão Sol (P2-2) isso não é variância: é efeito real da R1, porque a fuga dava margem a ele. A recalibração dele vai para um follow-up junto com `armador_de_fosso` e `escuta_do_sinal` (exceções da 394).
+- **Follow-ups da revisão Sol (`handoffs/SPEC-395-sol-review.md`):**
+  - P2-1: texto da §7 corrigido.
+  - P2-4: o campo `arena` de fervente/lençol/odre em `_ajustes.yaml` mostra a leitura de antes da correção; fica para o follow-up.
+  - P2-5: um ator sem arquétipo tabelado, com prioridade `absoluta` e dica "foge", ainda foge pelo legado `move afastar` (`conflict_orchestrator.py:702-705`). Hoje nenhuma criatura curada cai nesse caso; vira follow-up.
+  - P2-6: a citação das 4 ids de `fichas` na §9 foi escrita pelo autor de eval; conteúdo conferido pelo coordenador.
