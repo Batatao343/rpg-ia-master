@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import copy
 import hashlib
-import os
 import random
 import unicodedata
 from collections.abc import Callable
@@ -27,6 +26,7 @@ from typing import Any, Literal
 from services import faction_relations as fr
 from services import world_director as wd
 from services import world_pressures as wp
+from services.env import env_choice
 from world_utils import clamp_influence, effective_pace
 
 MODES = ("off", "shadow", "on")
@@ -36,8 +36,7 @@ SIM_VERSION = 1
 
 def mode() -> str:
     """`RPG_WORLD_ENGINE`; valor invalido cai no default."""
-    raw = os.getenv("RPG_WORLD_ENGINE", "").strip().lower()
-    return raw if raw in MODES else DEFAULT_MODE
+    return env_choice("RPG_WORLD_ENGINE", MODES, DEFAULT_MODE)
 
 
 def sim_key(m: str | None = None) -> str:
