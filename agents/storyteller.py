@@ -1275,6 +1275,8 @@ class _StoryTurn:
     updates: Any = None
     varie_clause: Any = None
     weather_note: Any = None
+    travel_intent: Any = None
+    world_before: Any = None
     world: Any = None
     world_note: Any = None
     world_tick: Any = None
@@ -1335,13 +1337,13 @@ def storyteller_node(state: GameState):
     t.intel = ensure_faction_intel(t.state.get("faction_intel"))
     # SPEC-299 P1-1: turno já resolvido pelo gate da lei (fuga/pena/multa): sem viagem/descanso.
     t.law_resolved = bool(t.state.get("law_gate_consumed"))
-    travel_intent = bool(
+    t.travel_intent = bool(
         t.last_user_input
         and not t.law_resolved
         and is_travel_intent(str(t.last_user_input), t.world)
     )
-    t.dest = find_travel_destination(t.world, t.last_user_input) if travel_intent else None
-    if travel_intent and not t.dest:
+    t.dest = find_travel_destination(t.world, t.last_user_input) if t.travel_intent else None
+    if t.travel_intent and not t.dest:
         try:
             from world_utils import invalid_travel_message
 
@@ -1362,7 +1364,7 @@ def storyteller_node(state: GameState):
     t.travel_periods = 0
     t.closed_pass = False
     t.discovered_routes: list[str] = []
-    world_before = t.world  # SPEC-302: relogio ANTES de viagem/descanso (dias virados)
+    t.world_before = t.world  # SPEC-302: relogio ANTES de viagem/descanso (dias virados)
     t.world_tick = None
     t.sim_updates: dict = {}
     t.faction_events: list = []
@@ -1402,7 +1404,7 @@ def storyteller_node(state: GameState):
             log_fallback("storyteller", "route_discovery_failed", exc)
         t.world = apply_travel(t.world, t.dest)
         t.world, t.factions, t.world_tick = _world_tick(
-            t.state, world_before, t.world, t.factions, t.intel
+            t.state, t.world_before, t.world, t.factions, t.intel
         )
         if not _engine_owns_factions():
             t.factions, t.faction_events = advance_factions(t.factions, t.travel_periods)
@@ -1477,7 +1479,7 @@ def storyteller_node(state: GameState):
         )
         # SPEC-233 R7: fações avançam pelo delta REAL do relógio (bloqueado = 1 período).
         t.world, t.factions, t.world_tick = _world_tick(
-            t.state, world_before, t.world, t.factions, t.intel
+            t.state, t.world_before, t.world, t.factions, t.intel
         )
         if not _engine_owns_factions():
             t.factions, t.faction_events = advance_factions(t.factions, 1 if rest_blocked else 2)
