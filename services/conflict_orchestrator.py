@@ -2829,6 +2829,131 @@ def _round_scene_start(
     return _scene_ctx, _scene_rnd, phase_changed
 
 
+def _round_start_of_round(
+    actors_by_id: dict,
+    sides: dict,
+    declarations: dict,
+    state: dict | None,
+    rng,
+    out: dict,
+    intents: "_RoundIntents",
+) -> tuple[dict | None, str | None, object]:
+    """SPEC-382: declaração do jogador, reset de usos, contexto dos efeitos e gatilho `inicio_rodada`.
+    Devolve (player, player_id, player_decl)."""
+    from services import card_deck_round as _deck
+
+    player = _find_player(actors_by_id, sides)
+    player_id = _player_id(sides)
+    player_decl = declarations.get(player_id) if player_id else None
+    if player_decl is not None and not isinstance(player_decl, ct.TurnDeclaration):
+        player_decl = ct.TurnDeclaration(**player_decl)
+    selected_reaction = player_decl.reaction_card_id if player_decl is not None else None
+    if state is not None:
+        selected_reaction = selected_reaction or state.get("_player_reaction_card_id")
+        state["_player_reaction_card_id"] = selected_reaction
+    from services import cards
+
+    for enemy_id in sides.get("enemy", []):
+        enemy = actors_by_id.get(enemy_id)
+        if enemy is not None:
+            cards.reset_enemy_card_usage(enemy, "turno")
+    ctx = fx.current()
+    if ctx is not None:
+        ctx.rng = rng
+        if _deck.deck_mode(state) == "on":
+            # SPEC-330 R6/R7: efeitos de pilha agem nas pilhas do jogador (so `on`).
+            ctx.piles = state["_piles"]
+            ctx.piles_actor = _player_id(sides)
+        if intents.intent_mode == "on" and intents.frozen is not None:
+            # SPEC-330 Interromper lê o presságio pendente (não em `shadow`).
+            ctx.pressagios = intents.frozen
+            ctx.intent_cursor = intents.intent_cursor
+    for a in actors_by_id.values():
+        if a.get("_cartas_rodada"):
+            fx.reset_round(a)
+    for aid in sorted(actors_by_id):
+        if _alive(actors_by_id[aid]):
+            fx.fire("inicio_rodada", sujeito_id=aid, out=out)
+
+    return player, player_id, player_decl
+
+
+def _round_class_mechanics(player: dict | None, state: dict | None, rng, out: dict) -> None:
+    """SPEC-382: mecânica de classe do jogador no início da rodada (Caldeira, Transformação)."""
+    from services import cards
+
+    # Mecânica de classe do jogador no início da rodada (SOBREVIVE).
+    if player is not None:
+        # Lista transitória compartilhada com o resultado; o harness a lê sem
+        # depender de parsing da prosa/log e o próximo round a substitui.
+        player["_last_class_mechanics"] = out["class_mechanics"]
+        if state is not None:
+            cards.reset_card_usage(state, "turno")
+        cm.reset_entropy_turn(player)
+        player.pop("_self_harmed_round", None)
+        before_boiler = (
+            player.get("_cool_deadline"),
+            int(player.get("vitalidade", player.get("hp", 0)) or 0),
+        )
+        out["logs"] += cm.tick_boiler(player, rng=rng)
+        after_boiler = (
+            player.get("_cool_deadline"),
+            int(player.get("vitalidade", player.get("hp", 0)) or 0),
+        )
+        if after_boiler != before_boiler:
+            _record_class_event(
+                out,
+                "special:boiler_overload"
+                if after_boiler[1] < before_boiler[1]
+                else "special:boiler_tick",
+                deadline=after_boiler[0],
+                vitality_delta=after_boiler[1] - before_boiler[1],
+            )
+        conditions_before = len(player.get("active_conditions") or [])
+        out["logs"] += cm.apply_transformacao(player)
+        if len(player.get("active_conditions") or []) > conditions_before:
+            _record_class_event(out, "consequence:transformacao")
+
+
+def _round_sequence(
+    actors_by_id: dict, sides: dict, initiator: str | None, rng, out: dict
+) -> tuple[list[str], dict]:
+    """SPEC-382: iniciativa por lado e ordem de ação (com as ações extras do Chefe no fim).
+    Devolve (seq, side_actors)."""
+    side_actors = {
+        s: [actors_by_id[a] for a in ids if a in actors_by_id]
+        for s, ids in sides.items()
+        if s in ("hero", "ally", "enemy")
+    }
+    # hero+ally agem como um lado só na iniciativa por lado (04).
+    init_sides = {
+        "heroes": [a for s in ("hero", "ally") for a in side_actors.get(s, [])],
+        "enemy": side_actors.get("enemy", []),
+    }
+    init = roll_initiative_by_side(init_sides, initiator=initiator, rng=rng)
+    out["initiative"] = init["order"]
+    seq: list[str] = []
+    side_ids = {
+        "heroes": sides.get("hero", []) + sides.get("ally", []),
+        "enemy": sides.get("enemy", []),
+    }
+    for side in init["order"]:
+        members = [aid for aid in side_ids.get(side, []) if _can_act(actors_by_id.get(aid, {}))]
+        members.sort(key=lambda aid: (-_agility(actors_by_id[aid]), str(aid)))
+        seq += members
+    # SPEC-295 (K2): ações extras do Chefe entram no FIM da rodada, depois de todos.
+    # Tick de condição, stun e expiração de buffs acontecem só na 1ª ação.
+    first_turn = set(seq)
+    extra = [
+        aid
+        for aid in sides.get("enemy", [])
+        if aid in first_turn
+        for _ in range(extra_actions(actors_by_id.get(aid) or {}))
+    ]
+    seq += extra
+    return seq, side_actors
+
+
 def _run_round(
     scene: dict,
     actors_by_id: dict[str, dict],
@@ -2876,102 +3001,12 @@ def _run_round(
         scene, actors_by_id, sides, out, rng, scene_state, intent_mode, frozen, intent_cursor
     )
 
-    player = _find_player(actors_by_id, sides)
-    player_id = _player_id(sides)
-    player_decl = declarations.get(player_id) if player_id else None
-    if player_decl is not None and not isinstance(player_decl, ct.TurnDeclaration):
-        player_decl = ct.TurnDeclaration(**player_decl)
-    selected_reaction = player_decl.reaction_card_id if player_decl is not None else None
-    if state is not None:
-        selected_reaction = selected_reaction or state.get("_player_reaction_card_id")
-        state["_player_reaction_card_id"] = selected_reaction
-    from services import cards
+    player, player_id, player_decl = _round_start_of_round(
+        actors_by_id, sides, declarations, state, rng, out, intents
+    )
+    _round_class_mechanics(player, state, rng, out)
 
-    for enemy_id in sides.get("enemy", []):
-        enemy = actors_by_id.get(enemy_id)
-        if enemy is not None:
-            cards.reset_enemy_card_usage(enemy, "turno")
-    ctx = fx.current()
-    if ctx is not None:
-        ctx.rng = rng
-        if _deck.deck_mode(state) == "on":
-            # SPEC-330 R6/R7: efeitos de pilha agem nas pilhas do jogador (so `on`).
-            ctx.piles = state["_piles"]
-            ctx.piles_actor = _player_id(sides)
-        if intent_mode == "on" and frozen is not None:
-            # SPEC-330 Interromper lê o presságio pendente (não em `shadow`).
-            ctx.pressagios = frozen
-            ctx.intent_cursor = intent_cursor
-    for a in actors_by_id.values():
-        if a.get("_cartas_rodada"):
-            fx.reset_round(a)
-    for aid in sorted(actors_by_id):
-        if _alive(actors_by_id[aid]):
-            fx.fire("inicio_rodada", sujeito_id=aid, out=out)
-
-    # Mecânica de classe do jogador no início da rodada (SOBREVIVE).
-    if player is not None:
-        # Lista transitória compartilhada com o resultado; o harness a lê sem
-        # depender de parsing da prosa/log e o próximo round a substitui.
-        player["_last_class_mechanics"] = out["class_mechanics"]
-        if state is not None:
-            cards.reset_card_usage(state, "turno")
-        cm.reset_entropy_turn(player)
-        player.pop("_self_harmed_round", None)
-        before_boiler = (
-            player.get("_cool_deadline"),
-            int(player.get("vitalidade", player.get("hp", 0)) or 0),
-        )
-        out["logs"] += cm.tick_boiler(player, rng=rng)
-        after_boiler = (
-            player.get("_cool_deadline"),
-            int(player.get("vitalidade", player.get("hp", 0)) or 0),
-        )
-        if after_boiler != before_boiler:
-            _record_class_event(
-                out,
-                "special:boiler_overload"
-                if after_boiler[1] < before_boiler[1]
-                else "special:boiler_tick",
-                deadline=after_boiler[0],
-                vitality_delta=after_boiler[1] - before_boiler[1],
-            )
-        conditions_before = len(player.get("active_conditions") or [])
-        out["logs"] += cm.apply_transformacao(player)
-        if len(player.get("active_conditions") or []) > conditions_before:
-            _record_class_event(out, "consequence:transformacao")
-
-    side_actors = {
-        s: [actors_by_id[a] for a in ids if a in actors_by_id]
-        for s, ids in sides.items()
-        if s in ("hero", "ally", "enemy")
-    }
-    # hero+ally agem como um lado só na iniciativa por lado (04).
-    init_sides = {
-        "heroes": [a for s in ("hero", "ally") for a in side_actors.get(s, [])],
-        "enemy": side_actors.get("enemy", []),
-    }
-    init = roll_initiative_by_side(init_sides, initiator=initiator, rng=rng)
-    out["initiative"] = init["order"]
-    seq: list[str] = []
-    side_ids = {
-        "heroes": sides.get("hero", []) + sides.get("ally", []),
-        "enemy": sides.get("enemy", []),
-    }
-    for side in init["order"]:
-        members = [aid for aid in side_ids.get(side, []) if _can_act(actors_by_id.get(aid, {}))]
-        members.sort(key=lambda aid: (-_agility(actors_by_id[aid]), str(aid)))
-        seq += members
-    # SPEC-295 (K2): ações extras do Chefe entram no FIM da rodada, depois de todos.
-    # Tick de condição, stun e expiração de buffs acontecem só na 1ª ação.
-    first_turn = set(seq)
-    extra = [
-        aid
-        for aid in sides.get("enemy", [])
-        if aid in first_turn
-        for _ in range(extra_actions(actors_by_id.get(aid) or {}))
-    ]
-    seq += extra
+    seq, side_actors = _round_sequence(actors_by_id, sides, initiator, rng, out)
     denied: set[str] = set()
     acted: set[str] = set()
     intents.acted = acted
