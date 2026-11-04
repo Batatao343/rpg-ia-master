@@ -1,0 +1,28 @@
+{
+ "natural_api_6_compras": [
+  "A Forja dos Clãs entrega a Carta Aguardente de Líquen e recolhe 45 de ouro; restam 30.\n\n+1 Carta: Aguardente de Líquen | Ouro −45 (total 30)",
+  "Na Forja dos Clãs, em Skallgard, a Carta Aguardente de Líquen passa de mão — e o ouro desce de 80 para 30.\n\n+1 Carta: Aguardente de Líquen | Ouro −50 (total 30)",
+  "A Forja dos Clãs entrega a Carta Aguardente de Líquen, e o brilho pálido do pergaminho some sob o couro da sua bolsa — 30 de ouro restam.\n\n+1 Carta: Aguardente de Líquen | Ouro −50 (total 30)",
+  "A bigorna da Forja dos Clãs em Skallgard ainda ecoa quando a Carta Lança de Gancho muda de mãos: 75 de ouro viram 30, e o peso do que restou tilinta no couro da bolsa.\n\n+1 Carta: Lança de Gancho | Ouro −45 (total 30)",
+  "A Carta Aguardente de Líquen passa das mãos do mercador da Forja dos Clãs para as suas, e o ouro escorre para o balcão — 50 moedas, restando-lhe 30.\n\n+1 Carta: Aguardente de Líquen | Ouro −50 (total 30)",
+  "A Lança de Gancho desce das mãos do mercador da Forja dos Clãs, e o ouro escorre para o balcão — 30 moedas ainda pesam na tua bolsa.\n\n+1 Carta: Lança de Gancho | Ouro −50 (total 30)"
+ ],
+ "natural_rejeicoes": 0,
+ "provocado_in_process_DeepSeek": {
+  "ultimas_moedas": {
+   "is_fallback": true,
+   "event": "loot.trade_prose_rejected",
+   "returned": "Forja dos Clãs fecha o negócio sem cerimônia."
+  },
+  "numero_inventado(120)": {
+   "is_fallback": true,
+   "event": "loot.trade_prose_rejected",
+   "returned": "Forja dos Clãs fecha o negócio sem cerimônia."
+  },
+  "lugar_ator(Skallgard sujeito)": {
+   "is_fallback": false,
+   "event": null,
+   "returned": "Em Skallgard, o frio cobra seu preço: a Carta Aguardente de Líquen muda de mãos e o ouro do herói mingua de 80 para 30."
+  }
+ }
+}

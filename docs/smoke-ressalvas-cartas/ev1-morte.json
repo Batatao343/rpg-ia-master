@@ -1,0 +1,35 @@
+{
+ "derrota(medico, vit 1)": {
+  "message": "Sangramento corrói Você: 1 de dano contínuo.\nGoblin 1 ataca Você com Pancada Esmagadora: acerta — 10 de dano, ferimento crítico na sua cabeça.\nGoblin 2 ataca Você: erra.\nSua condição Sangramento terminou.\nGoblin 1 cumpre o que o presságio anunciava.\nGoblin 2 cumpre o que o presságio anunciava.\nVocê executa a Última Ação em Goblin 1: acerta — 6 de dano.\n\nO sangramento já corroía seu corpo quando o Goblin 1 desceu a Pancada Esmagadora sobre sua cabeça — um acerto crítico que selou o combate. Sua Última Ação ainda feriu o Goblin 1 com a Serra Cirúrgica, mas o Goblin 2, embora ileso, nada mais precisou fazer: o último golpe dele errou, e o dano que restava veio do sangue que não parava. Você tomba agora sobre a terra fria do amanhecer, com a perna grave e a cabeça aberta, diante de um goblin ferido e outro intacto.\n\nA escuridão te engole — mas a Roda do Abismo ainda não decidiu. Voltar ao último respiro seguro, ou aceitar o fim aqui?",
+  "message_type": "STORY",
+  "death_pending": true,
+  "game_over": false,
+  "death": {
+   "pending": true,
+   "entered_terminal": true,
+   "killer": "Goblin",
+   "stabilization": "sem aliado próximo e capaz"
+  },
+  "combat": {
+   "active": false,
+   "phase": "ended",
+   "outcome": "death",
+   "round": 2
+  }
+ },
+ "continue": {
+  "message": "O céu cor de chumbo se fecha sobre a aldeia abandonada. Você descreva o cenário ao meu redor. Sou um Médico de Campo de nível 1. Janelas vazias encaram você como órbitas ocas. Um corvo pousa, inclina a cabeça, e espera.\n\nPara onde você vai?",
+  "message_type": "STORY",
+  "death_pending": false,
+  "game_over": false,
+  "vitalidade": 16,
+  "combat_active": false
+ },
+ "accept(2o jogo)": {
+  "message": "Goblin 1 ataca Você com Pancada Esmagadora: acerta — 10 de dano, ferimento grave no seu braço.\nGoblin 2 ataca Você: erra.\nSangramento corrói Você: 1 de dano contínuo.\nGoblin 1 cumpre o que o presságio anunciava.\nGoblin 2 cumpre o que o presságio anunciava.\nSua condição Sangramento terminou.\nVocê executa a Última Ação em Goblin 1: acerta — 5 de dano.\n\nO Goblin 1 já estava ferido pelo seu golpe quando desferiu a Pancada Esmagadora que rasgou seu braço, e a lâmina da Serra Cirúrgica escorregou da sua mão enquanto o Sangramento corroía o que restava de sua Vitalidade. O Goblin 2 errou o bote, mas não foi preciso acertar: o sangue que escorria do seu braço já tinha selado o destino daquele instante. Você tomba no chão frio de Nova Arcádia, o ferimento crítico na cabeça pulsando contra a pedra, e o mundo escurece nas bordas.\n\nA escuridão te engole — mas a Roda do Abismo ainda não decidiu. Voltar ao último respiro seguro, ou aceitar o fim aqui?",
+  "message_type": "STORY",
+  "death_pending": false,
+  "game_over": true,
+  "dead": true
+ }
+}

@@ -1,0 +1,9 @@
+SPEC-347 scripts/import_bestiary_art.py, cópia descartável do HEAD 2fcb2cb3, PNGs sintéticos 1024x1024 (sem custo, sem rede)
+run1 (criaturas/enemy_goblin.png, criaturas/bst_inexistente_zz.png, familias/bruto.png): importado: 3 · sem mudanca: 0
+run2 (mesma pasta):                                                                      importado: 0 · sem mudanca: 3   (idempotente)
+criatura fora do bestiário (enemy_nao_existe):  erro: criatura inexistente em data/bestiary.json   -> catálogo intacto
+família inválida (xyz):                         erro: familia desconhecida (válidas: predador, ... abissal)  -> intacto
+trocar arte existente sem --force:              erro: creature_family:bruto ja tem arte; use --force para trocar -> intacto
+catálogo: 3 entradas bundle BESTIARY_ART, visibility public; scripts/validate_content.py: 0 ERRO(S) · 29 AVISO(S) (avisos preexistentes de bestiary_identity)
+tests/test_import_bestiary_art.py (catálogo limpo, -n 0): 6 passed
+retire_creature_portrait.py --dry-run: não rodado (exige runtime com banco)

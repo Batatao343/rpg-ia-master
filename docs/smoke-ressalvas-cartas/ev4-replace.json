@@ -1,0 +1,5 @@
+{"metodo":"POST /game/action/stream, preset de staging (RPG_TOKEN_STREAM=on, cartas on), DeepSeek",
+ "combates":{"13 reacao":5,"13 leitura":3,"total":8},"rodadas_com_stream":"todas as rodadas dos 8 combates",
+ "narracoes_de_desfecho_com_LLM":8,"eventos_sse.token_replace":0,"eventos_sse.token_stream_shadow":0,
+ "campo_replace_nos_chunks":"false em todas","turn.token_replace":"false em 16/16 turnos do log dos 5 últimos combates; nos 3 primeiros só o flag replace dos chunks (false)",
+ "llm_calls_por_rodada_intermediaria":0,"llm_calls_por_desfecho":2}

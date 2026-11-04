@@ -1,0 +1,33 @@
+{
+ "vitoria": {
+  "message": "Você joga Bisturi de Campanha em Goblin 1: Mão que cose a carne também sabe onde ela cede. Acerta — 5 de dano, ferimento leve no braço do Goblin 1.\nVocê joga Bisturi de Campanha em Goblin 2: Mão que cose a carne também sabe onde ela cede. Acerta — 5 de dano, ferimento leve na cabeça do Goblin 2.\nGoblin 1 ganha a condição Defesa Instintiva.\nGoblin 2 ganha a condição Defesa Instintiva.\nPresságio frustrado: Goblin 1\nPresságio frustrado: Goblin 2\nGoblin 1 morre.\nGoblin 2 morre.\n\nO campo silencia. A luta acabou, e você segue em pé. Seu golpe termina o serviço: Goblin 1 tomba.\n\n+8 de ouro",
+  "message_type": "COMBAT",
+  "death_pending": false,
+  "game_over": false,
+  "combat_result": {
+   "outcome": "victory",
+   "loot_claimed": true,
+   "loot_turn": 3
+  },
+  "turn_outcome": {
+   "gold_delta": 8,
+   "xp_delta": 100,
+   "source": "mixed"
+  }
+ },
+ "Vasculho o corpo": {
+  "message": "Você revira o corpo de novo; o que havia de valor já está com você.",
+  "message_type": "LOOT",
+  "death_pending": false,
+  "game_over": false,
+  "turn_outcome": {
+   "gold_delta": 0,
+   "xp_delta": 0,
+   "source": "none"
+  }
+ },
+ "log": [
+  "router.decision route=loot source=classify",
+  "loot.corpse_already_looted"
+ ]
+}
