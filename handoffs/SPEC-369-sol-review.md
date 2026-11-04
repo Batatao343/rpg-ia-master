@@ -87,3 +87,18 @@ ruff check (arquivos alterados) → All checks passed
 ```
 
 (Os testes rodaram em série, `-n 0`, porque a RAM livre estava em 2,4 GB.)
+
+## Rodada 2 (2026-11-04, commit revisado `130cc04f`)
+
+> **Veredito:** `APPROVED` (escopo B1/B2; P2-1 fica com o coordenador no pouso, e P3-5 foi para o autor da régua em `b14c66c1`, que a Astra revisa)
+
+- P3-1 fechado: `draft.py:377`. O cabeçalho agora diz "vocabulário, orçamento ou raridade; veja os motivos".
+- P3-2 fechado: `draft.py:359-362`. Quando `passos == []`, o motivo é "sem passo possível", separado de "não coube em 6 passos". O teste novo `test_ajuste_sem_passo_possivel_tem_motivo_proprio` afirma os dois lados.
+- P3-3 fechado: `test_reparo_aumenta_quando_abaixo` afirma `len(llm.calls) == 2` sem condicional.
+- P3-4 fechado: o §3.1 registra a assinatura real e por que o desvio se justifica.
+- Nada fora do escopo: o commit toca só `draft.py`, o teste do B1 e a spec.
+
+```text
+bash scripts/dev/pt.sh tests/test_card_draft_orcamento.py tests/test_card_draft.py tests/test_spec387_draft.py → 27 passed (-n 2)
+ruff check + ruff format --check (draft.py, teste) → limpos
+```
