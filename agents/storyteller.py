@@ -2188,65 +2188,7 @@ def storyteller_node(state: GameState):
     t.turn_bl_pre_llm = t.turn_bl
     t.companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
     try:
-        from services import interlocutor as _interlocutor
-        from services import rumors as _rumors_mod
-        from services.narrative_sink import narrate_structured
-
-        # SPEC-319 (revisao P1-1/P2-1): o guard de segredo da narracao mediada (SPEC-202 R11) e o
-        # de achado falso de boato (SPEC-315) so rodam no texto FINAL; nesses turnos nada vai
-        # ao vivo (a 316 entrega o texto ja guardado).
-        _stream_ok = not t.rumor_nothing and (
-            t.state.get("interlocutor_reason") not in _interlocutor.MEDIATION_REASONS
-        )
-
-        # SPEC-223 R5: entrada do jogador delimitada como dado.
-        # SPEC-319: com sink ligado (so no stream SSE) `narrative` sai token a token;
-        # sem sink e o `with_structured_output(...).invoke` de sempre.
-        t._open_salt = (
-            f"{t.state.get('game_id', '')}:{(t.world or {}).get('turn_count', 0)}:storyteller"
-        )
-        _gold_now = int((t.state.get("player") or {}).get("gold", 0) or 0)
-
-        def _stream_view(partial: str) -> str:
-            # Follow-up D1: as mesmas correcoes do texto final, em fluxo — saldo de ouro e
-            # abertura repetida — para o stream ser prefixo do final (ordem igual a de baixo).
-            return prose_guard.vary_repeated_opening(
-                prose_guard.reconcile_player_gold_claims(partial, _gold_now),
-                t._aberturas,
-                salt=t._open_salt,
-            )
-
-        t.update = narrate_structured(
-            t.llm,
-            _story_schema_for_rumors(_rumors_mod),
-            [t.sys] + guard_messages(t.messages[-3:]),
-            state=t.state,
-            stream=_stream_ok,
-            finalize=_stream_view,
-            hold_extra=72,  # o maior padrao de saldo de ouro fecha em ~60 caracteres
-            min_words=8 if t._aberturas else 0,
-            # follow-up tail: o guard de evidencia/item roda no final; o stream para antes da
-            # 1a frase que ele pode cortar (estado do turno apos viagem/descanso/achado)
-            evidence_state={
-                **t.state,
-                "world": t.world,
-                "player": t.rested_player or t.discovery_player or t.state.get("player") or {},
-            },
-            hold_acquisition=True,
-        )
-
-        # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.
-        t.companion_narrated = isinstance(t.update, StoryUpdate)
-        if not isinstance(t.update, StoryUpdate):
-            from observability.telemetry import log_fallback
-
-            log_fallback("storyteller", "structured_invalid")
-            t.update = StoryUpdate(
-                narrative=_deterministic_story_fallback(
-                    (t.travel_note, t.rest_note, t.world_note, t.faction_note, t.weather_note),
-                    t._ll,
-                )
-            )
+        _story_narrate(t)
 
         _story_guard_narrative(t)
 
@@ -2265,6 +2207,70 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_narrate(t: _StoryTurn) -> None:
+    """Chamada estruturada do narrador (stream) com o guard de FallbackLLM."""
+    from services import interlocutor as _interlocutor
+    from services import prose_guard
+    from services import rumors as _rumors_mod
+    from services.narrative_sink import narrate_structured
+
+    # SPEC-319 (revisao P1-1/P2-1): o guard de segredo da narracao mediada (SPEC-202 R11) e o
+    # de achado falso de boato (SPEC-315) so rodam no texto FINAL; nesses turnos nada vai
+    # ao vivo (a 316 entrega o texto ja guardado).
+    _stream_ok = not t.rumor_nothing and (
+        t.state.get("interlocutor_reason") not in _interlocutor.MEDIATION_REASONS
+    )
+
+    # SPEC-223 R5: entrada do jogador delimitada como dado.
+    # SPEC-319: com sink ligado (so no stream SSE) `narrative` sai token a token;
+    # sem sink e o `with_structured_output(...).invoke` de sempre.
+    t._open_salt = (
+        f"{t.state.get('game_id', '')}:{(t.world or {}).get('turn_count', 0)}:storyteller"
+    )
+    _gold_now = int((t.state.get("player") or {}).get("gold", 0) or 0)
+
+    def _stream_view(partial: str) -> str:
+        # Follow-up D1: as mesmas correcoes do texto final, em fluxo — saldo de ouro e
+        # abertura repetida — para o stream ser prefixo do final (ordem igual a de baixo).
+        return prose_guard.vary_repeated_opening(
+            prose_guard.reconcile_player_gold_claims(partial, _gold_now),
+            t._aberturas,
+            salt=t._open_salt,
+        )
+
+    t.update = narrate_structured(
+        t.llm,
+        _story_schema_for_rumors(_rumors_mod),
+        [t.sys] + guard_messages(t.messages[-3:]),
+        state=t.state,
+        stream=_stream_ok,
+        finalize=_stream_view,
+        hold_extra=72,  # o maior padrao de saldo de ouro fecha em ~60 caracteres
+        min_words=8 if t._aberturas else 0,
+        # follow-up tail: o guard de evidencia/item roda no final; o stream para antes da
+        # 1a frase que ele pode cortar (estado do turno apos viagem/descanso/achado)
+        evidence_state={
+            **t.state,
+            "world": t.world,
+            "player": t.rested_player or t.discovery_player or t.state.get("player") or {},
+        },
+        hold_acquisition=True,
+    )
+
+    # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.
+    t.companion_narrated = isinstance(t.update, StoryUpdate)
+    if not isinstance(t.update, StoryUpdate):
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "structured_invalid")
+        t.update = StoryUpdate(
+            narrative=_deterministic_story_fallback(
+                (t.travel_note, t.rest_note, t.world_note, t.faction_note, t.weather_note),
+                t._ll,
+            )
+        )
 
 
 def _story_guard_narrative(t: _StoryTurn) -> None:
