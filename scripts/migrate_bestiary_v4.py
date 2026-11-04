@@ -12,7 +12,10 @@ perfil/tipo/nome); a autoria de julgamento (biblioteca de arquétipos + Cartas d
 inimigo) vive AQUI, curada, não como placeholder. Só toca o arquivo CURADO
 (data/bestiary.json), nunca o overlay runtime (isolar-cache-runtime).
 
-Uso: uv run python scripts/migrate_bestiary_v4.py
+⚠️ NÃO é passo da pipeline: sobrescreve a curadoria das SPEC-335/349 em
+data/bestiary.json e data/cards/bestiario.json (SPEC-376). Sem `--write` só avisa e sai 2.
+
+Uso: uv run python scripts/migrate_bestiary_v4.py --write
 """
 
 import json
@@ -1308,7 +1311,15 @@ def migrate_creature(cre) -> dict:
     return cre
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    args = list(sys.argv[1:] if argv is None else argv)
+    if "--write" not in args:
+        print(
+            "AVISO: este script SOBRESCREVE data/bestiary.json e data/cards/bestiario.json "
+            "e apaga curadoria das SPEC-335/349 (virtudes, cartas, momento/raridade). "
+            "Não é passo da pipeline. Use --write só de propósito."
+        )
+        return 2
     import gamedata  # noqa: F401 (garante DATA_DIR/tabelas carregadas)
 
     with open(BEST, encoding="utf-8") as f:

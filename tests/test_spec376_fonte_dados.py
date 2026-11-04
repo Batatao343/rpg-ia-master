@@ -22,3 +22,20 @@ def test_docs_nao_mandam_rodar_geradores_apagados():
             for linha in texto.splitlines():
                 if gerador in linha:
                     assert "removido" in linha.lower() or "SPEC-376" in linha, (rel, linha)
+
+
+def test_migrate_bestiary_sem_write_nao_grava(tmp_path, monkeypatch):
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "migrate_bestiary_v4_spec376", ROOT / "scripts" / "migrate_bestiary_v4.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    best = tmp_path / "bestiary.json"
+    best.write_text('{"x": {"name": "X"}}', encoding="utf-8")
+    monkeypatch.setattr(mod, "DATA", str(tmp_path))
+    monkeypatch.setattr(mod, "BEST", str(best))
+    assert mod.main([]) == 2
+    assert best.read_text(encoding="utf-8") == '{"x": {"name": "X"}}'
+    assert not (tmp_path / "cards").exists()

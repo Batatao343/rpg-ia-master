@@ -37,7 +37,7 @@ o dono decidiu em 19/10.
   - fases do Chefe.
 - **Restrições:**
   - mecânica 100% Python, determinística por seed;
-  - dados só pelos geradores oficiais (`scripts/migrate_bestiary_v4.py`);
+  - dados curados em `data/` (o `scripts/migrate_bestiary_v4.py` sobrescreve curadoria; só com `--write`, SPEC-376);
   - "o mundo não escala com o herói" (§5 das regras de design);
   - não piorar as metas da SPEC-285 (M1–M5) nem os níveis 1–4 de
     Lacaio/Padrão/Elite.
