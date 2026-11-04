@@ -1,6 +1,6 @@
 # SPEC-383 — Front: hooks do `App.tsx`, `GameActionsContext`, `Hud.tsx` por aba e poda de e2e de prints
 
-> **Status:** `draft`
+> **Status:** `approved` (04/11, coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = sim, D2 = não, D3 = manter, D4 = não — defaults do §8)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03 (revisão independente aplicada: `handoffs/SPEC-383-independent-review.md`)
 > **Origem:** auditoria de qualidade de 03/11 — `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §4.5 (itens 1–7) e §5 letra G; regras da onda em §6.2 (W1 revisada, W2–W8)
 > **Depende de:** SPEC-379 R6 pousada (testes que leem o fonte de `App.tsx`); SPEC-367 pousada (commit `94be76db`, mexeu no `App.tsx`); SPEC-368 e SPEC-371 `done` no cabeçalho (tocam `types.ts`, `combat/deck.ts`, `CodexTab.tsx`, `tabs/DossierDetail.tsx`, `components/combat/*`). Gate por etapa: W1 revisada (§4)
