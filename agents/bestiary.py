@@ -190,12 +190,6 @@ def materialize_enemy_concept(concept: dict | EnemySchema, *, encounter_level: i
 # pelo LLM vai pro OVERLAY gitignored (RPG_RUNTIME_CACHE_DIR/bestiary_runtime.json).
 
 
-def _overlay_path() -> str:
-    from gamedata import runtime_cache_path
-
-    return runtime_cache_path("bestiary_runtime.json")
-
-
 def _read_json(path: str) -> dict:
     if not os.path.exists(path):
         return {}
@@ -316,12 +310,6 @@ def save_enemy(data: dict, *, owner_id=_DONO_DA_REQUEST):
         owner_id=owner,
         game_id=None,
     )
-
-
-def _infer_tier_from_name(name: str) -> ModelTier:
-    """SPEC-223 R7 (D-C): nome vindo do jogador não escala para SMART."""
-    del name
-    return ModelTier.FAST
 
 
 # SPEC-287: a "sobrevivência específica" do Chefe/Nomeado (regras §27.3) vale a
@@ -660,7 +648,8 @@ def generate_new_enemy(
     if not lore:
         lore = "Standard RPG Monster."
 
-    llm = get_llm(temperature=0.5, tier=_infer_tier_from_name(name))
+    # SPEC-223 R7: o nome vindo do jogador não escala o tier (sempre FAST).
+    llm = get_llm(temperature=0.5, tier=ModelTier.FAST)
 
     sys_msg = SystemMessage(
         content=f"""

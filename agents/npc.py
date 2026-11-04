@@ -257,12 +257,6 @@ class NPCResponse(BaseModel):
 # migra o conteúdo inteiro pro overlay).
 
 
-def _npc_db_path() -> str:
-    from gamedata import runtime_cache_path
-
-    return runtime_cache_path("npc_database.json")
-
-
 def clamp_relationship_change(delta, who: str = "") -> int:
     """Relação é mecânica Python: o LLM propõe, o teto por turno decide."""
     try:
@@ -435,13 +429,6 @@ def _materialize_npc_combat_sheet(data: dict) -> dict:
     return normalized
 
 
-def _infer_tier_from_name(name: str) -> ModelTier:
-    """SPEC-223 R7 (D-C): o NOME (texto do jogador) não escala custo — tier fixo
-    FAST. SMART só por decisão do motor (ex.: Nomeado curado), nunca por palavra."""
-    del name
-    return ModelTier.FAST
-
-
 # --- FÁBRICA DE NPCs (A FUNÇÃO QUE FALTAVA) ---
 _POOL_DOC_KEYS = (
     "id",
@@ -536,7 +523,8 @@ def generate_new_npc(
     else:
         lore_info = query_rag(f"{name} {context}", index_name="lore")
 
-    llm = get_llm(temperature=0.7, tier=_infer_tier_from_name(name))
+    # SPEC-223 R7: o nome vindo do jogador não escala o tier (sempre FAST).
+    llm = get_llm(temperature=0.7, tier=ModelTier.FAST)
 
     try:
         designer = llm.with_structured_output(NPCSchema)
