@@ -55,7 +55,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - Notas 27/10–02/11 → `CHANGELOG.md`.
-- 04/11: 375/376/378/381/388 `done`, 377/379 pousadas. **381**: `api.py` 7.970 → 1.082 l. (`api_core`/`api_models`/`api_presenters`/`routes/*`); trava do `api.py` liberada; follow-ups: podar ~106 imports mortos (R17b), §6 no próximo deploy. Próximas: 383 (`App.tsx`), 382 (espera 372), 391 `draft` (reforço em cartas, D-391 com o dono). **Index local** (375): `python -m project_index build`.
+- 04/11: 375/376/377/378/381/388 `done` (377 item 2: Fôlego unificado, nada protegido a publicar), 379 pousada. **381**: `api.py` 7.970 → 1.082 l. (`api_core`/`api_models`/`api_presenters`/`routes/*`); trava do `api.py` liberada; follow-ups: podar ~106 imports mortos (R17b), §6 no próximo deploy. Próximas: 383 (`App.tsx`), 382 (espera 372), 391 `draft` (reforço em cartas, D-391 com o dono). **Index local** (375): `python -m project_index build`.
 
 
 ## Como rodar
