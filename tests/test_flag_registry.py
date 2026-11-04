@@ -107,3 +107,9 @@ def test_flag_companion_romance_kill_switch():
     """SPEC-384 D1: RPG_COMPANION_ROMANCE vira kill_switch (alavanca permanente, sem validade); `off` continua desligando."""
     entry = fr.load()["RPG_COMPANION_ROMANCE"]
     assert entry["kind"] == "kill_switch" and not entry.get("expires")
+
+
+def test_flag_npc_self_kill_switch():
+    """SPEC-384 D1: RPG_NPC_SELF vira kill_switch (alavanca permanente, sem validade); `off` continua desligando."""
+    entry = fr.load()["RPG_NPC_SELF"]
+    assert entry["kind"] == "kill_switch" and not entry.get("expires")

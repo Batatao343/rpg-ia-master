@@ -641,11 +641,10 @@ RPG_NPC_KNOWLEDGE:
   expires: 2027-01-25
   note: "conhecimento de NPC"
 RPG_NPC_SELF:
-  kind: release
+  kind: kill_switch
   default: "on"
   spec: SPEC-310
-  expires: 2027-01-25
-  note: "NPC com vida própria"
+  note: "desligamento de emergência do NPC com vida própria; SPEC-384 D1"
 RPG_NPC_TWO_PHASE:
   kind: release
   default: "on"
