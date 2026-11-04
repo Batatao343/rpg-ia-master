@@ -302,7 +302,7 @@ Princípio: o source é a verdade e o git guarda o histórico (**W8**, nada de r
 ## 3. Design técnico
 
 - **Arquivos novos:** `docs/spec376/deriva.md` (R6), `docs/spec376/README.md` (logs de W1, re-grep, matriz de
-  import e W2 A/B) e `tests/test_spec376_fonte_dados.py` (só para A e B, que não são refatoração pura de
+  import e W2 A/B) e `tests/test_data_source_generators.py` (só para A e B, que não são refatoração pura de
   runtime). Os testes são:
   - `test_geradores_apagados_nao_existem`: os arquivos apagados pelo R7 não existem;
   - `test_docs_nao_mandam_rodar_gerador_apagado`: em `CARTAS.md`, `CLASSES.md` e `AUTORIA.md`, nenhuma linha
@@ -331,14 +331,14 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
 
 ### Etapa A1 — `gen_cards_v4.py` (se o veredito for "sai")
 - **Arquivos:** `scripts/gen_cards_v4.py` (rm), `docs/design/CARTAS.md`,
-  `tests/test_conflito_autoria_cartas.py` (só o docstring), `tests/test_spec376_fonte_dados.py`.
+  `tests/test_conflito_autoria_cartas.py` (só o docstring), `tests/test_data_source_generators.py`.
 1. **Testes:** `test_geradores_apagados_nao_existem` (parte das Cartas) e `test_docs_nao_mandam…` ficam
    vermelhos.
 2. `git rm`; editar `CARTAS.md` e o docstring (R8).
-3. Rodar `tests/test_spec376_fonte_dados.py tests/test_conflito_autoria_cartas.py tests/test_spec355_conteudo.py -q`.
+3. Rodar `tests/test_data_source_generators.py tests/test_conflito_autoria_cartas.py tests/test_spec355_conteudo.py -q`.
 
 ### Etapa A2 — `gen_classes_v2.py` (se o veredito for "sai")
-- **Arquivos:** `scripts/gen_classes_v2.py` (rm), `docs/design/CLASSES.md`, `tests/test_spec376_fonte_dados.py`.
+- **Arquivos:** `scripts/gen_classes_v2.py` (rm), `docs/design/CLASSES.md`, `tests/test_data_source_generators.py`.
 - Mesmo roteiro da A1. Rodar `tests/test_cutover_audit.py tests/test_spec348_canon.py tests/test_mecanica_orfa.py -q`.
 
 ### Etapa A3 — Guia de autoria e adendo da 273
@@ -353,11 +353,11 @@ Ordem: 0 → A → B → C. A, B e C são independentes entre si **depois** da E
 
 ### Etapa A5 — `migrate_bestiary_v4.py` (só se a Etapa 0 provar que é destrutivo)
 - **Arquivos:** `scripts/migrate_bestiary_v4.py` (docstring e, com a D3, o `--write`),
-  `docs/HANDOFF-PROXIMA-SESSAO.md`, `tests/test_spec376_fonte_dados.py`.
+  `docs/HANDOFF-PROXIMA-SESSAO.md`, `tests/test_data_source_generators.py`.
 1. **Teste:** `test_migrate_bestiary_sem_write_nao_grava` vermelho.
 2. Aviso no docstring, a linha "Uso:" (`:15`) e o `--write` (D3), só em `main()`/`__main__`.
    `migrate_creature` e as constantes ficam byte-iguais (o 295 os usa). Corrigir o `HANDOFF-PROXIMA-SESSAO.md:40`.
-3. Rodar `tests/test_spec287_encounter_scale.py tests/test_spec290_chefe_sobrevivencia.py tests/test_spec295_chefe_no_topo.py tests/test_conflito_autoria_bestiario.py tests/test_spec376_fonte_dados.py -q`.
+3. Rodar `tests/test_spec287_encounter_scale.py tests/test_spec290_chefe_sobrevivencia.py tests/test_spec295_chefe_no_topo.py tests/test_conflito_autoria_bestiario.py tests/test_data_source_generators.py -q`.
 
 ### Etapa B1 — Scripts de evidência (lista final da D4)
 - **Arquivos:** os scripts liberados (R13) e `ruff-baseline.toml`.

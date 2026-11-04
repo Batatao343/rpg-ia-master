@@ -110,7 +110,6 @@ Talas de Ferro, *Prótese de Batalha*✦, Solda Viva.
 3. `uv run pytest tests/test_conflito_autoria_cartas.py` (cobertura/kind/dano/
    Ruptura/Virtude/potência/parity).
 
-**Pendências de cutover (conflito-13):** trocar `classes.json.starting_abilities`
-para as Cartas iniciais (R9) e remover
-`data/player_abilities.json` e o caminho `known_abilities` foram removidos no
-cutover; não devem ser recriados.
+**Cutover (conflito-13):** `data/player_abilities.json` e o caminho `known_abilities`
+foram removidos; não devem ser recriados. Pendente: trocar `classes.json.starting_abilities`
+para as Cartas iniciais (R9).
