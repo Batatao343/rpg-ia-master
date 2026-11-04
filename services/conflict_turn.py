@@ -288,7 +288,8 @@ def _damage_from(card: dict | None, actor: dict, step) -> tuple:
     return _DANO_BASICO_DEFAULT, dtype
 
 
-def _side_of(actor_id: str, sides) -> str | None:
+def _turn_side(actor_id: str, sides) -> str | None:
+    """Lado de turno declarado: `hero`/`ally` colapsam em `hero`."""
     """Lado declarado pelo orquestrador; None quando o chamador não informou
     `sides` (motor puro/testes) — aí a hostilidade não é inferida."""
     if not sides:
@@ -301,13 +302,14 @@ def _side_of(actor_id: str, sides) -> str | None:
 
 
 def _same_side(a_id: str, b_id: str, sides) -> bool | None:
-    a, b = _side_of(a_id, sides), _side_of(b_id, sides)
+    a, b = _turn_side(a_id, sides), _turn_side(b_id, sides)
     if a is None or b is None:
         return None
     return a == b
 
 
 def _targetable(target: dict | None) -> bool:
+    """Pode ser alvo de ataque declarado (aceita terminal; exclui rendido/fugido/morto)."""
     if not target:
         return False
     if target.get("dead") or target.get("fled") or target.get("surrendered"):

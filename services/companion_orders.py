@@ -54,6 +54,7 @@ def validate_order(ally: dict, soul: dict | None, order: dict) -> dict:
 
 
 def _alive(actor: dict | None) -> bool:
+    """Pode receber/executar ordem de companheiro (so status `ativo`)."""
     return bool(actor) and not actor.get("dead") and actor.get("status", "ativo") == "ativo"
 
 

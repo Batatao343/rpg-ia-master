@@ -294,6 +294,7 @@ def _name(actor: dict | None, fallback: str = "") -> str:
 
 
 def _alive(actor: dict | None) -> bool:
+    """Pode ser alvo de efeito de Carta (exclui terminal)."""
     if not actor:
         return False
     return not (
@@ -388,7 +389,8 @@ def reset_round(actor: dict) -> None:
     actor["_cartas_rodada"] = []
 
 
-def _side_of(actor_id: str, sides: dict | None) -> str | None:
+def _card_side(actor_id: str, sides: dict | None) -> str | None:
+    """Lado de Carta: `hero`/`ally` colapsam em `heroes`; o resto fica como declarado."""
     for side, ids in (sides or {}).items():
         if actor_id in ids:
             return "heroes" if side in ("hero", "ally") else side
@@ -396,13 +398,13 @@ def _side_of(actor_id: str, sides: dict | None) -> str | None:
 
 
 def _opponents(ctx: Ctx, actor_id: str) -> list[str]:
-    mine = _side_of(actor_id, ctx.sides)
+    mine = _card_side(actor_id, ctx.sides)
     if mine is None:
         actor = ctx.actors_by_id.get(actor_id) or {}
         mine = "heroes" if actor.get("is_player") or actor.get("player") else "enemy"
     out = []
     for aid, a in ctx.actors_by_id.items():
-        side = _side_of(aid, ctx.sides)
+        side = _card_side(aid, ctx.sides)
         if side is None:
             side = "heroes" if a.get("is_player") or a.get("player") else "enemy"
         if side != mine and _alive(a):
