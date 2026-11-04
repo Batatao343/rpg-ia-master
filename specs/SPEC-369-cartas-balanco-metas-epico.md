@@ -219,7 +219,7 @@ O que a leitura do source mostra sobre cada falha:
 **Fase B**
 - `docs/spec369/passos-0-19.json`: um registro por passo, com `{bloco, carta|constante, campo, de, para, metricas_antes, metricas_depois, mantido}`.
 - `docs/spec369/final-0-19.json` e `docs/spec369/RELATORIO.md`.
-- O módulo `services/card_budget_fit.py` só nasce se o D-369-5 decidir extrair o `_fit_orcamento`. Nesse caso, `fit_orcamento(card: dict, max_passos: int = 6) -> tuple[dict, list[str]]`, e `scripts/bestiario/gerar_mecanica.py` passa a importá-lo, com teste de equivalência sobre a saída atual dele.
+- O módulo `services/card_budget_fit.py` só nasce se o D-369-5 decidir extrair o `_fit_orcamento`. Nesse caso, `fit_orcamento(card: dict, max_passos: int = 40, passos: list[str] | None = None) -> dict` (**desvio justificado na B1**: o padrão 40 e o retorno só da Carta preservam byte a byte o chamador do bestiário; o `draft.py` passa `max_passos=6` e uma lista `passos` que recebe os passos aplicados), e `scripts/bestiario/gerar_mecanica.py` passa a importá-lo, com teste de equivalência sobre a saída atual dele.
 
 **Fase C**
 - `docs/spec369/confirmacao.json`.
@@ -506,3 +506,7 @@ O balanço é determinístico, e a Fase C é a prova dele. O LLM real entra em d
 - Testes novos em `tests/test_card_acervo_reparo.py` (`test_corruptor_tem_carta_de_iniciativa_no_tronco`, `test_has_vigilia_corruptor_com_carta`, `test_opening_initiator_corruptor_ambush_negated`); `test_tronco_cartas_por_postura_sem_subclasse_nivel_1` passou a esperar 4 Cartas do Corruptor e a isentar a passiva da regra "Fôlego 0 só com `cena`".
 - **Guarda R19 (0–19, `metricas_369.py posturas` + `emboscada --base`)**: os totais por Postura/subclasse saíram **idênticos à base** (Devoto 60,2; Sangromante 65,0 (+0,0 pp); Corruptor 51,9; Arcanista 55,8; Médico 45,8 na base e 46,7 na repetição do `emboscada`, que re-mede). Emboscada, `realista_369` (mistura D-369-6): Corruptor `todas` 50,7 → **51,9 %** (≥ 45,0); nenhuma outra Postura mudou; o `realista` da 355 (sem crédito de passiva preparada) fica em 50,7, porque a ferramenta da 355 só credita o `full_deck`. Os dois artefatos de medição estão só no scratch do executor; a medição final é da Fase B3+.
 - **Conflito com a Fase A (R1, não editado)**: `tests/test_spec369_regua.py::test_emboscada_credita_passiva_preparada` afirma (linha 166) "Corruptor: nenhuma Carta buff_iniciativa", que é a base. Com a Carta do R17 esse assert falha por desenho. A correção é inverter essa linha (`any(...)` verdadeiro para Corruptor) num commit de autor da régua; fica para o coordenador/Astra.
+
+### Fase B, follow-ups da revisão Sol (04/11)
+
+- P3-1: o cabeçalho do reparo diz "vocabulário, orçamento ou raridade". P3-2: motivo próprio "ajuste de orçamento sem passo possível" quando nenhum passo se aplica (ex.: abaixo da faixa com Fôlego 0), distinto de "não coube em 6 passos"; teste novo. P3-3: `test_reparo_aumenta_quando_abaixo` sem condicional. P3-4: assinatura real de `fit_orcamento` anotada no §3.1.

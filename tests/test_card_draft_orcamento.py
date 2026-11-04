@@ -81,8 +81,8 @@ def test_reparo_aumenta_quando_abaixo(draft):
     raw = _raw(draft, efeitos=[{"kind": "cura", "valor": 1}], custo_entropia=3)
     llm = Seq(draft.LoteRascunho(cartas=[raw]), AIMessage(content="erro"))
     _gen(draft, llm)
-    if len(llm.calls) == 2:
-        assert "aumente poder em" in llm.calls[1][1].content
+    assert len(llm.calls) == 2
+    assert "aumente poder em" in llm.calls[1][1].content
 
 
 def test_ajuste_deterministico_poe_na_faixa(draft):
@@ -101,6 +101,16 @@ def test_ajuste_desiste_e_rejeita(draft):
     assert out["cards"] == []
     motivos = [m for r in out["rejeitadas"] for m in r["motivos"]]
     assert any("ajuste de orçamento" in m for m in motivos)
+
+
+def test_ajuste_sem_passo_possivel_tem_motivo_proprio(draft):
+    raw = _raw(draft, efeitos=[{"kind": "cura", "valor": 1}], custo_entropia=3)
+    ruim = draft.LoteRascunho(cartas=[raw])
+    out = _gen(draft, Seq(ruim, ruim))
+    assert out["cards"] == []
+    motivos = [m for r in out["rejeitadas"] for m in r["motivos"]]
+    assert any("sem passo possível" in m for m in motivos)
+    assert not any("não coube" in m for m in motivos)
 
 
 def test_lote_final_so_tem_cartas_no_orcamento(draft):

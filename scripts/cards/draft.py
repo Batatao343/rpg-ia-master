@@ -356,7 +356,10 @@ def _ajustar_orcamento(
             aceitas.append(ajustada)
             vistas.add(ajustada["id"])
             continue
-        msg = f"ajuste de orçamento não coube em {MAX_PASSOS_AJUSTE} passos"
+        if passos:
+            msg = f"ajuste de orçamento não coube em {MAX_PASSOS_AJUSTE} passos"
+        else:
+            msg = "ajuste de orçamento sem passo possível (Fôlego e dano já no limite)"
         ainda.append({**rej, "motivos": [*rej["motivos"], msg]})
     return ainda
 
@@ -371,7 +374,7 @@ def _reparar(
     """SPEC-387 R27 [D-387-10]: 1 chamada extra com os motivos; erro/mensagem do LLM = nada reparado."""
     pedido = (
         human
-        + "\n\nREPARO: estas cartas foram REJEITADAS pelo vocabulário. Devolva SÓ as cartas "
+        + "\n\nREPARO: estas cartas foram REJEITADAS (vocabulário, orçamento ou raridade; veja os motivos). Devolva SÓ as cartas "
         + "corrigidas (mesmos ids), respeitando o vocabulário fechado:\n"
         + json.dumps(rejeitadas, ensure_ascii=False)
     )
