@@ -10,6 +10,8 @@ party.py::_fold
 playtest/runner.py::_norm
 scripts/bestiario/pool_revisao.py::_fold
 scripts/fauna/eval.py::_fold
+scripts/fauna/eval_tramas.py::_fold_tokens
+scripts/fauna/eval_tramas.py::_norm_tramas
 services/bestiary_lint.py::_fold
 services/card_effects.py::_fold
 services/card_rewards.py::_fold
