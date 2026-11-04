@@ -1,7 +1,7 @@
 # SPEC-384 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (1 P1 com correção de ~6 linhas; o resto é P2/P3)
-> **Revisor:** Opus 5.5 / papel Sol (spec-reviewer) · **Data:** 2026-11-04 · **Commit revisado:** `15a6d244` (branch `spec-384`, 9 commits sobre `main` `478478fa`)
+> **Veredito (rodada 2):** `APPROVED` (rodada 1 em `15a6d244` foi `CHANGES_REQUIRED`; achados resolvidos em `481ccd02`)
+> **Revisor:** Opus 5.5 / papel Sol (spec-reviewer) · **Data:** 2026-11-04 · **Commits revisados:** `15a6d244` (rodada 1, 9 commits sobre `main` `478478fa`) e `481ccd02` (rodada 2)
 
 ## Escopo
 
@@ -40,14 +40,18 @@ Revisei `git diff main...HEAD` inteiro (26 arquivos, +88/−688): D6 (CLI `game_
 
 ## Correções aplicadas
 
-(nenhuma ainda; o executor preenche commit por item)
+Rodada 2: todos em `481ccd02`, conferidos pelo revisor.
+
+- **P1-1 resolvido.** `tests/test_forge.py:190-195` `test_maldicao_da_cicatriz_nao_se_esquece` chama `cr.forget(..., "templo")` sobre a Cicatriz e exige `not ok` e `"Purgar" in error`. A asserção é específica: "Purgar" só aparece na mensagem da guarda `services/card_rewards.py:485`, então erro de templo ou de "fora do baralho" não passaria. A spec (§ Execução, D7) agora registra o saldo: 4 testes apagados + 3 linhas, 1 recriado.
+- **P2-1 resolvido.** Linha `game_engine.py` tirada de `docs/guias/ARQUITETURA.md`.
+- **P2-2 aceito como desvio registrado.** A spec, linha "Correções da revisão Sol", explica: `docs/descricao_projeto/**` é histórico e tem artefatos gerados.
+- **P3-1 e P3-2 resolvidos.** A alternativa `player/confirm` saiu de `services/abuse_policy.py:57` e de `tests/test_api_fuzz_schemathesis.py:37`. `tests/test_abuse_policy.py` segue verde.
+- **P3-3 deixado como histórico.** Aceito.
+- A edição do `AGENTS.md` (`15a6d244`) foi aceita pelo coordenador.
 
 ## Pendências
 
-- P1-1 antes do pouso.
-- P2-1 e P2-2 podem entrar no mesmo commit de correção, ou virar follow-up do coordenador.
-- P3-1 a P3-3 são opcionais.
-- A edição do `AGENTS.md` (linha 78) entrou na branch (`15a6d244`). A R6.2 manda essa troca para o coordenador, que precisa aceitar ou não. A troca em si está correta.
+- Nenhuma pendência. P3-3 (docs de spec 200/219) fica como histórico, por decisão aceita.
 
 ## Comandos rodados
 
@@ -60,4 +64,6 @@ pt.sh test_removed_routes test_flag_registry test_card_piles test_forge test_lat
 pt.sh test_api_fuzz_schemathesis -k scope → rc=5 (módulo pulado: schemathesis ausente neste venv)
 ruff check routes/turn.py routes/art.py observability/metrics.py services/cards.py tests/… → All checks passed
 py: openapi paths HEAD × docs/spec381/before/legacy → removido só /game/{game_id}/art/player/confirm; /auth/logout e /auth/refresh/logout presentes
+# rodada 2 (481ccd02)
+pt.sh tests/test_forge.py tests/test_abuse_policy.py tests/test_api_fuzz_schemathesis.py -n 2 → rc=0 (o módulo de fuzz é pulado sem schemathesis; o regex fica conferido só por leitura)
 ```
