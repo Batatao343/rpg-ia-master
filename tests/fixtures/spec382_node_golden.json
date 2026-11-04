@@ -56,179 +56,346 @@
   "trace": "4f53cda18c2baa0c"
  },
  "combat_basic_off": {
+  "calls": "3be910186096d7fa",
   "events": "94c8a660c8b78bc0",
   "files": "abc2b07e6d62c63f",
+  "order": "4e5b2c69eb6875da",
   "result": "6577ff5ab73e01ae",
   "state": "36142f1f62141a90",
   "trace": "6649087997df2372"
  },
  "combat_basic_on": {
+  "calls": "4f53cda18c2baa0c",
   "events": "3845027da04d78cd",
   "files": "4f53cda18c2baa0c",
+  "order": "e7611680f3053f40",
   "result": "4a485a88b017ff66",
   "state": "626be27a2ead1945",
   "trace": "4f53cda18c2baa0c"
  },
  "combat_death_off": {
+  "calls": "54b70d08ff34594b",
   "events": "b35e6ed40c014c71",
   "files": "315e770380445915",
+  "order": "b47e872ea3077613",
   "result": "87de92c66f4358fa",
   "state": "594c779330719a19",
   "trace": "3ba118ef3f6a5ef4"
  },
  "combat_death_on": {
+  "calls": "9e4a6d7a07b9545f",
   "events": "c157e2aaf673701c",
   "files": "315e770380445915",
+  "order": "13c8613c4913d5c3",
   "result": "f155c92a978431c2",
   "state": "533a3736a5a3aacc",
   "trace": "c80ba93bb1989bc9"
  },
  "combat_flee_dest_off": {
+  "calls": "3502fa796693ee9a",
   "events": "81e898fb8f1b9719",
   "files": "4f53cda18c2baa0c",
+  "order": "cf84ec5a5eaa8251",
   "result": "df42bb5fd20c17d3",
   "state": "2b0c299dd1c539a4",
   "trace": "5701175d706ce09d"
  },
  "combat_flee_dest_on": {
+  "calls": "d4ab8b8fe9165940",
   "events": "878e3e45eea75b6c",
   "files": "4f53cda18c2baa0c",
+  "order": "ba3988085696ab30",
   "result": "08b7da443d8e6d1a",
   "state": "30f156bce22addf8",
   "trace": "d4c3948c9a861ece"
  },
  "combat_flee_off": {
+  "calls": "f6f6f7920519a5b8",
   "events": "f6dd542e58148dd9",
   "files": "4f53cda18c2baa0c",
+  "order": "910ccb98f180921f",
   "result": "4035f284e9008c4c",
   "state": "85b3967c6938e522",
   "trace": "f1e295c6b1d0ea85"
  },
  "combat_flee_on": {
+  "calls": "012237d356ac9e38",
   "events": "4b4711a212d430fe",
   "files": "4f53cda18c2baa0c",
+  "order": "e821358c8ab297f0",
   "result": "9fac1078340646fc",
   "state": "e32032e6153c15cf",
   "trace": "5701175d706ce09d"
  },
  "combat_flee_rooted_off": {
+  "calls": "be9deefcb2d9a0b5",
   "events": "98ca02a2af4d5324",
   "files": "4f53cda18c2baa0c",
+  "order": "4496f42b6d62329a",
   "result": "03944ff49df2f65f",
   "state": "de7ceb7d44f9015b",
   "trace": "01fe6b31d3b8bed2"
  },
  "combat_flee_rooted_on": {
+  "calls": "62750013ef76e5f5",
   "events": "a161463e4906abe8",
   "files": "4f53cda18c2baa0c",
+  "order": "1d71b2596674a401",
   "result": "846d1680bd55b66e",
   "state": "721076afc994ea05",
   "trace": "a8880bb20e752112"
  },
  "combat_freetext_on": {
+  "calls": "4f53cda18c2baa0c",
   "events": "d50afdfc6dd8aa65",
   "files": "4f53cda18c2baa0c",
+  "order": "69e52b54beae9214",
   "result": "8ee693b0119d3ba9",
   "state": "eae00eede09c6ef6",
   "trace": "4f53cda18c2baa0c"
  },
  "combat_no_active_off": {
+  "calls": "cd4a639c8009a226",
   "events": "39f42852c58763ab",
   "files": "315e770380445915",
+  "order": "a74ecbece5655703",
   "result": "1a7dedf8c77be1fb",
   "state": "654c5fb4e5a12616",
   "trace": "8e339b791246780c"
  },
  "combat_no_active_on": {
+  "calls": "b73e9b03e91da712",
   "events": "39f42852c58763ab",
   "files": "315e770380445915",
+  "order": "a74ecbece5655703",
   "result": "bb90f3346d5682f9",
   "state": "35c5505789496248",
   "trace": "5fb828fec2d2bf11"
  },
  "combat_party_off": {
+  "calls": "aa5e71fa8883dcb2",
   "events": "4ea616ddfc4c0777",
   "files": "315e770380445915",
+  "order": "4496f42b6d62329a",
   "result": "729dae0bf6f12a86",
   "state": "80d6a0b6c7fcc39d",
   "trace": "f1b08fc790cd6d0e"
  },
  "combat_party_on": {
+  "calls": "c1386b56fb2a8263",
   "events": "b28f5767326a9dcf",
   "files": "315e770380445915",
+  "order": "1d71b2596674a401",
   "result": "9639fd614370ffcf",
   "state": "7020997db5a8377c",
   "trace": "8dc2d90839ad78d3"
  },
  "combat_real_narrate_off": {
+  "calls": "6b595478af311e69",
   "events": "1753b48478f50ce5",
   "files": "abc2b07e6d62c63f",
+  "order": "9daa7124fedae469",
   "result": "c286b32e28963786",
   "state": "7a494f29ce7fca80",
   "trace": "3ef70d0a0cba3c67"
  },
  "combat_real_narrate_on": {
+  "calls": "da5ca8efb9463bbd",
   "events": "1753b48478f50ce5",
   "files": "abc2b07e6d62c63f",
+  "order": "9daa7124fedae469",
   "result": "3dac3880337f37f9",
   "state": "f9cf8ae78dbe90b1",
   "trace": "37e921fddeb74319"
  },
  "combat_simulation_off": {
+  "calls": "6b595478af311e69",
   "events": "1753b48478f50ce5",
   "files": "abc2b07e6d62c63f",
+  "order": "9daa7124fedae469",
   "result": "3bad037be2478123",
   "state": "45ff5f1ac6114cc6",
   "trace": "c8beff6323550211"
  },
  "combat_simulation_on": {
+  "calls": "da5ca8efb9463bbd",
   "events": "1753b48478f50ce5",
   "files": "abc2b07e6d62c63f",
+  "order": "9daa7124fedae469",
   "result": "bb08830dcf2731ee",
   "state": "e30d518ca6ed6142",
   "trace": "ffc61293b20b8902"
  },
  "combat_start_spawn_off": {
+  "calls": "d13fdcdc7823bd16",
   "events": "9e316790beac2a6b",
   "files": "315e770380445915",
+  "order": "cb9a853d75bdd2f3",
   "result": "bacecfd1e2ccf87a",
   "state": "351cc750441640dc",
   "trace": "8bdb9fdb3b3ea17a"
  },
  "combat_start_spawn_on": {
+  "calls": "4f53cda18c2baa0c",
   "events": "d40eb83c433c092c",
   "files": "4f53cda18c2baa0c",
+  "order": "69e52b54beae9214",
   "result": "ced7054cf6ee3e19",
   "state": "3dd845b991670551",
   "trace": "4f53cda18c2baa0c"
  },
+ "combat_status_cards_on": {
+  "calls": "f1a8fc3707f2d766",
+  "events": "a06a6d63a9eb5d55",
+  "files": "315e770380445915",
+  "order": "bdb2f05859b99542",
+  "result": "6401b320f2e299df",
+  "state": "bedcdc4d94436215",
+  "trace": "da0f5d20540025a8"
+ },
  "combat_unconscious_off": {
+  "calls": "4f53cda18c2baa0c",
   "events": "4f53cda18c2baa0c",
   "files": "4f53cda18c2baa0c",
+  "order": "e117f5b26e391784",
   "result": "56c80910754c9ffe",
   "state": "a9727c896ddd5b58",
   "trace": "4f53cda18c2baa0c"
  },
  "combat_unconscious_on": {
+  "calls": "4f53cda18c2baa0c",
   "events": "4f53cda18c2baa0c",
   "files": "4f53cda18c2baa0c",
+  "order": "e117f5b26e391784",
   "result": "56c80910754c9ffe",
   "state": "a9727c896ddd5b58",
   "trace": "4f53cda18c2baa0c"
  },
  "combat_victory_quest_off": {
+  "calls": "6b595478af311e69",
   "events": "1753b48478f50ce5",
   "files": "abc2b07e6d62c63f",
+  "order": "9daa7124fedae469",
   "result": "7859d4e8d9123d01",
   "state": "d44c085e92734097",
   "trace": "3ef70d0a0cba3c67"
  },
  "combat_victory_quest_on": {
+  "calls": "da5ca8efb9463bbd",
   "events": "1753b48478f50ce5",
   "files": "abc2b07e6d62c63f",
+  "order": "9daa7124fedae469",
   "result": "826c393d42bc6f1e",
   "state": "9d49ec2125c61132",
   "trace": "37e921fddeb74319"
+ },
+ "round_boss_extra_decks": {
+  "calls": "33337c1c0dc73ed5",
+  "events": "604581cf982fa32e",
+  "files": "4f53cda18c2baa0c",
+  "order": "d39c881e046b26f1",
+  "result": "7408fea98031f881",
+  "state": "739c883c30335cb8",
+  "trace": "d36bac73f8795967"
+ },
+ "round_boss_extra_intent": {
+  "calls": "f9dfa0a924d19185",
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "order": "dc65c932423144d8",
+  "result": "a4c6824fc5674065",
+  "state": "dac39ff0f737c7e6",
+  "trace": "542653d0d4844bce"
+ },
+ "round_deck_on": {
+  "calls": "c2f034bd6096c22e",
+  "events": "12ed1db6d1056efa",
+  "files": "4f53cda18c2baa0c",
+  "order": "3fc6d92bb49fa584",
+  "result": "1b77719c938ec9b6",
+  "state": "2e8101be1ac388f1",
+  "trace": "5ae259480bb93156"
+ },
+ "round_intent_on": {
+  "calls": "d2d669407a0ddc9b",
+  "events": "ff5b57b2f7462b5e",
+  "files": "4f53cda18c2baa0c",
+  "order": "bdaf1f82ecfdee8e",
+  "result": "15ed49c0c8378a8c",
+  "state": "3250c0ba7523aed5",
+  "trace": "8593aaaf298802b1"
+ },
+ "round_intent_shadow": {
+  "calls": "a85a0aaf454a7c9e",
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "order": "8c4fb9a1e7a23ca1",
+  "result": "05c59e3095af5980",
+  "state": "dbd8b933a7742062",
+  "trace": "9d934c6b051ee852"
+ },
+ "round_interromper_queda": {
+  "calls": "87a5511d28349ebf",
+  "events": "af12932288e80a39",
+  "files": "4f53cda18c2baa0c",
+  "order": "40f0a7531ee93daf",
+  "result": "fda026420dee5a7a",
+  "state": "2528ba48835f493d",
+  "trace": "12a1490a113306fd"
+ },
+ "round_interromper_stun": {
+  "calls": "ed73f3256b425b20",
+  "events": "4a2044f72df386a6",
+  "files": "4f53cda18c2baa0c",
+  "order": "75842c3955be315b",
+  "result": "1d94d462b4307629",
+  "state": "99bdb55b5c5edc00",
+  "trace": "b3374769378a7da1"
+ },
+ "round_item_refused": {
+  "calls": "1ce94cfa17a3ba7f",
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "order": "61c37d792e19fadb",
+  "result": "98b79c1c60a0eb86",
+  "state": "3eeeb554c87d95d1",
+  "trace": "b40b844bd1aa9c46"
+ },
+ "round_off_kill": {
+  "calls": "ec3661ab7d530741",
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "order": "6d84b73fe759bb88",
+  "result": "60ea502abc80ce56",
+  "state": "899c5c73d3403a05",
+  "trace": "574c4411b4c3f18f"
+ },
+ "round_scene_cards": {
+  "calls": "dece0bf9d802e17a",
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "order": "7375ec4d460bc219",
+  "result": "4b408215bdc5ed2f",
+  "state": "dcae7fae8e4103b6",
+  "trace": "98118330f268232f"
+ },
+ "round_taunt_after_acted": {
+  "calls": "02853d99591218a8",
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "order": "6e50d4c6c71eec7f",
+  "result": "eea31952830c0409",
+  "state": "f74430e940f82ec9",
+  "trace": "379e2f4459a7bac2"
+ },
+ "round_taunt_same_round": {
+  "calls": "35127005f42d0fd7",
+  "events": "4f53cda18c2baa0c",
+  "files": "4f53cda18c2baa0c",
+  "order": "0b95f9b046736556",
+  "result": "e859ebe85f601479",
+  "state": "6a0db41fc5b1673f",
+  "trace": "507eece92734b396"
  },
  "story_empty_narrative": {
   "events": "3b39f35f75df5629",

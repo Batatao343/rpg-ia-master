@@ -55,6 +55,29 @@ def dumps(obj: Any) -> str:
     return json.dumps(norm(obj), ensure_ascii=False, sort_keys=True, default=str, indent=0)
 
 
+def key_orders(results: list[Any]) -> list[Any]:
+    """Ordem de insercao das chaves de cada resultado e de todo dict de rodada (`logs` lista).
+
+    So esses: dicts internos nascidos de `frozenset` (ex.: `modifiers` de
+    `conflict_scene._TACTICAL_MODIFIERS`) mudam de ordem com `PYTHONHASHSEED`.
+    """
+    rows: list[Any] = []
+
+    def walk(obj: Any, top: bool) -> None:
+        if isinstance(obj, dict):
+            if top or isinstance(obj.get("logs"), list):
+                rows.append([str(k) for k in obj if str(k) not in VOLATILE_KEYS])
+            for v in obj.values():
+                walk(v, False)
+        elif isinstance(obj, (list, tuple)):
+            for v in obj:
+                walk(v, False)
+
+    for res in results:
+        walk(res, True)
+    return rows
+
+
 def sha(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
@@ -74,10 +97,22 @@ class _Sink(logging.Handler):
 
 
 class Recorder:
-    """Acumula as quatro partes de um caso (varias chamadas de no por caso)."""
+    """Acumula as quatro partes de um caso (varias chamadas de no por caso).
 
-    def __init__(self, monkeypatch, tmp_path: Path) -> None:
+    `strict=True` (Sol P2-1, antes da Etapa 3) acrescenta duas partes sensiveis a ordem:
+    `calls` (sequencia de fases do `_run_round`, `spec382_phase_spy`) e `order` (ordem de
+    insercao das chaves do resultado e dos dicts de rodada, que `sort_keys` esconde). As cinco partes antigas nao
+    mudam de formato.
+    """
+
+    def __init__(self, monkeypatch, tmp_path: Path, *, strict: bool = False) -> None:
         self.mp, self.tmp = monkeypatch, tmp_path
+        self.strict = strict
+        self.calls: list[Any] = []
+        if strict:
+            from tests import spec382_phase_spy
+
+            spec382_phase_spy.install(monkeypatch, self.calls)
         self.results: list[Any] = []
         self.states: list[Any] = []
         self.events: list[Any] = []
@@ -146,6 +181,9 @@ class Recorder:
             "trace": dumps(self.trace),
             "files": dumps(self.files()),
         }
+        if self.strict:
+            parts["calls"] = dumps(self.calls)
+            parts["order"] = dumps(key_orders(self.results))
         dump = os.getenv(DUMP_ENV)
         if dump:
             out = Path(dump)
