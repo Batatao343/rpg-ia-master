@@ -1381,91 +1381,7 @@ def storyteller_node(state: GameState):
 
     t.discovery_player = None
     if t.dest:
-        from world_utils import travel_cost
-
-        t.travel_periods = travel_cost(t.world, t.dest)  # custo ANTES de mover (usa origem)
-        from services import world_calendar
-
-        t.closed_pass = world_calendar.pass_closed(
-            t.world, str(t.world.get("current_location_id") or ""), str(t.dest.get("id") or "")
-        )  # SPEC-303 R11: passo fechado pela neve (travessia cara, nunca recusa)
-        # spec loot-exploracao (R1): fog of war checado ANTES de apply_travel (que
-        # carimba `visited`). Baú curado (R3) pode reconceder-se? Não — one-shot.
-        first_visit = t.dest["id"] not in (t.world.get("visited") or [])
-        try:  # SPEC-309 F2: rota bloqueada por evento nao percebido = descoberta ao tentar
-            from services import world_perception as _wperc
-
-            t.discovered_routes = _wperc.hidden_blocked_route_events(
-                t.state, str(t.world.get("current_location_id") or ""), str(t.dest.get("id") or "")
-            )
-        except Exception as exc:
-            from observability.telemetry import log_fallback
-
-            log_fallback("storyteller", "route_discovery_failed", exc)
-        t.world = apply_travel(t.world, t.dest)
-        t.world, t.factions, t.world_tick = _world_tick(
-            t.state, t.world_before, t.world, t.factions, t.intel
-        )
-        if not _engine_owns_factions():
-            t.factions, t.faction_events = advance_factions(t.factions, t.travel_periods)
-            t.factions, t.world, t.faction_note = resolve_faction_completions(
-                t.factions, t.world, t.faction_events, t.intel
-            )
-        # spec loot-exploracao: achado ambiental (1ª visita) OU baú curado (sempre
-        # que houver e não saqueado). Muta player.inventory/gold + world in-place
-        # (propaga: viagem sem descanso não substitui o player no updates parcial).
-        _pl = deepcopy(t.state.get("player"))
-        if isinstance(_pl, dict) and (first_visit or (t.dest.get("treasure"))):
-            from services import exploration
-
-            _rng = exploration.arrival_rng(
-                str(t.state.get("game_id", "")),
-                t.dest["id"],
-                int(t.world.get("turn_count", 0) or 0),
-            )
-            disc_note, t.discovery_events = exploration.discover_on_arrival(
-                _pl,
-                t.world,
-                t.dest,
-                int(_pl.get("level", 1) or 1),
-                _rng,
-                projection=t.state.get("world_projection"),
-                first_visit=first_visit,
-            )
-            if disc_note:
-                t.faction_note = (t.faction_note + " " + disc_note).strip()
-            t.discovery_player = _pl
-            t.turn_bl = record_gain(
-                t.turn_bl,
-                "gold",
-                int(_pl.get("gold", 0) or 0)
-                - int((t.state.get("player") or {}).get("gold", 0) or 0),
-                "exploration",
-            )
-        if t.travel_periods == 0:
-            t.discovered_routes = []  # entrar em interior nao descobre rota
-            t.travel_note = (
-                f"O jogador ENTROU em {t.dest['name']} (mesma cidade — o tempo não passou). "
-                f"Contexto do local: {t.dest.get('lore_seed', '')} Descreva o que ele vê ao entrar."
-            )
-        else:
-            t.travel_note = (
-                f"O jogador VIAJOU para {t.dest['name']}"
-                + (
-                    f" (viagem longa: {t.travel_periods} períodos). "
-                    if t.travel_periods > 1
-                    else ". "
-                )
-                + f"Contexto do local: {t.dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
-            )
-            if t.discovered_routes:
-                t.travel_note += (
-                    " A estrada estava cortada (o comércio por ela está parado) e o jogador só "
-                    "descobre isso agora: ele PASSOU com dificuldade e chegou. Narre a travessia "
-                    "difícil e a descoberta, sem inventar a causa nem um desvio."
-                )
-            if t.closed_pass:
-                t.travel_note += f" {world_calendar.CROSSING_NOTE} Descreva a travessia dura e a nevasca ao chegar."
+        _story_travel_passage(t)
     elif t.last_user_input and not t.law_resolved and is_rest(t.last_user_input):
         _story_rest_passage(t)
     _story_world_tick_effects(t)
@@ -1540,6 +1456,93 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_travel_passage(t: _StoryTurn) -> None:
+    """Viagem: custo, passo fechado, rota descoberta, relógio, fações e achado de exploração."""
+    from services.turn_outcome import record_gain
+    from world_utils import travel_cost
+
+    t.travel_periods = travel_cost(t.world, t.dest)  # custo ANTES de mover (usa origem)
+    from services import world_calendar
+
+    t.closed_pass = world_calendar.pass_closed(
+        t.world, str(t.world.get("current_location_id") or ""), str(t.dest.get("id") or "")
+    )  # SPEC-303 R11: passo fechado pela neve (travessia cara, nunca recusa)
+    # spec loot-exploracao (R1): fog of war checado ANTES de apply_travel (que
+    # carimba `visited`). Baú curado (R3) pode reconceder-se? Não — one-shot.
+    first_visit = t.dest["id"] not in (t.world.get("visited") or [])
+    try:  # SPEC-309 F2: rota bloqueada por evento nao percebido = descoberta ao tentar
+        from services import world_perception as _wperc
+
+        t.discovered_routes = _wperc.hidden_blocked_route_events(
+            t.state, str(t.world.get("current_location_id") or ""), str(t.dest.get("id") or "")
+        )
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "route_discovery_failed", exc)
+    t.world = apply_travel(t.world, t.dest)
+    t.world, t.factions, t.world_tick = _world_tick(
+        t.state, t.world_before, t.world, t.factions, t.intel
+    )
+    if not _engine_owns_factions():
+        t.factions, t.faction_events = advance_factions(t.factions, t.travel_periods)
+        t.factions, t.world, t.faction_note = resolve_faction_completions(
+            t.factions, t.world, t.faction_events, t.intel
+        )
+    # spec loot-exploracao: achado ambiental (1ª visita) OU baú curado (sempre
+    # que houver e não saqueado). Muta player.inventory/gold + world in-place
+    # (propaga: viagem sem descanso não substitui o player no updates parcial).
+    _pl = deepcopy(t.state.get("player"))
+    if isinstance(_pl, dict) and (first_visit or (t.dest.get("treasure"))):
+        from services import exploration
+
+        _rng = exploration.arrival_rng(
+            str(t.state.get("game_id", "")),
+            t.dest["id"],
+            int(t.world.get("turn_count", 0) or 0),
+        )
+        disc_note, t.discovery_events = exploration.discover_on_arrival(
+            _pl,
+            t.world,
+            t.dest,
+            int(_pl.get("level", 1) or 1),
+            _rng,
+            projection=t.state.get("world_projection"),
+            first_visit=first_visit,
+        )
+        if disc_note:
+            t.faction_note = (t.faction_note + " " + disc_note).strip()
+        t.discovery_player = _pl
+        t.turn_bl = record_gain(
+            t.turn_bl,
+            "gold",
+            int(_pl.get("gold", 0) or 0) - int((t.state.get("player") or {}).get("gold", 0) or 0),
+            "exploration",
+        )
+    if t.travel_periods == 0:
+        t.discovered_routes = []  # entrar em interior nao descobre rota
+        t.travel_note = (
+            f"O jogador ENTROU em {t.dest['name']} (mesma cidade — o tempo não passou). "
+            f"Contexto do local: {t.dest.get('lore_seed', '')} Descreva o que ele vê ao entrar."
+        )
+    else:
+        t.travel_note = (
+            f"O jogador VIAJOU para {t.dest['name']}"
+            + (f" (viagem longa: {t.travel_periods} períodos). " if t.travel_periods > 1 else ". ")
+            + f"Contexto do local: {t.dest.get('lore_seed', '')} Descreva a chegada e o que ele vê agora."
+        )
+        if t.discovered_routes:
+            t.travel_note += (
+                " A estrada estava cortada (o comércio por ela está parado) e o jogador só "
+                "descobre isso agora: ele PASSOU com dificuldade e chegou. Narre a travessia "
+                "difícil e a descoberta, sem inventar a causa nem um desvio."
+            )
+        if t.closed_pass:
+            t.travel_note += (
+                f" {world_calendar.CROSSING_NOTE} Descreva a travessia dura e a nevasca ao chegar."
+            )
 
 
 def _story_rest_passage(t: _StoryTurn) -> None:
