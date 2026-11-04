@@ -1,6 +1,6 @@
 # SPEC-378 — Refatoração: helpers comuns (fold, leitor de flag, structured output, telemetria do LLM, memória do RAG, perfil runtime)
 
-> **Status:** `in-progress` (E4 pronta no commit da branch; E1-E3, E5, E6 pendentes por W1/377/379) (04/11 madrugada, dono: "vai executando o que puder"; D1=a, D2=a, D3=sim, D4=a, D5=a, D6=a — recomendações do §8)
+> **Status:** `in-progress` (código das E1, E2, E4, E5, E6 na branch; E3 cancelada por R21; falta a revisão W7 e o W2 do revisor) (04/11 madrugada, dono: "vai executando o que puder"; D1=a, D2=a, D3=sim, D4=a, D5=a, D6=a — recomendações do §8)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de código de 03/11 ([docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md)): §3 R6; §4.1 itens 3, 5 e 7; §4.2 itens 3 e 6; §4.3 itens 2 a 4; regras da onda §6 (W1–W8). Letra **D** do §6.1.
 > **Depende de:** SPEC-376 e SPEC-377 pousadas (W6: uma spec de refatoração em voo por vez; a 377 mexe em `services/law.py`, `faction_gate.py` e `faction_display.py`, que têm cópias de `_fold`). **SPEC-379 pousada com a remoção da contagem textual de `tests/test_spec192_vercel_packaging.py:81-82`**: é condição dura dos sub-itens `rag.py`/`persistence.py` da E6 (P0-2 da revisão). Por etapa, as travas seguem a W1 revisada (§6.2 da auditoria: branches vivas, mudanças não commitadas e specs `in-progress` direto na `main`). As specs 367 e 368 commitam direto na `main`, então a trava delas é pelo **status `done`** da spec, não pela branch: `agents/loot.py` (367), `persistence.py`/`services/card_*.py` (368). Branches: `agents/combat.py`, `services/enemy_*.py`, `playtest/*` (371); `rag.py`, `mock_llm.py`, `services/creature_gen.py` (374); `world_utils.py`, `services/fauna.py` (370). Tabela completa na §3.7.
@@ -710,8 +710,40 @@ archivist/campaign (~4 chamadas).
 
 ## 9. Notas de pouso e follow-ups
 
-(Preenchido na execução: tabelas da Etapa 0, sites divergentes que ficaram, sites travados que
-esperaram, resultado do W2 A×B.)
+**Execução (04/11, executor Sonnet; revisão W7 ainda pendente).**
+
+- **E4:** `_attempt` (19 sítios) e `RoutedLLM._prepare_candidate` (usado por `invoke` e `stream`;
+  `_stream_attempt` ficou, porque faz `bind_tools` no lugar de `_apply`). O parâmetro
+  `advance_on_circuit` não foi criado: o índice devolvido avança sempre e o `stream` o ignora
+  (usa `idx`); o golden `llm_attempts.json` provou a equivalência. `llm_setup.py` 1933 → 1896.
+- **E1:** `services/text.fold` + 15 sítios delegando (party, combat_intents, companion_tags,
+  inventory, reputation, death_flow, leak_phrases, law, memory_provenance, npc_knowledge,
+  faction_membership, plot_threads_lint, shared_pool_models, quest_log, world_validators).
+  Oráculo permanente em `tests/test_spec378_text_fold.py` (cópias `_legacy_*` verbatim).
+  **Ficaram:** `prose_guard._fold_gold` (a tabela dizia "migra", mas ele aplica `lower` ANTES de
+  NFKD: regra R11a), `plot_threads._fold` e `world_utils._fold_txt` (travados pela branch
+  `spec-372`), e os demais da coluna "fica". `dup_helpers` conta por nome de função, então os
+  números não mudam (33 `_fold`, 7 `fold`); as funções viraram delegações de uma linha.
+- **E2:** `services/env.env_choice` + 15 leitores (world_engine, world_quests, lore_quests,
+  npc_world, rumors ×2, rumor_adoption, world_calendar, npc_knowledge, law, opening_threads,
+  scene_cards, shared_pool, jev_rollout, enemy_decks, enemy_intent) e `latency_flags._choice`
+  como alias. Golden `flag_readers.json` (9 valores × deps ligadas/desligadas). **Ficaram:**
+  `narrative_sink`/`turn_delivery` (default `shadow` mas inválido vira `off`: duas saídas
+  diferentes, não cabem), `card_rewards`/`card_piles` (368), `plot_threads`/`fauna` (372),
+  `creature_gen`, `context_prefetch`/`router`/`companion_soul` (`os.environ.get`, R13a),
+  `combat_flags` (dicionário), `npc_self`, `account_security`.
+- **E3 cancelada (R21/D3):** só 2 sítios aptos (`chronicle_compression`, `tactical_profile`); os
+  demais logam a exceção, distinguem exceção de não-instância ou mantêm `try` externo mais largo.
+  O helper `invoke_structured` não foi criado.
+- **E5:** `rag._add_memory`, `_stage_memory`, `_query_by_vector`; as 4 funções públicas ficaram
+  com a mesma assinatura. Golden `rag_memory.json` (2 escopos × 18 ramos, `SAVES_DIR` em tmp).
+  `rag.py` 1817 → 1643. Eventos de log continuam literais (`_log_memory_saved/_failed`).
+- **E6:** `is_database_profile` em `kill_switches`, `dossiers`, `rag` (7) e `persistence` (8).
+  **Ficaram:** `agents/combat.py` (branch `spec-372`) e `services/card_effects.py` (368).
+  `persistence.py` +1 linha (o import): baseline do `size_budget` regravada com justificativa.
+- **W2 A×B** (A = `e88d0e11`, B = HEAD): `evals run` 12 suítes `--seed 7`, `evals compare`
+  `passed: true`, `regressions: []`, deltas zero; `playtest run --all --turns 10 --seed 0`: as 16
+  linhas por perfil (turnos, erros, violações) idênticas.
 
 Follow-ups já conhecidos (cada um muda comportamento e precisa de spec própria): unificar a
 semântica das cópias de fold divergentes (R6 da auditoria); semântica de `RPG_RUNTIME_PROFILE=""`
