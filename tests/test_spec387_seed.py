@@ -412,3 +412,27 @@ def test_printed_promote_passes_reviewer_check(monkeypatch):
         ns.voz_pendente and not ns.revisor_voz
     )  # mesma regra de `promote()`: pendente XOR revisor
     assert ns.voz_pendente or mod.revisor_valido(ns.revisor_voz)
+
+
+def test_entrega_body_through_the_graph_keeps_the_arc(saves):
+    """SPEC-389 R8 (Sol R2): o POST da `14 entrega` pelo grafo (MockLLM) não replaneja por região.
+
+    Achado: o MockLLM roteia "Entrego…" para STORY (sem palavra de conversa), então a quest só fecha
+    quando o storyteller do mock propõe (aleatório, ~metade das execuções). O fechamento
+    determinístico pela rota NPC é provado por `_assert_entrega_closes` (nó direto); o roteamento real
+    é do CLASSIFY (smoke §6). Aqui só se prova o que o grafo garante: 200, jogo em Brekmar e o arco
+    preservado (`campaign_plan.location` e `current_step`)."""
+    from fastapi.testclient import TestClient
+
+    import api
+
+    gid = sd.seed_save(14, variant="entrega", saves_dir=saves)  # seed nova: o POST muda o save
+    with sd._legacy(saves):
+        before = sd._load(gid)["campaign_plan"]
+        r = TestClient(api.app).post("/game/action", json=sd.smoke_body(14, "entrega", gid))
+        assert r.status_code == 200, r.text[:300]
+        after = sd._load(gid)
+    assert after["campaign_plan"]["location"] == "Brekmar"
+    assert int(after["campaign_plan"].get("current_step", 0)) >= int(before.get("current_step", 0))
+    quest = next(q for q in after["quests"] if q["id"] == "q368")
+    assert quest["status"] in {"active", "completed"}

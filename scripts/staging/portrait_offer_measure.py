@@ -74,6 +74,7 @@ def join_samples(samples: list[dict[str, Any]], logs: list[dict[str, Any]]) -> l
                 k: log.get(k)
                 for k in (
                     "instance",
+                    "game_ref",
                     "offered",
                     "omitted",
                     "switch_age_s",

@@ -482,3 +482,12 @@ def test_art_live_single_source(monkeypatch):
                 monkeypatch.setattr(creature_art, "mode", lambda m=mode_on: "on" if m else "off")
                 monkeypatch.setattr(api, "_database_profile", lambda d=db: d)
                 assert api._creature_art_live() is (portrait_offer.art_cause(mode_on, db) is None)
+
+
+def test_measure_join_copies_game_ref_to_summary():
+    from scripts.staging import portrait_offer_measure as m
+
+    logs = m.parse_logs(_log_line("r1", instance="a", game_ref="abc123", offered=1, omitted={}))
+    joined = m.join_samples([{"request_id": "r1", "kind": "api", "game": "h", "gerar": True}], logs)
+    assert joined[0]["offer_view"]["game_ref"] == "abc123"
+    assert ("api", "h", "abc123") in m.summarize(joined)["games"]
