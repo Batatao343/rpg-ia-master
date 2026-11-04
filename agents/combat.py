@@ -2665,6 +2665,19 @@ def _combat_node(state: GameState):
                     t.combat_meta["pilhas"], t.player, drawn_now
                 )
             _scene_cards.sync_hand(t.scene, t.combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
+    _combat_close_round_log(t)
+    _combat_close_encounter(t)
+    _combat_result_base(t)
+
+    _combat_result_quests(t)
+
+    _combat_result_events(t)
+
+    return t.result
+
+
+def _combat_close_round_log(t: _CombatTurn) -> None:
+    """Iniciativa, fontes de condição, mech_log e registro do tabuleiro."""
     t.combat_meta["initiative"] = list(t.out.get("initiative") or [])
     t.combat_meta["last_player_action"] = t.last_player_action
     t.combat_meta["last_reactions"] = list(t.out.get("reactions") or [])
@@ -2716,14 +2729,6 @@ def _combat_node(state: GameState):
             manifest=t.combat_meta.get("encounter"),
             source_sink=t.combat_meta,
         )
-    _combat_close_encounter(t)
-    _combat_result_base(t)
-
-    _combat_result_quests(t)
-
-    _combat_result_events(t)
-
-    return t.result
 
 
 def _combat_close_encounter(t: _CombatTurn) -> None:
