@@ -82,6 +82,7 @@
 "routes/art.py" = ["C901", "I001", "PERF401"]
 "routes/billing.py" = ["BLE001", "I001"]
 "routes/play.py" = ["I001"]
+"routes/read.py" = ["BLE001", "I001"]
 "scripts/admin_orphan_games.py" = ["I001"]
 "scripts/benchmark_turn_pipeline_real.py" = ["B023", "BLE001", "I001"]
 "scripts/bestiario/calibrar.py" = ["C901"]

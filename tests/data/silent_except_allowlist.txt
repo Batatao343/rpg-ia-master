@@ -19,7 +19,7 @@ api.py::_stream_turn_events._observe_delivery::1
 api.py::_stream_turn_events::1
 api.py::auth_config::1
 api.py::client_latency::1
-api.py::game_history::1
+routes/read.py::game_history::1
 infrastructure/account_lifecycle.py::PostgresAccountLifecycle._asset_downloads::1
 infrastructure/audit_source.py::PostgresAuditSource.load::1
 infrastructure/audit_source.py::PostgresAuditSource.load::2
