@@ -164,3 +164,18 @@ scripts/validate_content.py → 0 erros
 ```
 
 (Rodei em série, `-n 0`, porque a RAM livre estava em 1,4 GB, com processos de outra sessão. Não reproduzi medição da arena.)
+
+## Fase B — rodada 2 (2026-11-04, commit revisado `7d7a88cb`)
+
+> **Veredito:** `APPROVED`. Fechado com D-369-11 e D-369-12 (§8, `46930fe7`). A Fase C é a guarda contra overfit; se ela reprovar, a decisão volta ao dono.
+
+- **P1-1 fechado** (`3b57ed9b`). O fixture mudou em uma linha só: a `agilidade` de `mon_automato_fundicao` passou de 4 para 3, dentro do bloco dessa criatura. Fora essa linha, `tests/fixtures/` não muda contra `ef850520`, então o snapshot continua exato para as outras 123 criaturas. Prefiro isso a uma exceção nominal no teste, que o deixaria mais frouxo.
+- **P1-2 fechado** por decisão do dono (D-369-12). O `passos-0-19.json` passou a ter 36 sondagens (`sondagem: true`, `mantido: false`). A Carta vai em `sondagem_carta`, por isso o `test_r18` conta só o pacote final. O processo fora do limite agora fica visível no artefato e no §9 ("pacote final dentro, processo fora"). Aceito.
+- **P3-1 fechado.** As versões de `bas_med_golpe` estão em `[1, 2]` e `[2, 3]`.
+- **P3-2 aceito.** Cada passo do B6 declara que não houve medição da guarda R19 depois dele, e que ela foi medida no estado final. Os totais de Posturas depois do B6 e da D-369-10 são idênticos aos de antes do B6. Os estados intermediários só aplicam subconjuntos das mesmas Cartas de família, e a Fase C remede tudo. Por isso a falta de medição por passo não esconde risco.
+- **P3-3 e P3-4 fechados.** O §9 registra que a criatura muda em todo o jogo, e que os erros de `momento`/`tier` nas básicas e Cartas de inimigo são isentos do lint e já existiam (o gate é `validate_content`).
+
+```text
+pt.sh (-n 2) tests/test_spec349_*.py tests/test_spec369_*.py tests/test_card_piles.py tests/test_card_acervo_reparo.py → 782 passed, 7 xfailed (R22)
+git diff --stat ef850520 HEAD -- tests/fixtures/ → 1 linha (spec349_legado_snapshot.json)
+```
