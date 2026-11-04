@@ -117,3 +117,24 @@ def test_cli_without_key_writes_empty_batch_with_warning(draft, tmp_path, monkey
 
 def test_unknown_postura_is_rejected(draft):
     assert draft.main(["--postura", "Bardo", "--subclasse", "x"]) == 2
+
+
+def test_batch_is_cut_at_n(draft):
+    """SPEC-397 R1: o LLM devolve mais que `n`; entrega no máximo `n`, só as aprovadas."""
+    cartas = [_raw(draft, id=f"med_trama_{i}", name=f"Trama {i}") for i in range(6)]
+    out = draft.generate(
+        FakeLLM(draft.LoteRascunho(cartas=cartas)), "Médico de Campo", "boticario", 4, lore=[]
+    )
+    assert len(out["cards"]) == 4 and out["entregues"] == 4 and out["pedidas"] == 4
+
+
+def test_frequencia_is_closed_enum(draft):
+    """SPEC-397 R2: enum no schema (igual ao card_lint); valor inventado cai em rejeitadas."""
+    from services import card_lint
+
+    enum = draft.CartaRascunho.model_json_schema()["properties"]["frequencia"]["enum"]
+    assert enum == sorted(card_lint.FREQUENCIAS) and "rodada" not in enum
+    lote = draft.LoteRascunho(cartas=[_raw(draft, frequencia="rodada")])
+    out = draft.generate(FakeLLM(lote), "Médico de Campo", "boticario", 1, lore=[])
+    assert out["cards"] == []
+    assert any("frequencia" in m for r in out["rejeitadas"] for m in r["motivos"])

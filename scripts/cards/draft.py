@@ -67,7 +67,9 @@ class CartaRascunho(BaseModel):
     patamar: str = "inicial"
     raridade: str = "comum"
     custo_entropia: int = 0
-    frequencia: str = "livre"
+    frequencia: str = Field(
+        default="livre", json_schema_extra={"enum": sorted(card_lint.FREQUENCIAS)}
+    )  # SPEC-397 R2: vocabulário fechado no schema; parse tolerante, a triagem rejeita o resto
     efeitos: list[EfeitoRascunho]
     palavras_chave: dict[str, Any] = Field(default_factory=dict)
     descricao: str = Field(description="até 140 caracteres, sensorial, sem números")
@@ -277,6 +279,7 @@ def generate(
             r for r in novas if r["id"] not in ids_rejeitados
         ]
         rejeitadas = _ajustar_orcamento(rejeitadas, aceitas, ajustaveis)
+    aceitas = aceitas[: max(n, 0)]  # SPEC-397 R1: o lote nunca passa de `n`
     return {
         "cards": aceitas,
         "rejeitadas": rejeitadas,
@@ -302,6 +305,8 @@ def _triagem(
     for raw in cartas:
         card = to_card(raw, postura, subclasse, onda)
         problemas = fx.validate_card(card)
+        if card.get("frequencia") not in card_lint.FREQUENCIAS:
+            problemas.append(f"frequencia {card.get('frequencia')!r} fora do vocabulário")
         so_orcamento = not problemas
         orc = [str(i) for i in card_lint.check_budget(card)] if so_orcamento else []
         raridade = [str(i) for i in card_lint.check_raridade(card)] if so_orcamento else []
