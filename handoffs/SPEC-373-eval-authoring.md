@@ -160,3 +160,26 @@ e que nenhum commit de produto mexe nesses caminhos.
 - `tests/test_enemy_decks.py tests/test_spec349_mecanica.py -n 2`: 4 failed (os 4 de teto, como esperado), 574 passed.
 - `tests/test_eval_governance.py tests/test_ci_eval_gates.py`: verdes; `evals.core.governance check` válido.
 - `ruff check`/`format` limpos nos arquivos tocados.
+
+## 8. Adendo (04/11): exceção nominal D-373 no portão dos chefes
+
+- **Pedido:** decisão do dono de 04/11 ("aceito assim"), registrada na spec §8/§9 (R11.4) em
+  `378c2658`: `mon_hospede_do_estomago` e `mon_escavador_das_camaras` ficam fora da faixa.
+- **O que mudou** em `tests/test_spec373_artefatos.py`: `EXCECOES_CHEFE_D373`, exceção **por célula**
+  com o valor gravado nas 0–39 (`hospede` `L5|off` 0,435 e `L5|on` 0,385; `escavador` só `L5|on`
+  0,400; o `L5|off` dele, 65,5 %, segue a regra normal). `chefes_reprovados()` reprova célula listada
+  só se ela se afastar da faixa mais que `BORDA_PP` (3 pp) além do gravado. Qualquer outro chefe ou
+  célula fora de 45–85 % reprova, mesmo por 0,5 pp. Slots continuam exigindo `ok`.
+- **Por que 3 pp em relação ao gravado:** é a borda que o R17 já usa (≈ 1 erro padrão de 200 lutas)
+  e não cria limiar novo. Piso fixo em 45 % já está perdido; congelar o valor exato quebraria com
+  qualquer remedição honesta. A confirmação 40–119 (`hospede` 44,5/39,8; `escavador` 37,8 no `on`)
+  cabe na borda (37,8 = 7,2 pp fora; limite 5,0 + 3,0 = 8,0).
+- **Novos testes do avaliador:** `test_chefes_reprovados_known_good_e_bad` (gravado, borda de 3 pp,
+  3 pp + 1, célula não listada, outro chefe a 0,5 pp) e
+  `test_excecoes_d373_sao_so_as_aceitas_pelo_dono` (só os 2 ids, nenhum slot, só células L5 que
+  estão de fato fora — exceção sem uso não fica no código).
+- **Etapa E2:** já entregue no `1729475d` (sem `continue` de `bestiario-349` nos 3 testes de
+  `tests/test_enemy_decks.py`; teto 36 → 15 com `SUPERADO_POR: SPEC-373` em
+  `tests/test_spec349_mecanica.py`; nenhum `xfail` sobrou em `tests/test_spec373_cartas.py`). Não há
+  trabalho de avaliador pendente nela; a verificação dela é rodar os 3 arquivos (§5, comando final).
+- **Testes:** `tests/test_spec373_artefatos.py tests/test_spec373_cartas.py -n 4`: 45 passed.

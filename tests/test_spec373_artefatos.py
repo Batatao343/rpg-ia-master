@@ -11,6 +11,7 @@ não existem (é o alvo da spec, não um teste quebrado):
 - R2/R17 ``off``: células ``off`` idênticas à base para toda criatura fora de
   ``docs/spec373/recalibradas.json`` (lista de ids que o R8 recalibrou; ``[]`` se nenhuma);
 - R13 chefes: os 13 chefes da esteira com ``L5|off`` e ``L5|on`` em 45-85 %; slots com ``ok``;
+  exceção nominal D-373 (dono, 04/11) por célula em ``EXCECOES_CHEFE_D373``, sem piorar > 3 pp;
 - R18 Posturas: ``docs/spec373/posturas-ab-0-19.json`` (``arena_spec355.py base --seeds 0:20``, depois
   das Partes A/B e antes da Parte C) com ``posturas`` idêntico a ``docs/spec373/base/eval/posturas-0-19.json``;
 - R3 confirmação: ``docs/spec373/confirmacao-40-119.json`` gerado pelo ``arena.py`` com
@@ -76,6 +77,15 @@ MIN_OK = 250  # 241 da main 9468d058 + os 9 chefes (decisão do dono 04/11; era 
 BORDA_PP = 3.0
 MAX_BORDA = 5
 CONF_INICIO, CONF_SEEDS = 40, 80
+
+# D-373 (dono, 04/11, "aceito assim"; spec §8/§9, R11.4): exceção nominal ao R13, por célula.
+# Valor = taxa gravada nas 0-39 (``docs/spec373/arena-<r>.json`` em 378c2658). A célula listada
+# pode ficar fora de 45-85 %, mas não pode se afastar da faixa mais que BORDA_PP além do gravado
+# (mesma borda do R17, ~1 erro padrão de 200 lutas). Célula não listada segue a regra normal.
+EXCECOES_CHEFE_D373: dict[str, dict[str, float]] = {
+    "mon_hospede_do_estomago": {"L5|off": 0.435, "L5|on": 0.385},
+    "mon_escavador_das_camaras": {"L5|on": 0.400},
+}
 
 
 def _load(path: Path) -> dict:
@@ -239,13 +249,46 @@ def test_portao_off_identico_fora_das_recalibradas():
     assert not mudou, mudou
 
 
-def test_portao_chefes_na_faixa_off_e_on():
-    pos = _arena_dir(DOCS)
-    fora = {
-        bid: {k: pos[bid]["cells"][k] for k in ("L5|off", "L5|on")}
-        for bid in CHEFES
-        if not all(FAIXA[0] <= pos[bid]["cells"][k] <= FAIXA[1] for k in ("L5|off", "L5|on"))
+def _fora_pp(w: float) -> float:
+    return round(max((FAIXA[0] - w) * 100, (w - FAIXA[1]) * 100, 0.0), 1)
+
+
+def chefes_reprovados(cells_por_chefe: dict[str, dict], excecoes: dict) -> dict[str, dict]:
+    """Chefe -> células L5 reprovadas. Célula da D-373 só reprova se piorar > BORDA_PP."""
+    out: dict[str, dict] = {}
+    for bid, cells in cells_por_chefe.items():
+        for k in ("L5|off", "L5|on"):
+            w, gravado = cells[k], excecoes.get(bid, {}).get(k)
+            limite = 0.0 if gravado is None else _fora_pp(gravado) + BORDA_PP
+            if _fora_pp(w) > limite:
+                out.setdefault(bid, {})[k] = w
+    return out
+
+
+def test_chefes_reprovados_known_good_e_bad():
+    exc = {"x": {"L5|on": 0.40}}
+    assert chefes_reprovados({"x": {"L5|off": 0.60, "L5|on": 0.40}}, exc) == {}
+    assert chefes_reprovados({"x": {"L5|off": 0.60, "L5|on": 0.37}}, exc) == {}  # borda 3 pp
+    assert chefes_reprovados({"x": {"L5|off": 0.60, "L5|on": 0.36}}, exc) == {"x": {"L5|on": 0.36}}
+    # célula não listada da mesma criatura segue a regra normal
+    assert chefes_reprovados({"x": {"L5|off": 0.44, "L5|on": 0.50}}, exc) == {"x": {"L5|off": 0.44}}
+    # outro chefe fora da faixa reprova, mesmo por 0,5 pp
+    assert chefes_reprovados({"y": {"L5|off": 0.445, "L5|on": 0.60}}, exc) == {
+        "y": {"L5|off": 0.445}
     }
+
+
+def test_excecoes_d373_sao_so_as_aceitas_pelo_dono():
+    assert set(EXCECOES_CHEFE_D373) == {"mon_hospede_do_estomago", "mon_escavador_das_camaras"}
+    assert set(EXCECOES_CHEFE_D373) <= set(CHEFES) and not set(EXCECOES_CHEFE_D373) & set(SLOTS)
+    for cells in EXCECOES_CHEFE_D373.values():
+        assert set(cells) <= {"L5|off", "L5|on"} and all(_fora_pp(w) > 0 for w in cells.values())
+
+
+def test_portao_chefes_na_faixa_off_e_on():
+    """R13 com a exceção nominal D-373 (``EXCECOES_CHEFE_D373``); o resto dos chefes sem exceção."""
+    pos = _arena_dir(DOCS)
+    fora = chefes_reprovados({b: pos[b]["cells"] for b in CHEFES}, EXCECOES_CHEFE_D373)
     assert not fora, fora
     assert all(pos[s]["ok"] for s in SLOTS), {s: pos[s]["motivos"] for s in SLOTS}
 
