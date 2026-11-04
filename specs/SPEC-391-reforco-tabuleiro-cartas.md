@@ -1,7 +1,7 @@
 # SPEC-391 — Reforço de combate no tabuleiro de cartas ("Chamado do Bando" do líder de matilha)
 
 > **Status:** `approved` (04/11, dono: "391 concordo com tudo" — D-391-1..8 = recomendações da spec)
-> **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
+> **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04 (Etapas 0 e 1 feitas: §4 "Execução")
 > **Depende de:** SPEC-381 pousada (`api.py` em routers: o bloco `reinforcement_warning` muda de arquivo);
 > SPEC-371/372 sem conflito em `agents/combat.py` (371 `done`; 372 `draft`: conferir W1 antes da Etapa 3);
 > SPEC-369 sem conflito em `data/cards/inimigos/lider_matilha.json` e `_decks.json` (a 369 pode mexer em
@@ -401,6 +401,79 @@ ajusta as alavancas da Etapa 5 (EVAL_AUTHORING_REQUIRED). Subagente: só os test
 2. Gate passou → R19 (flag no registro) e §6. Gate não passou depois das alavancas → flag `off`, spec
    registra a medida e volta para o dono.
 
+### Execução — Etapas 0 e 1 (04/11, autor de eval; base `main` `55b85c2c`)
+
+**Etapa 0 — conferência.**
+
+1. **Linhas recontadas.** `agents/combat.py` 3.957 l.: `_plan_reinforcements` `:387-409`,
+   `_advance_reinforcements` `:412-440`, `_prepare_scene` `:1050` (planeja em `:1102`, `cs.freeze` em `:1103`).
+   O avanço do reforço roda em `_combat_aftermath` (`:3381`, chama `:3402`), e o presságio em
+   `_combat_close_round_meta` (`:2626`, `forecast_round` em `:2645`). A ordem das chamadas é `:2437` e depois
+   `:2440`, então o forecast vem **depois** do avanço, e o R4/R12 valem como escritos.
+   `services/conflict_orchestrator.py` 3.049 l.: `enemy_declaration` `:629`, `_forced_attack` `:663-665`,
+   guarda do plano `:669-677`, `apply_deck` na ficha `:152`. `services/enemy_decks.py` 677 l.: `_EXTRA_FILES`
+   `:78`, `_pools` `:108-131`, `build_enemy_deck` `:237`, `apply_deck` `:281`, `plan` `:406`, `record_promise`
+   `:455`, `_frustrate_promise` `:511`, `note_declaration` `:527`. `services/reinforcements.py` 224 l.
+   (`spawn` `:111`, `check` `:135-157`, `advance` `:166-224`). `observability/events.py:154-157` (4 eventos).
+   **SPEC-381 pousou:** `api.py` 1.081 l., e o bloco `reinforcement_warning` mora em
+   `api_presenters.py:1144-1151` (não em `routes/`). A Etapa 3 mexe no presenter. W1: 369/394/359 não tocam
+   `combat.py`, `enemy_decks.py` nem `conflict_orchestrator.py` (coordenador). `tests/test_enemy_decks.py:310-316`
+   segue igual (R20).
+2. **Pool de líderes.** No bestiário há 11 `arquetipo: lider_matilha`, e `leader_pool()` (só Elite) devolve **7**:
+
+   | id | categoria | `faction` | `familia_valoria` | natureza (leitura da descrição) |
+   |---|---|---|---|---|
+   | `enemy_bandido_capitao` | elite | — | — | humanoide |
+   | `enemy_soldado_legiao_ferro` | elite | `legiao_ferro` | — | humanoide |
+   | `mon_auroque_ruinas` | elite | — | — | fera |
+   | `mon_capita_corda` | elite | — | — | humanoide (pirata afogada) |
+   | `mon_carranca_de_proa` | elite | — | `demonio_encarnado` | humanoide (busto de madeira com braços de homem) |
+   | `mon_parelha_carmesim` | elite | — | `corpo_reescrito` | fera (cães de trenó) |
+   | `mon_tropel_sem_saida` | elite | — | `demonio_encarnado` | fera (bichos pisoteados) |
+
+   Fora do pool ficam `enemy_nomade_canibal`, `mon_saltador_de_palafita` e `mon_tatuzinho_de_afogado`
+   (lacaio) e `mon_hiena_sol` (padrão). Só 1 dos 7 tem facção, então os outros 6 recebem o "Capanga do bando"
+   no `spawn`. Para o gate isso quer dizer que a alavanca L3 só muda o `enemy_soldado_legiao_ferro`.
+3. **[H] fera/humanoide (§3.4), fechado: não há campo determinístico.** O bestiário não tem `type` de
+   natureza (`type` é Elite/Standard/Minion), nem `tags`, `natureza` ou `especie`. `familia_valoria` falta em
+   4 dos 7, e `humanoide_preco` não aparece em nenhum. O prefixo do id também não serve: `mon_capita_corda` é
+   humanoide. **[R] para a Etapa 2:** `chamados.json` ganha um mapa explícito `natureza_por_id`
+   (`{id: "fera"|"humanoide"}` para os 7 do pool), com default `fera` para id fora do mapa. É dado,
+   determinístico e não toca o bestiário.
+4. **[H] onde moram os telegrafos (§3.4), fechado: na chave extra `telegrafos` de `chamados.json`.**
+   `card_lint.load_pool`, `cards._load_cards`, `content_validator.validate_cards` e `enemy_decks._pools` leem
+   só `data["cards"]` e ignoram chaves extras no topo. A chave extra passa no lint sem tocar `_decks.json`, que
+   é o arquivo onde a 369 mexe. Os telegrafos de assinatura de hoje moram em `_decks.json`
+   (`familias.*.assinatura.telegrafo`) e em `tactical_profile.assinatura.telegrafo` do bestiário. Nenhum dos
+   dois é usado pelo chamado.
+5. **[H] R10 `warned_round`, fechado: o estado grava os dois.** Na transição para `called`, `warned_round`
+   passa a ser o espelho de `called_round`. Em `telegraphed` ele **não** existe. Assim o presenter de hoje
+   (`warned_round is not None and not fired and not cancelled`, `api_presenters.py:1146-1151`) e o invariante
+   `conflict.golden_reinforcement` (`playtest/invariants.py:2951-2955`: aviso sem `warned_round` ou com
+   `fired` é erro) seguem corretos sem mudar: telegrafado fica sem aviso, chamado fica com aviso, e chegado ou
+   cancelado fica sem aviso. Consequência para a Etapa 2: o despacho legado × Carta é feito por
+   `via == "carta"`, nunca pela presença de `warned_round`. O fluxo de Carta também **não** pode passar pelo
+   `rf.check`, porque ele trataria o `warned_round` espelhado como aviso legado e dispararia em N+2 pelo
+   `ARRIVAL_DELAY = 1`.
+6. **[H] neutralidade do §8, fechado.** O JSON da arena 285 e o de `metricas_epico.py` trazem `elapsed_s`,
+   então `diff` cru nunca dá vazio. A comparação usa só `.cells` (285) ou o JSON sem `elapsed_s` (368).
+   Comando fixado no §8.
+
+**Etapa 1 — avaliador** (commit `d0298e51`, congelado daqui em diante; diff vazio exigido no pouso).
+`docs/spec391/arena_reforco_cartas.py` refaz o laço de `sim._fight` (importa `sim.py` e, por ele, a arena
+285, sem editá-los) na célula `lider_matilha` (pool acima, `n = 1`). O baralho é `sim.full_deck`, o bot é
+`sim.full_deck_decl` e a tag de semente é `"391"`. O fluxo só entra com a flag ≠ `off` **e** com
+`services.reinforcement_cards.advance_card_flow` importável. Nesse caso o gatilho é planejado como no
+`_plan_reinforcements` (só em `on`), e `advance_card_flow(..., mode=mode)` roda no fim de cada rodada, com
+`combat_meta["round"] = rnd`. Sem o módulo, o `ImportError` vira stub `off`. Os contadores
+`telegraphed/called/fired/cancelled` são lidos do `combat_meta["reinforcement"]` final de cada luta
+(`telegraphed_round`, `called_round`, `fired`, `cancelled`). **A Etapa 2 precisa gravar esses nomes.** A saída
+não traz tempo (o tempo vai para o stderr), então o JSON é determinístico. Testes:
+`test_arena_reforco_off_equivale_sim_fight` (20 lutas, 2 líderes `enemy_soldado_legiao_ferro`/
+`mon_auroque_ruinas`) e `test_arena_reforco_saida_tem_campos`, **2 passed**. Medida de sanidade com flag
+`off` e 2 sementes: L3 morte 35,7 %, vitória 62,9 %; L5 morte 28,6 %, vitória 68,6 %. Com a flag `on` e sem
+o módulo, o resultado sai idêntico ao `off` (`card_flow: false`).
+
 ## 5. Critérios de aceite
 
 - [ ] R1–R20 com teste verde (lista da Etapa 2/3/4)
@@ -463,8 +536,11 @@ BASE="RPG_CARD_DECK=on RPG_ENEMY_DECKS=on RPG_ENEMY_INTENT=on"
 env $BASE RPG_COMBAT_REINFORCEMENTS=off bash scripts/dev/py.sh docs/spec391/arena_reforco_cartas.py 20 --levels 3,5,8 --json > docs/spec391/gate-off.json
 env $BASE RPG_COMBAT_REINFORCEMENTS=on  bash scripts/dev/py.sh docs/spec391/arena_reforco_cartas.py 20 --levels 3,5,8 --json > docs/spec391/gate-on.json
 # neutralidade: células sem líder idênticas (sim.py inalterado; flag não alcança run_round sem gatilho).
-# [H] comando exato fixado na Etapa 0: arena 285 default + docs/spec368/metricas_epico.py, flag on vs off, diff vazio.
-env $BASE RPG_COMBAT_REINFORCEMENTS=on bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > docs/spec391/neutro-285-on.json
+# Etapa 0: o JSON da 285 tem elapsed_s; compara-se só `.cells` (default sem lider_matilha).
+env $BASE RPG_COMBAT_REINFORCEMENTS=off bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > docs/spec391/neutro-285-off.json
+env $BASE RPG_COMBAT_REINFORCEMENTS=on  bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > docs/spec391/neutro-285-on.json
+bash scripts/dev/py.sh -c "import json;a,b=(json.load(open(f'docs/spec391/neutro-285-{m}.json',encoding='utf-8'))['cells'] for m in ('off','on'));assert a==b,'285 nao neutra'"
+# 368: mesmo par off/on de docs/spec368/metricas_epico.py --out ...; comparar o JSON sem `elapsed_s`.
 ```
 
 L1 fica fora: o orçamento do nível 1 (3) não comporta Elite + Lacaio, então ali o reforço nunca chega
