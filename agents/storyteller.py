@@ -2347,59 +2347,7 @@ def storyteller_node(state: GameState):
             str(t.narrative_text), t._aberturas[0] if t._aberturas else "", where="storyteller"
         )
 
-        # --- SPEC-298 R11: a ação do jogador NÃO altera mais a reputação aqui. O storyteller
-        # só enfileira propostas `faction_deed`; o validador exige a fação em cena e o
-        # processador (services.reputation) aplica com delta tabelado — ou guarda como
-        # pendência até a fação saber (regra de ouro).
-        t.rep_events = []
-        faction_impacts = (
-            [] if t.quarantine_llm_payload else (getattr(t.update, "faction_impacts", []) or [])
-        )
-        # SPEC-226 R8: 1 impacto por facção/turno (último vence).
-        _by_fid: dict = {}
-        for imp in faction_impacts:
-            _by_fid[getattr(imp, "faction_id", "")] = imp
-        for imp in _by_fid.values():
-            fid = getattr(imp, "faction_id", "")
-            if not fid:
-                continue
-            t.rep_events.append(
-                {
-                    "type": "faction_deed",
-                    "actor_id": "player",
-                    "target_id": fid,
-                    "payload": {
-                        "direction": getattr(imp, "direction", ""),
-                        "magnitude": getattr(imp, "magnitude", "menor"),
-                        "location_id": (t.world or {}).get("current_location_id", ""),
-                    },
-                    "source": "storyteller",
-                }
-            )
-
-        # --- SPEC-299 R4(a)/R6/R7: crimes classificados pelo LLM; o motor valida e registra.
-        # Guard de FallbackLLM: `update` não-StoryUpdate já caiu no except acima (sem claim).
-        t.law_updates: dict = {}
-        try:
-            t.law_updates = _law_mod.apply_claims(
-                {**t.state, **t._law_scene_updates, "world": t.world, "npcs": t.scene_npcs},
-                getattr(t.update, "crime_claims", []) or [],
-                player_text=str(t.last_user_input or ""),
-                quarantine=bool(t.quarantine_llm_payload),
-            )
-        except Exception as exc:  # silent-ok: lei nunca derruba o turno
-            _log_event("law", "claims_failed", level="warning", error=type(exc).__name__)
-        # --- SPEC-301 R20: intenção de vínculo proposta pelo LLM, validada em Python. ---
-        # FallbackLLM/quarentena: campo ignorado. Recusa vira nota narrável, sem estado.
-        _member_action = (
-            None if t.quarantine_llm_payload else getattr(t.update, "membership_action", None)
-        )
-        if isinstance(_member_action, MembershipAction) and _member_action.action:
-            _intent_note = _fm_apply(
-                t, fm.apply_intent(_fm_view(t), _member_action.action, _member_action.faction_id)
-            )
-            if _intent_note:
-                t.fm_post_notes.append(_intent_note)
+        _story_engine_proposals(t)
 
         _story_beat_and_npcs(t)
 
@@ -2414,6 +2362,65 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_engine_proposals(t: _StoryTurn) -> None:
+    """Propostas do motor: faction_deed, crimes (lei) e intenção de vínculo."""
+    from services import faction_membership as fm
+
+    # --- SPEC-298 R11: a ação do jogador NÃO altera mais a reputação aqui. O storyteller
+    # só enfileira propostas `faction_deed`; o validador exige a fação em cena e o
+    # processador (services.reputation) aplica com delta tabelado — ou guarda como
+    # pendência até a fação saber (regra de ouro).
+    t.rep_events = []
+    faction_impacts = (
+        [] if t.quarantine_llm_payload else (getattr(t.update, "faction_impacts", []) or [])
+    )
+    # SPEC-226 R8: 1 impacto por facção/turno (último vence).
+    _by_fid: dict = {}
+    for imp in faction_impacts:
+        _by_fid[getattr(imp, "faction_id", "")] = imp
+    for imp in _by_fid.values():
+        fid = getattr(imp, "faction_id", "")
+        if not fid:
+            continue
+        t.rep_events.append(
+            {
+                "type": "faction_deed",
+                "actor_id": "player",
+                "target_id": fid,
+                "payload": {
+                    "direction": getattr(imp, "direction", ""),
+                    "magnitude": getattr(imp, "magnitude", "menor"),
+                    "location_id": (t.world or {}).get("current_location_id", ""),
+                },
+                "source": "storyteller",
+            }
+        )
+
+    # --- SPEC-299 R4(a)/R6/R7: crimes classificados pelo LLM; o motor valida e registra.
+    # Guard de FallbackLLM: `update` não-StoryUpdate já caiu no except acima (sem claim).
+    t.law_updates: dict = {}
+    try:
+        t.law_updates = _law_mod.apply_claims(
+            {**t.state, **t._law_scene_updates, "world": t.world, "npcs": t.scene_npcs},
+            getattr(t.update, "crime_claims", []) or [],
+            player_text=str(t.last_user_input or ""),
+            quarantine=bool(t.quarantine_llm_payload),
+        )
+    except Exception as exc:  # silent-ok: lei nunca derruba o turno
+        _log_event("law", "claims_failed", level="warning", error=type(exc).__name__)
+    # --- SPEC-301 R20: intenção de vínculo proposta pelo LLM, validada em Python. ---
+    # FallbackLLM/quarentena: campo ignorado. Recusa vira nota narrável, sem estado.
+    _member_action = (
+        None if t.quarantine_llm_payload else getattr(t.update, "membership_action", None)
+    )
+    if isinstance(_member_action, MembershipAction) and _member_action.action:
+        _intent_note = _fm_apply(
+            t, fm.apply_intent(_fm_view(t), _member_action.action, _member_action.faction_id)
+        )
+        if _intent_note:
+            t.fm_post_notes.append(_intent_note)
 
 
 def _story_system_message(t: _StoryTurn) -> None:
