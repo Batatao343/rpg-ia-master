@@ -1,7 +1,7 @@
 # SPEC-390 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (rodada 2: só P2 no teste; o código de produto está aprovado)
-> **Revisor:** Opus 5.5 / Sol · **Data:** 2026-11-04 · **Commits revisados:** `c26c7ea3` (rodada 1), `3ff37fb4`+`44ef8483` (rodada 2)
+> **Veredito:** `APPROVED` (rodada 3; rodadas 1–2: `CHANGES_REQUIRED`)
+> **Revisor:** Opus 5.5 / Sol · **Data:** 2026-11-04 · **Commits revisados:** `c26c7ea3` (rodada 1), `3ff37fb4`+`44ef8483` (rodada 2), `76743a61` (rodada 3)
 
 ## Escopo
 
@@ -92,4 +92,18 @@ worktree descartável em 6024192b + tests/test_combat_text_smoke8.py (pytest -p 
 varredura temporária (removida) de todas as chaves, voto/armadura × 6 sementes → herói só em narrative_summary/participant_name; ids só em chaves *_id/id
 varredura temporária (removida) com as chaves de texto ampliadas → 0 herói, 0 id (fora reason=classify_story)
 bash scripts/dev/pt.sh tests/test_combat_text_smoke8.py tests/test_error_envelope.py tests/test_no_silent_except.py tests/test_log_event_registry.py tests/test_size_budget.py tests/test_spec353_registry.py tests/test_combat_text_smoke7.py tests/test_spec355_provocacao_rodada.py tests/test_spec363_rare_scenarios.py tests/test_spec387_seed.py tests/test_turn_outcome_endpoints.py → 183 passed
+```
+
+## Rodada 3
+
+Revisado `git show 76743a61`, que só mexe em `tests/test_combat_text_smoke8.py`:
+- **P2-2 fechado.** `_TEXT_KEYS` agora tem as superfícies reais (`message`, `text`, `efeito`, `mech_log`, `content`, `texto`,
+  `description`, `resultado`, `title`, `label`, `sinal`, `prenuncio`), a mesma lista que a rodada 2 varreu limpa.
+  `reason` continua fora. `_RAW_ID` soma `\b[0-9a-f]{24}\b`. Produto não foi tocado.
+- Nenhum achado aberto: P1-1, P1-2, P2-1 e P2-2 fechados. O smoke real §6 continua com o coordenador.
+
+**Veredito final: `APPROVED`.**
+
+```text
+bash scripts/dev/pt.sh tests/test_combat_text_smoke8.py → 10 passed
 ```
