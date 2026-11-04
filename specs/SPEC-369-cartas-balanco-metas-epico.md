@@ -485,6 +485,7 @@ Na confirmação (R22, sementes novas 260-339; famílias em 260-267 e `predador_
 | célula de família (R20) | ±5 pp | A vitória com 200 lutas e p ≈ 0,4–0,6 tem erro-padrão de cerca de 3,5 pp. O Δ entre dois braços independentes fica em cerca de 4,9 pp. |
 
 A tolerância vale **só na dimensão que já estava fora da meta na Fase B** (Astra P2-5). Exemplo: o Δ do `conjurador` L5 (−8,0) cumpre a meta cheia, então continua com |Δ| ≤ 10 na confirmação, e só a vitória `on` (38,5 %) ganha 38,5 − 5. As metas cheias e os pisos absolutos (R13, o p95 total ≤ 10, os timeouts, o R17 e o R19) não ganham tolerância. O aceite é registrado pelo coordenador.
+Nota da D-369-13 (Astra P3-10): o p95 total virou limite registrado (11) na D-369-13. Como a regra desta tolerância vale para limites registrados, ele ganha +1 rodada na confirmação, como o p95 do Médico. O timeout continua sem tolerância.
 
 ### D-369-12 — limite de passos do R18 na Fase B (04/11, dono: "Aceitar + Fase C guarda")
 
