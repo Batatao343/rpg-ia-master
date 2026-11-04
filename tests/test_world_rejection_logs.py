@@ -1,9 +1,6 @@
 """SPEC-252: rejeicoes do mundo, guarda narrativa, economia e replanejamento com motivo em log."""
 
-import io
 import json
-import logging
-from types import SimpleNamespace
 
 import pytest
 
@@ -15,35 +12,6 @@ SENT = "SENTINELA-252-xk"
 @pytest.fixture(autouse=True)
 def _log(monkeypatch):
     logging_setup.configure_logging({"RPG_LOG_LEVEL": "debug", "RPG_LOG_PROPAGATE": "1"})
-
-
-class _LogCapture:
-    """Mesma interface do ``capsys`` (``readouterr().out`` drena), lendo as linhas JSON
-    direto de um handler no logger ``rpg`` com o formatador de produção.
-
-    Antes o teste lia o stdout real e falhava sob xdist quando outro teste do mesmo
-    worker trocava o stdout/captura (flake de ordem, SPEC-377 §10). As asserções não mudam.
-    """
-
-    def __init__(self) -> None:
-        self._buf = io.StringIO()
-        self.handler = logging.StreamHandler(self._buf)
-        self.handler.setFormatter(logging_setup.JsonLineFormatter())
-
-    def readouterr(self) -> SimpleNamespace:
-        out = self._buf.getvalue()
-        self._buf.seek(0)
-        self._buf.truncate()
-        return SimpleNamespace(out=out, err="")
-
-
-@pytest.fixture
-def capsys(_log):  # sombreia o capsys do pytest só neste módulo
-    cap = _LogCapture()
-    logger = logging.getLogger("rpg")
-    logger.addHandler(cap.handler)
-    yield cap
-    logger.removeHandler(cap.handler)
 
 
 def _events(capsys, name):
