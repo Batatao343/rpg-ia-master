@@ -1,6 +1,6 @@
 # SPEC-345 — Bugs do teste no navegador (cartas off e on): roster, texto interno, mech log e layout mobile
 
-> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS, F-1 corrigido em 5f4dff39; falta o smoke com LLM real §6)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** nenhuma em aberto (SPEC-199/203/293/316/320–324 `done`; o `mech_log` vem da SPEC-334, já no `main` atrás da flag)
 > **Desbloqueia:** linha de base `off` da SPEC-342 (R24) e o smoke "cartas on" antes de ligar as flags
@@ -243,21 +243,21 @@ Testes primeiro em cada etapa. Subagente roda só os arquivos do escopo, com `-n
 
 ## 5. Critérios de aceite
 
-- [ ] R1: `targetchip_sem_vitalidade`, `targetchip_aria_mira_sem_vitalidade` e `targetchip_jogador_zero_inalterado` verdes; print `depois/on-360_07-conflito-inicio.png` e `depois/off-360_08-conflito-painel-mobile.png` mostram "sem Vitalidade".
-- [ ] R2/R3: `tests/test_spec345_combat_view.py` verde (4 testes), `test_estado_nao_muda` incluído; `tests/test_encounter_manifest.py` e `tests/test_combat_targeting.py` sem alteração e verdes.
-- [ ] R4/R5 (+316 F-1): `tests/test_spec345_player_text.py` verde; prints `depois/on-1440_12-r1-pos.png` e `depois/off-1440_13-desfecho.png` sem `adaga_ferro`/`pocao_cura`, `Mortos:` e `[SISTEMA]`; F-1 marcado como resolvido em `handoffs/SPEC-316-sol-review.md` pelo coordenador.
-- [ ] R6: `tests/test_spec345_mech_log.py` verde; no smoke `on`, o mech log do ataque de Mestre Aldric traz o nome dele.
-- [ ] R7: `preparacao_sem_faixa` (360 e 1440) verde; prints `depois/off-360_12-desfecho.png` e `depois/off-1440_13-desfecho.png` sem faixa preta.
-- [ ] R8: `tabbar_sem_sobreposicao`, `tabbar_ponto_visivel` e `tabbar_alvo_toque` verdes; prints `depois/on-360_09-mao.png` e `depois/off-360_06-jogo.png`.
-- [ ] R9: `cabecalho_lugar_inteiro_em_combate` + `fight_chip_label` verdes; print `depois/on-360_07-conflito-inicio.png` com "NOVA ARCÁDIA" inteiro.
-- [ ] R10: `primeiro_turno_respira` + `onboarding_compact_details` verdes; print `depois/off-360_06-jogo.png`.
-- [ ] R11: `trilha_ferimentos_uma_linha` verde (leve 4 e 5); print `depois/on-360_19-r3-pos.png`.
-- [ ] R12: 3 rodadas do perf registradas no handoff (passou 3/3 = ruído; senão, achado aberto).
-- [ ] R13: e2e da Etapa 4 verdes com `--workers=1`; `npm run lint`/`typecheck` limpos.
-- [ ] `uv run pytest` verde (suíte completa offline, coordenador, 1×).
-- [ ] Nenhum `with_structured_output` novo (sem guard novo a exigir).
-- [ ] Saves antigos continuam carregando (nenhum campo de estado alterado; R2.3, R5.4).
-- [ ] Revisão independente por outro agente (`spec-reviewer`).
+- [x] R1: `targetchip_sem_vitalidade`, `targetchip_aria_mira_sem_vitalidade` e `targetchip_jogador_zero_inalterado` verdes; print `depois/on-360_07-conflito-inicio.png` e `depois/off-360_08-conflito-painel-mobile.png` mostram "sem Vitalidade".
+- [x] R2/R3: `tests/test_spec345_combat_view.py` verde (4 testes), `test_estado_nao_muda` incluído; `tests/test_encounter_manifest.py` e `tests/test_combat_targeting.py` sem alteração e verdes.
+- [x] R4/R5 (+316 F-1): `tests/test_spec345_player_text.py` verde; prints `depois/on-1440_12-r1-pos.png` e `depois/off-1440_13-desfecho.png` sem `adaga_ferro`/`pocao_cura`, `Mortos:` e `[SISTEMA]`; F-1 marcado como resolvido em `handoffs/SPEC-316-sol-review.md` pelo coordenador.
+- [x] R6: `tests/test_spec345_mech_log.py` verde; no smoke `on`, o mech log do ataque de Mestre Aldric traz o nome dele.
+- [x] R7: `preparacao_sem_faixa` (360 e 1440) verde; prints `depois/off-360_12-desfecho.png` e `depois/off-1440_13-desfecho.png` sem faixa preta.
+- [x] R8: `tabbar_sem_sobreposicao`, `tabbar_ponto_visivel` e `tabbar_alvo_toque` verdes; prints `depois/on-360_09-mao.png` e `depois/off-360_06-jogo.png`.
+- [x] R9: `cabecalho_lugar_inteiro_em_combate` + `fight_chip_label` verdes; print `depois/on-360_07-conflito-inicio.png` com "NOVA ARCÁDIA" inteiro.
+- [x] R10: `primeiro_turno_respira` + `onboarding_compact_details` verdes; print `depois/off-360_06-jogo.png`.
+- [x] R11: `trilha_ferimentos_uma_linha` verde (leve 4 e 5); print `depois/on-360_19-r3-pos.png`.
+- [x] R12: 3 rodadas do perf registradas no handoff (passou 3/3 = ruído; senão, achado aberto).
+- [x] R13: e2e da Etapa 4 verdes com `--workers=1`; `npm run lint`/`typecheck` limpos.
+- [x] `uv run pytest` verde (suíte completa offline, coordenador, 1×).
+- [x] Nenhum `with_structured_output` novo (sem guard novo a exigir).
+- [x] Saves antigos continuam carregando (nenhum campo de estado alterado; R2.3, R5.4).
+- [x] Revisão independente por outro agente (`spec-reviewer`).
 
 ## 6. Smoke test com LLM real
 
@@ -296,3 +296,5 @@ A prosa do LLM real passa pela mesma substituição do loot (R4.4) e pela mesma 
 **Desvios da execução:** (00) re-revisão: `[RESULTADO]` tem dois padrões (linha inteira com a quebra, e do meio da linha até o fim SEM consumir a quebra; `remove_receipts`, usado também pelo stream); estados desabilitados sem opacity também em actionchip/placechip/death-btn/combat-card button/ws-bar iconbtn/msg__offer/play-queue (a face `.combat-card[aria-disabled]` fica, tem motivo escrito); `--tabbar-h` já vale 48 px + safe-area ≤ 899 px (provado por e2e; 0 só no desktop, onde não há barra); a conta crua da Arena do Véu é o log do laboratório de simulação (`agents/combat.py`, `is_simulation`), superfície de dev, não o texto do jogo real; (0) §3 `strip_system_tags`: os padrões de `[RESULTADO]` (linha inteira a partir da tag) e `[SISTEMA]` NÃO são ancorados em `^` (recibo no meio da linha também sai; revisão Sol P1-1); `narrative_sink.StreamGuard` usa os mesmos padrões (stream = final); desabilitado: `.btn`/`--primary`/`--danger` sem opacity (fundo `--bg-deep`, `--muted`, borda tracejada); (a) R10.2: o botão Dispensar fica dentro do `<details>` (primeira linha do corpo), não no `summary` (botão interativo dentro de summary é frágil); (b) R8.3: altura mínima de toque medida = 44 px (o `.play .mtabbar__btn` já impõe 44; 48 nunca valeu em runtime); (c) teste SSR `deck_msg_montado_vazio` não escrito (CombatDeckTab pesado para SSR), coberto pelo e2e `preparacao_sem_faixa`.
 
 **Nota do coordenador (27/10):** D7 ajustada — a SPEC-342 pousa primeiro (já em revisão); a 345 faz rebase sobre ela, absorve o item 9b (`.btn:disabled`/Forja, ex-R32 sugerida) e regrava a linha de base R24 da 342 quando suas correções mudarem o caminho `off`.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-345-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Critérios com teste (`test_spec345_*`, e2e `spec345-*`); modo `off` local (D-368-2) em 368 item 9; `on` no smoke 3; 0 id na tela em `smoke-final` 364 e 367 local.

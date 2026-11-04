@@ -1,6 +1,6 @@
 # SPEC-367 — Cartas: acabamento do 5º smoke real (cotação por nome parcial, chip do retrato depois de confirmar, presságio na voz do jogador, retrato de inimigo de fallback, condição de inimigo que termina, ouro na narração da compra, timeout do pool dos scripts de operação)
 
-> **Status:** `approved` (coordenador, autorização do dono 02/11 "manda bala"; decisões D-367-1..6 do autor valem como aceitas e o dono pode vetar)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-11-02 · **Atualizada:** 2026-11-02
 > **Épico:** SPEC-327
 > **Origem:** smoke final da SPEC-364 (02/11, `main` `90cfaa18`, local `legacy` + staging `hosted-supabase`, DeepSeek `deepseek-v4-flash`, 12 turnos e 1 geração de retrato). Achados A1–A7 em [docs/spec364/smoke-final.md](../docs/spec364/smoke-final.md) § Achados. A evidência bruta fica no scratchpad do coordenador (`scratchpad/smoke5/`).
@@ -347,19 +347,19 @@ no pouso, pelo coordenador. Toda etapa que toca `round_log` ou `enemy_intent` ro
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 anotada no §9
-- [ ] A1: pergunta com nome parcial cota a entrada certa; ambíguo/curto cai na consulta; venda afirmativa e 364 R4/R6 intactas (R1–R3)
-- [ ] A2: oferta some e o selo "Gerando retrato…" aparece ao confirmar; duplo clique = 1 cotação/1 confirmação; falha não esconde à toa (R4–R6)
-- [ ] A3: presságio com "você" para o herói; catálogo sem "de {alvo}"; invariante pela API (R7–R9)
-- [ ] A4: fallback sem oferta e sem reutilizar `tipo:fallback_*`; cotação 409; retirada com `--env-file`/`--dry-run` (R10–R12)
-- [ ] A5: "A condição Cego de Goblin-Mineiro terminou.", uma vez por evento, em todas as superfícies (R13, R14)
-- [ ] A6: contexto com antes/preço/depois; V-G rejeita o texto real e aceita o correto; corpus benigno sem disparo (R15–R17)
-- [ ] A7: scripts com abertura tolerante e retry só no checkout; `set` 1 vez; pool fechado em erro (R18, R19)
-- [ ] 0 LLM por rodada (R20); nenhum `with_structured_output` novo (R21); sem flag nova (R22); contrato aditivo (R23)
-- [ ] Golden 330 e specs existentes de `web/e2e/` sem diff (R24); invariante de ids/voz estendido (R25)
-- [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso); `npm run typecheck`, `lint`, `test` verdes
-- [ ] Revisão independente `Sol` sem P0/P1 aberto
-- [ ] **Smoke real §6 (coordenador)** executado e registrado em `docs/spec367/smoke-final.md`
+- [x] Etapa 0 anotada no §9
+- [x] A1: pergunta com nome parcial cota a entrada certa; ambíguo/curto cai na consulta; venda afirmativa e 364 R4/R6 intactas (R1–R3)
+- [x] A2: oferta some e o selo "Gerando retrato…" aparece ao confirmar; duplo clique = 1 cotação/1 confirmação; falha não esconde à toa (R4–R6)
+- [x] A3: presságio com "você" para o herói; catálogo sem "de {alvo}"; invariante pela API (R7–R9)
+- [x] A4: fallback sem oferta e sem reutilizar `tipo:fallback_*`; cotação 409; retirada com `--env-file`/`--dry-run` (R10–R12)
+- [x] A5: "A condição Cego de Goblin-Mineiro terminou.", uma vez por evento, em todas as superfícies (R13, R14)
+- [x] A6: contexto com antes/preço/depois; V-G rejeita o texto real e aceita o correto; corpus benigno sem disparo (R15–R17)
+- [x] A7: scripts com abertura tolerante e retry só no checkout; `set` 1 vez; pool fechado em erro (R18, R19)
+- [x] 0 LLM por rodada (R20); nenhum `with_structured_output` novo (R21); sem flag nova (R22); contrato aditivo (R23)
+- [x] Golden 330 e specs existentes de `web/e2e/` sem diff (R24); invariante de ids/voz estendido (R25)
+- [x] `uv run pytest` verde (suíte completa, coordenador, no pouso); `npm run typecheck`, `lint`, `test` verdes
+- [x] Revisão independente `Sol` sem P0/P1 aberto
+- [x] **Smoke real §6 (coordenador)** executado e registrado em `docs/spec367/smoke-final.md`
 
 ## 6. Smoke test com LLM real (≤ 6 turnos; só os achados)
 
@@ -493,3 +493,5 @@ apagar nada). Correção: `--dsn-env RPG_STAGING_DB_URL` usa o pool de operaçã
 `tipo:gen:criatura-hostil` (rótulo de espécie), não `tipo:fallback_criatura_hostil`; o inimigo continua com id
 `fallback_criatura_hostil_1`, então o guarda de R10 vale. Retirada feita: dry-run `ready` com 2 objetos →
 `status: retired`, `objects_deleted: 2`, `objects_failed: []`.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-367-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. A1–A7 verificados em `docs/spec367/smoke-{local,staging}.md`; R4 (chip "Gerando retrato…") falhou ao vivo e foi corrigido e verificado na 387 (100 ms). Ressalva: ramo `trade_prose_rejected` (V-G) nunca disparou ao vivo, só por teste.

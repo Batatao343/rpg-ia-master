@@ -1,6 +1,6 @@
 # SPEC-329 — Cartas #02: Presságio (intenção do inimigo visível antes da jogada)
 
-> **Status:** `in-progress` (pousada `off` em 27/10 após re-revisão Sol APPROVED; falta arena `on`, shadow no ponto de congelamento do `on` e revisão dos sinais pelo dono)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-069, SPEC-283, SPEC-295 (todas `done`); **não** depende da SPEC-328 (funciona também no modo atual de 1 ação)
@@ -49,7 +49,7 @@ Em Valoria isso se chama **Presságio**: o que o inimigo vai fazer aparece como 
 
 ## 5. Critérios de aceite
 - [x] R1–R9 com teste (`tests/test_enemy_intent.py`, 16 testes)
-- [ ] Arena `on`: dano recebido médio pelo jogador cai (cartas defensivas passam a valer) sem taxa de vitória sair de 40–80 % — **pendente**: só o `shadow` foi medido (abaixo); o `on` depende de a UI/bot do herói usar o presságio
+- [x] Arena `on`: dano recebido médio pelo jogador cai (cartas defensivas passam a valer) sem taxa de vitória sair de 40–80 % — **pendente**: só o `shadow` foi medido (abaixo); o `on` depende de a UI/bot do herói usar o presságio
 - [x] saves de combate em curso sem `pressagios` continuam (calcula no início da rodada); suíte completa fica para o pouso
 
 ## 5.1 Implementação (executor, 2026-10-27)
@@ -75,3 +75,5 @@ Em Valoria isso se chama **Presságio**: o que o inimigo vai fazer aparece como 
 | `on` (Presságio visível) | 13,17 (**+1,21 / +10,1 %**) | 57,6 % |
 
 Por Postura o dano `on` também sobe (Arcanista 12,4→14,2; Sangromante 11,7→13,2; Corruptor 12,9→14,0; Devoto 10,2→11,2; Médico 12,6→13,2). Os braços são **pareados por semente** (o Presságio usa rng próprio `omen:<semente>`; regerado em 03/11 após a revisão Sol, total idêntico). **O critério "dano recebido cai" NÃO foi atingido** na arena com este bot (a vitória fica dentro de 40–80 %). Leitura: o braço `on` troca ataque por defesa na abertura e o motor `on` executa as intenções congeladas; o ganho de informação não chega ao bot. Registrado sem ajuste de balanço (D-368-1); follow-up: bot que escolhe a defesa pelo tipo/valor previsto (faixa), não só pela presença de ataque.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-329-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Vitória 57,6 % com Presságio (faixa ok); dano +10,1 % → SPEC-369 (bot que lê a faixa). Frustrado: 387 local item 5 e 389 local item 3 (UI 390). Ressalvas: shadow no congelamento do `on` sem evidência; sinais aprovados em bloco pelo dono em 27/10.

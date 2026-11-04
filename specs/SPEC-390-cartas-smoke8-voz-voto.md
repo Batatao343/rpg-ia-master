@@ -1,6 +1,6 @@
 # SPEC-390 — Cartas: 3 arestas de texto do 8º smoke (Voto na voz "você", pronome da Provocação no herói, título da missão no recibo)
 
-> **Status:** `in-progress` (04/11, coordenador, autorização do dono "manda bala"; escopo só de texto/apresentação)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-327
 > **Origem:** smoke local da SPEC-389 ([docs/spec389/smoke-local.md](../docs/spec389/smoke-local.md), achados 1, 2 e 4; resumo em
@@ -59,10 +59,10 @@ Balanço (SPEC-369), novas mecânicas, mudanças de layout.
 
 ## 5. Critérios de aceite
 
-- [ ] R1: o registro e o `/game/history` da `13 voto` mostram "provocado por você", e o nome do herói aparece 0 vezes.
-- [ ] R2: o recibo da `14 entrega` traz o título "Caça". Um save antigo sem `quest_titles` mostra o id.
-- [ ] R3: a vítima herói mostra "Você está provocado por <Inimigo>.". A vítima inimigo mantém o texto atual.
-- [ ] R4: guardas verdes; suíte completa verde no pouso.
+- [x] R1: o registro e o `/game/history` da `13 voto` mostram "provocado por você", e o nome do herói aparece 0 vezes.
+- [x] R2: o recibo da `14 entrega` traz o título "Caça". Um save antigo sem `quest_titles` mostra o id.
+- [x] R3: a vítima herói mostra "Você está provocado por <Inimigo>.". A vítima inimigo mantém o texto atual.
+- [x] R4: guardas verdes; suíte completa verde no pouso.
 
 ## 6. Smoke real (curto, local)
 
@@ -83,3 +83,5 @@ Nenhuma decisão aberta: é só texto.
 ## 9. Registro de implementação
 
 04/11: R1 em `round_log._voce` (troca o herói por "você" na linha do desvio); R3 em `round_log._taunt_lines` (ramo da vítima "Você"); R2 em `turn_outcome` (`quest_titles` aditivo, escrito depois do `receipt_id`; `public_outcome` lê, fallback id). Front sem mudança (`outcomeToast` já usa `title`). Testes: `tests/test_combat_text_smoke8.py` (R1, R2, R3, R4 pela API real com MockLLM). Revisão Sol: "resiste à sua provocação" (P1-1), varredura de nome do herói/id cru em `13 voto` e `13 armadura` (P1-2). Nenhum teste antigo precisou de ajuste. Smoke §6 real (LLM) fica com o coordenador.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-390-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Smoke local (`docs/spec390/smoke.md`): "provocado por você", recibo com "Caça" e "Você está provocado por Soldado.". Ressalva: "resiste à sua provocação" só por teste (não ocorreu ao vivo).

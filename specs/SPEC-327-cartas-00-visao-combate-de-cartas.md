@@ -1,6 +1,6 @@
 # SPEC-327 — Cartas #00: Visão — o conflito de Valoria como jogo de cartas estratégico
 
-> **Status:** `approved` (dono, 2026-10-27)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Tipo:** épico / guarda-chuva (sem código próprio; define princípios, ordem e decisões do dono)
 > **Depende de:** Conflito v2 (SPEC-062–077) e SPEC-325, todas `done`
@@ -100,3 +100,5 @@ Medido offline (sem LLM) por `docs/spec368/metricas_epico.py` — 5 Posturas × 
 | ≥ 60 % das rodadas com ≥ 3 escolhas válidas | 87,7 % (81–94 % por Postura); 98,7 % contando o ataque básico | **atingido** |
 | Nenhuma Carta com uso > 60 % na mão | 14 Cartas acima (n ≥ 5), p. ex. `arc_des_mao_nua` 94 %, `arc_descarga` 90 %, `bas_san_corte_raso` 87 %; uso geral 38,4 % | **não atingido** (o uso agora é aviso, SPEC-358; a bandeira que vale é o delta) |
 | p95 do conflito ≤ 10 rodadas | total 12; Devoto 11 · Sangromante 8 · Corruptor 9 · Arcanista 9 · **Médico 19** (4,4 % de timeouts) | **não atingido** (Médico); follow-up |
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-327-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Metas: ≥3 escolhas em 87,7 % das rodadas (ok); 1,92 Cartas/rodada (meta ≥2), 14 Cartas >60 % de uso, p95 12 rodadas (Médico 19, 4,4 % timeout), dano recebido +10,1 % com Presságio → SPEC-369.

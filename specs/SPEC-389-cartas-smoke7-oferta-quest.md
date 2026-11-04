@@ -1,6 +1,6 @@
 # SPEC-389 — Cartas: achados do 7º smoke (oferta de retrato que some sem log, entrega de missão que não fecha, presságio frustrado no painel, Reação na prosa, Voto, escolta falha e 5 arestas de texto/UI)
 
-> **Status:** `approved` (04/11, coordenador, autorização do dono "manda bala"; D-389-1..8 pelas recomendações (a) do §8, veto do dono possível)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-327
 > **Origem:** 7º smoke real (04/11), feito no §6 da SPEC-387. Staging: achado S7-1 em
@@ -298,19 +298,19 @@ que mudar (por exemplo `conditions[].name`) entra no §9 com o motivo.
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 anotada no §9
-- [ ] S7-1: toda omissão com causa e 1 `offer_view` por resposta (R1, R2); `price_absent` fora do cache (R3); kill switch com idade e log estruturado (R4)
-- [ ] S7-1: medição da R5 feita e lida na mesma janela; causa corrigida com teste (R6); navegador × API explicado no §9 (R7)
-- [ ] L3: seed coerente e entrega à origem fechando pela rota NPC (R8, R9); replanejamento por região intacto (R10)
-- [ ] L2, L5, L6, L7, L10: R11–R15
-- [ ] L8, L4, L1: seeds `4 falha`, `12 hostil` e `smoke_body` (R16–R18)
-- [ ] L9: linha do `promote` que roda (R19); L11 entregue ao coordenador como nota da 369 (R20)
-- [ ] Guardas R21–R26
-- [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso); front `typecheck`/`lint`/`test` verdes; e2e novo verde a 390 e 1440
-- [ ] Guard de FallbackLLM mantido; nenhum `with_structured_output` novo
-- [ ] Saves antigos carregam (R25)
-- [ ] Revisão independente `Sol` sem P0/P1 aberto
-- [ ] **Smoke real §6 (coordenador)** registrado em `docs/spec389/smoke.md`
+- [x] Etapa 0 anotada no §9
+- [x] S7-1: toda omissão com causa e 1 `offer_view` por resposta (R1, R2); `price_absent` fora do cache (R3); kill switch com idade e log estruturado (R4)
+- [x] S7-1: medição da R5 feita e lida na mesma janela; causa corrigida com teste (R6); navegador × API explicado no §9 (R7)
+- [x] L3: seed coerente e entrega à origem fechando pela rota NPC (R8, R9); replanejamento por região intacto (R10)
+- [x] L2, L5, L6, L7, L10: R11–R15
+- [x] L8, L4, L1: seeds `4 falha`, `12 hostil` e `smoke_body` (R16–R18)
+- [x] L9: linha do `promote` que roda (R19); L11 entregue ao coordenador como nota da 369 (R20)
+- [x] Guardas R21–R26
+- [x] `uv run pytest` verde (suíte completa, coordenador, no pouso); front `typecheck`/`lint`/`test` verdes; e2e novo verde a 390 e 1440
+- [x] Guard de FallbackLLM mantido; nenhum `with_structured_output` novo
+- [x] Saves antigos carregam (R25)
+- [x] Revisão independente `Sol` sem P0/P1 aberto
+- [x] **Smoke real §6 (coordenador)** registrado em `docs/spec389/smoke.md`
 
 ## 6. Smoke test com LLM real (curto)
 
@@ -436,3 +436,5 @@ Executor (Sonnet), 04/11. Decisões D-389-1..8 pelas recomendações (a). Commit
 
 
 **Correções da revisão Sol (CHANGES_REQUIRED)**: P1-1 (`switches_snapshot` com `--dsn-env RPG_STAGING_DB_URL --env-file .env.staging`, JSON inteiro, `audit` filtrado por `image_generation`, falha se o snapshot não vier), P1-2 (amostra com o `game_id` real e o path real; contagem mínima API/navegador e status 200 em `count_problems`; `offer_view` ganhou `game_ref`), P2-1 (tally só com inimigo vivo), P2-2 (precedência `fallback_enemy` > `has_own_art` > `private_other_game`/`pending`, teste com o `portrait_for` real), P2-3 (`INSTANCE = observability.boot.INSTANCE_REF`), P2-4 (`_creature_art_live` usa `art_cause`), P2-5 (asserção por variante em `test_smoke_bodies_parse_and_play`; a `14 entrega` roda o nó `npc_actor` direto porque o MockLLM roteia "Entrego…" para STORY), P2-6 (recompensa e técnica no teste de entrega), P2-7 (docstrings).
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-389-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Oferta 12/12 em 3 instâncias (`docs/spec389/offer-measure-20261104.json`); itens locais 2–10 ok; 3 P3 de texto → SPEC-390 (pousada). Nota L11 (rendimento do `draft.py`) registrada para a SPEC-369.

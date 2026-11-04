@@ -1,6 +1,6 @@
 # SPEC-346 — Combate de cartas sem LLM por rodada, desfecho narrado pela IA e correções do smoke real (spawn, router, loot)
 
-> **Status:** `in-progress` (implementada e revisada — Sol APPROVED; falta o smoke real §6, feito pelo coordenador após 347/352)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Origem:** smoke com LLM real de 27/10 na `main` `fae9a4e5` (`docs/spec346/achados-smoke.md`, históricos `docs/spec346/smoke/hist-*.json`, prints em `docs/spec346/smoke/`)
 > **Depende de:** SPEC-203, SPEC-226, SPEC-325, SPEC-339, SPEC-341 (`done`); código das SPEC-328/329/330/331/332/333/334 já na `main` (status `in-progress`, flags `off`); SPEC-345 (`in-progress`: mexe em `player_summary_text`/`strip_system_tags`; rebase antes do pouso)
@@ -540,25 +540,25 @@ completa é do coordenador, no pouso.
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 anotada em §4 (código do 400 e hipótese) e R28 aplicado conforme o diagnóstico
-- [ ] Item 1: os testes da Etapa 5 passam; nenhum turno de desfecho (`on` ou `off`) mostra só o template ou os bullets
-- [ ] Item 2: os testes da Etapa 2 passam; invariante R24
-- [ ] Item 3: os testes da Etapa 1 passam
-- [ ] Itens 4/5/7: no `on` não há prosa por rodada; o resumo passa por R12–R14 (testes com os textos reais do smoke)
-- [ ] Item 6: os testes da Etapa 3 passam, incluindo o oráculo R10 em 20 seeds
-- [ ] Item 8: o teste R30 passa
-- [ ] Item 9: os testes da Etapa 6 passam
-- [ ] Item 10: registrado em §1 (sem mudança)
-- [ ] D-dono-1: rodada `on` com zero chamadas de LLM no grafo inteiro (teste de spy)
-- [ ] D-dono-3: abertura sem resolução de rodada; texto livre recusado sem LLM
-- [ ] `off`/`shadow`: os testes de combate existentes passam sem mudar expected (fora o rótulo R8, que só aparece em `on`)
-- [ ] Arena por Postura dentro de 45–85 % (`docs/spec346/arena.md`)
-- [ ] Eventos novos registrados (R31); nenhuma flag nova (R34)
-- [ ] Guard de FallbackLLM no resumo e na entrada (R33)
-- [ ] Saves antigos continuam carregando (R32)
-- [ ] `uv run pytest` verde (suíte completa offline, só o coordenador, no pouso)
-- [ ] Revisão independente `Sol` sem P0/P1 aberto
-- [ ] Smoke real §6 executado e registrado em `docs/spec346/smoke-final.md`
+- [x] Etapa 0 anotada em §4 (código do 400 e hipótese) e R28 aplicado conforme o diagnóstico
+- [x] Item 1: os testes da Etapa 5 passam; nenhum turno de desfecho (`on` ou `off`) mostra só o template ou os bullets
+- [x] Item 2: os testes da Etapa 2 passam; invariante R24
+- [x] Item 3: os testes da Etapa 1 passam
+- [x] Itens 4/5/7: no `on` não há prosa por rodada; o resumo passa por R12–R14 (testes com os textos reais do smoke)
+- [x] Item 6: os testes da Etapa 3 passam, incluindo o oráculo R10 em 20 seeds
+- [x] Item 8: o teste R30 passa
+- [x] Item 9: os testes da Etapa 6 passam
+- [x] Item 10: registrado em §1 (sem mudança)
+- [x] D-dono-1: rodada `on` com zero chamadas de LLM no grafo inteiro (teste de spy)
+- [x] D-dono-3: abertura sem resolução de rodada; texto livre recusado sem LLM
+- [x] `off`/`shadow`: os testes de combate existentes passam sem mudar expected (fora o rótulo R8, que só aparece em `on`)
+- [x] Arena por Postura dentro de 45–85 % (`docs/spec346/arena.md`)
+- [x] Eventos novos registrados (R31); nenhuma flag nova (R34)
+- [x] Guard de FallbackLLM no resumo e na entrada (R33)
+- [x] Saves antigos continuam carregando (R32)
+- [x] `uv run pytest` verde (suíte completa offline, só o coordenador, no pouso)
+- [x] Revisão independente `Sol` sem P0/P1 aberto
+- [x] Smoke real §6 executado e registrado em `docs/spec346/smoke-final.md`
 
 ## 6. Smoke test com LLM real (≤ 30 turnos)
 
@@ -679,3 +679,5 @@ Desvios e escolhas que o revisor deve conhecer:
 - **Arena**: ver `docs/spec346/arena.md`.
 
 **Limites conhecidos do fallback do router (só quando os 3 candidatos do CLASSIFY falham), aceitos pelo coordenador sob autonomia do dono:** P3-6 parcial ("sem pensar ataco o saqueador" fica em STORY se o alvo não está em cena/bestiário/manifesto), P3-10 (frases forçadas com criatura real do bestiário abrem combate), P3-11 ("ataco o guarda para abrir caminho" fica em STORY). Todos caem no lado seguro ou exigem frase artificial; o caminho normal (CLASSIFY respondendo) não é afetado.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-346-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. 0 LLM por rodada (smoke 3, `smoke-final` 364 R24 e todos os smokes seguintes); vitória (smoke 4); morte real local (368 item 10); fuga (`smoke-final` 364); router esgotado/`hostility_fallback` (389 item 8); Groq 120b (387 item 12). Ressalvas: morte no staging e "Vasculho o corpo" só por teste.

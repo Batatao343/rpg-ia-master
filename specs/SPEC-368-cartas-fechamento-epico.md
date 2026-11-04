@@ -1,6 +1,6 @@
 # SPEC-368 — Cartas: fechamento do épico (bug do rollback, conteúdo faltante, métricas nunca medidas e smoke dos §6 não verificados)
 
-> **Status:** `in-progress` (Etapas 0–4 implementadas em 02/11; faltam revisão Sol, suíte completa e o smoke §6 do coordenador) — aprovada pelo coordenador, autorização do dono 02/11 "manda bala" e "corrija tudo e garanta que está tudo correto"
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-11-02 · **Atualizada:** 2026-11-02
 > **Depende de:** SPEC-364 `done`; SPEC-367 (achados do smoke final) pode correr em paralelo — arquivos disjuntos exceto `agents/combat.py` (rebase)
 > **Desbloqueia:** fechar como `done` as specs 327–333, 335, 336, 345–347, 352, 355 e 357 do épico de cartas
@@ -129,9 +129,9 @@ Uma fixture por item do §6; teste offline de cada uma (estado chega à situaç�
 - [x] R13: fixtures testadas offline
 - [x] 0 LLM por rodada; golden da 330 sem diff; `web/e2e/contracts` sem diff; sem flag nova; saves antigos carregam
 - [x] Guard de FallbackLLM mantido; nenhum `with_structured_output` novo
-- [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso) — escopo verde no executor; [x] `npm run typecheck`, `typecheck:e2e`, `lint`, `test` verdes; [x] `ruff format --check .` e `ruff check .` limpos
-- [ ] Revisão independente `Sol` sem achado aberto
-- [ ] **Smoke real §6 (coordenador)** registrado em `docs/spec368/smoke-final.md`
+- [x] `uv run pytest` verde (suíte completa, coordenador, no pouso) — escopo verde no executor; [x] `npm run typecheck`, `typecheck:e2e`, `lint`, `test` verdes; [x] `ruff format --check .` e `ruff check .` limpos
+- [x] Revisão independente `Sol` sem achado aberto
+- [x] **Smoke real §6 (coordenador)** registrado em `docs/spec368/smoke-final.md`
 
 ## 6. Smoke test com LLM real (coordenador; `seed_save` do R13 leva o jogo real a cada cena dos itens 1–7, 12–14; itens 8–11 pelo roteiro do §9)
 
@@ -231,3 +231,5 @@ Cartas/rodada 1,92 (meta ≥ 2: **não**, −0,08) · rodadas com ≥ 3 escolhas
   regerado; R11 é **sintético** (replay canned), a taxa real de `replace` da rota de combate fica para o smoke §6 (telemetria do staging).
 - **Números regerados (R10 pareado):** R9 idêntico (1,92 cartas/rodada; 87,7 %; 14 Cartas > 60 %; p95 12). R10: `off` 11,96 × `on` 13,17
   (+10,1 %, vitória 64,6 → 57,6 %) — mesmo total; por Postura Devoto 10,20→11,24 e Sangromante 11,74→13,19 (antes 11,26/13,18).
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-368-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Smoke §6 em `docs/spec368/smoke-local.md` + 367 staging (item 11); parciais fechados nas 387/389. Métricas D-368-1 → SPEC-369.

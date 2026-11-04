@@ -1,6 +1,6 @@
 # SPEC-387 — Cartas: achados do 6º smoke (Carta de cena sem cache de processo, oferta de retrato estável, chip otimista, "Criatura hostil" de fallback, rota Groq, jogada inelegível explicada, escolta, seeds dos §6 não verificados, `draft.py` e 8 arestas de texto/UI)
 
-> **Status:** `in-progress` (implementado em 03/11, aguarda revisão Sol e o smoke §6; aprovada em 03/11, coordenador, autorização do dono "manda bala"; D-387-1..11 pelas recomendações do §8, veto do dono possível)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Épico:** SPEC-327
 > **Origem:** 6º smoke real (03/11, `main` `2a6e0945` local e `9e5f43d9` no staging). Achados S6-1..S6-4 em
@@ -421,23 +421,23 @@ pouso. Etapas que tocam `round_log`, `combat_preview` ou o orquestrador rodam ta
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 anotada no §9 (causa de S6-2, S6-4, L1, L5, L8, L9)
-- [ ] S6-1: instância fria mostra e aceita a Carta de cena; LRU e órfão cobertos (R1–R4)
-- [ ] S6-2: falha não fica em cache; 1 retry de checkout; causa medida (R5–R7)
-- [ ] S6-3: chip "Gerando retrato…" no clique, `disabled` real, desfaz no erro/cancelamento (R8, R9)
-- [ ] S6-4: nome genérico vira criatura da região; nenhum `fallback_*` de nome vazio (R10–R12)
-- [ ] L1: CLASSIFY com Groq que faz tool call; nenhum modelo morto em rota/fixture/AGENTS; roteiro por `RPG_ROUTES` (R13–R16)
-- [ ] L2: Carta inelegível recusada antes de gastar, com linha visível (R17, R18)
-- [ ] L3: `proteger` só com alvo ator; desfecho de objetivo falho narrado pela causa (R19, R20)
-- [ ] L4/L5 e "não verificado": seeds corrigidas e 9 variantes novas, 50/50 sementes (R21–R25)
-- [ ] L6: `draft.py` com vocabulário no schema, reparo 1×, contagem e comandos certos; gate intocado (R26, R27)
-- [ ] L7–L14: textos e UI (R28–R35)
-- [ ] Guardas R36–R41
-- [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso); front `typecheck`/`lint`/`test` verdes; e2e novos verdes a 390 e 1440
-- [ ] Guard de FallbackLLM mantido; nenhum `with_structured_output` novo no jogo
-- [ ] Saves antigos carregam (R41)
-- [ ] Revisão independente `Sol` sem P0/P1 aberto
-- [ ] **Smoke real §6 (coordenador)** registrado em `docs/spec387/smoke.md`
+- [x] Etapa 0 anotada no §9 (causa de S6-2, S6-4, L1, L5, L8, L9)
+- [x] S6-1: instância fria mostra e aceita a Carta de cena; LRU e órfão cobertos (R1–R4)
+- [x] S6-2: falha não fica em cache; 1 retry de checkout; causa medida (R5–R7)
+- [x] S6-3: chip "Gerando retrato…" no clique, `disabled` real, desfaz no erro/cancelamento (R8, R9)
+- [x] S6-4: nome genérico vira criatura da região; nenhum `fallback_*` de nome vazio (R10–R12)
+- [x] L1: CLASSIFY com Groq que faz tool call; nenhum modelo morto em rota/fixture/AGENTS; roteiro por `RPG_ROUTES` (R13–R16)
+- [x] L2: Carta inelegível recusada antes de gastar, com linha visível (R17, R18)
+- [x] L3: `proteger` só com alvo ator; desfecho de objetivo falho narrado pela causa (R19, R20)
+- [x] L4/L5 e "não verificado": seeds corrigidas e 9 variantes novas, 50/50 sementes (R21–R25)
+- [x] L6: `draft.py` com vocabulário no schema, reparo 1×, contagem e comandos certos; gate intocado (R26, R27)
+- [x] L7–L14: textos e UI (R28–R35)
+- [x] Guardas R36–R41
+- [x] `uv run pytest` verde (suíte completa, coordenador, no pouso); front `typecheck`/`lint`/`test` verdes; e2e novos verdes a 390 e 1440
+- [x] Guard de FallbackLLM mantido; nenhum `with_structured_output` novo no jogo
+- [x] Saves antigos carregam (R41)
+- [x] Revisão independente `Sol` sem P0/P1 aberto
+- [x] **Smoke real §6 (coordenador)** registrado em `docs/spec387/smoke.md`
 
 ## 6. Smoke test com LLM real (curto; só os achados e os "não verificado")
 
@@ -651,3 +651,5 @@ de reverter). Golden 330 e 453+223 testes de motor/sim verdes; **a arena não fo
   `hero_card_names` foi removido. Testes: apoio inimigo + linha sem sujeito, duas Cartas inimigas seguidas, Carta homônima do herói e do inimigo.
 - R3-P2-1: `round_log` não reexporta mais `off_text` (sem ciclo); `import services.off_text` e `import services.round_log` rodam em interpretador limpo.
 - R3-P3-1: `off_text.for_round` monta os argumentos; `_narrate` voltou a ≤ 100 linhas e saiu da baseline do `size_budget.json`.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-387-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. S6-1/S6-3/S6-4 ok no staging (`docs/spec387/smoke-staging.md`); S6-2 provado 12/12 após a 389 (`docs/spec389/smoke.md`). Ressalva: `trade_prose_rejected` não exercitado ao vivo.

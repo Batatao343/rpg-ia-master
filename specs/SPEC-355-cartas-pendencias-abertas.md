@@ -1,6 +1,6 @@
 # SPEC-355 — Cartas: pendências abertas do épico (regras do motor, conteúdo e balanço final)
 
-> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS; pendências de balanço com o dono no §9; bloco D com o coordenador)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Origem:** levantamento do coordenador em `docs/spec355/pendencias.md` (19 itens em 4 blocos), conferido item a item no source da `main` (`9daed66c`) — §1.1
 > **Depende de:** SPEC-339 `done`, SPEC-341 `done`; código das SPEC-328–336, 346, 347, 353 e 354 na `main` (353 aguarda só o smoke do coordenador)
@@ -415,31 +415,31 @@ RAM livre (regra do CLAUDE.md).
 
 ### 5.1 Do executor
 
-- [ ] §9 com a Etapa 0, a evidência da legada (R15) e as criaturas apontadas pelo R10
-- [ ] R1: Proteção de Reação em si mesmo vale até o próximo ataque do inimigo, nas duas ordens
-- [ ] R2: desvio na mesma rodada com 1 declaração por aplicação; teste da 339 verde sem mudança
-- [ ] R3: toda promessa (`prenuncio`) é cumprida ou frustrada com linha e motivo; fase antes da frustração
-- [ ] R4: queda por Reação com golpe final e autoria nos fatos e no fallback
-- [ ] R5: bateria nova verde; `test_spec346_router_fallback.py` sem regressão nos casos seguros
-- [ ] R6–R10: testes da Etapa 1 verdes; `arc1_cal_leitura` sem aviso; Renegado sem Descarga Arcana
-- [ ] R11/R12: nenhuma utilitária na mão de conflito; 2d6 fora do pool; golden verde
-- [ ] R13/R14: no máximo 4 Cartas de onda alteradas, 1 passo cada, `versao`+1, lint e orçamento limpos
-- [ ] R16/R17: `RELATORIO-emboscada.md` com `p_emb` por Postura e taxa realista; contrapartida só se < 45 %
-- [ ] R18: confirmação 20–99 rodada **uma vez**; desvios na held-out registrados para o dono
-- [ ] R50: avaliador, orçamento, golden, snapshot de texto e `router_off_golden` sem diff
-- [ ] R51–R53: nenhuma flag nova, saves antigos carregam, nenhum LLM novo
-- [ ] Revisão independente Sol sem P0/P1 aberto
+- [x] §9 com a Etapa 0, a evidência da legada (R15) e as criaturas apontadas pelo R10
+- [x] R1: Proteção de Reação em si mesmo vale até o próximo ataque do inimigo, nas duas ordens
+- [x] R2: desvio na mesma rodada com 1 declaração por aplicação; teste da 339 verde sem mudança
+- [x] R3: toda promessa (`prenuncio`) é cumprida ou frustrada com linha e motivo; fase antes da frustração
+- [x] R4: queda por Reação com golpe final e autoria nos fatos e no fallback
+- [x] R5: bateria nova verde; `test_spec346_router_fallback.py` sem regressão nos casos seguros
+- [x] R6–R10: testes da Etapa 1 verdes; `arc1_cal_leitura` sem aviso; Renegado sem Descarga Arcana
+- [x] R11/R12: nenhuma utilitária na mão de conflito; 2d6 fora do pool; golden verde
+- [x] R13/R14: no máximo 4 Cartas de onda alteradas, 1 passo cada, `versao`+1, lint e orçamento limpos
+- [x] R16/R17: `RELATORIO-emboscada.md` com `p_emb` por Postura e taxa realista; contrapartida só se < 45 %
+- [x] R18: confirmação 20–99 rodada **uma vez**; desvios na held-out registrados para o dono
+- [x] R50: avaliador, orçamento, golden, snapshot de texto e `router_off_golden` sem diff
+- [x] R51–R53: nenhuma flag nova, saves antigos carregam, nenhum LLM novo
+- [x] Revisão independente Sol sem P0/P1 aberto
 
 ### 5.2 Do coordenador (bloco D e pouso)
 
-- [ ] R44 (se aplicável): commit separado do teste da 341 por outro agente, com revisão Sol
-- [ ] `uv run pytest` verde (suíte completa, 1× no pouso)
-- [ ] **Item 17:** smoke real final (§6 das 346/347/352/353/354 + §6 desta) no staging com as cartas `on`,
+- [x] R44 (se aplicável): commit separado do teste da 341 por outro agente, com revisão Sol
+- [x] `uv run pytest` verde (suíte completa, 1× no pouso)
+- [x] **Item 17:** smoke real final (§6 das 346/347/352/353/354 + §6 desta) no staging com as cartas `on`,
       gravando o corpo de `/game/history` (Livro) em `docs/spec355/smoke-final.md`
-- [ ] **Item 18:** migration `20261028120000_creature_portraits.sql` aplicada no staging, bucket
+- [x] **Item 18:** migration `20261028120000_creature_portraits.sql` aplicada no staging, bucket
       `rpg-shared-art` criado e 1–3 gerações reais de retrato (SPEC-352 §6) registradas
-- [ ] **Item 19:** SPEC-319 P2-1 — `replace` do stream medido no combate, número no CHANGELOG
-- [ ] **Item 11b:** no smoke, o golpe do Penitente mostra `Proteção −N` quando o alvo tem defesa; se o dano
+- [x] **Item 19:** SPEC-319 P2-1 — `replace` do stream medido no combate, número no CHANGELOG
+- [x] **Item 11b:** no smoke, o golpe do Penitente mostra `Proteção −N` quando o alvo tem defesa; se o dano
       cair **sem** essa linha, abrir P1 de motor
 
 ## 6. Smoke test com LLM real (coordenador; ≤ 20 turnos; DeepSeek primário)
@@ -577,3 +577,5 @@ router_fallback,compra_utilitaria,exemplos_fora,emboscada,arena,guardas}.py`. R2
 ## 10. Evidência do item 19 (SPEC-368 R11, 02/11)
 
 SPEC-319 P2-1 (`replace` do stream na rota de combate), medido offline em `tests/test_spec368_replace.py`: com o Baralho `on` a rodada **não streama tokens** (346) e a narração de desfecho usa `stream=False` (nada ao vivo para reescrever); no caminho que ainda streama (`_narrate`, Baralho `off`/shadow) o replay canned deu **0/30 narrações limpas reescritas** e **3/3 com deriva de espécie reescritas por desenho** (cai no texto determinístico). **Isto é uma medição SINTÉTICA (replay canned), não a taxa real; a medição real da rota de combate fica para o smoke §6 (telemetria `token_replace`/`would_replace` do staging) e deve ser anotada aqui.** A taxa com LLM real é a do `would_replace` do shadow no staging (SPEC-319 D1: 1/25 = 4 %); sem LLM real não há número melhor que este.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-355-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Voto em Ketil (389 item 4, voz corrigida na 390), Leitura de Pressão e Renegado (368 item 13), Armadura Comprometida (389 item 5), vitória com Reação (389 item 6). Ressalvas: taxa real de `replace` só sintética; balanço → 369.

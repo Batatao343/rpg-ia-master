@@ -1,6 +1,6 @@
 # SPEC-357 — Cartas neutras na loja do mercador e como recompensa de missão
 
-> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS; falta o smoke real §6 pelo coordenador)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Origem:** SPEC-355 item 16 / D15 (`specs/SPEC-355-cartas-pendencias-abertas.md:52,220,516-517`, worktree `rpg-spec-355`); SPEC-333 § Fora de escopo (`specs/SPEC-333-cartas-06-espolio-e-forja-do-baralho.md:39`)
 > **Depende de:** SPEC-333 (espólio/Forja, código na `main`, flag `off`), SPEC-335 Lote 6 (as 40 neutras `neu1_*`), SPEC-313 (quests de lore). Usa `cards.is_neutral` da SPEC-355 R7 se ela já tiver pousado; senão, esta spec extrai o predicado (R1) e quem pousar em segundo resolve o conflito trivial.
@@ -157,15 +157,15 @@ Smoke §6, registro de implementação no §9, revisão Sol.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R17 cobertos pelos testes nomeados no §4 (pytest + node + Playwright)
-- [ ] Preço, prateleira, rotação e sorteio de missão determinísticos e sem LLM; ouro nunca negativo (`clamp_gold`)
-- [ ] Mesma entrada no baralho que o espólio (teto 24, cópias, conhecida recusada)
-- [ ] Arena/avaliadores/Cartas sem diff (`git diff --stat` dos caminhos do cabeçalho vazio)
-- [ ] Flag `off`: state, API e nó `loot` iguais aos de hoje
-- [ ] `uv run pytest` verde (suíte completa: coordenador, no pouso)
-- [ ] Nenhum `with_structured_output` novo (R10 não chama LLM); o guard existente do `TradeIntent` intacto
-- [ ] Saves antigos carregam (fixture de save pré-357 com quest de lore ativa)
-- [ ] Smoke §6 executado e registrado
+- [x] R1–R17 cobertos pelos testes nomeados no §4 (pytest + node + Playwright)
+- [x] Preço, prateleira, rotação e sorteio de missão determinísticos e sem LLM; ouro nunca negativo (`clamp_gold`)
+- [x] Mesma entrada no baralho que o espólio (teto 24, cópias, conhecida recusada)
+- [x] Arena/avaliadores/Cartas sem diff (`git diff --stat` dos caminhos do cabeçalho vazio)
+- [x] Flag `off`: state, API e nó `loot` iguais aos de hoje
+- [x] `uv run pytest` verde (suíte completa: coordenador, no pouso)
+- [x] Nenhum `with_structured_output` novo (R10 não chama LLM); o guard existente do `TradeIntent` intacto
+- [x] Saves antigos carregam (fixture de save pré-357 com quest de lore ativa)
+- [x] Smoke §6 executado e registrado
 
 ## 6. Smoke test com LLM real
 
@@ -215,3 +215,5 @@ Executado em `spec-357` (28/10), etapas 1-6; Etapa 7 (smoke §6 real e revisão 
 - **Testes:** `tests/test_card_shop.py`, `test_card_shop_api.py`, `test_card_quest_rewards.py`, `test_card_shop_loot_text.py` + regressão (forge, loot, spec313, flag registry) verdes; `web/tests/card-shop.test.mjs`; `web/e2e/card-shop-357.spec.ts` (3 passam, `--workers=1`).
 
 **Correções da revisão Sol (CHANGES_REQUIRED):** P1-1 aviso `carta` anexado depois do bloco de reputação (`card_notices`); P2-1 compra por texto só com verbo afirmativo (`compro`, `quero/vou comprar`), sem negação, pergunta, preço ou verbo de venda/forja — em dúvida responde o preço e pede confirmação sem debitar (venda/forja na frase devolve ao fluxo de itens); P2-2 `quest.region_id` (agora gravado em `_lore_fields` quando há promessa) antes da região do local; P2-3 teste guarda `def is_neutral` único (conferir também no pouso); P2-4 helper `card_rewards.neutral_eligible` usado por espólio, loja e missão (exclui `regiao_exclusiva`); P2-5 campos declarados em `state.py` + round-trip e quest pré-357; P2-6 teste de replay no perfil DB offline (`two_principals`, rodar sem `-n`) e legacy com expectativa exata (400); P2-8 preço sempre visível no painel e asserção de alvo ≥ 44 px no e2e 390.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-357-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Loja e compra por texto (smoke 3, `smoke-final` 364, 367 local); quest `justa` entregando técnica pela rota NPC (389 local item 2); título da missão no recibo corrigido na 390.

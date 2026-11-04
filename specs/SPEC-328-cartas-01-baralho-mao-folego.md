@@ -1,6 +1,6 @@
 # SPEC-328 — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
 
-> **Status:** `in-progress` (pousada `off`; Fôlego calibrado para 2 em 27/10 (`RPG_FOLEGO_BASE`); antes de `on`: R-4 e smoke real)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327 (visão: combate de cartas de Valoria)
 > **Depende de:** SPEC-063, SPEC-065, SPEC-067, SPEC-209, SPEC-325 (todas `done`)
@@ -73,10 +73,10 @@ Intenção visível do inimigo (SPEC-329), keywords/combos (SPEC-330), espólio/
 
 ## 5. Critérios de aceite
 - [x] R1–R17 com teste nomeado (`tests/test_card_piles.py`, `test_deck_migration.py`, `test_round_multi_play.py`, `test_api_jogadas.py`)
-- [ ] Arena `on` sem classe com vitória < 35 % ou > 80 % no encontro padrão — **NÃO atingido** com Fôlego 3/mão 5 (vitória ~98 % em L1 padrão; ver `docs/spec328/arena-results-2026-10-27.md`); depende de decisão do dono (Fôlego 2, ou pressão inimiga via SPEC-329). O próprio `off` já fica fora de 35–80 % nessa arena.
+- [x] Arena `on` sem classe com vitória < 35 % ou > 80 % no encontro padrão — **NÃO atingido** com Fôlego 3/mão 5 (vitória ~98 % em L1 padrão; ver `docs/spec328/arena-results-2026-10-27.md`); depende de decisão do dono (Fôlego 2, ou pressão inimiga via SPEC-329). O próprio `off` já fica fora de 35–80 % nessa arena.
 - [x] Narração: 1 chamada LLM por rodada (`test_uma_narracao_por_rodada_com_varias_jogadas`)
 - [x] Testes do escopo verdes (suíte completa é do coordenador); saves antigos carregam (combate sem `pilhas` segue no modo atual); guard de FallbackLLM no parser (`test_parser_guard_do_fallback_llm`)
-- [ ] Flag `on` no staging só depois de SPEC-334 (UI) pronta
+- [x] Flag `on` no staging só depois de SPEC-334 (UI) pronta
 
 ## 5b. Desvios e decisões de implementação (executor, 27/10)
 - Flag `RPG_CARD_DECK` vive em `services/card_piles.mode()` (padrão `off`), **não** em `combat_flags.CAPS` (os testes da SPEC-325 fixam 8 capacidades e o default `shadow`).
@@ -109,3 +109,5 @@ Arena com bot que joga o baralho completo (SPEC-336, `docs/spec336/arena-folego-
 Só Fôlego 2 cabe no critério (±15 pp). `FOLEGO_BASE` passa a **2** por padrão, configurável por
 `RPG_FOLEGO_BASE` (1..4) sem deploy — dentro do D2 da SPEC-327 ("calibrável na arena").
 Alerta: Médico de Campo cai a 9–16 % em L5 (revisar na SPEC-335).
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-328-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Arena com Fôlego 2: 45,8–62,2 % por Postura (`docs/spec346/arena.md`); flag `on` no staging desde 03/11. Pacto §6.2 em `docs/spec368/smoke-local.md` item 1; R-4 (rollback fora de combate) resolvido na 368 R1. Ressalva: §6.3 (recarregar) provado só pelo round-trip de rollback.

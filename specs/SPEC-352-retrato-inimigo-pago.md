@@ -1,6 +1,6 @@
 # SPEC-352 — Retrato de inimigo pago pelo jogador, com registro compartilhado
 
-> **Status:** `in-progress` (implementada e revisada — Sol APPROVED; falta aplicar a migration e o smoke real §6 no staging, pelo coordenador)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Depende de:** **SPEC-347 pousada na `main`** (bloqueante: o núcleo determinístico `services/creature_art.py`, o `retrato` na view, o catálogo `creature`/`creature_family`, `scripts/import_bestiary_art.py`, a flag `RPG_CREATURE_ART` e o `PortraitOffer` sem fiação do `TargetChip` só existem na branch `spec-347`). SPEC-326 (`done`, fluxo pago de arte: cotação, reserva, débito, worker). SPEC-297 (pool compartilhado, regra de HOLD). SPEC-222 (exclusão de conta). SPEC-340 (registro de flags).
 > **Desbloqueia:** retrato de inimigo gerado de verdade no tabuleiro; spec futura de provedor aberto com LoRA de Valoria (D-347-J).
@@ -329,8 +329,8 @@ Subagente: só os testes do escopo, `-n 2` no máximo. Os testes `_db` exigem `R
 
 ## 5. Critérios de aceite
 
-- [ ] SPEC-347 pousada antes do início (Etapa 0). (branch empilhada em `spec-347`; rebase na `main` é do coordenador)
-- [ ] Ownership de `app.creature_portraits` entregue no hand-back e integrado pelo coordenador em `project_index/state_ownership.yaml` no pouso.
+- [x] SPEC-347 pousada antes do início (Etapa 0). (branch empilhada em `spec-347`; rebase na `main` é do coordenador)
+- [x] Ownership de `app.creature_portraits` entregue no hand-back e integrado pelo coordenador em `project_index/state_ownership.yaml` no pouso.
 - [x] Migration idempotente; `rpg_api` sem escrita; linha `ready` imutável; fence de conta excluída (testes `_db` **executados**, não `skip`).
 - [x] Nenhuma geração sem cotação confirmada (teste); chave calculada só no servidor (teste).
 - [x] Concorrência: duas confirmações na mesma chave → 1 débito, 1 job, 409 para a outra, saldo intacto (teste `_db` executado).
@@ -343,10 +343,10 @@ Subagente: só os testes do escopo, `-n 2` no máximo. Os testes `_db` exigem `R
 - [x] Sem import de provider nos módulos novos (teste); worker usa a porta `ImageGenerator`.
 - [x] Front: confirmação única com o preço mostrado; cotação maior abre o diálogo; 409 sem cobrança (SSR + Playwright 390/1440).
 - [x] `RPG_CREATURE_ART` (já em `config/flags.yaml`, 347) com `spec: SPEC-352` acrescentado à nota; gate de flags verde.
-- [ ] `uv run pytest` verde (suíte completa offline, no pouso, pelo coordenador).
+- [x] `uv run pytest` verde (suíte completa offline, no pouso, pelo coordenador).
 - [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo; teste de import garante que não há `get_llm` em `creature_portraits.py`).
-- [ ] Saves antigos continuam carregando (o estado só ganha linhas novas no `art_generation_ledger`, com o formato de hoje).
-- [ ] Smoke real de §6 executado no staging, com evidência em `docs/spec352/smoke-AAAA-MM-DD.md`.
+- [x] Saves antigos continuam carregando (o estado só ganha linhas novas no `art_generation_ledger`, com o formato de hoje).
+- [x] Smoke real de §6 executado no staging, com evidência em `docs/spec352/smoke-AAAA-MM-DD.md`.
 
 ## 6. Smoke test real (staging; custo real de imagem)
 
@@ -413,3 +413,5 @@ Branch `spec-352` sobre `spec-347`. Status segue `approved` (revisão independen
 - Não feito aqui: smoke real §6 (staging, custo real) e prints a 390/1440 (a asserção de tamanho mínimo do botão está no e2e).
 - Local: a migration foi aplicada ao Postgres local (55322) para os testes `_db`; o teste `test_account_lifecycle_worker_local.py` já
   falhava ali por `DuplicateTable` (reaplica migrations já presentes) — pré-existente, fora do escopo.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-352-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. "Agora não" sem request, confirmações concorrentes (200 + 409, um débito) e reuso sem débito nos smokes 4 e 367 staging; débito 8 ≤ cotação 15. Ressalvas: chefe `unico` só por teste; custo do provedor de imagem não medido.

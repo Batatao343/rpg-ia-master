@@ -1,6 +1,6 @@
 # SPEC-333 — Cartas #06: Espólio de cartas, Forja do baralho, Ferimentos e Cicatrizes como cartas
 
-> **Status:** `in-progress` (implementada `off` em 27/10 atrás de `RPG_CARD_REWARDS=off|shadow|on`; revisão Sol APPROVED em 27/10 (`86a95c78`); falta smoke real §6 e jornadas e2e — ver §8)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (baralho), SPEC-330 (Fardo/Purgar), SPEC-209 (aba Combate fora de encontro)
@@ -52,7 +52,7 @@ Loja de cartas em cidades com preço dinâmico (follow-up junto da economia). Tr
 ## 5. Critérios de aceite
 - [x] R1–R9 com teste (`test_card_rewards.py`, `test_forge.py`, `test_wound_status_cards.py`); jornada e2e autorada em tarefa separada (pendente)
 - [x] Nenhuma recompensa fora do tier; ouro só via regra (mecânica é Python)
-- [ ] `uv run pytest` verde (suíte completa: coordenador no pouso); saves antigos (sem espólio) carregam (campos opcionais; flag `off` não toca a ficha)
+- [x] `uv run pytest` verde (suíte completa: coordenador no pouso); saves antigos (sem espólio) carregam (campos opcionais; flag `off` não toca a ficha)
 
 ## 6. Smoke real
 1. Vencer bandidos da Mão Sombria → espólio com 1 carta da facção. 2. Ganhar Ferimento grave → carta "Membro Falho" na mão, some ao fim. 3. Descanso longo → esquecer 1 carta.
@@ -71,3 +71,5 @@ Interpretações e desvios (revisar):
 - **Templo/curandeiro**: sem tag própria no mapa, vale tag `templo|santuario|curandeiro|hospicio` ou cidade segura (`cidade`+`seguro`). Descanso longo concede 1 carga de Esquecer (`forja_esquecer`).
 - **Afiar**: material = item `type: material` com raridade rara (novo `essencia_de_cinza`; ainda sem fonte de drop/loja — follow-up). A versão `+` vem de `afiada` na Carta; sem `afiada`, +1 no valor numérico do efeito principal; Carta sem valor numérico (fórmula legada) não é afiável.
 - `data/cards/_orcamento.json`: `status`/`maldicao` entram em `tipos_isentos`; `tests/spec330_equivalence.py` e o teste de 323 Cartas passaram a reconhecer `cartas-333`.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-333-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Espólio da Mão Sombria e Esquecer em 368 local item 6; Membro Falho/Dor Surda em 368 local item 7. Ressalva: jornada e2e autorada segue pendente como follow-up.

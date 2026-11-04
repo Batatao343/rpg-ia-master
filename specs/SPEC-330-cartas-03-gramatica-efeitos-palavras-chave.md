@@ -1,6 +1,6 @@
 # SPEC-330 — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
 
-> **Status:** `in-progress` (Grupo A e Grupo B pousados `off` em 27/10 após re-revisões Sol APPROVED; falta smoke real §6; follow-ups D-13 resolvidos na SPEC-368 em 03/11 — escolha do descartar na UI, `_bump` travado por lint, Fardo por evento do Abismo = decisão de não fazer)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (`comprar`/`descartar`/`Guardar`/`Exaurir` precisam das pilhas). As palavras-chave sem pilha (R5 grupo A) podem pousar antes.
@@ -72,7 +72,7 @@ Autoria de cartas novas (SPEC-335). Keywords de inimigo exclusivas (SPEC-332 pod
 - [x] Equivalência: 308 cartas legadas com resultado idêntico (seed fixa) ao motor anterior — golden da `main` pré-330 (§8 D-3)
 - [x] 14 palavras-chave com teste e entrada no glossário; Grupo B com efeito no motor (pilhas da 328, `RPG_CARD_DECK=on`; Eco/Ressoar valem em qualquer modo) — falta re-revisão e smoke real
 - [x] Validator rejeita vocabulário fora do catálogo e carta fora do orçamento
-- [ ] `uv run pytest` verde (suíte completa: coordenador, no pouso)
+- [x] `uv run pytest` verde (suíte completa: coordenador, no pouso)
 
 ## 6. Smoke real
 1. Combo Eco (2 cartas da Postura) narrado com coerência. 2. Rachadura + golpe: número no log bate com o texto da carta.
@@ -216,3 +216,5 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
 - **Follow-ups (antigos, para histórico).** Fardo por evento do Abismo (hoje só por Carta de inimigo/efeito);
   política de `descartar` com `escolha` real exige UI (SPEC-333); `ao_comprar` na compra de
   início de rodada; texto/UI do `FOLEGO_MAX`; smoke real (§6) e re-revisão do Grupo B.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-330-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Eco com acerto e Rachadura (+25 %, linha antes do ataque) em `docs/spec387/smoke-local.md` item 6; D-13 resolvido na 368.

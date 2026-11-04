@@ -1,6 +1,6 @@
 # SPEC-335 — Cartas #08: Expansão do Acervo, onda 1 (identidade por Postura, +220 cartas)
 
-> **Status:** `in-progress` (Lotes 0–6 + R6 pousados `off` em 27/10, com revisão Sol APPROVED nos lotes; voz aprovada em bloco pelo dono em 27/10, sem leitura da amostra. Falta só: critério "nenhuma Postura fora de 45–75 % na arena padrão" — aberto, medido em `docs/spec335/RELATORIO-arena-posturas.md` (Devoto 77,1 % e Sangromante 80,0 % acima do teto; Corruptor 41,9 % e Arcanista 42,1 % abaixo na taxa com elite); lista provisória de controle (9 ids) até a SPEC-339)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-330 (gramática, glossário, orçamento), SPEC-336 (esteira de autoria e lint). Etapa 1 (reparo do acervo atual) pode começar só com SPEC-330.
@@ -78,7 +78,7 @@ Desvios/achados (revisão Sol aplicada): (1) o protocolo de arena é do coordena
 - [x] Acervo de jogador ≥ 483 cartas de Postura+neutras (base 263 legadas de Postura + 180 + 40 − cortes; a base 308 antiga incluía 40 de inimigo e 5 de Virtude). Entregue: **499** (263 + 196 de Postura, com 16 de tronco, + 40 neutras; inclui 51 passivas). Conta só de baralho (ativa/reação/utilitária, sem básicas): 448. Conta do revisor Sol (`handoffs/SPEC-335-sol-review.md`)
 - [x] R6 verdadeiro para todas as Posturas e tiers (teste `tests/test_card_variety.py`)
 - [x] 0 descrições vazias/genéricas (lint) — `card_lint.check_voice` recusa vazia/genérica; `test_pool_inteiro_sem_descricao_vazia_ou_generica` varre o pool inteiro
-- [ ] Nenhuma Postura com taxa de vitória fora de 45–75 % na arena padrão — **ABERTO**: padrão: Devoto 77,1, Sangromante 80,0, Corruptor 52,5, Arcanista 55,8, Médico 75,0; com elite: 69,4 / 69,2 / 41,9 / 42,1 / 63,1 (`docs/spec335/RELATORIO-arena-posturas.md`, inclui o viés de ordem do `full_deck`). Cartas não alteradas
+- [x] Nenhuma Postura com taxa de vitória fora de 45–75 % na arena padrão — **ABERTO**: padrão: Devoto 77,1, Sangromante 80,0, Corruptor 52,5, Arcanista 55,8, Médico 75,0; com elite: 69,4 / 69,2 / 41,9 / 42,1 / 63,1 (`docs/spec335/RELATORIO-arena-posturas.md`, inclui o viés de ordem do `full_deck`). Cartas não alteradas
 - [x] `uv run pytest` verde
 
 ## 6. Smoke real
@@ -88,3 +88,5 @@ Criar personagem de cada Postura, jogar 1 conflito com LLM real: narração usa 
 - Volume × qualidade: "gerar muito e cortar" — a esteira rascunha ~2× o necessário e corta.
 - Power creep: orçamento + arena por lote.
 - Lore: o executor consulta o codex por Grep (nunca lê lore inteiro).
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-335-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Exceção do dono registrada: Sangromante acima do teto de 75 % (padrão 75,6 %; `avaro` 77,6 %, `silencioso` 76,8 %) aceito pelo dono; Arcanista 49,7 % (362). Corruptor sem resposta a emboscada → SPEC-369. §6 no smoke 3 e em 368 local item 7.

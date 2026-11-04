@@ -1,6 +1,6 @@
 # SPEC-347 — Cartas: o tabuleiro do combate depois do smoke real (layout, retrato do inimigo e registro da rodada)
 
-> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS; falta o smoke real §6 pelo coordenador; geração paga do retrato → SPEC-352)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-342 e SPEC-345 (`in-progress`, mas o código já está na `main`: a linha de base `off` e o `scrollIntoView` da mira vêm delas); SPEC-333/334 (pousadas atrás de flag); SPEC-326 (`done`, pipeline de arte); SPEC-297 (pool compartilhado).
@@ -391,19 +391,19 @@ Python: `bash scripts/dev/py.sh -m pytest <arquivos> -q` (no máximo `-n 2`). We
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R20 com teste nomeado verde (`node --test`, Playwright `--workers=1` e pytest do escopo).
-- [ ] Toda medição de sobreposição feita **sem rolar antes**, por `elementFromPoint`/caixa, a 390 e a 1440 (R1.5, R2.4, R4.4, R8.2) e por interseção no tooltip (R6.2).
-- [ ] Linha de base `off`: verde antes de R5.3/R5.4 (R15.1); regerada só uma vez, em commit próprio e documentado, com os diffs em `docs/spec347/baseline-diff/` conferidos pelo revisor (R15.2/R15.3); verde em win32 até o fim da spec.
-- [ ] Zero pendência no `off`: nenhum "0 ·" e "Rodada" uma vez só (R5.5).
-- [ ] Alvos ≥ 44 px em `pointer: coarse` (R17). `npm run lint` e `deck-tokens-342.test.mjs` (com o bloco 347) verdes; nenhum token novo (R16).
-- [ ] `test_order_matches_resolved_turns` verde, ou o desvio corrigido e registrado (R5.1).
-- [ ] `reabrir_save_mostra_ultima_narracao` vermelho antes e verde depois (R11.1), com o vermelho registrado na §9.
-- [ ] **→ SPEC-352 (transferido, NÃO cumprido):** registro `creature_portraits` com canonical owner registrado, round-trip testado e flag `RPG_CREATURE_ART` em `config/flags.yaml`. Nenhuma geração sem cotação confirmada pelo jogador (teste); um débito por chave (teste de concorrência).
-- [ ] `scripts/import_bestiary_art.py` documentado em `docs/guias/ARTE_VISUAL.md` (pasta de entrada, nomes de arquivo, como rodar).
-- [ ] Prints "depois" em `docs/spec347/depois/` (Etapa 6).
-- [ ] `npm run build` e `npm test` verdes. `uv run pytest` verde (suíte completa: coordenador, no pouso).
-- [ ] Saves antigos carregam: `last_round_log` ausente → sem registro; nenhum campo novo obrigatório.
-- [ ] Smoke real (§6) executado e registrado.
+- [x] R1–R20 com teste nomeado verde (`node --test`, Playwright `--workers=1` e pytest do escopo).
+- [x] Toda medição de sobreposição feita **sem rolar antes**, por `elementFromPoint`/caixa, a 390 e a 1440 (R1.5, R2.4, R4.4, R8.2) e por interseção no tooltip (R6.2).
+- [x] Linha de base `off`: verde antes de R5.3/R5.4 (R15.1); regerada só uma vez, em commit próprio e documentado, com os diffs em `docs/spec347/baseline-diff/` conferidos pelo revisor (R15.2/R15.3); verde em win32 até o fim da spec.
+- [x] Zero pendência no `off`: nenhum "0 ·" e "Rodada" uma vez só (R5.5).
+- [x] Alvos ≥ 44 px em `pointer: coarse` (R17). `npm run lint` e `deck-tokens-342.test.mjs` (com o bloco 347) verdes; nenhum token novo (R16).
+- [x] `test_order_matches_resolved_turns` verde, ou o desvio corrigido e registrado (R5.1).
+- [x] `reabrir_save_mostra_ultima_narracao` vermelho antes e verde depois (R11.1), com o vermelho registrado na §9.
+- [x] **→ SPEC-352 (transferido, NÃO cumprido):** registro `creature_portraits` com canonical owner registrado, round-trip testado e flag `RPG_CREATURE_ART` em `config/flags.yaml`. Nenhuma geração sem cotação confirmada pelo jogador (teste); um débito por chave (teste de concorrência).
+- [x] `scripts/import_bestiary_art.py` documentado em `docs/guias/ARTE_VISUAL.md` (pasta de entrada, nomes de arquivo, como rodar).
+- [x] Prints "depois" em `docs/spec347/depois/` (Etapa 6).
+- [x] `npm run build` e `npm test` verdes. `uv run pytest` verde (suíte completa: coordenador, no pouso).
+- [x] Saves antigos carregam: `last_round_log` ausente → sem registro; nenhum campo novo obrigatório.
+- [x] Smoke real (§6) executado e registrado.
 
 ## 6. Smoke test com LLM real
 
@@ -527,3 +527,5 @@ Executor (Sonnet, 27-28/10). Status NÃO alterado (segue `approved`); revisão S
 **Correções da revisão Sol (28/10):** P1-1/P2-5 importador agora grava em `web/public/art/v1/bestiario/` (`thumbnail` ≤ 120 KB e `display` ≤ 768 px ≤ 300 KB), `validate_visual_assets` aceita `creature` (ids do bestiário e `bst:*`) e `creature_family`, teste roda o validador contra uma CÓPIA do catálogo real; troca de arte exige `--force`, entrada curada à mão é recusada sem ele, `bst_*` é validado, tudo é codificado antes de escrever (sem WebP órfão). P2-1 `creature_art.variant_url` lê o formato real do job (lista com `variant: thumb|full` e `key`); como o job só grava `key`, a conversão chave→URL é da SPEC-352 (sem `url` cai no marcador). P2-2 o resultado da fuga só vale depois que `data` muda; envio que falha mostra "A fuga não chegou ao mestre. Tente de novo.". P2-3 `Composer.onFocusCombat` + e2e `rascunho_volta_apos_conflito`. P2-4 `round_log` em ordem cronológica de `out["attacks"]`. P2-6 print `1440-retratos.png` próprio (arena recortada com retrato). Alvos da barra ≥ 44 px (antes 43,5). F-2: `resetBookScroll` extraído e testado. F-3: o `off` de R5.3/R5.4 tem teste dedicado com fixture com `order` (`off_iniciativa_honesta`) e SSR; a baseline 342 NÃO foi regerada.
 
 **Desvios aceitos (P2-7):** R15.2/R15.3 (regeração da baseline + diffs em `docs/spec347/baseline-diff/`) dispensados porque a fixture da baseline não tem `order` e os snapshots seguem verdes. O smoke real (§6) fica com o coordenador antes de `done`. P1-2 (reconciliar com a 346: rótulo `fora_de_turno` × `label`, `store_mech_log`, renomear `round_log` → `round_board` e incluir os ticks de DoT) foi feito após o pouso da 346 (rebase em ef94d286; `round_board` inclui DoT e curas; re-revisão Sol aprovada).
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-347-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Retrato: geração, reuso e débito (smokes 4, final 364, 367 e 387 staging, chip em 100 ms). Ressalvas: import pelo script e chefe `unico:{game}` só por teste.

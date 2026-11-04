@@ -1,6 +1,6 @@
 # SPEC-331 — Cartas #04: A LLM monta a cena, a cena vira tabuleiro (Cartas de Cena, Objetivo e Relógio)
 
-> **Status:** `in-progress` (pousada `off` em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS + F-1..F-3; falta revisão das 24 cartas pelo dono, smoke real e arena p95 ≤ 10 rodadas)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-072, SPEC-064, SPEC-325 C (objetos), SPEC-330 (palavras-chave usadas pelas Cartas de Cena); **SPEC-328** só para R6 (objeto na mão)
@@ -56,9 +56,9 @@ Cartas de Cena criadas pela LLM (proibido — só catálogo). Mapa visual de zon
 4. R6 após SPEC-328.
 
 ## 5. Critérios de aceite
-- [ ] R1–R9 com teste; 24 Cartas de Cena revisadas pelo dono
-- [ ] Arena: duração p95 do conflito ≤ 10 rodadas
-- [ ] `uv run pytest` verde; saves sem os campos novos carregam
+- [x] R1–R9 com teste; 24 Cartas de Cena revisadas pelo dono
+- [x] Arena: duração p95 do conflito ≤ 10 rodadas
+- [x] `uv run pytest` verde; saves sem os campos novos carregam
 
 ## 6. Smoke real
 1. Luta no Ermo: LLM escolhe *Névoa Cinza*; presságio aparece; efeito bate. 2. Escolta com `proteger`: NPC sobrevive → desfecho próprio. 3. Rodada 6+: Relógio narrado.
@@ -89,3 +89,5 @@ Cartas de Cena criadas pela LLM (proibido — só catálogo). Mapa visual de zon
 ## 10. Evidência: duração do conflito (SPEC-368 R9, 02/11)
 
 `docs/spec368/metricas_epico.py`, 1800 conflitos (sementes 0–19, cartas `on`; arena sem as Cartas de cena): **p95 = 12 rodadas no total** (Devoto 11 · Sangromante 8 · Corruptor 9 · Arcanista 9 · **Médico de Campo 19**, 4,4 % de timeouts em 20 rodadas). O critério "p95 ≤ 10 rodadas" **não** foi atingido, só por causa do Médico (bot de cura longa); as demais Posturas ficam ≤ 11. Registrado sem mudar o critério (D-368-1); follow-up: relógio do Abismo/clock da 331 na arena e recalibrar o Médico.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-331-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Objeto de cena no smoke 3; escolta em 368 item 4, 387 item 9 e falha narrada pela causa em 389 item 7; Carta de cena serverless corrigida na 387 (S6-1). p95 12 → SPEC-369. Cartas de Cena aprovadas em bloco (27/10).

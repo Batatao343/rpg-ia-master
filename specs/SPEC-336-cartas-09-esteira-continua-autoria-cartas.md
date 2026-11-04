@@ -1,6 +1,6 @@
 # SPEC-336 — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
 
-> **Status:** `in-progress` (esteira pousada em 27/10 após re-revisão Sol APPROVED; falta smoke real do draft com chave e evento de fim de conflito para a métrica de vitória)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-330 (gramática + `power_score` + `render_card_text`), SPEC-090/285 (arena/simulação de combate)
@@ -98,3 +98,5 @@ Desvios / decisões de implementação:
   evento de fim de conflito por partida; hoje aceita um `--resultados` externo.
 - **Arena Fôlego 2 × 3 com baralho completo:** `docs/spec336/arena-folego-completo-2026-10-27.md`.
 - **Follow-ups de balanço vindos da SPEC-341 (próxima onda):** (1) `san1_sil_corte_sem_aviso` v2 ficou `dominante` na held-out 20–99 (+9,1 pp, uso 52 %; dono aceitou em 27/10, já no máximo de 1 passo) — rever com a arena nova; (2) avaro 75,2 % e silencioso 76,6 % aceitos como exceções, reavaliar se algo mudar; (3) voz de `juros_do_primeiro` ajustada na 341, mantenha `nota_voz` na amostra da onda.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-336-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. `draft.py` com chave real em 368 item 8, 387 item 14 e 389 item 9 (comandos impressos rodam sem edição). Rendimento (2 de 4 reprovadas por orçamento) → SPEC-369.

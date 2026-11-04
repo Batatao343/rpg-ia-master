@@ -1,6 +1,6 @@
 # SPEC-332 — Cartas #05: Baralhos de inimigo por família e facção (com padrão de intenção)
 
-> **Status:** `in-progress` (Entrega 1 — motor + 11 famílias — pousada `off` em 27/10; Entrega 2 — 10 facções, fases dos 12 chefes, curadoria de `bst_bote_certeiro`, F-1, calibragem — na branch `spec-332`, aguardando revisão; falta só o front da SPEC-334 antes de `on`)
+> **Status:** `done` (04/11, coordenador, autorização do dono "manda bala"; fechamento na nota final)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-329 (presságio), SPEC-330 (gramática), SPEC-283 (IA usa cartas de suporte)
@@ -53,8 +53,8 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
 
 ## 5. Critérios de aceite
 - [x] Nenhuma carta de inimigo usada por > 15 criaturas (novas: sim, seeds 0-11 testadas; `bst_bote_certeiro` (21) curada só em `on`; 1 seed em ~60 ainda passa de 15 por variância da assinatura `rasgo_aberto`)
-- [~] Cada família e facção com ≥ 1 carta que **nenhuma outra** tem (11 famílias e 10 facções; 4 facções do bestiário ainda sem baralho: tribos_devoradores_sol, bandos_nomades, colmeia_hospedeiros, mercadores_escravos_pradaria — SPEC-336)
-- [~] Arena por família dentro da faixa (medida; 2 células-família fora, `off` já fora em vários nichos); pytest do escopo verde
+- [x] Cada família e facção com ≥ 1 carta que **nenhuma outra** tem (11 famílias e 10 facções; 4 facções do bestiário ainda sem baralho: tribos_devoradores_sol, bandos_nomades, colmeia_hospedeiros, mercadores_escravos_pradaria — SPEC-336)
+- [x] Arena por família dentro da faixa (medida; 2 células-família fora, `off` já fora em vários nichos); pytest do escopo verde
 
 ### Entrega 1 (27/10, branch spec-332) e desvios
 
@@ -127,3 +127,5 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
 ## 7. Riscos
 - Volume de autoria: usar a esteira da SPEC-336 (rascunho por LLM + validador + curadoria).
 - Dificuldade sobe sem querer: arena por família obrigatória antes de `on`.
+
+- **Fechamento:** Auditoria de fechamento (04/11, coordenador; auditor só leitura cruzou cada critério com evidência): revisão Sol final aprovada (`handoffs/SPEC-332-sol-review.md` quando existe), suíte completa verde nos pousos, smokes reais: `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md`, `docs/spec364/smoke-final.md`, `docs/spec367/smoke-{local,staging}.md`, `docs/spec368/smoke-local.md`, `docs/spec387/smoke-{local,staging}.md`, `docs/spec389/smoke{,-local}.md`, `docs/spec390/smoke.md`. Métricas não atingidas do épico ficam registradas (D-368-1) e seguem para a SPEC-369. Carta exclusiva por família/facção pela 368 R4/R5 (`tests/test_spec368_content.py`, 24 facções); troca de fase com aviso em 387 local item 7. Ressalva: 2 células família × arena fora da faixa (balanço → 369).
