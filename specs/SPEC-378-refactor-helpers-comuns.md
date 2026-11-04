@@ -402,6 +402,7 @@ def invoke_structured(
         if node:
             try:
                 from observability.telemetry import log_event  # lazy, como em :243
+
                 log_event(node, event, level=level, error=type(e).__name__)
             except Exception:
                 pass

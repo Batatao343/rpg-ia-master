@@ -271,6 +271,8 @@ A conferência e a revisão independente corrigiram a auditoria em cinco pontos:
   # services/law.py
   def day_hook(ctx) -> "DayHookResult":  # SPEC-377 R3/R6
       """Hook `post`: state_patch {"law_state": ...}; vazio se world_engine != on, lei off ou sem state."""
+
+
   # services/world_engine.py (_register_default_hooks, :729-738)
   register_day_hook("law", law.day_hook, stage="post", order=30)
   # agents/storyteller.py (:1691-1708): mover o bloco `if enc.get("reason") == "bounty_hunters":

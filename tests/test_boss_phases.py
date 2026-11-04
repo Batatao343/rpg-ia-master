@@ -12,6 +12,12 @@ from services import conflict_turn as ct
 from services import enemy_decks as edk
 
 
+def _phases(fases: list[dict]) -> list[dict]:
+    """SPEC-387 R29: cada fase traz `texto` (linha da troca); aqui só a identidade, e o texto não pode faltar."""
+    assert all(str(f.get("texto") or "").strip() for f in fases), fases
+    return [{"actor_id": f["actor_id"], "fase": f["fase"]} for f in fases]
+
+
 @pytest.fixture(autouse=True)
 def _flags(monkeypatch):
     monkeypatch.delenv("RPG_ENEMY_INTENT", raising=False)
@@ -86,7 +92,7 @@ def test_phase_changes_once_with_narration_extra_deck_and_pattern():
     assert "bst_furia_final" in boss["cartas"]
     assert edk.pattern_of(boss) == ["reforco_proprio", "ataque"]
     assert out["logs"] == ["Valerius cospe sangue e rasga o manto."]
-    assert out["fases"] == [{"actor_id": "chefe_1", "fase": 1}]
+    assert _phases(out["fases"]) == [{"actor_id": "chefe_1", "fase": 1}]
     assert edk.apply_phases(actors, sides, out) is False  # não repete a mesma fase
 
 
@@ -137,7 +143,7 @@ def test_run_round_narrates_phase_and_recomputes_the_presságio(monkeypatch):
         scene, actors, sides, {}, declarations=decl, rng=random.Random(3), pressagios=stale
     )
     assert any("cospe sangue" in line for line in out["logs"])
-    assert out["fases"] == [{"actor_id": "chefe_1", "fase": 1}]
+    assert _phases(out["fases"]) == [{"actor_id": "chefe_1", "fase": 1}]
     # o presságio congelado antigo (passar a vez) foi descartado e recalculado na nova fase
     assert not any("cumpre o que o presságio anunciava" in line for line in out["logs"][:1])
     assert boss["fase_idx"] == 1
@@ -248,7 +254,7 @@ def test_authored_boss_phase_applies_from_decks_json_only_when_on(monkeypatch):
     assert edk.apply_phases({b["id"]: b}, {"enemy": [b["id"]]}, out, rnd=2)
     assert b["fase_idx"] == 1 and "inf_predador_apice_pele_de_veterano" in b["cartas"]
     assert any("Lorde" in line for line in out["logs"])
-    assert out["fases"] == [{"actor_id": b["id"], "fase": 1}]
+    assert _phases(out["fases"]) == [{"actor_id": b["id"], "fase": 1}]
 
 
 def test_authored_phase_narrations_are_distinct_per_boss():
@@ -264,7 +270,7 @@ def test_phase_jump_narrates_every_phase_crossed():
     boss["vitalidade"] = 8  # 20 %: cruza as fases de 70 % e 30 % de uma vez
     out: dict = {"logs": []}
     assert edk.apply_phases(actors, sides, out, rnd=1)
-    assert out["fases"] == [
+    assert _phases(out["fases"]) == [
         {"actor_id": "chefe_1", "fase": 1},
         {"actor_id": "chefe_1", "fase": 2},
     ]
