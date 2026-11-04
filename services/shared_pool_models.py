@@ -7,7 +7,6 @@ recalcula (R27/§3).
 
 from __future__ import annotations
 
-import unicodedata
 from datetime import datetime
 from enum import StrEnum
 from typing import Literal
@@ -15,6 +14,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from services import text as _text
 from services.npc_seed import NpcSeed
 
 
@@ -134,6 +134,4 @@ class PoolEvaluation(BaseModel):
 
 def fold_name(text: object) -> str:
     """Nome dobrado: sem acento, casefold, espaços colapsados."""
-    nfkd = unicodedata.normalize("NFKD", str(text or ""))
-    stripped = "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
-    return " ".join(stripped.split())
+    return _text.fold(text, collapse=True)
