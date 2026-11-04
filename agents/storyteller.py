@@ -1959,34 +1959,7 @@ def storyteller_node(state: GameState):
                     "combate — eles querem algo (pedágio, informação, escolta). Se surgir um "
                     "porta-voz, registre-o em introduced_npcs."
                 )
-        # Sem emboscada: o mundo gera 1 evento off-screen narrado (e grava no RAG da sessão).
-        try:
-            if _engine_owns_factions():
-                # modo on: a narracao diaria substitui o pulso (SPEC-302 R26); so se o dia
-                # virou e algo foi percebido (0 chamadas caso contrario)
-                t.world_note = t.world_note or _narrate_world(
-                    t.state, t.world, t.factions, t.intel, t.perceived_items
-                )
-            else:
-                t.world, t.world_note = simulate_world(
-                    t.state, t.world, t.factions, t.intel, 1 if t.dest else 2
-                )
-                if t.world_note.startswith("[ECOS DO MUNDO]"):
-                    # SPEC-296 R6: rumor percebido persiste ("Ouvi dizer").
-                    from services.ambient import append_news
-
-                    t.world = append_news(
-                        t.world,
-                        text=t.world_note[len("[ECOS DO MUNDO]") :].strip(),
-                        location_id=t.world.get("current_location_id", ""),
-                        location_name=t.world.get("current_location", ""),
-                        turn=int(t.world.get("turn_count", 0) or 0),
-                    )
-        except Exception as exc:
-            from observability.telemetry import log_fallback
-
-            log_fallback("storyteller", "world_pulse_failed", exc)
-            t.world_note = ""
+        _story_world_pulse(t)
 
     _story_context_blocks(t)
 
@@ -2022,6 +1995,38 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_world_pulse(t: _StoryTurn) -> None:
+    """Sem emboscada: o mundo gera 1 evento off-screen narrado."""
+    # Sem emboscada: o mundo gera 1 evento off-screen narrado (e grava no RAG da sessão).
+    try:
+        if _engine_owns_factions():
+            # modo on: a narracao diaria substitui o pulso (SPEC-302 R26); so se o dia
+            # virou e algo foi percebido (0 chamadas caso contrario)
+            t.world_note = t.world_note or _narrate_world(
+                t.state, t.world, t.factions, t.intel, t.perceived_items
+            )
+        else:
+            t.world, t.world_note = simulate_world(
+                t.state, t.world, t.factions, t.intel, 1 if t.dest else 2
+            )
+            if t.world_note.startswith("[ECOS DO MUNDO]"):
+                # SPEC-296 R6: rumor percebido persiste ("Ouvi dizer").
+                from services.ambient import append_news
+
+                t.world = append_news(
+                    t.world,
+                    text=t.world_note[len("[ECOS DO MUNDO]") :].strip(),
+                    location_id=t.world.get("current_location_id", ""),
+                    location_name=t.world.get("current_location", ""),
+                    turn=int(t.world.get("turn_count", 0) or 0),
+                )
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "world_pulse_failed", exc)
+        t.world_note = ""
 
 
 def _story_context_blocks(t: _StoryTurn) -> None:
