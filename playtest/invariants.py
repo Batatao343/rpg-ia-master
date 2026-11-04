@@ -2236,19 +2236,11 @@ def check_fauna(state: dict, prev: dict | None, turn: int) -> list[Violation]:
 
 def _trama_presence_errors(p: dict, e: dict, turn: int) -> list[Violation]:
     """SPEC-372 R16: presenca com `trama_id` tem a criatura ligada a ela e `locais` na trama."""
-    tid = p.get("trama_id")
-    if not tid:
-        return []
-    from services import plot_threads
+    from services import fauna_tramas
 
-    thr = plot_threads.thread(str(tid))
-    linked = {t.get("id") for t in e.get("tramas") or [] if isinstance(t, dict)}
+    msg = fauna_tramas.presence_error(p, e)
     cid = str(p.get("creature_id") or "")
-    if thr is None or tid not in linked:
-        return [_V("fauna_presenca_valida", "error", turn, "trama_id sem ligacao", creature=cid)]
-    if not set(p.get("locais") or []) <= set(thr.locations):
-        return [_V("fauna_presenca_valida", "error", turn, "local fora da trama", creature=cid)]
-    return []
+    return [_V("fauna_presenca_valida", "error", turn, msg, creature=cid)] if msg else []
 
 
 def check_saber(state: dict, prev: dict | None, turn: int) -> list[Violation]:

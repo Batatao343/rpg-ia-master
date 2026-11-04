@@ -1106,6 +1106,7 @@ def _weighted_pool(
     """Fase 6.3 + SPEC-289/292/303 (+ SPEC-360 R8 com `fauna_on`): candidatos, pesos e as
     razões ecológicas por id. Sem `fauna_on` é o sorteio ponderado de antes, byte a byte."""
     from services import ecology as eco3
+    from services import fauna_tramas
 
     region_id = (loc or {}).get("region_id", "")
     loc_id = (loc or {}).get("id", "")
@@ -1182,10 +1183,7 @@ def _weighted_pool(
             m = sorted(migrants, key=lambda e: e.get("id", ""))[int(turn) % len(migrants)]
             pool = pool + [m]
             weights = weights + [eco3.MIGRANT_WEIGHT * (neutral if fauna_on else 1.0)]
-    if trama_stages:  # SPEC-372 R8: portão por último (legado e migrantes)
-        from services import fauna_tramas
-
-        weights = fauna_tramas.apply_gate(pool, weights, trama_stages)
+    weights = fauna_tramas.apply_gate(pool, weights, trama_stages)  # SPEC-372 R8: por último
     return pool, weights, why
 
 

@@ -1,6 +1,6 @@
 # SPEC-372 — Criaturas de trama: o campo `tramas` passa a valer, com estágio de trama derivado (filha 360-D; Nova Arcádia)
 
-> **Status:** `approved` — aprovada pelo dono em 03/11 via pedido de execução imediata ("transforme em spec e execute agora"); os defaults da §8 valem até ele dizer o contrário.
+> **Status:** `in-review` — aprovada pelo dono em 03/11 via pedido de execução imediata ("transforme em spec e execute agora"); os defaults da §8 valem até ele dizer o contrário.
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Depende de:** SPEC-360 (`done`: `services/fauna.py`, campo `tramas` validado só em forma, NA com 38 entradas aprovadas). SPEC-350 (`done`: catálogo `data/world/plot_threads.json`, hoje só com as 7 tramas de Nova Arcádia; `services/plot_threads.py`). SPEC-351 (`done`, opcional: o fio de abertura conta como "tocada"). **Não** depende da SPEC-370: Nova Arcádia já tem fauna.
 > **Desbloqueia:** criaturas de trama nas regiões 2–12, quando a SPEC-350 povoar outras regiões (ondas em `plot_threads.json:12-58`) e a SPEC-370 tiver coberto a região; presságio e saber ligados à trama (filha 360-C, se quiser).

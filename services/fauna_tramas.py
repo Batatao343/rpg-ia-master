@@ -135,6 +135,21 @@ def birth(
     return (out, tid) if out else ([], "")
 
 
+def presence_error(p: dict, e: dict) -> str | None:
+    """R16: motivo de invalidade de uma presenca com `trama_id`, ou `None`."""
+    tid = p.get("trama_id")
+    if not tid:
+        return None
+    from services import plot_threads
+
+    thr = plot_threads.thread(str(tid))
+    if thr is None or tid not in {t["id"] for t in normalize_tramas((e or {}).get("tramas"))}:
+        return "trama_id sem ligacao"
+    if not set(p.get("locais") or []) <= set(thr.locations):
+        return "local fora da trama"
+    return None
+
+
 def log_pull(picked: dict | None, stages: Mapping[str, str] | None, location_id: str) -> None:
     """R14: `trama_puxao` quando a criatura sorteada pesou `TRAMA_MULT` neste local."""
     if not picked or not stages or mode() != "on":
