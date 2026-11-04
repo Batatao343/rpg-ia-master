@@ -140,3 +140,15 @@ desconta): mon_portao_que_morde, mon_odre_de_oleo, mon_fervente_de_ferrugem, mon
   - P2-6: a citação das 4 ids de `fichas` na §9 foi escrita pelo autor de eval; conteúdo conferido pelo coordenador.
 - **Smoke de integracao (04/11, §6):** `docs/spec395/smoke.md`. Portao (3/10) atacou ate morrer, sem fuga; lacrador (5/16) fugiu na rodada 2 (`final_status: fugiu`). MockLLM, save editado so para pôr a criatura ferida (declarado no arquivo).
 - **Revisão Sol rodada 2 (945dc8fd):** APPROVED_WITH_FOLLOWUPS. P2-7 (a guarda `ficha_vs_base` aceita qualquer chave não-fuga em vez de exigir a de `sempre`) fica de follow-up, junto com os outros P2.
+
+### Regressão `test_campanha_na_lama_exercita_fauna_sem_chamada_extra` (suíte completa)
+
+Causa: efeito indireto da recalibração, não da R1 nem da fauna. Na campanha do Anel de Lama a caça do
+t=13 (Gralha de Crematório, intocada) custava 3 chamadas fora do roteador na `main` e 2 na branch. A chamada
+que faltava era a **preparação do encontro** (`prepare_encounter`, SPEC-232 D-A), que só roda com
+Carga do Abismo >= leve ou inimigo Elite+. Na `main` o herói saía de um combate anterior com
+`abyss_charge` 1; na branch com 0 (o desfecho do combate do t=3 contra o Sorvedouro do Código mudou: ele
+foi recalibrado e não foge mais). Comportamento novo correto; o fluxo de chamadas da R1 não mudou.
+O teste pressupunha que todo início de combate custa a preparação. Correção sem afrouxar: a preparação
+passa a ser contada à parte (wrapper em `prepare_encounter`) e subtraída dos dois lados da comparação
+(`off_starts` e `hunts`); a igualdade exata continua.

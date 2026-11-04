@@ -227,6 +227,18 @@ def test_campanha_na_lama_exercita_fauna_sem_chamada_extra(monkeypatch):
 
     monkeypatch.setenv("RPG_WORLD_ENGINE", "on")
     calls = _count_invokes(monkeypatch)
+    # SPEC-395: a preparacao do encontro (1 invoke FAST) so roda com Carga do Abismo >= leve ou
+    # inimigo Elite+ (SPEC-232 D-A). Depende do estado da campanha, nao da fauna: contada a parte.
+    preps = [0]
+    from services import encounter_preparation as _prep
+
+    _orig_prep = _prep.prepare_encounter
+
+    def _count_prep(*a, **k):
+        preps[0] += 1
+        return _orig_prep(*a, **k)
+
+    monkeypatch.setattr(_prep, "prepare_encounter", _count_prep)
     state = _build_initial_state("explorador", 3, start_level=3)
     state["world"].update(
         {
@@ -241,14 +253,16 @@ def test_campanha_na_lama_exercita_fauna_sem_chamada_extra(monkeypatch):
         text = "fujo do combate" if busy else _LAMA_ACTS[t % len(_LAMA_ACTS)]
         state["messages"] = list(state.get("messages") or []) + [HumanMessage(content=text)]
         _flags(monkeypatch, "off", "off")
-        calls[0] = 0
+        calls[0] = preps[0] = 0
         random.seed(1000 + t)  # o mesmo acaso nos dois ramos do turno
         off_out = app.invoke(copy.deepcopy(state), {"recursion_limit": 60})
         off_calls = calls[0]
         if not busy and (off_out.get("combat") or {}).get("active"):
-            off_starts.append(off_calls)  # custo de um início de combate qualquer (`off`)
+            off_starts.append(
+                off_calls - preps[0]
+            )  # custo de um início de combate qualquer (`off`)
         _flags(monkeypatch, "on", "on")
-        calls[0] = calls[1] = 0
+        calls[0] = calls[1] = preps[0] = 0
         random.seed(1000 + t)
         state = app.invoke(state, {"recursion_limit": 60})
         # A caça (R20) troca um turno de história por um início de combate: as chamadas são as
@@ -256,7 +270,7 @@ def test_campanha_na_lama_exercita_fauna_sem_chamada_extra(monkeypatch):
         # que classifica o texto livre. Nenhuma é da fauna.
         hunt = text == "sigo o rastro" and bool((state.get("combat") or {}).get("active"))
         if hunt:
-            hunts.append((calls[0], calls[1]))
+            hunts.append((calls[0], calls[1], preps[0]))
         elif calls[0] > off_calls:
             extra.append((t, text, calls[0], off_calls))
         violations += check_fauna(state, None, t)
@@ -271,5 +285,5 @@ def test_campanha_na_lama_exercita_fauna_sem_chamada_extra(monkeypatch):
     # P2-10 (Sol): sem folga. Caça = um início de combate comum + o roteador que classifica o
     # texto livre (medido à parte); nenhuma chamada da fauna.
     assert hunts  # a caça foi exercitada
-    for total, router in hunts:
-        assert router <= 1 and total - router in set(off_starts), (hunts, off_starts)
+    for total, router, prepared in hunts:
+        assert router <= 1 and total - router - prepared in set(off_starts), (hunts, off_starts)
