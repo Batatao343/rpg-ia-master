@@ -9,10 +9,11 @@ from __future__ import annotations
 
 import json
 import re
-import unicodedata
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, TypedDict
+
+from services import text as _text
 
 _DATA = Path(__file__).resolve().parent.parent / "data"
 
@@ -31,8 +32,7 @@ def catalog() -> dict[str, dict]:
 
 
 def _fold(text: Any) -> str:
-    raw = unicodedata.normalize("NFKD", str(text or ""))
-    return "".join(c for c in raw if not unicodedata.combining(c)).lower()
+    return _text.fold(text, case="lower")
 
 
 def _int(value: Any, default: int = 0) -> int:
