@@ -361,3 +361,24 @@ def test_r20_exige_200_lutas_e_sementes_da_fase():
     conf = [T.SEMENTES_FAMILIA["confirmacao"], T.SEMENTES_FAMILIA_CELULA[k]["confirmacao"]]
     assert max(b for _, b in fin) < min(a for a, _ in conf)
     assert all(260 <= a <= b <= 339 for a, b in conf)
+
+
+def test_d369_11_tolerancia_so_na_dimensao_fora_da_meta():
+    """Astra P2-5: na confirmacao, o Delta do conjurador L5 (-8,0, dentro da meta) segue com |Delta|
+    <= 10; so a vitoria `on` (38,5 %, fora) ganha limite registrado + 5 pp. No apex e o contrario."""
+    T = _load("test_spec369_metas_regua", "tests/test_spec369_metas.py")
+    assert T._faixa_celula("conjurador|L5", "final") == (38.5, 85.0, 10.0)
+    assert T._faixa_celula("conjurador|L5", "confirmacao") == (33.5, 85.0, 10.0)
+    assert T._faixa_celula("predador_apice|L3", "final") == (45.0, 85.0, 13.5)
+    assert T._faixa_celula("predador_apice|L3", "confirmacao") == (45.0, 85.0, 18.5)
+
+
+def test_p3_8_isencao_le_snapshot_do_artefato():
+    """Astra P3-8: com `custo_folego` gravado na linha do `uso`, a isencao segue o snapshot, nao o
+    catalogo atual; sem o campo (artefato antigo), cai no catalogo."""
+    T = _load("test_spec369_metas_regua", "tests/test_spec369_metas.py")
+    assert T.assinatura_gratis("bas_cor_mofo", {"categoria": "basica", "custo_folego": 0})
+    assert not T.assinatura_gratis("bas_dev_voto", {"categoria": "basica", "custo_folego": 1})
+    assert not T.assinatura_gratis("arc1_x", {"categoria": "onda", "custo_folego": 0})
+    sem = {"categoria": "basica"}
+    assert T.assinatura_gratis("bas_dev_voto", sem) is T.assinatura_gratis("bas_dev_voto")

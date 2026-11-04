@@ -62,8 +62,9 @@ LIMITE_FAMILIA = {
     "conjurador|L5": {"on_win": 0.385, "delta_pp": -8.0},
     "predador_apice|L3": {"on_win": 0.615, "delta_pp": -13.5},
 }
-# D-369-10 item 5 / R22: na confirmacao (sementes novas) os LIMITES REGISTRADOS ganham uma tolerancia
-# de amostra (~1 erro-padrao das amostras da Fase C); metas cheias e pisos absolutos nao ganham nada.
+# D-369-11 (tolerancia da Fase C; proposta do autor da regua, spec §8) / R22: na confirmacao (sementes
+# novas) os LIMITES REGISTRADOS ganham uma tolerancia de amostra (~1 erro-padrao das amostras da
+# Fase C); metas cheias e pisos absolutos nao ganham nada.
 TOLERANCIA_CONFIRMACAO = {"uso": 0.05, "p95": 1.0, "razao": 0.02, "familia_pp": 5.0}
 
 
@@ -71,9 +72,12 @@ def _tol(fase: str, chave: str) -> float:
     return TOLERANCIA_CONFIRMACAO[chave] if fase == "confirmacao" else 0.0
 
 
-def assinatura_gratis(cid: str) -> bool:
-    """D-369-10 item 1: Carta basica com `custo_folego` 0 no catalogo atual (jogada sempre que esta
-    na mao; o uso nao mede dominancia)."""
+def assinatura_gratis(cid: str, row: dict | None = None) -> bool:
+    """D-369-10 item 1: Carta basica com `custo_folego` 0 (jogada sempre que esta na mao; o uso nao
+    mede dominancia). Astra P3-8: le o snapshot ``custo_folego`` gravado na linha do artefato
+    (`metricas_369 uso`, a partir deste commit) quando existe; artefato antigo sem o campo -> catalogo."""
+    if row is not None and "custo_folego" in row:
+        return row.get("categoria") == "basica" and int(row["custo_folego"]) == 0
     from services import card_effects as fx
     from services import cards
 
@@ -121,7 +125,7 @@ def r14(data: dict, fase: str = "final") -> list[str]:
     for cid, r in data["uso"]["cartas"].items():
         if r["categoria"] in FORA_DA_META_R14:
             continue
-        na_meta = na_meta_r14a(cid, r["categoria"]) and not assinatura_gratis(cid)
+        na_meta = na_meta_r14a(cid, r["categoria"]) and not assinatura_gratis(cid, r)
         teto = LIMIARES["uso_alto"]
         if cid in LIMITE_USO_R14A:
             teto = max(teto, LIMITE_USO_R14A[cid] + _tol(fase, "uso"))
@@ -220,8 +224,14 @@ def _faixa_celula(key: str, fase: str) -> tuple[float, float, float]:
     if lim is None:
         return lo, hi, d_max
     tol = _tol(fase, "familia_pp")
-    on = lim["on_win"] * 100
-    return min(lo, on - tol), max(hi, on + tol), max(d_max, abs(lim["delta_pp"]) + tol)
+    on, delta = lim["on_win"] * 100, abs(lim["delta_pp"])
+    # D-369-11 (Astra P2-5): so a dimensao que JA estava fora da meta na Fase B ganha limite (e
+    # tolerancia); a que cumpria a meta cheia segue com a meta cheia, tambem na confirmacao.
+    if not lo <= on <= hi:
+        lo, hi = min(lo, on - tol), max(hi, on + tol)
+    if delta > d_max:
+        d_max = delta + tol
+    return lo, hi, d_max
 
 
 # --------------------------------------------------------------------------

@@ -267,6 +267,7 @@ def cmd_uso(seeds: list[int], *, ids: list[str] | None = None) -> dict:
             "categoria": categoria(cid),
             "classe": card.get("classe"),
             "versao": fx.versao(card),
+            "custo_folego": fx.custo_folego(card),  # snapshot (Astra P3-8, isencao D-369-10)
             "na_mao": na_mao,
             "uso": round(jogada / na_mao, 3),
             "delta_pp_v2": rep["delta_pp"],
