@@ -14,6 +14,7 @@ from __future__ import annotations
 from typing import NamedTuple
 
 from services import graph_resolver as gr
+from services import text as _text
 from services.structured_outputs import ProposedWorldEvent
 
 
@@ -298,10 +299,7 @@ def _turn_of(state: dict) -> int:
 
 
 def _fold(value: object) -> str:
-    import unicodedata
-
-    folded = unicodedata.normalize("NFKD", str(value or ""))
-    return " ".join("".join(c for c in folded if not unicodedata.combining(c)).casefold().split())
+    return _text.fold(value, collapse=True)
 
 
 def scene_anchor_ids(state: dict) -> set:
