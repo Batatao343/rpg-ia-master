@@ -1826,6 +1826,13 @@ def _story_roll_encounter(t: _StoryTurn) -> None:
     t.enc = _dedupe_encounter(t.enc, t.world)  # SPEC-233 R6
     if not t.enc:
         t.world.pop("encounter_eff_danger", None)  # SPEC-233 R5
+    _story_fauna_to_signal(t)
+
+
+def _story_fauna_to_signal(t: _StoryTurn) -> None:
+    """SPEC-360 R16: sem presença anunciada, o encontro vira sinal; cooldown carimbado."""
+    from services import fauna as _fauna
+
     if t.enc and t.enc.get("fauna_convert"):
         # SPEC-360 R16: sem presença anunciada, o encontro vira sinal; cooldown carimbado.
         _fe = _fauna.entry(str(t.enc.get("enemy_id") or ""))
