@@ -1,6 +1,6 @@
 # SPEC-394 — Bestiário: recalibrar as 7 criaturas que derivaram depois da SPEC-387
 
-> **Status:** `in-review` — dono, 03–04/11: "transforme em spec e execute agora" (follow-ups do bestiário); D1–D5 nos defaults. Após SPEC-373 pousar (`b50e8fb3`).
+> **Status:** `done` — dono, 03–04/11: "transforme em spec e execute agora" (follow-ups do bestiário); D1–D5 nos defaults. Após SPEC-373 pousar (`b50e8fb3`).
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** SPEC-373 pousada (`approved`, em voo no worktree `rpg-spec-373`: o R9 dela muda o `on` destas criaturas e ela congela `arena.py`), SPEC-349 `done` (esteira, `calibrar.py`, `_ajustes.yaml`), SPEC-387 `done` (mudanças de motor que causaram a deriva)
@@ -87,13 +87,13 @@ R7, uma vez. A §9 recebe a tabela antes/depois, os dials, a confirmação e as 
 
 ## 5. Critérios de aceite
 
-- [ ] R1: `git diff --exit-code main --` nos caminhos do avaliador
-- [ ] R2/R3: `base.json` e `RELATORIO.md` com a causa do salto do `off` (ou "não achada" com os braços testados)
-- [ ] R5: os 4 testes de `tests/test_bestiario_calibragem.py` verdes; exceções nominais na §9
-- [ ] R6: snapshot das 274 idêntico em `off` e `on`
-- [ ] R7: `confirmacao-40-119.json` gravado, com resultado na §9 sem reajuste
-- [ ] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
-- [ ] Saves antigos carregam (só números de ficha; baralho já montado não remonta, regra da 373 R10)
+- [x] R1: `git diff --exit-code main --` nos caminhos do avaliador
+- [x] R2/R3: `base.json` e `RELATORIO.md` com a causa do salto do `off` (ou "não achada" com os braços testados)
+- [x] R5: os 4 testes de `tests/test_bestiario_calibragem.py` verdes; exceções nominais na §9
+- [x] R6: snapshot das 274 idêntico em `off` e `on`
+- [x] R7: `confirmacao-40-119.json` gravado, com resultado na §9 sem reajuste
+- [x] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
+- [x] Saves antigos carregam (só números de ficha; baralho já montado não remonta, regra da 373 R10)
 
 ## 6. Smoke test
 
@@ -126,3 +126,8 @@ Detalhe e tabelas em `docs/spec394/RELATORIO.md`.
 - **Recalibrado:** anzolado 72,5/91 -> 57,5/76 (c2 d2 f1 s1), `ok`; confirmacao 40-119: 56,8/71 `ok`.
 - **Excecoes nominais (D2/D3):** armador (49,5/86; conf. 41,7/79,5), escuta (41,5/87,5; conf. 42,7/82), portao (91/90, intocado). Duas execucoes do `calibrar.py`, melhor ajuste mantido.
 - **R6:** 369 ids fora de F com hashes `off`/`on` identicos. R1: avaliador congelado intocado.
+- **Revisão Terra (04/11, `handoffs/SPEC-394-terra-review.md`):** APPROVED_WITH_FOLLOWUPS.
+  - P2-1: armador e escuta receberam dials parciais. O `off` sobreajustou em 0–39 e na confirmação ficou 2–3 pp abaixo do piso. Eles ficam como exceção nominal (D2), e a recalibração fica para depois da SPEC-395.
+  - P2-2: não há teste que ligue `_ajustes.yaml` a `bestiary.json`. É opcional e vai para a SPEC-395.
+  - P2-3: não ficou log da segunda execução do `calibrar.py`. Vale o resultado commitado.
+- **Causa da deriva (D3):** o `abissal → flee` de `e208f189`. Sai pela SPEC-395 (Risco alto).
