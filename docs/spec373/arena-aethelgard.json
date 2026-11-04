@@ -59,12 +59,12 @@
    "categoria": "elite",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.475,
-    "L3|on": 0.49
+    "L3|off": 0.585,
+    "L3|on": 0.55
    },
    "ok": false,
    "motivos": [
-    "L3|on delta 11.5 pp > 8"
+    "L3|off delta 9.5 pp > 8"
    ]
   },
   "enemy_fantasma": {

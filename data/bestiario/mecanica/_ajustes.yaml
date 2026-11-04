@@ -38,9 +38,9 @@ ajustes:
     forca: 0
     sig: -4
   enemy_esqueleto_mago:
-    arena: L3|off 48% | L3|on 53% (SPEC-373 passo manual, sig 0)
+    arena: L3|off 58% | L3|on 55% (melhor de 1 rodadas)
     corpo: 0
-    dano: -2
+    dano: -3
     forca: 0
     sig: 0
   enemy_fantasma:

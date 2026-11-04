@@ -260,7 +260,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "versatil",
-        "dano_base": 4,
+        "dano_base": 3,
         "dano_tipo": "arcano"
       },
       "descricao": "Um prisma do braço solta um fio de luz que corta a pele.",
@@ -280,14 +280,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "pesada",
-        "dano_base": 6,
+        "dano_base": 5,
         "dano_tipo": "arcano"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "pesada",
-          "dano_base": 6,
+          "dano_base": 5,
           "dano_tipo": "arcano"
         },
         {

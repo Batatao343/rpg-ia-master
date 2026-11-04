@@ -8,7 +8,7 @@
 | Dentado de Eras (`mon_dentado_de_eras`) | elite | nova | 70% | 73% | - | - | - | sim |
 | Avesso de Oghma (`mon_avesso_de_oghma`) | lacaio | nova | 58% | 60% | - | - | - | sim |
 | Fervido da Corrente (`mon_fervido_da_corrente`) | padrao | nova | 60% | 62% | - | - | - | sim |
-| Iniciado Refratado (`enemy_esqueleto_mago`) | elite | reinventada | 48% | 49% | - | - | L3|off: -1.5; L3|on: -11.5 | NAO: L3|on delta 11.5 pp > 8 |
+| Iniciado Refratado (`enemy_esqueleto_mago`) | elite | reinventada | 58% | 55% | - | - | L3|off: +9.5; L3|on: -5.5 | NAO: L3|off delta 9.5 pp > 8 (borda, R8 dano -3) |
 | Nadador Transparente (`enemy_fantasma`) | elite | reinventada | 62% | 56% | - | - | L3|off: +7.5; L3|on: +7.5 | sim |
 | Encomenda Costurada (`enemy_golem_carne`) | elite | reinventada | 71% | 66% | - | - | L3|off: +62.5; L3|on: +58.0 | sim |
 | Cação de Lastro (`mon_cacao_de_lastro`) | chefe | nova | - | - | 70% | 65% | - | sim |
