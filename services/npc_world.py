@@ -1514,18 +1514,6 @@ def escort_start(state: dict, ref: str, quest_id: str, to: str, day: int) -> dic
     return sim
 
 
-def escort_stop(state: dict, ref: str, day: int) -> dict:
-    """`npc_sim` novo sem a escolta; o NPC fica onde esta (`escort.at`) e a simulacao da 304
-    segue dali (pura)."""
-    sim = copy.deepcopy((state or {}).get(sim_key()) or {})
-    entry = (sim.get("npcs") or {}).get(ref)
-    if entry and entry.get("escort"):
-        esc = entry.pop("escort")
-        at = str(esc.get("paused_at") or esc.get("at") or "")
-        entry["pos"] = {"location_id": at, "since_day": int(day), "arrive_day": None}
-    return sim
-
-
 def escort_eval(state: dict, esc: dict) -> dict:
     """Nova `escort` dado onde o jogador esta agora (pura). Segue se o local novo ENCURTA a
     distancia ao destino; senao pausa onde o NPC estava; volta a seguir quando o jogador

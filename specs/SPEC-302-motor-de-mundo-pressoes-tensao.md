@@ -980,3 +980,5 @@ Todas as decisões abertas desta spec seguem o **default recomendado pelo autor*
 - D1: sim — progresso de fação no tick diário; ascensão consome vaga do diretor.
 - D4 (substitui a recomendação): RITMO DE CRISE VENCE — garantir a cadência C1 (~1 crise perceptível a cada 10-15 dias por região frequentada); o teto de crises SIMULTÂNEAS continua valendo.
 - D7: filhas reservadas — calendário/estações, agenda e morte off-screen de NPCs, quests de mundo com prazo.
+
+Adendo 2026-11-04: leitores `world_engine.region_pressure` e `faction_relations.faction_relation`/`relation_label` removidos pela SPEC-376 (sem consumidor desde a entrega).

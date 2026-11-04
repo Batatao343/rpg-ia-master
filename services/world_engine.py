@@ -198,12 +198,6 @@ def ensure_world_sim(state: dict, current_day: int, factions: list | None = None
     return _new_sim(str((state or {}).get("game_id", "")), int(current_day), factions or [], m)
 
 
-def region_pressure(state: dict, region_id: str, kind: str) -> int:
-    """Leitura para specs consumidoras (modo `on`: `world_sim`)."""
-    sim = (state or {}).get("world_sim") or {}
-    return int(((sim.get("pressures") or {}).get(region_id) or {}).get(kind, 0))
-
-
 @dataclass(frozen=True)
 class WorldTickResult:
     world: dict

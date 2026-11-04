@@ -60,23 +60,6 @@ def seed_relations(factions: list) -> dict[str, int]:
     return out
 
 
-def faction_relation(state: dict, a: str, b: str) -> int:
-    sim = (state or {}).get("world_sim") or {}
-    return int((sim.get("faction_relations") or {}).get(pair_key(a, b), 0))
-
-
-def relation_label(value: int) -> str:
-    if value <= -WAR_THRESHOLD:
-        return "guerra"
-    if value <= -20:
-        return "hostil"
-    if value >= ALLIANCE_THRESHOLD:
-        return "alianca"
-    if value >= 20:
-        return "cordial"
-    return "neutra"
-
-
 def next_relation_band(old: str, value: int) -> str:
     """Bandas `guerra | neutra | alianca` com histerese."""
     if old == "guerra":
