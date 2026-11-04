@@ -226,8 +226,16 @@ def _fits_creature(creature: dict, card_id: str) -> bool:
     return not (dtype in _CASTER_DAMAGE and _is_melee_only(creature))
 
 
+def _autoral(creature: dict) -> bool:
+    """SPEC-373 R9: >= 2 Cartas autorais E assinatura própria no perfil (criatura da esteira)."""
+    own = [c for c in creature.get("cartas_autorais") or [] if c]
+    sig = _profile(creature).get("assinatura")
+    return len(own) >= 2 and isinstance(sig, dict) and bool(sig.get("carta"))
+
+
 def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
     """Baralho de conflito da criatura: próprias + 3-5 da família + 0-3 da facção.
+    Criatura autoral (``_autoral``): 1-2 comuns da família, sem a assinatura da família (R9).
     Determinístico por ``id`` + ``seed`` (``deck_seed`` do conflito, gravado no spawn); mantém a ordem das próprias e nunca repete."""
     deck = _own_ids(creature)
     cid = creature.get("id")
@@ -245,7 +253,11 @@ def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
             for c in pools["familias"].get(fam, [])
             if c not in deck and c not in alt and _fits_creature(creature, c)
         ]
-        want = 3 + _h(cid, seed, "fam") % 3  # 3..5
+        if _autoral(creature):  # a família é tempero: `pool` já exclui as assinaturas (`alt`)
+            want = 1 + _h(cid, seed, "fam") % 2  # 1..2
+            sig = None
+        else:
+            want = 3 + _h(cid, seed, "fam") % 3  # 3..5
         picked: list[str] = []
         if sig and sig["carta"] not in deck:
             picked.append(sig["carta"])
@@ -281,7 +293,8 @@ def apply_deck(actor: dict, seed: int | str | None = None) -> None:
         # F-1: o marcador `_deck332` decide; sem ele (ficha reconstruída) só conta como já
         # montada com >= 3 cartas dos pools (a montagem soma >= 3 da família), de modo que
         # 1-2 cartas `inf_*` curadas no bestiário não pulem a montagem.
-        if len(known & set(_own_ids(actor))) >= 3:
+        # R10: criatura autoral monta 1-2 da família; com 1 carta dos pools já está montada.
+        if len(known & set(_own_ids(actor))) >= (1 if _autoral(actor) else 3):
             actor["_deck332"] = True
             return
         actor["cartas"] = build_enemy_deck(
