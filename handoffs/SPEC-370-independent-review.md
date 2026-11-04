@@ -204,3 +204,60 @@ eval --regiao deserto_zhur → gates ok (M1 0,8185 / 0,8336; M8 0,2913; M5 −0,
 eval --regiao nova_arcadia → gates ok (M1 0,7366 / 0,7433)
 pytest -m "not slow" test_spec360_build test_spec312_seeds test_spec370_suprime test_spec370_caps test_spec360_sinais test_spec370_eval test_spec360_eval → só test_bloco_sem_nome falhou (H-03); test_bloco_ate_60_tokens passou
 ```
+
+## Lote 4 — Costa Negra, Ophidia
+
+> **Veredito:** `APPROVED` para o conteúdo, depois das correções abaixo, feitas pelo revisor. O M1 de Ophidia continua abaixo do gate por causa do motor, não do conteúdo; já está decidido pelo dono e vai para o executor.
+> **Revisor:** Opus 5.5 (`spec-reviewer`, independente; `revisor_fauna: opus-370-revisor-lote4`; autor `opus-370-lote4`)
+> **Data:** 2026-11-03 · **Commits revisados:** `188f150f`, `1cdd3482` · **Correção:** `656c0fdd`
+
+### Escopo
+
+Os arquivos são `data/bestiario/fauna/{costa_negra,ophidia}.yaml`, com 29 + 27 = 56 entradas. Usei o mesmo método dos lotes anteriores. Pela `region_adjacency()`, Costa Negra e Ophidia só são vizinhas de Brekmar, então a leitura entre regiões comparou as duas com o Brekmar.
+
+Com este lote, as 12 regiões ficam sem nenhuma entrada `pendente`.
+
+Ophidia está com M1 de 0,6229. A causa é o motor: a região tem 1 nó só, e a presença nova vira luta sem deixar sinal antes. O dono já decidiu que, em região de 1 nó, a presença nova sempre deixa sinal antes de poder virar luta, e o executor implementa isso depois desta revisão. Por isso julguei só o conteúdo.
+
+### Achados
+
+| ID | Sev. | Arquivo (entrada) | Problema | Correção |
+|---|---|---|---|---|
+| I-01 | P1 | `ophidia.yaml` (`mon_turu_de_casco`) × `brekmar.yaml` (`mon_broca_de_costado`) | Item 12, regiões vizinhas. O autor já tinha reescrito rastro, resto e marca do Turu, e eles ficaram distintos (barco oco por dentro × casco furado de dentro para fora). Mas a `aproximacao` ainda repetia a imagem da Broca, "cabeça de conchas girando" | Agora é "ponta dura e serrilhada, e atrás dela um corpo branco e mole do comprimento de um homem" |
+| I-02 | P2 | `costa_negra.yaml` (`mon_andarilho_de_cracas`) × `brekmar.yaml` (`mon_craca_de_amarra`) | Item 12, regiões vizinhas: a `marca` do Andarilho ("cones novos onde não havia") repetia a da Craca de Brekmar ("crosta de cones grossa como de anos") | Agora são pedras de deitar riscadas por nadadeiras gastas, sem nenhum bicho deitado nelas |
+| I-03 | P2 | `ophidia.yaml` (`mon_cobra_de_sangria`) | Ponto 4 do autor: "bichos compridos listrados" e "bichos do mar listrados" soavam forçados | Troquei por "serpentes listradas" e "serpentes do mar listradas"; serpente não é token do nome, e o E10 passa |
+| I-04 | P2 | `ophidia.yaml` (`mon_caranguejo_cinza`) × `costa_negra.yaml` (`mon_caranguejo_mare`) | A `aproximacao` dos dois caranguejos legados tinha o mesmo molde ("da toca/crânio sai um bicho de casca… ergue garras"). As regiões não são vizinhas, mas a troca custa pouco | O de Ophidia sai de lado de trás da mureta, coberto de pó vulcânico, e as garras soltam vapor |
+
+Conferido e **mantido** (pontos do autor):
+
+1. **`suprime`.** Todos são relações de ordem ou de comércio, não de caça.
+   - Caldeireiro→Saqueador: o resto mostra o ladrão de barril cozido.
+   - Esfolado de Sal→Saqueador de Marfim: Osshari contra quem segue mapas Osshari roubados, como dizem o rumor e a descrição do Saqueador.
+   - Vigia de Cor Errada→Trépano/Doente: a tripulação pirata contra os barcos do sindicato.
+   - Trépano→Doente: comércio de amostras de sangue.
+   - Acendedor→Contrabandista: o mais fraco, mas é rivalidade de carga entre piratas e a Mão Sombria, e o Contrabandista `foge_de` Acendedor.
+2. **Presas.**
+   - Gaivota→Carrapato de Osso tem base: ave que mergulha "sobre qualquer coisa que se mova entre as carcaças", contra um bicho pequeno que sai dos furos das ossadas.
+   - As demais também têm apoio na ficha ou no resto: O Que Come→Filhote; Estrela→Caranguejo/Barata (ela abre o que tem casca); Tubarão→Andarilho/Bruxa (e Touro, cujo resto é o elefante-marinho mordido); Leviatã→Nadador Escaldado; Sereia→Ossada de Pomes; Moreia→Lagarto; Vela→Ossada/Cobra; Caranguejo de Cinza→Turu.
+3. **`imediato` em Ophidia.** Desbotado da Névoa (tomado por tronco no raso) e Escorpena de Basalto (peixe-pedra) estão justificados. São 2 no único nó, o teto do E18.
+4. **Outras perífrases do E10.** "água parada" (Saltador de Poça, Escorpena), "lascas brancas" (Carrapato), "garras de recife" (Sereia) e "marujo" (Vigia) soam naturais; só "bichos compridos" foi trocado (I-03).
+5. **Turu × Broca.** No sinal, a reescrita do autor resolve, com o acabamento do I-01. Na ficha, porém, os dois continuam quase o mesmo bicho (verme de navio com cabeça de duas conchas serrilhadas), e isso é assunto da esteira do bestiário (U3/U4). O mesmo vale para Andarilho de Cracas × Craca de Amarra, que compartilham a larva que endurece, e para a "luz falsa" do Acendedor de Naufrágios × Pescador de Lanterna (Brekmar), que ficou distinta no sinal.
+
+### Correções aplicadas
+
+`656c0fdd`: I-01 a I-04. As 56 entradas estão com `revisao: aprovada` e `revisor_fauna: opus-370-revisor-lote4`. `fauna.json` (368 criaturas) e `rumor_seeds.json` foram regenerados.
+
+### Pendências
+
+- Executor (decisão do dono): em região de 1 nó, a presença nova deixa sinal antes de poder virar luta. Depois disso, rodar de novo o eval de Ophidia e o `--todas`; o `eval-global.md` deste commit ainda é o do autor do lote.
+- H-03 (lote 3) continua: `test_bloco_sem_nome` falha só no `mon_escuta_do_sinal`, por causa do envelope do bloco.
+
+### Comandos rodados
+
+```text
+scripts/fauna/lint.py --regiao {costa_negra,ophidia} → 0 erro cada
+scripts/fauna/build.py → fauna.json: 368 criaturas · build_rumor_seeds.py → ok · validate_content.py → 0 ERRO(S)
+eval --regiao costa_negra → gates ok (M1 0,8238 / legado 0,8515; M8 0,2863; M5 −0,199)
+eval --regiao ophidia → M1 0,6229 (falha; motor, decisão do dono), M4 N/A, demais ok (M8 0,2121; M5 −0,190)
+pytest -m "not slow" test_spec360_build test_spec312_seeds test_spec370_suprime test_spec370_caps test_spec360_sinais → só test_bloco_sem_nome (H-03, mon_escuta_do_sinal)
+```
