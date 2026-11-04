@@ -23,11 +23,12 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-import os
 import re
 import unicodedata
 from pathlib import Path
 from typing import Any
+
+from services.env import env_choice
 
 _DIR = Path(__file__).resolve().parent.parent / "data" / "cards" / "inimigos"
 _DECKS_PATH = _DIR / "_decks.json"
@@ -83,8 +84,7 @@ _pools_cache: dict | None = None
 # Flag
 # --------------------------------------------------------------------------
 def mode() -> str:
-    raw = os.getenv("RPG_ENEMY_DECKS", "off").strip().lower()
-    return raw if raw in _MODES else "off"
+    return env_choice("RPG_ENEMY_DECKS", _MODES, "off")
 
 
 def active() -> bool:
