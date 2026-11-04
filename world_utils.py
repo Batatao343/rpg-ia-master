@@ -1015,7 +1015,9 @@ def pick_encounter_enemy(
         picked = eco3.weighted_pick(cands, weights, rng)
         fauna_tramas.log_pull(picked, trama_stages, (loc or {}).get("id", ""))  # SPEC-372 R14
         return picked
-    cands, weights, _why = _weighted_pool(*args, season, world, world_sim, fauna_on=False)
+    cands, weights, _why = _weighted_pool(
+        *args, season, world, world_sim, fauna_on=False, trama_stages=trama_stages
+    )
     picked = eco3.weighted_pick(cands, weights, rng)
     if fmode == "shadow":  # SPEC-360 R12: escolhe o legado, registra o que a fauna escolheria
         import hashlib as _hl
@@ -1365,6 +1367,7 @@ def check_encounter(
             bestiary_knowledge=bestiary_knowledge,
             projection=projection,
             season=season_id,
+            trama_stages=trama_stages,
         )
         if intel.get(fid, {}).get("known"):
             who = ruler.get("name")

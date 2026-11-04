@@ -345,3 +345,58 @@ def test_save_load_preserva_trama_id(flags, tmp_path):
     twice = fauna.normalize_fauna_sim(json.loads(json.dumps(once)))
     assert once == twice
     assert twice["presencas"][0]["trama_id"] == CORPOS and "trama_id" not in twice["presencas"][1]
+
+
+def test_faccao_dominante_respeita_portao(flags):
+    """P2-8: facção sem combatente próprio (`poder_kahen`) cai no sorteio de região, com portão."""
+    import gamedata
+    import world_utils as wu
+
+    cid, loc_id = _pick(list(pt.thread(CORPOS).locations))
+    _link(flags, cid)
+    assert wu._bestiary_by_faction("poder_kahen") is None
+    flags.setattr(wu, "_hostile_ruler", lambda *a, **k: {"id": "poder_kahen", "name": "Kahen"})
+    seen = set()
+    for turn in range(100, 160):
+        world = ev360._neutral_world(loc_id, "Tarde")
+        enc = wu.check_encounter(
+            world, [], {}, turn * 10, bestiary_knowledge={}, projection={}, trama_stages=DORM
+        )
+        assert enc and enc["reason"] == "controlled"
+        seen.add(enc["enemy_id"])
+    assert gamedata.get_location(loc_id) and seen and cid not in seen
+
+
+def test_rumor_adoption_encounter_hint_respeita_portao(flags):
+    """P2-9: o encontro de rumor adotado (tipo != criatura_avistada) respeita o portão."""
+    import gamedata
+    from services import rumor_adoption as ra
+
+    cid, loc_id = _pick(list(pt.thread(CORPOS).locations))
+    _link(flags, cid)
+    flags.setattr(ra, "_unused", None, raising=False)
+    # estado com a trama dormente: nenhum sinal; a trama so abre com rumor percebido da semente
+    state = {"game_id": "g", "bestiary_knowledge": {}, "world_projection": {}}
+    world = {
+        "current_location_id": loc_id,
+        "world_clock": {"day": 3, "period": "Tarde"},
+    }
+    assert gamedata.get_location(loc_id)
+    seen = set()
+    for i in range(60):
+        inst = {"rumor_id": f"r{i}", "claim": {"kind": "emboscada"}}
+        hint = ra.encounter_hint(state, inst, world, ev360.PLAYER_LEVEL, i)
+        if hint:
+            seen.add(hint["enemy_id"])
+    assert seen and cid not in seen
+    # com a trama atingida, a criatura volta a poder sair
+    state["world_sim"] = {
+        "rumors": [{"rumor_id": "x", "seed_id": pt.thread(CORPOS).rumor_ids[0], "perceived_day": 2}]
+    }
+    seen = set()
+    for i in range(200):
+        inst = {"rumor_id": f"s{i}", "claim": {"kind": "emboscada"}}
+        hint = ra.encounter_hint(state, inst, world, ev360.PLAYER_LEVEL, i)
+        if hint:
+            seen.add(hint["enemy_id"])
+    assert cid in seen
