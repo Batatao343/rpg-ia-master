@@ -1,5 +1,5 @@
 {
-  "commit_sha": "39b57cac52407fd559ba282aa76b2b335987e31a",
+  "commit_sha": "4396d69f1a4fc7612aa51e7b043f45999d059795",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -125362,7 +125362,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 22
+        "line": 28
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases._boss",
@@ -125373,7 +125373,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 16
+        "line": 22
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases._flags",
@@ -125384,7 +125384,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 274
+        "line": 15
+      },
+      "source": "module:tests.test_boss_phases",
+      "target": "symbol:tests.test_boss_phases._phases",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 280
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases._valerius",
@@ -125395,7 +125406,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 55
+        "line": 61
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases._world",
@@ -125406,7 +125417,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 206
+        "line": 212
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_all_twelve_bosses_have_two_authored_phases_with_valid_cards",
@@ -125417,7 +125428,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 226
+        "line": 232
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_authored_boss_phase_applies_from_decks_json_only_when_on",
@@ -125428,7 +125439,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 254
+        "line": 260
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_authored_phase_narrations_are_distinct_per_boss",
@@ -125439,7 +125450,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 146
+        "line": 152
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast",
@@ -125450,7 +125461,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 77
+        "line": 83
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
@@ -125461,7 +125472,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 261
+        "line": 267
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_phase_jump_narrates_every_phase_crossed",
@@ -125472,7 +125483,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 166
+        "line": 172
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
@@ -125483,7 +125494,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 93
+        "line": 99
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards",
@@ -125494,7 +125505,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 295
+        "line": 301
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
@@ -125505,7 +125516,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 107
+        "line": 113
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_phases_inert_when_flag_off",
@@ -125516,7 +125527,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 283
+        "line": 289
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
@@ -125527,7 +125538,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 116
+        "line": 122
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
@@ -125538,7 +125549,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 186
+        "line": 192
       },
       "source": "module:tests.test_boss_phases",
       "target": "symbol:tests.test_boss_phases.test_signature_warning_goes_to_log_when_intent_is_off",
@@ -423627,7 +423638,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 23
+        "line": 29
       },
       "source": "symbol:tests.test_boss_phases._boss",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -423638,7 +423649,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 19
+        "line": 25
       },
       "source": "symbol:tests.test_boss_phases._flags",
       "target": "symbol:services.enemy_decks.reload",
@@ -423649,7 +423660,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 278
+        "line": 284
       },
       "source": "symbol:tests.test_boss_phases._valerius",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -423660,7 +423671,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 57
+        "line": 63
       },
       "source": "symbol:tests.test_boss_phases._world",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -423671,7 +423682,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 69
+        "line": 75
       },
       "source": "symbol:tests.test_boss_phases._world",
       "target": "symbol:services.conflict_scene.freeze",
@@ -423682,7 +423693,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 56
+        "line": 62
       },
       "source": "symbol:tests.test_boss_phases._world",
       "target": "symbol:services.conflict_scene.new_scene",
@@ -423693,7 +423704,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 68
+        "line": 74
       },
       "source": "symbol:tests.test_boss_phases._world",
       "target": "symbol:services.conflict_scene.place",
@@ -423704,21 +423715,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 213
+        "line": 219
       },
       "source": "symbol:tests.test_boss_phases.test_all_twelve_bosses_have_two_authored_phases_with_valid_cards",
       "target": "symbol:services.enemy_decks._meta",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 242
-      },
-      "source": "symbol:tests.test_boss_phases.test_authored_boss_phase_applies_from_decks_json_only_when_on",
-      "target": "symbol:services.enemy_decks.apply_phases",
       "type": "calls"
     },
     {
@@ -423737,10 +423737,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 239
+        "line": 254
       },
       "source": "symbol:tests.test_boss_phases.test_authored_boss_phase_applies_from_decks_json_only_when_on",
-      "target": "symbol:services.enemy_decks.reload",
+      "target": "symbol:services.enemy_decks.apply_phases",
       "type": "calls"
     },
     {
@@ -423759,7 +423759,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 255
+        "line": 251
+      },
+      "source": "symbol:tests.test_boss_phases.test_authored_boss_phase_applies_from_decks_json_only_when_on",
+      "target": "symbol:services.enemy_decks.reload",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 257
+      },
+      "source": "symbol:tests.test_boss_phases.test_authored_boss_phase_applies_from_decks_json_only_when_on",
+      "target": "symbol:tests.test_boss_phases._phases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 261
       },
       "source": "symbol:tests.test_boss_phases.test_authored_phase_narrations_are_distinct_per_boss",
       "target": "symbol:services.enemy_decks._meta",
@@ -423770,7 +423792,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 160
+        "line": 166
       },
       "source": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -423781,7 +423803,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 159
+        "line": 165
       },
       "source": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -423792,7 +423814,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 159
+        "line": 165
       },
       "source": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -423803,7 +423825,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 147
+        "line": 153
       },
       "source": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast",
       "target": "symbol:tests.test_boss_phases._boss",
@@ -423814,7 +423836,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 148
+        "line": 154
       },
       "source": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast",
       "target": "symbol:tests.test_boss_phases._world",
@@ -423825,7 +423847,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 152
+        "line": 158
       },
       "source": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast",
       "target": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast.spy",
@@ -423836,18 +423858,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 81
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
-      "target": "symbol:services.enemy_decks.apply_phases",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 84
+        "line": 87
       },
       "source": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
       "target": "symbol:services.enemy_decks.apply_phases",
@@ -423869,7 +423880,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 82
+        "line": 96
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
+      "target": "symbol:services.enemy_decks.apply_phases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 88
       },
       "source": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
       "target": "symbol:services.enemy_decks.pattern_of",
@@ -423880,7 +423902,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 87
+        "line": 93
       },
       "source": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
       "target": "symbol:services.enemy_decks.pattern_of",
@@ -423891,7 +423913,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 78
+        "line": 84
       },
       "source": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
       "target": "symbol:tests.test_boss_phases._boss",
@@ -423902,7 +423924,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 79
+        "line": 95
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
+      "target": "symbol:tests.test_boss_phases._phases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 85
       },
       "source": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
       "target": "symbol:tests.test_boss_phases._world",
@@ -423913,7 +423946,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 266
+        "line": 272
       },
       "source": "symbol:tests.test_boss_phases.test_phase_jump_narrates_every_phase_crossed",
       "target": "symbol:services.enemy_decks.apply_phases",
@@ -423924,7 +423957,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 262
+        "line": 268
       },
       "source": "symbol:tests.test_boss_phases.test_phase_jump_narrates_every_phase_crossed",
       "target": "symbol:tests.test_boss_phases._boss",
@@ -423935,7 +423968,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 263
+        "line": 273
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_jump_narrates_every_phase_crossed",
+      "target": "symbol:tests.test_boss_phases._phases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 269
       },
       "source": "symbol:tests.test_boss_phases.test_phase_jump_narrates_every_phase_crossed",
       "target": "symbol:tests.test_boss_phases._world",
@@ -423946,7 +423990,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 180
+        "line": 186
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
+      "target": "symbol:services.enemy_decks._sig_falls_on",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 188
       },
       "source": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
       "target": "symbol:services.enemy_decks._sig_falls_on",
@@ -423960,17 +424015,6 @@
         "line": 182
       },
       "source": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
-      "target": "symbol:services.enemy_decks._sig_falls_on",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 176
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
       "target": "symbol:services.enemy_decks.apply_phases",
       "type": "calls"
     },
@@ -423979,7 +424023,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 178
+        "line": 184
       },
       "source": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
       "target": "symbol:services.enemy_decks.assinatura_of",
@@ -423990,7 +424034,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 181
+        "line": 187
       },
       "source": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
       "target": "symbol:services.enemy_decks.prenuncio",
@@ -424001,7 +424045,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 183
+        "line": 189
       },
       "source": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
       "target": "symbol:services.enemy_decks.prenuncio",
@@ -424012,7 +424056,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 167
+        "line": 173
       },
       "source": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
       "target": "symbol:tests.test_boss_phases._boss",
@@ -424023,7 +424067,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 174
+        "line": 180
       },
       "source": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
       "target": "symbol:tests.test_boss_phases._world",
@@ -424034,152 +424078,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 98
+        "line": 104
       },
       "source": "symbol:tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards",
-      "target": "symbol:services.enemy_decks.apply_phases",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 103
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards",
-      "target": "symbol:services.enemy_decks.apply_phases",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 94
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards",
-      "target": "symbol:tests.test_boss_phases._boss",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 95
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards",
-      "target": "symbol:tests.test_boss_phases._world",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 319
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
-      "target": "symbol:services.conflict_orchestrator.enemy_declaration",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 300
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
-      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 312
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
-      "target": "symbol:services.conflict_scene.freeze",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 299
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
-      "target": "symbol:services.conflict_scene.new_scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 311
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
-      "target": "symbol:services.conflict_scene.place",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 318
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
-      "target": "symbol:services.enemy_decks._sig_falls_on",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 315
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
-      "target": "symbol:services.enemy_decks.apply_phases",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 317
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
-      "target": "symbol:services.enemy_decks.assinatura_of",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 297
-      },
-      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
-      "target": "symbol:tests.test_boss_phases._valerius",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 112
-      },
-      "source": "symbol:tests.test_boss_phases.test_phases_inert_when_flag_off",
       "target": "symbol:services.enemy_decks.apply_phases",
       "type": "calls"
     },
@@ -424190,6 +424091,149 @@
         "file": "tests/test_boss_phases.py",
         "line": 109
       },
+      "source": "symbol:tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards",
+      "target": "symbol:services.enemy_decks.apply_phases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 100
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards",
+      "target": "symbol:tests.test_boss_phases._boss",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 101
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards",
+      "target": "symbol:tests.test_boss_phases._world",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 325
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
+      "target": "symbol:services.conflict_orchestrator.enemy_declaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 306
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
+      "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 318
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
+      "target": "symbol:services.conflict_scene.freeze",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 305
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
+      "target": "symbol:services.conflict_scene.new_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 317
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
+      "target": "symbol:services.conflict_scene.place",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 324
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
+      "target": "symbol:services.enemy_decks._sig_falls_on",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 321
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
+      "target": "symbol:services.enemy_decks.apply_phases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 323
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
+      "target": "symbol:services.enemy_decks.assinatura_of",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 303
+      },
+      "source": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
+      "target": "symbol:tests.test_boss_phases._valerius",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 118
+      },
+      "source": "symbol:tests.test_boss_phases.test_phases_inert_when_flag_off",
+      "target": "symbol:services.enemy_decks.apply_phases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 115
+      },
       "source": "symbol:tests.test_boss_phases.test_phases_inert_when_flag_off",
       "target": "symbol:tests.test_boss_phases._boss",
       "type": "calls"
@@ -424199,7 +424243,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 110
+        "line": 116
       },
       "source": "symbol:tests.test_boss_phases.test_phases_inert_when_flag_off",
       "target": "symbol:tests.test_boss_phases._world",
@@ -424210,7 +424254,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 289
+        "line": 295
       },
       "source": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
       "target": "symbol:services.enemy_decks._sig_falls_on",
@@ -424221,7 +424265,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 286
+        "line": 292
       },
       "source": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
       "target": "symbol:services.enemy_decks.apply_phases",
@@ -424232,7 +424276,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 288
+        "line": 294
       },
       "source": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
       "target": "symbol:services.enemy_decks.assinatura_of",
@@ -424243,29 +424287,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
+        "line": 296
+      },
+      "source": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
+      "target": "symbol:services.enemy_decks.prenuncio",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 298
+      },
+      "source": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
+      "target": "symbol:services.enemy_decks.prenuncio",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
         "line": 290
-      },
-      "source": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
-      "target": "symbol:services.enemy_decks.prenuncio",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 292
-      },
-      "source": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
-      "target": "symbol:services.enemy_decks.prenuncio",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 284
       },
       "source": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
       "target": "symbol:tests.test_boss_phases._valerius",
@@ -424276,7 +424320,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 136
+        "line": 142
       },
       "source": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -424287,7 +424331,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 128
+        "line": 134
       },
       "source": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -424298,21 +424342,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 135
+        "line": 141
       },
       "source": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_boss_phases.py",
-        "line": 129
-      },
-      "source": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
-      "target": "symbol:services.conflict_turn.TurnStep",
       "type": "calls"
     },
     {
@@ -424331,7 +424364,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 118
+        "line": 141
+      },
+      "source": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
+      "target": "symbol:services.conflict_turn.TurnStep",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 124
       },
       "source": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
       "target": "symbol:tests.test_boss_phases._boss",
@@ -424342,7 +424386,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 119
+        "line": 146
+      },
+      "source": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
+      "target": "symbol:tests.test_boss_phases._phases",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_boss_phases.py",
+        "line": 125
       },
       "source": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
       "target": "symbol:tests.test_boss_phases._world",
@@ -424353,7 +424408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 199
+        "line": 205
       },
       "source": "symbol:tests.test_boss_phases.test_signature_warning_goes_to_log_when_intent_is_off",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -424364,7 +424419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 196
+        "line": 202
       },
       "source": "symbol:tests.test_boss_phases.test_signature_warning_goes_to_log_when_intent_is_off",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -424375,7 +424430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 196
+        "line": 202
       },
       "source": "symbol:tests.test_boss_phases.test_signature_warning_goes_to_log_when_intent_is_off",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -424386,7 +424441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 187
+        "line": 193
       },
       "source": "symbol:tests.test_boss_phases.test_signature_warning_goes_to_log_when_intent_is_off",
       "target": "symbol:tests.test_boss_phases._boss",
@@ -424397,7 +424452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_boss_phases.py",
-        "line": 195
+        "line": 201
       },
       "source": "symbol:tests.test_boss_phases.test_signature_warning_goes_to_log_when_intent_is_off",
       "target": "symbol:tests.test_boss_phases._world",
@@ -777818,126 +777873,133 @@
     {
       "id": "symbol:tests.test_boss_phases._boss",
       "kind": "test",
-      "line": 22,
+      "line": 28,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases._boss"
     },
     {
       "id": "symbol:tests.test_boss_phases._flags",
       "kind": "test",
-      "line": 16,
+      "line": 22,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases._flags"
     },
     {
+      "id": "symbol:tests.test_boss_phases._phases",
+      "kind": "test",
+      "line": 15,
+      "path": "tests/test_boss_phases.py",
+      "qualified_name": "tests.test_boss_phases._phases"
+    },
+    {
       "id": "symbol:tests.test_boss_phases._valerius",
       "kind": "test",
-      "line": 274,
+      "line": 280,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases._valerius"
     },
     {
       "id": "symbol:tests.test_boss_phases._world",
       "kind": "test",
-      "line": 55,
+      "line": 61,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases._world"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_all_twelve_bosses_have_two_authored_phases_with_valid_cards",
       "kind": "test",
-      "line": 206,
+      "line": 212,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_all_twelve_bosses_have_two_authored_phases_with_valid_cards"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_authored_boss_phase_applies_from_decks_json_only_when_on",
       "kind": "test",
-      "line": 226,
+      "line": 232,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_authored_boss_phase_applies_from_decks_json_only_when_on"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_authored_phase_narrations_are_distinct_per_boss",
       "kind": "test",
-      "line": 254,
+      "line": 260,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_authored_phase_narrations_are_distinct_per_boss"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast",
       "kind": "test",
-      "line": 146,
+      "line": 152,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast.spy",
       "kind": "test",
-      "line": 152,
+      "line": 158,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_phase_applied_at_end_of_round_before_next_forecast.spy"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern",
       "kind": "test",
-      "line": 77,
+      "line": 83,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_phase_changes_once_with_narration_extra_deck_and_pattern"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_phase_jump_narrates_every_phase_crossed",
       "kind": "test",
-      "line": 261,
+      "line": 267,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_phase_jump_narrates_every_phase_crossed"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round",
       "kind": "test",
-      "line": 166,
+      "line": 172,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_phase_signature_waits_one_telegraphed_round"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards",
       "kind": "test",
-      "line": 93,
+      "line": 99,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_phase_skips_forward_and_never_regresses_or_loads_unknown_cards"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing",
       "kind": "test",
-      "line": 295,
+      "line": 301,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_phase_two_boss_uses_signature_before_fleeing"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_phases_inert_when_flag_off",
       "kind": "test",
-      "line": 107,
+      "line": 113,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_phases_inert_when_flag_off"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee",
       "kind": "test",
-      "line": 283,
+      "line": 289,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_prenuncio_does_not_promise_when_the_boss_would_flee"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio",
       "kind": "test",
-      "line": 116,
+      "line": 122,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_run_round_narrates_phase_and_recomputes_the_presságio"
     },
     {
       "id": "symbol:tests.test_boss_phases.test_signature_warning_goes_to_log_when_intent_is_off",
       "kind": "test",
-      "line": 186,
+      "line": 192,
       "path": "tests/test_boss_phases.py",
       "qualified_name": "tests.test_boss_phases.test_signature_warning_goes_to_log_when_intent_is_off"
     },
@@ -851499,5 +851561,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:103b3f4337965e2c3cde06151fcff1393660280dd9bb80854935ea3ee4dd3d2b"
+  "source_tree_hash": "sha256:2f31e30ede4a151470138af94d007c1e2a97a73fcfca116f507779199388a1e7"
 }
