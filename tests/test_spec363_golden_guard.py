@@ -22,12 +22,6 @@ def test_golden_files_have_no_diff_against_main():
     )
 
 
-def _branch() -> str:
-    return subprocess.run(
-        ["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True, check=False
-    ).stdout.strip()
-
-
 def test_engine_modules_untouched_by_spec363():
     # SPEC-387: guarda de pouso da 363 — depois do pouso o motor pode mudar por outras specs (skip fora da branch).
     branch = subprocess.run(
@@ -36,8 +30,4 @@ def test_engine_modules_untouched_by_spec363():
     if branch != "spec-363":
         pytest.skip("guarda da SPEC-363: só na branch spec-363")
     # R14/R15 leem `final_blows` (já gravado pelo orquestrador); nada novo dentro do motor.
-    # Guard de branch (como o da SPEC-364): fora de `spec-363` ele travaria toda spec futura
-    # que toque o motor (SPEC-377 R14, revisão Sol P1-1) e, na `main`, compara a main consigo.
-    if _branch() != "spec-363":
-        pytest.skip("guard só vale na branch spec-363")
     assert _clean_against_main("services/conflict_orchestrator.py", "services/conflict_turn.py")
