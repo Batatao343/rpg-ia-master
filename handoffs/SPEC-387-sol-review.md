@@ -1,7 +1,7 @@
 # SPEC-387 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus 5.5 / papel Sol · **Data:** 2026-11-03 · **Commit revisado:** `4ceb5f94` (intervalo `a965031e..4ceb5f94`, base `8ff8d674`)
+> **Veredito (rodada 2):** `CHANGES_REQUIRED` (rodada 1: `CHANGES_REQUIRED`)
+> **Revisor:** Opus 5.5 / papel Sol · **Data:** 2026-11-03 · **Commits revisados:** rodada 1 `4ceb5f94` (`a965031e..4ceb5f94`, base `8ff8d674`); rodada 2 `07116abd` (`eb11d4a9..07116abd`)
 
 ## Escopo
 
@@ -118,4 +118,62 @@ seed 13 reacao, semente 0 → CUMPRIDOS com carta_id inf_bruto_investida_cega, F
 ruff check / ruff format --check (39 .py alterados) → ok
 dup_helpers --diff main...HEAD → só `_refuse` (homônimo aninhado em inventory.py, semântica distinta; ok)
 node --test web/tests/spec387-portrait-optimistic + spec354-roundboard → 7 pass; npm run typecheck → ok; eslint (arquivos alterados) → ok
+```
+
+---
+
+## Rodada 2 (commit `07116abd`, diff `eb11d4a9..07116abd`)
+
+### Estado dos achados da rodada 1
+
+| ID | Estado | Evidência |
+|---|---|---|
+| P1-1 | **Parcial** (ver R2-P1-1) | `_translate_logs` (`services/round_log.py:907`) agora traduz golpe, ferimento, Vitalidade 0, fuga e "terminou". Mas o filtro de "técnica" (`:938`) descarta toda linha com dígito e todo "Usa …". |
+| P1-2 | Resolvido, com 1 lacuna (ver R2-P2-1) | `_retract_omen` (`conflict_orchestrator.py:1866`) roda depois da Reação e da AoO. A seed `13 reacao` (50 sementes) afirma que o presságio sai de cumpridos e entra em frustrados, que não há "cumpre…", que o quadro não tem presságio com Carta e que o texto diz "Presságio frustrado: Goblin", sem "Investida". |
+| P1-3 | Resolvido | `tests/test_objectives.py:156` ganhou `motivo` na igualdade exata (oráculo não afrouxado). |
+| P2-1 | Resolvido | `test_cold_instance_play_via_api[0/63]`: POST real, 200, "Empurrar (Poço Negro)" no texto e dano no inimigo. |
+| P3-1 | Resolvido | O evento `scene_card_orphan` é afirmado, 1×, sem id. |
+| P3-2 | Resolvido | `spawn_generic_name` é alcançado sem candidato regional. Com candidato, não há `fallback_criatura_hostil` e nenhum dos dois eventos. |
+| P3-3 | Resolvido | O teste compara a regra do prompt com `card_lint.check_raridade` (comum/incomum, nos limites). A docstring foi corrigida e `_examples` não tem mais parâmetro sem uso. |
+| P3-4 | Resolvido | O e2e de 390 mede antes de qualquer rolagem e de novo rolado até o fim. eslint ok. O Playwright não rodou aqui. |
+| P3-5 | Resolvido | O §9 registra o golden 360 (2 testes), o `test_objectives` e os rebaselines do `size_budget`. |
+
+### Golden 360: escopo do diff e regravação
+
+- **O que mudou:** gerei de novo as mensagens dos 30 turnos (`explorador`, flags `off`) na base `8ff8d674` e em `07116abd`.
+  Só mudam as **mensagens 12, 14 e 20** (índice 0; linhas 14, 16 e 22 do JSON), todas do fallback `off`. O resto do
+  fingerprint é idêntico.
+- **"Usa Punho de Tala" não é jogada do herói.** A Carta é `cri_jotun_cinza_punho_de_tala`, do Crescido do Clã, e a linha
+  seguinte é o golpe dela ("Crescido do Clã → Playtest-explorador: erro/acerto"). A ação do herói nessas 3 rodadas é a
+  fuga, e ela continua no texto novo ("Você tenta fugir…" e "Você avança na fuga…"). O golpe aparece traduzido ("Crescido do
+  Clã erra/acerta você"), e os ferimentos também. Nessas 3 mensagens só some o **nome** da Carta inimiga.
+- **O defeito existe fora do golden:** o mesmo filtro perde ações do herói que não são ataque (ver R2-P1-1).
+- **Pode regravar?** Sim. `SPEC360_REGEN=1` pelo coordenador não viola integridade: o arquivo não está em
+  `evals/protected-paths.txt`, a guarda é de byte-identidade das flags de fauna e a mudança vem do R33. Mas **só depois de
+  fechar R2-P1-1**, porque a correção pode mudar de novo as mensagens 12/14/20 (por exemplo, "Crescido do Clã usa Punho de
+  Tala"). Ao regravar, conferir de novo que só mudam essas mensagens do fallback `off`.
+
+### Achados novos / remanescentes
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R2-P1-1 | P1 | `services/round_log.py:938` (filtro `technical`) e `tests/test_spec387_text.py:227` | O tradutor ainda **apaga ações do herói que não são ataque**. Sonda: logs `["Usa Bandagem de Campo", "Smoke recupera 3 Vitalidade.", "Usa Golpe Rachado", "Smoke → Goblin: acerto (…)", "dano 6×1=6; Vitalidade 9 -> 3 …", "Smoke sofre 1 de Sangramento (Vit 4)."]` → `"Você acerta Goblin.\n\nO que você faz?"`. A cura com Carta (`conflict_turn.py:653-656`, "X recupera N Vitalidade com <Carta>.") e o dano contínuo caem pelo `re.search(r"\d", line)`, e toda linha "Usa <Carta>" cai pelo `startswith("Usa ")`. Uma rodada só de apoio (cura, proteção) vira "O que você faz?". O teste novo **fixa** esse defeito: `not re.search(r"\d", text)` em `:227`. O R33 não proíbe números no texto determinístico (o fallback antigo e o `deterministic_outcome_text` têm números); proíbe id, bullet e nome do herói. | (1) Traduzir "Usa <Carta>": o ator é o da próxima linha de golpe (`X → Y`) ou, sem golpe, o herói quando a Carta estiver em `deck`/`prepared_cards`/`virtue_cards`/cena. Resultado: "Você usa <Carta>." ou "<Inimigo> usa <Carta>.". Passar os ids ou nomes das Cartas do herói a `off_fallback_text`, com `_narrate` já tendo `player`. (2) Manter as linhas humanas com número: "X recupera N Vitalidade com C." → "Você recupera N de Vitalidade com C."; "X sofre N de <cond> (Vit k)." → "Você sofre N de <cond>.". Descartar só aritmética (`_is_arith`, "dano a×b=c", "a -> b") e id. (3) Trocar a asserção de `:227` por "sem aritmética e sem id". Somar um caso com Carta de cura e um com dano contínuo, os dois com a ação do herói no texto. Depois regravar o golden 360. |
+| R2-P2-1 | P2 | `services/conflict_orchestrator.py:1866-1878` × `:2670-2684` | `_retract_omen` registra o presságio como frustrado, mas, ao contrário de `_frustrate`, **não dispara o gatilho `ao_pressagio_frustrado`** (SPEC-330 R3), nem quando o alvo do presságio está na cena. Uma Carta usa esse gatilho: "Ferro Antes do Ferro" (Devoto Zeloso, `data/cards/posturas/devoto_zeloso.json`, cura quando o presságio é frustrado, "abatê-lo antes vale uma cura"). Matar o atacante com a Reação (`dev_encaixe`, do mesmo Devoto) é exatamente esse caso. Quando o inimigo morre por outro caminho antes do turno, o `_frustrate(…, "incapaz")` dispara o gatilho. Pela Reação, não. Resultado: dois "frustrados" com efeitos diferentes. Não regride em relação à `main` (lá era "cumprido", sem gatilho), mas a reclassificação cria a incoerência. | Extrair o corpo de `_frustrate` (entrada, `fx.fire("ao_pressagio_frustrado", …)` e linha) para um helper de módulo usado pelos dois caminhos, e passar a intenção congelada do ator. A alternativa é registrar no §9/§8 a decisão explícita de não disparar (com o motivo). Teste: Devoto com "Ferro Antes do Ferro" ativa e Reação `dev_encaixe` matando o atacante → o gatilho dispara uma vez, ou fica comprovadamente inerte se a decisão for documentada. A arena de Cartas não é afetada (0 atacantes derrubados em 27.778 janelas na rodada 1). |
+
+### Regressão nova
+
+Nenhuma além dos dois itens acima.
+- Golden 330 e as guardas 353/355/364 estão verdes.
+- Sim e arena estão verdes. `test_spec371_eval` (E5 byte-idêntico) está verde.
+- `size_budget` cresceu de novo (orquestrador +17, `_resolve_actor_turn_inner` +2). O motivo está no §9 (exceção prevista).
+
+### Comandos rodados (rodada 2)
+
+```text
+bash scripts/dev/pt.sh tests/test_spec387_*.py test_objectives test_spec368_seed test_enemy_intent test_spec355_{golpe_reacao,guardas} test_spec353_registry test_spec364_registry_voice test_spec367_{omen_voice,condition_end} test_card_effects_grammar test_spec353_golden_guard test_spec364_golden_guard test_spec371_{eval,pressagio,reacao_inicial} test_spec346_board_no_llm test_spec364_flee_surfaces test_size_budget test_log_event_registry test_card_draft test_scene_cards_node → 375 passed, 1 skipped, 1 xfailed
+bash scripts/dev/pt.sh test_card_sim{,_v2} test_spec341_balanco test_spec355_arena test_spec362_{arcanista,run_round} test_spec371_flags_off (--deselect golden 360) → 89 passed, 1 skipped
+bash scripts/dev/pt.sh tests/test_spec360_flags_off.py → FAILED test_golden_flags_off_byte_identico (esperado; regravar após R2-P1-1)
+dump golden 360 (base 8ff8d674 × 07116abd) → diff só nas mensagens 12, 14, 20 (fallback off)
+sonda off_fallback_text com cura + dano contínuo → "Você acerta Goblin." (cura, Cartas e DoT perdidos: R2-P1-1)
+ruff check (arquivos .py da rodada) → ok; eslint web/e2e/spec387-omen-390.spec.ts → ok
 ```
