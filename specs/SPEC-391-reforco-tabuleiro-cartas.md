@@ -1,6 +1,6 @@
 # SPEC-391 — Reforço de combate no tabuleiro de cartas ("Chamado do Bando" do líder de matilha)
 
-> **Status:** `draft`
+> **Status:** `approved` (04/11, dono: "391 concordo com tudo" — D-391-1..8 = recomendações da spec)
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Depende de:** SPEC-381 pousada (`api.py` em routers: o bloco `reinforcement_warning` muda de arquivo);
 > SPEC-371/372 sem conflito em `agents/combat.py` (371 `done`; 372 `draft`: conferir W1 antes da Etapa 3);

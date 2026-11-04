@@ -1,6 +1,6 @@
 # SPEC-380 — Evals vivos: baseline no CI, suíte `cards_combat` e playtest real semanal
 
-> **Status:** `draft`
+> **Status:** `approved` (04/11, dono: "ok para tudo" — D1..D6 = recomendações; D3: a SPEC-377 pousou, então os 20 casos de Fôlego entram de uma vez; D2: environment `llm-playtest` e chaves são ação do dono)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** [auditoria 03/11](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md) §4.6 "Evals" (a)–(d) e §5 letra J · regras da onda §6.2 (W1–W8, em especial **W5**)
 > **Depende de:** SPEC-370 e SPEC-374 pousadas (as duas editam `evals/protected-paths.txt`, §6.3 da auditoria) · SPEC-375 pousada (edita `.github/workflows/eval-gates.yml`, ver SPEC-375 §R5/R7) · **só para R2:** SPEC-368 pousada (muda o comportamento das Cartas); SPEC-371 pousada ou abandonada para os casos de Presságio (a branch `spec-371` mexe em `services/enemy_intent.py` e em Cartas `reacao_inicial`); SPEC-377 decidida para os casos de custo (ver D3)
