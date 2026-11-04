@@ -102,3 +102,65 @@ ruff check (arquivos alterados) → All checks passed
 bash scripts/dev/pt.sh tests/test_card_draft_orcamento.py tests/test_card_draft.py tests/test_spec387_draft.py → 27 passed (-n 2)
 ruff check + ruff format --check (draft.py, teste) → limpos
 ```
+
+## Fase B (B3/B5/B6 + D-369-10) — 2026-11-04, commit revisado `1baa675b`
+
+> **Veredito:** `CHANGES_REQUIRED` (2 achados P1, 4 achados P3)
+
+Commits de produto revisados: `c2d05130` (B3), `f58016b8` (B5, só §9), `00448b33` (B6), `d986c92b` (artefatos) e `540deb81` (passo da D-369-10). Commits de régua: `8ef607c0` e `7a75a389`.
+
+### Conferência
+
+1. **R1/R2: ok.**
+   - `git diff 7a75a389 HEAD -- <arquivos da Fase A>` dá vazio.
+   - No intervalo `ef850520..HEAD`, os arquivos da Fase A só foram tocados por commits `test(cards)` de régua: `06bd8f39`, `33b08981`, `6ed6815d`, `8ef607c0` e `7a75a389`.
+   - Nenhum commit de produto toca régua.
+   - Os caminhos do R2, `evals/`, `agents/combat.py` e `conflict_orchestrator.py` dão `git diff --exit-code` vazio contra `ef850520`.
+   - Os limiares mudaram depois da Fase B (`7a75a389`), mas por decisão escrita do dono (D-369-10), num commit separado de autor de régua. Os limites registrados são os números da Fase B e não podem piorar. Aceito.
+2. **R18: limite estourado no processo** (P1-2, abaixo). O R18 diz que "passo que não move a métrica-alvo é revertido e **conta no limite**". Uma sondagem em árvore descartável é exatamente isso: um passo medido e revertido. A spec não abre exceção para ela. Pela regra, então, as sondagens contam.
+   - **Heróis:** há 5 Cartas mantidas e 3 do B5 revertidas (8), mais 3 Cartas só sondadas: `bas_med_pressao`, `arc1_cal_pulso_medido` e `bas_cor_mofo`. Isso dá **11 Cartas, acima do teto de 8**. O `bas_cor_mofo` recebeu 3 tentativas, acima de 2.
+   - **Famílias:** além das 2 Cartas registradas, foram sondadas outras: `abissal` +3, `conjurador` +3 e `predador_apice` +5. O teto é de 2 Cartas por família.
+   - O B5 também mediu 3 Cartas num só braço, quando a regra é um passo por vez. Isso foi declarado.
+   - O pacote que fica no produto respeita os limites. O problema é a busca (*forking paths*) sobre as sementes 0–19 e um `passos-0-19.json` que não registra a busca inteira. Por isso o `test_r18` passa.
+3. **Passos mantidos: ok, com ressalvas P3.** Os 6 passos do B3 e o da D-369-10 têm `metricas_antes`/`depois` e `guarda_r19`. Os 4 do B6 têm `resultado` por célula, mas não têm `guarda_r19` por passo. Os parciais do B6 se justificam: movem a célula mais de 1 luta, não pioram outra célula mais de 5 pp, o lint barra o `dano_base` abaixo da arma, e a D-369-10 item 3 os aceita como limite.
+4. **`mon_automato_fundicao` (agilidade 4→3): quebra um teste** (P1-1).
+   - `tests/test_spec349_curadoria_legado.py::test_snapshot_bate_com_bestiario_original_nos_campos_de_slot` falha (`virtudes` {agilidade 3} != snapshot {agilidade 4}, `tests/fixtures/spec349_legado_snapshot.json:1757`). É uma criatura `valoria/unico` de Nova Arcádia, e os campos de slot dela eram invariantes da 349.
+   - Os outros testes passaram: golden e snapshot da 330, `test_spec285_lethality`, `test_spec349_{mecanica,bestiary_lint,onda_nova_arcadia}` e `test_conflito_autoria_bestiario`.
+   - Efeito no jogo real: o elite fica mais fácil (esquiva 14→13) para **todas** as Posturas, em todo encontro de Nova Arcádia, não só para o Médico. Isso está coberto pela D-369-10 ("um passo num único inimigo"). Convém ver se a SPEC-394 (recalibrar criaturas derivadas) mede essa criatura, para não haver conflito de calibração.
+5. **Básicas a Fôlego 0: ok.**
+   - A UI e o custo exibido vêm de `custo_folego`, então não precisam de mudança.
+   - `budget_error` é `None` nas 3 básicas e em `bas_med_golpe`.
+   - As descrições não mudaram e não têm número.
+   - Nenhum texto do produto afirma "básica custa 1 Fôlego".
+   - A mudança em `tests/test_card_piles.py` está justificada (R18b) e ficou mais forte, porque fixa o conjunto exato das Cartas a 0.
+   - O `card_lint.lint_card` ainda acusa `momento` ausente nas básicas e nas Cartas de inimigo, e `tier` ausente nas Cartas de inimigo. Esses erros já existiam: o lint de onda não se aplica a esse acervo. Ficam como P3 de registro, porque o R18 pede "card_lint sem aviso".
+6. **R17 (51,9 % × 60,6 %): os dois números estão certos, cada um no seu momento.** Com `level_req` 1, a passiva anula a emboscada em todos os níveis, então o `realista_369` do Corruptor é igual ao total `posturas` dele.
+   - Na B2, esse total era 51,9 %.
+   - No passo 5 do B3, `bas_cor_guarda` foi a Fôlego 0 e o total do Corruptor subiu de 51,9 para 60,6 %.
+   - O valor que vale é **60,6 %**, o do estado final, e a correção no §9 está certa.
+7. **Conteúdo: ok.** `validate_content` dá 0 erros (29 avisos de bestiário que já existiam). Os textos não mudaram, então a voz continua a mesma.
+8. **Metas: ok.** `test_spec369_metas.py` dá 8 passed e 7 xfailed, e os 7 são todos do R22 (falta `confirmacao.json`).
+
+### Achados
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P1-1 | P1 | `data/bestiary.json:8997` × `tests/fixtures/spec349_legado_snapshot.json:1757` | O passo da D-369-10 deixa vermelho `test_spec349_curadoria_legado::test_snapshot_bate_com_bestiario_original_nos_campos_de_slot`, e a suíte do pouso falharia. | Num commit próprio, atualizar o fixture (`agilidade` 3) **ou** criar uma exceção nominal no teste, citando a D-369-10. Registrar no §9. Rodar `tests/test_spec349_*`. |
+| P1-2 | P1 | `docs/spec369/passos-0-19.json`; §9 :640-642, :652, :673 | As sondagens revertidas não estão no registro. Pelo R18 elas contam no limite: são 11 Cartas de herói contra o teto de 8, 3 tentativas em `bas_cor_mofo` contra o teto de 2, e mais de 2 Cartas por família em 3 famílias. O `test_r18` passa só porque o registro está incompleto. | (a) Registrar cada sondagem em `passos-0-19.json` (`mantido: false`, `sondagem: true`, sem métrica inventada: só o que foi medido). (b) No §5, marcar o R18 como "pacote final dentro, processo fora". (c) Levar ao dono como D-369-11: aceitar o estouro e usar a Fase C (260–339, held-out) como a guarda contra overfit, ou reverter. Não editar a régua para isso. |
+| P3-1 | P3 | `docs/spec369/passos-0-19.json` (2º passo de `bas_med_golpe`) | O passo registra `versao: [1, 2]`, mas o arquivo tem `versao` 3. O §9:628 diz "mesma versão". | Corrigir para `[2, 3]` e alinhar o texto do §9. |
+| P3-2 | P3 | `passos-0-19.json` (B6) | Os passos do B6 não registram `guarda_r19`. A medição final mostra as Posturas iguais às do fim do B3, então a guarda vale no fim, mas não está provada passo a passo. | Anotar `guarda_r19` (ou "n/a: a arena de Posturas não usa Cartas de família", com prova). |
+| P3-3 | P3 | §9 :686 | Falta registrar que o passo da criatura vale no jogo inteiro (todas as Posturas, Nova Arcádia) e se a SPEC-394 a mede. | Uma linha no §9 e no RELATORIO. |
+| P3-4 | P3 | R18 ("card_lint sem aviso") | Os erros de `momento`/`tier` nas básicas e nas Cartas de inimigo já existiam e não vêm deste diff. | Registrar a isenção no §9, porque o lint de onda não vale para básicas e inimigos. |
+
+### Comandos rodados
+
+```text
+git diff --stat 7a75a389 HEAD -- docs/spec369/{metricas_369,bot_pressagio}.py docs/spec369/{base-0-19.json,BASE.md} tests/test_spec369_*.py → vazio
+git diff --exit-code ef850520 HEAD -- <R2> evals agents/combat.py services/conflict_orchestrator.py → vazio
+pt.sh -n 0 tests/test_spec349_curadoria_legado.py → 1 failed, 4 passed (P1-1)
+pt.sh -n 0 card_lint, card_piles, conflito_autoria_bestiario, mecanica_orfa, scene_cards, spec285_lethality, spec349_{bestiary_lint,mecanica,onda_nova_arcadia}, spec369_{metas,regua}, spec377_folego, card_acervo_reparo, card_effects_grammar → 983 passed, 7 xfailed (R22)
+pt.sh -n 0 spec341_balanco, spec35{3,5}_*, spec362, spec363/364/367/387 golden guards, card_sim → 78 passed, 10 skipped
+scripts/validate_content.py → 0 erros
+```
+
+(Rodei em série, `-n 0`, porque a RAM livre estava em 1,4 GB, com processos de outra sessão. Não reproduzi medição da arena.)
