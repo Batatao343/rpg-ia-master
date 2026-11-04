@@ -51,17 +51,22 @@ ISENTAS_PISO_R13 = {"Sangromante"}  # item 2(0): fora do piso por Postura; o tot
 # ficar `dominante` reprova. Item 2(b): o B4 sai do plano, mas `bomba_estopim` (onda) segue no R14(b).
 LEGADAS_TRAVADAS_R14B = {"arc_cal_valvula", "dev_ombro_porta", "dev_reflexo_bastiao"}
 
-# D-369-10 (dono, 04/11, "Aceitar e ajustar", spec §8): limites REGISTRADOS com os numeros da Fase B
-# (`final-0-19.json` de 540deb81). Sao tetos que nao podem piorar; o resto das metas fica inalterado.
-# - R14(a): assinatura basica com `custo_folego` 0 (lido do catalogo) fica isenta, como o golpe.
-LIMITE_USO_R14A = {"arc1_cal_pulso_medido": 1.0, "bas_cor_mofo": 0.714}  # D-369-10 item 1
-LIMITE_P95_POSTURA = {"Médico de Campo": 16.0}  # D-369-10 item 2 (p95 total <= 10 continua meta)
-LIMITE_PRESSAGIO_RAZAO = 1.0257  # D-369-10 item 3 (vitoria de on-faixa segue em 45-85 %)
-# D-369-10 item 3: celulas do R20 com limite registrado (vitoria `on` e Delta da Fase B, sem piorar).
-LIMITE_FAMILIA = {
-    "conjurador|L5": {"on_win": 0.385, "delta_pp": -8.0},
-    "predador_apice|L3": {"on_win": 0.615, "delta_pp": -13.5},
+# D-369-10 (dono, "Aceitar e ajustar") com os valores da D-369-13 (dono, "Aceitar numeros atuais"):
+# limites REGISTRADOS = o medido em `final-0-19.json` de 9acb4c82 (passo do Automato revertido, main
+# rebaseada). Tetos que nao podem piorar; so o que esta FORA da meta tem limite, o resto e meta cheia.
+# - R14(a): assinatura basica com `custo_folego` 0 (snapshot do artefato/catalogo) fica isenta.
+LIMITE_USO_R14A = {  # D-369-10 item 1 / D-369-13
+    "arc1_cal_pulso_medido": 1.0,
+    "bas_cor_mofo": 0.718,
+    "med1_fer_garra_de_protese": 0.604,
 }
+LIMITE_P95_TOTAL: float | None = 11.0  # D-369-13: p95 total 11 > meta 10 -> limite registrado
+LIMITE_P95_POSTURA = {"Médico de Campo": 17.0}  # D-369-10 item 2 / D-369-13
+LIMITE_TIMEOUT_POSTURA = {"Médico de Campo": 3.3}  # D-369-13 (pct; sem tolerancia D-369-11)
+LIMITE_PRESSAGIO_RAZAO = 1.0355  # D-369-10 item 3 / D-369-13 (vitoria de on-faixa segue em 45-85 %)
+# D-369-10 item 3 / D-369-13: so `conjurador` L5 segue fora (on 39,5 %); Delta -7,0 cumpre a meta e
+# fica com a meta cheia (P2-5). `predador_apice` L3 passou (72,0 %, -3,0) e voltou a meta cheia.
+LIMITE_FAMILIA = {"conjurador|L5": {"on_win": 0.395, "delta_pp": -7.0}}
 # D-369-11 (tolerancia da Fase C; proposta do autor da regua, spec §8) / R22: na confirmacao (sementes
 # novas) os LIMITES REGISTRADOS ganham uma tolerancia de amostra (~1 erro-padrao das amostras da
 # Fase C); metas cheias e pisos absolutos nao ganham nada.
@@ -139,7 +144,10 @@ def r14(data: dict, fase: str = "final") -> list[str]:
 def r15(data: dict, fase: str = "final") -> list[str]:
     r9 = data["base"]["r9"]
     bad = []
-    if r9["total"]["p95_rodadas_conflito"] > LIMIARES["p95_total_max"]:
+    teto_total = LIMIARES["p95_total_max"]
+    if LIMITE_P95_TOTAL is not None:
+        teto_total = max(teto_total, LIMITE_P95_TOTAL + _tol(fase, "p95"))
+    if r9["total"]["p95_rodadas_conflito"] > teto_total:
         bad.append(f"p95 total {r9['total']['p95_rodadas_conflito']}")
     for cls, v in r9["por_postura"].items():
         teto = LIMIARES["p95_postura_max"]
@@ -147,7 +155,8 @@ def r15(data: dict, fase: str = "final") -> list[str]:
             teto = max(teto, LIMITE_P95_POSTURA[cls] + _tol(fase, "p95"))
         if v["p95_rodadas_conflito"] > teto:
             bad.append(f"{cls} p95 {v['p95_rodadas_conflito']}")
-        if v["timeout_pct"] > LIMIARES["timeout_postura_max_pct"]:
+        teto_to = max(LIMIARES["timeout_postura_max_pct"], LIMITE_TIMEOUT_POSTURA.get(cls, 0.0))
+        if v["timeout_pct"] > teto_to:
             bad.append(f"{cls} timeout {v['timeout_pct']}")
     return bad
 

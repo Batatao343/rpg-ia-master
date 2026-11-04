@@ -272,13 +272,17 @@ def test_r14a_conta_assinatura_basica_fora_do_sangromante():
     falhas = T.r14(base)
     assert "(a) med1_fer_lente_de_protese uso 1.0" in falhas  # onda sem limite registrado reprova
     assert not any("bas_cor_golpe" in f or "san" in f for f in falhas)
-    # D-369-10: bas_cor_mofo tem teto registrado 0,714 (Fase B), que nao pode subir
+    # D-369-10/13: bas_cor_mofo tem teto registrado 0,718 (medido), que nao pode subir
+    lim = T.LIMITE_USO_R14A["bas_cor_mofo"]
+    assert lim == 0.718
     usos = base["uso"]["cartas"]["bas_cor_mofo"]
-    for uso, reprova in ((0.714, False), (0.72, True)):
+    for uso, reprova in ((lim, False), (round(lim + 0.002, 3), True)):
         usos["uso"] = uso
         assert any(f.startswith("(a) bas_cor_mofo") for f in T.r14(base)) is reprova, uso
-    usos["uso"] = 0.76
-    assert not any("bas_cor_mofo" in f for f in T.r14(base, "confirmacao"))  # 0,714 + 0,05
+    usos["uso"] = round(lim + 0.05, 3)
+    assert not any("bas_cor_mofo" in f for f in T.r14(base, "confirmacao"))  # + 0,05 (D-369-11)
+    usos["uso"] = round(lim + 0.052, 3)
+    assert any("bas_cor_mofo" in f for f in T.r14(base, "confirmacao"))
 
 
 def test_d369_10_assinatura_gratis_le_o_catalogo():
@@ -295,23 +299,40 @@ def test_d369_10_assinatura_gratis_le_o_catalogo():
 
 
 def test_d369_10_limites_registrados_nao_podem_piorar():
-    """D-369-10: p95 do Medico 16, razao do Pressagio 1,0257 e as 2 celulas do R20 sao tetos."""
+    """D-369-10 com os valores da D-369-13: p95 total 11, p95 do Medico 17, timeout do Medico 3,3 %,
+    razao do Pressagio 1,0355 e `conjurador` L5 sao tetos exatos (o medido); um passo pior reprova.
+    O que passa (as outras 4 celulas, as outras Posturas) fica na meta cheia."""
     T = _load("test_spec369_metas_regua", "tests/test_spec369_metas.py")
     with open(os.path.join(ROOT, "docs", "spec369", "final-0-19.json"), encoding="utf-8") as fh:
         final = json.load(fh)
+    r9, med = final["base"]["r9"], final["base"]["r9"]["por_postura"]["Médico de Campo"]
+    # os limites sao exatamente o medido (nada mais frouxo que o medido)
+    assert T.LIMITE_P95_TOTAL == r9["total"]["p95_rodadas_conflito"] == 11.0
+    assert {"Médico de Campo": med["p95_rodadas_conflito"]} == T.LIMITE_P95_POSTURA
+    assert {"Médico de Campo": med["timeout_pct"]} == T.LIMITE_TIMEOUT_POSTURA
+    bloco = final["pressagio"]["conhecida"]["decks_on"]
+    assert bloco["razao_faixa_cego"] == T.LIMITE_PRESSAGIO_RAZAO
     assert T.r15(final) == [] and T.r16(final) == []
-    final["base"]["r9"]["por_postura"]["Médico de Campo"]["p95_rodadas_conflito"] = 17.0
-    assert T.r15(final) == ["Médico de Campo p95 17.0"]
-    assert T.r15(final, "confirmacao") == []  # 16 + 1 rodada de tolerancia
-    final["pressagio"]["conhecida"]["decks_on"]["razao_faixa_cego"] = 1.03
-    assert T.r16(final) == ["on-faixa/on-cego 1.03"]
-    cell = final["familias"]["cells"]["predador_apice|L3"]
-    cell["delta_pp"] = -14.0
-    assert any(f.startswith("predador_apice|L3") for f in T.r20(final, ["predador_apice|L3"]))
-    cell["delta_pp"] = -13.5
-    assert T.r20(final, ["predador_apice|L3"]) == []
-    # as outras 3 celulas seguem com a meta cheia
-    assert T._faixa_celula("abissal|L3", "final") == (45.0, 85.0, 10.0)
+    med["p95_rodadas_conflito"] = 18.0
+    r9["total"]["p95_rodadas_conflito"] = 12.0
+    assert T.r15(final) == ["p95 total 12.0", "Médico de Campo p95 18.0"]
+    assert T.r15(final, "confirmacao") == []  # + 1 rodada de tolerancia (D-369-11)
+    med["timeout_pct"] = 3.4
+    assert "Médico de Campo timeout 3.4" in T.r15(final, "confirmacao")  # timeout sem tolerancia
+    final["base"]["r9"]["por_postura"]["Devoto do Abismo"]["timeout_pct"] = 1.1
+    assert "Devoto do Abismo timeout 1.1" in T.r15(final)  # sem limite registrado: meta cheia
+    bloco["razao_faixa_cego"] = 1.036
+    assert T.r16(final) == ["on-faixa/on-cego 1.036"]
+    cell = final["familias"]["cells"]["conjurador|L5"]
+    assert T.r20(final, ["conjurador|L5"]) == []
+    cell["on"]["win"] = 0.39
+    assert any(f.startswith("conjurador|L5") for f in T.r20(final, ["conjurador|L5"]))
+    cell["on"]["win"], cell["delta_pp"] = 0.395, -10.5  # Delta cumpria a meta: segue <= 10
+    assert any(f.startswith("conjurador|L5") for f in T.r20(final, ["conjurador|L5"]))
+    # predador_apice L3 passou na D-369-13 e voltou a meta cheia (como as outras 3 celulas)
+    assert set(T.LIMITE_FAMILIA) == {"conjurador|L5"}
+    for k in ("predador_apice|L3", "abissal|L3", "lider_matilha|L3", "lider_matilha|L5"):
+        assert T._faixa_celula(k, "final") == (45.0, 85.0, 10.0), k
 
 
 def test_posturas_deterministico_e_igual_a_base_do_emboscada(M):
@@ -363,14 +384,17 @@ def test_r20_exige_200_lutas_e_sementes_da_fase():
     assert all(260 <= a <= b <= 339 for a, b in conf)
 
 
-def test_d369_11_tolerancia_so_na_dimensao_fora_da_meta():
-    """Astra P2-5: na confirmacao, o Delta do conjurador L5 (-8,0, dentro da meta) segue com |Delta|
-    <= 10; so a vitoria `on` (38,5 %, fora) ganha limite registrado + 5 pp. No apex e o contrario."""
+def test_d369_11_tolerancia_so_na_dimensao_fora_da_meta(monkeypatch):
+    """Astra P2-5: na confirmacao, o Delta do conjurador L5 (-7,0, dentro da meta) segue com |Delta|
+    <= 10; so a vitoria `on` (39,5 %, fora) ganha limite registrado + 5 pp. O caso contrario (so o
+    Delta fora) e provado com uma celula sintetica, ja que nenhuma real ficou assim (D-369-13)."""
     T = _load("test_spec369_metas_regua", "tests/test_spec369_metas.py")
-    assert T._faixa_celula("conjurador|L5", "final") == (38.5, 85.0, 10.0)
-    assert T._faixa_celula("conjurador|L5", "confirmacao") == (33.5, 85.0, 10.0)
-    assert T._faixa_celula("predador_apice|L3", "final") == (45.0, 85.0, 13.5)
-    assert T._faixa_celula("predador_apice|L3", "confirmacao") == (45.0, 85.0, 18.5)
+    assert T._faixa_celula("conjurador|L5", "final") == (39.5, 85.0, 10.0)
+    assert T._faixa_celula("conjurador|L5", "confirmacao") == (34.5, 85.0, 10.0)
+    sint = {**T.LIMITE_FAMILIA, "x|L3": {"on_win": 0.615, "delta_pp": -13.5}}
+    monkeypatch.setattr(T, "LIMITE_FAMILIA", sint)
+    assert T._faixa_celula("x|L3", "final") == (45.0, 85.0, 13.5)
+    assert T._faixa_celula("x|L3", "confirmacao") == (45.0, 85.0, 18.5)
 
 
 def test_p3_8_isencao_le_snapshot_do_artefato():
