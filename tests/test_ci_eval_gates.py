@@ -140,3 +140,29 @@ def test_health_exposes_deploy_identity(monkeypatch: pytest.MonkeyPatch):
     from api import health_check
 
     assert health_check()["git_sha"] == "abcdef123"
+
+
+def _job_steps(workflow: dict, job: str) -> list[dict]:
+    return workflow["jobs"][job]["steps"]
+
+
+def test_eval_gates_compara_com_baseline():
+    """SPEC-380 R1.3/R1.4/R1.5/R2.7: baseline comparada no CI, Python com patch fixo."""
+    gates = yaml.load(
+        (ROOT / ".github/workflows/eval-gates.yml").read_text(encoding="utf-8"),
+        Loader=yaml.BaseLoader,
+    )
+    steps = _job_steps(gates, "deterministic-evals")
+    runs = [step.get("run", "") for step in steps]
+    run_step = next(i for i, r in enumerate(runs) if "-m evals run" in r)
+    compare_step = next(i for i, r in enumerate(runs) if "-m evals compare" in r)
+    assert compare_step > run_step
+    assert "--suite cards_combat" in runs[run_step]
+    assert "--baseline evals/baselines/deterministic.json" in runs[compare_step]
+    assert "--current readiness_artifacts/evals/ci-" in runs[compare_step]
+    assert any("tests/test_eval_baseline.py" in r and "pytest" in r for r in runs)
+    setup = next(s for s in steps if str(s.get("uses", "")).startswith("astral-sh/setup-uv@"))
+    version = setup.get("with", {}).get("python-version", "")
+    assert version.count(".") == 2 and version.startswith("3.13.")
+    assert "evals/baselines" in (ROOT / "evals/protected-paths.txt").read_text(encoding="utf-8")
+

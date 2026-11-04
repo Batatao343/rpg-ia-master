@@ -63,7 +63,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+      # SPEC-380 R1.4: `platform` (linux-py3.13.N) entra na compatibilidade da baseline;
+      # patch fixo para o CI não ficar vermelho sozinho quando o runner sobe de versão.
+      # Mudou o patch => regenerar evals/baselines/deterministic.json (eval authoring).
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          python-version: "3.13.18"
       - run: uv sync
       - run: uv run python -m evals.core.governance check --root .
       - run: uv run pytest tests/test_eval_governance.py tests/test_eval_harness.py
@@ -76,8 +81,18 @@ jobs:
           --suite player_knowledge --suite dossier_leak --suite gameplay_gate
           --suite encounter_manifest
           --suite npc_knowledge
+          --suite cards_combat
           --run-id ci-${{ github.run_id }}-${{ github.run_attempt }}
           --output readiness_artifacts/evals
+      # Depois do `run`, para o artefato existir mesmo com a baseline stale (SPEC-380 §3.1).
+      - run: uv run pytest tests/test_eval_baseline.py
+        if: always()
+      - run: >-
+          uv run python -m evals compare
+          --current readiness_artifacts/evals/ci-${{ github.run_id }}-${{ github.run_attempt }}.json
+          --baseline evals/baselines/deterministic.json
+          --output readiness_artifacts/evals/compare.json
+        if: always()
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
