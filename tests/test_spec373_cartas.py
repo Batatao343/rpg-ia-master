@@ -105,37 +105,39 @@ def test_uso_populacao_inteira_ate_15(monkeypatch):
     assert max(pico.values()) <= 15, pico.most_common(5)
 
 
-# --- Parte C (R21): Corruptor, Carta buff_iniciativa de tronco -----------------------------
+# --- Motor: `buff_iniciativa` como efeito principal de Carta ativa (revisões Sol P1-2 / Opus P1-1) --
+# A Carta de dados da Parte C (Mão Adiantada, R21) migrou para a SPEC-369 B2 (D9 da 373), que
+# entrega a passiva `cor1_tro_faro_do_abismo`. A correção de motor (`_SUPPORT_EFFECTS`) fica e é
+# provada com uma Carta sintética de fixture, sem depender do acervo.
 
-CORRUPTOR_SUBS = ["", "alma", "biologia", "inorganica"]
-
-
-@pytest.mark.parametrize("sub", CORRUPTOR_SUBS)
-@pytest.mark.parametrize("level", [1, 3, 5])
-def test_corruptor_tem_buff_iniciativa_no_full_deck(level, sub):
-    from scripts.cards import sim
-
-    ids = sim.full_deck("Corruptor", level, sub)
-    assert "cor1_tro_mao_adiantada" in ids, (level, sub)
-    ini = [
-        c
-        for c in ids
-        if any(e.get("kind") == "buff_iniciativa" for e in fx.normalize(cards.get_card(c) or {}))
-    ]
-    assert ini, (level, sub)
+SYN_INI = "t_ini_ativa"
 
 
-def test_mao_adiantada_nao_e_legada_e_passa_o_lint():
-    card = cards.get_card("cor1_tro_mao_adiantada")
-    assert card["origem"] == ORIGEM and card["onda"] == 1
-    erros = [i for i in card_lint.lint_card(card, []) if i.severity != "aviso"]
-    assert erros == []
+def _carta_ini() -> dict:
+    return fx.materialize(
+        {
+            "id": SYN_INI,
+            "name": "Passo Sintético",
+            "tipo": "ativa",
+            "origem": "teste",
+            "classe": "Corruptor",
+            "subclasse": "",
+            "raridade": "comum",
+            "custo_entropia": 2,
+            "custo_folego": 1,
+            "frequencia": "cena",
+            "virtude_permitida": ["mente"],
+            "efeitos": [{"kind": "buff_iniciativa", "valor": 2}],
+            "descricao": "Carta de teste.",
+            "tier": 1,
+            "level_req": 1,
+            "apex": False,
+            "versao": 1,
+        }
+    )
 
 
-# --- Mão Adiantada precisa FAZER algo quando jogada (revisões Sol P1-2 / Opus P1-1) -----------
-
-
-def _jogar_mao_adiantada():
+def _jogar_carta_ini(monkeypatch):
     import random
 
     from services import card_piles as cp
@@ -143,14 +145,16 @@ def _jogar_mao_adiantada():
     from services import conflict_scene as cs
     from services import conflict_turn as ct
 
+    monkeypatch.setenv("RPG_CARD_DECK", "on")
+    monkeypatch.setitem(cards._load_cards(), SYN_INI, _carta_ini())
     player = orch.ensure_combat_sheet(
         {
             "id": "player",
             "name": "Herói",
             "is_player": True,
             "class_name": "Corruptor",
-            "known_cards": ["cor1_tro_mao_adiantada"],
-            "prepared_cards": ["cor1_tro_mao_adiantada"],
+            "known_cards": [SYN_INI],
+            "prepared_cards": [SYN_INI],
             "virtudes": {"forca": 2, "agilidade": 3, "corpo": 3, "mente": 3, "carisma": 1},
             "entropy": 8,
             "max_entropy": 10,
@@ -171,7 +175,7 @@ def _jogar_mao_adiantada():
         }
     )
     piles = cp.start_piles(player, 11)
-    piles["mao"] = ["cor1_tro_mao_adiantada"]
+    piles["mao"] = [SYN_INI]
     scene = cs.new_scene()
     for aid in ("player", "gob_1"):
         cs.place(scene, aid)
@@ -179,7 +183,7 @@ def _jogar_mao_adiantada():
     state = {"player": player, "_piles": piles, "_deck_mode": "on"}
     actors = {"player": player, "gob_1": enemy}
     sides = {"hero": ["player"], "enemy": ["gob_1"]}
-    step = ct.TurnStep(kind="card", card_id="cor1_tro_mao_adiantada", target_id="player")
+    step = ct.TurnStep(kind="card", card_id=SYN_INI, target_id="player")
     decl = ct.TurnDeclaration(actor_id="player", jogadas=[step])
     out = orch.run_round(
         scene, actors, sides, state, declarations={"player": decl}, rng=random.Random(5)
@@ -187,22 +191,22 @@ def _jogar_mao_adiantada():
     return out, player, enemy, state, (scene, actors, sides)
 
 
-def test_mao_adiantada_jogada_grava_condicao_de_iniciativa():
-    out, player, _e, state, _w = _jogar_mao_adiantada()
+def test_buff_iniciativa_ativo_grava_condicao_de_iniciativa(monkeypatch):
+    out, player, _e, state, _w = _jogar_carta_ini(monkeypatch)
     assert not any("sem resolução" in line for line in out["logs"])
-    conds = [c for c in player["active_conditions"] if c.get("source") == "cor1_tro_mao_adiantada"]
+    conds = [c for c in player["active_conditions"] if c.get("source") == SYN_INI]
     assert conds and conds[0]["stat"] == "initiative" and conds[0]["delta"] == 2
-    assert state["_piles"]["exaurida"] == ["cor1_tro_mao_adiantada"]  # frequência `cena`
+    assert state["_piles"]["exaurida"] == [SYN_INI]  # frequência `cena`
 
 
-def test_mao_adiantada_vale_na_rolagem_da_rodada_seguinte(monkeypatch):
+def test_buff_iniciativa_ativo_vale_na_rolagem_da_rodada_seguinte(monkeypatch):
     import random
 
     from services import conflict_orchestrator as orch
     from services import conflict_resolution as cr
     from services import conflict_turn as ct
 
-    _out, player, _e, state, (scene, actors, sides) = _jogar_mao_adiantada()
+    _out, player, _e, state, (scene, actors, sides) = _jogar_carta_ini(monkeypatch)
     base = cr.virtude_value(player, "agilidade")
     seen: list[int] = []
     real = cr._initiative_value
