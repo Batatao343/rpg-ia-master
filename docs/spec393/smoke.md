@@ -18,5 +18,6 @@ Estimado < US$ 0,02 (4 jogos de morte + 3 de vitória + 1 de compra; 1 a 2 chama
 ## Achados
 
 1. **P2 (R1 incompleto): `message` do `POST /game/death accept` ainda é a pergunta.** O history está certo, a resposta imediata não. Corrigir também `last_turn_outcome["player_message"]` em `services/death_ending.py:apply_accept_text` (ou fazer `player_facing_message` ignorar o campo quando `game_over` por memorial). Falta teste de API que afirme a `message` da resposta, não só o history.
+   - Corrigido em 17a45893 (apply_accept_text também troca last_turn_outcome.player_message; teste de API afirma o message).
 2. Guard de prosa de morte: sem falso positivo em 3 prosas reais; ramo de rejeição só provado por teste.
 3. Frase de golpe final só aparece quando a narração do desfecho cai no fallback determinístico; com LLM aceito, a prosa é do modelo.
