@@ -2321,6 +2321,8 @@ class _CombatTurn:
 
 
 def _combat_node(state: GameState):
+    from services import prose_guard
+
     t = _CombatTurn(state=state)
     t.messages = t.state.get("messages", [])
     if not t.messages:
@@ -2976,39 +2978,7 @@ def _combat_node(state: GameState):
             # SPEC-199 R1: XP/nível NÃO entram em `logs` (nem na prosa/fallbacks);
             # chegam à UI por `last_turn_outcome` -> `turn_outcome`.
 
-    # ---- Narração ----
-    from services import prose_guard
-
-    t.aberturas = prose_guard.ultimas_aberturas(t.messages)
-    t.loc = t.state.get("world", {}).get("current_location", "")
-    t.board_on = _deck_mode_now() == "on" and not t.is_simulation  # SPEC-346: `on` não narra rodada
-    t.outcome_now = (
-        _encounter_outcome(
-            player=t.player,
-            enemies=t.enemies,
-            hero_fled=t.hero_fled,
-            player_dead=t.player_dead,
-            objective_result=t.scene.get("objetivo_resultado"),
-        )
-        if t.combat_over
-        else None
-    )
-    # ---- Resumo canônico do conflito (conflito-12): antes da narração (o fallback o usa) ----
-    t.conflict_sum = None
-    if t.combat_over:
-        participants = [t.player] + t.enemies + t.allies
-        t.conflict_sum = summ.build_summary(
-            participants,
-            scene=t.scene,
-            extras={
-                "turn": t.turn,
-                "conflict_id": t.combat_meta.get("instance_id"),
-                # Player saves historically do not persist ``id``. Carry both
-                # the canonical role and the runtime display identity so the
-                # summary cannot downgrade a recoverable fall into death.
-                "downed_ids": (_downed_identity_tokens(t.player) if t.player_dead else []),
-            },
-        )
+    _combat_outcome_summary(t)
     t.narrative = ""
     if t.board_on:
         pass  # compõe o REGISTRO depois que `status_logs` fecha (SPEC-346 R4/R5)
@@ -3412,6 +3382,43 @@ def _combat_node(state: GameState):
     t.result["player_reaction_card_id"] = None
 
     return t.result
+
+
+def _combat_outcome_summary(t: _CombatTurn) -> None:
+    """Desfecho do encontro e resumo canônico do conflito."""
+    # ---- Narração ----
+    from services import prose_guard
+
+    t.aberturas = prose_guard.ultimas_aberturas(t.messages)
+    t.loc = t.state.get("world", {}).get("current_location", "")
+    t.board_on = _deck_mode_now() == "on" and not t.is_simulation  # SPEC-346: `on` não narra rodada
+    t.outcome_now = (
+        _encounter_outcome(
+            player=t.player,
+            enemies=t.enemies,
+            hero_fled=t.hero_fled,
+            player_dead=t.player_dead,
+            objective_result=t.scene.get("objetivo_resultado"),
+        )
+        if t.combat_over
+        else None
+    )
+    # ---- Resumo canônico do conflito (conflito-12): antes da narração (o fallback o usa) ----
+    t.conflict_sum = None
+    if t.combat_over:
+        participants = [t.player] + t.enemies + t.allies
+        t.conflict_sum = summ.build_summary(
+            participants,
+            scene=t.scene,
+            extras={
+                "turn": t.turn,
+                "conflict_id": t.combat_meta.get("instance_id"),
+                # Player saves historically do not persist ``id``. Carry both
+                # the canonical role and the runtime display identity so the
+                # summary cannot downgrade a recoverable fall into death.
+                "downed_ids": (_downed_identity_tokens(t.player) if t.player_dead else []),
+            },
+        )
 
 
 def _compose_board_narrative(
