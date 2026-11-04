@@ -80,9 +80,17 @@ def test_contra_jogo_of_ordem(monkeypatch):
 
 
 def test_bestiary_e_fauna_json_intocados():
-    # SHA da main em 86cb7bb8 (nenhum byte muda nesta spec)
+    # SHA da main em 86cb7bb8 (nenhum byte muda nesta spec). Guarda de branch: depois do pouso specs
+    # seguintes podem mudar esses arquivos, e o clone raso do CI nem tem o commit.
     import subprocess
 
+    def _git(*args: str) -> subprocess.CompletedProcess:
+        return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True)
+
+    if _git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip() != "spec-371":
+        pytest.skip("guarda só vale na branch spec-371")
+    if _git("cat-file", "-e", "86cb7bb8^{commit}").returncode != 0:
+        pytest.skip("commit base ausente (clone raso)")
     for rel in ("data/bestiary.json", "data/world/fauna.json"):
         head = subprocess.run(
             ["git", "show", f"86cb7bb8:{rel}"], cwd=ROOT, capture_output=True, check=True
