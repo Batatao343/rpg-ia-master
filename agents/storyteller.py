@@ -1666,105 +1666,7 @@ def storyteller_node(state: GameState):
             log_fallback("storyteller", "fauna_hunt_failed", exc)
     # spec mapa-sublocais (R2): custo 0 (intra-cidade/interior) não rola encontro
     if (t.dest and t.travel_periods >= 1) or t.rested_player is not None or t._fauna_hunt:
-        t.turn = int(t.world.get("turn_count", 0))
-        # R5 (fix-playtest-achados): a FORÇA do encontro escala pelo nível (apex não).
-        _plevel = int((t.state.get("player") or {}).get("level", 1) or 1)
-        from gamedata import get_location as _get_location
-        from world_utils import effective_danger, recovery_rest_safe
-
-        danger_now = effective_danger(t.world)  # SPEC-233 R1
-        # spec letalidade-early-game-v2 (alavanca 1): um DESCANSO de early-game em
-        # zona não-apex de perigo baixo recupera SEM sortear encontro — o laço de
-        # recuperação que faltava (viagem não cura; descanso interrompido = morte).
-        # Só vale pra REST (rested_player is not None), nunca pra viagem.
-        _rest_recovers = t.rested_player is not None and (
-            recovery_rest_safe(
-                _plevel, danger_now, _get_location(t.world.get("current_location_id", "")) or {}
-            )
-            # SPEC-301 R9: perk `abrigo` — descanso no QG da própria fação não sorteia encontro
-            or fm.has_perk(
-                _fm_view(t), "abrigo", location_id=str(t.world.get("current_location_id") or "")
-            )
-        )
-        if _rest_recovers:
-            t.enc = None
-        elif t._fauna_hunt:  # SPEC-360 R20: a caça escolhe a criatura (a da presença)
-            t.enc = dict(t._fauna_hunt)
-            t.world["encounter_eff_danger"] = int(t.enc.get("eff_danger") or 1)
-        else:
-            # Fase 6.3: sorteio ponderado — pressão de caça/fação/migração
-            _law_hint = _law_mod.hunter_encounter(
-                {**t.state, "world": t.world},
-                str(t.world.get("current_location_id") or ""),
-                _law_mod.clock_of({**t.state, "world": t.world}),
-            )
-            from services import lore_quests as _lq
-
-            _rumor_hint, _rumor_id = (
-                _rumor_arrival(t.state, t.world, t.sim_updates, _plevel, t.turn)
-                if t.dest and t.travel_periods >= 1
-                else (None, "")
-            )  # SPEC-315 R16
-            t.enc = check_encounter(
-                t.world,
-                t.factions,
-                t.intel,
-                t.turn,
-                bestiary_knowledge=t.state.get("bestiary_knowledge"),
-                projection=t.state.get("world_projection"),
-                player_level=_plevel,
-                law_hint=_law_hint,
-                exempt_factions=fm.passage_factions(_fm_view(t)),  # SPEC-301 perk `passagem`
-                hunt_anchor=_lq.active_hunt_anchor({**t.state, "world": t.world}),  # SPEC-313 R26
-                rumor_hint=_rumor_hint,
-                world_sim=(
-                    (t.sim_updates.get("world_sim") or t.state.get("world_sim") or {})
-                    if _fauna.mode() != "off"
-                    else None
-                ),  # SPEC-360: ecologia, presença e conversão em sinal
-                game_id=str(t.state.get("game_id") or ""),
-                trama_stages=_fauna.fauna_tramas.stages_for(t.state, t.world),  # SPEC-372
-            )
-            if t.enc and t.enc.get("reason") == "rumor":
-                from services import rumor_adoption as _ra
-
-                t.sim_updates["world_sim"] = _ra.commit(
-                    t.sim_updates.get("world_sim") or t.state.get("world_sim") or {},
-                    _rumor_id,
-                    int((t.world.get("world_clock") or {}).get("day", 1) or 1),
-                    {"kind": "encounter", "enemy_id": str(t.enc.get("enemy_id") or "")},
-                )
-        # spec encontros-dedupe (R3): não repete o MESMO template de encontro 2x
-        # seguidas no mesmo local (o mundo não é um carrossel).
-        t.enc = _dedupe_encounter(t.enc, t.world)  # SPEC-233 R6
-        if not t.enc:
-            t.world.pop("encounter_eff_danger", None)  # SPEC-233 R5
-        if t.enc and t.enc.get("fauna_convert"):
-            # SPEC-360 R16: sem presença anunciada, o encontro vira sinal; cooldown carimbado.
-            _fe = _fauna.entry(str(t.enc.get("enemy_id") or ""))
-            _fnote, _fupd = (
-                _fauna.convert_to_signal(
-                    {**t.state, **t.sim_updates, "world": t.world},
-                    _fe,
-                    str(t.world.get("current_location_id") or ""),
-                    t._fauna_day,
-                )
-                if _fe
-                else ("", {})
-            )
-            # P2-9 (Sol): sem vaga para anunciar (teto da região/global), a criatura que não pôde
-            # ser anunciada ataca como o encontro original; o turno não fica vazio nem gasta o
-            # cooldown de um sinal que não houve.
-            if _fnote:
-                t.world["last_encounter_turn"] = t.turn
-                t.world["last_encounter_id"] = "fauna_sinal"
-                t.world["last_encounter_loc"] = t.world.get("current_location_id")
-                t.world.pop("encounter_eff_danger", None)
-                if _fupd.get("world_sim"):
-                    t.sim_updates["world_sim"] = _fupd["world_sim"]
-                t.world_note = f"ENCONTRO NA ESTRADA (sinal): {_fnote}\n{_fauna.SCENE_RULE}"
-                t._fauna_sign_shown = True
-                t.enc = None
+        _story_roll_encounter(t)
         if t.enc:
             _story_encounter_kind(t)
 
@@ -1808,6 +1710,112 @@ def storyteller_node(state: GameState):
     except Exception as e:
         _log_event("storyteller", "failed", level="error", error=type(e).__name__)
         return _story_exception_fallback(t)
+
+
+def _story_roll_encounter(t: _StoryTurn) -> None:
+    """Sorteio do encontro (caça de fauna, lei, boato, dedupe, fauna convertida em sinal)."""
+    from services import faction_membership as fm
+    from services import fauna as _fauna
+
+    t.turn = int(t.world.get("turn_count", 0))
+    # R5 (fix-playtest-achados): a FORÇA do encontro escala pelo nível (apex não).
+    _plevel = int((t.state.get("player") or {}).get("level", 1) or 1)
+    from gamedata import get_location as _get_location
+    from world_utils import effective_danger, recovery_rest_safe
+
+    danger_now = effective_danger(t.world)  # SPEC-233 R1
+    # spec letalidade-early-game-v2 (alavanca 1): um DESCANSO de early-game em
+    # zona não-apex de perigo baixo recupera SEM sortear encontro — o laço de
+    # recuperação que faltava (viagem não cura; descanso interrompido = morte).
+    # Só vale pra REST (rested_player is not None), nunca pra viagem.
+    _rest_recovers = t.rested_player is not None and (
+        recovery_rest_safe(
+            _plevel, danger_now, _get_location(t.world.get("current_location_id", "")) or {}
+        )
+        # SPEC-301 R9: perk `abrigo` — descanso no QG da própria fação não sorteia encontro
+        or fm.has_perk(
+            _fm_view(t), "abrigo", location_id=str(t.world.get("current_location_id") or "")
+        )
+    )
+    if _rest_recovers:
+        t.enc = None
+    elif t._fauna_hunt:  # SPEC-360 R20: a caça escolhe a criatura (a da presença)
+        t.enc = dict(t._fauna_hunt)
+        t.world["encounter_eff_danger"] = int(t.enc.get("eff_danger") or 1)
+    else:
+        # Fase 6.3: sorteio ponderado — pressão de caça/fação/migração
+        _law_hint = _law_mod.hunter_encounter(
+            {**t.state, "world": t.world},
+            str(t.world.get("current_location_id") or ""),
+            _law_mod.clock_of({**t.state, "world": t.world}),
+        )
+        from services import lore_quests as _lq
+
+        _rumor_hint, _rumor_id = (
+            _rumor_arrival(t.state, t.world, t.sim_updates, _plevel, t.turn)
+            if t.dest and t.travel_periods >= 1
+            else (None, "")
+        )  # SPEC-315 R16
+        t.enc = check_encounter(
+            t.world,
+            t.factions,
+            t.intel,
+            t.turn,
+            bestiary_knowledge=t.state.get("bestiary_knowledge"),
+            projection=t.state.get("world_projection"),
+            player_level=_plevel,
+            law_hint=_law_hint,
+            exempt_factions=fm.passage_factions(_fm_view(t)),  # SPEC-301 perk `passagem`
+            hunt_anchor=_lq.active_hunt_anchor({**t.state, "world": t.world}),  # SPEC-313 R26
+            rumor_hint=_rumor_hint,
+            world_sim=(
+                (t.sim_updates.get("world_sim") or t.state.get("world_sim") or {})
+                if _fauna.mode() != "off"
+                else None
+            ),  # SPEC-360: ecologia, presença e conversão em sinal
+            game_id=str(t.state.get("game_id") or ""),
+            trama_stages=_fauna.fauna_tramas.stages_for(t.state, t.world),  # SPEC-372
+        )
+        if t.enc and t.enc.get("reason") == "rumor":
+            from services import rumor_adoption as _ra
+
+            t.sim_updates["world_sim"] = _ra.commit(
+                t.sim_updates.get("world_sim") or t.state.get("world_sim") or {},
+                _rumor_id,
+                int((t.world.get("world_clock") or {}).get("day", 1) or 1),
+                {"kind": "encounter", "enemy_id": str(t.enc.get("enemy_id") or "")},
+            )
+    # spec encontros-dedupe (R3): não repete o MESMO template de encontro 2x
+    # seguidas no mesmo local (o mundo não é um carrossel).
+    t.enc = _dedupe_encounter(t.enc, t.world)  # SPEC-233 R6
+    if not t.enc:
+        t.world.pop("encounter_eff_danger", None)  # SPEC-233 R5
+    if t.enc and t.enc.get("fauna_convert"):
+        # SPEC-360 R16: sem presença anunciada, o encontro vira sinal; cooldown carimbado.
+        _fe = _fauna.entry(str(t.enc.get("enemy_id") or ""))
+        _fnote, _fupd = (
+            _fauna.convert_to_signal(
+                {**t.state, **t.sim_updates, "world": t.world},
+                _fe,
+                str(t.world.get("current_location_id") or ""),
+                t._fauna_day,
+            )
+            if _fe
+            else ("", {})
+        )
+        # P2-9 (Sol): sem vaga para anunciar (teto da região/global), a criatura que não pôde
+        # ser anunciada ataca como o encontro original; o turno não fica vazio nem gasta o
+        # cooldown de um sinal que não houve.
+        if _fnote:
+            t.world["last_encounter_turn"] = t.turn
+            t.world["last_encounter_id"] = "fauna_sinal"
+            t.world["last_encounter_loc"] = t.world.get("current_location_id")
+            t.world.pop("encounter_eff_danger", None)
+            if _fupd.get("world_sim"):
+                t.sim_updates["world_sim"] = _fupd["world_sim"]
+            t.world_note = f"ENCONTRO NA ESTRADA (sinal): {_fnote}\n{_fauna.SCENE_RULE}"
+            t._fauna_sign_shown = True
+            t.enc = None
 
 
 def _story_encounter_kind(t: _StoryTurn) -> None:
