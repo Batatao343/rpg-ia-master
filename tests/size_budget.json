@@ -6,17 +6,17 @@
  },
  "files": {
   "agents/archivist.py": 1252,
-  "agents/combat.py": 3729,
+  "agents/combat.py": 3731,
   "agents/npc.py": 1604,
-  "agents/storyteller.py": 2723,
-  "api.py": 1082,
+  "agents/storyteller.py": 2725,
+  "api.py": 1081,
   "api_presenters.py": 1357,
   "combat_mechanics.py": 1089,
   "infrastructure/wallet.py": 1001,
   "llm_setup.py": 1896,
   "mock_llm.py": 1103,
   "persistence.py": 1373,
-  "playtest/invariants.py": 3043,
+  "playtest/invariants.py": 3053,
   "playtest/profiles.py": 1497,
   "playtest/runner.py": 1908,
   "playtest/telemetry.py": 1671,
@@ -39,7 +39,7 @@
   "state.py": 1098,
   "web/src/App.tsx": 1156,
   "web/src/types.ts": 1272,
-  "world_utils.py": 1951
+  "world_utils.py": 1983
  },
  "functions": {
   "agents/archivist.py::_archive_node": 666,
@@ -56,7 +56,7 @@
   "agents/npc.py::generate_new_npc": 110,
   "agents/npc.py::npc_actor_node": 778,
   "agents/storyteller.py::_with_new_npc": 133,
-  "agents/storyteller.py::storyteller_node": 1551,
+  "agents/storyteller.py::storyteller_node": 1553,
   "agents/turn_finalizer.py::turn_finalizer_node": 105,
   "api_presenters.py::_combat_block": 252,
   "api_presenters.py::_format_response_raw": 136,
@@ -103,6 +103,8 @@
   "scripts/benchmark_turn_pipeline_real.py::run_real_benchmark": 151,
   "scripts/chaos_test.py::run": 139,
   "scripts/fauna/eval.py::_simulate": 185,
+  "scripts/fauna/eval_tramas.py::_simulate": 139,
+  "scripts/fauna/eval_tramas.py::stage_cases": 111,
   "scripts/finops_margin_sim.py::render": 101,
   "scripts/latency_baseline.py::execute": 102,
   "scripts/load_test.py::run": 136,
@@ -140,6 +142,7 @@
   "services/economy.py::execute_trade": 101,
   "services/event_processor.py::apply_event": 149,
   "services/event_processor.py::process_pending_events": 419,
+  "services/fauna.py::day_hook": 101,
   "services/finops_job.py::run_finops": 153,
   "services/image_quotes.py::ImageQuoteRepository._confirm": 101,
   "services/law.py::register_crime": 106,
@@ -165,7 +168,7 @@
   "services/world_validators.py::validate_proposal": 127,
   "workers/dynamic_art_jobs.py::generate_dynamic_art_job": 122,
   "workers/run_worker.py::build_handlers": 190,
-  "world_utils.py::check_encounter": 208,
+  "world_utils.py::check_encounter": 212,
   "world_utils.py::resolve_trap": 116
  }
 }

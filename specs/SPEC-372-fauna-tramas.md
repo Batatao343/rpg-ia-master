@@ -1,7 +1,7 @@
 # SPEC-372 — Criaturas de trama: o campo `tramas` passa a valer, com estágio de trama derivado (filha 360-D; Nova Arcádia)
 
-> **Status:** `in-review` — aprovada pelo dono em 03/11 via pedido de execução imediata ("transforme em spec e execute agora"); os defaults da §8 valem até ele dizer o contrário.
-> **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
+> **Status:** `done` — aprovada pelo dono em 03/11 via pedido de execução imediata ("transforme em spec e execute agora"); os defaults da §8 valem até ele dizer o contrário.
+> **Criada:** 2026-11-03 · **Atualizada:** 2026-11-04
 > **Depende de:** SPEC-360 (`done`: `services/fauna.py`, campo `tramas` validado só em forma, NA com 38 entradas aprovadas). SPEC-350 (`done`: catálogo `data/world/plot_threads.json`, hoje só com as 7 tramas de Nova Arcádia; `services/plot_threads.py`). SPEC-351 (`done`, opcional: o fio de abertura conta como "tocada"). **Não** depende da SPEC-370: Nova Arcádia já tem fauna.
 > **Desbloqueia:** criaturas de trama nas regiões 2–12, quando a SPEC-350 povoar outras regiões (ondas em `plot_threads.json:12-58`) e a SPEC-370 tiver coberto a região; presságio e saber ligados à trama (filha 360-C, se quiser).
 > **EXECUTOR_MODEL:** `Terra` (Sonnet, `spec-executor`) no estágio derivado, motor, lint, flag e testes. **Opus** (`claude-opus-5-5`, `spec-author`) escolhe e justifica as ligações criatura → trama em NA. Nunca Fable (dono, 28/10). **REVIEW_MODEL:** revisor Opus independente (`spec-reviewer`, nunca o autor) para as ligações; `Sol` técnico (estado derivado, determinismo, flags, integridade de eval). **REVIEW_REQUIRED:** `true`.
@@ -219,20 +219,20 @@ Estado derivado sem writer novo; determinismo; flag `off`; R8; integridade de ev
 
 ## 5. Critérios de aceite
 
-- [ ] `plot_stage`/`plot_stages` puros, com os 12 testes da Etapa 2 (R1–R3)
-- [ ] Forma nova de `tramas`, string legada aceita; E19–E22 com fixtures boas e ruins; `lint.py --regiao nova_arcadia` com 0 erro (R4, R5)
-- [ ] ≥ 4 das 7 tramas de NA com ≥ 1 criatura, ≤ 25 % das não-BOSS ligadas, todas as ligações aprovadas por revisor ≠ autor (R6)
-- [ ] Portão, puxão, presença nos locais e `track` com teste; portão vale no fallback legado (R7–R10)
-- [ ] Boost dos rumores da trama e portão do `avistamento` com teste; portão de segredo intacto (R11)
-- [ ] `RPG_FAUNA_TRAMAS` registrada `off`; golden `off` e relatório de NA da 360 byte-idênticos (R12, T7)
-- [ ] Gatilhos iguais `on`×`off`; 0 chamada LLM nova; latência no teto (R13)
-- [ ] Avaliador commitado antes do produto, protegido, intocado depois; T1–T8 verdes; relatório publicado (R15)
-- [ ] Playtest com as quatro flags `on`: 0 violação `error` (R16)
-- [ ] Revisão Sol `APPROVED` ou `APPROVED_WITH_FOLLOWUPS`
-- [ ] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo)
-- [ ] Saves antigos continuam carregando (`trama_id` é opcional; presença sem ele vale como hoje)
-- [ ] Smoke real da §6 executado e registrado na §9
+- [x] `plot_stage`/`plot_stages` puros, com os 12 testes da Etapa 2 (R1–R3)
+- [x] Forma nova de `tramas`, string legada aceita; E19–E22 com fixtures boas e ruins; `lint.py --regiao nova_arcadia` com 0 erro (R4, R5)
+- [x] ≥ 4 das 7 tramas de NA com ≥ 1 criatura, ≤ 25 % das não-BOSS ligadas, todas as ligações aprovadas por revisor ≠ autor (R6)
+- [x] Portão, puxão, presença nos locais e `track` com teste; portão vale no fallback legado (R7–R10)
+- [x] Boost dos rumores da trama e portão do `avistamento` com teste; portão de segredo intacto (R11)
+- [x] `RPG_FAUNA_TRAMAS` registrada `off`; golden `off` e relatório de NA da 360 byte-idênticos (R12, T7)
+- [x] Gatilhos iguais `on`×`off`; 0 chamada LLM nova; latência no teto (R13)
+- [x] Avaliador commitado antes do produto, protegido, intocado depois; T1–T8 verdes; relatório publicado (R15)
+- [x] Playtest com as quatro flags `on`: 0 violação `error` (R16)
+- [x] Revisão Sol `APPROVED` ou `APPROVED_WITH_FOLLOWUPS`
+- [x] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo)
+- [x] Saves antigos continuam carregando (`trama_id` é opcional; presença sem ele vale como hoje)
+- [x] Smoke real da §6 executado e registrado na §9
 
 ## 6. Smoke test com LLM real
 
