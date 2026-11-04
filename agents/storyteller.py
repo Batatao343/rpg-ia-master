@@ -1402,15 +1402,12 @@ def storyteller_node(state: GameState):
 
             _story_noncombat_encounter(t)
         _story_world_pulse(t)
-
     _story_context_blocks(t)
 
     t.llm = get_llm(temperature=0.7)
 
     _story_prompt_blocks(t)
-
     _story_prompt_scene_blocks(t)
-
     _story_system_message(t)
 
     # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat
@@ -1419,18 +1416,12 @@ def storyteller_node(state: GameState):
     t.companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
     try:
         _story_narrate(t)
-
         _story_guard_narrative(t)
-
         _story_engine_proposals(t)
-
         _story_beat_and_npcs(t)
-
         _story_assemble_base(t)
-
         _story_assemble_items(t)
         _story_assemble_events(t)
-
         _story_assemble_quests(t)
         return t.updates
 

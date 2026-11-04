@@ -2415,7 +2415,6 @@ def _combat_node(state: GameState):
         t.declaration = TurnDeclaration(**t.declaration)
 
     _combat_flee_request(t)
-
     _combat_environment(t)
     _combat_attempt_flee(t)
     if not t.hero_fled:
@@ -2436,17 +2435,13 @@ def _combat_node(state: GameState):
         }
 
     _combat_aftermath(t)
-
     _combat_outcome_summary(t)
     _combat_narrate(t)
-
     _combat_close_round_meta(t)
     _combat_close_round_log(t)
     _combat_close_encounter(t)
     _combat_result_base(t)
-
     _combat_result_quests(t)
-
     _combat_result_events(t)
 
     return t.result
