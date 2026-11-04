@@ -1,6 +1,6 @@
 # SPEC-395 — Tabela tática respeita `resistance: absoluta` (abissal e outras que não fogem)
 
-> **Status:** `draft`
+> **Status:** `approved` — dono, 04/11: "Executar com padrões" (D1–D4 nos defaults); Lençol de Chaminé deixa de fugir (ajuste de texto em spec futura).
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** SPEC-394 (`in-review`; diagnóstico em `rpg-spec-394/docs/spec394/RELATORIO.md:7-35`, dials atuais do `_ajustes.yaml`), SPEC-373 `done` (congela `arena.py`)
