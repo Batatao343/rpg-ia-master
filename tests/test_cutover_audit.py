@@ -26,7 +26,6 @@ SURVIVING_FUNCTIONS = [
     "normalize_attr",
     "roll_dice_numeric",
     "parse_condition",
-    "tick_conditions",
     "player_passives",
     "entropy_config",
     "abyss_tier",

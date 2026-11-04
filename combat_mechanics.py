@@ -532,53 +532,6 @@ def apply_condition(entity: dict, cond: dict) -> str:
     return f"{entity.get('name', 'Alvo')}: ganha condição {cond['name']}"
 
 
-def tick_conditions(entity: dict, *, rng=None) -> list[str]:
-    """Aplica DoT, decrementa duração, remove expiradas. Mutação in-place."""
-    logs: list[str] = []
-    survivors: list[dict] = []
-    name = entity.get("name", "Alvo")
-    for c in entity.get("active_conditions", []) or []:
-        dot = int(c.get("dot", 0) or 0)
-        if dot > 0:
-            if entity.get("vitalidade") is not None:
-                from services.conflict_damage import resolve_damage_and_wounds
-
-                dres = resolve_damage_and_wounds(
-                    entity,
-                    damage_base=dot,
-                    damage_type=str(c.get("damage_type") or "cortante"),
-                    ignore_resistance=True,
-                    defensavel=False,
-                    bypass_armor=True,
-                    directed_region=None,
-                    rng=rng,
-                )
-                logs.append(
-                    f"{name} sofre {dot} de {c.get('name', 'condição')} "
-                    f"(Vitalidade {dres['vitalidade']})"
-                )
-            else:
-                # Compatibilidade estrita com fichas anteriores ao cutover.
-                entity["hp"] = max(0, int(entity.get("hp", 0)) - dot)
-                logs.append(
-                    f"{name} sofre {dot} de {c.get('name', 'condição')} (HP {entity['hp']})"
-                )
-        c["duration"] = int(c.get("duration", 0)) - 1
-        if c["duration"] > 0:
-            survivors.append(c)
-        else:
-            logs.append(f"{name}: {c.get('name', 'condição')} terminou")
-    entity["active_conditions"] = survivors
-    if (
-        entity.get("vitalidade") is None
-        and int(entity.get("hp", 1)) <= 0
-        and entity.get("status") == "ativo"
-    ):
-        entity["status"] = "morto"
-        logs.append(f"{name} sucumbe aos efeitos.")
-    return logs
-
-
 # --------------------------------------------------------------------------
 # Iniciativa
 # --------------------------------------------------------------------------

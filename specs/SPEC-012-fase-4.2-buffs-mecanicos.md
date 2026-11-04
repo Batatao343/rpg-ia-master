@@ -196,3 +196,5 @@ Formato:
   observar no playtest.
 - **Passiva aproximada** (Batedor +2 flat): documentada no JSON via `note`; revisar
   quando 4.6 der estados aos inimigos.
+
+Adendo 2026-11-04: `combat_mechanics.tick_conditions` removida pela SPEC-376 (sem chamador; o laço v4 usa `_tick_conditions_v4`).

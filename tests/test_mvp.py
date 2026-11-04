@@ -322,15 +322,6 @@ def test_parse_condition_dot_and_duration():
     assert buff["dot"] == 0 and buff["duration"] == 2
 
 
-def test_condition_tick_applies_dot_and_expires():
-    e = _enemy(hp=10)
-    e["active_conditions"] = [{"name": "Veneno", "dot": 4, "duration": 1, "source": "x"}]
-    logs = cm.tick_conditions(e)
-    assert e["hp"] == 6
-    assert e["active_conditions"] == []  # expirou
-    assert any("Veneno" in l for l in logs)
-
-
 def test_combat_node_round_runs_and_returns_state():
     import agents.combat as combat
 

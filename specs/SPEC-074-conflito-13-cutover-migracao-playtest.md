@@ -275,3 +275,5 @@ de corte:
 ## Adendo SPEC-272 (2026-10-18)
 
 SPEC-272: `combat_mechanics.resolve_damage_formula` saiu da lista SOBREVIVE de `tests/test_cutover_audit.py` e do código — nenhum caminho de produção a chamava depois do cutover (o dano usa `roll_dice_numeric`).
+
+Adendo 2026-11-04: `combat_mechanics.tick_conditions` removida pela SPEC-376 (sem chamador; o laço v4 usa `_tick_conditions_v4`).
