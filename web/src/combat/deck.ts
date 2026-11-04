@@ -240,7 +240,7 @@ export function dropRejectedPlay(queue: QueuedPlay[], playIndex: number | undefi
   return { queue: queue.filter((_, i) => i !== idx), note: `${lost.name} perdeu o alvo — escolha de novo.` };
 }
 
-export type RoundEntryKind = "jogada" | "dano_continuo" | "queda" | "pressagio";
+export type RoundEntryKind = "jogada" | "dano_continuo" | "queda" | "pressagio" | "pressagio_frustrado";
 
 /** SPEC-354 R5.2: o `tipo` da API; sem ele, o formato de hoje é inferido (DoT = rótulo "Dano contínuo" sem carta). */
 export function roundEntryKind(e: RoundLogEntry): RoundEntryKind {
@@ -270,6 +270,7 @@ export function effectLine(e: RoundLogEntry, who: string, isPlayer: boolean): st
   const kind = roundEntryKind(e);
   if (kind === "queda") return `${who} cai (${e.efeito ?? "abatido"})`;
   if (kind === "pressagio") return `Presságio cumprido: ${e.efeito ?? e.carta_nome ?? who}`;
+  if (kind === "pressagio_frustrado") return e.efeito ?? `Presságio frustrado: ${who}`; // SPEC-389 R11
   const cond = e.carta_nome ?? e.efeito ?? "dano contínuo";
   const n = e.dano != null ? ` · −${e.dano} Vitalidade` : (e.efeito ? ` · ${e.efeito}` : "");
   return `${isPlayer ? "Você" : who} sofre ${cond}${n}`;

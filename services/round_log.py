@@ -49,6 +49,7 @@ _HUMAN_LINE_RES = tuple(
         r"é um Fardo e não pode ser jogada\.$|^Falta Fôlego para descartar |não pode ser descartada\.$",
         r"não é uma Carta ativa\.$|está silenciado — sem Cartas\.$",
         r" resiste à provocação de ",  # SPEC-387: a Provocação que não desvia também se explica
+        r", provocado por .+, muda de alvo\.$",  # SPEC-389 R12: o desvio efetivo do Voto
     )
 )
 
@@ -178,12 +179,19 @@ def _is_hero_side(actor_id: str, actors_by_id: dict[str, dict]) -> bool:
     return bool(actor.get("is_player") or actor.get("is_ally") or actor_id == "player")
 
 
-def _attack_line(atk: dict, names: dict[str, str], actors_by_id: dict[str, dict]) -> str:
+def _attack_line(
+    atk: dict,
+    names: dict[str, str],
+    actors_by_id: dict[str, dict],
+    reactions: frozenset[str] = frozenset(),
+) -> str:
     actor_id = str(atk.get("actor_id"))
     who = names.get(actor_id, "Alguém")
     target = names.get(str(atk.get("target_id")), "Alguém")
     card = _card(atk.get("card_id"))
     result = _result_phrase(atk, target)
+    if not atk.get("card_id") and atk.get("fora_de_turno") in reactions:  # SPEC-389 R14
+        return f"{who} reage com {atk['fora_de_turno']} em {target}: {result}."
     if atk.get("label") == "Última Ação":
         return f"{who} executa a Última Ação em {target}: {result}."
     if card is not None and _is_hero_side(actor_id, actors_by_id):
@@ -322,6 +330,9 @@ def round_registry(
     from services.combat_preview import chrono_events
 
     names = _names(actors_by_id)
+    reaction_names = frozenset(
+        n for n in (_card_name(r.get("card_id")) for r in out.get("reactions") or []) if n
+    )
     hero_name = next(
         (str(a.get("name") or "") for a in actors_by_id.values() if a.get("is_player")), ""
     )
@@ -336,7 +347,7 @@ def round_registry(
         if kind == "attack":
             atk = payload[0]
             if atk.get("label") != "Última Ação":
-                event_lines.append(_attack_line(atk, names, actors_by_id))
+                event_lines.append(_attack_line(atk, names, actors_by_id, reaction_names))
                 event_lines += after_card.pop(_card_name(atk.get("card_id")), [])
         elif kind == "tick":
             victim = names.get(
@@ -372,8 +383,15 @@ def round_registry(
             event_lines += after_card.pop(str(card.get("name") or ""), [])
 
     dot_lines: list[str] = []
+    settled = {  # SPEC-389 R12: quem já foi desviado/resistiu na rodada: só o desfecho aparece
+        str(d.get("actor_id")) for d in out.get("pressagios_desviados") or []
+    } | {
+        str(m.get("actor_id"))
+        for m in out.get("class_mechanics") or []
+        if m.get("kind") == "special:taunt_resisted"
+    }
     for novo in out.get("condicoes_novas") or []:  # SPEC-353 R39a: a Provocação diz o que faz
-        if novo.get("control") == "taunt":
+        if novo.get("control") == "taunt" and str(novo.get("victim_id")) not in settled:
             src = names.get(str(novo.get("source_id")), "alguém")
             alvo = "você" if src == "Você" else src
             dot_lines.append(
@@ -406,7 +424,7 @@ def round_registry(
     # SPEC-363 R15: a causa fora de turno (Última Ação) vem ANTES da queda que ela provoca.
     for atk in out.get("attacks") or []:
         if atk.get("label") == "Última Ação":
-            fall_lines.append(_attack_line(atk, names, actors_by_id))
+            fall_lines.append(_attack_line(atk, names, actors_by_id, reaction_names))
     for aid in out.get("deaths") or []:
         if aid != "player" and not (actors_by_id.get(aid) or {}).get("is_player"):
             fall_lines.append(f"{names.get(str(aid), 'Alguém')} morre.")

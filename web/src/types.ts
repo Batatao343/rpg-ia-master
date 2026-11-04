@@ -278,6 +278,8 @@ export interface QuestBlock {
 }
 
 export interface Condition {
+  /** SPEC-389 R13: nome gravado no save (estável); `name`/`label` são o rótulo humano. */
+  id?: string;
   name: string;
   label?: string;
   dot: number;
@@ -1257,7 +1259,7 @@ export interface RoundLogEntry {
   resultado: "acerto" | "erro" | "critico" | "supercritico" | "efeito";
   dano: number | null; efeito: string | null;
   /** SPEC-354 R5.2 (contrato com a SPEC-353): ausente nos saves/respostas antigos — o front infere. */
-  tipo?: "jogada" | "dano_continuo" | "queda" | "pressagio";
+  tipo?: "jogada" | "dano_continuo" | "queda" | "pressagio" | "pressagio_frustrado";
 }
 
 /** SPEC-347 R13: retrato do inimigo no tabuleiro (só com `RPG_CREATURE_ART=on` ou arte curada). */

@@ -662,6 +662,14 @@ def round_board(
                 seen_pressagio.add(actor_id)
                 entries.append(pressagio_entry(pressagios[actor_id]))
             entries.append(attack_entry(atk, reaction=reaction))
+    for fr in (
+        out.get("pressagios_frustrados") or []
+    ):  # SPEC-389 R11: sem Carta nem id (ainda oculta)
+        entry = queda_entry(
+            str(fr.get("actor_id")),
+            f"Presságio frustrado: {names.get(str(fr.get('actor_id')), 'Alguém')}",
+        )
+        entries.append({**entry, "tipo": "pressagio_frustrado"})
     for aid in out.get("deaths") or []:
         entries.append(queda_entry(str(aid), "morre"))
     for aid in out.get("terminal") or []:

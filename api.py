@@ -3042,16 +3042,16 @@ def _combat_block(state: dict) -> dict[str, Any]:
         str(e.get("id") or e.get("name")) for e in enemies if isinstance(e, dict) and e not in alive
     }
 
-    def _condition_label(raw: str) -> str:
-        from services import card_effects as _fx
+    from services.card_effects import condition_label as _condition_label
 
-        return _fx.condition_label(raw) if raw else ""
-
-    def _conds(entity):
+    def _conds(
+        entity,
+    ):  # SPEC-389 R13: `name` = rótulo humano; `id` = nome gravado (o save não muda)
         return [
             {
-                "name": c.get("name", ""),
-                "label": _condition_label(str(c.get("name", ""))),
+                "id": c.get("name", ""),
+                "name": (label := _condition_label(str(c.get("name", "")))),
+                "label": label,
                 "dot": c.get("dot", 0),
                 "duration": c.get("duration", 0),
             }

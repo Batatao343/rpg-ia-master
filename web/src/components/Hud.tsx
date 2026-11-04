@@ -80,6 +80,7 @@ export function FichaTab({ data, hpHitKey, onEquip, busy }: {
             cards.map((card) => (
               <li key={card.id}>
                 {card.name}
+                {card.subclass ? ` · ${card.subclass}` : null}
                 {card.prepared ? <span className="ability__branch"> <Icon name="prepared" /> preparada</span> : null}
                 <span className="ability__kind"> · {card.type}</span>
               </li>
