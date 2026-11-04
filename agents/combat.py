@@ -37,6 +37,7 @@ from services import enemy_intent as _enemy_intent
 from services import fauna_saber as _fauna_saber
 from services import generic_spawn as _gs
 from services import graph_resolver as gr
+from services import off_text as _off_text
 from services import scene_cards as _scene_cards
 from services.conflict_turn import _SUPPORT_EFFECTS, TurnDeclaration, TurnStep
 from services.context_builder import build_context_pack
@@ -1744,6 +1745,7 @@ def _narrate(
     withhold: str = "",
     fecho_override: str | None = None,
     fallback_text: str | None = None,
+    off_ctx: dict | None = None,
 ) -> str:
     from services import prose_guard, round_log
 
@@ -1825,13 +1827,7 @@ def _narrate(
         _log_event("combat", "narrate_failed", level="warning", error=type(e).__name__)
     if fallback_text is not None:  # SPEC-346 R15/R16: legível, sem bullets de log cru
         return fallback_text
-    return round_log.off_fallback_text(
-        logs,
-        str(player.get("name") or ""),
-        spawned_flavor,
-        victory,
-        round_log.hero_card_names(player),
-    )
+    return _off_text.for_round(logs, player, spawned_flavor, victory, off_ctx)
 
 
 # ==========================================================================
@@ -2964,6 +2960,7 @@ def _combat_node(state: GameState):
             withhold=_faction_withhold_clause(
                 combat_meta.get("encounter"), state.get("factions"), state.get("faction_intel")
             ),
+            off_ctx=_off_text.context_from(out, actors_by_id),  # Sol R3-P1-1
         )
     if combat_over and not board_on:
         narrative = summ.narrative_or_fallback(conflict_sum, narrative, player_facing=True)

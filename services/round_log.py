@@ -897,6 +897,3 @@ def names_hero(text: str, hero_name: str) -> bool:
     """SPEC-387 R33 [D-387-6]: a prosa usou o nome próprio do herói (a voz é "você")."""
     hero = (hero_name or "").strip()
     return bool(hero) and bool(re.search(rf"(?<!\w){re.escape(hero)}(?!\w)", text or ""))
-
-
-from services.off_text import hero_card_names, off_fallback_text  # noqa: E402,F401  (SPEC-387)

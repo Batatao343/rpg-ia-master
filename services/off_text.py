@@ -19,7 +19,6 @@ _ATK_VERB = {
 
 
 _USA_LINE_RE = re.compile(r"^Usa (.+?)(?: \(| —|$)")
-_SUBJECT_RE = re.compile(r"^(.+?)(?::| recupera| ganha| sofre| é )")
 _NOISE_RE = re.compile(r"→|->|×|\btotal \d|Entropia|Carga do Abismo|\(excedente|^dano \d")
 
 
@@ -29,41 +28,52 @@ def _clean_numeric(line: str) -> str:
     return re.sub(r"recupera (\d+) Vitalidade", r"recupera \1 de Vitalidade", line)
 
 
-def _translate_logs(
-    logs: Iterable[str], hero_name: str, hero_cards: Iterable[str] = ()
-) -> list[str]:
+def context(cards_used: Iterable[dict] | None, names: dict[str, str] | None) -> dict:
+    """Autoria das Cartas: `out["cards_used"]` (em ordem, com `actor_id`) + nome de cada ator."""
+    return {"cards_used": list(cards_used or []), "names": dict(names or {})}
+
+
+def context_from(out: dict, actors_by_id: dict) -> dict:
+    """Monta o contexto a partir da saída do `run_round` e dos atores do conflito."""
+    names = {
+        str(k): str(a.get("name") or "") for k, a in actors_by_id.items() if isinstance(a, dict)
+    }
+    return context(out.get("cards_used"), names)
+
+
+def _used_name(entry: dict) -> str:
+    card = entry.get("card") or rl._card(entry.get("card_id")) or {}
+    return str(card.get("name") or "")
+
+
+def _translate_logs(logs: Iterable[str], hero_name: str, ctx: dict | None = None) -> list[str]:
     """SPEC-387 (Sol P1-1, R2-P1-1): o registro técnico do motor em frases na voz "você", SEM descartar
     fatos (Carta usada e por quem, golpe, ferimento, Vitalidade, cura, dano contínuo, fuga). Descarta só
     aritmética de dado e ids; nunca o nome do herói."""
     hero = (hero_name or "").strip()
-    mine = {str(c) for c in hero_cards}
+    queue = list((ctx or {}).get("cards_used") or [])
+    names = (ctx or {}).get("names") or {}
     out: list[str] = []
     target = ""  # quem sofreu o último golpe (para o Ferimento/Vitalidade da linha seguinte)
-    pending = ""  # Carta "Usa X" ainda sem autor
 
     def who(name: str, subject: bool) -> str:
         if hero and name == hero:
             return "Você" if subject else "você"
         return name
 
-    def flush(actor: str) -> None:
-        nonlocal pending
-        if pending:
-            out.append(f"{who(actor, True)} usa {pending}.")
-            pending = ""
-
     for raw in logs:
         line = str(raw or "").strip()
         if not line:
             continue
         u = _USA_LINE_RE.match(line)
-        if u:
-            flush(hero if u.group(1) in mine else "")
-            pending = u.group(1)
+        if u:  # o autor vem de `cards_used` (em ordem), NUNCA do nome da Carta
+            card = u.group(1)
+            hit = next((i for i, e in enumerate(queue) if _used_name(e) == card), None)
+            actor = names.get(str(queue.pop(hit).get("actor_id"))) if hit is not None else ""
+            out.append(f"{who(actor, True)} usa {card}." if actor else f"{card} é usada.")
             continue
         m = _ATK_LINE_RE.match(line)
         if m:
-            flush(m.group(1))
             target = m.group(2)
             out.append(f"{who(m.group(1), True)} {_ATK_VERB[m.group(3)]} {who(target, False)}.")
             continue
@@ -79,23 +89,12 @@ def _translate_logs(
             continue
         if _NOISE_RE.search(line) and not line.startswith("Você"):
             continue
-        subject = _SUBJECT_RE.match(line)
-        flush(subject.group(1) if subject else hero)
         human = rl._voce(_clean_numeric(line), hero)
         if rl._is_arith(human) and not human.startswith("Você"):
             continue
         if not rl._RAW_ID_RE.search(human) and not rl.names_hero(human, hero):
             out.append(human)
-    flush(hero if pending in mine else "")
     return out
-
-
-def hero_card_names(player: dict) -> set[str]:
-    """Nomes das Cartas do herói (baralho, preparadas, Virtude, cena): quem "Usa <Carta>" sem golpe."""
-    ids = [*(player.get("deck") or []), *(player.get("prepared_cards") or [])]
-    ids += [vc.get("card_id") for vc in player.get("virtue_cards") or [] if isinstance(vc, dict)]
-    ids += list(player.get("cartas_cena") or [])
-    return {n for n in (rl._card_name(c) for c in ids if c) if n}
 
 
 def off_fallback_text(
@@ -103,14 +102,21 @@ def off_fallback_text(
     hero_name: str,
     flavor: str,
     victory: bool,
-    hero_cards: Iterable[str] = (),
+    ctx: dict | None = None,
 ) -> str:
     """SPEC-387 R33: texto do modo `off` sem LLM — só linhas humanas do motor, na voz do jogador
     ("você"), sem id, sem bullets nem "⚔️"; um parágrafo como `deterministic_outcome_text`."""
     lines: list[str] = []
-    for human in _translate_logs(logs, hero_name, hero_cards):
+    for human in _translate_logs(logs, hero_name, ctx):
         if human not in lines:
             lines.append(human)
     head = [flavor.strip()] if flavor and flavor.strip() else []
     tail = "Vitória! O campo silencia." if victory else "O que você faz?"
     return " ".join([*head, *lines]) + ("\n\n" if lines or head else "") + tail
+
+
+def for_round(
+    logs: Iterable[str], player: dict, flavor: str | None, victory: bool, ctx: dict | None
+) -> str:
+    """Montagem dos argumentos para o `_narrate` do combate (mantém o agente enxuto)."""
+    return off_fallback_text(logs, str(player.get("name") or ""), flavor or "", victory, ctx)

@@ -3,17 +3,19 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 
 import pytest
 
 import agents.combat as combat
 from services import card_piles as cp
-from services import card_text, cards, prose_guard, round_log
+from services import card_text, cards, off_text, prose_guard
 from tests.fixtures import spec368_seed as sd
 from tests.fixtures import spec387_smoke as fixt
 from tests.fixtures.spec387_rounds import load, play, step_card
 from tests.test_card_piles import _player, _Step
 
+ROOT_DIR = Path(__file__).resolve().parents[1]
 ID_RE = re.compile(r"\b[a-z]+(?:_[a-z0-9]+)+\b")
 
 
@@ -105,13 +107,13 @@ LOGS = [
 
 
 def test_off_fallback_no_ids_no_bullets():
-    text = round_log.off_fallback_text(LOGS, "Smoke", "Algo hostil emerge.", False)
+    text = off_text.off_fallback_text(LOGS, "Smoke", "Algo hostil emerge.", False)
     assert "⚔️" not in text and "•" not in text
     assert not ID_RE.search(text) and "não está na cena" not in text
     assert "A condição Defesa Instintiva de Goblin terminou." in text
     assert "Você ganha a condição Rachadura." in text
     assert text.endswith("O que você faz?")
-    assert round_log.off_fallback_text([], "Smoke", "", True).endswith("Vitória! O campo silencia.")
+    assert off_text.off_fallback_text([], "Smoke", "", True).endswith("Vitória! O campo silencia.")
 
 
 def test_off_prose_with_hero_name_falls_back(monkeypatch):
@@ -217,7 +219,7 @@ REAL_FLEE_LOGS = [
 
 def test_off_fallback_keeps_the_facts_of_the_round():
     """Sol P1-1: fuga, golpe, ferimento e Vitalidade viram frases; nada de id, '⚔️', '•' nem nome do herói."""
-    text = round_log.off_fallback_text(REAL_FLEE_LOGS, "Playtest-explorador", "", False)
+    text = off_text.off_fallback_text(REAL_FLEE_LOGS, "Playtest-explorador", "", False)
     assert "Você avança na fuga" in text
     assert "Crescido do Clã acerta você." in text
     assert "Você sofre um ferimento grave no torso." in text
@@ -225,7 +227,7 @@ def test_off_fallback_keeps_the_facts_of_the_round():
     assert "Sua condição Sangramento terminou." in text
     assert "Playtest-explorador" not in text and "⚔️" not in text and "•" not in text
     assert not ID_RE.search(text) and "total" not in text and "->" not in text and "×" not in text
-    atk = round_log.off_fallback_text(
+    atk = off_text.off_fallback_text(
         [
             "Playtest-explorador → Goblin: critico (total 12 vs Esquiva 13).",
             "dano 7×2=14; Vitalidade 10 -> 0 (excedente 3)",
@@ -235,7 +237,7 @@ def test_off_fallback_keeps_the_facts_of_the_round():
         True,
     )
     assert "Você acerta em cheio Goblin. Goblin fica sem Vitalidade." in atk
-    assert round_log.off_fallback_text(
+    assert off_text.off_fallback_text(
         ["Você tenta fugir, mas os inimigos te alcançam."], "Playtest-explorador", "", False
     ).startswith("Você tenta fugir")
 
@@ -252,8 +254,15 @@ PROBE = [
 
 def test_off_fallback_keeps_cards_heal_and_dot():
     """Sol R2-P1-1: quem usou cada Carta, cura e dano contínuo com número ficam; só a aritmética sai."""
-    text = round_log.off_fallback_text(
-        PROBE, "Smoke", "", False, {"Bandagem de Campo", "Golpe Rachado"}
+    text = off_text.off_fallback_text(
+        PROBE,
+        "Smoke",
+        "",
+        False,
+        off_text.context(
+            [_used("player", "x", "Bandagem de Campo"), _used("player", "y", "Golpe Rachado")],
+            {"player": "Smoke"},
+        ),
     )
     assert "Você usa Bandagem de Campo." in text
     assert "Você recupera 3 de Vitalidade." in text
@@ -261,12 +270,83 @@ def test_off_fallback_keeps_cards_heal_and_dot():
     assert "Você sofre 1 de Sangramento." in text
     assert not ID_RE.search(text) and "total" not in text and "->" not in text and "×" not in text
     assert "Smoke" not in text and "Esquiva" not in text
-    enemy = round_log.off_fallback_text(
+    enemy = off_text.off_fallback_text(
         ["Usa Punho de Tala", "Crescido do Clã → Smoke: erro (total 7 vs Esquiva 12)."],
         "Smoke",
         "",
         False,
+        off_text.context(
+            [_used("e1", "z", "Punho de Tala")], {"player": "Smoke", "e1": "Crescido do Clã"}
+        ),
     )
     assert "Crescido do Clã usa Punho de Tala. Crescido do Clã erra você." in enemy
-    heal_only = round_log.off_fallback_text(PROBE[:2], "Smoke", "", False, {"Bandagem de Campo"})
+    heal_only = off_text.off_fallback_text(
+        PROBE[:2],
+        "Smoke",
+        "",
+        False,
+        off_text.context([_used("player", "x", "Bandagem de Campo")], {"player": "Smoke"}),
+    )
     assert heal_only.startswith("Você usa Bandagem de Campo. Você recupera 3 de Vitalidade.")
+
+
+def _used(actor, card_id, name=None):
+    entry = {"actor_id": actor, "card_id": card_id}
+    return {**entry, "card": {"name": name}} if name else entry
+
+
+def test_off_fallback_attributes_cards_by_cards_used():
+    """Sol R3-P1-1: o autor de "Usa X" vem de `cards_used` (em ordem), nunca do nome da Carta."""
+    names = {"player": "Smoke", "e1": "Goblin", "e2": "Corvo"}
+    # (1) apoio inimigo seguido de linha sem sujeito: não vira "Você usa"
+    t1 = off_text.off_fallback_text(
+        ["Usa Uivo de Comando", "Mais um aviso rouco ecoa."],
+        "Smoke",
+        "",
+        False,
+        off_text.context([_used("e1", "a", "Uivo de Comando")], names),
+    )
+    assert "Goblin usa" in t1 and "Você usa" not in t1
+    # (2) duas Cartas inimigas seguidas, cada uma com o seu autor
+    t2 = off_text.off_fallback_text(
+        ["Usa Uivo de Comando", "Usa Pancada Esmagadora"],
+        "Smoke",
+        "",
+        False,
+        off_text.context(
+            [_used("e1", "a", "Uivo de Comando"), _used("e2", "b", "Pancada Esmagadora")], names
+        ),
+    )
+    assert t2.count("usa") == 2 and "Goblin usa" in t2 and "Corvo usa" in t2 and "Você" not in t2
+    # (3) Carta homônima do herói e do inimigo no fim da rodada: vale a ordem de cards_used
+    t3 = off_text.off_fallback_text(
+        ["Usa Golpe", "Usa Golpe"],
+        "Smoke",
+        "",
+        False,
+        off_text.context(
+            [_used("player", "bas_san_golpe", "Golpe"), _used("e1", "bas_san_golpe", "Golpe")],
+            names,
+        ),
+    )
+    assert "Você usa" in t3 and "Goblin usa" in t3 and t3.index("Você usa") < t3.index("Goblin usa")
+    # sem correspondência: frase sem ator, nunca "Você" por padrão
+    t4 = off_text.off_fallback_text(
+        ["Usa Carta Fantasma"], "Smoke", "", False, off_text.context([], names)
+    )
+    assert "Você" not in t4 and "Carta Fantasma" in t4
+
+
+def test_off_text_imports_in_a_clean_interpreter():
+    """Sol R3-P2-1: sem reexportação circular."""
+    import subprocess
+    import sys
+
+    for mod in ("services.off_text", "services.round_log"):
+        r = subprocess.run(
+            [sys.executable, "-c", f"import {mod}"], capture_output=True, text=True, cwd=ROOT_DIR
+        )
+        assert r.returncode == 0, r.stderr[-300:]
+    from services import round_log as rl
+
+    assert not hasattr(rl, "off_fallback_text")  # nada re-exportado

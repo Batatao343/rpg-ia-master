@@ -644,3 +644,10 @@ de reverter). Golden 330 e 453+223 testes de motor/sim verdes; **a arena não fo
 - R2-P2-1: helper comum `_fire_omen_frustrated` (usado por `_frustrate` e `_retract_omen`): matar o atacante pela Reação dispara
   `ao_pressagio_frustrado` uma vez (teste com "Ferro Antes do Ferro" armado: cura 5 -> 8 em 10 sementes). Decisão: dispara.
 - Golden 360: as 3 mensagens (12, 14, 20) mudam como no §9 anterior, agora com "Crescido do Clã usa Punho de Tala." e, na 20, "Você sofre 1 de Sangramento.".
+
+**Correções da revisão Sol (rodada 3, 03/11):**
+- R3-P1-1: o autor de "Usa X" no fallback `off` vem de `out["cards_used"]` (em ordem, `actor_id`), casando cada "Usa X" com a próxima entrada
+  daquela Carta; sem correspondência a frase não tem ator ("X é usada."), nunca "Você" por padrão. `off_text.context`/`context_from` montam o contexto;
+  `hero_card_names` foi removido. Testes: apoio inimigo + linha sem sujeito, duas Cartas inimigas seguidas, Carta homônima do herói e do inimigo.
+- R3-P2-1: `round_log` não reexporta mais `off_text` (sem ciclo); `import services.off_text` e `import services.round_log` rodam em interpretador limpo.
+- R3-P3-1: `off_text.for_round` monta os argumentos; `_narrate` voltou a ≤ 100 linhas e saiu da baseline do `size_budget.json`.
