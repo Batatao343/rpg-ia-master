@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 88.9,
+ "elapsed_s": 108.8,
  "criaturas": {
   "mon_nadador_escaldado": {
    "nome": "Nadador Escaldado",
@@ -60,7 +60,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.665,
-    "L3|on": 0.685
+    "L3|on": 0.68
    },
    "ok": true,
    "motivos": []
@@ -104,7 +104,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.645,
-    "L3|on": 0.77
+    "L3|on": 0.645
    },
    "ok": true,
    "motivos": []
@@ -126,7 +126,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.7,
-    "L3|on": 0.665
+    "L3|on": 0.7
    },
    "ok": true,
    "motivos": []
@@ -172,7 +172,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.465,
-    "L3|on": 0.585
+    "L3|on": 0.505
    },
    "ok": true,
    "motivos": []
@@ -183,7 +183,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.7,
-    "L3|on": 0.605
+    "L3|on": 0.775
    },
    "ok": true,
    "motivos": []

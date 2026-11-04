@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 152.9,
+ "elapsed_s": 156.8,
  "criaturas": {
   "mon_arame_vivo": {
    "nome": "Arame Vivo",
@@ -60,7 +60,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.69,
-    "L3|on": 0.71
+    "L3|on": 0.705
    },
    "ok": true,
    "motivos": []
@@ -71,10 +71,12 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.715,
-    "L3|on": 0.81
+    "L3|on": 0.855
    },
-   "ok": true,
-   "motivos": []
+   "ok": false,
+   "motivos": [
+    "L3|on 86% fora de 45-85%"
+   ]
   },
   "mon_gralha_de_crematorio": {
    "nome": "Gralha de Crematório",
@@ -93,7 +95,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.75,
-    "L3|on": 0.68
+    "L3|on": 0.685
    },
    "ok": true,
    "motivos": []
@@ -115,7 +117,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.7,
-    "L3|on": 0.71
+    "L3|on": 0.69
    },
    "ok": true,
    "motivos": []
@@ -137,7 +139,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.78,
-    "L3|on": 0.72
+    "L3|on": 0.775
    },
    "ok": true,
    "motivos": []
@@ -170,7 +172,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.71,
-    "L3|on": 0.745
+    "L3|on": 0.74
    },
    "ok": true,
    "motivos": []
@@ -243,7 +245,7 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.765,
-    "L3|on": 0.75
+    "L3|on": 0.74
    },
    "ok": true,
    "motivos": []
@@ -279,7 +281,7 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.715,
-    "L3|on": 0.74
+    "L3|on": 0.71
    },
    "ok": true,
    "motivos": []

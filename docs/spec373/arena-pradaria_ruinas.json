@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 114.9,
+ "elapsed_s": 91.0,
  "criaturas": {
   "mon_vertedor_de_areia": {
    "nome": "Vertedor de Areia",
@@ -93,7 +93,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.695,
-    "L3|on": 0.715
+    "L3|on": 0.695
    },
    "ok": true,
    "motivos": []
@@ -126,7 +126,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.64,
-    "L3|on": 0.655
+    "L3|on": 0.61
    },
    "ok": true,
    "motivos": []
@@ -137,7 +137,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.545,
-    "L3|on": 0.85
+    "L3|on": 0.695
    },
    "ok": true,
    "motivos": []
@@ -170,7 +170,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.625,
-    "L3|on": 0.73
+    "L3|on": 0.79
    },
    "ok": true,
    "motivos": []
@@ -181,7 +181,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.485,
-    "L3|on": 0.605
+    "L3|on": 0.59
    },
    "ok": true,
    "motivos": []
@@ -192,7 +192,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.7,
-    "L3|on": 0.65
+    "L3|on": 0.655
    },
    "ok": true,
    "motivos": []
@@ -214,7 +214,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.66,
-    "L3|on": 0.675
+    "L3|on": 0.59
    },
    "ok": true,
    "motivos": []
@@ -247,13 +247,10 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.485,
-    "L3|on": 0.435
+    "L3|on": 0.46
    },
-   "ok": false,
-   "motivos": [
-    "L3|on 44% fora de 45-85%",
-    "L3|on delta 8.5 pp > 8"
-   ]
+   "ok": true,
+   "motivos": []
   }
  }
 }

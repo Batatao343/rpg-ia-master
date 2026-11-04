@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 104.8,
+ "elapsed_s": 96.6,
  "criaturas": {
   "mon_casco_de_costelas": {
    "nome": "Casco de Costelas",
@@ -38,7 +38,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.675,
-    "L3|on": 0.76
+    "L3|on": 0.765
    },
    "ok": true,
    "motivos": []
@@ -71,7 +71,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.52,
-    "L3|on": 0.595
+    "L3|on": 0.59
    },
    "ok": true,
    "motivos": []
@@ -115,7 +115,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.53,
-    "L3|on": 0.595
+    "L3|on": 0.605
    },
    "ok": true,
    "motivos": []
@@ -218,7 +218,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.67,
-    "L3|on": 0.81
+    "L3|on": 0.65
    },
    "ok": true,
    "motivos": []
@@ -229,7 +229,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.63,
-    "L3|on": 0.6
+    "L3|on": 0.655
    },
    "ok": true,
    "motivos": []

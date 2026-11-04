@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 126.2,
+ "elapsed_s": 137.2,
  "criaturas": {
   "mon_lixado_da_fronteira": {
    "nome": "Lixado da Fronteira",
@@ -16,7 +16,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.805,
-    "L3|on": 0.775
+    "L3|on": 0.755
    },
    "ok": true,
    "motivos": []
@@ -27,7 +27,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.58,
-    "L3|on": 0.85
+    "L3|on": 0.7
    },
    "ok": true,
    "motivos": []
@@ -38,7 +38,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.555,
-    "L3|on": 0.575
+    "L3|on": 0.57
    },
    "ok": true,
    "motivos": []
@@ -130,7 +130,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.62,
-    "L3|on": 0.605
+    "L3|on": 0.695
    },
    "ok": true,
    "motivos": []
@@ -196,7 +196,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.675,
-    "L3|on": 0.825
+    "L3|on": 0.7
    },
    "ok": true,
    "motivos": []
@@ -207,7 +207,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.41,
-    "L3|on": 0.46
+    "L3|on": 0.7
    },
    "ok": false,
    "motivos": [

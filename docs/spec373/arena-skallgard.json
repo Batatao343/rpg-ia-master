@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 140.9,
+ "elapsed_s": 255.5,
  "criaturas": {
   "mon_parado_do_sopro": {
    "nome": "Parado do Sopro",
@@ -16,7 +16,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.775,
-    "L3|on": 0.755
+    "L3|on": 0.805
    },
    "ok": true,
    "motivos": []
@@ -38,7 +38,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.62,
-    "L3|on": 0.6
+    "L3|on": 0.595
    },
    "ok": true,
    "motivos": []
@@ -71,7 +71,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.655,
-    "L3|on": 0.755
+    "L3|on": 0.72
    },
    "ok": true,
    "motivos": []
@@ -115,7 +115,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.575,
-    "L3|on": 0.81
+    "L3|on": 0.625
    },
    "ok": true,
    "motivos": []
@@ -183,7 +183,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.425,
-    "L3|on": 0.785
+    "L3|on": 0.795
    },
    "ok": false,
    "motivos": [
@@ -240,12 +240,12 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.455,
-    "L3|on": 0.365
+    "L3|on": 0.355
    },
    "ok": false,
    "motivos": [
     "L3|on 36% fora de 45-85%",
-    "L3|on delta 20.5 pp > 8"
+    "L3|on delta 21.5 pp > 8"
    ]
   },
   "enemy_yeti": {
@@ -254,7 +254,7 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.67,
-    "L3|on": 0.655
+    "L3|on": 0.63
    },
    "ok": true,
    "motivos": []

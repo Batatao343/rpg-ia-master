@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 119.9,
+ "elapsed_s": 184.4,
  "criaturas": {
   "mon_andarilho_de_duas_idades": {
    "nome": "Andarilho de Duas Idades",
@@ -82,7 +82,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.7,
-    "L3|on": 0.845
+    "L3|on": 0.78
    },
    "ok": true,
    "motivos": []
@@ -115,7 +115,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.735,
-    "L3|on": 0.72
+    "L3|on": 0.74
    },
    "ok": true,
    "motivos": []
@@ -148,7 +148,7 @@
    "status": "adotada",
    "cells": {
     "L3|off": 0.615,
-    "L3|on": 0.785
+    "L3|on": 0.62
    },
    "ok": false,
    "motivos": [
@@ -183,7 +183,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.56,
-    "L3|on": 0.555
+    "L3|on": 0.745
    },
    "ok": true,
    "motivos": []
@@ -205,7 +205,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.595,
-    "L3|on": 0.77
+    "L3|on": 0.765
    },
    "ok": true,
    "motivos": []
@@ -216,7 +216,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.565,
-    "L3|on": 0.71
+    "L3|on": 0.75
    },
    "ok": true,
    "motivos": []

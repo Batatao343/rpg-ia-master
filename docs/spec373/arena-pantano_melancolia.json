@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 103.4,
+ "elapsed_s": 100.5,
  "criaturas": {
   "mon_estaqueiro_afogado": {
    "nome": "Estaqueiro Afogado",
@@ -38,7 +38,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.715,
-    "L3|on": 0.73
+    "L3|on": 0.745
    },
    "ok": true,
    "motivos": []
@@ -49,7 +49,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.525,
-    "L3|on": 0.63
+    "L3|on": 0.615
    },
    "ok": true,
    "motivos": []
@@ -93,7 +93,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.585,
-    "L3|on": 0.61
+    "L3|on": 0.605
    },
    "ok": true,
    "motivos": []
@@ -104,7 +104,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.735,
-    "L3|on": 0.745
+    "L3|on": 0.71
    },
    "ok": true,
    "motivos": []
@@ -192,7 +192,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.69,
-    "L3|on": 0.775
+    "L3|on": 0.765
    },
    "ok": true,
    "motivos": []
@@ -214,7 +214,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.67,
-    "L3|on": 0.825
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
@@ -225,7 +225,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.705,
-    "L3|on": 0.735
+    "L3|on": 0.83
    },
    "ok": true,
    "motivos": []

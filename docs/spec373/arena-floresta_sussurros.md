@@ -4,8 +4,8 @@
 
 | Criatura | Cat. | Status | L3|off | L3|on | L5|off | L5|on | Delta vs slot antes | OK |
 |---|---|---|---|---|---|---|---|---|
-| Lixado da Fronteira (`mon_lixado_da_fronteira`) | padrao | nova | 80% | 78% | - | - | - | sim |
-| Abafador de Candeias (`mon_abafador_de_candeias`) | padrao | nova | 58% | 85% | - | - | - | sim |
+| Lixado da Fronteira (`mon_lixado_da_fronteira`) | padrao | nova | 80% | 76% | - | - | - | sim |
+| Abafador de Candeias (`mon_abafador_de_candeias`) | padrao | nova | 58% | 70% | - | - | - | sim |
 | Fechado de Escápulas (`mon_fechado_de_escapulas`) | elite | nova | 56% | 57% | - | - | - | sim |
 | Virado do Avesso (`mon_virado_do_avesso`) | padrao | nova | 62% | 68% | - | - | - | sim |
 | Calado das Guelras (`mon_calado_das_guelras`) | lacaio | nova | 76% | 74% | - | - | - | sim |
@@ -14,14 +14,14 @@
 | Preguiça da Pradaria (`mon_ent_dormindo`) | elite | reinventada | 73% | 72% | - | - | L3|off: -1.5; L3|on: +15.5 | NAO: L3|on delta 15.5 pp > 8 |
 | Morcego Rasteiro (`mon_morcego_rasteiro`) | lacaio | nova | 76% | 81% | - | - | - | sim |
 | Besouro do Estalo (`mon_besouro_do_estalo`) | lacaio | nova | 75% | 86% | - | - | - | NAO: L3|on 86% fora de 45-85% |
-| Onça Vazada (`mon_onca_vazada`) | elite | nova | 62% | 60% | - | - | - | sim |
+| Onça Vazada (`mon_onca_vazada`) | elite | nova | 62% | 70% | - | - | - | sim |
 | Lagarta de Visgo (`mon_lagarta_de_visgo`) | lacaio | nova | 70% | 78% | - | - | - | sim |
 | Toldo das Clareiras (`mon_toldo_das_clareiras`) | chefe | nova | - | - | 46% | 48% | - | sim |
 | Vespa Coveira (`mon_vespa_coveira`) | elite | nova | 66% | 63% | - | - | - | sim |
 | Bugio Invertido (`mon_bugio_invertido`) | padrao | nova | 57% | 54% | - | - | - | sim |
 | Dedos de Colheita (`mon_dedos_de_colheita`) | padrao | nova | 79% | 77% | - | - | - | sim |
-| Olho de Pétala (`mon_olho_de_petala`) | padrao | nova | 68% | 82% | - | - | - | sim |
-| Mapa de Cicatrizes (`mon_mapa_de_cicatrizes`) | padrao | nova | 41% | 46% | - | - | - | NAO: L3|off 41% fora de 45-85% |
+| Olho de Pétala (`mon_olho_de_petala`) | padrao | nova | 68% | 70% | - | - | - | sim |
+| Mapa de Cicatrizes (`mon_mapa_de_cicatrizes`) | padrao | nova | 41% | 70% | - | - | - | NAO: L3|off 41% fora de 45-85% |
 | Ressecado da Travessia (`mon_ressecado_da_travessia`) | lacaio | nova | 74% | 76% | - | - | - | sim |
 | Mascador de Raiz (`mon_mascador_de_raiz`) | padrao | nova | 66% | 63% | - | - | - | sim |
 | Sombra Deitada (`enemy_sombra_espreitadora`) | lacaio | reinventada | 82% | 68% | - | - | L3|off: +0.0; L3|on: +0.5 | sim |

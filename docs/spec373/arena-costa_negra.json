@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 103.3,
+ "elapsed_s": 124.3,
  "criaturas": {
   "mon_escama_revirada": {
    "nome": "Escama Revirada",
@@ -27,7 +27,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.65,
-    "L3|on": 0.78
+    "L3|on": 0.685
    },
    "ok": true,
    "motivos": []
@@ -49,7 +49,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.52,
-    "L3|on": 0.625
+    "L3|on": 0.63
    },
    "ok": true,
    "motivos": []
@@ -96,7 +96,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.53,
-    "L3|on": 0.67
+    "L3|on": 0.53
    },
    "ok": true,
    "motivos": []
@@ -173,7 +173,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.55,
-    "L3|on": 0.725
+    "L3|on": 0.62
    },
    "ok": true,
    "motivos": []
@@ -184,7 +184,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.695,
-    "L3|on": 0.605
+    "L3|on": 0.62
    },
    "ok": true,
    "motivos": []
@@ -195,7 +195,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.67,
-    "L3|on": 0.655
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
@@ -206,7 +206,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.605,
-    "L3|on": 0.835
+    "L3|on": 0.81
    },
    "ok": true,
    "motivos": []
@@ -228,7 +228,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.56,
-    "L3|on": 0.79
+    "L3|on": 0.45
    },
    "ok": true,
    "motivos": []

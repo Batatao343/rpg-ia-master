@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 150.3,
+ "elapsed_s": 138.4,
  "criaturas": {
   "mon_doador_inacabado": {
    "nome": "Doador Inacabado",
@@ -16,7 +16,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.59,
-    "L3|on": 0.6
+    "L3|on": 0.635
    },
    "ok": true,
    "motivos": []
@@ -49,7 +49,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.605,
-    "L3|on": 0.665
+    "L3|on": 0.615
    },
    "ok": true,
    "motivos": []
@@ -60,10 +60,12 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.475,
-    "L3|on": 0.53
+    "L3|on": 0.49
    },
-   "ok": true,
-   "motivos": []
+   "ok": false,
+   "motivos": [
+    "L3|on delta 11.5 pp > 8"
+   ]
   },
   "enemy_fantasma": {
    "nome": "Nadador Transparente",
@@ -82,7 +84,7 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.71,
-    "L3|on": 0.655
+    "L3|on": 0.66
    },
    "ok": true,
    "motivos": []
@@ -148,7 +150,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.735,
-    "L3|on": 0.765
+    "L3|on": 0.795
    },
    "ok": true,
    "motivos": []
@@ -227,7 +229,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.58,
-    "L3|on": 0.615
+    "L3|on": 0.69
    },
    "ok": true,
    "motivos": []

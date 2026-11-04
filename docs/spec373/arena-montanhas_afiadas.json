@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 161.7,
+ "elapsed_s": 175.8,
  "criaturas": {
   "mon_deitado_na_parede": {
    "nome": "Deitado na Parede",
@@ -60,10 +60,12 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.665,
-    "L3|on": 0.58
+    "L3|on": 0.56
    },
-   "ok": true,
-   "motivos": []
+   "ok": false,
+   "motivos": [
+    "L3|on delta 10.0 pp > 8"
+   ]
   },
   "enemy_wyvern_jovem": {
    "nome": "Leque de Costelas",
@@ -93,12 +95,12 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.6,
-    "L3|on": 0.585
+    "L3|on": 0.79
    },
    "ok": false,
    "motivos": [
     "L3|off delta 18.0 pp > 8",
-    "L3|on delta 11.5 pp > 8"
+    "L3|on delta 9.0 pp > 8"
    ]
   },
   "enemy_basilisco_caverna": {
@@ -107,12 +109,11 @@
    "status": "reinventada",
    "cells": {
     "L3|off": 0.5,
-    "L3|on": 0.645
+    "L3|on": 0.5
    },
    "ok": false,
    "motivos": [
-    "L3|off delta 18.0 pp > 8",
-    "L3|on delta 10.5 pp > 8"
+    "L3|off delta 18.0 pp > 8"
    ]
   },
   "enemy_morcego_vampiro": {
@@ -143,7 +144,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.77,
-    "L3|on": 0.815
+    "L3|on": 0.785
    },
    "ok": true,
    "motivos": []
@@ -200,7 +201,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.595,
-    "L3|on": 0.57
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
@@ -257,7 +258,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.57,
-    "L3|on": 0.585
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
