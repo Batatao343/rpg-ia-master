@@ -135,7 +135,7 @@ branch = true
 relative_files = true
 source = [
     "agents", "services", "infrastructure", "workers", "playtest", "evals",
-    "api", "character_creator", "combat_mechanics", "encounter_budget", "game_engine",
+    "api", "character_creator", "combat_mechanics", "encounter_budget",
     "gamedata", "inventory", "llm_setup", "main", "mock_llm", "party", "persistence",
     "progression", "rag", "state", "vercel_app", "world_utils",
 ]

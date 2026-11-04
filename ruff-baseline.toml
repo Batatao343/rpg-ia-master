@@ -31,7 +31,6 @@
 "evals/experiments/spec217_j1.py" = ["E731"]
 "evals/experiments/spec217_j2.py" = ["PERF401"]
 "evals/experiments/spec238_loot.py" = ["ERA001"]
-"game_engine.py" = ["BLE001", "C901", "E722"]
 "gamedata.py" = ["BLE001"]
 "infrastructure/account_lifecycle.py" = ["BLE001", "C420"]
 "infrastructure/account_read_model.py" = ["C420", "F401", "I001"]

@@ -1,8 +1,7 @@
 """SPEC-222 R1: nenhum ``print()`` em código de produção.
 
 stdout de função serverless vira log da plataforma, fora de ``safe_json``/redaction.
-Permitidos: ``scripts/``, ``playtest/``, ``evals/``, ``tests/``, o CLI ``game_engine.py``
-e blocos ``if __name__ == "__main__":``.
+Permitidos: ``scripts/``, ``playtest/``, ``evals/``, ``tests/``, e blocos ``if __name__ == "__main__":``.
 """
 
 from __future__ import annotations
@@ -12,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCTION_DIRS = ("agents", "services", "infrastructure", "observability", "workers")
-ALLOWED_ROOT_FILES = {"game_engine.py", "conftest.py"}
+ALLOWED_ROOT_FILES = {"conftest.py"}
 
 
 def _production_files() -> list[Path]:

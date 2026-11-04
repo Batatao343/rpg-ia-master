@@ -34,9 +34,6 @@ Sem nenhuma chave o jogo usa `MockLLM`: continua jogável, determinístico e sem
 ## Rodar
 
 ```bash
-# Jogar no terminal (CLI)
-uv run python game_engine.py
-
 # API REST (backend para frontend web/mobile)
 uv run uvicorn api:app --reload --port 8000
 
@@ -99,7 +96,7 @@ tática são resolvidos em Python.
 ```
 main.py / state.py / llm_setup.py / rag.py / persistence.py
 gamedata.py / combat_mechanics.py / world_utils.py / character_creator.py
-game_engine.py (CLI)   api.py (REST)
+api.py (REST)
 agents/   # router, campaign_manager, storyteller, combat, npc, loot, archivist, ...
 data/     # codex/, rules.txt, bestiary.json, classes.json, artifacts.json, ...
 services/conflict_orchestrator.py  # motor tático determinístico

@@ -61,8 +61,6 @@
   "api_presenters.py::_combat_block": 252,
   "api_presenters.py::_format_response_raw": 136,
   "character_creator.py::create_player_character": 129,
-  "game_engine.py::create_character_wizard": 165,
-  "game_engine.py::run_game_loop": 142,
   "infrastructure/postgres_turns.py::PostgresTurnCoordinator.claim": 143,
   "infrastructure/postgres_turns.py::PostgresTurnCoordinator.commit_create": 119,
   "infrastructure/postgres_turns.py::PostgresTurnCoordinator.commit_game": 218,

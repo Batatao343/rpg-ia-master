@@ -9,9 +9,7 @@
 
 RPG de texto dark fantasy com narração gerada por IA. Jogador digita ações em linguagem natural; o motor classifica a intenção, executa o agente correto e retorna narrativa coerente com o mundo e a sessão atual.
 
-Dois modos de uso:
-- **CLI** (`game_engine.py`) — terminal interativo com cores ANSI
-- **API REST** (`api.py`) — backend para frontend web/mobile
+Uso: **API REST** (`api.py`) — backend para o frontend web/mobile (o CLI `game_engine.py` foi removido, SPEC-384 D6)
 
 ---
 

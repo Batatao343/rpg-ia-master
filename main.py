@@ -176,4 +176,4 @@ def build_game_graph():
 app = build_game_graph()
 
 if __name__ == "__main__":
-    print("🤖 Grafo definido. Execute 'game_engine.py' para jogar.")
+    print("🤖 Grafo definido. Execute 'uvicorn api:app' para jogar.")
