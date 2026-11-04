@@ -224,9 +224,11 @@ def test_cenas_nao_quebram_com_cartas_novas():
 
 
 def test_uso_das_cartas_de_familia_escala_com_o_bestiario(monkeypatch):
-    """A esteira triplica o bestiário: o teto de 15 criaturas por Carta de família (332) vale só
-    para a população original (ver ``test_enemy_decks``). Aqui o teto é proporcional e fixa o
-    uso atual (31 em 373 criaturas) para a SPEC-336 saber quando crescer as famílias."""
+    """Teto de 15 criaturas por Carta de família (332) na população inteira, esteira incluída.
+
+    SUPERADO_POR: SPEC-373 (R16, Etapa E). O teto proporcional de 36 da SPEC-349 caiu: a regra
+    de montagem do R9 e as Cartas novas da Parte B2 trazem o uso de volta a 15. Gate congelado
+    pelo autor de eval (``handoffs/SPEC-373-eval-authoring.md``); o executor não o edita."""
     import collections
 
     monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
@@ -234,7 +236,7 @@ def test_uso_das_cartas_de_familia_escala_com_o_bestiario(monkeypatch):
     for bid, entry in BEST.items():
         deck = edk.build_enemy_deck({**entry, "id": bid}, 0)
         use.update(c for c in deck if c.startswith("inf_"))
-    assert use and max(use.values()) <= 36, use.most_common(3)
+    assert use and max(use.values()) <= 15, use.most_common(3)
 
 
 @pytest.mark.parametrize("modo", ["off", "on"])

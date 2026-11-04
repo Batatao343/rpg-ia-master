@@ -43,14 +43,14 @@ FAIXA = (0.45, 0.85)
 DELTA_MAX_PP = 8.0
 
 
-def medir(bid: str, categoria: str, seeds: int, modos: list[str]) -> dict:
+def medir(bid: str, categoria: str, seeds: int, modos: list[str], inicio: int = 0) -> dict:
     out: dict = {}
     for level in LEVELS[categoria]:
         n = A.group_size(categoria, level)
         for modo in modos:
             wins = fights = 0
             for cls in A.CLASSES:
-                for seed in range(seeds):
+                for seed in range(inicio, inicio + seeds):
                     outcome, _ = M.fight(bid, n, cls, level, seed, modo)
                     fights += 1
                     wins += outcome == "win"
@@ -79,6 +79,9 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--regiao", default="nova_arcadia")
     ap.add_argument("--seeds", type=int, default=20)
+    ap.add_argument(
+        "--seed-inicio", type=int, default=0, help="1ª semente (SPEC-373: confirmação 40-119)"
+    )
     ap.add_argument("--modo", default="off,on")
     ap.add_argument("--ids", default="", help="só estes ids (separados por vírgula)")
     ap.add_argument("--json", help="grava o resultado bruto")
@@ -107,7 +110,7 @@ def main(argv: list[str] | None = None) -> int:
     res: dict = {}
     for f in fichas:
         bid, cat = f["id"], f["categoria"]
-        cells = medir(bid, cat, args.seeds, modos)
+        cells = medir(bid, cat, args.seeds, modos, args.seed_inicio)
         base = (base_all.get("criaturas") or {}).get(bid) if f.get("substitui") else None
         ok, motivos = veredito(cells, base.get("cells") if base else None)
         res[bid] = {
@@ -126,6 +129,8 @@ def main(argv: list[str] | None = None) -> int:
         "elapsed_s": round(time.time() - t0, 1),
         "criaturas": res,
     }
+    if args.seed_inicio:  # só fora do default: o JSON com início 0 fica igual ao de antes
+        payload["seed_inicio"] = args.seed_inicio
     if args.json:
         Path(args.json).write_text(
             json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"

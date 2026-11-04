@@ -23,3 +23,6 @@ scripts/bestiario/eval_geracao.py
 tests/test_spec370_eval.py
 scripts/fauna/eval_tramas.py
 tests/test_spec372_eval.py
+scripts/bestiario/arena.py
+tests/test_spec373_artefatos.py
+docs/spec373/base/eval
