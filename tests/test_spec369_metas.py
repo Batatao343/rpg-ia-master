@@ -65,12 +65,20 @@ def r13(data: dict) -> list[str]:
     return bad
 
 
+def na_meta_r14a(cid: str, categoria: str) -> bool:
+    """R14(a)+(d): Carta de onda OU assinatura basica (basica que nao e golpe nem guarda; o golpe
+    basico e aceito como fallback por desenho), sempre fora do Sangromante."""
+    if categoria == "onda":
+        return True
+    return categoria == "basica" and not cid.endswith(("_golpe", "_guarda"))
+
+
 def r14(data: dict) -> list[str]:
     bad = []
     for cid, r in data["uso"]["cartas"].items():
         if r["categoria"] in FORA_DA_META_R14:
             continue
-        if r["categoria"] == "onda" and r["uso"] > LIMIARES["uso_alto"]:
+        if na_meta_r14a(cid, r["categoria"]) and r["uso"] > LIMIARES["uso_alto"]:
             bad.append(f"(a) {cid} uso {r['uso']}")
         if "dominante" in r["bandeiras_v2"]:
             bad.append(f"(b) {cid} delta {r['delta_pp_v2']}")

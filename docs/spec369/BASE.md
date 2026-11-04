@@ -21,7 +21,7 @@ sem LLM por rodada. A Fase B mede com esta ferramenta congelada e não a edita (
 | # | Meta | Limiar (D-369-3) | Base 0-19 | Passa? |
 |---|---|---|---|---|
 | 1 | Cartas por rodada (R13) | total ≥ 2,00; cada Postura ≥ 1,90 | **1,915**; Devoto 1,799 · Sangromante 1,792 · Corruptor 1,864 · Arcanista 1,876 · Médico 2,100 | não |
-| 2 | Dominância (R14) | (a) 0 de onda fora do Sangromante com uso > 60 %; (b) 0 `dominante` por Δ `lote-v2` fora do Sangromante | (a) `arc1_cal_pulso_medido` 1,0 e `med1_fer_lente_de_protese` 1,0; (b) **3 legadas**: `arc_cal_valvula` +10,0 · `dev_ombro_porta` +8,8 · `dev_reflexo_bastiao` +8,7 | não |
+| 2 | Dominância (R14) | (a) 0 de onda nem assinatura básica (R14d) fora do Sangromante com uso > 60 %; (b) 0 `dominante` por Δ `lote-v2` fora do Sangromante | (a) `arc1_cal_pulso_medido` 1,0, `med1_fer_lente_de_protese` 1,0 e `bas_cor_mofo` 0,607 (assinatura básica); (b) **3 legadas**: `arc_cal_valvula` +10,0 · `dev_ombro_porta` +8,8 · `dev_reflexo_bastiao` +8,7 | não |
 | 3 | Duração (R15) | p95 total ≤ 10; cada Postura ≤ 12; timeouts ≤ 1,0 % | p95 **12**; Médico p95 **19** e **4,4 %** de timeout; Devoto 11 | não |
 | 4 | Presságio (R16, primária D-369-2) | `on-faixa` ≤ 95 % do dano de `on-cego` (`conhecida`, decks `on`); vitória 45-85 % | **103,4 %** (13,38 × 12,94); vitória 54,1 %; 4/20 sementes abaixo do cego | não |
 | 5 | `draft.py` (R12) | ≥ 3/4 no lint (lote real) | 2/4 (fonte: 387/389); a régua não mede, é o §6 item 1 | não (§6) |
@@ -36,7 +36,7 @@ Arcanista 55,8 · Médico 45,8), nenhuma subclasse padrão acima de 75 % fora de
 
 | Categoria | Uso > 60 % | `dominante` por Δ (`lote-v2`) |
 |---|---|---|
-| básica | `bas_cor_golpe`, `bas_cor_mofo`, `bas_dev_golpe`, `bas_med_golpe` | — |
+| básica | golpes (fallback aceito, R14d): `bas_cor_golpe`, `bas_dev_golpe`, `bas_med_golpe` · **assinatura, entra na meta (a)**: `bas_cor_mofo` (0,607) | — |
 | legada (travada pelo golden, D-369-4) | `arc_des_mao_nua`, `arc_descarga`, `arc_faisca`, `cor_bio_gangrena`, `med_fer_talas` | `arc_cal_valvula`, `dev_ombro_porta`, `dev_reflexo_bastiao` |
 | onda | `arc1_cal_pulso_medido` (novo), `med1_fer_lente_de_protese` | — |
 | Sangromante (exceção aceita, R4a) | `bas_san_corte_raso`, `san1_ava_penhor_de_carne`, `san1_exp_selo_de_dor`, `san_sil_exato` | — |
@@ -47,6 +47,9 @@ Arcanista 55,8 · Médico 45,8), nenhuma subclasse padrão acima de 75 % fora de
 - Os 3 `dominante` por Δ são **legadas**, e nelas só o `custo_folego` pode mudar (e só se o D-369-4
   liberar). Com o D-369-4 em "não", a meta R14(b) é inalcançável sem mexer em legada. **Decisão do
   dono** (abaixo).
+- As três são **reações** (`tipo: reacao`). O bot não as declara (uso 0,0 no lote), e o Δ é por
+  **remoção** (`delta_base: "remocao"`, não há referência por substituição para reação). O
+  `custo_folego` de uma reação que o motor dispara sozinho pode nem mover esse Δ.
 
 ## Decomposição do R8 (Presságio; dano médio recebido por conflito, 1.800 lutas por braço)
 
@@ -97,7 +100,7 @@ O Corruptor subiu de 44,2 % (355) para 50,7 % sem Carta nova: o catálogo mudou 
 `buff_iniciativa` do Corruptor, continua sendo requisito de desenho ("resposta à emboscada"), mas
 deixou de ser necessário para o número. **Decisão do dono** (abaixo).
 
-## Meta 7: células de família (D-369-7, 200 lutas por célula e modo, sementes 0-7)
+## Meta 7: células de família (D-369-7, 200 lutas por célula e modo, exceto `predador_apice` com 80; sementes 0-7)
 
 Definição aplicada: **alvo** = `off` ∈ [45, 85] e (`on` fora da faixa **ou** \|Δ\| > 10 pp);
 **fora de escopo** = `off` já fora de 45-85 %.
@@ -108,7 +111,13 @@ Definição aplicada: **alvo** = `off` ∈ [45, 85] e (`on` fora da faixa **ou**
 | `conjurador` L5 | 46,5 | **36,5** | −10,0 | `on` abaixo de 45 |
 | `lider_matilha` L3 | 58,0 | 70,0 | **+12,0** | \|Δ\| > 10 (fica mais fácil) |
 | `lider_matilha` L5 | 68,5 | 80,0 | **+11,5** | \|Δ\| > 10 (fica mais fácil) |
-| `predador_apice` L3 | 76,2 | 63,7 | **−12,5** | \|Δ\| > 10 |
+| `predador_apice` L3 ⚠ | 76,2 | 63,7 | **−12,5** | \|Δ\| > 10 |
+
+- ⚠ **Exceção de amostra:** `predador_apice` tem só **2 criaturas** não-chefe, então a célula tem
+  **80 lutas por modo**, não as 200 do R20/D-369-7. O erro-padrão da vitória é de cerca de 5 pp por
+  braço, e o do Δ é de cerca de 7 pp (braços tratados como independentes). O −12,5 pp fica a menos de
+  2 erros-padrão do limiar de 10. A célula entra como alvo com essa ressalva, e o dono decide (item 4
+  do pedido).
 
 - Fora de escopo (o `off` já está fora): predador L5, morto-vivo L5, bruto L5, guardião L5, apex L5,
   emboscador L5 e abissal L5.
@@ -123,18 +132,29 @@ O dono precisa confirmar ou trocar:
 1. **D-369-2.** O critério da 329 passa a ser `on-faixa` ≤ 95 % do dano de `on-cego` (`conhecida`,
    decks `on`), e o `on` × `off` fica só registrado? Na base essa razão está em 103,4 %, e a Fase B só
    tem alavanca de conteúdo para mudar isso.
-2. **D-369-3.** As metas em camadas valem? Há 2 pontos novos:
+2. **D-369-3.** As metas em camadas valem? Há 4 pontos novos:
+   - (0) o R13 exige toda Postura ≥ 1,90, e isso inclui o **Sangromante (1,792)**. Todas as Cartas dele
+     estão travadas (R4a), e a alavanca compartilhada é limitada a +2 pp de vitória (R19b). Sem
+     alavanca própria, o piso pode ser **inalcançável**. O Sangromante fica no piso de 1,90 ou vira
+     exceção, como no R14?
+   - (a2) o R14(a) também falha pela assinatura básica `bas_cor_mofo` (0,607), que entra na meta pelo R14(d).
    - (a) o R14(b) hoje só falha por **3 legadas** (`arc_cal_valvula`, `dev_ombro_porta`,
      `dev_reflexo_bastiao`). Elas ficam como "travadas pelo golden", fora da meta, ou o D-369-4 libera
-     o `custo_folego` delas?
+     o `custo_folego` delas? As três são reações, com uso 0 pelo bot e Δ por remoção, e o
+     `custo_folego` pode não mover esse Δ.
    - (b) o B4 (`bomba_estopim`) não tem alvo na base (+5,0 pp, sem bandeira). Ele sai do plano?
 3. **D-369-1 e D-369-4.** Manter o Fôlego 2 e as legadas travadas? A Etapa 0 provou que um
    `custo_folego` explícito numa legada (teste com `arc_descarga` = 2, revertido) deixa o golden e o
    snapshot da 330 verdes.
 4. **D-369-7.** A lista de 5 células acima é a lista do R20? Inclui as duas de `lider_matilha`, em que
-   o `on` facilita.
+   o `on` facilita. Sobre `predador_apice` L3 (80 lutas por modo, Δ com erro-padrão de ~7 pp), três
+   opções: aceitar com 80, tirar da lista, ou medir **só essa célula** com mais sementes. A escolha
+   precisa sair antes de ver o efeito da Fase B.
 5. **R17.** A meta 6 já passa (50,7 %). A Carta `buff_iniciativa` do Corruptor continua no B2 por
    desenho, ou sai?
+6. **Pouso da Fase B.** A revisão Sol (Etapa 8) e o `/spec-land` exigem `tests/test_spec369_metas.py`
+   com **0 xfailed** nos testes R13–R20 e R18 (a Fase C fica à parte). Um xfail por artefato ausente
+   bloqueia o pouso.
 
 Até a resposta, a Fase B pode fazer só o B1 (`draft.py`) e o B2 (Corruptor), que não dependem do
 oráculo (R1).

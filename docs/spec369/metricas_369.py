@@ -503,11 +503,12 @@ def cmd_emboscada(seeds: list[int], base_posturas: dict | None = None) -> dict:
     rng = _seed_range(seeds)
     classes = B._classes_arg(None)
     base = base_posturas or B.posturas(rng, classes)
+    orig_run_round = orch.run_round
     orch.run_round = E._ambush_round
     try:
         amb = B.posturas(rng, classes)
     finally:
-        orch.run_round = E._orig_run_round
+        orch.run_round = orig_run_round
     mix_355 = E.mix(base, amb)
     E.has_initiative_card = tem_iniciativa
     try:

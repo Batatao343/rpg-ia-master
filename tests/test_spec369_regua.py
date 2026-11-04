@@ -216,3 +216,29 @@ def test_base_commitada_reproduz_368_e_tem_as_secoes():
     for braco, arm in (("off", "off"), ("on-368", "on")):
         assert p[braco]["dano_medio"] == r10[arm]["dano_medio"], braco
         assert p[braco]["vitoria_pct"] == r10[arm]["vitoria_pct"], braco
+
+
+def test_sem_cartas_tira_e_devolve_catalogo_e_herois(M):
+    """P3-4 (Astra): a prova do R9a tira as Cartas pos-368 e devolve catalogo e cache de herois."""
+    cat = M.cards._load_cards()
+    antes = {i: cat[i] for i in M.CARTAS_POS_368}
+    M.A.hero("Devoto do Abismo", 1)  # garante cache nao vazio
+    herois = dict(M.A._HEROES)
+    with M.sem_cartas(M.CARTAS_POS_368):
+        assert not any(i in cat for i in M.CARTAS_POS_368)
+        assert M.A._HEROES == {}
+    assert {i: cat[i] for i in M.CARTAS_POS_368} == antes
+    assert herois == M.A._HEROES
+
+
+def test_r14a_conta_assinatura_basica_fora_do_sangromante():
+    """P1-1 (Astra): R14(d) poe a assinatura basica na meta (a); golpe/guarda e Sangromante, nao."""
+    T = _load("test_spec369_metas_regua", "tests/test_spec369_metas.py")
+    assert T.na_meta_r14a("bas_cor_mofo", "basica")
+    assert T.na_meta_r14a("med1_fer_lente_de_protese", "onda")
+    assert not T.na_meta_r14a("bas_cor_golpe", "basica")
+    assert not T.na_meta_r14a("bas_dev_guarda", "basica")
+    with open(os.path.join(ROOT, "docs", "spec369", "base-0-19.json"), encoding="utf-8") as fh:
+        falhas = T.r14(json.load(fh))
+    assert "(a) bas_cor_mofo uso 0.607" in falhas
+    assert not any("bas_cor_golpe" in f or "san" in f for f in falhas)
