@@ -9,9 +9,9 @@ import { isMobileViewport, offChatSurface, returnToChat } from "./workspace/mobi
 import { safeStorage } from "./safeStorage";
 import { preparePending, loadPending, clearPending, clearPendingIfOwn, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
 import { clearWorkspaceOwner } from "./workspace/workspaceStorage";
-import { forgetAllChatSessions, resetBookScroll } from "./workspace/chatSessionStore";
-import { looksDegraded, speakerFromHistory } from "./lib";
-import type { ActionOptions, CombatSimulatorPayload, GameResponse, CreatePayload, LogEntry, SaveSummary } from "./types";
+import { forgetAllChatSessions } from "./workspace/chatSessionStore";
+import { looksDegraded } from "./lib";
+import type { ActionOptions, GameResponse, LogEntry, SaveSummary } from "./types";
 import { Banner, type BannerState } from "./components/Banner";
 import { CreateScreen } from "./components/CreateScreen";
 import { PlayScreen } from "./components/PlayScreen";
@@ -24,7 +24,8 @@ import { AuthScreen, hasEmailActionLink } from "./components/AuthScreen";
 import { authErrorMessage } from "./lib/authErrors";
 import { errMsg, errRequestId } from "./lib/errorMessages";
 import { publishRejectedPlay } from "./lib/rejectedPlay";
-import type { AppCore, Screen } from "./hooks/core";
+import { LS_KEY, type AppCore, type Screen } from "./hooks/core";
+import { loadHistory as loadHistoryFor, useSaves } from "./hooks/useSaves";
 import { useImageQuote } from "./hooks/useImageQuote";
 import { AccountScreen } from "./components/AccountScreen";
 import { estilhasLabel } from "./lib/estilhas";
@@ -44,7 +45,6 @@ function clearOwner(owner: string) {
   forgetAllChatSessions();
 }
 
-const LS_KEY = "cronicas_game_id";
 const SIGNUP_NOTICE = "Se o endereço puder receber mensagens, enviamos um link de confirmação. "
   + "Abra o e-mail (confira também spam e a aba Atualizações) e clique no link para ativar a conta.";
 
@@ -93,6 +93,9 @@ export function App() {
   };
   const { imageQuote, setImageQuote, imageBusy, imageError, resetImageQuote, openImageQuote,
     handleGeneratePortrait, confirmImageQuote, restorePortrait } = useImageQuote(core, refreshBalance);
+  const loadHistory = (gid: string, generation: number) => loadHistoryFor(core, gid, generation);
+  const { handleCreate, handleCreateSimulation, handleContinue, handleContinueSave, handleDeleteSave, handleNew } =
+    useSaves(core, { onTurn, openImageQuote, resetImageQuote, resetTurn, loadHistory });
   useEffect(() => {
     const expired = () => {
       if (deletionInProgress.current) return;
@@ -373,52 +376,6 @@ export function App() {
     return entryId;
   }
 
-  async function handleCreate(payload: CreatePayload) {
-    if (busy) return;
-    setBusy(true);
-    const generation = ++session.current;
-    resetImageQuote();
-    setScreen("play");
-    setLog([]);
-    setThinking(true);
-    try {
-      const r = await api.newGame(payload);
-      if (session.current !== generation) return;
-      onTurn(r);
-      if (payload.generate_portrait && r.game_id) {
-        void openImageQuote(r.game_id);
-
-      }
-    } catch (err) {
-      if (session.current !== generation) return;
-      setScreen("create");
-      setBanner({ msg: "Falha ao criar personagem: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
-    } finally {
-      if (session.current === generation) { setThinking(false); setBusy(false); }
-    }
-  }
-
-  async function handleCreateSimulation(payload: CombatSimulatorPayload) {
-    if (busy) return;
-    const generation = ++session.current;
-    resetImageQuote();
-    setBusy(true);
-    setThinking(true);
-    setScreen("play");
-    setLog([]);
-    try {
-      const response = await api.newCombatSimulator(payload);
-      if (session.current !== generation) return;
-      onTurn(response);
-    } catch (err) {
-      if (session.current !== generation) return;
-      setScreen("simulator");
-      setBanner({ msg: "Falha ao abrir a arena: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
-    } finally {
-      if (session.current === generation) { setThinking(false); setBusy(false); }
-    }
-  }
-
   // spec streaming-turno-sse (R4): chunks do servidor alimentam UMA entrada
   // "streaming" do log; o typewriter revela o texto conforme ele cresce.
   const streamEntryId = useRef<number | null>(null);
@@ -695,83 +652,6 @@ export function App() {
     setPending(null);
     resetTurn();
     setBanner({ msg: "Ação pendente descartada. Você pode enviar uma nova ação.", kind: "warn" });
-  }
-
-  async function loadHistory(gid: string, generation: number) {
-    const entries = new Map<string, api.HistoryEntry>();
-    let cursor: string | undefined;
-    do {
-      const page = await api.getHistory(gid, cursor);
-      if (session.current !== generation) return;
-      page.entries.forEach(entry => entries.set(entry.id, entry));
-      cursor = page.next_cursor || undefined;
-      if (page.partial_history) setBanner({ msg: "Este save antigo contém apenas o trecho de histórico preservado.", kind: "warn" });
-    } while (cursor);
-    if (session.current === generation) setLog([...entries.values()].map(entry => ({
-      ...entry, historyId: entry.id, costMilli: entry.cost_milli, speaker: speakerFromHistory(entry),
-      technicalCostUsd: entry.technical_cost_usd, technicalCostExact: entry.technical_cost_exact,
-      id: logSeq.current++,
-    })));
-  }
-
-  function handleContinue() {
-    if (continueData?.game_id) void handleContinueSave(continueData.game_id);
-  }
-
-  async function handleContinueSave(gid: string) {
-    if (busy) return;
-    const generation = ++session.current;
-    resetImageQuote(); resetTurn();
-    setBusy(true);
-    try {
-      const r = await api.getState(gid);
-      if (session.current !== generation) return;
-      gameId.current = gid;
-      safeStorage.set(LS_KEY, gid);
-      // SPEC-347 R11.2: a memória de rolagem serve à troca de superfície, não a reabrir o save — o Livro abre no fim.
-      resetBookScroll(gid);
-      setScreen("play"); setLog([]); setData(r);
-      const saved = loadPending(owner.current, gid);
-      setPending(saved);
-      if (saved) {
-        const status = await api.getOperation(gid, saved.operation_id);
-        if (session.current !== generation) return;
-        if (status.status === "completed") { clearPending(owner.current, gid); setPending(null); }
-      }
-      await loadHistory(gid, generation);
-    } catch (err) {
-      if (session.current === generation) setBanner({ msg: "Não consegui abrir a campanha: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
-    } finally {
-      if (session.current === generation) setBusy(false);
-    }
-  }
-
-  async function handleDeleteSave(gid: string) {
-    if (busy) return;
-    setBusy(true);
-    try {
-      await api.deleteSave(gid);
-      if (gameId.current === gid) {
-        gameId.current = null;
-        safeStorage.remove(LS_KEY);
-      }
-      const list = await api.getSaves();
-      setSaves(list);
-      if (list.length === 0) setScreen("create");
-    } catch (err) {
-      setBanner({ msg: "Não consegui excluir: " + errMsg(err), kind: "error", requestId: errRequestId(err) });
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  function handleNew() {
-    if (busy) return;
-    session.current++;
-    resetImageQuote(); resetTurn();
-    setPending(null);
-    setScreen(data?.combat_simulation?.enabled ? "simulator" : "create");
-    setData(null);
   }
 
   const handleUiError = useCallback((message: string, requestId?: string) => {

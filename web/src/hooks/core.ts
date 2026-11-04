@@ -4,6 +4,8 @@ import type { BannerState } from "../components/Banner";
 import type { PendingOperation } from "../pendingOperation";
 import type { GameResponse, LogEntry, SaveSummary } from "../types";
 
+export const LS_KEY = "cronicas_game_id";
+
 export type Screen = "bootstrap" | "auth" | "saves" | "create" | "simulator" | "play" | "account";
 
 /**
