@@ -1,5 +1,5 @@
 {
-  "commit_sha": "3010233df30d26dc28660d7ba10c8c83b91e050f",
+  "commit_sha": "cb7d6644e34596f3c3233b6d2b70d7ea26c93385",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -18776,6 +18776,17 @@
       },
       "source": "file:tests/test_narrative_evidence.py",
       "target": "module:tests.test_narrative_evidence",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_no_new_fold.py",
+        "line": 1
+      },
+      "source": "file:tests/test_no_new_fold.py",
+      "target": "module:tests.test_no_new_fold",
       "type": "contains"
     },
     {
@@ -169080,6 +169091,50 @@
       },
       "source": "module:tests.test_narrative_evidence",
       "target": "symbol:tests.test_narrative_evidence.test_shared_contract_removes_false_death_and_arrival_preserving_atmosphere",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_no_new_fold.py",
+        "line": 39
+      },
+      "source": "module:tests.test_no_new_fold",
+      "target": "symbol:tests.test_no_new_fold._allowed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_no_new_fold.py",
+        "line": 22
+      },
+      "source": "module:tests.test_no_new_fold",
+      "target": "symbol:tests.test_no_new_fold._found",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_no_new_fold.py",
+        "line": 49
+      },
+      "source": "module:tests.test_no_new_fold",
+      "target": "symbol:tests.test_no_new_fold.test_fold_allowlist_only_shrinks",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_no_new_fold.py",
+        "line": 44
+      },
+      "source": "module:tests.test_no_new_fold",
+      "target": "symbol:tests.test_no_new_fold.test_no_new_local_fold",
       "type": "defines"
     },
     {
@@ -519689,6 +519744,50 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_no_new_fold.py",
+        "line": 50
+      },
+      "source": "symbol:tests.test_no_new_fold.test_fold_allowlist_only_shrinks",
+      "target": "symbol:tests.test_no_new_fold._allowed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_no_new_fold.py",
+        "line": 50
+      },
+      "source": "symbol:tests.test_no_new_fold.test_fold_allowlist_only_shrinks",
+      "target": "symbol:tests.test_no_new_fold._found",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_no_new_fold.py",
+        "line": 45
+      },
+      "source": "symbol:tests.test_no_new_fold.test_no_new_local_fold",
+      "target": "symbol:tests.test_no_new_fold._allowed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_no_new_fold.py",
+        "line": 45
+      },
+      "source": "symbol:tests.test_no_new_fold.test_no_new_local_fold",
+      "target": "symbol:tests.test_no_new_fold._found",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_no_print_in_production.py",
         "line": 38
       },
@@ -719822,6 +719921,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_no_new_fold.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_no_new_fold.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_no_print_in_production.py",
       "kind": "file",
       "line": 1,
@@ -730327,6 +730433,13 @@
       "line": 1,
       "path": "tests/test_narrative_evidence.py",
       "qualified_name": "tests.test_narrative_evidence"
+    },
+    {
+      "id": "module:tests.test_no_new_fold",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_no_new_fold.py",
+      "qualified_name": "tests.test_no_new_fold"
     },
     {
       "id": "module:tests.test_no_print_in_production",
@@ -817150,6 +817263,34 @@
       "qualified_name": "tests.test_narrative_evidence.test_shared_contract_removes_false_death_and_arrival_preserving_atmosphere"
     },
     {
+      "id": "symbol:tests.test_no_new_fold._allowed",
+      "kind": "test",
+      "line": 39,
+      "path": "tests/test_no_new_fold.py",
+      "qualified_name": "tests.test_no_new_fold._allowed"
+    },
+    {
+      "id": "symbol:tests.test_no_new_fold._found",
+      "kind": "test",
+      "line": 22,
+      "path": "tests/test_no_new_fold.py",
+      "qualified_name": "tests.test_no_new_fold._found"
+    },
+    {
+      "id": "symbol:tests.test_no_new_fold.test_fold_allowlist_only_shrinks",
+      "kind": "test",
+      "line": 49,
+      "path": "tests/test_no_new_fold.py",
+      "qualified_name": "tests.test_no_new_fold.test_fold_allowlist_only_shrinks"
+    },
+    {
+      "id": "symbol:tests.test_no_new_fold.test_no_new_local_fold",
+      "kind": "test",
+      "line": 44,
+      "path": "tests/test_no_new_fold.py",
+      "qualified_name": "tests.test_no_new_fold.test_no_new_local_fold"
+    },
+    {
       "id": "symbol:tests.test_no_print_in_production._is_main_guard",
       "kind": "test",
       "line": 25,
@@ -866732,5 +866873,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:be835362adeda028fa63ea3e8f3db03508bb709b3110293cad6b2af4095245da"
+  "source_tree_hash": "sha256:578d5656d685a8992a6b8bf57786186c83ef1c2d07b6aedecaf63185cb1d6cb3"
 }

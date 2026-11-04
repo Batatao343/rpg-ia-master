@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "3010233df30d26dc28660d7ba10c8c83b91e050f",
+  "commit_sha": "cb7d6644e34596f3c3233b6d2b70d7ea26c93385",
   "edge_counts": {
-    "calls": 39054,
-    "contains": 1292,
-    "defines": 18994,
+    "calls": 39058,
+    "contains": 1293,
+    "defines": 18998,
     "imports": 3176,
     "likely_test_for": 2286,
     "route_to": 69
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:f45a6806f26f4c691c413c3f17ec9d271f4510010b03a37e3195470411662ced",
+  "graph_hash": "sha256:6bf294a423d0f493353ac233b0979ce45bc9891ed1d5d22321fd80f4c0d42e77",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -859,6 +859,7 @@
     "tests/test_mutation_api_local.py",
     "tests/test_mvp.py",
     "tests/test_narrative_evidence.py",
+    "tests/test_no_new_fold.py",
     "tests/test_no_print_in_production.py",
     "tests/test_no_silent_except.py",
     "tests/test_npc_camadas.py",
@@ -1571,12 +1572,12 @@
     "artifact": 10,
     "class": 1111,
     "endpoint": 69,
-    "file": 1514,
+    "file": 1515,
     "function": 5869,
     "method": 869,
-    "module": 1292,
-    "test": 11144
+    "module": 1293,
+    "test": 11148
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:be835362adeda028fa63ea3e8f3db03508bb709b3110293cad6b2af4095245da"
+  "source_tree_hash": "sha256:578d5656d685a8992a6b8bf57786186c83ef1c2d07b6aedecaf63185cb1d6cb3"
 }
