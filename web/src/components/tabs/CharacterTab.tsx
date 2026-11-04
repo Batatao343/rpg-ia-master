@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import * as api from "../../api";
 import type { GameResponse, VisualAsset, WoundTrackView } from "../../types";
 import { FichaTab } from "./FichaTab";
-import type { EquipFn } from "./hudParts";
+import { useGameActionsContext } from "../../context/GameActionsContext";
 import { GeneratedPortrait } from "../GeneratedPortrait";
 import { QuestsTab } from "../QuestsTab";
 import { Sigil } from "../Sigil";
@@ -46,11 +46,12 @@ function woundsFrom(data: GameResponse): WoundTrackView {
 }
 
 /** SPEC-209 R8–R13: ficha completa + Jornada. Tudo vem de `GameResponse`; nada é recalculado aqui. */
-export function CharacterTab({ data, hitKey, onEquip, busy, artPanel }: {
-  data: GameResponse | null; hitKey: number; onEquip?: EquipFn; busy?: boolean;
+export function CharacterTab({ data, hitKey, busy, artPanel }: {
+  data: GameResponse | null; hitKey: number; busy?: boolean;
   /** SPEC-321 R6: cotação de retrato e imagens encomendadas (saíram do topo da tela). */
   artPanel?: ReactNode;
 }) {
+  const { onEquip } = useGameActionsContext();
   const [section, setSection] = useState<Section>("ficha");
   const p = data?.player_stats;
   const sub = [p?.class_name, p?.subclass, p?.race].filter(Boolean).join(" · ") || "—";

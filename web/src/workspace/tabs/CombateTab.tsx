@@ -9,7 +9,8 @@ import { CombatOutcomePanel } from "../../components/CombatOutcomePanel";
 import { EspolioPanel } from "../../components/combat/EspolioPanel";
 import { ForjaPanel } from "../../components/combat/ForjaPanel";
 import { LojaCartasPanel } from "../../components/combat/LojaCartasPanel";
-import { forgeHasContent, type RewardSender } from "../../cardRewards";
+import { useGameActionsContext } from "../../context/GameActionsContext";
+import { forgeHasContent } from "../../cardRewards";
 import { resultFrom, shouldShowResult } from "../../combatOutcome";
 import { Arena, buildParticipants } from "../../combat/Arena";
 import { RoundBoard } from "../../components/combat/RoundBoard";
@@ -59,7 +60,7 @@ const SPARE_TEXT = "Sem matar.";
 /** SPEC-325 R12/R13: frases que o servidor reconhece (combat_intents.abandon_target / accepts_sacrifice). */
 const ABANDON_TEXT = (name: string) => `Fujo e deixo ${name} para trás.`;
 const SACRIFICE_TEXT = "Aceito o sacrifício.";
-export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onCardReward, onGeneratePortrait, imageBusy, onOpenLevelUp, dismissedResult, onDismissResult, lastNarration, onShowChat }: {
+export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, imageBusy, onOpenLevelUp, dismissedResult, onDismissResult, lastNarration, onShowChat }: {
   data: GameResponse | null;
   busy: boolean;
   blocked: boolean;
@@ -71,12 +72,6 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   reactionCardId?: string;
   onReaction: (cardId?: string) => void;
   onAction: (text: string, options?: ActionOptions) => void;
-  /** SPEC-209: preparar Cartas fora de encontro; devolve a mensagem de erro (ou null). */
-  onPrepareCards?: (prepared: string[]) => Promise<string | null>;
-  /** SPEC-333: espólio de Cartas e Forja do baralho (só quando a API trouxer os blocos). */
-  onCardReward?: RewardSender;
-  /** SPEC-352 R12: retrato pago de inimigo; a Arena só mostra a oferta quando o servidor mandar `retrato.gerar`. */
-  onGeneratePortrait?: (enemyId: string, priceShards: number, priceMilli?: string) => void;
   imageBusy?: boolean;
   onOpenLevelUp?: () => void;
   /** SPEC-212: dispensa controlada pelo PlayScreen (sequencia o modal de nível); sem props = local. */
@@ -86,6 +81,8 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   lastNarration?: string;
   onShowChat?: () => void;
 }) {
+  // SPEC-209/333/352: preparar Cartas, espólio/Forja/Loja e retrato pago vêm do Context (SPEC-383 R2).
+  const { onPrepareCards, onCardReward, onGeneratePortrait } = useGameActionsContext();
   const combat = data?.combat;
   const [localDismissed, setLocalDismissed] = useState<string | null>(null);
   const controlled = !!onDismissResult;

@@ -27,6 +27,7 @@ import { publishRejectedPlay } from "./lib/rejectedPlay";
 import { LS_KEY, type AppCore, type Screen } from "./hooks/core";
 import { loadHistory as loadHistoryFor, useSaves } from "./hooks/useSaves";
 import { useImageQuote } from "./hooks/useImageQuote";
+import { GameActionsProvider } from "./context/GameActionsContext";
 import { AccountScreen } from "./components/AccountScreen";
 import { estilhasLabel } from "./lib/estilhas";
 
@@ -901,31 +902,31 @@ export function App() {
             exit={{ y: 0 }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           >
-            <PlayScreen
-              data={data}
-              log={log}
-              thinking={thinking}
-              turn={turn}
-              onRetryTurn={retryTurn}
-              banner={<Banner state={banner} onDone={clearBanner} />}
-              busy={busy}
-              onAction={handleAction}
-              onNew={handleNew}
-              onLevelUp={handleLevelUp}
-              onEquip={handleEquip}
-              onPrepareCards={handlePrepareCards}
-              onCardReward={handleCardReward}
-              onGeneratePortrait={handleGeneratePortrait}
-              onLogout={authRequired ? handleLogout : undefined}
-              onAccount={authRequired ? () => { accountReturn.current = "play"; setScreen("account"); } : undefined}
-              accountBalance={accountBalance}
-              confirmLeave={confirmLeave}
-              artPanel={artPanel}
-              onQuoteOffer={offer => { if (data?.game_id) void openImageQuote(data.game_id, offer.type, false, offer.offer_id); }}
-              offersDisabled={busy || imageBusy}
-              imageBusy={imageBusy}
-              owner={renderedOwner}
-            />
+            {/* SPEC-383 R2.1: objeto novo a cada render (sem memo/ref/efeito): o handler é o do render que pintou o DOM. */}
+            <GameActionsProvider value={{ onEquip: handleEquip, onPrepareCards: handlePrepareCards,
+              onCardReward: handleCardReward, onGeneratePortrait: handleGeneratePortrait }}>
+              <PlayScreen
+                data={data}
+                log={log}
+                thinking={thinking}
+                turn={turn}
+                onRetryTurn={retryTurn}
+                banner={<Banner state={banner} onDone={clearBanner} />}
+                busy={busy}
+                onAction={handleAction}
+                onNew={handleNew}
+                onLevelUp={handleLevelUp}
+                onLogout={authRequired ? handleLogout : undefined}
+                onAccount={authRequired ? () => { accountReturn.current = "play"; setScreen("account"); } : undefined}
+                accountBalance={accountBalance}
+                confirmLeave={confirmLeave}
+                artPanel={artPanel}
+                onQuoteOffer={offer => { if (data?.game_id) void openImageQuote(data.game_id, offer.type, false, offer.offer_id); }}
+                offersDisabled={busy || imageBusy}
+                imageBusy={imageBusy}
+                owner={renderedOwner}
+              />
+            </GameActionsProvider>
           </motion.div>
         )}
       </AnimatePresence>

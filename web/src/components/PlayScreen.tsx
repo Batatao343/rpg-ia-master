@@ -1,7 +1,6 @@
 import { useRef, useState, type ReactNode } from "react";
 import type { ActionOptions, GameResponse, LogEntry } from "../types";
 import type { TurnWait } from "../turnWait";
-import type { RewardSender } from "../cardRewards";
 import { LevelUpModal, type LevelUpPick } from "./LevelUpModal";
 import { estilhasLabel } from "../lib/estilhas";
 import { Workspace, type WorkspaceHandle } from "../workspace/Workspace";
@@ -24,11 +23,6 @@ interface Props {
   onAction: (text: string, options?: ActionOptions) => void;
   onNew: () => void;
   onLevelUp: (choiceId: string, pick: LevelUpPick) => void;
-  onEquip: (pick: { item_id?: string; unequip_slot?: string }) => void;
-  onPrepareCards?: (prepared: string[]) => Promise<string | null>;
-  onCardReward?: RewardSender;
-  /** SPEC-352 R12: pedir o retrato pago de um inimigo (id da instância, preço mostrado em Estilhas). */
-  onGeneratePortrait?: (enemyId: string, priceShards: number, priceMilli?: string) => void;
   onLogout?: () => void;
   onAccount?: () => void;
   accountBalance?: string | null;
@@ -46,7 +40,7 @@ interface Props {
 
 /** SPEC-204: orquestrador da tela de jogo — topbar + workspace (chat + UM painel)
  *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
-export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onCardReward, onGeneratePortrait, onLogout, onAccount, accountBalance, confirmLeave = false, artPanel, onQuoteOffer, offersDisabled, imageBusy, owner = "legacy" }: Props) {
+export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onLogout, onAccount, accountBalance, confirmLeave = false, artPanel, onQuoteOffer, offersDisabled, imageBusy, owner = "legacy" }: Props) {
   const compact = useIsCompact();
   const [confirmingNew, setConfirmingNew] = useState(false);
   const [luDismissedKey, setLuDismissedKey] = useState<string | null>(null);
@@ -129,8 +123,7 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
 
       <Workspace key={data?.game_id ?? "sem-jogo"} ref={workspace} owner={owner} data={data} log={log}
         thinking={thinking} turn={turn} onRetryTurn={onRetryTurn} busy={busy} blocked={blocked}
-        onAction={onAction} onEquip={onEquip}
-        onPrepareCards={onPrepareCards} onCardReward={onCardReward} onGeneratePortrait={onGeneratePortrait} imageBusy={imageBusy} onOpenLevelUp={openLevelUp}
+        onAction={onAction} imageBusy={imageBusy} onOpenLevelUp={openLevelUp}
         artPanel={artPanel} onQuoteOffer={onQuoteOffer} offersDisabled={offersDisabled}
         place={data?.current_location || "—"} banner={compact ? banner : undefined}
         headActions={compact ? (
