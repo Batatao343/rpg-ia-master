@@ -20,6 +20,7 @@ Flag ``RPG_ENEMY_DECKS=off|shadow|on`` (default ``off``): ``off`` = nada muda;
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import logging
@@ -306,6 +307,34 @@ def apply_deck(actor: dict, seed: int | str | None = None) -> None:
             actor, actor.get("deck_seed", 0) if seed is None else seed
         )
         actor["_deck332_shadow"] = True
+
+
+def extra_action_cards(actor: dict) -> list[str] | None:
+    """SPEC-373 R12: na ação extra do chefe, só Carta própria (autoral ou ``baralho_extra`` de
+    fase). ``None`` = sem filtro (``off``, ficha sem baralho montado ou nada a tirar)."""
+    if mode() != "on" or not actor.get("_deck332"):
+        return None
+    own = set(actor.get("cartas_autorais") or [])
+    for phase in _sorted_phases(actor):
+        own |= {str(c) for c in phase.get("baralho_extra") or []}
+    cur = _own_ids(actor)
+    kept = [c for c in cur if c in own]
+    return kept if kept and len(kept) < len(cur) else None
+
+
+@contextlib.contextmanager
+def extra_action_deck(actor: dict):
+    """Troca ``cartas`` pelo baralho da ação extra só enquanto o inimigo declara."""
+    keep = extra_action_cards(actor)
+    if keep is None:
+        yield
+        return
+    full = actor["cartas"]
+    actor["cartas"] = keep
+    try:
+        yield
+    finally:
+        actor["cartas"] = full
 
 
 # --------------------------------------------------------------------------

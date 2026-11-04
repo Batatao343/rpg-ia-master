@@ -2925,7 +2925,8 @@ def _run_round(
                         _frustrate(actor_id, _it, "incapaz")  # SPEC-330 Interromper
                 continue
             _mark = _extra_mark(out)
-            decl = _enemy_decl(actor_id, actor)
+            with _edk_mod.extra_action_deck(actor):  # SPEC-373 R12
+                decl = _enemy_decl(actor_id, actor)
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
             _close_extra_action(out, actor, _mark)  # SPEC-387 R29
             _spend_taunt(actor_id, actor)

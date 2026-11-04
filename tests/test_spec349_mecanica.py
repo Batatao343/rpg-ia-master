@@ -200,7 +200,8 @@ def test_ajustes_registrados_e_slots_sem_corpo():
         assert cid in FICHAS, cid
         assert isinstance(a.get("arena"), str) and "L" in a["arena"], cid
         for chave in ("corpo", "dano", "forca", "sig"):
-            assert abs(int(a.get(chave, 0))) <= 7, (cid, chave)
+            teto = 9 if cid in CHEFES and chave in ("dano", "sig") else 7  # SPEC-373 D4
+            assert abs(int(a.get(chave, 0))) <= teto, (cid, chave)
         if cid in SLOTS:
             assert not a.get("corpo"), cid
 

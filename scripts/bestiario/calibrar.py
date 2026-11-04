@@ -33,6 +33,7 @@ AJ_PATH = ROOT / "data" / "bestiario" / "mecanica" / "_ajustes.yaml"
 BASE_PATH = ROOT / "docs" / "spec349" / "arena-slots-baseline.json"
 LIMITE = 7
 LIMITE_DANO = 7
+LIMITE_DANO_CHEFE = 9  # SPEC-373 D4: dano/sig de chefe até ±9 (os demais dials seguem em ±7)
 ALVO = 0.65
 
 
@@ -151,9 +152,14 @@ def main() -> int:
                 )
             )
             novo = {c: int(cur.get(c, 0)) for c in (*comps, "sig")}
+            chefe = fichas[cid]["categoria"] == "chefe"
+            lim_dano = LIMITE_DANO_CHEFE if chefe else LIMITE_DANO
             for _ in range(k):
-                comp = min(comps, key=lambda c: (abs(novo[c]), comps.index(c)))
-                lim = LIMITE_DANO if comp == "dano" else LIMITE
+                livres = [c for c in comps if abs(novo[c] + sentido) <= (lim_dano if c == "dano" else LIMITE)]
+                if not livres:
+                    break
+                comp = min(livres, key=lambda c: (abs(novo[c]), comps.index(c)))
+                lim = lim_dano if comp == "dano" else LIMITE
                 novo[comp] = max(-lim, min(lim, novo[comp] + sentido))
             if (
                 len(cells) == 2
@@ -166,7 +172,7 @@ def main() -> int:
                 on = next(v for k, v in cells.items() if k.endswith("|on"))
                 off = next(v for k, v in cells.items() if k.endswith("|off"))
                 novo["sig"] = max(
-                    -LIMITE_DANO, min(LIMITE_DANO, novo["sig"] + (1 if on > off else -1))
+                    -lim_dano, min(lim_dano, novo["sig"] + (1 if on > off else -1))
                 )
             aj.setdefault(cid, {}).update(novo)
             aj[cid]["arena"] = leitura
