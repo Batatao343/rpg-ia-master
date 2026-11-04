@@ -1,6 +1,6 @@
 # SPEC-381 — Fatiar `api.py` em routers por domínio, DTOs e montagem de resposta (refatoração pura)
 
-> **Status:** `in-progress` (executor 04/11: Etapas 0-14 prontas, faltam R13b/R18/Etapa 15; ver "Registro de execucao"; aprovada em 04/11, dono: "vai executando o que puder"; D1–D10 = recomendações do §8)
+> **Status:** `done` (04/11: Etapas 0–15; revisão Sol APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-381-sol-review.md`; W2 coordenador: evals compare 12 suítes seed 7 sem diferença, playtest 14 perfis igual, catálogo byte-igual; smoke `uvicorn api:app` e `python api.py` OK; pendente: §6 no próximo deploy do staging, `smoke_local_profile` exige Supabase local; follow-up R17b: podar ~106 imports mortos de `api.py`) · aprovada em 04/11, dono: "vai executando o que puder"; D1–D10 = recomendações do §8
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03 (revisão independente aplicada: `handoffs/SPEC-381-independent-review.md`; ver "Resposta à revisão" no fim)
 > **Origem:** `docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md` §4.1 itens 1, 8 e 9, §3 R8, §5 letra E e §6 inteiro (letra E → SPEC-381; regras W1–W8, W1 na versão revisada)
 > **Depende de:** SPEC-367 e SPEC-368 **pousadas**. A revisão confirmou que já pousaram as edições de `api.py`: `566a4efc` e `061c330b`. SPEC-378 **recomendada antes** (helpers comuns), com a condição D10: a 378 não toca `api.py`.
@@ -575,21 +575,21 @@ Na Etapa 8 (`billing`) entra a troca `app.routes` → `request.app.routes` (R21)
 
 ## 5. Critérios de aceite
 
-- [ ] R6: dumps `legacy` e `hosted` byte-iguais a `docs/spec381/before/` (com tipo de rota e 9 handlers); `test_spec381_api_surface` apagado no fim
-- [ ] R21: nenhum `_IncludedRouter` novo; `route_label` devolve o template para 1 path de cada router
-- [ ] R7: conjunto de `sys.modules` só com os módulos novos; importtime ≤ 105 % (mediana de 5)
-- [ ] R3/R4/R5: `test_spec381_structure` verde (sem `import api` nos módulos novos, efeitos colaterais em `api.py`, estado com identidade, `_FAKE_GOOGLE` não reexportado)
-- [ ] R9–R13: os 34 nomes com lar único e patch vivo; nenhum teste com asserção alterada (`git diff` de `tests/` só mostra prefixo `api.`→`<lar>.`, import e `API_FILES`)
-- [ ] R13b: `patch_liveness` antes = depois; mutação dos não-callable falha antes e depois
-- [ ] R14: contagens dos 13 scanners iguais ao base
-- [ ] Catálogo de eventos byte-igual (R8)
-- [ ] R15/R16/R17: bundle, gates por caminho e baseline do Ruff conforme
-- [ ] R18: golden de 404 igual; lista de sites não convertidos no handoff
-- [ ] `api.py` ≤ ~1.300 linhas; maior módulo novo é `routes/turn.py`
-- [ ] W2 completo: suíte, evals `compare` sem diferença, playtest com mesma contagem
-- [ ] Revisão independente (Sol) aprovada, com a prova de patch vivo
-- [ ] Saves antigos carregam (nenhuma mudança em `persistence.py`; `test_spec265_legacy_mana_saves` e afins verdes)
-- [ ] §6 executado em staging
+- [x] R6: dumps `legacy` e `hosted` byte-iguais a `docs/spec381/before/` (com tipo de rota e 9 handlers); `test_spec381_api_surface` apagado no fim
+- [x] R21: nenhum `_IncludedRouter` novo; `route_label` devolve o template para 1 path de cada router
+- [x] R7: conjunto de `sys.modules` só com os módulos novos; importtime ≤ 105 % (mediana de 5)
+- [x] R3/R4/R5: `test_spec381_structure` verde (sem `import api` nos módulos novos, efeitos colaterais em `api.py`, estado com identidade, `_FAKE_GOOGLE` não reexportado)
+- [x] R9–R13: os 34 nomes com lar único e patch vivo; nenhum teste com asserção alterada (`git diff` de `tests/` só mostra prefixo `api.`→`<lar>.`, import e `API_FILES`)
+- [x] R13b: `patch_liveness` antes = depois; mutação dos não-callable falha antes e depois
+- [x] R14: contagens dos 13 scanners iguais ao base
+- [x] Catálogo de eventos byte-igual (R8)
+- [x] R15/R16/R17: bundle, gates por caminho e baseline do Ruff conforme
+- [x] R18: golden de 404 igual; lista de sites não convertidos no handoff
+- [x] `api.py` ≤ ~1.300 linhas; maior módulo novo é `routes/turn.py`
+- [x] W2 completo: suíte, evals `compare` sem diferença, playtest com mesma contagem
+- [x] Revisão independente (Sol) aprovada, com a prova de patch vivo
+- [x] Saves antigos carregam (nenhuma mudança em `persistence.py`; `test_spec265_legacy_mana_saves` e afins verdes)
+- [ ] §6 executado em staging (pendente: próximo deploy do staging)
 
 ## 6. Smoke test real (staging)
 
