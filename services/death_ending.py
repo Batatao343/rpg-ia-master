@@ -38,4 +38,10 @@ def apply_accept_text(state: dict) -> dict:
             break
     if history:
         state["presentation_history"] = history
+    outcome = state.get("last_turn_outcome")
+    if isinstance(outcome, dict) and WHEEL_TEXT in str(outcome.get("player_message", "")):
+        state["last_turn_outcome"] = {
+            **outcome,
+            "player_message": _swap(str(outcome["player_message"])),
+        }
     return state

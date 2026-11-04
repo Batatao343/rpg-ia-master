@@ -45,6 +45,24 @@ def test_accept_replaces_wheel_question_in_message_and_history(tmp_path, monkeyp
     assert all("aceitar o fim aqui?" not in row["text"] for row in saved["presentation_history"])
 
 
+def test_accept_updates_response_message_from_turn_outcome(tmp_path, monkeypatch):
+    """O `message` da resposta vem de `last_turn_outcome.player_message` (player_facing_message)."""
+    monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
+    api._rate_hits.clear()
+    client = TestClient(api.app)
+    gid = str(uuid.uuid4())
+    prose = f"Você tomba. {round_log.WHEEL_TEXT}"
+    st = _state(gid, hp=0, gold=0, death_pending=True)
+    st["messages"] = [AIMessage(content=prose)]
+    st["last_turn_outcome"] = {"player_message": prose}
+    persistence.save_game_state(st)
+    body = client.post("/game/death", json={"game_id": gid, "choice": "accept"}).json()
+    assert body["message"].endswith(ACCEPT_TEXT)
+    assert "aceitar o fim aqui?" not in body["message"]
+    saved = persistence.load_game_state(persistence.save_path(gid))
+    assert saved["last_turn_outcome"]["player_message"].endswith(ACCEPT_TEXT)
+
+
 # --- R2 ----------------------------------------------------------------------------------
 def _blow(target, by="player", kind="golpe", condition=None):
     return {"target_id": target, "by_actor_id": by, "kind": kind, "condition": condition}
