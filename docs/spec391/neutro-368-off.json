@@ -1,0 +1,211 @@
+{
+ "r9": {
+  "por_postura": {
+   "Devoto do Abismo": {
+    "conflitos": 360,
+    "rodadas": 1669,
+    "cartas_por_rodada_media": 1.799,
+    "cartas_por_rodada_p50": 2.0,
+    "pct_rodadas_ge3_escolhas": 91.9,
+    "pct_rodadas_ge3_com_basico": 99.7,
+    "uso_cartas_da_mao_pct": 36.0,
+    "cartas_com_uso_acima_60": {
+     "bas_dev_golpe": 0.758
+    },
+    "p95_rodadas_conflito": 11.0,
+    "vitoria_pct": 71.7,
+    "timeout_pct": 0.3
+   },
+   "Sangromante": {
+    "conflitos": 360,
+    "rodadas": 1293,
+    "cartas_por_rodada_media": 1.792,
+    "cartas_por_rodada_p50": 2.0,
+    "pct_rodadas_ge3_escolhas": 94.0,
+    "pct_rodadas_ge3_com_basico": 99.6,
+    "uso_cartas_da_mao_pct": 35.8,
+    "cartas_com_uso_acima_60": {
+     "bas_san_corte_raso": 0.872,
+     "san1_ava_penhor_de_carne": 0.661,
+     "san1_exp_selo_de_dor": 0.665,
+     "san_sil_exato": 0.764
+    },
+    "p95_rodadas_conflito": 8.0,
+    "vitoria_pct": 72.5,
+    "timeout_pct": 0.0
+   },
+   "Corruptor": {
+    "conflitos": 360,
+    "rodadas": 1496,
+    "cartas_por_rodada_media": 1.864,
+    "cartas_por_rodada_p50": 2.0,
+    "pct_rodadas_ge3_escolhas": 93.0,
+    "pct_rodadas_ge3_com_basico": 98.7,
+    "uso_cartas_da_mao_pct": 37.3,
+    "cartas_com_uso_acima_60": {
+     "bas_cor_golpe": 0.798,
+     "bas_cor_mofo": 0.607,
+     "cor_bio_gangrena": 0.613
+    },
+    "p95_rodadas_conflito": 9.0,
+    "vitoria_pct": 61.7,
+    "timeout_pct": 0.3
+   },
+   "Arcanista Cinzento": {
+    "conflitos": 360,
+    "rodadas": 1337,
+    "cartas_por_rodada_media": 1.844,
+    "cartas_por_rodada_p50": 2.0,
+    "pct_rodadas_ge3_escolhas": 81.4,
+    "pct_rodadas_ge3_com_basico": 97.2,
+    "uso_cartas_da_mao_pct": 36.9,
+    "cartas_com_uso_acima_60": {
+     "arc1_cal_pulso_medido": 1.0,
+     "arc_des_mao_nua": 0.936,
+     "arc_descarga": 0.897,
+     "arc_faisca": 0.678
+    },
+    "p95_rodadas_conflito": 9.0,
+    "vitoria_pct": 58.6,
+    "timeout_pct": 0.0
+   },
+   "Médico de Campo": {
+    "conflitos": 360,
+    "rodadas": 2578,
+    "cartas_por_rodada_media": 2.1,
+    "cartas_por_rodada_p50": 2.0,
+    "pct_rodadas_ge3_escolhas": 81.0,
+    "pct_rodadas_ge3_com_basico": 97.8,
+    "uso_cartas_da_mao_pct": 42.0,
+    "cartas_com_uso_acima_60": {
+     "bas_med_golpe": 0.811,
+     "med1_fer_lente_de_protese": 1.0,
+     "med_fer_talas": 0.619
+    },
+    "p95_rodadas_conflito": 19.0,
+    "vitoria_pct": 55.3,
+    "timeout_pct": 4.4
+   }
+  },
+  "total": {
+   "conflitos": 1800,
+   "rodadas": 8373,
+   "cartas_por_rodada_media": 1.909,
+   "cartas_por_rodada_p50": 2.0,
+   "pct_rodadas_ge3_escolhas": 87.4,
+   "pct_rodadas_ge3_com_basico": 98.5,
+   "uso_cartas_da_mao_pct": 38.2,
+   "cartas_com_uso_acima_60": {
+    "arc1_cal_pulso_medido": 1.0,
+    "arc_des_mao_nua": 0.936,
+    "arc_descarga": 0.897,
+    "arc_faisca": 0.678,
+    "bas_cor_golpe": 0.798,
+    "bas_cor_mofo": 0.607,
+    "bas_dev_golpe": 0.758,
+    "bas_med_golpe": 0.811,
+    "bas_san_corte_raso": 0.872,
+    "cor_bio_gangrena": 0.613,
+    "med1_fer_lente_de_protese": 1.0,
+    "med_fer_talas": 0.619,
+    "san1_ava_penhor_de_carne": 0.661,
+    "san1_exp_selo_de_dor": 0.665,
+    "san_sil_exato": 0.764
+   },
+   "p95_rodadas_conflito": 12.0,
+   "vitoria_pct": 63.9,
+   "timeout_pct": 1.0
+  }
+ },
+ "r10": {
+  "total": {
+   "off": {
+    "conflitos": 1800,
+    "dano_medio": 12.05,
+    "vitoria_pct": 63.9
+   },
+   "on": {
+    "conflitos": 1800,
+    "dano_medio": 13.22,
+    "vitoria_pct": 56.8
+   },
+   "delta_dano": 1.17,
+   "delta_dano_pct": 9.7,
+   "dano_cai": false
+  },
+  "por_postura": {
+   "Arcanista Cinzento": {
+    "off": {
+     "conflitos": 360,
+     "dano_medio": 12.77,
+     "vitoria_pct": 58.6
+    },
+    "on": {
+     "conflitos": 360,
+     "dano_medio": 14.45,
+     "vitoria_pct": 47.2
+    }
+   },
+   "Corruptor": {
+    "off": {
+     "conflitos": 360,
+     "dano_medio": 12.91,
+     "vitoria_pct": 61.7
+    },
+    "on": {
+     "conflitos": 360,
+     "dano_medio": 13.98,
+     "vitoria_pct": 53.6
+    }
+   },
+   "Devoto do Abismo": {
+    "off": {
+     "conflitos": 360,
+     "dano_medio": 10.2,
+     "vitoria_pct": 71.7
+    },
+    "on": {
+     "conflitos": 360,
+     "dano_medio": 11.24,
+     "vitoria_pct": 68.9
+    }
+   },
+   "Médico de Campo": {
+    "off": {
+     "conflitos": 360,
+     "dano_medio": 12.62,
+     "vitoria_pct": 55.3
+    },
+    "on": {
+     "conflitos": 360,
+     "dano_medio": 13.25,
+     "vitoria_pct": 50.8
+    }
+   },
+   "Sangromante": {
+    "off": {
+     "conflitos": 360,
+     "dano_medio": 11.74,
+     "vitoria_pct": 72.5
+    },
+    "on": {
+     "conflitos": 360,
+     "dano_medio": 13.19,
+     "vitoria_pct": 63.3
+    }
+   }
+  }
+ },
+ "meta": {
+  "spec": "SPEC-368",
+  "seeds": [
+   0,
+   19
+  ],
+  "levels": "1,3,5",
+  "categories": "padrao,elite",
+  "per_cat": 3,
+  "bot": "scripts/cards/sim.py full_deck_decl (+ leitura do Pressagio no braco R10 on)",
+  "elapsed_s": 43.8
+ }
+}
