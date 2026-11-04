@@ -215,7 +215,9 @@ def test_principal_b_cannot_touch_game_a(two_principals, monkeypatch, method, pa
     monkeypatch.setattr(tp.runtime, "resources", (object(),))
     from infrastructure.request_context import current_principal
 
-    monkeypatch.setattr("api._image_finance", lambda: (tp.runtime, current_principal(), object()))
+    monkeypatch.setattr(
+        "routes.art._image_finance", lambda: (tp.runtime, current_principal(), object())
+    )
     from services.account_security import proof
 
     _patch_audit_source(monkeypatch)

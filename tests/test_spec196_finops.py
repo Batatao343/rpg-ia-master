@@ -18,6 +18,7 @@ from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 import api
+import routes.art
 import llm_setup
 from infrastructure.contracts import Principal
 from infrastructure.finops_reader import FakeFinopsReader, OpsCounts
@@ -376,7 +377,7 @@ def test_image_switch_refuses_new_generation_but_not_reading(monkeypatch):
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1")
     ks.set_switches(ks.KillSwitches(ks.MemorySwitchStore({ks.IMAGE: False}), ttl=0))
     with pytest.raises(HTTPException) as exc:
-        api._image_finance()
+        routes.art._image_finance()
     assert (exc.value.status_code, exc.value.detail) == (503, "image_generation_disabled")
     assert TestClient(api.app).get("/health").status_code in {200, 401, 404}  # app still serves
 
@@ -827,8 +828,10 @@ def test_f5_guard_applies_to_new_quotes_not_to_replay_of_existing_generation(mon
     )
     monkeypatch.setattr("infrastructure.request_context.current_principal", lambda: object())
     with pytest.raises(HTTPException):
-        api._image_finance()  # quote / new confirm: refused
-    runtime, _principal, _repo = api._image_finance(guard=False)  # confirm replay lookup: allowed
+        routes.art._image_finance()  # quote / new confirm: refused
+    runtime, _principal, _repo = routes.art._image_finance(
+        guard=False
+    )  # confirm replay lookup: allowed
     assert runtime.resources
 
 

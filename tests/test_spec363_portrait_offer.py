@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 import api
+import routes.art
 import api_presenters
 import api_core
 from services import kill_switches
@@ -101,7 +102,7 @@ def test_offer_implies_quote_ok(monkeypatch, live, db, env, switch, fresh, price
     )
     gerar = (view or {}).get("gerar")
     if gerar:
-        api._guard_image_effect()  # não pode levantar (switch on + preço fresco)
+        routes.art._guard_image_effect()  # não pode levantar (switch on + preço fresco)
         assert db and env and live and switch and fresh and price
     if not (switch and fresh):
         assert not gerar, "oferta com o portão da imagem fechado"

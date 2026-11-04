@@ -7,6 +7,7 @@ from fastapi import HTTPException
 from pydantic import ValidationError
 
 import api
+import routes.art
 import api_presenters
 import api_core
 from services import visual_catalog
@@ -77,7 +78,7 @@ def test_quote_kill_switch_503_before_any_row(monkeypatch):
     def off():
         raise HTTPException(503, "image_generation_disabled")
 
-    monkeypatch.setattr(api, "_guard_image_effect", off)
+    monkeypatch.setattr(routes.art, "_guard_image_effect", off)
     with pytest.raises(HTTPException) as exc:
         api.create_image_quote("g", _req(enemy_id="enemy_goblin_1"))
     assert exc.value.status_code == 503
