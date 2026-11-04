@@ -138,3 +138,4 @@ desconta): mon_portao_que_morde, mon_odre_de_oleo, mon_fervente_de_ferrugem, mon
   - P2-4: o campo `arena` de fervente/lençol/odre em `_ajustes.yaml` mostra a leitura de antes da correção; fica para o follow-up.
   - P2-5: um ator sem arquétipo tabelado, com prioridade `absoluta` e dica "foge", ainda foge pelo legado `move afastar` (`conflict_orchestrator.py:702-705`). Hoje nenhuma criatura curada cai nesse caso; vira follow-up.
   - P2-6: a citação das 4 ids de `fichas` na §9 foi escrita pelo autor de eval; conteúdo conferido pelo coordenador.
+- **Smoke de integracao (04/11, §6):** `docs/spec395/smoke.md`. Portao (3/10) atacou ate morrer, sem fuga; lacrador (5/16) fugiu na rodada 2 (`final_status: fugiu`). MockLLM, save editado so para pôr a criatura ferida (declarado no arquivo).
