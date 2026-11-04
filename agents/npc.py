@@ -523,8 +523,7 @@ def generate_new_npc(
     else:
         lore_info = query_rag(f"{name} {context}", index_name="lore")
 
-    # SPEC-223 R7: o nome vindo do jogador não escala o tier (sempre FAST).
-    llm = get_llm(temperature=0.7, tier=ModelTier.FAST)
+    llm = get_llm(temperature=0.7, tier=ModelTier.FAST)  # SPEC-223 R7
 
     try:
         designer = llm.with_structured_output(NPCSchema)
