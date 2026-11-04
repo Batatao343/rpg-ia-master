@@ -1,7 +1,7 @@
 # SPEC-382 — Refatoração pura dos nós grandes: `storyteller_node`, `_combat_node` e `_run_round` em fases nomeadas no mesmo módulo
 
-> **Status:** `approved` (04/11, coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = não (follow-up), D2 = 378 já `done`, D3 = aceitar, D4 = aceitar, D5 = smoke local, D6 = já aplicada pela SPEC-387 (guard da 363 com gate de branch), D7 = SPEC-384 D3 é **não**: Etapa 4 preserva `_advance_reinforcements`. Etapa 3 espera a `spec-373` (W1: `services/conflict_orchestrator.py`))
-> **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
+> **Status:** `in-progress` (Etapas 0-parcial, 1, 2 e 4 executadas em 04/11; Etapa 3 pendente por W1 da `spec-373`; Etapa 5 pendente). Aprovada em 04/11 ( coordenador, autonomia do dono na onda: "vai executando o que puder"; D1 = não (follow-up), D2 = 378 já `done`, D3 = aceitar, D4 = aceitar, D5 = smoke local, D6 = já aplicada pela SPEC-387 (guard da 363 com gate de branch), D7 = SPEC-384 D3 é **não**: Etapa 4 preserva `_advance_reinforcements`. Etapa 3 espera a `spec-373` (W1: `services/conflict_orchestrator.py`))
+> **Criada:** 2026-11-03 · **Atualizada:** 2026-11-04
 > **Origem:** auditoria de qualidade de 03/11 (`docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md`
 > §4.2 itens 1–2, §5 letra F, §6 regras W1–W8, §6.3 ordem 7)
 > **Depende de:** por etapa (§4):
@@ -572,3 +572,63 @@ Nenhum achado rejeitado. Ajuste factual em relação ao texto da revisão: na D6
 pousou, porque o ESTADO de 02/11 a lista como `in-progress`.
 - **D7 — Ordem com a SPEC-384 D3** (apagar `_advance_reinforcements`). Recomendação: decidir a D3 antes
   da Etapa 4; se for "apagar", a 384 pousa antes e a Etapa 4.0 regrava o golden de combate sobre ela.
+
+## Registro de execução (04/11, executor — Etapas 1, 2 e 4)
+
+**Estado:** golden (Etapa 1) + `storyteller_node` (Etapa 2) + `_combat_node` (Etapa 4) prontos na branch `spec-382`
+(rebaseada sobre `3cd58353`). **Etapa 3 (`_run_round`) NÃO executada**: a branch viva `spec-373` edita
+`services/conflict_orchestrator.py` (W1). Antes dela: acrescentar ≥ 6 casos diretos de `run_round` ao golden
+(§3.4) — o golden atual só cobre `run_round` indiretamente (combate e campanhas) — e pousar a D6 (gate de branch em
+`test_spec363_golden_guard.py` **já existe**, SPEC-387). Etapa 5 (W2 A/B completo, revisão Sol, smoke) com o coordenador.
+
+**Resultado (linhas por `ast`):** `storyteller_node` 1553 → 118; `_combat_node` 1037 → 125; nenhum helper novo > 100
+linhas (maior: `_story_system_message` 93, `_combat_aftermath` 92). Arquivos: `agents/storyteller.py` 2725 → 3020,
+`agents/combat.py` 3731 → 3957 (inevitável pelo R2: mesmo módulo; baseline de `tests/size_budget.json` atualizada
+só nessas 4 linhas, em commit próprio com o motivo).
+
+**Desvios (registrados, sem mudança de comportamento):**
+1. *Contexto de turno único.* `_StoryTurn` (108 campos) e `_CombatTurn` (66) guardam **todos** os locais usados por
+   mais de uma fase (inclusive `update`, `llm`, `sys`, `narrative_text`, `out`, `result`); os helpers recebem só `(t)`,
+   sem os parâmetros extras da §3.3 (`update`, `llm`, `recent_player_inputs`). Loop-vars e temporários de uma fase só
+   ficam locais. Identidade preservada (`turn_bl is not state.get("turn_baseline")` verde pelo golden).
+2. *Fronteiras de helper (§3.3 superada).* Teto de 100 linhas por função nova (gate `size_budget`) em vez de 220:
+   storyteller — `_story_travel_refusal`, `_story_travel_passage`, `_story_rest_passage`, `_story_world_tick_effects`,
+   `_story_membership_and_quests`, `_story_scene_and_replan`, `_story_roll_encounter` (+`_story_fauna_to_signal`),
+   `_story_encounter_kind`, `_story_combat_start`, `_story_noncombat_encounter`, `_story_world_pulse`,
+   `_story_context_blocks`, `_story_prompt_blocks`, `_story_prompt_scene_blocks`, `_story_system_message`,
+   `_story_narrate`, `_story_guard_narrative` (+`_story_prevalidate_events`), `_story_engine_proposals`,
+   `_story_beat_and_npcs`, `_story_assemble_{base,items,events,quests}`, `_story_exception_fallback`;
+   combate — `_combat_unconscious_refusal`, `_combat_freetext_refusal`, `_combat_open_scene`, `_combat_no_active_result`,
+   `_combat_assemble_sides`, `_combat_flee_request`, `_combat_environment`, `_combat_attempt_flee`,
+   `_combat_declare_turn`, `_combat_prepare_round`, `_combat_run_round`, `_combat_aftermath`,
+   `_combat_outcome_summary`, `_combat_narrate`, `_combat_close_round_{meta,log}`, `_combat_close_encounter`,
+   `_combat_result_{base,quests,events}`. `llm = get_llm(...)` fica no orquestrador no mesmo ponto; o `try/except`
+   principal e o `return _story_exception_fallback(t)` também (R6). `_fm_view/_fm_apply` viraram funções de módulo `(t, …)`.
+3. *Texto-fonte.* `test_spec371_saber` exige os literais `if not is_simulation and _fauna_saber.active()` e
+   `if combat_over and not is_simulation and _fauna_saber.active()` (não listados no R12): os dois helpers mantêm
+   aliases locais (`is_simulation = t.is_simulation`). O `getsource` do nó que a R12 previa já virou teste de
+   comportamento (SPEC-379 R6a). `travel_intent` e `world_before` foram promovidos a campos num commit próprio
+   (a divisão viagem/descanso os cruza).
+4. *Golden.* `tests/test_spec382_node_golden.py` (+ `spec382_node_golden.py`, `spec382_node_cases.py`, fixture): 17 casos
+   diretos de `storyteller_node`, 25 de combate (12 cenários × `RPG_CARD_DECK` off/on + texto livre `on`), 3 de stream
+   (`narrative_sink.bind`), 8 campanhas de **30** turnos (4 perfis × deck off/on; `seed=0`) com hash do estado final,
+   `last_mech_log` e `record_step`. Partes hasheadas: retorno, estado de entrada pós-chamada, eventos `rpg.*` +
+   `record_step`, arquivos em `tmp_path`. Normalização: ids hex (uuid) e `llm.mock_selected` (uma vez por processo).
+   Estável em 3 `PYTHONHASHSEED`, `-n 2` e depois de outros testes (commit de correção do harness, sem regravar o
+   fixture). Fixture gravado 1× e **nunca regravado**; Etapa 4.0 dispensada (a 371 já estava na `main`; rebase sobre
+   a 393 não alterou nenhum hash).
+5. *Cobertura por faixa* (`sys.monitoring`, só o golden): `storyteller_node` 473/629 stmts (75 %), `_combat_node`
+   374/475 (79 %); toda faixa tem ≥ 1 linha executada. **Não cobertos** (extraídos sem prova do golden, só pelos testes
+   de escopo): storyteller — caça/sinal de fauna (`hunt_hint`, `track_signal`, `fauna_to_signal` com `_fnote`),
+   `rumor_adoption.commit`, `advance_factions` (motor desligado), `on_faction_defeated`/ascensão, `death_pending` por
+   armadilha, `companion_voice_ack`, `archive_low`, item repetido/único reclamado, recusa de item narrado,
+   `world_replan` por causa; combate — `manifest_from_legacy`, `card_rewards.expire_pending`/`grant_after_conflict`,
+   `_normalize_extra_play`, `chase_state` por condição, absorção/`finish_combat` do saber de fauna, reflexo de aliados
+   de cena, `death_pending` (coberto só no ramo off), eventos de abandono (`choices["events"]`). Revisor: prefira ler
+   o diff desses trechos.
+6. *Evidência por commit.* Golden (53 casos) verde em **cada** commit da série; escopo da Etapa 2 (1013 testes) e da
+   Etapa 4 (1267 testes) verdes no HEAD. Não rodei a suíte completa nem W2 A/B (coordenador).
+7. *D7.* `_advance_reinforcements` e `_plan_reinforcements` ficaram como estavam.
+8. *W1 (04/11):* `spec-373` (conflict_orchestrator, dados de cartas; worktree sujo), `spec-359`, `spec-383-etapa4-wip` (web):
+   sem interseção com `agents/storyteller.py`/`agents/combat.py`; `spec-393` mexia em `combat._narrate_outcome` e já pousou
+   (rebase feito).
