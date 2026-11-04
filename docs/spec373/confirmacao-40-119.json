@@ -281,6 +281,17 @@
    },
    "ok": true,
    "motivos": []
+  },
+  "enemy_fantasma": {
+   "nome": "Nadador Transparente",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.583,
+    "L3|on": 0.515
+   },
+   "ok": true,
+   "motivos": []
   }
  },
  "regioes": [
