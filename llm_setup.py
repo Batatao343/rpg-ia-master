@@ -1046,74 +1046,80 @@ class RoutedLLM:
             return result, "no_tool_call", None
         return result, "schema_validation", None
 
+    def _prepare_candidate(
+        self,
+        provider: str,
+        model: str,
+        attempt_index: int,
+        fell_back: bool,
+        structured: bool,
+        errors: list[str],
+        *,
+        split_apply: bool,
+    ):
+        """Kill switch -> circuito -> build -> ``_apply`` de um candidato (SPEC-378 E4).
+
+        Devolve ``(cliente | None, attempt_index)``; ``None`` = pular o candidato. O indice
+        avanca em circuito/build/apply (``invoke``); ``stream`` ignora o indice devolvido.
+        ``split_apply`` separa o rotulo ``apply:`` (``invoke``) do ``build:`` unico (``stream``).
+        """
+        if _kill_switch_disabled(provider, model):  # SPEC-196: operador desligou o modelo
+            errors.append(f"{provider}:{model} kill_switch")
+            _log_attempt(
+                provider, model, self.tier, attempt_index, "kill_switch", fell_back=fell_back
+            )
+            return None, attempt_index
+        common = {"provider": provider, "model": model, "tier": self.tier}
+        common |= {"fell_back": fell_back, "structured": structured}
+        circuit_reason = _OPEN_CIRCUITS.get((provider, model))
+        if circuit_reason:
+            errors.append(f"{provider}:{model} circuit")
+            _attempt(
+                attempt_index=attempt_index,
+                latency_ms=0,
+                outcome="circuit_open",
+                error=circuit_reason,
+                **common,
+            )
+            return None, attempt_index + 1
+        build_t0 = time.perf_counter()
+        stage = "build"
+        try:
+            client = _cached_for_tier(provider, model, self.temperature, self.tier)
+            if split_apply:
+                stage = "apply"
+            client = self._apply(client, provider)
+        except Exception as e:
+            name = type(e).__name__
+            errors.append(f"{provider}:{model} {stage}:{name}")
+            _attempt(
+                attempt_index=attempt_index,
+                latency_ms=int((time.perf_counter() - build_t0) * 1000),
+                outcome="build_error",
+                error=f"apply:{name}" if stage == "apply" else name,
+                http_status=_http_status(e),
+                **common,
+            )
+            _open_circuit_if_permanent(provider, model, e)
+            return None, attempt_index + 1
+        return client, attempt_index
+
     def invoke(self, input):
         errors = []
         attempt_index = 0
         structured_contract = self._pydantic_structured_contract()
         for provider_index, (provider, model) in enumerate(self.candidates):
             fell_back = provider_index > 0
-            if _kill_switch_disabled(provider, model):  # SPEC-196: operator switched model off
-                errors.append(f"{provider}:{model} kill_switch")
-                _log_attempt(
-                    provider, model, self.tier, attempt_index, "kill_switch", fell_back=fell_back
-                )
-                continue
-            circuit_reason = _OPEN_CIRCUITS.get((provider, model))
-            if circuit_reason:
-                errors.append(f"{provider}:{model} circuit")
-                _attempt(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=attempt_index,
-                    latency_ms=0,
-                    fell_back=fell_back,
-                    outcome="circuit_open",
-                    error=circuit_reason,
-                    structured=structured_contract is not None,
-                )
-                attempt_index += 1
-                continue
-            build_t0 = time.perf_counter()
-            try:
-                client = _cached_for_tier(provider, model, self.temperature, self.tier)
-            except Exception as e:
-                latency_ms = int((time.perf_counter() - build_t0) * 1000)
-                errors.append(f"{provider}:{model} build:{type(e).__name__}")
-                _attempt(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=attempt_index,
-                    latency_ms=latency_ms,
-                    fell_back=fell_back,
-                    outcome="build_error",
-                    error=type(e).__name__,
-                    http_status=_http_status(e),
-                    structured=structured_contract is not None,
-                )
-                attempt_index += 1
-                _open_circuit_if_permanent(provider, model, e)
-                continue
-            try:
-                client = self._apply(client, provider)
-            except Exception as e:
-                latency_ms = int((time.perf_counter() - build_t0) * 1000)
-                errors.append(f"{provider}:{model} apply:{type(e).__name__}")
-                _attempt(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=attempt_index,
-                    latency_ms=latency_ms,
-                    fell_back=fell_back,
-                    outcome="build_error",
-                    error=f"apply:{type(e).__name__}",
-                    http_status=_http_status(e),
-                    structured=structured_contract is not None,
-                )
-                attempt_index += 1
-                _open_circuit_if_permanent(provider, model, e)
+            client, attempt_index = self._prepare_candidate(
+                provider,
+                model,
+                attempt_index,
+                fell_back,
+                structured_contract is not None,
+                errors,
+                split_apply=True,
+            )
+            if client is None:
                 continue
             # Uma resposta HTTP válida sem o tool call/schema pedido é um erro
             # semântico recuperável. Regenera no máximo duas vezes no MESMO
@@ -1225,46 +1231,11 @@ class RoutedLLM:
         errors = []
         for idx, (provider, model) in enumerate(self.candidates):
             fell_back = idx > 0
-            if _kill_switch_disabled(provider, model):  # SPEC-196
-                errors.append(f"{provider}:{model} kill_switch")
-                _log_attempt(provider, model, self.tier, idx, "kill_switch", fell_back=fell_back)
-                continue
             structured = self._pydantic_structured_contract() is not None
-            circuit_reason = _OPEN_CIRCUITS.get((provider, model))
-            if circuit_reason:
-                errors.append(f"{provider}:{model} circuit")
-                _attempt(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=idx,
-                    latency_ms=0,
-                    fell_back=fell_back,
-                    outcome="circuit_open",
-                    error=circuit_reason,
-                    structured=structured,
-                )
-                continue
-            build_t0 = time.perf_counter()
-            try:
-                client = _cached_for_tier(provider, model, self.temperature, self.tier)
-                client = self._apply(client, provider)
-            except Exception as e:
-                latency_ms = int((time.perf_counter() - build_t0) * 1000)
-                errors.append(f"{provider}:{model} build:{type(e).__name__}")
-                _attempt(
-                    provider=provider,
-                    model=model,
-                    tier=self.tier,
-                    attempt_index=idx,
-                    latency_ms=latency_ms,
-                    fell_back=fell_back,
-                    outcome="build_error",
-                    error=type(e).__name__,
-                    http_status=_http_status(e),
-                    structured=structured,
-                )
-                _open_circuit_if_permanent(provider, model, e)
+            client, _ = self._prepare_candidate(
+                provider, model, idx, fell_back, structured, errors, split_apply=False
+            )
+            if client is None:
                 continue
             t0 = time.perf_counter()
             _authorize_provider_attempt(provider, model)
