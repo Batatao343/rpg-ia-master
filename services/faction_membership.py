@@ -18,11 +18,12 @@ from __future__ import annotations
 import copy
 import json
 import logging
-import unicodedata
 from collections.abc import Mapping
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
+
+from services import text as _text
 
 _LOG = logging.getLogger("rpg.faction_membership")
 _DATA = Path(__file__).resolve().parent.parent / "data"
@@ -120,8 +121,7 @@ def _int(value: Any, default: int = 0) -> int:
 
 
 def _fold(text: Any) -> str:
-    raw = unicodedata.normalize("NFKD", str(text or ""))
-    return "".join(c for c in raw if not unicodedata.combining(c)).strip().casefold()
+    return _text.fold(text, strip=True)
 
 
 def _world(state: Mapping) -> dict:
