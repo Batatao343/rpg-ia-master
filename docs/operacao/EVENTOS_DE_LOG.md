@@ -92,6 +92,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.companion_order_ignored` | — |
 | `combat.companion_order_refused` | `verb` |
 | `combat.companion_orders_shadow` | `verb` |
+| `combat.death_prose.fallback` | `detail` |
 | `combat.enemy_extra_action_skipped` | — |
 | `combat.enemy_knowledge_failed` | — |
 | `combat.entrance_count_reconciled` | `species` |
@@ -197,6 +198,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `image.generation_failed` | `error_type`, `http_status`, `job_id`, `outcome` |
 | `image.processing_failed` | `error_type` |
 | `image_job.fallback` | — |
+| `import_bestiary_art.pool.fallback` | — |
 | `jev.primary` | Decisao do Jev no router (modo primary). |
 | `jev.shadow` | Observacao do Jev no router (modo shadow). |
 | `job.completed` | `attempt`, `duration_ms`, `kind` |

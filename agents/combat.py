@@ -2091,7 +2091,6 @@ def _narrate_outcome(
     auth = round_log.authorship(
         last_out, round_log._fact_names(player, enemies, names), player, conflict_sum
     )
-
     if source_sink is not None:
         source_sink.pop("last_outcome_source", None)  # nunca herda o valor de um conflito anterior
 
@@ -2150,6 +2149,7 @@ def _narrate_outcome(
         verdict = summ.validate_narrative_text(conflict_sum, text) if text else {"ok": False}
         if text and verdict["ok"]:
             codes = summ.validate_attribution(text, auth)  # SPEC-353 R8
+            codes = codes or prose_guard.wounds_bad(label, text, player)  # SPEC-393 R3
             if not codes:
                 _src("llm")
                 return text

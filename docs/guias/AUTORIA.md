@@ -157,3 +157,5 @@ medição em `docs/spec376/deriva.md`).
    `--check`; `--write` exige seleção humana (SPEC-355 R6).
 4. **Bestiário legado:** `scripts/migrate_bestiary_v4.py` sobrescreve curadoria e só grava com `--write`.
 5. Validar: `uv run python scripts/cards/lint.py` e `bash scripts/dev/pt.sh tests/test_conflito_autoria_cartas.py`.
+
+**Arte de criatura do pool (`bst_<id>`):** `scripts/import_bestiary_art.py` avisa no stdout quando o id não está no pool conhecido localmente (o pool real é dinâmico); `--strict` transforma o aviso em erro.

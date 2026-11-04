@@ -830,25 +830,39 @@ def decisive_cards(last_out: dict, limit: int = 2) -> list[str]:
     return [str((_card(c) or {}).get("name") or c) for c in ranked]
 
 
+def _blow_subject(blow: dict, names: dict[str, str]) -> str | None:
+    """Sujeito da frase do golpe final (None = autor desconhecido, sem frase)."""
+    by = str(blow.get("by_actor_id") or "")
+    if blow.get("kind") == "dano_continuo":
+        cond = _cond_name(blow.get("condition"), "dano contínuo")
+        return f"{cond[:1].upper()}{cond[1:]}"
+    if by == "player" and blow.get("kind") == "reacao":  # SPEC-355 R4
+        return "Sua reação"
+    if by == "player":
+        return "Seu golpe"
+    return names.get(by)
+
+
 def final_blow_sentence(last_out: dict | None, names: dict[str, str]) -> str:
-    """SPEC-353 R10: a frase do golpe final, sem dígitos, com a autoria certa."""
+    """SPEC-353 R10 / SPEC-393 R2: a frase do golpe final, sem dígitos, com a autoria certa.
+
+    Todos os derrubados da rodada final, agrupados por (autor, tipo, condição) na ordem do registro."""
+    groups: dict[tuple, tuple[str, list[str]]] = {}
     for blow in (last_out or {}).get("final_blows") or []:
         tid = str(blow.get("target_id"))
         if tid == "player":
             continue
-        target = names.get(tid, "O inimigo")
-        by = str(blow.get("by_actor_id") or "")
-        if blow.get("kind") == "dano_continuo":
-            cond = _cond_name(blow.get("condition"), "dano contínuo")
-            return f"{cond[:1].upper()}{cond[1:]} termina o serviço: {target} tomba."
-        if by == "player" and blow.get("kind") == "reacao":  # SPEC-355 R4
-            return f"Sua reação termina o serviço: {target} tomba."
-        if by == "player":
-            return f"Seu golpe termina o serviço: {target} tomba."
-        who = names.get(by)
-        if who:
-            return f"{who} termina o serviço: {target} tomba."
-    return ""
+        subject = _blow_subject(blow, names)
+        if not subject:
+            continue
+        key = (blow.get("by_actor_id"), blow.get("kind"), blow.get("condition"))
+        targets = groups.setdefault(key, (subject, []))[1]
+        targets.append(names.get(tid, "O inimigo"))
+    parts = []
+    for subject, targets in groups.values():
+        verb = "tomba" if len(targets) == 1 else "tombam"
+        parts.append(f"{subject} termina o serviço: {_join(targets)} {verb}.")
+    return " ".join(parts)
 
 
 def deterministic_outcome_text(

@@ -594,7 +594,9 @@ def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dic
     )
     greet = r"(?:(?:oi|ola|ei|entao|bem|certo|ok|pois|bom dia|boa tarde|boa noite) )*"
     verb = r"(?:compro|adquiro|quero comprar|quero adquirir|vou comprar|vou adquirir)"
-    tail = r"(?: (?:por favor|agora|entao))*"
+    # SPEC-393 R4: cauda de pagamento ("com minhas ultimas moedas") antes das cortesias finais.
+    pay = r"(?: com (?:(?:as|minhas|meu|o meu|as minhas) )?(?:ultimas )?(?:moedas|ouro|dinheiro))?"
+    tail = pay + r"(?: (?:por favor|agora|entao))*"
     # SPEC-363 R28: "... da <mercador | local | NPC presente>" — gramática continua fechada.
     owners = _shop_complement_names(work_state, state)
     complement = (

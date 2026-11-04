@@ -33,6 +33,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from observability.telemetry import log_fallback  # noqa: E402
 from services import asset_pipeline  # noqa: E402
 from services.enemy_decks import FAMILIAS  # noqa: E402
 
@@ -55,6 +56,31 @@ class ImportErrorArt(ValueError):
 def _bestiary_ids(path: Path) -> dict[str, str]:
     data = json.loads(path.read_text(encoding="utf-8"))
     return {k: str(v.get("name") or k) for k, v in data.items() if isinstance(v, dict)}
+
+
+def known_pool_ids() -> set[str] | None:
+    """Ids de criatura conhecidos localmente (fichas do bestiario); None sem fonte local."""
+    try:
+        from services import bestiary_lint
+
+        ids = {str(k) for k in bestiary_lint.load_fichas()}
+    except (ImportError, OSError, ValueError) as exc:
+        log_fallback("import_bestiary_art.pool", "pool_source_unavailable", exc)
+        return None
+    return ids or None
+
+
+def pool_warnings(folder: Path, known: set[str] | None) -> list[str]:
+    """SPEC-393 R5: avisos para `bst_<id>` fora do pool local (o pool real e dinamico)."""
+    directory = folder / "criaturas"
+    stems = sorted(p.stem for p in directory.glob("*")) if directory.is_dir() else []
+    out: list[str] = []
+    for stem in (s for s in stems if s.startswith("bst_")):
+        if known is None:
+            out.append(f"aviso: {stem}: sem fonte local do pool; id nao verificado")
+        elif stem[4:] not in known:
+            out.append(f"aviso: {stem}: id fora do pool conhecido localmente")
+    return out
 
 
 def _subject_for(kind: str, stem: str, names: dict[str, str]) -> tuple[str, str, str]:
@@ -141,7 +167,13 @@ def import_folder(
     out_dir: Path = OUT_DIR,
     url_base: str = URL_BASE,
     force: bool = False,
+    warnings: list[str] | None = None,
+    known_pool: set[str] | None = None,
 ) -> dict[str, int]:
+    if warnings is not None:
+        warnings.extend(
+            pool_warnings(folder, known_pool if known_pool is not None else known_pool_ids())
+        )
     names = _bestiary_ids(bestiary_path)
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     original = catalog["assets"]
@@ -213,11 +245,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--force", action="store_true", help="troca a arte de um id que ja tem entrada"
     )
+    parser.add_argument(
+        "--strict", action="store_true", help="avisos de id fora do pool viram erro"
+    )
     args = parser.parse_args(argv)
+    warns: list[str] = []
     try:
-        stats = import_folder(args.folder, force=args.force)
+        stats = import_folder(args.folder, force=args.force, warnings=warns)
     except ImportErrorArt as exc:
         print(f"erro: {exc}", file=sys.stderr)
+        return 2
+    for line in warns:
+        print(line)
+    if warns and args.strict:
+        print("erro: --strict e ha avisos de pool", file=sys.stderr)
         return 2
     print(f"importado: {stats['added']} · sem mudanca: {stats['unchanged']}")
     return 0

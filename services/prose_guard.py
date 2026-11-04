@@ -565,3 +565,10 @@ def gold_claims_ok(text: str, *, allowed: set[int], gold_after: int) -> bool:
         if tail_re.match(t[m.end() :]):
             return False
     return True
+
+
+def wounds_bad(label: str, prose: str, player: dict) -> list[str]:
+    """SPEC-393 R3: códigos de rejeição da prosa de morte que contradiz os Ferimentos."""
+    from services import death_prose_guard
+
+    return death_prose_guard.codes(label, prose, player)

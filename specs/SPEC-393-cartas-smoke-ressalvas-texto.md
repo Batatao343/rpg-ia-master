@@ -42,12 +42,12 @@ Balanço (SPEC-369), roteiro do smoke da 387 (o texto do roteiro é doc), chefe 
 
 ## 5. Critérios de aceite
 
-- [ ] R1: `accept` devolve o texto de encerramento; o history não repete a pergunta.
-- [ ] R2: 2 inimigos na rodada final nomeados; 1 alvo byte-idêntico.
-- [ ] R3: prosa contraditória cai no fallback com log; prosa fiel passa.
-- [ ] R4: "Compro a <Carta> com minhas últimas moedas" compra; V-G intacto.
-- [ ] R5: aviso e `--strict`.
-- [ ] R6: causa registrada (e corrigida, se for bug).
+- [x] R1: `accept` devolve o texto de encerramento; o history não repete a pergunta.
+- [x] R2: 2 inimigos na rodada final nomeados; 1 alvo byte-idêntico.
+- [x] R3: prosa contraditória cai no fallback com log; prosa fiel passa.
+- [x] R4: "Compro a <Carta> com minhas últimas moedas" compra; V-G intacto.
+- [x] R5: aviso e `--strict`.
+- [x] R6: causa registrada (e corrigida, se for bug).
 - [ ] R7: guardas verdes; suíte completa verde no pouso.
 
 ## 6. Smoke real (curto, local)
@@ -64,4 +64,10 @@ Nenhuma aberta: é texto e robustez.
 
 ## 9. Registro de implementação
 
-(vazio)
+- R1: `services/death_ending.py` (`ACCEPT_TEXT`, `apply_accept_text`) troca `WHEEL_TEXT` na última mensagem da IA e em `presentation_history`; sem pergunta a trocar, anexa o texto. Chamado no ramo `accept` de `resolve_death_choice`.
+- R2: `round_log.final_blow_sentence` agrupa por (autor, tipo, condição); novo `_blow_subject`. Alvo único: byte-idêntico.
+- R3: `services/death_prose_guard.py` (`check`, `wounds_from_player`); só para `death`; ganchado como código de rejeição (`death_prose_guard.codes`) no mesmo ponto da atribuição, para não crescer `combat.py`: fonte `fallback_attribution`, evento existente `outcome_attribution_rejected` e `log_fallback` (sem evento novo, catálogo intacto). Prosa sobre parte do corpo de outro dono ("braço do Goblin") é ignorada.
+- R4: grupo opcional `pay` na cauda da gramática de `_card_shop_turn`.
+- R5: `pool_warnings`/`known_pool_ids` (fichas do bestiário como fonte local) e `--strict`; linha em AUTORIA.md.
+- R6 (A2): ARTEFATO, não bug. Em `/game/new` com MockLLM a abertura ecoa o pedido ("Você descreva o cenário ao meu redor. Sou um Sangromante de nível 1."); o `continue` restaura exatamente essa narração. Teste `test_continue_restores_checkpoint_narration_not_player_text`.
+- Testes: `tests/test_card_epic_caveats.py` (14). Desvio: §6 (smoke real com LLM) não executado pelo executor (sem chave); coberto por testes com API real + MockLLM, fica para o coordenador.

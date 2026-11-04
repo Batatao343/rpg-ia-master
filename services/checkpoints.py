@@ -175,7 +175,9 @@ def resolve_death_choice(
                     kind="milestone",
                     event_id=event_id,
                 )
-        return new
+        from services.death_ending import apply_accept_text
+
+        return apply_accept_text(new)
 
     restored: dict | None = None
     if checkpoint is not None:
