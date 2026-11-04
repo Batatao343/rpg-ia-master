@@ -531,3 +531,16 @@ Registrar no hand-back o que foi feito em cada passo e os ids de requisição do
 | Nota sobre `workspaceModel.test.mjs:253` | **Aceito** (só tirar os 2 caminhos). |
 
 Nada foi rejeitado.
+
+## 9. Registro de execução (04/11, executor) — PARCIAL, etapas 4-5 bloqueadas
+
+Entregue (1 commit por etapa, oráculo antes/depois verde): Etapa 1 (`turn-retry.spec.ts`, 7 casos, verdes em dev e `preview`; matriz em `handoffs/SPEC-383-turn-matrix.md`; `lista_base` = 500), Etapa 2 (`useImageQuote`), Etapa 3 (`useSaves` + `loadHistory`), Etapa 7 (split do `Hud.tsx` + remoção dos 2 wrappers), Etapa 8 (4 specs de print apagados, 40 testes; `retrato_marcador_sem_flag_*` movidos; lista final 462 = 500 − 40 + 2; regra R4.1), Etapa 9 (CSS morto), R2 (Context; ver desvio 3). Bundle 843.264 → 844.302 bytes (+0,12 %).
+
+**Bloqueio (Etapa 4, `useAuthSession`)** — a sonda de lint do §4 reprovou. Ao extrair o hook, o compilador do `react-hooks` v7 passa a analisar `App` e o hook (nos commits 2 e 3 os hooks escaparam da análise por bailout, não porque estejam limpos). Achados, 20 erros no total:
+1. `App`: `react-hooks/refs` em `nativeCtx.current = …` (R1.4(b) cobre) e em `renderedOwner = owner.current` / `renderedSession = session.current` (§3.1 manda parar e reportar, sem disable).
+2. Hook: `react-hooks/immutability` "This value cannot be modified" em toda mutação de `owner.current`/`gameId.current`/`accountReturn.current`/… desestruturado do `core` (o compilador só reconhece ref por nome terminado em `Ref` ou por `useRef` local; ref dentro de objeto de argumento é "prop"). Testado: renomear no hook (`owner: ownerRef`) zera esses erros, mas altera todo corpo (`owner.current` → `ownerRef.current`).
+3. Hook: `exhaustive-deps` nos efeitos `[]` (membros do `core` não são estáveis) — corrigir exige deps novas (proibido, R1.3) ou `eslint-disable` novo (proibido).
+4. Hook: "accessed before it is declared" para `resumeSession` usada no efeito nativo (exige reordenar; o teste Python que travava a ordem já foi removido pela 379).
+Trabalho em `spec-383-etapa4-wip` (branch local, não pousar). As etapas 5 (`useTurn`) e a parte `useGameActions` da Etapa 6 dependem da mesma decisão do coordenador/dono: (a) autorizar renomear os refs do `core` com sufixo `Ref` + os disables mínimos, ou (b) manter `useAuthSession`/`useTurn` fora e fechar a spec com o que foi entregue.
+
+Desvios: (1) 1 `warning` `exhaustive-deps` (`resetImageQuote` no efeito `rpg:auth-expired`) desde a Etapa 2: a função agora vem de hook, deixa de ser reconhecida como estável; corrigir exigiria dep nova ou disable. (2) `web/tests/spec389-hud-subclass.test.mjs` também lia `Hud.tsx` (faltava na tabela §3.5): só o caminho virou `tabs/FichaTab.tsx`. (3) R2 foi feito sem `useGameActions`: `handleEquip`/`handleCardReward`/`handlePrepareCards` seguem no `App` e o `GameActionsProvider` recebe-os direto (valor novo a cada render, R2.1). (4) Ao mover `retrato_marcador_sem_flag_*`, o `screenshot` condicional a `RPG_SPEC354_PRINTS` (e `OUT`) ficou de fora, para não deixar print em `web/e2e/` (R4.1); `expect(` por teste igual (1). (5) Nas linhas de CSS do R5 houve deslocamento de +1. Playwright local sem ffmpeg: rodado com um config local não versionado (`video`/`trace` off).
