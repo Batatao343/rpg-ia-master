@@ -301,8 +301,8 @@ def test_drenagem_fora_do_lock_do_jogo(gen_on, monkeypatch):
     import time
 
     import api
-    import routes.turn
     import api_core
+    import routes.turn
     from services import creature_gen_jobs as cgj
 
     rodou = []

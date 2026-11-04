@@ -9,9 +9,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
-import routes.turn
 import character_creator
 import persistence
+import routes.turn
 from tests.factories import make_player, make_state, make_world
 
 _UUID_A = UUID("00000000-0000-4000-8000-000000000379")

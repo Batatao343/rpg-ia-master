@@ -8,8 +8,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
-import routes.billing
 import api_core
+import routes.billing
 from infrastructure.contracts import Principal, Unauthorized
 from services.auth_sessions import CsrfSigner
 from tests.test_stripe_checkout import SECRET, signed

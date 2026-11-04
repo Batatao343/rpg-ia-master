@@ -202,8 +202,8 @@ def test_new_game_backstory_truncated_in_summary(tmp_path, monkeypatch):
     from fastapi.testclient import TestClient
 
     import api
-    import routes.turn
     import persistence
+    import routes.turn
 
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     api._rate_hits.clear()

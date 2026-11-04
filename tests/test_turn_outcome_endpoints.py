@@ -83,8 +83,8 @@ def test_post_replay_same_receipt_single_xp_grant(monkeypatch):
     from fastapi.testclient import TestClient
 
     import api
-    import routes.turn
     import persistence
+    import routes.turn
     from tests.test_hardening_persistencia_sse import _state
 
     gid = str(uuid.uuid4())

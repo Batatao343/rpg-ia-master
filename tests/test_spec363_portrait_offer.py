@@ -5,9 +5,9 @@ from __future__ import annotations
 import pytest
 
 import api
-import routes.art
-import api_presenters
 import api_core
+import api_presenters
+import routes.art
 from services import kill_switches
 from services.shard_pricing import PricingUnavailable
 

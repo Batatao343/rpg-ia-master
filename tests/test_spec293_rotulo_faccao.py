@@ -10,9 +10,9 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage, HumanMessage
 
 import api
-import routes.turn
 import api_core
 import gamedata
+import routes.turn
 from services import encounter_manifest as em
 from services import faction_display as fd
 from world_utils import apply_faction_reveal

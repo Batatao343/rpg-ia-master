@@ -17,10 +17,9 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 
 import api
-import routes.turn
-import routes.turn
 import api_core
 import persistence
+import routes.turn
 from llm_setup import LLMAttemptEvent, ModelTier, _emit_attempt_telemetry
 from observability import latency as lat
 from observability.latency import FakeClock

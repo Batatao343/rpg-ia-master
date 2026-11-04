@@ -8,8 +8,8 @@ import pytest
 from fastapi import HTTPException
 
 import api
-import routes.turn
 import api_core
+import routes.turn
 from services import combat_targeting as ct
 from tests.test_combat_simulator import _request
 

@@ -12,10 +12,10 @@ from fastapi.testclient import TestClient
 import agents.campaign_manager as campaign_manager
 import agents.combat as combat_agent
 import api
-import routes.turn
 import api_core
 import character_creator
 import persistence
+import routes.turn
 
 
 def _request(**overrides) -> api.CombatSimulatorRequest:

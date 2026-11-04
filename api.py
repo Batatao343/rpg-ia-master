@@ -150,7 +150,6 @@ from api_core import (
     _usage_attempts,
     _validated_receipt,
 )
-from api_models import GameResponse
 
 import api_presenters
 from api_presenters import (
