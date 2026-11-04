@@ -7,6 +7,7 @@ from uuid import uuid4
 import pytest
 
 import api
+import routes.turn
 import api_core
 from infrastructure.contracts import OperationClaim, Principal
 from infrastructure.request_context import principal_scope
@@ -74,7 +75,7 @@ def test_api_commit_passes_one_normalized_consolidate_for_all_attempts(monkeypat
     monkeypatch.setattr(
         runtime, "get_runtime", lambda: SimpleNamespace(turn_coordinator=Coordinator())
     )
-    monkeypatch.setattr(api, "_schedule_chronicle_jobs", lambda _state: None)
+    monkeypatch.setattr(routes.turn, "_schedule_chronicle_jobs", lambda _state: None)
     response = api.GameResponse.model_construct(game_id=str(game_id), message="Texto privado")
     state = {"game_id": str(game_id), "messages": [], "world": {"turn_count": 1}}
     attempts = [
@@ -94,7 +95,7 @@ def test_api_commit_passes_one_normalized_consolidate_for_all_attempts(monkeypat
         },
     ]
     with principal_scope(principal):
-        api._commit_turn(
+        routes.turn._commit_turn(
             state,
             response,
             claim=claim,
@@ -161,13 +162,13 @@ def test_failed_api_turn_forwards_billable_attempts_to_failed_operation(monkeypa
     monkeypatch.setattr(
         runtime, "get_runtime", lambda: SimpleNamespace(turn_coordinator=Coordinator())
     )
-    monkeypatch.setattr(api, "_log_turn", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(routes.turn, "_log_turn", lambda *_args, **_kwargs: None)
     state = {"game_id": str(game_id), "messages": [], "world": {"turn_count": 0}}
     with (
         pytest.raises(HTTPException) as exc,
         principal_scope(Principal(owner_id, "test", str(owner_id), local=True)),
     ):
-        api._run_turn(state, "ação", claim=claim, request_hash="b" * 64)
+        routes.turn._run_turn(state, "ação", claim=claim, request_hash="b" * 64)
     assert exc.value.status_code == 500
     assert len(captured["events"]) == 2
     assert captured["events"][0].component == f"llm:{claim.lease_token}"
@@ -243,7 +244,7 @@ def test_failed_new_game_records_player_creation_attempt(monkeypatch):
         raise RuntimeError("creation failed")
 
     monkeypatch.setattr(api_core, "_begin_create_operation", lambda _req: (claim, "a" * 64, None))
-    monkeypatch.setattr(api, "_create_game", fail_create)
+    monkeypatch.setattr(routes.turn, "_create_game", fail_create)
     monkeypatch.setattr(
         runtime, "get_runtime", lambda: SimpleNamespace(turn_coordinator=Coordinator())
     )

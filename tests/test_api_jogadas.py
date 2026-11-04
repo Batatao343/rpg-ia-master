@@ -10,6 +10,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 import agents.combat as combat_agent
 import api
+import routes.turn
 import api_core
 from services import card_piles as cp
 from tests.test_combat_simulator import _request
@@ -49,7 +50,7 @@ def _plays(state, *cards):
 
 def test_lista_inteira_vira_declaracao_em_um_request(monkeypatch):
     state = _state(monkeypatch)
-    api._apply_action_options(state, _req(jogadas=_plays(state, GOLPE, GUARDA)))
+    routes.turn._apply_action_options(state, _req(jogadas=_plays(state, GOLPE, GUARDA)))
     decl = state["combat_declaration"]
     assert [s["card_id"] for s in decl["jogadas"]] == [GOLPE, GUARDA]
     assert decl["acao"]["card_id"] == GOLPE
@@ -58,7 +59,7 @@ def test_lista_inteira_vira_declaracao_em_um_request(monkeypatch):
 def test_lista_recusada_com_baralho_desligado(monkeypatch):
     state = _state(monkeypatch, mode="off")
     with pytest.raises(HTTPException) as exc:
-        api._apply_action_options(state, _req(jogadas=_plays(state, GOLPE)))
+        routes.turn._apply_action_options(state, _req(jogadas=_plays(state, GOLPE)))
     assert exc.value.status_code == 409 and exc.value.detail["code"] == "deck_off"
 
 
@@ -69,7 +70,7 @@ def test_teto_de_jogadas_no_schema():
 
 def test_no_resolve_a_lista_e_compra_a_proxima_mao(monkeypatch):
     state = _state(monkeypatch)
-    api._apply_action_options(state, _req(jogadas=_plays(state, GOLPE, GUARDA)))
+    routes.turn._apply_action_options(state, _req(jogadas=_plays(state, GOLPE, GUARDA)))
     out = combat_agent._combat_node(state)
     meta = out["combat"]
     assert meta["round"] == 1
@@ -84,7 +85,7 @@ def test_carta_fora_da_mao_rejeitada_com_motivo_e_sem_gastar(monkeypatch):
     state = _state(monkeypatch)
     before = deepcopy(state["combat"]["pilhas"])
     entropy = state["player"]["entropy"]
-    api._apply_action_options(state, _req(jogadas=_plays(state, "san_sil_exato")))
+    routes.turn._apply_action_options(state, _req(jogadas=_plays(state, "san_sil_exato")))
     out = combat_agent._combat_node(state)
     assert "não está na sua mão" in out["messages"][0].content
     assert out["combat"]["round"] == 0  # a rodada nao foi consumida
@@ -110,7 +111,7 @@ def test_rodada_com_varias_jogadas_nao_chama_llm_nem_narrate(monkeypatch):
     monkeypatch.setattr(combat_agent, "_narrate", fake_narrate)
     monkeypatch.setattr(combat_agent, "get_llm", forbidden)
     monkeypatch.setattr(combat_agent, "build_context_pack", lambda *a, **k: _Pack())
-    api._apply_action_options(state, _req(jogadas=_plays(state, GOLPE, GUARDA, GOLPE)))
+    routes.turn._apply_action_options(state, _req(jogadas=_plays(state, GOLPE, GUARDA, GOLPE)))
     out = combat_agent._combat_node(state)
     # SPEC-346 R2/D-dono-1: com o Baralho `on` a rodada NÃO narra por LLM; a mensagem é o registro.
     assert calls == []
@@ -317,7 +318,7 @@ def test_recusa_preserva_pressagios(monkeypatch):
 
     monkeypatch.setattr(combat_agent, "_narrate", lambda *a, **k: "n")
     monkeypatch.setattr(combat_agent, "build_context_pack", lambda *a, **k: _Pack())
-    api._apply_action_options(state, _req(jogadas=_plays(state, "san_sil_exato")))
+    routes.turn._apply_action_options(state, _req(jogadas=_plays(state, "san_sil_exato")))
     out = combat_agent._combat_node(state)
     assert out["combat"]["pressagios"] == {"r": [1]}
     assert out["combat"]["pressagios_publicos"] == [{"x": 1}]

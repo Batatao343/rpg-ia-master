@@ -301,6 +301,7 @@ def test_drenagem_fora_do_lock_do_jogo(gen_on, monkeypatch):
     import time
 
     import api
+    import routes.turn
     import api_core
     from services import creature_gen_jobs as cgj
 
@@ -322,7 +323,7 @@ def test_drenagem_fora_do_lock_do_jogo(gen_on, monkeypatch):
     lock.release()
     cgj.aguardar_drenagem(5)
     assert rodou == [ODRES]
-    assert "creature_gen" not in inspect.getsource(api._execute_action)
+    assert "creature_gen" not in inspect.getsource(routes.turn._execute_action)
 
 
 def test_payload_sem_fala_crua_do_jogador():

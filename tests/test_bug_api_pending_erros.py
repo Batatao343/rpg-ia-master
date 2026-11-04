@@ -148,16 +148,17 @@ def test_backstory_null_does_not_leak_none_into_new_game(monkeypatch):
     from fastapi.testclient import TestClient
 
     import api
+    import routes.turn
 
     seen = {}
-    real_invoke = api.game_graph.invoke
+    real_invoke = routes.turn.game_graph.invoke
 
     def spy(initial_state, *a, **kw):
         seen["summary"] = initial_state["narrative_summary"]
         seen["messages"] = [str(m.content) for m in initial_state["messages"]]
         return real_invoke(initial_state, *a, **kw)
 
-    monkeypatch.setattr(api.game_graph, "invoke", spy)
+    monkeypatch.setattr(routes.turn.game_graph, "invoke", spy)
     body = {
         "name": "Kaelen",
         "race": "Humano",

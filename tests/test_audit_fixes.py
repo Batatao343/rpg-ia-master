@@ -165,7 +165,7 @@ def test_is_simulated_provider_legado_gemini_sem_key(monkeypatch):
 
 
 def test_500_no_action_nao_vaza_excecao(client, saves_dir, monkeypatch):
-    import api
+    import routes.turn
 
     gid = str(uuid.uuid4())
     assert persistence.save_game_state(_estado_minimo(gid))
@@ -174,7 +174,7 @@ def test_500_no_action_nao_vaza_excecao(client, saves_dir, monkeypatch):
         def invoke(self, *_a, **_k):
             raise RuntimeError("segredo-interno-c:\\caminho\\privado")
 
-    monkeypatch.setattr(api, "game_graph", _Boom())
+    monkeypatch.setattr(routes.turn, "game_graph", _Boom())
     r = client.post("/game/action", json={"input_text": "olá", "game_id": gid})
     assert r.status_code == 500
     assert "segredo-interno" not in r.text

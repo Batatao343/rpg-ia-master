@@ -8,6 +8,7 @@ import pytest
 from fastapi import HTTPException
 
 import api
+import routes.turn
 import api_core
 from services import combat_targeting as ct
 from tests.test_combat_simulator import _request
@@ -203,7 +204,7 @@ def test_invalid_target_rejected_without_spending():
     dead_id = state["enemies"][0]["id"]
     snapshot = deepcopy(state)
     with pytest.raises(HTTPException) as exc:
-        api._apply_action_options(state, _req(card_id=ATK_TURN, target_id=dead_id))
+        routes.turn._apply_action_options(state, _req(card_id=ATK_TURN, target_id=dead_id))
     assert exc.value.status_code == 409
     assert exc.value.detail["code"] == "invalid_target"
     assert exc.value.detail["invalid_reason"] == "no_valid_target"
@@ -216,7 +217,7 @@ def test_attack_with_stale_target_rejected():
     state = _state()
     state["enemies"][0].update(dead=True, status="morto")
     with pytest.raises(HTTPException) as exc:
-        api._apply_action_options(
+        routes.turn._apply_action_options(
             state, _req(action_kind="attack", target_id=state["enemies"][0]["id"])
         )
     assert exc.value.detail["code"] == "invalid_target"
@@ -225,7 +226,7 @@ def test_attack_with_stale_target_rejected():
 def test_valid_target_accepted_and_declared():
     state = _state()
     eid = _enemy_ids(state)[1]
-    api._apply_action_options(state, _req(card_id=ATK, target_id=eid))
+    routes.turn._apply_action_options(state, _req(card_id=ATK, target_id=eid))
     assert state["combat_declaration"]["acao"]["target_id"] == eid
 
 
@@ -233,15 +234,15 @@ def test_support_card_from_ui_targets_player():
     """R10/R12: sem alvo ou com inimigo vindo da UI, suporte resolve no jogador."""
     for tid in (None, "mon_cao_rebite__sim_1"):
         state = _state()
-        api._apply_action_options(state, _req(card_id=SUPPORT, target_id=tid))
+        routes.turn._apply_action_options(state, _req(card_id=SUPPORT, target_id=tid))
         assert state["combat_declaration"]["acao"]["target_id"] == "player"
 
 
 def test_old_client_payload_still_valid():
     state = _state()
-    api._apply_action_options(state, _req(card_id=ATK))  # sem target_id
+    routes.turn._apply_action_options(state, _req(card_id=ATK))  # sem target_id
     assert state["combat_declaration"]["acao"]["card_id"] == ATK
-    api._apply_action_options(state, _req(action_kind="flee"))
+    routes.turn._apply_action_options(state, _req(action_kind="flee"))
     assert state["combat_declaration"]["acao"]["kind"] == "flee"
 
 

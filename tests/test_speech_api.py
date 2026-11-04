@@ -11,6 +11,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import routes.turn
 import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from services.auth_sessions import CsrfSigner
@@ -88,10 +89,12 @@ def speech_client(monkeypatch):
 
 def test_authenticated_transcription_requires_explicit_game_send(speech_client, monkeypatch):
     client, headers, payload, calls, rate_calls, _, owner = speech_client
-    monkeypatch.setattr(api.game_graph, "invoke", lambda *_a: pytest.fail("must not call game"))
+    monkeypatch.setattr(
+        routes.turn.game_graph, "invoke", lambda *_a: pytest.fail("must not call game")
+    )
     # SPEC-200: POST /game/action executa via stream — guardar os dois modos.
     monkeypatch.setattr(
-        api.game_graph, "stream", lambda *_a, **_k: pytest.fail("must not call game")
+        routes.turn.game_graph, "stream", lambda *_a, **_k: pytest.fail("must not call game")
     )
     response = client.post(
         "/account/transcriptions?owner_id=other", headers=headers, content=payload

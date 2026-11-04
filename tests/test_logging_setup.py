@@ -78,9 +78,11 @@ def test_exception_logs_type_not_message(capsys):
 
 
 def test_turn_line_has_event_key(capsys):
-    import api
+    import routes.turn
 
     logging_setup.configure_logging({})
-    api._log_turn({"game_id": "g", "world": {"turn_count": 1}, "next": "STORY"}, 0.0, 0, None)
+    routes.turn._log_turn(
+        {"game_id": "g", "world": {"turn_count": 1}, "next": "STORY"}, 0.0, 0, None
+    )
     lines = [x for x in _lines(capsys) if x.get("evt") == "turn"]
     assert len(lines) == 1 and lines[0]["event"] == "turn"

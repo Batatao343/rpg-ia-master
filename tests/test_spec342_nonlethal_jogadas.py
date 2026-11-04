@@ -69,6 +69,7 @@ def _deck_state(monkeypatch, plays, intent):
     from langchain_core.messages import HumanMessage
 
     import api
+    import routes.turn
     from services import card_piles as cp
     from tests.test_api_jogadas import GUARDA, _req, _state
 
@@ -86,7 +87,7 @@ def _deck_state(monkeypatch, plays, intent):
     steps = [
         api.PlayStepRequest(card_id=c, target_id="player" if c == GUARDA else eid) for c in plays
     ]
-    api._apply_action_options(state, _req(jogadas=steps))
+    routes.turn._apply_action_options(state, _req(jogadas=steps))
     random.seed(3)
     return state, eid
 

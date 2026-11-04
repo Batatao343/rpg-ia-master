@@ -12,6 +12,7 @@ from fastapi.testclient import TestClient
 import agents.campaign_manager as campaign_manager
 import agents.combat as combat_agent
 import api
+import routes.turn
 import api_core
 import character_creator
 import persistence
@@ -199,7 +200,7 @@ def test_action_request_monta_manobra_estruturada():
         maneuver="guardar",
     )
 
-    api._apply_action_options(state, req)
+    routes.turn._apply_action_options(state, req)
 
     assert state["combat_declaration"] == {
         "actor_id": "player",

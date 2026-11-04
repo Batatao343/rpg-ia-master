@@ -17,6 +17,8 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 
 import api
+import routes.turn
+import routes.turn
 import api_core
 import persistence
 from llm_setup import LLMAttemptEvent, ModelTier, _emit_attempt_telemetry
@@ -137,7 +139,7 @@ def _turn_lines(caplog) -> list:
 def _run_post_turn(monkeypatch, caplog, graph, text="avanço", gid=None):
     gid = gid or str(uuid.uuid4())
     assert persistence.save_game_state(_state(gid))
-    monkeypatch.setattr(api, "game_graph", graph)
+    monkeypatch.setattr(routes.turn, "game_graph", graph)
     caplog.set_level(logging.INFO, logger="rpg.turn")
     with TestClient(api.app) as c:
         r = c.post(
@@ -381,7 +383,7 @@ def test_lock_wait_measured(monkeypatch, caplog):
     clock = FakeClock()
     lat.set_clock(clock)
     assert persistence.save_game_state(_state(gid))
-    monkeypatch.setattr(api, "game_graph", _Graph())
+    monkeypatch.setattr(routes.turn, "game_graph", _Graph())
     caplog.set_level(logging.INFO, logger="rpg.turn")
     lock = api_core._game_lock(gid)
     holder_has = threading.Event()
@@ -436,10 +438,10 @@ def test_instrumentation_equivalence(monkeypatch):
         random.seed(7)
         state = _build_initial_state("explorador", 3)
         state["game_id"] = str(uuid.uuid4())
-        monkeypatch.setattr(api, "game_graph", real_graph)
+        monkeypatch.setattr(routes.turn, "game_graph", real_graph)
         kwargs = {"timeline": lat.TurnTimeline(FakeClock())} if with_timeline else {}
         random.seed(11)
-        response = api._run_turn(state, "olho ao redor", str(uuid.uuid4()), **kwargs)
+        response = routes.turn._run_turn(state, "olho ao redor", str(uuid.uuid4()), **kwargs)
         saved = persistence.load_game_state(persistence.save_path(state["game_id"]))
         outputs.append(
             (
@@ -467,7 +469,7 @@ def test_disconnect_mid_stream_single_turn(monkeypatch):
             yield "values", out
             finished.set()
 
-    monkeypatch.setattr(api, "game_graph", G())
+    monkeypatch.setattr(routes.turn, "game_graph", G())
     records = []
     lat.add_sink(records.append)
     req = api.ActionRequest(game_id=gid, input_text="avanço", action_id=action_id)
@@ -512,7 +514,7 @@ def test_post_stream_mid_failure_matches_invoke_failure(monkeypatch):
         def invoke(self, *_a, **_k):
             raise AssertionError("POST deve usar stream quando disponivel")
 
-    monkeypatch.setattr(api, "game_graph", _MidBoom())
+    monkeypatch.setattr(routes.turn, "game_graph", _MidBoom())
     action_id = str(uuid.uuid4())
     body = {"game_id": gid, "input_text": "avanço", "action_id": action_id}
     with TestClient(api.app, raise_server_exceptions=False) as c:
@@ -523,7 +525,7 @@ def test_post_stream_mid_failure_matches_invoke_failure(monkeypatch):
     assert after["world"] == before["world"] and after["player"] == before["player"]
     assert len(after.get("messages") or []) == len(before.get("messages") or [])
 
-    monkeypatch.setattr(api, "game_graph", _Graph())
+    monkeypatch.setattr(routes.turn, "game_graph", _Graph())
     with TestClient(api.app) as c:
         retry = c.post("/game/action", json=body)
     assert retry.status_code == 200, retry.text

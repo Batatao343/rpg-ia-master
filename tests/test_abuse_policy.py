@@ -13,6 +13,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import routes.turn
 import api_core
 from infrastructure.contracts import Principal, Unauthorized
 from infrastructure.local_adapters import MemoryRateLimiter
@@ -356,12 +357,12 @@ def _patched_execute(monkeypatch, receipt):
     state = {"game_id": GAME}
     monkeypatch.setattr(api_core, "load_game_state", lambda _f: state)
     monkeypatch.setattr(api_core, "_resolve_save_file", lambda _g: "x")
-    monkeypatch.setattr(api, "_await_projection_db", lambda s, _g: s)
-    monkeypatch.setattr(api, "_begin_turn_operation", lambda s, r: (None, "h", receipt))
+    monkeypatch.setattr(routes.turn, "_await_projection_db", lambda s, _g: s)
+    monkeypatch.setattr(routes.turn, "_begin_turn_operation", lambda s, r: (None, "h", receipt))
     monkeypatch.setattr(api_core, "_action_already_processed", lambda s, a: False)
-    monkeypatch.setattr(api, "_apply_action_options", lambda s, r: None)
-    monkeypatch.setattr(api, "_projection_owner", lambda: None)
-    monkeypatch.setattr(api, "_run_turn", lambda *a, **k: "TURN-RESPONSE")
+    monkeypatch.setattr(routes.turn, "_apply_action_options", lambda s, r: None)
+    monkeypatch.setattr(routes.turn, "_projection_owner", lambda: None)
+    monkeypatch.setattr(routes.turn, "_run_turn", lambda *a, **k: "TURN-RESPONSE")
 
 
 def test_replay_by_action_id_does_not_consume_quota(env, monkeypatch):
@@ -372,13 +373,13 @@ def test_replay_by_action_id_does_not_consume_quota(env, monkeypatch):
     req = api.ActionRequest(input_text="olho", game_id=GAME, action_id=str(uuid4()))
     try:
         for _ in range(10):  # replays: nunca consomem
-            assert api._execute_action(req) == "RECEIPT"
+            assert routes.turn._execute_action(req) == "RECEIPT"
         assert runtime.daily_quota._counts == {}
         _patched_execute(monkeypatch, receipt=None)
-        assert api._execute_action(req) == "TURN-RESPONSE"
-        assert api._execute_action(req) == "TURN-RESPONSE"
+        assert routes.turn._execute_action(req) == "TURN-RESPONSE"
+        assert routes.turn._execute_action(req) == "TURN-RESPONSE"
         with pytest.raises(api.QuotaExceeded):
-            api._execute_action(req)
+            routes.turn._execute_action(req)
     finally:
         reset_current_principal(token)
 

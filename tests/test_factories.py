@@ -9,6 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api
+import routes.turn
 import character_creator
 import persistence
 from tests.factories import make_player, make_state, make_world
@@ -31,7 +32,7 @@ def _capture_api_state(monkeypatch, fixed: UUID, **extra) -> dict:
             captured.update(current)
             return current
 
-    monkeypatch.setattr(api, "game_graph", Graph())
+    monkeypatch.setattr(routes.turn, "game_graph", Graph())
     monkeypatch.setattr(api.uuid, "uuid4", lambda: fixed)
     resp = TestClient(api.app).post("/game/new", json={**_BODY, **extra})
     assert resp.status_code == 200, resp.text

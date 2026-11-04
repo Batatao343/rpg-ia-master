@@ -193,7 +193,7 @@ def test_stream_respeita_rate_limit(monkeypatch):
 
 
 def test_stream_erro_no_meio_emite_error_sanitizado(client, monkeypatch):
-    import api
+    import routes.turn
 
     gid = _new_game(client)
 
@@ -204,7 +204,7 @@ def test_stream_erro_no_meio_emite_error_sanitizado(client, monkeypatch):
         def invoke(self, *a, **k):
             raise RuntimeError("nunca chega aqui")
 
-    monkeypatch.setattr(api, "game_graph", _Boom())
+    monkeypatch.setattr(routes.turn, "game_graph", _Boom())
     with client.stream(
         "POST", "/game/action/stream", json={"input_text": "x", "game_id": gid}
     ) as r:
@@ -291,17 +291,17 @@ def test_early_narrative_before_archivist_phase(client, monkeypatch):
 
 
 def test_shadow_mode_keeps_order_and_logs(client, monkeypatch):
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "shadow")
     logs = []
-    real = api._sse_log
+    real = routes.turn._sse_log
 
     def _spy(event, **kw):
         logs.append((event, kw))
         real(event, **kw)
 
-    monkeypatch.setattr(api, "_sse_log", _spy)
+    monkeypatch.setattr(routes.turn, "_sse_log", _spy)
     gid = _new_game(client)
     events = _stream(client, gid)
     names = _names(events)
@@ -314,11 +314,11 @@ def test_shadow_mode_keeps_order_and_logs(client, monkeypatch):
 
 
 def test_off_mode_byte_identical_to_head(client, monkeypatch):
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
     logs = []
-    monkeypatch.setattr(api, "_sse_log", lambda event, **kw: logs.append(event))
+    monkeypatch.setattr(routes.turn, "_sse_log", lambda event, **kw: logs.append(event))
     gid = _new_game(client)
     events = _stream(client, gid)
     names = _names(events)
@@ -417,10 +417,10 @@ class _EncounterGraph:
 
 
 def test_encounter_turn_emits_narrative_once(client, monkeypatch):
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
-    monkeypatch.setattr(api, "game_graph", _EncounterGraph(api.game_graph))
+    monkeypatch.setattr(routes.turn, "game_graph", _EncounterGraph(routes.turn.game_graph))
     gid = _new_game(client)
     events = _stream(client, gid)
     dones = [d for e, d in events if e == "narrative" and d["done"] and not d.get("replace")]
@@ -432,7 +432,7 @@ def test_encounter_turn_emits_narrative_once(client, monkeypatch):
 
 
 def test_error_after_narrative_marks_shown(client, monkeypatch):
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
     gid = _new_game(client)
@@ -440,7 +440,7 @@ def test_error_after_narrative_marks_shown(client, monkeypatch):
     def _boom(*a, **k):
         raise RuntimeError("commit falhou")
 
-    monkeypatch.setattr(api, "_commit_turn", _boom)
+    monkeypatch.setattr(routes.turn, "_commit_turn", _boom)
     events = _stream(client, gid)
     names = _names(events)
     assert "narrative" in names and names[-1] == "error"
@@ -449,7 +449,7 @@ def test_error_after_narrative_marks_shown(client, monkeypatch):
 
 
 def test_error_before_narrative_has_no_shown_flag(client, monkeypatch):
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
     gid = _new_game(client)
@@ -458,7 +458,7 @@ def test_error_before_narrative_has_no_shown_flag(client, monkeypatch):
         def stream(self, *a, **k):
             raise RuntimeError("x")
 
-    monkeypatch.setattr(api, "game_graph", _Boom())
+    monkeypatch.setattr(routes.turn, "game_graph", _Boom())
     events = _stream(client, gid)
     assert events[-1][0] == "error" and "narrative_shown" not in events[-1][1]
 
@@ -491,10 +491,10 @@ class _DelegationGraph:
 
 
 def test_npc_delegation_to_storyteller_emits_once(client, monkeypatch):
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
-    monkeypatch.setattr(api, "game_graph", _DelegationGraph(api.game_graph))
+    monkeypatch.setattr(routes.turn, "game_graph", _DelegationGraph(routes.turn.game_graph))
     gid = _new_game(client)
     events = _stream(client, gid)
     dones = [d for e, d in events if e == "narrative" and d["done"] and not d.get("replace")]
@@ -507,7 +507,7 @@ def test_npc_delegation_to_storyteller_emits_once(client, monkeypatch):
 def test_http_error_after_narrative_marks_shown(client, monkeypatch):
     from fastapi import HTTPException
 
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
     gid = _new_game(client)
@@ -515,27 +515,27 @@ def test_http_error_after_narrative_marks_shown(client, monkeypatch):
     def _boom(*a, **k):
         raise HTTPException(status_code=503, detail="indisponivel")
 
-    monkeypatch.setattr(api, "_commit_turn", _boom)
+    monkeypatch.setattr(routes.turn, "_commit_turn", _boom)
     events = _stream(client, gid)
     assert "narrative" in _names(events) and events[-1][0] == "error"
     assert events[-1][1]["narrative_shown"] is True
 
 
 def test_retry_same_action_id_recovers_turn(client, monkeypatch):
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
     gid = _new_game(client)
     action_id = "22222222-2222-4222-8222-222222222222"
-    real_commit = api._commit_turn
+    real_commit = routes.turn._commit_turn
 
     def _boom(*a, **k):
         raise RuntimeError("commit falhou")
 
-    monkeypatch.setattr(api, "_commit_turn", _boom)
+    monkeypatch.setattr(routes.turn, "_commit_turn", _boom)
     failed = _stream(client, gid, action_id=action_id)
     assert failed[-1][0] == "error" and failed[-1][1]["narrative_shown"] is True
-    monkeypatch.setattr(api, "_commit_turn", real_commit)
+    monkeypatch.setattr(routes.turn, "_commit_turn", real_commit)
     retried = _stream(client, gid, action_id=action_id)
     assert retried[-1][0] == "state"
     saved = client.get("/game/state", params={"game_id": gid}).json()
@@ -650,14 +650,14 @@ def test_reset_event_clears_partial(client, monkeypatch):
 
 
 def test_shadow_logs_ttft_without_deltas(client, monkeypatch):
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_TOKEN_STREAM", "shadow")
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
     logs = []
-    real = api._sse_log
+    real = routes.turn._sse_log
     monkeypatch.setattr(
-        api, "_sse_log", lambda event, **kw: (logs.append((event, kw)), real(event, **kw))
+        routes.turn, "_sse_log", lambda event, **kw: (logs.append((event, kw)), real(event, **kw))
     )
     gid = _new_game(client)
     events = _stream(client, gid)
@@ -669,12 +669,12 @@ def test_shadow_logs_ttft_without_deltas(client, monkeypatch):
 
 
 def test_off_byte_identical(client, monkeypatch):
-    import api
+    import routes.turn
 
     monkeypatch.setenv("RPG_TOKEN_STREAM", "off")
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
     logs = []
-    monkeypatch.setattr(api, "_sse_log", lambda event, **kw: logs.append(event))
+    monkeypatch.setattr(routes.turn, "_sse_log", lambda event, **kw: logs.append(event))
     gid = _new_game(client)
     events = _stream(client, gid)
     names = _names(events)

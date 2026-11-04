@@ -11,6 +11,7 @@ from langchain_core.messages import AIMessage
 from pydantic import ValidationError
 
 import api
+import routes.turn
 import api_core
 import persistence
 from llm_setup import LLMAttemptEvent, ModelTier
@@ -103,7 +104,7 @@ def test_action_id_repetido_nao_executa_segundo_turno(monkeypatch):
             out["messages"] = list(out.get("messages") or []) + [AIMessage(content="feito")]
             return out
 
-    monkeypatch.setattr(api, "game_graph", Graph())
+    monkeypatch.setattr(routes.turn, "game_graph", Graph())
     client = TestClient(api.app)
     action_id = str(uuid.uuid4())
     body = {"game_id": gid, "input_text": "avanço", "action_id": action_id}
@@ -138,7 +139,7 @@ def test_mutacoes_do_mesmo_jogo_sao_serializadas(monkeypatch):
                 active -= 1
             return out
 
-    monkeypatch.setattr(api, "game_graph", Graph())
+    monkeypatch.setattr(routes.turn, "game_graph", Graph())
     responses = []
 
     def send():
@@ -176,7 +177,7 @@ def test_worker_sse_persiste_mesmo_se_consumidor_fecha(monkeypatch):
             yield "values", out
             finished.set()
 
-    monkeypatch.setattr(api, "game_graph", Graph())
+    monkeypatch.setattr(routes.turn, "game_graph", Graph())
     req = api.ActionRequest(game_id=gid, input_text="avanço", action_id=action_id)
     stream = api._stream_turn(req, gid)
     assert "accepted" in next(stream)
@@ -207,7 +208,7 @@ def test_falha_de_persistencia_no_turno_retorna_500(monkeypatch):
             out["messages"] = list(out.get("messages") or []) + [AIMessage(content="feito")]
             return out
 
-    monkeypatch.setattr(api, "game_graph", Graph())
+    monkeypatch.setattr(routes.turn, "game_graph", Graph())
     monkeypatch.setattr(api_core, "save_game_state", lambda _state: False)
     response = TestClient(api.app).post(
         "/game/action",

@@ -15,6 +15,7 @@ from langchain_core.messages import (
 )
 
 import api
+import routes.turn
 import api_core
 import persistence
 from services import checkpoints as cp
@@ -144,7 +145,7 @@ def test_commit_turn_defers_on_checkpoint_failure(monkeypatch):
     monkeypatch.setattr(persistence, "save_checkpoint", lambda s: False)
     assert api._prepare_checkpoint(st, deepcopy(st)) is True
     assert st["continuity"]["last_checkpoint_turn"] == 0  # nao marcado antes de gravar
-    api._commit_turn(
+    routes.turn._commit_turn(
         st,
         api.format_response(st),
         claim=None,
@@ -167,7 +168,7 @@ def test_commit_turn_marks_after_checkpoint_success():
     st = _idle(_state(gid, hp=20, gold=1, turn=10))
     st["continuity"] = {"last_checkpoint_turn": 0, "checkpoint_deferred": True}
     assert api._prepare_checkpoint(st, deepcopy(st)) is True
-    api._commit_turn(
+    routes.turn._commit_turn(
         st,
         api.format_response(st),
         claim=None,
@@ -238,9 +239,9 @@ def test_crash_between_checkpoint_and_save_discards_ahead_checkpoint(client, mon
 
     with monkeypatch.context() as m:
         m.setattr(api_core, "_require_saved", _crash)
-        m.setattr(api, "_schedule_chronicle_jobs", lambda *_a, **_k: None)
+        m.setattr(routes.turn, "_schedule_chronicle_jobs", lambda *_a, **_k: None)
         with pytest.raises(RuntimeError):
-            api._commit_turn(
+            routes.turn._commit_turn(
                 ahead,
                 api.format_response(ahead),
                 claim=None,

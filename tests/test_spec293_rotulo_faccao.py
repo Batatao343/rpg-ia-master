@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage, HumanMessage
 
 import api
+import routes.turn
 import api_core
 import gamedata
 from services import encounter_manifest as em
@@ -242,7 +243,7 @@ def test_sse_sem_nome_canonico(client, monkeypatch):
     def fake_execute(req, progress=None, timeline=None, on_response=None):
         return api.format_response(copy.deepcopy(state))
 
-    monkeypatch.setattr(api, "_execute_action", fake_execute)
+    monkeypatch.setattr(routes.turn, "_execute_action", fake_execute)
     with c.stream(
         "POST",
         "/game/action/stream",

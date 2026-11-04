@@ -438,13 +438,14 @@ def test_default_card_target_covers_purga():
 
 def test_api_beneficial_card_without_target_targets_player():
     import api
+    import routes.turn
 
     state = {"combat": {"active": True}, "enemies": [{"id": "e1", "name": "E", "status": "ativo"}]}
     req = api.ActionRequest(input_text="", card_id="sutura_rapida")
-    api._apply_action_options(state, req)
+    routes.turn._apply_action_options(state, req)
     assert state["combat_declaration"]["acao"]["target_id"] == "player"
     req = api.ActionRequest(input_text="", card_id="arc_descarga")
-    api._apply_action_options(state, req)
+    routes.turn._apply_action_options(state, req)
     assert state["combat_declaration"]["acao"]["target_id"] == "e1"
 
 

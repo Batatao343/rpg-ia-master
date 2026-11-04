@@ -302,6 +302,7 @@ def test_worker_down_falls_back_to_mode_a(infra, monkeypatch):
     """Fila parada: o próximo turno não espera job que ninguém roda e drena a
     pendência DENTRO da sua cerca; o job atrasado depois é no-op."""
     import api
+    import routes.turn
     from infrastructure import runtime as runtime_mod
     from services.turn_effects import effect_scope
     from workers.projection_jobs import apply_projection
@@ -324,7 +325,7 @@ def test_worker_down_falls_back_to_mode_a(infra, monkeypatch):
         import time
 
         started = time.monotonic()
-        assert api._await_projection_db(state, str(game)) is state  # job só queued
+        assert routes.turn._await_projection_db(state, str(game)) is state  # job só queued
         assert time.monotonic() - started < 1.0
         import agents.archivist as archive
 

@@ -161,14 +161,14 @@ def test_sse_disconnect_logged(client, capsys):
 
 
 def test_sse_error_logged_and_turn_delivery_error_type(client, capsys, monkeypatch):
-    import api
+    import routes.turn
 
     gid = _new_game(client)
 
     def boom(*a, **k):
         raise RuntimeError(f"segredo {SENT_TEXT}")
 
-    monkeypatch.setattr(api, "_execute_action", boom)
+    monkeypatch.setattr(routes.turn, "_execute_action", boom)
     capsys.readouterr()
     with client.stream(
         "POST",
@@ -225,6 +225,7 @@ def test_operation_conflict_logged(capsys, monkeypatch, exc_name, reason):
     from fastapi import HTTPException
 
     import api
+    import routes.turn
     from infrastructure import contracts
 
     _patch_db(monkeypatch, _FakeCoordinator(claim_exc=getattr(contracts, exc_name)("x")))
@@ -233,7 +234,7 @@ def test_operation_conflict_logged(capsys, monkeypatch, exc_name, reason):
         input_text="olho", game_id=state["game_id"], action_id=str(uuid.uuid4())
     )
     with pytest.raises(HTTPException) as caught:
-        api._begin_turn_operation(state, req)
+        routes.turn._begin_turn_operation(state, req)
     assert caught.value.status_code == 409
     (line,) = _find(_lines(capsys), "operation.rejected")
     assert line["reason"] == reason and line["op_kind"] == "turn"
@@ -244,6 +245,7 @@ def test_request_mismatch_logged(capsys, monkeypatch):
     from fastapi import HTTPException
 
     import api
+    import routes.turn
     from infrastructure.contracts import Conflict
 
     _patch_db(monkeypatch, _FakeCoordinator(receipt=Conflict("mismatch")))
@@ -252,13 +254,14 @@ def test_request_mismatch_logged(capsys, monkeypatch):
         input_text="olho", game_id=state["game_id"], action_id=str(uuid.uuid4())
     )
     with pytest.raises(HTTPException):
-        api._begin_turn_operation(state, req)
+        routes.turn._begin_turn_operation(state, req)
     (line,) = _find(_lines(capsys), "operation.rejected")
     assert line["reason"] == "request_mismatch"
 
 
 def test_replay_logged(capsys, monkeypatch):
     import api
+    import routes.turn
 
     cached = api.GameResponse.model_construct()
     _patch_db(monkeypatch, _FakeCoordinator(receipt={"response": {"x": 1}}))
@@ -267,7 +270,7 @@ def test_replay_logged(capsys, monkeypatch):
     req = api.ActionRequest(
         input_text="olho", game_id=state["game_id"], action_id=str(uuid.uuid4())
     )
-    claim, _hash, replay = api._begin_turn_operation(state, req)
+    claim, _hash, replay = routes.turn._begin_turn_operation(state, req)
     assert claim is None and replay is cached
     (line,) = _find(_lines(capsys), "operation.replayed")
     assert line["op_kind"] == "turn" and line["level"] == "info"

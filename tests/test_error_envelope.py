@@ -129,7 +129,7 @@ def test_blocked_response_has_code_and_request_id():
 def test_sse_error_event_envelope(client, monkeypatch):
     from fastapi import HTTPException
 
-    import api
+    import routes.turn
 
     gid = client.post(
         "/game/new",
@@ -145,7 +145,7 @@ def test_sse_error_event_envelope(client, monkeypatch):
     def boom(*a, **k):
         raise HTTPException(409, "operation_in_progress")
 
-    monkeypatch.setattr(api, "_execute_action", boom)
+    monkeypatch.setattr(routes.turn, "_execute_action", boom)
     with client.stream(
         "POST",
         "/game/action/stream",

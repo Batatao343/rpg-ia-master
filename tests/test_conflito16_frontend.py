@@ -3,6 +3,7 @@
 from random import Random
 
 import api
+import routes.turn
 from services import conflict_orchestrator as orch
 from services import conflict_scene as scene_mod
 from services.conflict_turn import TurnDeclaration, TurnStep
@@ -113,7 +114,7 @@ def test_action_request_aceita_escolhas_taticas_estruturadas():
     assert req.ruptura is True
     assert req.reaction_card_id == "dev_encaixe"
     state = {"combat": {"active": True}}
-    api._apply_action_options(state, req)
+    routes.turn._apply_action_options(state, req)
     assert state["combat_declaration"]["acao"]["params"]["ruptura"] is True
     assert state["combat_declaration"]["reaction_card_id"] == "dev_encaixe"
 

@@ -83,6 +83,7 @@ def test_post_replay_same_receipt_single_xp_grant(monkeypatch):
     from fastapi.testclient import TestClient
 
     import api
+    import routes.turn
     import persistence
     from tests.test_hardening_persistencia_sse import _state
 
@@ -107,7 +108,7 @@ def test_post_replay_same_receipt_single_xp_grant(monkeypatch):
             out["messages"] = list(out.get("messages") or []) + [AIMessage(content="O rato tomba.")]
             return out
 
-    monkeypatch.setattr(api, "game_graph", Graph())
+    monkeypatch.setattr(routes.turn, "game_graph", Graph())
     client = TestClient(api.app)
     body = {"game_id": gid, "input_text": "ataco", "action_id": str(uuid.uuid4())}
     first = client.post("/game/action", json=body)
