@@ -1,0 +1,12 @@
+{
+ "acervo_reason_antes": "passiva_permanente",
+ "prepared_antes": 7,
+ "accept_return": {
+  "ok": true,
+  "destino": "acervo",
+  "motivo": "passiva_permanente",
+  "log": "Faro do Abismo entra no seu Acervo."
+ },
+ "prepared_depois": 7,
+ "faro_in_prepared": false
+}

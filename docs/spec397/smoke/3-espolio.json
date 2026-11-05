@@ -1,0 +1,80 @@
+{
+ "antes": {
+  "prepared": [
+   "cor_toque",
+   "cor_esporos",
+   "cor_carne_docil",
+   "cor_membrana"
+  ],
+  "level": 1,
+  "known": [
+   "cor_toque",
+   "cor_esporos",
+   "cor_carne_docil",
+   "cor_farejar",
+   "cor_membrana",
+   "cor_ler_cicatriz"
+  ]
+ },
+ "oferta_antes_de_aceitar": {
+  "id": "c1",
+  "origem": "vitoria",
+  "recusa_ouro": 15,
+  "ofertas": [
+   {
+    "id": "cor1_tro_faro_do_abismo",
+    "name": "Faro do Abismo",
+    "tipo": "passiva",
+    "classe": "Corruptor",
+    "raridade": "comum",
+    "custo_folego": 0,
+    "custo_entropia": 0,
+    "texto": "+2 de Iniciativa.",
+    "descricao": "O Abismo cochicha por onde a emboscada virá, e o seu primeiro passo chega antes do deles.",
+    "conhecida": false
+   }
+  ]
+ },
+ "espolio_pendente_na_API": null,
+ "status": 200,
+ "resp_keys": [
+  "espolio_pendente",
+  "log",
+  "ok",
+  "player_stats"
+ ],
+ "message": null,
+ "prepared_depois": [
+  "cor_toque",
+  "cor_esporos",
+  "cor_carne_docil",
+  "cor_membrana"
+ ],
+ "n_prepared": 4,
+ "faro_in_prepared": false,
+ "faro_in_deck": false,
+ "faro_known": true,
+ "faro_card_in_response": [
+  {
+   "id": "cor1_tro_faro_do_abismo",
+   "name": "Faro do Abismo",
+   "type": "passiva",
+   "description": "O Abismo cochicha por onde a emboscada virá, e o seu primeiro passo chega antes do deles.",
+   "effect_kind": "buff_iniciativa",
+   "target_kind": "enemy",
+   "subclass": "",
+   "prepared": false,
+   "cost": 0,
+   "base_cost": 0,
+   "frequency": "livre",
+   "spent": false,
+   "ready": false,
+   "has_rupture": false,
+   "rupture_ready": false,
+   "trigger": "",
+   "evolved": null,
+   "texto": "+2 de Iniciativa."
+  }
+ ],
+ "body_excerpt": "{\"ok\": true, \"log\": \"Faro do Abismo entra no seu Acervo.\", \"player_stats\": {\"gold\": 50, \"cards\": [{\"id\": \"cor_toque\", \"name\": \"Toque da Decadência\", \"type\": \"ativa\", \"description\": \"O que ele encosta começa a apodrecer no tempo devido.\", \"effect_kind\": \"dot\", \"target_kind\": \"enemy\", \"subclass\": \"\", \"prepared\": true, \"cost\": 0, \"base_cost\": 0, \"frequency\": \"livre\", \"spent\": false, \"ready\": true, \"has_rupture\": false, \"rupture_ready\": false, \"trigger\": \"\", \"evolved\": null, \"texto\": \"Causa 2 de dano por rodada durante 2 rodadas.\"}, {\"id\": \"cor_esporos\", \"name\": \"Esporos\", \"type\": \"ativa\", \"description\": \"Solta uma nuvem fina que se aloja nos pulmões.\", \"effect_kind\": \"dot\", \"target_kind\": \"enemy\", \"subclass\": \"\", \"prepared\": true, \"cost\": 1, \"base_cost\": 1, \"frequency\": \"turno\", \"spent\": false, \"ready\": true, \"has_rupture\": false, \"rupture_ready\": false, \"trigger\": \"\", \"evolved\": null, \"texto\": \"Causa 2 de dano por rodada durante 3 rodadas.\"}, {\"id\": \"cor_carne_docil\", \"name\": \"Carne Dócil\", \"type\": \"passiva\", \"description\": \"A matéria já quer ceder; ele só precisa pedir com jeito.\", \"effect_kind\": \"buff_dot\", \"target_kind\": \"enemy\", \"subclass\": \"\", \"prepared\": true, \"cost\": 0, \"base_cost\": 0, \"frequency\": \"livre\", \"spent\": false, \"ready\": false, \"has_rupture\": false, \"rupture_ready\": false, \"trigger\": \"\", \"evolved\": null, \"texto\": \"+1 de dano contínuo.\"}, {\"id\": \"cor_farejar\", \"name\": \"Farejar Praga\", \"type\": \"utilitaria\", \"description\": \"Segue o cheiro do que já está morrendo."
+}

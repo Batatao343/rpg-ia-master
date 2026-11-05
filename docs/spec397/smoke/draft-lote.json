@@ -1,0 +1,106 @@
+{
+  "_meta": "SPEC-336 rascunho onda 97 - Médico de Campo/boticario. Fora do pool; passe por lint, sim e promote.",
+  "cards": [
+    {
+      "id": "med_cataplasma_frio",
+      "name": "Cataplasma Frio",
+      "tipo": "ativa",
+      "origem": "onda-97",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "alvo": "aliados",
+          "valor": 4
+        }
+      ],
+      "descricao": "Pano encharcado de erva amarga e água de cinza, pesado na pele, tirando o ardor do ferimento aberto.",
+      "momento": "Melhor jogada quando a rodada seguinte já está decidida e a erva pode ficar na mão até alguém precisar dela.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 97,
+      "versao": 1,
+      "palavras_chave": {
+        "guardar": true
+      }
+    },
+    {
+      "id": "med_frasco_de_sono",
+      "name": "Frasco de Sono",
+      "tipo": "ativa",
+      "origem": "onda-97",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "alvo": "alvo",
+          "duracao": 2
+        },
+        {
+          "kind": "empurrao",
+          "alvo": "alvo",
+          "valor": 1
+        }
+      ],
+      "descricao": "Um vidro de fundo raso, cheiro de éter e fungo; o ar pesa e o braço do inimigo esquece como se levanta.",
+      "momento": "Melhor jogada quando o agressor já está engajado no corpo a corpo e um braço lento vale mais que qualquer golpe do boticário.",
+      "tier": 2,
+      "level_req": 2,
+      "apex": false,
+      "onda": 97,
+      "versao": 1
+    },
+    {
+      "id": "med_vinagre_na_chaga",
+      "name": "Vinagre na Chaga",
+      "tipo": "ativa",
+      "origem": "onda-97",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeitos": [
+        {
+          "kind": "purga_condicao",
+          "alvo": "aliados",
+          "valor": 2,
+          "condicao": "sangramento"
+        }
+      ],
+      "descricao": "O vinagre morde a ferida aberta, e a carne se fecha em silêncio sobre o cheiro de ferro.",
+      "momento": "Melhor jogada quando um aliado sangra a cada passo e a rodada não permite parar para costurar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 97,
+      "versao": 1,
+      "palavras_chave": {
+        "guardar": true
+      }
+    }
+  ],
+  "_rejeitadas_vocabulario": [
+    {
+      "id": "med_torno_de_ervas",
+      "motivos": [
+        "efeitos sem efeito principal (ao_jogar, sem condição)"
+      ]
+    }
+  ]
+}

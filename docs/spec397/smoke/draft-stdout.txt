@@ -1,0 +1,7 @@
+3 cartas (1 fora do vocabulário) -> C:\Users\guilh\AppData\Local\Temp\smoke397\data\cards\_rascunhos\onda97_medico_de_campo_boticario.json
+pedidas=4 entregues=3 rejeitadas=1 custo_estimado=US$ 0.0027
+AVISO: pediu 4, entregou 3
+Próximos passos:
+  bash scripts/dev/py.sh scripts/cards/lint.py data/cards/_rascunhos/onda97_medico_de_campo_boticario.json
+  bash scripts/dev/py.sh scripts/cards/sim.py --lote data/cards/_rascunhos/onda97_medico_de_campo_boticario.json --protocolo lote-v2 --json --out data/cards/_rascunhos/onda97_medico_de_campo_boticario.sim.json
+  bash scripts/dev/py.sh scripts/cards/promote.py data/cards/_rascunhos/onda97_medico_de_campo_boticario.json --onda 97 --protocolo lote-v2 --sim-report data/cards/_rascunhos/onda97_medico_de_campo_boticario.sim.json --voz-pendente
