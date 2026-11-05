@@ -312,6 +312,12 @@ def _add_to_deck(player: dict, card_id: str) -> str:
     return "acervo"
 
 
+def _accept_log(card_id: str, name: str, where: str) -> str:
+    if _is_passive(card_id):  # SPEC-397: voz "você", sem número
+        return f"{name} entra no seu Acervo: fica sempre ativa e não ocupa Preparação."
+    return f"{name} entra no seu Acervo" + (" e no Baralho." if where == "baralho" else ".")
+
+
 def acervo_reason(player: dict, card_id: str) -> str | None:
     """SPEC-363 R32: por que a Carta comprada/sorteada fica só no Acervo (None = não fica)."""
     if _is_passive(card_id):
@@ -426,7 +432,7 @@ def accept(state: dict, card_id: str | None) -> dict:
         "gold": 0,
         "destino": where,
         **({"motivo": why} if where == "acervo" and why else {}),
-        "log": f"{name} entra no seu Acervo" + (" e no Baralho." if where == "baralho" else "."),
+        "log": _accept_log(str(card_id), str(name), where),
     }
 
 

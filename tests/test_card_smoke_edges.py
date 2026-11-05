@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 from tests.fixtures.spec368_seed import _legacy, _load, _new_game
 
 FARO = "cor1_tro_faro_do_abismo"
+LAST_LOG: list[str] = [""]  # log da última chamada de `_reward_faro`
 
 
 @pytest.fixture
@@ -68,6 +69,7 @@ def _reward_faro(client, gid, mutate=None):
     assert persistence.save_game_state(state)
     r = client.post("/game/espolio", json={"game_id": gid, "card_id": FARO})
     assert r.status_code == 200, r.text
+    LAST_LOG[:] = [r.json().get("log", "")]
     return _load(gid)["player"]
 
 
@@ -78,6 +80,7 @@ def test_passive_reward_keeps_four_of_four_and_prepare_still_works(client):
 
     gid = _new_game(client, "Corruptor", "Smoke397")
     player = _reward_faro(client, gid)
+    assert "sempre ativa" in LAST_LOG[0] and "não ocupa Preparação" in LAST_LOG[0]
     assert len(player["prepared_cards"]) == 4 and FARO not in player["prepared_cards"]
     assert FARO not in (player.get("deck") or [])
     assert _has_vigilia(player)
