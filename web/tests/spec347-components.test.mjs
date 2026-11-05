@@ -29,7 +29,9 @@ test('playqueue_desfazer_fila_na_fila_e_selo', async () => {
   const out = html(h(PlayQueue, { queue: q, selected: null, nameOf: () => 'X', busy: false, onSelect() {}, onMove() {}, onRemove() {}, onClear() {}, onEnd() {}, touch: true }));
   assert.match(out, /play-queue__clear--inline/);
   assert.match(out, /play-queue__badge" aria-hidden="true">2</);
-  assert.match(out, /aria-label="Encerrar a rodada, 2 cartas"/);
+  // SPEC-396: nome = conteúdo ("Encerrar a rodada" + ", " sr-only + "2 cartas"), sem aria-label.
+  assert.doesNotMatch(out, /data-end-turn[^>]*aria-label/);
+  assert.match(out, /Encerrar a rodada<span class="sr-inline">, 2 cartas<\/span><\/span><small class="play-queue__count" aria-hidden="true">2 cartas</);
 });
 
 const combatBase = { round: 3, order: [{ name: 'Inimigos', side: 'enemy', init: 0 }, { name: 'Heróis', side: 'hero', init: 0 }],

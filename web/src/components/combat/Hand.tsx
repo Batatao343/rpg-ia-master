@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import type { Glossary, HandCard, PilesView } from "../../types";
 import { Icon } from "../../design/icons";
 import { BLOCK_TEXT, keywordRules, type BlockReason } from "../../combat/deck";
@@ -67,23 +67,27 @@ export function Hand({ piles, glossary, reasons, armedIndex, busy, onPlay, head,
           const descId = `deck-card-${index}-rules`;
           const desc = [plain, ...rules, reason ? `Indisponível: ${BLOCK_TEXT[reason]}.` : ""].filter(Boolean).join(" ");
           const discardReason = discardReasons?.[index] ?? null;
+          // SPEC-396: o nome vem do conteúdo (WCAG 2.5.3): nome visível + sufixo sr-only; as regras ficam
+          // num irmão sr-only (fora do botão) ligado por aria-describedby.
           const cardButton = (
-            <button key={`${card.id}-${index}`} type="button" className={`combat-card deck-card${reason ? " is-dim" : ""}${armed ? " is-aiming" : ""}`}
+            <Fragment key={`${card.id}-${index}`}>
+            <button type="button" className={`combat-card deck-card${reason ? " is-dim" : ""}${armed ? " is-aiming" : ""}`}
               data-card={card.id} aria-pressed={armed} aria-disabled={reason ? true : undefined}
               aria-keyshortcuts={index < 5 ? String(index + 1) : undefined}
               aria-describedby={descId}
-              aria-label={`${card.name}, ${card.custo_folego} de Fôlego${card.custo_entropia ? `, ${card.custo_entropia} de Entropia` : ""}`}
               disabled={busy && !reason}
               onClick={(e) => { if (!busy) onPlay(card, index, e.currentTarget); }}>
               <span className="combat-card__top">
                 <span className="deck-card__pips" title="Custo de Fôlego" aria-hidden="true">{"●".repeat(card.custo_folego) || "○"} {card.custo_folego}</span>
                 {card.custo_entropia > 0 && <span className="combat-card__cost" title="Custo de Entropia" aria-hidden="true">{card.custo_entropia}E</span>}
               </span>
-              <span className="combat-card__name">{card.name}</span>
+              <span className="combat-card__name">{card.name}
+                <span className="sr-inline">{`, ${card.custo_folego} de Fôlego${card.custo_entropia ? `, ${card.custo_entropia} de Entropia` : ""}`}</span></span>
               {card.texto && <span className="combat-card__desc" aria-hidden="true"><RuleText texto={card.texto} glossary={glossary} /></span>}
               {reason && <span className="combat-card__state" aria-hidden="true">{BLOCK_TEXT[reason]}</span>}
-              <span id={descId} className="sr-only">{desc}</span>
             </button>
+            <span id={descId} className="sr-only">{desc}</span>
+            </Fragment>
           );
           if (!card.descartar_folego || !onDiscard) return cardButton;
           return (
@@ -92,9 +96,9 @@ export function Hand({ piles, glossary, reasons, armedIndex, busy, onPlay, head,
               <button type="button" className="btn btn--ghost btn--sm deck-card__discard" data-discard={card.id}
                 aria-disabled={discardReason || busy ? true : undefined}
                 title={discardReason ? BLOCK_TEXT[discardReason] : undefined}
-                aria-label={`Descartar ${card.name} por ${card.descartar_folego} de Fôlego${discardReason ? `. Indisponível: ${BLOCK_TEXT[discardReason]}` : ""}`}
                 onClick={(e) => { if (!busy && !discardReason) onDiscard(card, index, e.currentTarget); }}>
                 Descartar ({card.descartar_folego} Fôlego)
+                <span className="sr-inline">{`: ${card.name}${discardReason ? `. Indisponível: ${BLOCK_TEXT[discardReason]}` : ""}`}</span>
               </button>
             </div>
           );

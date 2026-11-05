@@ -48,19 +48,19 @@ export function CardHand({ cards, enemies, busy, aimingCardId, ruptureId, detail
                 aria-pressed={aiming} aria-disabled={blocked || undefined}
                 aria-describedby={detailId}
                 aria-keyshortcuts={index < 9 ? String(index + 1) : undefined}
-                aria-label={`Jogar Carta ${card.name}, ${card.cost} de Entropia${blocked && reasonText ? `, indisponível: ${reasonText}` : `, ${verb}`}`}
                 {...(touch ? {} : {
                   onMouseEnter: () => onDetail(card.id), onMouseLeave: () => onDetail(null),
                   onFocus: () => onDetail(card.id), onBlur: () => onDetail(null),
                 })}
                 onClick={(event) => { if (!blocked || aiming) onGesture(card, event.currentTarget); }}>
-                <span className="combat-card__top">
+                <span className="combat-card__top" aria-hidden="true">
                   <span className="combat-card__cost" title="Custo de Entropia">{card.cost}E</span>
                   <span className="combat-card__freq">{FREQ_SHORT[card.frequency] ?? card.frequency}</span>
                 </span>
-                <span className="combat-card__name">{card.name}</span>
-                <span className="combat-card__desc">{card.description || card.effect_kind.replace(/_/g, " ")}</span>
-                <span className="combat-card__state">
+                <span className="combat-card__name"><span className="sr-inline">Jogar Carta </span>{card.name}
+                  <span className="sr-inline">{`, ${card.cost} de Entropia${blocked && reasonText ? `, indisponível: ${reasonText}` : `, ${verb}`}`}</span></span>
+                <span className="combat-card__desc" aria-hidden="true">{card.description || card.effect_kind.replace(/_/g, " ")}</span>
+                <span className="combat-card__state" aria-hidden="true">
                   {blocked ? (reasonText || "Indisponível") : aiming ? "Mirando…" : plan.mode === "aim" ? "Escolha o alvo" : "Disponível"}
                   {card.evolved ? ` · Caminho ${card.evolved}` : ""}
                 </span>

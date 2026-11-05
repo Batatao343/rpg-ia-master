@@ -1227,6 +1227,8 @@ select {
 
 /* ---- SPEC-205: combate por gesto ---- */
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* SPEC-396: texto só para leitor de tela que fica em linha (sem blocar): o nome acessível não ganha espaço no meio. */
+.sr-inline { font-size: 0; line-height: 0; }
 .arena { display: grid; gap: 0.5rem; min-width: 0; }
 .arena__turn { margin: 0; color: var(--faint); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
 .arena__zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.45rem; }

@@ -68,10 +68,9 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
             return (
               <li key={p.uid} className={open ? "is-selected" : undefined}>
                 <button type="button" className="play-queue__item" aria-expanded={open}
-                  aria-label={`${i + 1}º: ${p.name}${p.targetId ? ` em ${nameOf(p.targetId) ?? "alvo"}` : ""}. ${open ? "Fechar opções" : "Abrir opções"}`}
                   onClick={() => onSelect(open ? null : p.uid)}>
-                  <span className="play-queue__n">{i + 1}</span> {p.name}
-                  {p.targetId && <span className="play-queue__to"> → {nameOf(p.targetId) ?? "alvo"}</span>}
+                  <span className="play-queue__n">{i + 1}<span className="sr-inline">º:</span></span> {p.name}
+                  {p.targetId && <span className="play-queue__to"><span className="sr-inline"> em</span><span aria-hidden="true"> →</span> {nameOf(p.targetId) ?? "alvo"}</span>}
                 </button>
                 {open && (
                   <span className="play-queue__ops">
@@ -110,12 +109,11 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
         <button type="button" className="btn btn--primary play-queue__submit" data-end-turn
           aria-disabled={busy || queue.length === 0 ? "true" : undefined}
           aria-keyshortcuts="Enter" title="Encerrar a rodada (Enter)"
-          aria-label={queue.length > 0 ? `Encerrar a rodada, ${queue.length} ${queue.length === 1 ? "carta" : "cartas"}` : undefined}
           onClick={() => { if (!busy && queue.length) onEnd(); }}>
-          <span>Encerrar a rodada</span>
+          <span>Encerrar a rodada{queue.length > 0 && <span className="sr-inline">{`, ${queue.length} ${queue.length === 1 ? "carta" : "cartas"}`}</span>}</span>
           {queue.length > 0 && (
             <>
-              <small className="play-queue__count">{queue.length} {queue.length === 1 ? "carta" : "cartas"}</small>
+              <small className="play-queue__count" aria-hidden="true">{queue.length} {queue.length === 1 ? "carta" : "cartas"}</small>
               <small className="play-queue__badge" aria-hidden="true">{queue.length}</small>
             </>
           )}

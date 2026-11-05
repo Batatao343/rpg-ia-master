@@ -60,11 +60,11 @@ test('fila: Encerrar a rodada desligado sem fila; com fila mostra a contagem e E
   const q = [{ uid: 'a', cardId: 'golpe', name: 'Golpe', targetId: 'e1', folego: 1, entropia: 0 }];
   const out = html(h(PlayQueue, { ...base, queue: q, selected: 'a' }));
   assert.match(out, /btn btn--primary play-queue__submit/);
-  assert.match(out, /Encerrar a rodada<\/span><small[^>]*>1 carta/);
+  assert.match(out, /Encerrar a rodada(<span class="sr-inline">[^<]*<\/span>)?<\/span><small[^>]*>1 carta/);
   assert.doesNotMatch(out, /Enter\)?<\/|\(1\)/);
   assert.match(out, /Desfazer \(Esc\)/);
   assert.match(out, /aria-label="Cancelar Golpe"/);
-  assert.match(out, /Golpe[\s\S]*→ Lobo/);
+  assert.match(out, /Golpe[\s\S]*→<\/span> Lobo/);
 });
 
 test('prévia e log: anunciáveis e sem render quando vazios', async () => {
@@ -79,4 +79,15 @@ test('prévia e log: anunciáveis e sem render quando vazios', async () => {
   const log = html(h(MechLog, { lines: ['Você · Golpe → Lobo · 2d10 6 + 7 +2 = 15 vs 12 · acerto · 5 dano'], round: 3 }));
   assert.match(log, /<details[\s\S]*Os dados da rodada 3/);
   assert.match(log, /mech-log__who">Você</);
+});
+
+test('SPEC-396: carta do Acervo — nome vem do conteúdo (sem aria-label) e aria-describedby aponta para ids existentes', async () => {
+  const { DeckCard } = await load('../src/components/tabs/DeckCard.tsx');
+  const card = { id: 'golpe', name: 'Golpe do Véu', type: 'ativa', cost: 2, base_cost: 2, frequency: 'turno', description: 'Causa 3 de dano.', prepared: false, spent: false, has_rupture: false, effect_kind: 'dano' };
+  const out = html(h(DeckCard, { card, preparable: true, onToggle() {} }));
+  assert.doesNotMatch(out, /<button[^>]*aria-label=/);
+  const ids = /aria-describedby="([^"]+)"/.exec(out)[1].split(' ');
+  assert.ok(ids.length >= 2);
+  for (const id of ids) assert.ok(out.includes(`id="${id}"`), id);
+  assert.match(out, /Golpe do Véu<span class="sr-inline">, [^<]*Enter para preparar<\/span>/);
 });

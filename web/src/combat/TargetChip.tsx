@@ -26,9 +26,9 @@ export type AimMark = { valid: boolean; reason?: string } | undefined;
 /** SPEC-205 R11: participante da arena. Vira botão só enquanto há mira ativa. */
 /** SPEC-347 R13.8: retrato à esquerda do nome. `pronto`/`gerando` → <img> (a melhor arte disponível);
  *  `marcador` → ícone da família (aria-hidden; o nome segue no texto). Tamanho fixo, sem salto de layout. */
-export function Portrait({ r }: { r: CreaturePortrait }) {
+export function Portrait({ r, decor }: { r: CreaturePortrait; decor?: boolean }) {
   return (
-    <span className={`tchip__portrait tchip__portrait--${r.estado}`} data-portrait={r.estado}>
+    <span className={`tchip__portrait tchip__portrait--${r.estado}`} data-portrait={r.estado} aria-hidden={decor || undefined}>
       {r.src ? <img src={r.src} alt={r.alt} loading="lazy" decoding="async" />
         : <span className="tchip__portrait-icon" aria-hidden="true"><Icon name={familyIcon(r.familia, r.icone)} /></span>}
       {r.estado === "gerando" && <em className="tchip__portrait-badge">Gerando retrato…</em>}
@@ -61,6 +61,15 @@ function PortraitOffer({ p, onGenerate, disabled }: { p: Participant; onGenerate
   );
 }
 
+/** SPEC-396: sufixo falado do nome do alvo (entra em sr-only dentro do nome visível). */
+function tailOf(p: Participant, aim: NonNullable<AimMark>, spent: boolean, omen?: OmenView): string {
+  const base = aim.valid
+    ? spent ? ", sem Vitalidade — o próximo golpe fere"
+      : p.vit != null ? `, Vitalidade ${p.vit} de ${p.max}` : ""
+    : `: alvo inválido${aim.reason ? ` — ${aim.reason}` : ""}`;
+  return base + (omen ? `. Presságio: ${omen.spoken}` : "");
+}
+
 export function TargetChip({ p, aim, onPick, omen, onGenerate, genDisabled }: {
   p: Participant;
   aim: AimMark;
@@ -73,34 +82,37 @@ export function TargetChip({ p, aim, onPick, omen, onGenerate, genDisabled }: {
 }) {
   const pct = p.vit != null && p.max ? Math.max(0, Math.min(100, Math.round((p.vit / p.max) * 100))) : null;
   const spent = p.role === "enemy" && p.vit === 0 && (p.max ?? 0) > 0; // SPEC-345 R1: de pé, sem Vitalidade
+  // SPEC-396: com mira o chip é botão e o nome vem do conteúdo (WCAG 2.5.3): só o nome fica "visível" ao leitor;
+  // o resto da tela vira aria-hidden e o texto falado entra em sr-only (prefixo/sufixo abaixo).
+  const h = aim ? { "aria-hidden": true as const } : undefined;
   const body = (
     <>
-      {p.retrato && <Portrait r={p.retrato} />}
+      {p.retrato && <Portrait r={p.retrato} decor={!!aim} />}
       <span className="tchip__top">
-        <strong>{p.name}</strong>
-        {p.vit != null && p.max != null && <span className={`tchip__vit${spent ? " is-spent" : ""}`}>{spent ? "sem Vitalidade" : `${p.vit}/${p.max}`}</span>}
+        <strong>{aim?.valid && <span className="sr-inline">Alvo: </span>}{p.name}{aim && <span className="sr-inline">{tailOf(p, aim, spent, omen)}</span>}</strong>
+        {p.vit != null && p.max != null && <span className={`tchip__vit${spent ? " is-spent" : ""}`} {...h}>{spent ? "sem Vitalidade" : `${p.vit}/${p.max}`}</span>}
       </span>
       {pct !== null && <span className={`tchip__bar${spent ? " is-spent" : ""}`} aria-hidden="true" data-effect="hit.feedback" data-pct={pct}><span style={{ transform: `scaleX(${pct / 100})` }} /></span>}
-      <span className="tchip__meta">
+      <span className="tchip__meta" {...h}>
         {p.role === "enemy" && (p.esquiva != null ? `Esquiva ${p.esquiva}` : "Esquiva ?")}
         {p.role === "enemy" && p.protecao != null ? ` · Proteção ${p.protecao}` : ""}
         {p.concealment && p.concealment !== "visivel" ? ` · ${p.concealment}` : ""}
         {p.posture && p.posture !== "neutro" ? ` · ${p.posture}` : ""}
       </span>
-      {p.engagedNames.length > 0 && <span className="tchip__meta">{`Engajado: ${p.engagedNames.join(", ")}`}</span>}
+      {p.engagedNames.length > 0 && <span className="tchip__meta" {...h}>{`Engajado: ${p.engagedNames.join(", ")}`}</span>}
       {p.conditions.length > 0 && (
-        <span className="tchip__tags">{p.conditions.map((c, i) => <em key={i}>{c.label ?? c.name}</em>)}</span>
+        <span className="tchip__tags" {...h}>{p.conditions.map((c, i) => <em key={i}>{c.label ?? c.name}</em>)}</span>
       )}
-      {p.intel.length > 0 && <span className="tchip__meta">{`Revelado: ${p.intel.join(", ")}`}</span>}
+      {p.intel.length > 0 && <span className="tchip__meta" {...h}>{`Revelado: ${p.intel.join(", ")}`}</span>}
       {omen && (
-        <span className={`tchip__omen${omen.veiled ? " is-veiled" : ""}`} data-omen={omen.veiled ? "veiled" : "known"}>
+        <span className={`tchip__omen${omen.veiled ? " is-veiled" : ""}`} data-omen={omen.veiled ? "veiled" : "known"} {...h}>
           <Icon name={omen.icon} />
           <span>{omen.text}{omen.card ? ` — ${omen.card}` : ""}</span>
           {omen.num && <span className="tchip__omen-num">{omen.num}</span>}
         </span>
       )}
-      {omen?.prenuncio && <span className="tchip__meta" data-omen-prenuncio>{omen.prenuncio}</span>}
-      {omen?.saber && <span className="tchip__meta" data-omen-saber>{`Você sabe: ${omen.saber}`}</span>}
+      {omen?.prenuncio && <span className="tchip__meta" data-omen-prenuncio {...h}>{omen.prenuncio}</span>}
+      {omen?.saber && <span className="tchip__meta" data-omen-saber {...h}>{`Você sabe: ${omen.saber}`}</span>}
     </>
   );
   const cls = `tchip tchip--${p.role}${aim ? (aim.valid ? " is-valid" : " is-invalid") : ""}${p.retrato ? " tchip--portrait" : ""}`;
@@ -113,12 +125,8 @@ export function TargetChip({ p, aim, onPick, omen, onGenerate, genDisabled }: {
     );
   }
   const effectState = aim.valid ? "valid" : "invalid";
-  const label = (aim.valid
-    ? spent ? `Alvo: ${p.name}, sem Vitalidade — o próximo golpe fere`
-      : `Alvo: ${p.name}${p.vit != null ? `, Vitalidade ${p.vit} de ${p.max}` : ""}`
-    : `${p.name}: alvo inválido${aim.reason ? ` — ${aim.reason}` : ""}`) + (omen ? `. Presságio: ${omen.spoken}` : "");
   const button = (
-    <button type="button" className={cls} data-target={p.id} data-aim-safe aria-label={label}
+    <button type="button" className={cls} data-target={p.id} data-aim-safe
       data-effect="target.valid" data-effect-state={effectState}
       aria-disabled={!aim.valid || undefined} title={aim.valid ? undefined : aim.reason}
       onClick={() => { if (aim.valid) onPick(p.id); }}>

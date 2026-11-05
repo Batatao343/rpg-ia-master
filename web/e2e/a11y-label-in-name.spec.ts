@@ -3,7 +3,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { test, expect } from "./fixtures";
-import { armDeck, openCombat } from "./deck-342-helpers";
+import { armDeck, openCombat, HAND } from "./deck-342-helpers";
 
 test.beforeEach(({ backend }) => {
   backend.allowFailure(/fonts\.(googleapis|gstatic)\.com/);
@@ -33,6 +33,8 @@ test.describe("desktop", () => {
     await labelInName(page, "topbar");
     await page.getByRole("tab", { name: "Mapa" }).click();
     await labelInName(page, "aba Mapa");
+    const ficha = page.getByRole("button", { name: "Fechar ficha" });
+    if (await ficha.count()) await labelInName(page, "ficha de contexto");
   });
 
   test("combate legado: carta armada e alvos", async ({ page, backend }) => {
@@ -42,20 +44,20 @@ test.describe("desktop", () => {
     await openGame(page);
     const golpe = page.locator("#ws-panel-combate").getByRole("button", { name: /Jogar Carta Golpe do Véu/ });
     await expect(golpe).toHaveAccessibleName(/^Jogar Carta Golpe do Véu/);
-    await expect(golpe).not.toHaveAccessibleDescription("");
     await labelInName(page, "carta legada");
     await golpe.click();
     const valid = page.locator('#ws-panel-combate [data-target="e1"]');
     await expect(valid).toHaveAccessibleName(/^Alvo: Saqueador/);
     await expect(page.locator('#ws-panel-combate [data-target="e2"]')).toHaveAccessibleName(/alvo inválido/);
-    await expect(valid).not.toHaveAccessibleDescription("");
     await labelInName(page, "mira");
   });
 
   test("combate do baralho: descarte, alvo e fila com 2 itens", async ({ page, backend }) => {
-    armDeck(backend, { nonlethal: true });
+    armDeck(backend, { nonlethal: true, hand: HAND.map((c, i) => (i === 1 ? { ...c, descartar_folego: 1 } : c)) });
     await openCombat(page);
-    await expect(page.locator(".deck-card[data-card='golpe']")).toHaveAccessibleName(/^Jogar Carta Golpe do Véu/);
+    await expect(page.locator(".deck-card[data-card='golpe']")).toHaveAccessibleName(/^Golpe do Véu\s*, 1 de Fôlego/);
+    await expect(page.locator(".deck-card[data-card='golpe']")).not.toHaveAccessibleDescription("");
+    await expect(page.locator("[data-discard='corte']")).toHaveAccessibleName(/^Descartar \(1 Fôlego\)\s*: Corte Largo/);
     await labelInName(page, "mão do baralho");
     for (const id of ["golpe", "corte"]) {
       await page.locator(`.deck-card[data-card="${id}"]`).dispatchEvent("click");

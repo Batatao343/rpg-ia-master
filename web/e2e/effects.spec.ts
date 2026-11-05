@@ -313,8 +313,8 @@ for (const [width, height] of [[1440, 900], [1280, 720]] as const) {
       const invalid = panel(page).locator('[data-target="e2"]');
       await expect(valid).toHaveAttribute("data-effect-state", "valid");
       await expect(invalid).toHaveAttribute("data-effect-state", "invalid");
-      await expect(valid).toHaveAttribute("aria-label", /^Alvo: Saqueador/);
-      await expect(invalid).toHaveAttribute("aria-label", /alvo inválido/);
+      await expect(valid).toHaveAccessibleName(/^Alvo: Saqueador/);
+      await expect(invalid).toHaveAccessibleName(/alvo inválido/);
       expect(await css(valid, "outline-style")).toBe("solid");
       expect(await css(invalid, "border-top-style")).toBe("dashed");
       await a11y(page, "mira");

@@ -1,3 +1,4 @@
+import { useId } from "react";
 import type { CardView } from "../../types";
 import { Icon, type IconName } from "../../design/icons";
 
@@ -24,35 +25,40 @@ export interface DeckCardProps {
 /** SPEC-209 R1/R15: carta do Acervo. Todos os números vêm do servidor; sem arte inventada —
  *  só ícone/selo por tipo. A carta INTEIRA é o controle (clique, Enter ou Espaço). */
 export function DeckCard({ card, preparable, blockedReason, evolvable, onToggle, onEvolve }: DeckCardProps) {
+  const uid = useId();
   const blocked = preparable && !!blockedReason;
   const costDiffers = card.base_cost != null && card.base_cost !== card.cost;
   const state = card.prepared ? "Preparada" : preparable ? "No Acervo" : "Sempre em vigor";
   const typeLabel = TYPE_LABEL[card.type] ?? card.type;
+  const hint = blocked ? `, indisponível: ${blockedReason}`
+    : card.prepared ? ", Enter para tirar da preparação" : ", Enter para preparar";
+  // SPEC-396: no botão o nome vem do conteúdo (WCAG 2.5.3): o resto é aria-hidden e o texto falado vai em sr-only.
+  const btn = preparable && !!onToggle;
+  const h = btn ? { "aria-hidden": true as const } : undefined;
   const head = (
     <>
-      <span className="deck-card__top">
+      <span className="deck-card__top" {...h}>
         <span className="deck-card__type" aria-hidden><Icon name={TYPE_ICON[card.type] ?? "unique"} /></span>
         <span className="deck-card__kind">{typeLabel}</span>
         <span className="deck-card__cost" title="Custo de Entropia">
           {card.cost}E{costDiffers ? <small> (base {card.base_cost})</small> : null}
         </span>
       </span>
-      <span className="deck-card__name">{card.name}</span>
-      <span className="deck-card__desc">{card.description || card.effect_kind.replace(/_/g, " ")}</span>
-      <span className="deck-card__meta">
+      <span className="deck-card__name">{card.name}
+        {btn && <span className="sr-inline">{`, ${typeLabel}, ${card.cost} de Entropia, ${state}${hint}`}</span>}</span>
+      <span className="deck-card__desc" id={`${uid}-d`} {...h}>{card.description || card.effect_kind.replace(/_/g, " ")}</span>
+      <span className="deck-card__meta" id={`${uid}-m`} {...h}>
         <span className="deck-card__chip">{FREQ_LABEL[card.frequency] ?? card.frequency}</span>
         {card.spent && <span className="deck-card__chip is-spent">Gasta</span>}
         {card.has_rupture && <span className="deck-card__chip is-rupture">Ruptura</span>}
         {card.evolved && <span className="deck-card__chip is-evolved">Caminho {card.evolved}</span>}
         {card.subclass && <span className="deck-card__chip">{card.subclass}</span>}
       </span>
-      <span className="deck-card__state">
+      <span className="deck-card__state" {...h}>
         {state}{blocked ? ` · ${blockedReason}` : ""}
       </span>
     </>
   );
-  const hint = blocked ? `, indisponível: ${blockedReason}`
-    : card.prepared ? ", Enter para tirar da preparação" : ", Enter para preparar";
   return (
     <li className={"deck-card" + (card.prepared ? " is-prepared" : "") + (card.spent ? " is-spent" : "")}
       data-card-id={card.id}>
@@ -60,9 +66,8 @@ export function DeckCard({ card, preparable, blockedReason, evolvable, onToggle,
         <button type="button" className="deck-card__btn" data-deck-card
           data-effect={blocked ? "card.blocked" : "choice.select"}
           data-effect-state={blocked ? "blocked" : card.prepared ? "selected" : "idle"}
-          aria-pressed={card.prepared}
+          aria-pressed={card.prepared} aria-describedby={`${uid}-d ${uid}-m`}
           aria-disabled={blocked || undefined}
-          aria-label={`${card.name}, ${typeLabel}, ${card.cost} de Entropia, ${state}${hint}`}
           onClick={() => { if (!blocked) onToggle(card); }}>
           {head}
         </button>

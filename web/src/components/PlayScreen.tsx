@@ -115,7 +115,7 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
               {simulation ? "Reiniciar" : "Nova jornada"}
             </button>
             {onLogout && <button className="iconbtn" type="button" disabled={busy}
-              onClick={onLogout} aria-label="Encerrar sessão">Sair</button>}
+              onClick={onLogout}>Encerrar sessão</button>}
           </div>
         </header>
       )}

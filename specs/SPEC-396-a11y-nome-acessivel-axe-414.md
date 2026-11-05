@@ -295,3 +295,13 @@ Sem LLM nem infra nova: o smoke é de navegador/AT.
   dúvidas `aria-hidden`/`sr-only`.
 - Etapa 4: contagem do e2e completo (passou/falhou) e 0 violação da regra.
 - §6.2: nota do smoke com leitor de tela.
+
+### Registro da execução (05/11)
+
+- **Etapa 0.** Vermelho confirmado em `button[aria-label="Encerrar sessão"]` (#8/#9) e `button[data-card=…]` (#1). Dúvida 1: filhos `aria-hidden` **entram** no "texto visível" do axe (usa `isVisibleOnScreen`) -> a estratégia E **reprovou**; D-396-1 caiu para o fallback (b).
+- **Fallback aplicado (A).** Itens 1, 2, 3, 4, 5, 6, 7: sem `aria-label`; o nome vem do conteúdo (regra N/A), decoração em `aria-hidden` e o texto falado em `<span class="sr-inline">` dentro do elemento do nome. Nova classe `.sr-inline` (`font-size:0`): o `.sr-only` (absolute) bloca o nome e o Playwright injeta espaço (`Golpe do Véu , 1 …`), quebrando regex `^Golpe do Véu,` de ~45 locators. Nomes preservados byte a byte, exceto `Descartar (1 Fôlego) : X` (botão flex, aceita `\s*`). `aria-describedby` do Acervo (`useId`) e das cartas do baralho mantido.
+- **Dúvida 2** (`sr-only` no botão): não medida; o `descId` das cartas do baralho foi movido para irmão do botão por segurança.
+- #6: o selo `.play-queue__count` virou `aria-hidden` e o texto "`, N cartas`" vai em `sr-inline` (a 390 px o count está `display:none` e o nome perderia "2 cartas"); nome acessível exato `Encerrar a rodada, 2 cartas` mantido.
+- #8/#9: texto visível `Encerrar sessão` (D-396-2 a). #10 (`×`) passou no axe: sem mudança. #11: `aria-label` condicional `Código de suporte copiado`.
+- **Desvio:** asserts existentes editados porque dependiam do markup antigo: `effects.spec.ts` (`toHaveAttribute("aria-label")` -> `toHaveAccessibleName`), `spec345-components`/`spec347-components` (aria-label -> sr-inline), `deck-components` (2 regex). Bump: o branch do PR #55 foi apagado e estava defasado (removia `overrides`); aplicados à mão os 3 pins em `web/package.json` + `npm install` local.
+- **Evidência:** e2e novo (5 testes) + 15 specs tocadas: 202 passed / 16 skipped / 0 failed (`--project=chromium`); `npm test` 315/315; lint 0 erro; typecheck e build ok; `pytest tests/test_eval_frontend.py tests/test_audit_browser_local.py` 9 passed.

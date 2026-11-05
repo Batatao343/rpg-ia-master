@@ -36,8 +36,8 @@ export function PlayMenu({ busy, simulation, accountBalance, onAccount, onNew, o
           </button>
           {onLogout && (
             <button type="button" className="btn btn--ghost playmenu__item" disabled={busy}
-              onClick={() => { close(); onLogout(); }} aria-label="Encerrar sessão">
-              Sair
+              onClick={() => { close(); onLogout(); }}>
+              Encerrar sessão
             </button>
           )}
           <button type="button" className="btn btn--ghost playmenu__item playmenu__close" onClick={close}>

@@ -16,7 +16,7 @@ export function SupportCode({ requestId }: { requestId?: string | null }) {
   return (
     <span className="support-code">
       Código de suporte: <code>{short}</code>
-      <button type="button" className="support-code-copy" onClick={copy} aria-label="Copiar código de suporte">
+      <button type="button" className="support-code-copy" onClick={copy} aria-label={copied ? "Código de suporte copiado" : "Copiar código de suporte"}>
         {copied ? "Copiado" : "Copiar"}
       </button>
       <span className="sr-only" aria-live="polite">{copied ? "Código de suporte copiado" : ""}</span>
