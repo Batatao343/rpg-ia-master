@@ -38,7 +38,7 @@ Balanço (SPEC-369), timeouts do DeepSeek (infra).
 - [x] R3: abertura narrada coerente com a emboscada ou com a emboscada negada.
 - [x] R4: causa registrada (e corrigida, se for bug).
 - [x] R5: passiva por recompensa listada e efetiva.
-- [ ] R6: guardas e suíte completa verdes no pouso.
+- [x] R6: guardas e suíte completa verdes no pouso (05/11; `test_oidc_identity` case5 instável, passou ao rodar de novo).
 
 ## 5. Smoke real (curto, local)
 

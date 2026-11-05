@@ -11,7 +11,7 @@
 - staging = `72b7605b` (05/11; cartas `on` + `RPG_PLOT_THREADS`/`RPG_FAUNA`/`RPG_CREATURE_GEN` `on` pelo preset `staging_flags.json`; post_deploy, vercel_smoke e e2e_session verdes). `image_generation` off.
 - **Épico de cartas fechado (04/11):** 327–336, 345–347, 352, 355, 357, 367, 368, 387, 389, 390 `done` após auditoria critério × evidência (8 smokes reais; notas "Fechamento" com ressalvas só-por-teste em cada spec).
 - Últimos smokes: Carta de cena serverless ok; oferta de retrato 12/12 em 3 instâncias (`docs/spec389/offer-measure-20261104.json`); quest de entrega fecha pela rota NPC; 0 LLM por rodada; débito 8 ≤ 15 milli.
-- **SPEC-369** (balanço, 3 fases): Fase A (régua, `docs/spec369/`) e B1/B2 (`draft.py` com ajuste de orçamento; Carta `cor1_tro_faro_do_abismo`) na `main`. Base: 1,915 Cartas/rodada, 15 Cartas > 60 %, Médico p95 19, leitor de Presságio 103,4 % do cego, 5 células de família fora. B3+ espera o gate do dono.
+- **SPEC-369** `done` (05/11): balanço em 3 fases; confirmação 260–339 passou (`docs/spec369/CONFIRMACAO.md`); limites registrados pelo dono (D-369-10 a 13). **SPEC-397** `done`: corte do `draft.py`, abertura narra emboscada, passiva por recompensa vale sem ocupar Preparação.
 - **SPEC-393** `done` (04/11): smoke real das ressalvas do épico (`docs/smoke-ressalvas-cartas/`) + correções: texto de morte aceita, golpe final com vários alvos, guard da prosa de morte, compra "com minhas últimas moedas", aviso do import de arte.
 - **Bestiário (04/11), na `main`:** 370, 371, 372, 373, 374, 394 e 395 `done`.
   - 373: veredito 253/281; chefes hospede/escavador fora da faixa por decisão do dono (D-373); R21 migrou para o Faro da 369; `bomba_estopim` nerfada.
@@ -23,7 +23,7 @@
 
 ## Próximos 3 passos
 
-1. SPEC-369 B3–B6 e Fase C, depois do gate do dono em `docs/spec369/BASE.md`. O B4 (`bomba_estopim`) já foi feito pela 373.
+1. SPEC-398 (a escrever): contrato da mão (reação sem alvo vem `jogavel`), rótulo `defeat` no objetivo de cena falho, inimigos ocultos juntos, chip de Vitalidade 0, e o item 4 do smoke 369 (2º conflito contra a mesma família) com driver corrigido. Base: `docs/spec369/diagnostico-combate-travado.md`.
 1c. Follow-up do bestiário (ainda sem spec): recalibrar odre, armador e escuta; P2 da 395 (guarda `ficha_vs_base` exige a chave de `sempre`; `move afastar` legado com `absoluta`; campo `arena` desatualizado).
 2. Chefe `unico` entre 2 contas só no staging.
 3. Refatoração 375–385 (outra sessão); artes do staging (326 D2); smoke §6 de 349/359/360/361.
@@ -42,7 +42,6 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 | Logs externos (Axiom) | token Axiom no `.env.staging` | "faz" → envio do app |
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera" → certificação |
 | Auth staging/prod (343) | confirmar e-mail obrigatório + captcha na Vercel | "confirmei" → fechar enumeração |
-| SPEC-369 gate R9c | responder os 6 itens no fim de `docs/spec369/BASE.md` (D-369-2/3/7, legadas, `predador_apice`, guarda básica) | "ok/defaults" → B3–B6 + Fase C |
 | Decisões abertas | D-363-1 (crítico em dupla abaixo da defesa), D-363-2 (teto diário R$ 5), D-364-2 ("até 0,015 Estilhas"), D-367-2 (8 frases do Presságio em "você"), veto D-387-1..11 / D-389-1..8 | dono responde → registrar na spec |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
 | Lore 312 D1 / 313 D8 | ler `data/world/rumor_seed_overrides.json`, `lore_quests.json` | ajustes → reindexar |
