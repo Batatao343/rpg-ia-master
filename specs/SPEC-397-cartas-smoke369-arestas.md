@@ -1,6 +1,6 @@
 # SPEC-397 — Cartas: arestas do smoke da SPEC-369 (corte do `draft.py`, `frequencia` fechada, emboscada na abertura narrada, arma na prosa final, passiva por recompensa)
 
-> **Status:** `approved` (04/11, coordenador, sob a ordem permanente do dono "manda bala" e a política de zero pendência)
+> **Status:** `done` (04/11, coordenador; revisão Sol APPROVED na rodada 2, follow-ups fechados; smoke real em `docs/spec397/smoke.md`)
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-327
 > **Origem:** [docs/spec369/smoke.md](../docs/spec369/smoke.md) § Achados 1–5.
