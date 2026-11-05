@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-18T13:52:59.270223+00:00",
+  "at": "2026-11-05T13:36:35.803625+00:00",
   "base": "https://rpg-ia-master-staging.vercel.app",
   "checks": {
     "auth_config": {
@@ -56,7 +56,7 @@
         "rpg_deletion",
         "rpg_refresh"
       ],
-      "dummy_captcha_status": 401,
+      "dummy_captcha_status": 403,
       "ok": true,
       "origin_missing_status": 403,
       "status": 200,
@@ -76,7 +76,7 @@
     },
     "new_game": {
       "body_has_bearer": false,
-      "ms": 19191,
+      "ms": 17683,
       "ok": true,
       "simulated": false,
       "status": 200,
@@ -87,7 +87,7 @@
       "retry": {
         "has_done": true,
         "has_error": false,
-        "narration_chars": 1633,
+        "narration_chars": 1108,
         "sequence": [
           "accepted",
           "visual",
@@ -97,13 +97,13 @@
         "session_actions": 5,
         "state": true,
         "status": 200,
-        "total_ms": 261.1,
-        "ttfb_ms": 162.9,
+        "total_ms": 301.1,
+        "ttfb_ms": 214.6,
         "turn_count": 6
       }
     },
     "signup_captcha": {
-      "app_dummy_token_status": 202,
+      "app_dummy_token_status": 403,
       "app_no_token_status": 403,
       "gotrue_dummy_token": {
         "error_code": "captcha_failed",
@@ -113,7 +113,7 @@
         "error_code": "captcha_failed",
         "status": 400
       },
-      "note": "app answers 202 generic (anti-enumeration) whatever GoTrue says",
+      "note": "real secret: dummy token -> 403 captcha_invalid; test secret: 202 generic",
       "ok": true,
       "turnstile_real_secret": true
     },
@@ -134,116 +134,125 @@
       ],
       "ok": true,
       "total_ms": {
-        "max_ms": 10464.4,
+        "max_ms": 26755.6,
         "n": 5,
-        "p50_ms": 8750.3,
-        "p95_ms": 10464.4
+        "p50_ms": 7132.3,
+        "p95_ms": 26755.6
       },
       "ttfb_ms": {
-        "max_ms": 307.3,
+        "max_ms": 288.9,
         "n": 5,
-        "p50_ms": 220.6,
-        "p95_ms": 307.3
+        "p50_ms": 202.8,
+        "p95_ms": 288.9
       },
       "turns": [
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 1494,
+          "narration_chars": 1871,
           "sequence": [
             "accepted",
             "phase",
             "route",
+            "narrative",
+            "phase",
+            "narrative",
             "phase",
             "visual",
-            "narrative",
             "state"
           ],
           "session_actions": 1,
           "state": true,
           "status": 200,
-          "total_ms": 10261.5,
-          "ttfb_ms": 177.0,
+          "total_ms": 26755.6,
+          "ttfb_ms": 149.4,
           "turn_count": 2
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 1164,
+          "narration_chars": 1797,
           "sequence": [
             "accepted",
             "phase",
             "route",
+            "narrative",
+            "phase",
+            "narrative",
             "phase",
             "visual",
-            "narrative",
             "state"
           ],
           "session_actions": 2,
           "state": true,
           "status": 200,
-          "total_ms": 5920.7,
-          "ttfb_ms": 220.6,
+          "total_ms": 7132.3,
+          "ttfb_ms": 224.0,
           "turn_count": 3
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 551,
+          "narration_chars": 1704,
           "sequence": [
             "accepted",
             "phase",
             "route",
             "phase",
-            "visual",
             "narrative",
+            "phase",
+            "visual",
             "state"
           ],
           "session_actions": 3,
           "state": true,
           "status": 200,
-          "total_ms": 8750.3,
-          "ttfb_ms": 158.8,
+          "total_ms": 6757.9,
+          "ttfb_ms": 202.8,
           "turn_count": 4
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 263,
+          "narration_chars": 2040,
           "sequence": [
             "accepted",
             "phase",
             "route",
+            "narrative",
+            "phase",
+            "narrative",
             "phase",
             "visual",
-            "narrative",
             "state"
           ],
           "session_actions": 4,
           "state": true,
           "status": 200,
-          "total_ms": 7127.2,
-          "ttfb_ms": 307.3,
+          "total_ms": 5292.3,
+          "ttfb_ms": 155.6,
           "turn_count": 5
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 1633,
+          "narration_chars": 1108,
           "sequence": [
             "accepted",
             "phase",
             "route",
+            "narrative",
+            "phase",
+            "narrative",
             "phase",
             "visual",
-            "narrative",
             "state"
           ],
           "session_actions": 5,
           "state": true,
           "status": 200,
-          "total_ms": 10464.4,
-          "ttfb_ms": 238.7,
+          "total_ms": 8647.8,
+          "ttfb_ms": 288.9,
           "turn_count": 6
         }
       ]

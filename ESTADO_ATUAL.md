@@ -8,7 +8,7 @@
 
 ## Estado em 10 linhas
 
-- staging = `3cd58353` (cartas `on`, preset `staging_flags.json`; inclui 369 B1/B2 e 393; smokes pós-deploy verdes 04/11). `image_generation` off.
+- staging = `72b7605b` (05/11; cartas `on` + `RPG_PLOT_THREADS`/`RPG_FAUNA`/`RPG_CREATURE_GEN` `on` pelo preset `staging_flags.json`; post_deploy, vercel_smoke e e2e_session verdes). `image_generation` off.
 - **Épico de cartas fechado (04/11):** 327–336, 345–347, 352, 355, 357, 367, 368, 387, 389, 390 `done` após auditoria critério × evidência (8 smokes reais; notas "Fechamento" com ressalvas só-por-teste em cada spec).
 - Últimos smokes: Carta de cena serverless ok; oferta de retrato 12/12 em 3 instâncias (`docs/spec389/offer-measure-20261104.json`); quest de entrega fecha pela rota NPC; 0 LLM por rodada; débito 8 ≤ 15 milli.
 - **SPEC-369** (balanço, 3 fases): Fase A (régua, `docs/spec369/`) e B1/B2 (`draft.py` com ajuste de orçamento; Carta `cor1_tro_faro_do_abismo`) na `main`. Base: 1,915 Cartas/rodada, 15 Cartas > 60 %, Médico p95 19, leitor de Presságio 103,4 % do cego, 5 células de família fora. B3+ espera o gate do dono.
@@ -24,7 +24,6 @@
 ## Próximos 3 passos
 
 1. SPEC-369 B3–B6 e Fase C, depois do gate do dono em `docs/spec369/BASE.md`. O B4 (`bomba_estopim`) já foi feito pela 373.
-1b. Deploy no staging e smoke real com `RPG_PLOT_THREADS`/`RPG_FAUNA`/`RPG_CREATURE_GEN` → ligar as 3 flags. O dono autorizou em 03/11.
 1c. Follow-up do bestiário (ainda sem spec): recalibrar odre, armador e escuta; P2 da 395 (guarda `ficha_vs_base` exige a chave de `sempre`; `move afastar` legado com `absoluta`; campo `arena` desatualizado).
 2. Chefe `unico` entre 2 contas só no staging.
 3. Refatoração 375–385 (outra sessão); artes do staging (326 D2); smoke §6 de 349/359/360/361.
@@ -45,7 +44,6 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 | Auth staging/prod (343) | confirmar e-mail obrigatório + captcha na Vercel | "confirmei" → fechar enumeração |
 | SPEC-369 gate R9c | responder os 6 itens no fim de `docs/spec369/BASE.md` (D-369-2/3/7, legadas, `predador_apice`, guarda básica) | "ok/defaults" → B3–B6 + Fase C |
 | Decisões abertas | D-363-1 (crítico em dupla abaixo da defesa), D-363-2 (teto diário R$ 5), D-364-2 ("até 0,015 Estilhas"), D-367-2 (8 frases do Presságio em "você"), veto D-387-1..11 / D-389-1..8 | dono responde → registrar na spec |
-| Push + evals protegidos (370/372/373/374/394/395) | pedir o push; `/eval-publish` já aprovado pelo dono (04/11) | "push" → push + comando de aprovação do eval-gates |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
 | Lore 312 D1 / 313 D8 | ler `data/world/rumor_seed_overrides.json`, `lore_quests.json` | ajustes → reindexar |
 

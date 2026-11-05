@@ -1,89 +1,105 @@
 {
   "base": "https://rpg-ia-master-staging.vercel.app",
-  "at": "2026-10-16T03:55:45.841394+00:00",
+  "at": "2026-11-05T13:36:18.522381+00:00",
   "checks": {
     "health": {
       "ok": true,
       "status": 200,
-      "ms": 278,
+      "ms": 63,
       "error": null,
       "headers": {
         "content-type": "application/json",
         "cache-control": "public, max-age=0, must-revalidate",
         "x-vercel-cache": "MISS",
-        "x-vercel-id": "gru1::gru1::fph4j-1792122951427-6127dbf445ef",
+        "x-vercel-id": "gru1::gru1::wmc5p-1793885782173-47686688ad78",
         "server": "Vercel",
-        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "strict-transport-security": "max-age=63072000; includeSubDomains",
         "x-content-type-options": "nosniff",
         "x-frame-options": "DENY",
-        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'",
         "referrer-policy": "same-origin"
       }
     },
     "static_index": {
       "ok": true,
       "status": 200,
-      "ms": 32,
+      "ms": 35,
       "error": null,
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "public, max-age=0, must-revalidate",
         "x-vercel-cache": "MISS",
-        "x-vercel-id": "gru1::gru1::fph4j-1792122952254-7d34e825feb0",
+        "x-vercel-id": "gru1::gru1::gj825-1793885782598-8f07587e5105",
         "server": "Vercel",
-        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "strict-transport-security": "max-age=63072000; includeSubDomains",
         "x-content-type-options": "nosniff",
         "x-frame-options": "DENY",
-        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+        "content-security-policy": "default-src 'self'; connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'",
         "referrer-policy": "same-origin"
       }
     },
     "cron_jobs": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 113,
+      "ms": 179,
       "body": {
         "ok": true,
         "processed": 0,
         "stopped_reason": "empty",
-        "elapsed_s": 0.078,
-        "duration_s": 0.08
+        "elapsed_s": 0.081,
+        "failed": 0,
+        "dead": 0,
+        "deferred": 0,
+        "duration_s": 0.135
       },
       "ok": true
     },
     "cron_account-deletions": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 102,
+      "ms": 112,
       "body": {
         "ok": true,
         "claimed": 0,
         "deleted": 0,
         "failed": 0,
         "auth_buckets_purged": 0,
-        "duration_s": 0.068
+        "duration_s": 0.074
       },
       "ok": true
     },
     "cron_operations": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 55,
+      "ms": 225,
       "body": {
         "ok": true,
         "orphans_seen": 0,
         "released": 0,
+        "wallet_seen": 0,
+        "wallet_released": 0,
+        "wallet_settled": 0,
+        "wallet_uncertain": 0,
+        "wallet_skipped": 0,
+        "wallet_errors": 0,
+        "purged_operations": 0,
+        "purged_jobs": 0,
+        "purged_usage_events": 0,
+        "purged_finops_evaluations": 0,
+        "purged_owner_daily_counters": 0,
+        "purged_account_deletions_compacted": 0,
+        "purged_account_deletions": 0,
         "failed": 0,
-        "duration_s": 0.027
+        "duration_s": 0.191
       },
       "ok": true
     }
   },
-  "first_request_ms": 278,
+  "first_request_ms": 63,
   "warm_ms": {
     "n": 10,
-    "p50": 33.5,
-    "max": 197
+    "p50": 36.5,
+    "max": 68
   },
   "ok": true
 }
