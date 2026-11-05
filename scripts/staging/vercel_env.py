@@ -108,6 +108,10 @@ OPTIONAL_FLAGS = (
     "RPG_ENEMY_DECKS",
     "RPG_CARD_REWARDS",
     "RPG_CREATURE_ART",
+    # SPEC-350/360/361: tramas, fauna viva e criatura gerada, off|on.
+    "RPG_PLOT_THREADS",
+    "RPG_FAUNA",
+    "RPG_CREATURE_GEN",
 )
 # SPEC-326 R17: price profiles de imagem (linhas imutáveis em app.image_price_profiles).
 DYNAMIC_ART_PRICE_PROFILES = {
@@ -172,6 +176,10 @@ WORLD_FLAGS = (
     "RPG_ENEMY_DECKS",
     "RPG_CARD_REWARDS",
     "RPG_CREATURE_ART",
+    # SPEC-350/360/361: tramas, fauna viva e criatura gerada, off|on.
+    "RPG_PLOT_THREADS",
+    "RPG_FAUNA",
+    "RPG_CREATURE_GEN",
 )
 # Valores aceitos por flag que fogem de off|shadow|on.
 WORLD_FLAG_VALUES: dict[str, tuple[str, ...]] = {
@@ -187,6 +195,9 @@ WORLD_FLAG_VALUES: dict[str, tuple[str, ...]] = {
     "RPG_ENEMY_DECKS": ("off", "on"),
     "RPG_CARD_REWARDS": ("off", "on"),
     "RPG_CREATURE_ART": ("off", "on"),
+    "RPG_PLOT_THREADS": ("off", "on"),
+    "RPG_FAUNA": ("off", "on"),
+    "RPG_CREATURE_GEN": ("off", "on"),
 }
 # SPEC-317 R1: A/B do tier CLASSIFY. ``groq_first`` poe o Groq gpt-oss-20b na frente (DeepSeek
 # em 2o) via RPG_ROUTES inline; ``default`` apaga a variavel (volta ao ROUTES do codigo). Sem a flag
