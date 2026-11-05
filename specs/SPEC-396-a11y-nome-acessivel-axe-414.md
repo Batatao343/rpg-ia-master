@@ -1,6 +1,6 @@
 # SPEC-396 — A11y: nome acessível contém o texto visível (destrava axe-core 4.14, PR #55)
 
-> **Status:** `draft`
+> **Status:** `approved` (05/11, dono: "ok defaults" → D-396-1 = (a) estratégia E, fallback (b) se a Etapa 0 reprovar; D-396-2 = (a) texto visível `Encerrar sessão`, (c) se não couber em 320 px; D-396-3 = (a) bump do PR #55 no branch da spec, PR fechado como incorporado; D-396-4 = (a) ícone `close`, só se a Etapa 0 reprovar)
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04
 > **Origem:** PR #55 do Dependabot (lote npm: `@axe-core/playwright` 4.10.2→4.14.0, `typescript-eslint` 8.72.1, `vite` 8.3.5). Com o 4.14, a regra `label-content-name-mismatch` (WCAG 2.5.3 *Label in Name*) passa a valer: 87 falhas no e2e completo (04/11), **todas** dessa regra; 354 passam. Exemplos: `effects.spec.ts` (ctrl.pending, mira, card.arm, tab.indicator, map.marker), `combat-gesture.spec.ts`, `critical-journeys.spec.ts` F06/F35.
 > **Escopo:** corrigir os `aria-label` que não contêm o texto visível (ou trocar por `aria-labelledby`/texto visível) e pousar o bump do PR #55 junto, com o pin `tests/test_eval_frontend.py` (`^4.14.0`). Sem desligar a regra.

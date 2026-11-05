@@ -1,6 +1,6 @@
 # SPEC-391 — Reforço de combate no tabuleiro de cartas ("Chamado do Bando" do líder de matilha)
 
-> **Status:** `in-progress` (04/11: código pousado com `RPG_COMBAT_REINFORCEMENTS=off`; gate §8 reprovado após L1+L2+L3 — Δ morte +10,4 pp, Corruptor +17,4 — [resultado](../docs/spec391/gate-resultado.md); decisão do dono D-391-5; follow-ups Sol P3-1/P3-6/P3-7)
+> **Status:** `in-progress` (05/11, dono: "aceito" → **D-391-4 revisto para a opção 3** (só faixa de vitória 45–85 % por Postura, sem teto de Δ): o gate 4 (L1+L2+L3, código atual) passa com vitória ON 57,4–79,0 % — [resultado](../docs/spec391/gate-resultado.md); alavancas L1–L3 ficam (já pousadas, reduzem a letalidade). Próximo: smoke §6 local com a flag `on`; ligar no staging só com o "liga" do dono (D-391-8). Antes: 04/11 código pousado com `RPG_COMBAT_REINFORCEMENTS=off`, gate pela opção 2 reprovado (Δ +10,4 pp, Corruptor +17,4); follow-ups Sol P3-1/P3-6/P3-7)
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04 (Etapas 0 e 1 feitas: §4 "Execução")
 > **Depende de:** SPEC-381 pousada (`api.py` em routers: o bloco `reinforcement_warning` muda de arquivo);
 > SPEC-371/372 sem conflito em `agents/combat.py` (371 `done`; 372 `draft`: conferir W1 antes da Etapa 3);
