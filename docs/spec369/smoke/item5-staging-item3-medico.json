@@ -1,0 +1,106 @@
+{
+ "carta_na_mao": {
+  "id": "bas_med_golpe",
+  "name": "Bisturi de Campanha",
+  "custo_folego": 1,
+  "texto": "Causa 8 de dano (5 da Carta + 2 de herói iniciante + 1 de bônus)."
+ },
+ "rodadas": [
+  {
+   "rd": 1,
+   "jogadas": [
+    "bas_med_golpe",
+    "bas_med_golpe"
+   ],
+   "mech_log": [
+    "Você · Bisturi de Campanha → Afogado da Batalha · 3d10 3 + 4 +1 = 8 vs 11 · erro",
+    "Você · Bisturi de Campanha → Afogado da Batalha · 2d10 1 + 8 +1 = 10 vs 11 · erro"
+   ],
+   "narracao_trecho": [
+    "Você joga Bisturi de Campanha em Afogado da Batalha: Mão que cose a carne também sabe onde ela cede. Erra."
+   ]
+  },
+  {
+   "rd": 2,
+   "jogadas": [
+    "bas_med_golpe",
+    "bas_med_guarda"
+   ],
+   "mech_log": [
+    "Você · Bisturi de Campanha → Afogado da Batalha · 2d10 7 + 10 +1 = 18 vs 11 · acerto · Proteção −1 · 7 dano"
+   ],
+   "narracao_trecho": [
+    "Você joga Bisturi de Campanha em Afogado da Batalha: Mão que cose a carne também sabe onde ela cede. Acerta — 7 de dano."
+   ]
+  },
+  {
+   "rd": 3,
+   "jogadas": [
+    "bas_med_golpe",
+    "bas_med_golpe"
+   ],
+   "mech_log": [
+    "Você · Bisturi de Campanha → Afogado da Batalha · 2d10 9 + 7 +0 = 16 vs 11 · acerto · Torpor −25 % · 6 dano",
+    "Você · Bisturi de Campanha → Afogado da Batalha · 2d10 1 + 8 +0 = 9 vs 11 · erro"
+   ],
+   "narracao_trecho": [
+    "Você joga Bisturi de Campanha em Afogado da Batalha: Mão que cose a carne também sabe onde ela cede. Acerta — 6 de dano.",
+    "Você joga Bisturi de Campanha em Afogado da Batalha: Mão que cose a carne também sabe onde ela cede. Erra."
+   ]
+  },
+  {
+   "rd": 4,
+   "jogadas": [
+    "bas_med_golpe",
+    "med_torniquete"
+   ],
+   "mech_log": [
+    "Você · Bisturi de Campanha → Afogado da Batalha · 2d10 5 + 1 +0 = 6 vs 11 · erro"
+   ],
+   "narracao_trecho": [
+    "Você joga Bisturi de Campanha em Afogado da Batalha: Mão que cose a carne também sabe onde ela cede. Erra."
+   ]
+  },
+  {
+   "rd": 5,
+   "jogadas": [
+    "bas_med_golpe",
+    "bas_med_pressao"
+   ],
+   "mech_log": [
+    "Você · Bisturi de Campanha → Afogado da Batalha · 2d10 5 + 4 +0 = 9 vs 11 · erro"
+   ],
+   "narracao_trecho": [
+    "Você joga Bisturi de Campanha em Afogado da Batalha: Mão que cose a carne também sabe onde ela cede. Erra."
+   ]
+  },
+  {
+   "rd": 6,
+   "jogadas": [
+    "bas_med_golpe",
+    "bas_med_guarda"
+   ],
+   "mech_log": [
+    "Você · Bisturi de Campanha → Afogado da Batalha · 2d10 4 + 3 +0 = 7 vs 11 · erro"
+   ],
+   "narracao_trecho": [
+    "Você joga Bisturi de Campanha em Afogado da Batalha: Mão que cose a carne também sabe onde ela cede. Erra."
+   ]
+  },
+  {
+   "rd": 7,
+   "jogadas": [
+    "bas_med_golpe",
+    "bas_med_golpe"
+   ],
+   "mech_log": [
+    "Você · Bisturi de Campanha → Afogado da Batalha · 2d10 4 + 4 +0 = 8 vs 11 · crítico (dupla de 4) · Torpor −25 % · 12 dano",
+    "Você · Bisturi de Campanha → Afogado da Batalha · 2d10 9 + 8 +0 = 17 vs 11 · acerto · Torpor −25 % · 6 dano"
+   ],
+   "narracao_trecho": [
+    "Você joga Bisturi de Campanha em Afogado da Batalha: Mão que cose a carne também sabe onde ela cede. Acerto crítico (dupla nos dados) — 12 de dano, ferimento grave na cabeça do Afogado da Batalha.",
+    "Você joga Bisturi de Campanha em Afogado da Batalha: Mão que cose a carne também sabe onde ela cede. Acerta — 6 de dano, ferimento leve no braço do Afogado da Batalha."
+   ]
+  }
+ ]
+}

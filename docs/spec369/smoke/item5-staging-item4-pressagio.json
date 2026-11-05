@@ -1,0 +1,93 @@
+{
+ "abertura_pressagios_publicos": [
+  {
+   "tipo": "enfraquecer",
+   "faixa": null,
+   "sinal": "Garras se abrem para prender, não para rasgar: Afogado da Batalha quer você no chão."
+  }
+ ],
+ "rodadas": [
+  {
+   "rd": 1,
+   "faixa_anunciada": [],
+   "jogou_defesa": false,
+   "mech_inimigo": [
+    "Afogado da Batalha · Toque Gélido da Morte → Você · 2d10 9 + 6 +4 = 19 vs 11 · acerto"
+   ]
+  },
+  {
+   "rd": 2,
+   "faixa_anunciada": [
+    [
+     3,
+     6
+    ]
+   ],
+   "jogou_defesa": true,
+   "mech_inimigo": [
+    "Afogado da Batalha → Você · 2d10 8 + 5 +4 = 17 vs 11 · acerto · Proteção −2 · 1 dano"
+   ]
+  },
+  {
+   "rd": 3,
+   "faixa_anunciada": [],
+   "jogou_defesa": false,
+   "mech_inimigo": [
+    "Afogado da Batalha · Toque de Podridão → Você · 2d10 7 + 7 +3 = 17 vs 11 · crítico (dupla de 7)"
+   ]
+  },
+  {
+   "rd": 4,
+   "faixa_anunciada": [],
+   "jogou_defesa": false,
+   "mech_inimigo": []
+  },
+  {
+   "rd": 5,
+   "faixa_anunciada": [
+    [
+     3,
+     6
+    ]
+   ],
+   "jogou_defesa": false,
+   "mech_inimigo": [
+    "Afogado da Batalha → Você · 2d10 5 + 9 +3 = 17 vs 11 · acerto · Torpor −25 % · 2 dano"
+   ]
+  },
+  {
+   "rd": 6,
+   "faixa_anunciada": [
+    [
+     3,
+     6
+    ]
+   ],
+   "jogou_defesa": true,
+   "mech_inimigo": [
+    "Afogado da Batalha → Você · 2d10 10 + 9 +3 = 22 vs 11 · acerto · Proteção −2 · 1 dano"
+   ]
+  },
+  {
+   "rd": 7,
+   "faixa_anunciada": [
+    [
+     3,
+     6
+    ]
+   ],
+   "jogou_defesa": false,
+   "mech_inimigo": [
+    "Afogado da Batalha → Você · 2d10 9 + 6 +3 = 18 vs 11 · acerto · Torpor −25 % · 2 dano"
+   ]
+  },
+  {
+   "rd": 8,
+   "faixa_anunciada": [],
+   "jogou_defesa": false,
+   "mech_inimigo": [
+    "Afogado da Batalha → Você · 2d10 9 + 6 +3 = 18 vs 11 · acerto · Torpor −25 % · 2 dano"
+   ]
+  }
+ ]
+}
