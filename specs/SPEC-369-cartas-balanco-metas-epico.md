@@ -1,6 +1,6 @@
 # SPEC-369 — Cartas: balanço das metas não atingidas do épico (Cartas por rodada, dominância, duração, Presságio, `draft.py`, emboscada do Corruptor, famílias × arena)
 
-> **Status:** `approved` (04/11, coordenador, sob a ordem permanente do dono "manda bala"; decisões D-369-1, -4, -5, -6, -8 e -9 nos defaults. O gate do oráculo, R9c com D-369-2, -3 e -7, continua com o dono)
+> **Status:** `done` (05/11, coordenador; Fase A, Fase B e Fase C pousadas; revisões Astra e Sol aprovadas; decisões do dono D-369-10 a 13 no §8; confirmação em `docs/spec369/CONFIRMACAO.md`)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-04
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-368 `done` (métricas e `docs/spec368/metricas_epico.py`), SPEC-362 `done` (protocolo de passo, Arcanista 49,7 %), SPEC-355 `done` (`arena_spec355.py emboscada`, R17), SPEC-358 `done` (arena por substituição `lote-v2`), SPEC-387/389 `done` (`draft.py` com reparo; nota L11).
@@ -358,25 +358,25 @@ Uma rodada nas 260–339 → `confirmacao.json` → `tests/test_spec369_metas.py
 
 ## 5. Critérios de aceite
 
-- [ ] R1: Fase A e Fase B por agentes distintos; nenhum commit da Fase B em arquivo da Fase A; `<sha-A>` em §9
-- [ ] R2: diff vazio em avaliadores, orçamento, golden, snapshot, testes de artefato e `web/e2e/contracts`
-- [ ] R9: `base` reproduz a 368; BASE.md com as 7 metas, as células de família nomeadas e a aprovação do dono registrada
-- [ ] R10/R11: testes da régua verdes; testes de meta escritos antes do produto
-- [ ] R12: `draft.py` com orçamento e raridade na triagem, reparo com score e faixa, ajuste determinístico; testes offline verdes
-- [ ] R13: Cartas por rodada total ≥ 2,00, cada Postura ≥ 1,90 (0–19 e 260–339)
-- [ ] R14: 0 de onda fora do Sangromante com uso > 60 %; 0 `dominante` por delta fora do Sangromante (inclui `bomba_estopim`); tabela por categoria registrada
-- [ ] R15: p95 total ≤ 10, toda Postura ≤ 12, timeouts ≤ 1,0 % (0–19 e 260–339)
-- [ ] R16: `on-faixa` ≤ 95 % do dano do `on-cego` (`conhecida`, decks `on`), vitória em 45–85 %; secundária registrada
-- [ ] R17: Carta `buff_iniciativa` do Corruptor; emboscada realista ≥ 45,0 % (0–19 e 260–339)
-- [ ] R18: ≤ 8 Cartas de herói, ≤ 2 passos cada, `versao` + 1, lint, orçamento e `validate_content` limpos
-- [ ] R19: guardas globais em todos os passos e no final
-- [ ] R20: células de família dentro de 45–85 % e |Δ| ≤ 10 pp (0–7 e 260–267)
-- [ ] R22: confirmação única gravada; nenhum reajuste depois dela
-- [ ] Revisão `Astra` da Fase A e `Sol` da Fase B, sem P0/P1 aberto
-- [ ] `uv run pytest` verde (suíte completa, 1× no pouso de cada fase, coordenador)
-- [ ] Guard de FallbackLLM mantido no `draft.py`; nenhum `with_structured_output` novo
-- [ ] Saves antigos carregam: saves guardam ids, e o motor lê a `versao` do catálogo; a Carta nova não aparece em save antigo
-- [ ] Smoke §6 registrado em `docs/spec369/smoke.md`
+- [x] R1: Fase A e Fase B por agentes distintos; nenhum commit da Fase B em arquivo da Fase A; `<sha-A>` em §9
+- [x] R2: diff vazio em avaliadores, orçamento, golden, snapshot, testes de artefato e `web/e2e/contracts`
+- [x] R9: `base` reproduz a 368; BASE.md com as 7 metas, as células de família nomeadas e a aprovação do dono registrada
+- [x] R10/R11: testes da régua verdes; testes de meta escritos antes do produto
+- [x] R12: `draft.py` com orçamento e raridade na triagem, reparo com score e faixa, ajuste determinístico; testes offline verdes
+- [x] R13: Cartas por rodada total ≥ 2,00, cada Postura ≥ 1,90 (0–19 e 260–339)
+- [x] R14: 0 de onda fora do Sangromante com uso > 60 %; 0 `dominante` por delta fora do Sangromante (inclui `bomba_estopim`); tabela por categoria registrada — **limite registrado pelo dono (D-369-10/13)**: `arc1_cal_pulso_medido` e `bas_cor_mofo`; assinaturas a Fôlego 0 isentas; 0 `dominante`
+- [x] R15: p95 total ≤ 10, toda Postura ≤ 12, timeouts ≤ 1,0 % (0–19 e 260–339) — **na confirmação, p95 total 10; o Médico (p95 15, timeout 2,2 %) fica sob o limite registrado (D-369-13)**
+- [x] R16: `on-faixa` ≤ 95 % do dano do `on-cego` (`conhecida`, decks `on`), vitória em 45–85 %; secundária registrada — **limite registrado (D-369-13): razão 1,033 na confirmação**
+- [x] R17: Carta `buff_iniciativa` do Corruptor; emboscada realista ≥ 45,0 % (0–19 e 260–339)
+- [x] R18: ≤ 8 Cartas de herói, ≤ 2 passos cada, `versao` + 1, lint, orçamento e `validate_content` limpos — **pacote final dentro, processo fora (D-369-12)**
+- [x] R19: guardas globais em todos os passos e no final
+- [x] R20: células de família dentro de 45–85 % e |Δ| ≤ 10 pp (0–7 e 260–267) — **na confirmação, todas as células dentro**
+- [x] R22: confirmação única gravada; nenhum reajuste depois dela
+- [x] Revisão `Astra` da Fase A e `Sol` da Fase B, sem P0/P1 aberto
+- [x] `uv run pytest` verde (suíte completa, 1× no pouso de cada fase, coordenador)
+- [x] Guard de FallbackLLM mantido no `draft.py`; nenhum `with_structured_output` novo
+- [x] Saves antigos carregam: saves guardam ids, e o motor lê a `versao` do catálogo; a Carta nova não aparece em save antigo
+- [x] Smoke §6 registrado em `docs/spec369/smoke.md` — **itens 1–4 locais ok; item 5 no staging: item 3 ok, item 4 parcial (faixa e defesa conferidas no mesmo conflito; o segundo conflito contra a mesma família fica para o smoke da SPEC-398). O travamento visto era do driver (docs/spec369/diagnostico-combate-travado.md)**
 
 ## 6. Smoke test com LLM real
 
