@@ -16,7 +16,7 @@
 - **Bestiário (04/11), na `main`:** 370, 371, 372, 373, 374, 394 e 395 `done`.
   - 373: veredito 253/281; chefes hospede/escavador fora da faixa por decisão do dono (D-373); R21 migrou para o Faro da 369; `bomba_estopim` nerfada.
   - 395: `absoluta` não foge.
-  - Exceções nominais: odre, armador e escuta.
+  - Exceções nominais: odre, armador e escuta (dono, 07/11: sem recalibrar). SPEC-400 `done` (07/11): follow-ups da 395 (`absoluta` não foge na remontagem nem no legado; guarda exige a chave de `sempre`).
 - Balanço: Arcanista 49,7 %; Sangromante acima do teto (exceção do dono registrada na 335).
 - Latência: 1ª narração p50 2,6 s; abertura de combate ~13 s (staging).
 - Project Index não é mais versionado (`51c70d85`): nada de reindex por commit.
@@ -24,7 +24,6 @@
 ## Próximos 3 passos
 
 1. SPEC-398 (a escrever): contrato da mão (reação sem alvo vem `jogavel`), rótulo `defeat` no objetivo de cena falho, inimigos ocultos juntos, chip de Vitalidade 0, e o item 4 do smoke 369 (2º conflito contra a mesma família) com driver corrigido. Base: `docs/spec369/diagnostico-combate-travado.md`.
-1c. Follow-up do bestiário (ainda sem spec): recalibrar odre, armador e escuta; P2 da 395 (guarda `ficha_vs_base` exige a chave de `sempre`; `move afastar` legado com `absoluta`; campo `arena` desatualizado).
 2. Chefe `unico` entre 2 contas só no staging.
 3. Refatoração 375–385 (outra sessão); artes do staging (326 D2); smoke §6 de 349/359/360/361.
 
