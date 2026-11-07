@@ -144,7 +144,7 @@ langsmith==0.14.14
     #   langchain-classic
     #   langchain-community
     #   langchain-core
-multidict==6.9.1
+multidict==7.2.1
     # via
     #   aiohttp
     #   yarl
@@ -286,7 +286,7 @@ uuid-utils==0.17.0
     #   langsmith
 uvicorn==0.54.0
     # via rpg-ia-master
-websockets==16.1.1
+websockets==17.4
     # via
     #   langgraph-sdk
     #   langsmith
