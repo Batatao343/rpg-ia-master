@@ -657,3 +657,68 @@ def test_portao_ferido_nao_foge():
     decl = orch.enemy_declaration(_scene("gate", "player"), "gate", actors, sides)
     assert getattr(decl.acao, "maneuver", None) != "flee"
     assert decl.acao.kind != "move"
+
+
+def test_absoluta_remontada_nao_mantem_fuga_da_tabela():
+    """SPEC-400 R1: ``flee`` da tabela gravado numa absoluta some na remontagem."""
+
+    def renorm(resistance: str) -> str:
+        profile = {
+            "priorities": [
+                {
+                    "trigger": "muito_ferido",
+                    "resistance": resistance,
+                    "action_key": "flee",
+                    "action_hint": "foge",
+                }
+            ]
+        }
+        out = tp.normalize_runtime_profile({"arquetipo": "abissal"}, profile)
+        again = tp.normalize_runtime_profile({"arquetipo": "abissal"}, out)
+        assert again == out
+        return out["priorities"][0]["action_key"]
+
+    assert renorm("absoluta") == "attack"
+    assert renorm("flexivel") == "flee"
+
+
+def test_portao_salvo_antes_da_395_nao_foge():
+    """SPEC-400 R1: save antigo do portao (flee gravado na absoluta) nao foge."""
+    raw = dict(bestiary._read_json(bestiary.BESTIARY_FILE)["mon_portao_que_morde"])
+    gate = orch.ensure_combat_sheet(dict(raw))
+    for priority in gate["tactical_profile"]["priorities"]:
+        if priority.get("resistance") == "absoluta" and priority.get("trigger") == "muito_ferido":
+            priority["action_key"] = "flee"
+    gate = orch.ensure_combat_sheet(gate)
+    gate["max_vitalidade"] = 20
+    gate["vitalidade"] = 5
+    actors = {"gate": gate, "player": _player()}
+    sides = {"ally": ["player"], "enemy": ["gate"]}
+    decl = orch.enemy_declaration(_scene("gate", "player"), "gate", actors, sides)
+    assert getattr(decl.acao, "maneuver", None) != "flee"
+    assert decl.acao.kind != "move"
+
+
+def test_legado_absoluta_sem_arquetipo_nao_foge():
+    """SPEC-400 R2: perfil legado sem action_key respeita ``absoluta``."""
+
+    def declare(resistance: str):
+        foe = _actor("foe", "equilibrado", category="inimigo")
+        foe["arquetipo"] = "fora_da_tabela"
+        foe["tactical_profile"] = {
+            "priorities": [
+                {
+                    "trigger": "sempre",
+                    "action_hint": "foge",
+                    "resistance": resistance,
+                    "tipo": "obrigatorio",
+                }
+            ]
+        }
+        actors = {"foe": foe, "player": _player()}
+        sides = {"ally": ["player"], "enemy": ["foe"]}
+        return orch.enemy_declaration(_scene("foe", "player"), "foe", actors, sides)
+
+    assert declare("absoluta").acao.kind != "move"
+    flex = declare("flexivel").acao
+    assert flex.kind == "move" and flex.direction == "afastar"
