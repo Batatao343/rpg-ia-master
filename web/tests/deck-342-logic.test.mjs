@@ -74,7 +74,7 @@ test('BLOCK_TEXT e previewParts iguais à D-342-7; nada de "turno" nas strings',
   assert.deepEqual({ ...d.BLOCK_TEXT }, {
     fardo: 'Fardo: pesa na mão, não se joga', sem_folego: 'Falta fôlego', limite: 'Não cabe mais nada nesta rodada',
     ja_na_fila: 'Já vai na fila', entropia: 'A Entropia não basta',
-    nao_jogavel: 'Reação: escolha-a em 'Reação preparada para esta rodada'; ela dispara no gatilho, não se joga da mão', passiva: 'Passiva: sempre ativa, não se joga', oculto: 'Nenhum inimigo à vista.', sem_alvo: 'Nenhum alvo ao alcance.',
+    nao_jogavel: "Reação: escolha-a em 'Reação preparada para esta rodada'; ela dispara no gatilho, não se joga da mão", passiva: 'Passiva: sempre ativa, não se joga', oculto: 'Nenhum inimigo à vista.', sem_alvo: 'Nenhum alvo ao alcance.',
   });
   const p = { chance_acerto_pct: 55, chance_critico_pct: 9, dano_min: 4, dano_max: 7, ferimento_provavel: null, efeitos_extra: ['Sangramento'], pressagio_frustrado: false };
   assert.deepEqual({ ...d.previewParts(p) }, { chance: '55 %', rest: '4–7 de dano · pode Sangrar' });
