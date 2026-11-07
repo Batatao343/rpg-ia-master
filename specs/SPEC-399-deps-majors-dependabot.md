@@ -299,3 +299,12 @@ Sem LLM novo. O smoke é de deploy, porque `multidict`/`websockets` entram no bu
   depois de CI verde (recomendado, mantém a autoria do bot); (b) refazer na branch da spec e fechar
   como superseded. **Recomendação: (a)** para #44. Para #45, (a) se o lock do PR já deduplicar o
   `framer-motion`, senão (b).
+
+## 8. Notas de execução (07/11)
+
+- **Etapa 0:** setup-node v7.0 só muda `NODE_AUTH_TOKEN`/ESM (não usados). motion 13.0: remove `@emotion/is-prop-valid` (nenhum `isValidProp`/emotion em `web/src`); 13.5.1/14.0 só tiram APIs internas; nossos 5 imports (`AnimatePresence`, `motion`, `MotionConfig`, `useReducedMotion`) são públicos. Peers do dia inalteradas: `eslint-plugin-jsx-a11y` 6.10.2 `eslint ^3…^9`; `typescript-eslint` 8.72.1 `typescript >=4.8.4 <6.1.0`.
+- **Etapa 1:** `refs/tags/v7.1.0` = `949feb2413d6458794dcd2491c4babbbce0c15c1` (commit); o diff do #44 usa esse SHA nos 4 `uses:`. Pouso: mergear o #44 (D-399-6 a).
+- **Etapa 2:** feita no lock: multidict 6.9.1 → 7.2.1, websockets 16.1.1 → 17.4 (resolvedor pegou as mais novas); `requirements.txt` reexportado. `uv lock --upgrade-package uuid-utils --dry-run` só chega a 0.19.0 (0.x): #49 segue travado pelos pais `<1.0`. Gatilho: `langchain-core` e `langsmith` liberarem `uuid-utils>=1`; prova: `uv lock --upgrade-package uuid-utils` resolve 1.x.
+- **Etapa 3 (#45):** o lock do PR já deduplica (framer-motion/motion-dom/motion-utils em 14.x, uma cópia) → D-399-6: mergear o #45 após CI verde, sem aplicar na branch.
+- **Etapa 4 (#46/#47):** adiado, gatilho: `eslint-plugin-jsx-a11y` publicar peer com `^10`; prova: `npm install -D eslint@^10` sem ERESOLVE.
+- **Etapa 5 (#42):** adiado, gatilho: `typescript-eslint` declarar peer que inclua 7.x (conferir o publicador `microsoft1es` no npm).
