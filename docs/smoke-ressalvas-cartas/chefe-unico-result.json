@@ -1,0 +1,90 @@
+{
+ "region": "Skallgard",
+ "target": {
+  "name": "Urso-Titã",
+  "gerar": {
+   "preco_estilhas": 1,
+   "escopo": "unico",
+   "preco_milli": "15"
+  }
+ },
+ "B_before": [
+  {
+   "id": "mon_caldeira_de_peito_1",
+   "name": "Caldeira de Peito",
+   "estado": "marcador",
+   "proprio": false,
+   "gerar": {
+    "preco_estilhas": 1,
+    "escopo": "tipo",
+    "preco_milli": "15"
+   },
+   "src_h": null,
+   "familia": "guardiao"
+  }
+ ],
+ "A_gen": {
+  "ready": {
+   "after_s": 97,
+   "src_prefix": "https://uzeagzcyvxzrpjgrhaql.supabase.co/storage/v1/object/sign/rpg-sh"
+  },
+  "peak_reserved": 15,
+  "balance_before": {
+   "available_milli": "311",
+   "reserved_milli": "0"
+  },
+  "balance_after": {
+   "available_milli": "303",
+   "reserved_milli": "0"
+  },
+  "debit_milli": 8,
+  "reservations": 1
+ },
+ "A_after": [
+  {
+   "id": "mon_urso_tita_1",
+   "name": "Urso-Titã",
+   "estado": "pronto",
+   "proprio": true,
+   "gerar": null,
+   "src_h": "4759800bf6",
+   "familia": "predador_apice"
+  }
+ ],
+ "db_row": [
+  {
+   "key_hash": "622f6cc914",
+   "scope": "unico",
+   "status": "ready",
+   "visibility": "game",
+   "store": "shared",
+   "origin_is_A": true,
+   "pool_entry": null,
+   "sha256": "{\"full\": \"0a393e9d8afc36f300bc994a4317b28e691f11cf05f13e4ba5f0ccdcdb766267\", \"thumb\": \"3b74539fb4247d3dc55abfd1a5f955713ffe4f7424d54785b5f6bad115f369a2\"}"
+  }
+ ],
+ "registry_A_sees": 1,
+ "registry_B_sees": 0,
+ "B_after": [
+  {
+   "id": "mon_caldeira_de_peito_1",
+   "name": "Caldeira de Peito",
+   "estado": "marcador",
+   "proprio": false,
+   "gerar": {
+    "preco_estilhas": 1,
+    "escopo": "tipo",
+    "preco_milli": "15"
+   },
+   "src_h": null,
+   "familia": "guardiao"
+  }
+ ],
+ "B_reads_A_game_status": 404,
+ "B_has_same_name": [],
+ "bal1": {
+  "available_milli": "303",
+  "reserved_milli": "0"
+ },
+ "debit_milli": 8
+}
