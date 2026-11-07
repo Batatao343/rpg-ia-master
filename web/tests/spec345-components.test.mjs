@@ -32,7 +32,7 @@ test('targetchip_aria_mira_sem_vitalidade', async () => {
   const out = html(h(TargetChip, { p: base, aim: { valid: true }, onPick() {} }));
   // SPEC-396: o nome vem do conteúdo (sem aria-label): prefixo e sufixo em sr-only em volta do nome visível.
   assert.doesNotMatch(out, /aria-label=/);
-  assert.match(out, /<strong><span class="sr-inline">Alvo: <\/span>Bandido 1<span class="sr-inline">, de pé, sem Vitalidade: só cai com Ferimento Crítico<\/span><\/strong>/);
+  assert.match(out, /<strong><span class="sr-inline">Alvo: <\/span>Bandido 1<span class="sr-inline">, de pé, sem Vitalidade: cada golpe agora abre um Ferimento<\/span><\/strong>/);
 });
 
 test('targetchip_jogador_zero_inalterado', async () => {

@@ -468,12 +468,12 @@ export interface EncounterView {
 /** SPEC-203 R7: desfecho mecânico; XP vem só de `turn_outcome` (xp_event_ref). */
 export interface CombatResultView {
   encounter_id: string;
-  outcome: EncounterOutcome; outcome_reason?: "objective_failed"; // SPEC-398 R3: motivo aditivo (outcome segue defeat)
+  outcome: EncounterOutcome;
+  outcome_reason?: "objective_failed";
   participants: Array<{ participant_id: string; species_label: string; final_status: string }>;
   xp_event_ref: string | null;
   loot_ref: string | null;
-  ended_round: number;
-  result_event_id: string;
+  ended_round: number; result_event_id: string;
 }
 
 export interface ActionOptions {

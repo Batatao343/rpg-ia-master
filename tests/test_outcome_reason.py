@@ -51,3 +51,30 @@ def test_objective_failed_end_to_end_keeps_outcome_defeat(monkeypatch):
     res = r.json().get("combat_result") or {}
     assert res.get("outcome") == "defeat"
     assert res.get("outcome_reason") == "objective_failed"
+
+
+def _ended_state(game_id: str, reason: str | None) -> dict:
+    from tests.factories import make_state
+
+    combat = {
+        "active": False,
+        "phase": "ended",
+        "outcome": "defeat",
+        "result": {"outcome": "defeat", "xp_event_ref": "r1"},
+    }
+    if reason:
+        combat["outcome_reason"] = reason
+    return make_state(game_id=game_id, combat=combat)
+
+
+def test_outcome_reason_survives_save_load_and_old_save_has_none():
+    import os
+
+    import persistence
+
+    for gid, reason in (("or-new", "objective_failed"), ("or-old", None)):
+        assert persistence.save_game_state(_ended_state(gid, reason))
+        loaded = persistence.load_game_state(os.path.join(persistence.SAVES_DIR, f"{gid}.json"))
+        view = em.result_view(loaded["combat"], {"receipt_id": "r1"})
+        assert view["outcome"] == "defeat"
+        assert view.get("outcome_reason") == reason

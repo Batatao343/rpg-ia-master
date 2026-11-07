@@ -6,7 +6,7 @@ visível traz o `invalid_reason` do motor. Só leitura; sem LLM."""
 
 from __future__ import annotations
 
-from services import cards
+from services import card_piles, cards
 from services import combat_targeting as targeting
 
 NOT_PLAYABLE = "not_playable_from_hand"
@@ -19,7 +19,7 @@ def merge_row_targeting(row: dict, state: dict) -> None:
     card_id = str(row.get("id"))
     row.update(targeting.hand_card_targeting(state, card_id))
     card = cards.get_card(card_id) or {}
-    if card and card.get("tipo") not in ("ativa", "utilitaria"):
+    if card and not card_piles.is_fardo(card) and card.get("tipo") in ("reacao", "passiva"):
         row["jogavel"] = False
         row["alvo"] = "si"
         row["valid_targets"] = []

@@ -36,14 +36,15 @@ export function folegoState(piles: Pick<PilesView, "folego" | "folego_emprestado
   };
 }
 
-export type BlockReason = "fardo" | "sem_folego" | "limite" | "ja_na_fila" | "entropia" | "nao_jogavel" | "oculto" | "sem_alvo" | null;
+export type BlockReason = "fardo" | "sem_folego" | "limite" | "ja_na_fila" | "entropia" | "nao_jogavel" | "passiva" | "oculto" | "sem_alvo" | null;
 export const BLOCK_TEXT: Record<Exclude<BlockReason, null>, string> = {
   fardo: "Fardo: pesa na mão, não se joga",
   sem_folego: "Falta fôlego",
   limite: "Não cabe mais nada nesta rodada",
   ja_na_fila: "Já vai na fila",
   entropia: "A Entropia não basta",
-  nao_jogavel: "Reação: responde sozinha, não se joga da mão",
+  nao_jogavel: "Reação: você a usa quando o inimigo ataca, não se joga da mão",
+  passiva: "Passiva: sempre ativa, não se joga",
   oculto: "Nenhum inimigo à vista.",
   sem_alvo: "Nenhum alvo ao alcance.",
 };
@@ -63,8 +64,12 @@ export function endText(queue: QueuedPlay[], spare: boolean): string {
 /** Por que esta carta (cópia `index` da mão) não pode entrar na fila agora. */
 export function blockReason(card: HandCard, hand: HandCard[], index: number, queue: QueuedPlay[],
   piles: PilesView, entropy: number | null): BlockReason {
-  const server = card.invalid_reason ? SERVER_BLOCK[card.invalid_reason] : undefined;
-  if (!card.jogavel) return server === "nao_jogavel" ? server : "fardo";
+  let server = card.invalid_reason ? SERVER_BLOCK[card.invalid_reason] : undefined;
+  if (server === "nao_jogavel") {  // só Reação/Passiva; Fardo (status/maldição) segue "fardo"
+    if (card.tipo !== "reacao" && card.tipo !== "passiva") server = undefined;
+    else if (card.tipo === "passiva") server = "passiva";
+  }
+  if (!card.jogavel) return server === "nao_jogavel" || server === "passiva" ? server : "fardo";
   if (server) return server;
   if (queue.length >= MAX_PLAYS) return "limite";
   const copiesBefore = hand.slice(0, index + 1).filter((c) => c.id === card.id).length;

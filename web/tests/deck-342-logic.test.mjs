@@ -74,7 +74,7 @@ test('BLOCK_TEXT e previewParts iguais à D-342-7; nada de "turno" nas strings',
   assert.deepEqual({ ...d.BLOCK_TEXT }, {
     fardo: 'Fardo: pesa na mão, não se joga', sem_folego: 'Falta fôlego', limite: 'Não cabe mais nada nesta rodada',
     ja_na_fila: 'Já vai na fila', entropia: 'A Entropia não basta',
-    nao_jogavel: 'Reação: responde sozinha, não se joga da mão', oculto: 'Nenhum inimigo à vista.', sem_alvo: 'Nenhum alvo ao alcance.',
+    nao_jogavel: 'Reação: você a usa quando o inimigo ataca, não se joga da mão', passiva: 'Passiva: sempre ativa, não se joga', oculto: 'Nenhum inimigo à vista.', sem_alvo: 'Nenhum alvo ao alcance.',
   });
   const p = { chance_acerto_pct: 55, chance_critico_pct: 9, dano_min: 4, dano_max: 7, ferimento_provavel: null, efeitos_extra: ['Sangramento'], pressagio_frustrado: false };
   assert.deepEqual({ ...d.previewParts(p) }, { chance: '55 %', rest: '4–7 de dano · pode Sangrar' });
@@ -94,7 +94,10 @@ test('SPEC-398 R1/R2: blockReason lê o motivo do servidor (reação, alvo ocult
   const piles = { folego: 5, folego_emprestado: 0, pacto_max: 0 };
   const base = { id: 'c', name: 'C', custo_folego: 1, custo_entropia: 0, jogavel: true, alvo: 'inimigo' };
   const hand = (c) => d.blockReason(c, [c], 0, [], piles, null);
-  assert.equal(hand({ ...base, jogavel: false, invalid_reason: 'not_playable_from_hand' }), 'nao_jogavel');
+  const nj = { ...base, jogavel: false, invalid_reason: 'not_playable_from_hand' };
+  assert.equal(hand({ ...nj, tipo: 'reacao' }), 'nao_jogavel');
+  assert.equal(hand({ ...nj, tipo: 'passiva' }), 'passiva');
+  assert.equal(hand({ ...nj, tipo: 'status' }), 'fardo');
   assert.equal(hand({ ...base, jogavel: false }), 'fardo');
   assert.equal(hand({ ...base, invalid_reason: 'target_hidden', valid_targets: [] }), 'oculto');
   assert.equal(hand({ ...base, invalid_reason: 'no_valid_target', valid_targets: [] }), 'sem_alvo');

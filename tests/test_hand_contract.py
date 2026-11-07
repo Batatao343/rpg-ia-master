@@ -89,3 +89,57 @@ def test_two_flanking_enemies_hide_from_hero_by_rule_r5():
     )
     # Atacar escondido continua recusado (R5 não afrouxa a regra de ocultação).
     assert ct.basic_action_targeting(state, "attack").invalid_reason == "target_hidden"
+
+
+def test_status_curse_card_in_hand_keeps_fardo_contract(monkeypatch):
+    """Review P1-1: Carta de status/maldição (Fardo) não recebe `not_playable_from_hand`."""
+    client, saved, gid = hp.api_client(monkeypatch)
+    st = hp.open_combat(client, saved, gid)
+    st["combat"]["pilhas"]["mao"] = ["sts_dor_surda", REACT]
+    hand = _hand(client, gid)
+    assert hand["sts_dor_surda"]["jogavel"] is False
+    assert hand["sts_dor_surda"].get("invalid_reason") != "not_playable_from_hand"
+    assert hand[REACT]["invalid_reason"] == "not_playable_from_hand"
+
+
+def test_hidden_plus_visible_enemy_suggestions_never_409(monkeypatch):
+    """Review P3-2/P3-3: 1 escondido + 1 visível. Atacar mira só o visível; Procurar só o escondido
+    (Procurar no visível dá 409 `no_valid_target`: a Ação não é gasta à toa)."""
+    from services import combat_targeting as ct
+
+    client, saved, gid = hp.api_client(monkeypatch)
+    st = hp.open_combat(client, saved, gid)
+    second = hp.add_second_enemy(st)
+    first = next(e["id"] for e in st["enemies"] if e["id"] != second)
+    hp.hide_enemy(st, first)
+    st["combat"]["pilhas"]["mao"] = [ATK]
+    row = _hand(client, gid)[ATK]
+    assert row["valid_targets"] == [second]
+    cases = [(ATK, None, None), (None, "attack", None), (None, "maneuver", "procurar")]
+    for card_id, kind, man in cases:
+        res = (
+            ct.hand_card_targeting(st, card_id)
+            if card_id
+            else ct.basic_action_targeting(st, kind, man).as_dict()
+        )
+        assert res["valid_targets"]
+        for tid in res["valid_targets"]:
+            assert (
+                ct.check_declared_target(
+                    st, card_id=card_id, action_kind=kind, maneuver=man, target_id=tid
+                )
+                is None
+            )
+    assert ct.basic_action_targeting(st, "maneuver", "procurar").valid_targets == [first]
+    assert (
+        ct.check_declared_target(
+            st, card_id=None, action_kind="maneuver", maneuver="procurar", target_id=second
+        )
+        == "no_valid_target"
+    )
+    assert (
+        ct.check_declared_target(
+            st, card_id=None, action_kind="attack", maneuver=None, target_id=first
+        )
+        == "no_valid_target"
+    )
