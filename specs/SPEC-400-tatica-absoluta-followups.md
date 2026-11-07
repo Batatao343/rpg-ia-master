@@ -1,6 +1,6 @@
 # SPEC-400 — Follow-ups da 395: `absoluta` em saves, no legado e nas guardas
 
-> **Status:** `approved` — dono, 07/11: "ok aprovado" (D1–D5 nos defaults).
+> **Status:** `in-review` (aprovada: dono, 07/11: "ok aprovado" D1–D5 nos defaults).
 > **Criada:** 2026-11-07 · **Atualizada:** 2026-11-07
 > **Épico:** SPEC-349 (bestiário) · **Depende de:** SPEC-395 `done`
 > **Desbloqueia:** fechar P2-1, P2-4, P2-5 e P2-7 de `handoffs/SPEC-395-sol-review.md`
@@ -52,7 +52,7 @@ A 395 fez a prioridade `absoluta` deixar de herdar `flee`/`surrender` da tabela 
 2. **Testes do produto.** Escrever os 3 testes novos e o assert R3, e commitá-los sozinhos. Os 3 testes ficam vermelhos (o assert R3 é verde na base e se prova pela M9 na revisão). Rodar `bash scripts/dev/pt.sh tests/test_tactical_archetypes_runtime.py`.
 3. **Correção.** Aplicar R1 e R2. Rodar com `-n 2` `test_tactical_archetypes_runtime`, `test_conflito_tatica`, `test_enemy_decks`, `test_spec349_mecanica`, `test_size_budget` e `test_spec373_montagem`: tudo verde.
 4. **R5.** Rodar `snapshot.py --out <scratch>/fix-snapshot.json` e conferir que é idêntico à base, id por id.
-5. **R4 (autor de eval, commit separado).** O caso novo fica vermelho na base. Depois, `ficha_vs_base` passa a exigir a chave esperada. Fazer a mutação M9 num worktree descartável: precisa reprovar.
+5. **R4 (autor de eval, commit separado).** A prova de vermelho é a mutação M9: ela passa na base `fca76cda` e reprova depois de `f7fdac05` (o caso novo não é o vermelho). `ficha_vs_base` passa a exigir a chave esperada.
 6. **R6.** Editar o texto das 3 entradas. Rodar `test_spec373_artefatos` e `test_bestiario_calibragem` (verdes, sem diff) e `validate_content.py`, que precisa terminar sem erros.
 
 ## 5. Critérios de aceite
@@ -85,3 +85,11 @@ Não há LLM nesse caminho: as rodadas de Cartas e a declaração do inimigo sã
 - **D3 — Quem escreve a R4.** (**Um autor de eval, em commit separado**.) Alternativa: o próprio executor, já que o arquivo não é protegido. Só é aceitável porque a mudança aperta a guarda e não a afrouxa.
 - **D4 — Prova da R6.** (**Comando de conferência e portões da 373 verdes, sem teste permanente.**) Um teste que fixasse o texto quebraria na próxima vez que o `calibrar.py` reescrevesse o campo (`calibrar.py:143,147,183`).
 - **D5 — Odre com a confirmação 40–119 no texto.** (**Sim**: a próxima calibração precisa ver que ele está fora da faixa.)
+
+## 9. Registro de execução (07/11)
+
+- Commits de produto: testes vermelhos, depois R1 (`normalize_runtime_profile`) e R2 (`resolve_action_key`); R6 no `_ajustes.yaml`; smoke em `docs/spec400/smoke.md`.
+- Passo 5: a prova de vermelho do P2-7 é a M9 (passa em `fca76cda`, reprova depois de `f7fdac05`), não o caso novo de `test_ficha_vs_base_known_good_e_bad`.
+- Desvio R6: o texto do odre usa `40-119 = 37%/46%, exceção nominal` (em vez de `40-119: 37%/46%`), porque `: ` dentro de escalar YAML sem aspas quebra o parse do arquivo.
+- R5: snapshot `off`/`on` idêntico (373 ids) antes e depois, inclusive após o R6.
+- Smoke feito em processo (sem uvicorn); ver o arquivo.

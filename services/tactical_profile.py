@@ -596,9 +596,9 @@ def resolve_action_key(decision: dict) -> str:
     """SPEC-400 R2: ``action_key`` da decisao; sem ela, a dica legada, mas uma
     prioridade ``absoluta`` nunca vira fuga/rendicao por esse caminho."""
     key = decision.get("action_key") or legacy_action_key(decision.get("action_hint"))
-    if key in _NO_RETREAT_ACTIONS and not decision.get("action_key"):
-        if decision.get("resistance") == "absoluta":
-            return "attack"
+    legacy_retreat = key in _NO_RETREAT_ACTIONS and not decision.get("action_key")
+    if legacy_retreat and decision.get("resistance") == "absoluta":
+        return "attack"
     return key
 
 
