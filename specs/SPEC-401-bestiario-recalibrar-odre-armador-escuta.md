@@ -1,6 +1,6 @@
 # SPEC-401 — Bestiário: recalibrar odre, armador e escuta; fechar os P2 de motor da 395
 
-> **Status:** `draft`
+> **Status:** `approved` — dono, 07/11: "aprovo 401"; D1–D3 nos defaults.
 > **Criada:** 2026-11-07 · **Atualizada:** 2026-11-07
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** SPEC-394 `done` (exceções nominais de armador e escuta), SPEC-395 `done` (exceção nominal do odre; revisão Sol `handoffs/SPEC-395-sol-review.md`), SPEC-373 `done` (`arena.py` congelado)
