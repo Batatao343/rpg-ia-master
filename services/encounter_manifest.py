@@ -791,4 +791,5 @@ def result_view(combat: dict | None, turn_outcome: dict | None) -> dict:
     receipt = str((turn_outcome or {}).get("receipt_id") or "")
     if not receipt or result.get("xp_event_ref") != receipt:
         return {}
-    return dict(result)
+    reason = combat.get("outcome_reason")  # SPEC-398 R3: motivo aditivo; `outcome` não muda
+    return {**result, **({"outcome_reason": reason} if reason else {})}

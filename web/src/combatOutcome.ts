@@ -11,6 +11,10 @@ export const OUTCOME_TITLES: Record<CombatResultView["outcome"], string> = {
   expired: "O confronto se dissipou",
 };
 
+/** SPEC-398 R3: objetivo falho com o herói de pé não é "Derrota" crua. */
+export const outcomeTitle = (r: CombatResultView): string =>
+  r.outcome_reason === "objective_failed" ? "O objetivo falhou" : (OUTCOME_TITLES[r.outcome] ?? r.outcome);
+
 const STATUS_LABELS: Record<string, string> = {
   morto: "abatido", fugiu: "fugiu", rendido: "rendido", capturado: "capturado",
   ausente: "partiu", ativo: "de pé", incapacitado: "desacordado",

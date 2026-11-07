@@ -32,3 +32,9 @@ test('SPEC-212: modal de nível espera o painel de desfecho ser dispensado', asy
   assert.equal(levelUpHeldByOutcome(result, 'res-1'), false);  // "Continuar" clicado: modal abre
   assert.equal(levelUpHeldByOutcome(null, null), false);       // sem desfecho: nada a esperar
 });
+
+test('SPEC-398 R3: outcomeTitle usa o motivo; sem ele segue o título do outcome', async () => {
+  const m = await load();
+  assert.equal(m.outcomeTitle({ outcome: 'defeat', outcome_reason: 'objective_failed' }), 'O objetivo falhou');
+  assert.equal(m.outcomeTitle({ outcome: 'defeat' }), 'Derrota');
+});

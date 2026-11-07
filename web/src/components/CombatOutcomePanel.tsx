@@ -1,5 +1,5 @@
 import type { CombatResultView, TurnOutcome } from "../types";
-import { OUTCOME_TITLES, casualtyLines, rewardLines } from "../combatOutcome";
+import { outcomeTitle, casualtyLines, rewardLines } from "../combatOutcome";
 
 interface Props {
   result: CombatResultView;
@@ -15,7 +15,7 @@ export function CombatOutcomePanel({ result, outcome, onContinue }: Props) {
   return (
     <section className={`combat-outcome combat-outcome--${result.outcome}`}
              aria-label="Desfecho do combate">
-      <h2 className="combat-outcome__title">{OUTCOME_TITLES[result.outcome] ?? result.outcome}</h2>
+      <h2 className="combat-outcome__title">{outcomeTitle(result)}</h2>
       <ul className="combat-outcome__cast">
         {casualtyLines(result).map((line, i) => <li key={`${i}-${line}`}>{line}</li>)}
       </ul>

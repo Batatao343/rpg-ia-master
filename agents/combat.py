@@ -39,6 +39,7 @@ from services import fauna_saber as _fauna_saber
 from services import generic_spawn as _gs
 from services import graph_resolver as gr
 from services import off_text as _off_text
+from services import outcome_reason as _orr
 from services import scene_cards as _scene_cards
 from services.conflict_turn import _SUPPORT_EFFECTS, TurnDeclaration, TurnStep
 from services.context_builder import build_context_pack
@@ -2065,11 +2066,8 @@ def _narrate_outcome(
     from services import prose_guard, round_log
 
     label = "incapacitated" if (player.get("post_combat_state") == "inconsciente") else outcome
-    if (  # SPEC-387 R20: objetivo falho com o herói de pé não é "derrota"/desmaio
-        label == "defeat"
-        and ((last_out or {}).get("objetivo") or {}).get("resultado") == "falhou"
-        and player.get("conscious", True)
-    ):
+    objetivo = (last_out or {}).get("objetivo") or {}
+    if _orr.is_objective_failed(label, objetivo.get("resultado"), player):  # SPEC-387 R20/398 R3
         label = "objective_failed"
     facts = round_log.outcome_facts(
         label,
@@ -2764,16 +2762,16 @@ def _combat_close_encounter(t: _CombatTurn) -> None:
         t.combat_meta["scene"] = None
         t.combat_meta.pop("scene_allies", None)
         # SPEC-203 R5/R7: resolving → ended + snapshot do desfecho.
-        _outcome = t.outcome_now
+        _orr.mark(t.combat_meta, t.outcome_now, t.scene, t.player)  # SPEC-398 R3
         t.combat_meta = _finish_encounter(
             t.combat_meta,
             t.enemies,
-            _outcome,
+            t.outcome_now,
             loot=bool(t.victory) and not t.is_simulation,
         )
         # SPEC-296 R2: inimigo que fugiu pode voltar com reforços (1 alerta/encontro).
         if not t.is_simulation:
-            _alerted = _flee_alert_world(t.world_out or t.world, t.enemies, _outcome)
+            _alerted = _flee_alert_world(t.world_out or t.world, t.enemies, t.outcome_now)
             if _alerted is not None:
                 t.world_out = _alerted
     else:
