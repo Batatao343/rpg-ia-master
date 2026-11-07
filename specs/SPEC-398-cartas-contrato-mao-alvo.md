@@ -56,11 +56,11 @@ Mudar a mecânica de Vitalidade 0 ou de Ferimentos, o balanço (SPEC-369) e novo
 
 ## 4. Critérios de aceite
 
-- [ ] R1: reação sai não jogável com motivo; nenhuma sugestão da vista gera 409.
-- [ ] R2: `invalid_reason` no item da mão e frase na UI.
-- [ ] R3: `outcome_reason: "objective_failed"` gravado e lido pelos consumidores; `outcome` intacto; save antigo carrega.
-- [ ] R4: chip com Vitalidade 0 legível.
-- [ ] R5: causa registrada (e corrigida, se for bug).
+- [x] R1: reação sai não jogável com motivo; nenhuma sugestão da vista gera 409.
+- [x] R2: `invalid_reason` no item da mão e frase na UI.
+- [x] R3: `outcome_reason: "objective_failed"` gravado e lido pelos consumidores; `outcome` intacto; save antigo carrega.
+- [x] R4: chip com Vitalidade 0 legível.
+- [x] R5: causa registrada (e corrigida, se for bug).
 - [ ] R6: item 4 da 369 refeito no staging com o driver corrigido.
 - [ ] R7: guardas e suíte completa verdes no pouso.
 
@@ -70,4 +70,12 @@ Mudar a mecânica de Vitalidade 0 ou de Ferimentos, o balanço (SPEC-369) e novo
 
 ## 6. Registro de implementação
 
-(vazio)
+**R1/R2** (`services/hand_contract.py`, chamado no merge de `api_presenters._combat_block`): Carta que não é `ativa`/`utilitaria` (reação, passiva) sai `jogavel: false`, `alvo: "si"`, `valid_targets: []`, `invalid_reason: "not_playable_from_hand"`. `hand_card_targeting` não mudou (o 409 de `check_declared_target` segue igual). `invalid_reason` de alvo (`target_hidden`/`no_valid_target`/`target_dead`) já saía no item; a UI (`web/src/combat/deck.ts` `blockReason`) agora o lê: "Reação: responde sozinha, não se joga da mão", "Nenhum inimigo à vista.", "Nenhum alvo ao alcance.". `not_playable_from_hand` não entra no enum `INVALID_REASONS` do motor (só na vista da mão).
+
+**R3** (`services/outcome_reason.py`): `mark()` grava `combat.outcome_reason = "objective_failed"` antes de `_finish_encounter` quando `outcome == defeat`, `objetivo_resultado == falhou` e o herói está de pé; `em.result_view` o repassa em `combat_result`; a heurística de rótulo da narração (SPEC-387 R20) usa o mesmo predicado `is_objective_failed`. `outcome` continua `defeat`. Painel de desfecho: "O objetivo falhou" (`outcomeTitle`). `_flee_alert_world` não mudou (derrota segue sem alerta). Save antigo sem o campo: `result_view` não inclui a chave.
+
+**R4**: o chip já tinha "sem Vitalidade" (SPEC-345); agora "de pé, sem Vitalidade" com `title` e fala "só cai com Ferimento Crítico". Sem número novo.
+
+**R5 (causa)**: regra legítima (SPEC-285), não bug de ocultação: arquétipos de flanco (`batedor`; `covarde_oportunista` e `agil` têm `sempre: flank` em `tactical_profile.py`) usam `cs.hide(observers=[herói])` no 1º round, então dois inimigos somem juntos (`Escuta do Sinal` = `covarde_oportunista`). Teste reproduz com 2 batedores. **Bug real achado e corrigido:** `basic_action_targeting(maneuver="procurar")` usava a mesma lista de alvos visíveis do ataque, então o herói só de Cartas não conseguia Procurar quem estava escondido (a UI bloqueava e o 409 recusaria). Agora Procurar mira os escondidos do herói (`_search_targets`); atacar escondido segue recusado. Sem a `scene` completa da execução 2 (não persistida nos logs), a evidência é o teste determinístico, não o replay.
+
+**R7**: nenhum evento novo (catálogo intacto), nenhuma flag; golden 382 e demais guardas verdes; `size_budget` sem estouro (`agents/combat.py` 3948 -> 3946; `api_presenters.py`, `types.ts` sem crescer). Testes: `test_hand_contract.py`, `test_outcome_reason.py`, `deck-342-logic`, `combat-outcome`, `spec345-components` (web 317 ok). typecheck e typecheck:e2e ok.
