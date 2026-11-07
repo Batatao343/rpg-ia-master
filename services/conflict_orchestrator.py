@@ -647,7 +647,7 @@ def enemy_declaration(
         decision_state,
     )
     explicit_action = decision.get("action_key")
-    action_key = explicit_action or tp.legacy_action_key(decision.get("action_hint"))
+    action_key = tp.resolve_action_key(decision)
     target = (
         canonical["_vulnerable_enemy_target"]
         if decision.get("trigger") == "alvo_vulneravel"

@@ -562,10 +562,16 @@ def normalize_runtime_profile(actor: dict, profile: dict | None = None) -> dict:
     for priority in normalized.get("priorities", []) or []:
         if not isinstance(priority, dict):
             continue
-        if priority.get("action_key") in TACTICAL_ACTION_KEYS:
-            continue
         trigger = _normalize_archetype(priority.get("trigger") or "sempre")
         key = actions.get(trigger, fallback)
+        stored = priority.get("action_key")
+        # SPEC-400 R1: chave igual a da tabela numa absoluta e chave da tabela (save pre-395).
+        if stored in TACTICAL_ACTION_KEYS and not (
+            stored == key
+            and stored in _NO_RETREAT_ACTIONS
+            and priority.get("resistance") == "absoluta"
+        ):
+            continue
         if key in _NO_RETREAT_ACTIONS and priority.get("resistance") == "absoluta":
             key = fallback if fallback not in _NO_RETREAT_ACTIONS else "attack"  # SPEC-395
         priority["action_key"] = key
@@ -584,6 +590,16 @@ def legacy_action_key(action_hint: object) -> str:
     if tokens & {"foge", "fugir", "recua", "escapa"}:
         return "flee"
     return "attack"
+
+
+def resolve_action_key(decision: dict) -> str:
+    """SPEC-400 R2: ``action_key`` da decisao; sem ela, a dica legada, mas uma
+    prioridade ``absoluta`` nunca vira fuga/rendicao por esse caminho."""
+    key = decision.get("action_key") or legacy_action_key(decision.get("action_hint"))
+    if key in _NO_RETREAT_ACTIONS and not decision.get("action_key"):
+        if decision.get("resistance") == "absoluta":
+            return "attack"
+    return key
 
 
 def generate_tactical_profile(archetype: str, llm, *, context: dict | None = None) -> dict:
