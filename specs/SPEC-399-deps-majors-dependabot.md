@@ -1,6 +1,6 @@
 # SPEC-399 — Dependabot: triagem e pouso dos 8 PRs de versão major
 
-> **Status:** `draft`
+> **Status:** `approved` (07/11, dono: "ok defaults" → D-399-1 = (a) fechar #42 e adiar; D-399-2 = (a) adiar ESLint 10 até o jsx-a11y aceitar; D-399-3 = (b) pousar motion 14; D-399-4 = (a) reexport manual pelo coordenador; D-399-5 = (a) sem `ignore:`; D-399-6 = (a) mergear o #44 direto após CI verde; #45 (a) se o lock deduplicar o `framer-motion`, senão (b))
 > **Criada:** 2026-11-05 · **Atualizada:** 2026-11-07
 > **Origem:** pedido do dono, "escreve os PRs do dependabot". São 8 PRs major abertos: #42 typescript 7, #44 actions/setup-node 7, #45 motion 14, #46 @eslint/js 10, #47 eslint 10, #49 uuid-utils 1.0 (pip), #50 multidict 7 (pip), #51 websockets 17 (pip).
 > **Depende de:** nada (SPEC-396 `done` já pousou o lote npm minor do PR #55)
