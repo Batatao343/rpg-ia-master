@@ -43,7 +43,7 @@ export const BLOCK_TEXT: Record<Exclude<BlockReason, null>, string> = {
   limite: "Não cabe mais nada nesta rodada",
   ja_na_fila: "Já vai na fila",
   entropia: "A Entropia não basta",
-  nao_jogavel: "Reação: você a usa quando o inimigo ataca, não se joga da mão",
+  nao_jogavel: "Reação: escolha-a em 'Reação preparada para esta rodada'; ela dispara no gatilho, não se joga da mão",
   passiva: "Passiva: sempre ativa, não se joga",
   oculto: "Nenhum inimigo à vista.",
   sem_alvo: "Nenhum alvo ao alcance.",
