@@ -69,3 +69,33 @@ cd web && npm run typecheck → ok
 bash scripts/dev/py.sh scripts/dev/dup_helpers.py --diff main...HEAD → só colisão de nome `mark` (falso positivo)
 script ad hoc (scratchpad) merge_row_targeting em sts_dor_surda → invalid_reason 'not_playable_from_hand' (confirma P1-1)
 ```
+
+---
+
+## Rodada 2 (commit revisado `00a3fa70`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+
+| Item | Situação |
+|---|---|
+| P1-1 | Fechado. `merge_row_targeting` só sobrescreve Carta que não é Fardo e tem `tipo` `reacao`/`passiva`. `blockReason` também devolve `fardo` para qualquer outro `tipo`. Testes: `sts_dor_surda` pela API (`test_status_curse_card_in_hand_keeps_fardo_contract`) e `tipo: 'status'` → `fardo` no web. |
+| P2-1 | Fechado. "de pé, sem Vitalidade: cada golpe agora abre um Ferimento" vale para Lacaio, Padrão e Elite/Chefe (Vitalidade 0 → todo dano vira excedente → Ferimento, `conflict_damage.py:330-341`). |
+| P2-2 | Fechado com ressalva (P3-5). "Passiva: sempre ativa, não se joga" está correto. |
+| P3-1 | Fechado. Round-trip real `save_game_state` → `load_game_state` (o `SAVES_DIR` fica no sandbox do conftest), com e sem a chave. |
+| P3-2 | Fechado. Um inimigo escondido e um visível: Carta, atacar e Procurar; toda sugestão passa no `check_declared_target`. |
+| P3-3 | Fechado e registrado no §6. **Faz sentido como regra:** com alguém escondido do herói, Procurar num visível é inócuo no motor (`conflict_turn._resolve_maneuver`: `cs.search` só limpa `hidden_from`/`approx_from`, que o visível não tem, e a descoberta de objeto só roda quando ninguém está escondido). Recusar sem gastar a Ação é melhor que gastá-la à toa. **Sem escondidos não há regressão:** `_search_targets` cai em `_enemy_targets`, a mesma função de antes da 398, e o caminho da descoberta de objeto (SPEC-325 R14) segue igual. |
+| P3-4 | Aceito. `outcome_reason` foi para linha própria, e `ended_round`/`result_event_id` foram fundidos numa linha para o `types.ts` não passar do teto (1272 no `size_budget.json`). Dois campos curtos na mesma linha não pioram a leitura de forma relevante. |
+
+**Novo (follow-up, não bloqueia):**
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-5 | P3 | `web/src/combat/deck.ts:46` | "você a usa quando o inimigo ataca" cobre o gatilho mais comum (`ao_ser_atacado`, 6 de 16), mas não `ao_inimigo_engajar`, `aliado_cai`, `apos_auto_dano` etc. Também não diz que a Reação precisa ser escolhida em "Reação preparada para esta rodada". | Algo como "Reação: escolha em Reação preparada para esta rodada; não se joga da mão". Polimento de texto, pode ir num follow-up. |
+
+### Comandos rodados (rodada 2)
+
+```text
+bash scripts/dev/pt.sh <13 arquivos do escopo: hand_contract, outcome_reason, combat_targeting, spec363_hand_targets, spec364_409_play_index, spec364_hidden_view_contract, spec382_node_golden, tactical_archetypes_runtime, spec346_outcome, size_budget, no_silent_except, log_event_registry, error_envelope> --basetemp=C:/Users/guilh/AppData/Local/Temp/btR2 → 210 passed
+cd web && npm test → 317 pass, 0 fail
+cd web && npm run typecheck → ok
+```
