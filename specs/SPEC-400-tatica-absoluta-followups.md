@@ -1,6 +1,6 @@
 # SPEC-400 — Follow-ups da 395: `absoluta` em saves, no legado e nas guardas
 
-> **Status:** `in-review` (aprovada: dono, 07/11: "ok aprovado" D1–D5 nos defaults).
+> **Status:** `done` (aprovada: dono, 07/11: "ok aprovado" D1–D5 nos defaults).
 > **Criada:** 2026-11-07 · **Atualizada:** 2026-11-07
 > **Épico:** SPEC-349 (bestiário) · **Depende de:** SPEC-395 `done`
 > **Desbloqueia:** fechar P2-1, P2-4, P2-5 e P2-7 de `handoffs/SPEC-395-sol-review.md`
@@ -57,13 +57,13 @@ A 395 fez a prioridade `absoluta` deixar de herdar `flee`/`surrender` da tabela 
 
 ## 5. Critérios de aceite
 
-- [ ] Os 3 testes novos falham na base e passam depois, em commit de testes separado
-- [ ] A M9 reprova `ficha_vs_base`, e M0/M7/M8/M10 se comportam como na rodada 2
-- [ ] R5: o snapshot `off`/`on` tem as 373 ids idênticas antes e depois
-- [ ] R6: só o campo `arena` das 3 ids muda (`git diff` do `_ajustes.yaml` mexe em 3 linhas) e `bestiary.json` fica sem diff
-- [ ] `git diff --exit-code main --` limpo em `arena.py`, `calibrar.py`, `test_bestiario_calibragem.py`, `test_spec373_artefatos.py` e `evals/`
-- [ ] `test_size_budget` verde e `uv run pytest` verde (coordenador, no pouso)
-- [ ] Saves antigos carregam, e um portão montado antes da 395 deixa de fugir na remontagem
+- [x] Os 3 testes novos falham na base e passam depois, em commit de testes separado
+- [x] A M9 reprova `ficha_vs_base`, e M0/M7/M8/M10 se comportam como na rodada 2
+- [x] R5: o snapshot `off`/`on` tem as 373 ids idênticas antes e depois
+- [x] R6: só o campo `arena` das 3 ids muda (`git diff` do `_ajustes.yaml` mexe em 3 linhas) e `bestiary.json` fica sem diff
+- [x] `git diff --exit-code main --` limpo em `arena.py`, `calibrar.py`, `test_bestiario_calibragem.py`, `test_spec373_artefatos.py` e `evals/`
+- [x] `test_size_budget` verde e `uv run pytest` verde (coordenador, no pouso)
+- [x] Saves antigos carregam, e um portão montado antes da 395 deixa de fugir na remontagem
 
 ## 6. Smoke test
 
@@ -93,3 +93,6 @@ Não há LLM nesse caminho: as rodadas de Cartas e a declaração do inimigo sã
 - Desvio R6: o texto do odre usa `40-119 = 37%/46%, exceção nominal` (em vez de `40-119: 37%/46%`), porque `: ` dentro de escalar YAML sem aspas quebra o parse do arquivo.
 - R5: snapshot `off`/`on` idêntico (373 ids) antes e depois, inclusive após o R6.
 - Smoke feito em processo (sem uvicorn); ver o arquivo.
+- **Revisão Sol (07/11, `handoffs/SPEC-400-sol-review.md`, 8434e02c): APPROVED.**
+  - N-2: o assert R3 do bestiário curado era do executor no plano. Saiu no commit do autor de eval (f7fdac05), deixando a guarda mais estrita.
+  - N-1 (opcional, follow-up): o assert R3 usa o gatilho cru, mas o produto normaliza o gatilho.
