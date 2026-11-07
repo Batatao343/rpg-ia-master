@@ -526,10 +526,20 @@ def test_todo_bestiario_curado_normaliza_para_action_keys_fechadas():
         assert all(
             priority.get("action_key") in tp.TACTICAL_ACTION_KEYS for priority in priorities
         ), enemy_id
-        # SPEC-395: resistencia absoluta nunca sai com fuga/rendicao pela tabela
+        # SPEC-395: resistencia absoluta nunca sai com fuga/rendicao pela tabela.
+        # SPEC-400 R3: quando a tabela levaria o gatilho a fuga/rendicao, a chave e a de
+        # ``sempre`` do arquetipo (ou ``attack``), nao qualquer chave fora de fuga.
+        actions = tp._ENEMY_ARCHETYPE_ACTIONS[str(raw.get("arquetipo") or "")]
+        expected = actions.get("sempre", "attack")
+        if expected in {"flee", "surrender"}:
+            expected = "attack"
         for priority in priorities:
-            if priority.get("resistance") == "absoluta":
-                assert priority["action_key"] not in {"flee", "surrender"}, enemy_id
+            if priority.get("resistance") != "absoluta":
+                continue
+            assert priority["action_key"] not in {"flee", "surrender"}, enemy_id
+            trigger = str(priority.get("trigger") or "sempre")
+            if actions.get(trigger, actions.get("sempre", "attack")) in {"flee", "surrender"}:
+                assert priority["action_key"] == expected, enemy_id
 
 
 def test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte():

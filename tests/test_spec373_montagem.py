@@ -11,6 +11,7 @@ import pytest
 from agents.bestiary import load_bestiary
 from services import conflict_orchestrator as orch
 from services import enemy_decks as edk
+from services import tactical_profile as tp
 
 BASE = Path(__file__).resolve().parents[1] / "docs" / "spec373" / "base"
 
@@ -40,20 +41,36 @@ def _hash(sheet: dict) -> str:
 ACTION_KEY_BASE = "flee"
 
 
+def chave_absoluta_esperada(arquetipo: str) -> str | None:
+    """Oráculo da R3 da 395 pela tabela (SPEC-400 D2, não pelo ``normalize_runtime_profile``).
+
+    A ``absoluta`` sai com a chave de ``sempre`` do arquétipo, ou ``attack`` quando ela falta
+    ou também é fuga/rendição. ``None``: arquétipo fora da tabela."""
+    acoes = tp._ENEMY_ARCHETYPE_ACTIONS.get(arquetipo)
+    if acoes is None:
+        return None
+    chave = acoes.get("sempre", "attack")
+    return "attack" if chave in ("flee", "surrender") else chave
+
+
 def ficha_vs_base(sheet: dict, base_hash: str) -> list[str]:
     """Id em ``fichas``: só o ``action_key`` das prioridades ``absoluta`` pode ter mudado.
 
     Devolve esse campo ao valor da base e exige o hash da 373; o resto da ficha (HP, cartas,
-    dano, perfil) segue travado. Também exige que a mudança exista e não seja fuga/rendição."""
+    dano, perfil) segue travado. Também exige que a chave nova seja a esperada pela tabela
+    para ``sheet["arquetipo"]`` (SPEC-400 R4), e não só "qualquer uma que não seja fuga"."""
     restaurada = json.loads(json.dumps(sheet, default=str))
     prios = (restaurada.get("tactical_profile") or {}).get("priorities") or []
     absolutas = [p for p in prios if p.get("resistance") == "absoluta"]
     if not absolutas:
         return ["sem prioridade absoluta (a id não devia estar em fichas)"]
+    esperada = chave_absoluta_esperada(str(sheet.get("arquetipo") or ""))
+    if esperada is None:
+        return [f"arquetipo fora da tabela: {sheet.get('arquetipo')!r}"]
     erros = [
-        f"absoluta ainda mapeia para {p.get('action_key')}"
+        f"absoluta mapeia para {p.get('action_key')}, esperado {esperada}"
         for p in absolutas
-        if p.get("action_key") in (ACTION_KEY_BASE, "surrender")
+        if p.get("action_key") != esperada
     ]
     for p in absolutas:
         p["action_key"] = ACTION_KEY_BASE
@@ -65,6 +82,7 @@ def ficha_vs_base(sheet: dict, base_hash: str) -> list[str]:
 def test_ficha_vs_base_known_good_e_bad():
     base = {
         "hp": 12,
+        "arquetipo": "conjurador",
         "tactical_profile": {
             "priorities": [
                 {"resistance": "absoluta", "action_key": "flee"},
@@ -80,11 +98,46 @@ def test_ficha_vs_base_known_good_e_bad():
     flex = json.loads(json.dumps(fixed))
     flex["tactical_profile"]["priorities"][1]["action_key"] = "flee"
     assert ficha_vs_base(flex, h)  # só a absoluta pode mudar
-    assert ficha_vs_base(base, h) == ["absoluta ainda mapeia para flee"]  # sem correção
+    sem_correcao = ["absoluta mapeia para flee, esperado control"]
+    assert ficha_vs_base(base, h) == sem_correcao
     rend = json.loads(json.dumps(fixed))
     rend["tactical_profile"]["priorities"][0]["action_key"] = "surrender"
     assert ficha_vs_base(rend, h)
     assert ficha_vs_base({"hp": 12}, h)  # sem absoluta
+
+
+def test_ficha_vs_base_exige_chave_de_sempre_do_arquetipo():
+    """SPEC-400 R4 (P2-7 da 395): a absoluta corrigida tem de sair com a chave de ``sempre``.
+
+    Antes, qualquer chave fora de fuga/rendição passava (a M9, odre com ``flank``, passava)."""
+    base = {
+        "hp": 12,
+        "arquetipo": "conjurador",
+        "tactical_profile": {
+            "priorities": [
+                {"resistance": "absoluta", "action_key": "flee"},
+                {"resistance": "flexivel", "action_key": "attack"},
+            ]
+        },
+    }
+    h = _hash(base)
+    flank = json.loads(json.dumps(base))
+    flank["tactical_profile"]["priorities"][0]["action_key"] = "flank"
+    assert ficha_vs_base(flank, h) == ["absoluta mapeia para flank, esperado control"]
+    # arquétipo com ``sempre`` = attack: attack passa, control (de outro arquétipo) reprova
+    abissal = {**json.loads(json.dumps(base)), "arquetipo": "abissal"}
+    h_abissal = _hash(abissal)
+    abissal["tactical_profile"]["priorities"][0]["action_key"] = "attack"
+    assert ficha_vs_base(abissal, h_abissal) == []
+    abissal["tactical_profile"]["priorities"][0]["action_key"] = "control"
+    assert ficha_vs_base(abissal, h_abissal)
+    # sem arquétipo da tabela não há chave esperada: reprova em vez de aceitar qualquer uma
+    fora = {**json.loads(json.dumps(base)), "arquetipo": "inventado"}
+    fora["tactical_profile"]["priorities"][0]["action_key"] = "control"
+    assert ficha_vs_base(fora, _hash({**base, "arquetipo": "inventado"}))
+    assert chave_absoluta_esperada("covarde_oportunista") == "flank"
+    assert chave_absoluta_esperada("guardiao") == "attack"
+    assert chave_absoluta_esperada("inventado") is None
 
 
 def test_snapshot_off_existe_e_bate(monkeypatch):
