@@ -945,7 +945,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
 
     from services import bestiary_knowledge as knowledge
     from services import cards
-    from services import combat_targeting as _targeting
+    from services import combat_targeting as _targeting, hand_contract as _hand_contract
 
     initiative = list(meta.get("initiative") or [])
     scene = meta.get("scene") or {}
@@ -1128,7 +1128,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
         view["pilhas"] = _piles.public_view(meta["pilhas"], player)
         for _row in view["pilhas"].get("mao") or []:  # SPEC-363 R19: alvos de TODA Carta da mão
             try:
-                _row.update(_targeting.hand_card_targeting(state, str(_row.get("id"))))
+                _hand_contract.merge_row_targeting(_row, state)
             except Exception as exc:  # noqa: BLE001 - alvo é dica de UI; o motor revalida
                 log_fallback("combat_view", "hand_targeting_failed", exc)
     # SPEC-353 R54 + SPEC-354 R4.1 (um só caminho): com o Baralho `on`, o registro da rodada vale durante o conflito

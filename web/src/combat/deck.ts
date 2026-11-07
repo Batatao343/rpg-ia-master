@@ -36,13 +36,21 @@ export function folegoState(piles: Pick<PilesView, "folego" | "folego_emprestado
   };
 }
 
-export type BlockReason = "fardo" | "sem_folego" | "limite" | "ja_na_fila" | "entropia" | null;
+export type BlockReason = "fardo" | "sem_folego" | "limite" | "ja_na_fila" | "entropia" | "nao_jogavel" | "oculto" | "sem_alvo" | null;
 export const BLOCK_TEXT: Record<Exclude<BlockReason, null>, string> = {
   fardo: "Fardo: pesa na mão, não se joga",
   sem_folego: "Falta fôlego",
   limite: "Não cabe mais nada nesta rodada",
   ja_na_fila: "Já vai na fila",
   entropia: "A Entropia não basta",
+  nao_jogavel: "Reação: responde sozinha, não se joga da mão",
+  oculto: "Nenhum inimigo à vista.",
+  sem_alvo: "Nenhum alvo ao alcance.",
+};
+
+/** SPEC-398 R1/R2: motivo que o servidor mandou no item da mão (mesma regra do motor). */
+const SERVER_BLOCK: Record<string, Exclude<BlockReason, null>> = {
+  not_playable_from_hand: "nao_jogavel", target_hidden: "oculto", no_valid_target: "sem_alvo", target_dead: "sem_alvo",
 };
 
 /** SPEC-342 R10.2: marginália enviada (1ª pessoa). O servidor não depende deste texto: a semântica vem de `jogadas`.
@@ -55,7 +63,9 @@ export function endText(queue: QueuedPlay[], spare: boolean): string {
 /** Por que esta carta (cópia `index` da mão) não pode entrar na fila agora. */
 export function blockReason(card: HandCard, hand: HandCard[], index: number, queue: QueuedPlay[],
   piles: PilesView, entropy: number | null): BlockReason {
-  if (!card.jogavel) return "fardo";
+  const server = card.invalid_reason ? SERVER_BLOCK[card.invalid_reason] : undefined;
+  if (!card.jogavel) return server === "nao_jogavel" ? server : "fardo";
+  if (server) return server;
   if (queue.length >= MAX_PLAYS) return "limite";
   const copiesBefore = hand.slice(0, index + 1).filter((c) => c.id === card.id).length;
   if (queue.filter((p) => p.cardId === card.id && !p.discard).length >= copiesBefore) return "ja_na_fila";
