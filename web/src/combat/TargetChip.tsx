@@ -64,7 +64,7 @@ function PortraitOffer({ p, onGenerate, disabled }: { p: Participant; onGenerate
 /** SPEC-396: sufixo falado do nome do alvo (entra em sr-only dentro do nome visível). */
 function tailOf(p: Participant, aim: NonNullable<AimMark>, spent: boolean, omen?: OmenView): string {
   const base = aim.valid
-    ? spent ? ", sem Vitalidade — o próximo golpe fere"
+    ? spent ? ", de pé, sem Vitalidade: só cai com Ferimento Crítico"
       : p.vit != null ? `, Vitalidade ${p.vit} de ${p.max}` : ""
     : `: alvo inválido${aim.reason ? ` — ${aim.reason}` : ""}`;
   return base + (omen ? `. Presságio: ${omen.spoken}` : "");
@@ -90,7 +90,7 @@ export function TargetChip({ p, aim, onPick, omen, onGenerate, genDisabled }: {
       {p.retrato && <Portrait r={p.retrato} decor={!!aim} />}
       <span className="tchip__top">
         <strong>{aim?.valid && <span className="sr-inline">Alvo: </span>}{p.name}{aim && <span className="sr-inline">{tailOf(p, aim, spent, omen)}</span>}</strong>
-        {p.vit != null && p.max != null && <span className={`tchip__vit${spent ? " is-spent" : ""}`} {...h}>{spent ? "sem Vitalidade" : `${p.vit}/${p.max}`}</span>}
+        {p.vit != null && p.max != null && <span className={`tchip__vit${spent ? " is-spent" : ""}`} title={spent ? "Sem Vitalidade, o inimigo segue de pé: só cai com Ferimento Crítico." : undefined} {...h}>{spent ? "de pé, sem Vitalidade" : `${p.vit}/${p.max}`}</span>}
       </span>
       {pct !== null && <span className={`tchip__bar${spent ? " is-spent" : ""}`} aria-hidden="true" data-effect="hit.feedback" data-pct={pct}><span style={{ transform: `scaleX(${pct / 100})` }} /></span>}
       <span className="tchip__meta" {...h}>

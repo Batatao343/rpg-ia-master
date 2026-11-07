@@ -22,7 +22,7 @@ const base = { id: 'b1', name: 'Bandido 1', role: 'enemy', vit: 0, max: 8, condi
 test('targetchip_sem_vitalidade', async () => {
   const { TargetChip } = await load('../src/combat/TargetChip.tsx');
   const out = html(h(TargetChip, { p: base, aim: undefined, onPick() {} }));
-  assert.match(out, /tchip__vit is-spent">sem Vitalidade</);
+  assert.match(out, /tchip__vit is-spent" title="[^"]*">de pé, sem Vitalidade</);
   assert.match(out, /tchip__bar is-spent/);
   assert.doesNotMatch(out, /0\/8/);
 });
@@ -32,7 +32,7 @@ test('targetchip_aria_mira_sem_vitalidade', async () => {
   const out = html(h(TargetChip, { p: base, aim: { valid: true }, onPick() {} }));
   // SPEC-396: o nome vem do conteúdo (sem aria-label): prefixo e sufixo em sr-only em volta do nome visível.
   assert.doesNotMatch(out, /aria-label=/);
-  assert.match(out, /<strong><span class="sr-inline">Alvo: <\/span>Bandido 1<span class="sr-inline">, sem Vitalidade — o próximo golpe fere<\/span><\/strong>/);
+  assert.match(out, /<strong><span class="sr-inline">Alvo: <\/span>Bandido 1<span class="sr-inline">, de pé, sem Vitalidade: só cai com Ferimento Crítico<\/span><\/strong>/);
 });
 
 test('targetchip_jogador_zero_inalterado', async () => {
