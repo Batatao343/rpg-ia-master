@@ -630,7 +630,7 @@ ajustes:
     forca: 2
     sig: 0
   mon_fervente_de_ferrugem:
-    arena: L3|off 74% | L3|on 81% (arena final, 40 seeds)
+    arena: L3|off 58% | L3|on 68% (SPEC-395 pós-R1, 40 seeds)
     corpo: 1
     dano: 0
     sig: 0
@@ -776,7 +776,7 @@ ajustes:
     forca: 4
     sig: 0
   mon_lencol_de_chamine:
-    arena: L3|off 69% | L3|on 74% (arena final, 40 seeds)
+    arena: L3|off 60% | L3|on 60% (SPEC-395 pós-R1, 40 seeds)
   mon_lesma_de_penacho:
     arena: L3|off 80% | L3|on 66% (arena final, 40 seeds)
   mon_levantado_de_rubi:
@@ -887,7 +887,7 @@ ajustes:
     dano: -2
     sig: 0
   mon_odre_de_oleo:
-    arena: L3|off 68% | L3|on 76% (arena final, 40 seeds)
+    arena: L3|off 56% | L3|on 53% (SPEC-395 pós-R1, 40 seeds); 40-119 = 37%/46%, exceção nominal
     corpo: 2
     dano: 1
     sig: 1
