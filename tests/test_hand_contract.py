@@ -50,3 +50,42 @@ def test_every_suggested_target_is_accepted_by_engine(monkeypatch):
                 )
                 is None
             )
+
+
+def test_two_flanking_enemies_hide_from_hero_by_rule_r5():
+    """SPEC-398 R5: arquétipos de flanco (`batedor`; `covarde_oportunista` e `agil` têm `sempre: flank`, SPEC-285): no 1o round os dois
+    se escondem do herói (relativo, `hide(observers=[alvo])`). Regra legítima, não bug: o ataque
+    por Carta fica sem mira (`target_hidden`) até um `procurar`; passar e Cartas de aliado seguem."""
+    import random
+
+    from services import combat_targeting as ct
+    from services import conflict_orchestrator as orch
+    from tests.test_tactical_archetypes_runtime import _actor, _pass, _player, _scene
+
+    player = _player()
+    foes = [_actor(f"e{i}", "batedor", category="padrao", agility=4) for i in (1, 2)]
+    scene = _scene("player", "e1", "e2")
+    actors = {"player": player, **{f["id"]: f for f in foes}}
+    orch.run_round(
+        scene,
+        actors,
+        {"hero": ["player"], "enemy": ["e1", "e2"]},
+        declarations={"player": _pass("player")},
+        initiator="enemy",
+        rng=random.Random(3),
+    )
+    state = {"combat": {"active": True, "scene": scene}, "enemies": foes, "player": player}
+    res = ct.hand_card_targeting(state, ATK)
+    assert res["valid_targets"] == [] and res["invalid_reason"] == "target_hidden"
+    assert all(scene["positions"][f["id"]]["hidden_from"] == ["player"] for f in foes)
+    # Procurar é a saída: mira justamente quem está escondido, e o 409 não o recusa.
+    seek = ct.basic_action_targeting(state, "maneuver", "procurar")
+    assert seek.invalid_reason is None and seek.valid_targets == ["e1", "e2"]
+    assert (
+        ct.check_declared_target(
+            state, card_id=None, action_kind="maneuver", maneuver="procurar", target_id="e1"
+        )
+        is None
+    )
+    # Atacar escondido continua recusado (R5 não afrouxa a regra de ocultação).
+    assert ct.basic_action_targeting(state, "attack").invalid_reason == "target_hidden"

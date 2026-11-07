@@ -104,6 +104,18 @@ def _enemy_targets(state: dict) -> TargetingResult:
     return TargetingResult(visible, None)
 
 
+def _search_targets(state: dict) -> TargetingResult:
+    """SPEC-398 R5: Procurar mira justamente quem está Escondido do herói (o motor não exige
+    visibilidade na busca); sem escondidos, vale a regra dos inimigos visíveis."""
+    scene = (state.get("combat") or {}).get("scene") or {}
+    hidden = [
+        _enemy_id(e)
+        for e in _enemies(state)
+        if _targetable(e) and cs.is_hidden_from(scene, _enemy_id(e), PLAYER_ID)
+    ]
+    return TargetingResult(hidden, None) if hidden else _enemy_targets(state)
+
+
 def valid_targets_for_card(state: dict, card_id: str) -> TargetingResult:
     """Alvos válidos e motivo de indisponibilidade de uma Carta do jogador."""
     gate = _combat_gate(state)
@@ -166,6 +178,8 @@ def basic_action_targeting(state: dict, kind: str, maneuver: str | None = None) 
     gate = _combat_gate(state)
     if gate:
         return TargetingResult([], gate)
+    if kind == "maneuver" and maneuver == "procurar":
+        return _search_targets(state)
     if kind == "attack" or (kind == "maneuver" and maneuver in _TARGETED_MANEUVERS):
         return _enemy_targets(state)
     return TargetingResult([], None)
