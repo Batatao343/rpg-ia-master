@@ -291,3 +291,34 @@ e que nenhum commit de produto mexe nesses caminhos.
   `git diff data/` ficou limpo.
 - `_doc` do registro e a docstring de `test_spec373_artefatos.py` foram atualizados. O R8 e a
   guarda `avaliar_posteriores` não mudaram.
+
+## 13. Adendo (07/11): a `absoluta` tem de sair com a chave de `sempre` (SPEC-400 R3/R4, P2-7 da 395, `f7fdac05`)
+
+- **Achado (Sol, rodada 2 da 395):** `ficha_vs_base` aceitava qualquer chave fora de
+  `flee`/`surrender` na `absoluta`. A M9 (odre com `action_key: "flank"` explícito na `absoluta`;
+  o certo é `control`) passava em todos os portões da 373. O assert de
+  `test_todo_bestiario_curado_normaliza_para_action_keys_fechadas` tinha a mesma folga.
+- **Oráculo (D2 da 400):** a tabela, não o produto. `chave_absoluta_esperada(arquetipo)` lê
+  `tp._ENEMY_ARCHETYPE_ACTIONS[arq].get("sempre", "attack")` e cai em `attack` se isso também
+  for fuga/rendição. `normalize_runtime_profile` não entra: seria a função conferindo a si mesma.
+- **Guarda:** `ficha_vs_base` exige `action_key == esperada` em toda `absoluta` (as 4 ids de
+  `fichas` vinham de `flee` na base, logo todas caem na regra), e reprova arquétipo fora da
+  tabela em vez de aceitar qualquer chave. A restauração para `ACTION_KEY_BASE` e o hash da 373
+  não mudaram. O assert curado exige a chave esperada só na `absoluta` cujo gatilho a tabela
+  levaria a fuga/rendição; nas demais `absoluta`, segue barrando só fuga/rendição.
+- **Known-good/bad:** `test_ficha_vs_base_known_good_e_bad` (fixture ganhou `arquetipo:
+  conjurador`; mensagem de "sem correção" atualizada) e o novo
+  `test_ficha_vs_base_exige_chave_de_sempre_do_arquetipo`: `flank` no conjurador, `control` no
+  abissal e arquétipo inventado reprovam; `attack` no abissal passa.
+- **Mutações** (worktrees descartáveis, removidos; `data/` e `services/` limpos):
+
+| Mutação | Antes (`fca76cda`) | Depois (`f7fdac05`) |
+|---|---|---|
+| M0 linha de base | verde | verde (73 passed no escopo) |
+| M9 odre `absoluta` com `action_key: "flank"` | **passa** | **F** `test_snapshot_off_existe_e_bate` e `test_todo_bestiario_curado...` (`mon_odre_de_oleo`) |
+| M7 vitalidade do odre 12→99 | F | F `test_snapshot_off_existe_e_bate` |
+| M10 R1 da 395 revertida no produto | F | F (snapshot, curado e os 2 testes da 395) |
+
+M8 (prosa do `sempre`) não foi refeita: a guarda não mudou o hash, só acrescentou a exigência.
+Os arquivos não são protegidos (`evals/protected-paths.txt` não os lista); nada de isenção de ruff
+mudou.
