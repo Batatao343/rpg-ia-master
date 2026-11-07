@@ -1,6 +1,6 @@
 # SPEC-400 — Follow-ups da 395: `absoluta` em saves, no legado e nas guardas
 
-> **Status:** `draft`
+> **Status:** `approved` — dono, 07/11: "ok aprovado" (D1–D5 nos defaults).
 > **Criada:** 2026-11-07 · **Atualizada:** 2026-11-07
 > **Épico:** SPEC-349 (bestiário) · **Depende de:** SPEC-395 `done`
 > **Desbloqueia:** fechar P2-1, P2-4, P2-5 e P2-7 de `handoffs/SPEC-395-sol-review.md`
