@@ -431,6 +431,8 @@ Registrar em `docs/spec367/smoke-final.md` (trechos, sem segredos), com provider
 - **D-367-2 — Reescrever 8 frases do presságio em vez de flexionar "de você".** Flexão por regra ("de você" →
   possessivo) gera português pior que a reescrita. A tabela do §3.3 é a proposta; veto do dono troca frase a
   frase.
+  **Decidido em 09/11, pelo coordenador com delegação do dono ("confio em vc nas decisoes"): ficam as 8
+  reescritas do §3.3, como implementado.** Nenhuma frase foi vetada.
 - **D-367-3 — V-G rejeita, não reescreve.** É o mesmo modelo de V1–V6 (`conflict_summary`): texto inválido vira
   o fallback determinístico. A regra (b) cobre o caso real ("últimas moedas" com saldo > 0), que (a) não pega,
   porque o 45 era o preço certo.

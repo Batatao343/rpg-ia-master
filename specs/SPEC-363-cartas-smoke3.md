@@ -559,8 +559,16 @@ Registrar em `docs/spec363/smoke-final.md` (trechos, sem segredos), com provider
   é acerto automático e Crítico. Opções: manter; exigir total ≥ defesa para o Crítico por dupla; dupla só com 2d10;
   Crítico por dupla vira "acerto" sem dobrar. Qualquer opção pede arena por Postura numa spec de balanço própria.
   **Nenhum requisito nesta spec.**
+  **Decidido em 09/11, pelo coordenador com delegação do dono ("confio em vc nas decisoes"): manter a regra.**
+  Qualquer dupla nos mantidos é acerto automático e Crítico, como nas §13.2/§13.3 das regras consolidadas. O balanço
+  da SPEC-369 foi calibrado e confirmado (260–339) com essa regra em vigor, e o round_log já explica o
+  crítico abaixo da Esquiva (353 R29). Mexer exigiria uma nova rodada de arena por Postura, e nada mostra
+  necessidade disso.
 - **D-363-2 — Teto diário do staging.** Se a Etapa 0 provar que o cap (R$ 5/dia contando texto) desligou a imagem, o
   coordenador religa para o smoke; subir o valor ou separar texto de imagem no cap é decisão do dono.
+  **Decidido em 09/11, pelo coordenador com delegação do dono: manter R$ 5/dia, com texto e imagem no mesmo cap e a
+  regra "o cap nunca religa sozinho".** No smoke, o coordenador religa à mão, auditado, como já é feito hoje.
+  Isso só vale para o staging; o teto de produção entra no go/no-go da SPEC-197.
 
 ## 9. Registro de implementação
 

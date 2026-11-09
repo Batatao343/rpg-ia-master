@@ -433,6 +433,8 @@ Os três itens "não verificados" do smoke 4 não entram no §6: R21–R23 os pr
   máximo e diverge do saldo e do Livro, que já mostram frações (`AccountScreen.tsx:11-16`, `StoryLog.tsx:166`).
   Singular só para exatamente 1. Alternativa, se o dono preferir: manter o inteiro, com "até" e o plural certo
   ("até 1 Estilha").
+  **Decidido em 09/11, pelo coordenador com delegação do dono ("confio em vc nas decisoes"): fica o teto exato
+  (R18, como implementado).** O texto pago fica igual ao saldo e ao Livro, e assim não exagera o preço.
 - **D-364-3 — Pergunta nunca transaciona item.** Estende ao fluxo de itens a regra que as Cartas já seguem
   (`agents/loot.py:422-437`): gasto irreversível só com frase afirmativa.
 - **D-364-4 — Nome curto só na exibição.** Não toca save nem resolução por nome.
