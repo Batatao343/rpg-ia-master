@@ -62,7 +62,7 @@ Mudar a mecânica de Vitalidade 0 ou de Ferimentos, o balanço (SPEC-369) e novo
 - [x] R4: chip com Vitalidade 0 legível.
 - [x] R5: causa registrada (e corrigida, se for bug).
 - [ ] R6: item 4 da 369 refeito no staging com o driver corrigido.
-- [ ] R7: guardas e suíte completa verdes no pouso.
+- [x] R7: guardas e suíte completa verdes no pouso (09/11: suíte completa verde antes do rebase sobre a SPEC-400; depois do rebase, testes de cruzamento verdes, ver §6).
 
 ## 5. Decisões
 
@@ -81,3 +81,5 @@ Mudar a mecânica de Vitalidade 0 ou de Ferimentos, o balanço (SPEC-369) e novo
 **R7**: nenhum evento novo (catálogo intacto), nenhuma flag; golden 382 e demais guardas verdes; `size_budget` sem estouro (`agents/combat.py` 3948 -> 3946; `api_presenters.py`, `types.ts` sem crescer). Testes: `test_hand_contract.py`, `test_outcome_reason.py`, `deck-342-logic`, `combat-outcome`, `spec345-components` (web 317 ok). typecheck e typecheck:e2e ok.
 
 **Correções da revisão Sol (CHANGES_REQUIRED):** P1-1 `merge_row_targeting` só sobrescreve Carta não-Fardo de tipo `reacao`/`passiva` (status e maldição seguem "Fardo: pesa na mão"; `blockReason` mantém `fardo` para `tipo` fora de reação/passiva). P2-2 textos: reação "você a usa quando o inimigo ataca, não se joga da mão"; passiva "Passiva: sempre ativa, não se joga". P3-1 round-trip save/load do `outcome_reason` (e save sem a chave). P3-2 teste com 1 escondido + 1 visível cobrindo Carta, atacar e Procurar. **P3-3 (comportamento registrado):** com escondidos e visíveis ao mesmo tempo, Procurar num inimigo visível dá 409 `no_valid_target` (antes era aceito e gastava a Ação à toa); atacar o escondido também dá 409 `no_valid_target`. Mantido por fazer sentido. P3-4 `types.ts`: `outcome_reason` em linha própria (duas linhas vizinhas fundidas para o arquivo não crescer).
+
+- **Pouso (09/11):** suíte completa (`-n 3`) verde, com `ruff`, `typecheck`, `typecheck:e2e` e `npm test`. A `main` recebeu a SPEC-400 (combate/`absoluta`) depois do sync. Após o rebase, os testes de cruzamento passaram: mão, desfecho, alvo, golden 382, 373, 400, guardas e `ruff`. Não houve uma segunda suíte completa, porque a RAM livre estava em 0,6 GB; o CI roda a suíte completa no push. Status segue `approved` até o smoke R6 no staging.
