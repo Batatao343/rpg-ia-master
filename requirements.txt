@@ -10,7 +10,7 @@ annotated-doc==0.0.5
     # via fastapi
 annotated-types==0.8.0
     # via pydantic
-anyio==4.15.1
+anyio==4.16.0
     # via
     #   httpx
     #   httpx2
@@ -29,7 +29,7 @@ cffi==2.1.1 ; platform_python_implementation != 'PyPy'
     # via cryptography
 charset-normalizer==3.5.2
     # via requests
-click==8.5.0
+click==8.5.1
     # via uvicorn
 cryptography==50.0.2
     # via
@@ -49,13 +49,13 @@ frozenlist==1.8.0
     #   aiosignal
 google-ai-generativelanguage==0.12.1
     # via langchain-google-genai
-google-api-core==2.43.2
+google-api-core==2.44.0
     # via google-ai-generativelanguage
-google-auth==2.62.0
+google-auth==2.62.1
     # via
     #   google-ai-generativelanguage
     #   google-api-core
-googleapis-common-protos==1.75.1
+googleapis-common-protos==1.76.0
     # via
     #   google-api-core
     #   grpcio-status
@@ -95,17 +95,17 @@ idna==3.20
     #   httpx2
     #   requests
     #   yarl
-jiter==0.18.0
+jiter==0.19.0
     # via openai
-jsonpatch==1.38
+jsonpatch==1.44
     # via langchain-core
-jsonpointer==3.6
+jsonpointer==3.10
     # via jsonpatch
 langchain-classic==1.0.8
     # via langchain-community
 langchain-community==0.4.2
     # via rpg-ia-master
-langchain-core==1.7.0
+langchain-core==1.7.6
     # via
     #   langchain-classic
     #   langchain-community
@@ -119,9 +119,9 @@ langchain-core==1.7.0
     #   rpg-ia-master
 langchain-google-genai==3.2.0
     # via rpg-ia-master
-langchain-openai==1.7.3
+langchain-openai==1.7.4
     # via rpg-ia-master
-langchain-protocol==0.0.20
+langchain-protocol==0.0.21
     # via
     #   langchain-core
     #   langgraph-sdk
@@ -129,7 +129,7 @@ langchain-text-splitters==1.1.3
     # via
     #   langchain-classic
     #   rpg-ia-master
-langgraph==1.2.18
+langgraph==1.2.20
     # via rpg-ia-master
 langgraph-checkpoint==4.3.1
     # via
@@ -137,9 +137,9 @@ langgraph-checkpoint==4.3.1
     #   langgraph-prebuilt
 langgraph-prebuilt==1.1.1
     # via langgraph
-langgraph-sdk==0.4.10
+langgraph-sdk==0.4.14
     # via langgraph
-langsmith==0.14.14
+langsmith==0.14.17
     # via
     #   langchain-classic
     #   langchain-community
@@ -152,7 +152,7 @@ numpy==2.5.4
     # via
     #   faiss-cpu
     #   langchain-community
-openai==3.40.0
+openai==3.46.0
     # via langchain-openai
 opentelemetry-api==1.45.2
     # via
@@ -179,16 +179,16 @@ proto-plus==1.29.0
     # via
     #   google-ai-generativelanguage
     #   google-api-core
-protobuf==7.35.1
+protobuf==7.36.2
     # via
     #   google-ai-generativelanguage
     #   google-api-core
     #   googleapis-common-protos
     #   grpcio-status
     #   proto-plus
-psycopg==3.3.6
+psycopg==3.3.8
     # via rpg-ia-master
-psycopg-binary==3.3.6 ; implementation_name != 'pypy'
+psycopg-binary==3.3.8 ; implementation_name != 'pypy'
     # via psycopg
 psycopg-pool==3.3.3
     # via psycopg
@@ -198,7 +198,7 @@ pyasn1-modules==0.4.2
     # via google-auth
 pycparser==3.12 ; implementation_name != 'PyPy' and platform_python_implementation != 'PyPy'
     # via cffi
-pydantic==2.14.1
+pydantic==2.14.3
     # via
     #   fastapi
     #   langchain-classic
@@ -209,7 +209,7 @@ pydantic==2.14.1
     #   openai
     #   pydantic-settings
     #   rpg-ia-master
-pydantic-core==2.50.1
+pydantic-core==2.50.4
     # via pydantic
 pydantic-settings==2.16.2
     # via langchain-community
@@ -223,7 +223,7 @@ pyyaml==6.0.3
     #   langchain-community
     #   langchain-core
     #   rpg-ia-master
-regex==2026.9.29
+regex==2026.11.7
     # via tiktoken
 requests==2.34.2
     # via
@@ -239,7 +239,7 @@ sniffio==1.3.1
     # via
     #   langsmith
     #   openai
-sqlalchemy==2.1.6
+sqlalchemy==2.1.8
     # via
     #   langchain-classic
     #   langchain-community
@@ -271,7 +271,7 @@ typing-extensions==4.16.0
     #   pydantic-settings
     #   sqlalchemy
     #   typing-inspection
-typing-inspection==0.4.4
+typing-inspection==0.4.5
     # via
     #   fastapi
     #   pydantic
