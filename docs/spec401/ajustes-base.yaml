@@ -1,0 +1,1253 @@
+# SPEC-349 Etapa 7: ajustes numéricos da arena (scripts/bestiario/calibrar.py).
+# corpo: soma na Virtude Corpo (Vitalidade pela tabela); dano: soma no dano_base do
+# ataque básico e da assinatura; forca: soma na Virtude Força (acerto); sig: só a assinatura. `arena` = leitura (L3/L5, off | on) que motivou o último passo.
+ajustes:
+  enemy_aranha_de_cristal:
+    arena: L5|off 53% | L5|on 28% (arena final, 40 seeds)
+    corpo: 0
+    dano: -7
+    forca: 0
+    sig: 0
+  enemy_aranha_lobo:
+    arena: L3|off 76% | L3|on 66% (arena final, 40 seeds)
+    dano: -1
+    sig: 0
+  enemy_basilisco_caverna:
+    arena: L3|off 50% | L3|on 66% (arena final, 40 seeds)
+    corpo: 0
+    dano: 1
+    forca: 0
+    sig: 4
+  enemy_boss_general_escorpiao:
+    arena: L5|off 72% | L5|on 60% (SPEC-373 passo manual dano -6 sig -3)
+    corpo: 0
+    dano: -6
+    forca: 0
+    sig: -3
+  enemy_djinn_menor:
+    arena: L3|off 70% | L3|on 70% (arena final, 40 seeds)
+    dano: 1
+    sig: 1
+  enemy_elemental_fogo_poluido:
+    arena: L3|off 76% | L3|on 68% (arena final, 40 seeds)
+    dano: -2
+  enemy_esqueleto_legiao_antiga:
+    arena: L3|off 48% | L3|on 42% (arena final, 40 seeds)
+    corpo: 0
+    dano: 0
+    forca: 0
+    sig: -4
+  enemy_esqueleto_mago:
+    arena: L3|off 58% | L3|on 55% (melhor de 1 rodadas)
+    corpo: 0
+    dano: -3
+    forca: 0
+    sig: 0
+  enemy_fantasma:
+    arena: L3|off 63% | L3|on 56% (SPEC-373 passo manual, sig 6)
+    corpo: 0
+    dano: -3
+    forca: 0
+    sig: 6
+  enemy_gargula_ferro:
+    arena: L3|off 68% | L3|on 58% (arena final, 40 seeds)
+    dano: -1
+  enemy_golem_carne:
+    arena: L3|off 71% | L3|on 66% (arena final, 40 seeds)
+    dano: -7
+    sig: 0
+  enemy_golem_lixo:
+    arena: L3|off 72% | L3|on 76% (arena final, 40 seeds)
+    corpo: 0
+    dano: -6
+    sig: 5
+  enemy_horror_esgoto:
+    arena: L3|off 72% | L3|on 74% (arena final, 40 seeds)
+    corpo: 0
+    dano: -1
+    sig: 0
+  enemy_lobo_invernal:
+    arena: L3|off 46% | L3|on 44% (arena final, 40 seeds)
+    corpo: 0
+    dano: 0
+    forca: 0
+    sig: 0
+  enemy_mimico_bau:
+    arena: L3|off 60% | L3|on 87% (arena final, 40 seeds)
+    corpo: 0
+    dano: 2
+    forca: 0
+    sig: 6
+  enemy_minotauro_esqueleto:
+    arena: L3|off 82% | L3|on 14% (arena final, 40 seeds)
+    corpo: 0
+    dano: -7
+    forca: 0
+    sig: -5
+  enemy_morcego_vampiro:
+    arena: L3|off 81% | L3|on 60% (arena final, 40 seeds)
+    corpo: 0
+    dano: 0
+    forca: 0
+    sig: 0
+  enemy_mumia_de_po:
+    arena: L3|off 66% | L3|on 73% (arena final, 40 seeds)
+    dano: -4
+    sig: 2
+  enemy_observador_menor:
+    arena: L3|off 66% | L3|on 58% (arena final, 40 seeds)
+    dano: -1
+    sig: 0
+  enemy_polvo_esgoto:
+    arena: L3|off 44% | L3|on 72% (arena final, 40 seeds)
+    corpo: 0
+    dano: -2
+    forca: 0
+    sig: 5
+  enemy_sentinela_ferro:
+    arena: L3|off 68% | L3|on 52% (arena final, 40 seeds)
+    dano: -3
+  enemy_sombra_espreitadora:
+    arena: L3|off 82% | L3|on 68% (arena final, 40 seeds)
+  enemy_troll_ponte:
+    arena: L3|off 44% | L3|on 51% (arena final, 40 seeds)
+    dano: -1
+    sig: 0
+  enemy_urso_coruja_mutante:
+    arena: L3|off 64% | L3|on 40% (arena final, 40 seeds)
+    corpo: 0
+    dano: -2
+    forca: 0
+    sig: -3
+  enemy_verme_areia_jovem:
+    arena: L3|off 62% | L3|on 72% (arena final, 40 seeds)
+    dano: -2
+    sig: 1
+  enemy_vinha_estranguladora:
+    arena: L3|off 63% | L3|on 78%
+    dano: 2
+    sig: 0
+  enemy_wyvern_jovem:
+    arena: L3|off 61% | L3|on 72% (arena final, 40 seeds)
+    dano: -2
+    sig: 0
+  enemy_yeti:
+    arena: L3|off 67% | L3|on 50% (arena final, 40 seeds)
+    dano: -2
+    sig: 0
+  enemy_zumbi_blindado:
+    arena: L3|off 42% | L3|on 33% (arena final, 40 seeds)
+    corpo: 0
+    dano: -1
+    forca: 0
+    sig: 2
+  mon_abafador_de_candeias:
+    arena: L3|off 58% | L3|on 85% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_acendedor_de_naufragios:
+    arena: L3|off 70% | L3|on 64% (arena final, 40 seeds)
+  mon_aguadeiro_de_bucho:
+    arena: L3|off 56% | L3|on 88% (arena final, 40 seeds)
+    corpo: 2
+    dano: 0
+    forca: 1
+    sig: 5
+  mon_alambique_de_carne:
+    arena: L3|off 62% | L3|on 70% (arena final, 40 seeds)
+    corpo: 5
+    dano: 4
+    forca: 4
+    sig: 0
+  mon_altivo_do_vidro:
+    arena: L3|off 78% | L3|on 85% (arena final, 40 seeds)
+  mon_andarilho_de_cracas:
+    arena: L3|off 53% | L3|on 67% (arena final, 40 seeds)
+    corpo: -2
+    dano: -1
+    sig: 0
+  mon_andarilho_de_duas_idades:
+    arena: L3|off 50% | L3|on 64% (arena final, 40 seeds)
+    corpo: -2
+    dano: -1
+    sig: 0
+  mon_andas_de_caribu:
+    arena: L3|off 69% | L3|on 80% (arena final, 40 seeds)
+  mon_anzolado_da_casa:
+    arena: L3|off 57% | L3|on 76%
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 1
+  mon_aperto_da_tregua:
+    arena: L3|off 78% | L3|on 74% (arena final, 40 seeds)
+  mon_arame_vivo:
+    arena: L3|off 65% | L3|on 74% (arena final, 40 seeds)
+  mon_aranha_de_bolha:
+    arena: L3|off 58% | L3|on 83% (arena final, 40 seeds)
+    corpo: 3
+    dano: 2
+    forca: 2
+    sig: 3
+  mon_ariete_de_medula:
+    arena: L3|off 63% | L3|on 60% (arena final, 40 seeds)
+  mon_armador_de_fosso:
+    arena: L3|off 50% | L3|on 86% (melhor de 6 rodadas)
+    corpo: 2
+    dano: 2
+    forca: 0
+    sig: 4
+  mon_arpeu_de_bracos:
+    arena: L3|off 59% | L3|on 73%
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_arqueiro_de_tendao:
+    arena: L3|off 70% | L3|on 70% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    forca: 0
+    sig: 0
+  mon_arraia_de_lodo:
+    arena: L3|off 70% | L3|on 72% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_aspirante_de_coral:
+    arena: L3|off 50% | L3|on 84%
+    corpo: 1
+    dano: 1
+    forca: 1
+    sig: 2
+  mon_avesso_de_oghma:
+    arena: L3|off 58% | L3|on 80% (arena final, 40 seeds)
+  mon_balsa_de_ultimo_dia:
+    arena: L3|off 48% | L3|on 59% (arena final, 40 seeds)
+    corpo: -2
+    dano: -2
+    forca: -1
+    sig: 0
+  mon_banhado_do_centro:
+    arena: L3|off 72% | L3|on 72% (arena final, 40 seeds)
+  mon_barata_das_costelas:
+    arena: L3|off 78% | L3|on 76% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_besouro_de_alavanca:
+    arena: L3|off 64% | L3|on 72% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_besouro_do_estalo:
+    arena: L3|off 75% | L3|on 86% (arena final, 40 seeds)
+  mon_bexiga_de_respiro:
+    arena: L3|off 84% | L3|on 76% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 0
+  mon_bigua_de_vidro:
+    arena: L3|off 78% | L3|on 78% (arena final, 40 seeds)
+  mon_boia_de_bracos:
+    arena: L3|off 60% | L3|on 76% (arena final, 40 seeds)
+    corpo: 2
+    dano: 1
+    sig: 0
+  mon_borda_que_anda:
+    arena: L5|off 75% | L5|on 41% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: -7
+  mon_bracos_de_tenaz:
+    arena: L3|off 60% | L3|on 72% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 2
+  mon_broca_de_costado:
+    arena: L3|off 67% | L3|on 81% (arena final, 40 seeds)
+  mon_bruxa_de_carcaca:
+    arena: L3|off 82% | L3|on 85% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 0
+  mon_bucho_de_praia:
+    arena: L3|off 64% | L3|on 78% (arena final, 40 seeds)
+    corpo: -1
+    dano: 0
+    sig: 0
+  mon_bugio_invertido:
+    arena: L3|off 57% | L3|on 80% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: 2
+  mon_cabeca_acima:
+    arena: L3|off 66% | L3|on 82% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_cabeleira_de_vidro:
+    arena: L3|off 72% | L3|on 84% (arena final, 40 seeds)
+  mon_cacador_sem_calor:
+    arena: L3|off 80% | L3|on 74% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_cacao_de_lastro:
+    arena: L5|off 70% | L5|on 61% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: 0
+  mon_cagado_de_geada:
+    arena: L3|off 61% | L3|on 84% (arena final, 40 seeds)
+    corpo: -3
+    dano: -2
+    forca: 1
+    sig: 2
+  mon_calado_das_guelras:
+    arena: L3|off 76% | L3|on 80% (arena final, 40 seeds)
+  mon_caldeira_de_peito:
+    arena: L3|off 53% | L3|on 56% (arena final, 40 seeds)
+    corpo: -3
+    dano: -3
+    forca: -1
+    sig: 0
+  mon_caldeireiro_de_oleo:
+    arena: L3|off 55% | L3|on 74% (arena final, 40 seeds)
+    corpo: 2
+    dano: 0
+    forca: 1
+    sig: 5
+  mon_camarao_faxineiro:
+    arena: L3|off 76% | L3|on 84% (arena final, 40 seeds)
+  mon_cardume_coagulado:
+    arena: L3|off 68% | L3|on 76% (arena final, 40 seeds)
+  mon_carranca_de_proa:
+    arena: L3|off 72% | L3|on 76% (arena final, 40 seeds)
+    corpo: -3
+    dano: -3
+    sig: 0
+  mon_carrapato_de_mamute:
+    arena: L3|off 70% | L3|on 72% (arena final, 40 seeds)
+  mon_carregador_de_ganchos:
+    arena: L3|off 55% | L3|on 82% (arena final, 40 seeds)
+    corpo: 5
+    dano: 5
+    forca: 4
+    sig: 7
+  mon_casaco_de_sanguessugas:
+    arena: L3|off 56% | L3|on 74% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_casco_de_costelas:
+    arena: L5|off 63% | L5|on 32% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: -7
+  mon_castor_de_estacas:
+    arena: L3|off 52% | L3|on 79% (arena final, 40 seeds)
+    corpo: -1
+    dano: -1
+    sig: 2
+  mon_cauda_de_atalaia:
+    arena: L3|off 76% | L3|on 77% (arena final, 40 seeds)
+    corpo: -1
+    dano: 0
+    sig: 0
+  mon_cauda_emendada:
+    arena: L3|off 62% | L3|on 72% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    forca: 0
+    sig: 1
+  mon_cavadeira_de_unhas:
+    arena: L3|off 71% | L3|on 74% (arena final, 40 seeds)
+  mon_cavador_de_funil:
+    arena: L3|off 46% | L3|on 88% (arena final, 40 seeds)
+    corpo: 4
+    dano: 2
+    forca: 3
+    sig: 7
+  mon_centopeia_da_torre_invertida:
+    arena: L3|off 68% | L3|on 82% (arena final, 40 seeds)
+  mon_chicote_de_fenda:
+    arena: L3|off 74% | L3|on 80% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_chifres_travados:
+    arena: L5|off 64% | L5|on 29% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: -7
+  mon_cisne_de_patina:
+    arena: L3|off 67% | L3|on 82%
+    corpo: 1
+    dano: 0
+    forca: 0
+    sig: 1
+  mon_coandu_de_rebrota:
+    arena: L3|off 70% | L3|on 80% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 1
+  mon_cobra_de_legua:
+    arena: L3|off 64% | L3|on 82%
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: 1
+  mon_cobra_de_sangria:
+    arena: L3|off 71% | L3|on 74% (arena final, 40 seeds)
+  mon_colecionador_de_poses:
+    arena: L5|off 63% | L5|on 48% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: 0
+  mon_comedor_de_alga:
+    arena: L3|off 58% | L3|on 80% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_compassado_do_trono:
+    arena: L3|off 60% | L3|on 66% (arena final, 40 seeds)
+    corpo: -2
+    dano: -2
+    forca: -1
+    sig: 0
+  mon_contrabandista_vitreo:
+    arena: L3|off 82% | L3|on 75% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_convidado_de_cera:
+    arena: L3|off 41% | L3|on 84% (arena final, 40 seeds)
+    corpo: 6
+    dano: 6
+    forca: 5
+    sig: 7
+  mon_cordao_de_medida:
+    arena: L3|off 69% | L3|on 80% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: 1
+  mon_costas_de_alicerce:
+    arena: L3|off 59% | L3|on 79% (arena final, 40 seeds)
+    corpo: -1
+    dano: 0
+    forca: 0
+    sig: 1
+  mon_costurado_de_lentes:
+    arena: L3|off 56% | L3|on 84% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: 3
+  mon_couro_pegado:
+    arena: L3|off 45% | L3|on 64% (arena final, 40 seeds)
+    corpo: -1
+    dano: -1
+    sig: 0
+  mon_craca_de_amarra:
+    arena: L3|off 65% | L3|on 52% (arena final, 40 seeds)
+    corpo: 3
+    dano: 0
+    forca: 2
+    sig: 4
+  mon_cupinzeiro_de_vidro:
+    arena: L3|off 74% | L3|on 75% (arena final, 40 seeds)
+    corpo: -1
+    dano: -1
+    forca: 0
+    sig: 0
+  mon_dedos_de_colheita:
+    arena: L3|off 57% | L3|on 59%
+    corpo: 0
+    dano: 2
+    forca: -2
+    sig: 0
+  mon_deitado_na_parede:
+    arena: L3|off 82% | L3|on 74% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_dentado_de_eras:
+    arena: L3|off 70% | L3|on 72% (arena final, 40 seeds)
+  mon_desafiante_rubro:
+    arena: L3|off 70% | L3|on 44% (arena final, 40 seeds)
+    corpo: -3
+    dano: -3
+    forca: -1
+    sig: -1
+  mon_desbotado_da_nevoa:
+    arena: L3|off 66% | L3|on 68%
+    corpo: 1
+    dano: 1
+    forca: 0
+    sig: 0
+  mon_desfiado_da_aurora:
+    arena: L3|off 80% | L3|on 76% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    forca: 0
+    sig: 0
+  mon_desfiado_de_vaelorn:
+    arena: L3|off 48% | L3|on 62% (arena final, 40 seeds)
+    corpo: -1
+    dano: -1
+    sig: 1
+  mon_despenseiro_de_espinhos:
+    arena: L3|off 75% | L3|on 81% (arena final, 40 seeds)
+    corpo: 2
+    dano: 1
+    sig: 0
+  mon_doador_inacabado:
+    arena: L3|off 59% | L3|on 61% (arena final, 40 seeds)
+  mon_doente_de_encomenda:
+    arena: L3|off 80% | L3|on 70% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: -1
+  mon_egua_de_costas:
+    arena: L3|off 50% | L3|on 64% (arena final, 40 seeds)
+    corpo: -2
+    dano: -1
+    sig: 0
+  mon_enegrecido_que_espera:
+    arena: L3|off 46% | L3|on 70% (arena final, 40 seeds)
+    corpo: -2
+    dano: -1
+    sig: 0
+  mon_enrolado_da_clareira:
+    arena: L3|off 59% | L3|on 76% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_ent_dormindo:
+    arena: L3|off 73% | L3|on 75% (arena final, 40 seeds)
+    corpo: 0
+    dano: -4
+    forca: 0
+    sig: 0
+  mon_enxertadora_da_uniao:
+    arena: L3|off 84% | L3|on 66% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: -2
+  mon_enxerto_da_fornalha:
+    arena: L3|off 78% | L3|on 72% (arena final, 40 seeds)
+  mon_ermitao_de_carcaca:
+    arena: L3|off 80% | L3|on 68% (arena final, 40 seeds)
+  mon_ermitao_de_elmo:
+    arena: L3|off 66% | L3|on 82% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 0
+  mon_escama_revirada:
+    arena: L3|off 70% | L3|on 84% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    sig: 0
+  mon_escavador_das_camaras:
+    arena: L5|off 66% | L5|on 30% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: -7
+  mon_escorpena_de_basalto:
+    arena: L3|off 70% | L3|on 60% (arena final, 40 seeds)
+  mon_escritura_rastejante:
+    arena: L3|off 66% | L3|on 49% (arena final, 40 seeds)
+    corpo: -2
+    dano: 2
+    forca: 1
+    sig: 4
+  mon_escuta_do_sinal:
+    arena: L3|off 42% | L3|on 88% (melhor de 6 rodadas)
+    corpo: 1
+    dano: 1
+    forca: 1
+    sig: 3
+  mon_esfolado_da_tempestade:
+    arena: L3|off 73% | L3|on 83% (arena final, 40 seeds)
+    corpo: 2
+    dano: 1
+    forca: 1
+    sig: 0
+  mon_esfolado_de_sal:
+    arena: L3|off 78% | L3|on 78% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_estaqueiro_afogado:
+    arena: L3|off 60% | L3|on 57% (arena final, 40 seeds)
+  mon_estivador_das_facas:
+    arena: L3|off 60% | L3|on 62% (arena final, 40 seeds)
+  mon_estrela_de_alavanca:
+    arena: L3|off 80% | L3|on 78% (arena final, 40 seeds)
+    corpo: 2
+    dano: 1
+    sig: 0
+  mon_fardo_de_espolio:
+    arena: L3|off 82% | L3|on 76% (arena final, 40 seeds)
+  mon_fechado_de_escapulas:
+    arena: L3|off 56% | L3|on 73% (arena final, 40 seeds)
+    corpo: -2
+    dano: -2
+    forca: -1
+    sig: 4
+  mon_feltro_do_ventre:
+    arena: L3|off 72% | L3|on 76% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_ferida_de_coral:
+    arena: L3|off 65% | L3|on 78% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    forca: 0
+    sig: 1
+  mon_ferreiro_chama_fria:
+    arena: L3|off 76% | L3|on 79% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: 0
+  mon_fervente_de_ferrugem:
+    arena: L3|off 58% | L3|on 68% (SPEC-395 pós-R1, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 0
+  mon_fervido_da_corrente:
+    arena: L3|off 60% | L3|on 74% (arena final, 40 seeds)
+    corpo: -1
+    dano: -1
+    sig: 2
+  mon_fila_de_grilhoes:
+    arena: L3|off 60% | L3|on 76% (arena final, 40 seeds)
+    corpo: -2
+    dano: 1
+  mon_fole_de_costela:
+    arena: L3|off 83% | L3|on 84% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+  mon_forrado_de_leviata:
+    arena: L3|off 52% | L3|on 62% (arena final, 40 seeds)
+    corpo: -2
+    dano: -1
+    sig: 0
+  mon_fucador_da_semente:
+    arena: L3|off 69% | L3|on 66% (arena final, 40 seeds)
+  mon_fundeiro_da_poca:
+    arena: L3|off 62% | L3|on 79% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 2
+  mon_furador_de_odres:
+    arena: L3|off 81% | L3|on 76% (arena final, 40 seeds)
+  mon_gancho_de_esfola:
+    arena: L3|off 56% | L3|on 81% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: 1
+  mon_gato_de_lastro:
+    arena: L3|off 52% | L3|on 66% (arena final, 40 seeds)
+  mon_geodo_da_praga:
+    arena: L3|off 74% | L3|on 61% (arena final, 40 seeds)
+    corpo: -1
+    dano: 0
+    sig: -1
+  mon_gralha_de_crematorio:
+    arena: L3|off 84% | L3|on 56% (arena final, 40 seeds)
+    corpo: 2
+    dano: -2
+    forca: -2
+    sig: 2
+  mon_guia_avesso:
+    arena: L3|off 60% | L3|on 74% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 2
+  mon_hospede_do_estomago:
+    arena: L5|off 42% | L5|on 32% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: 0
+  mon_isca_amarrada:
+    arena: L3|off 43% | L3|on 76% (arena final, 40 seeds)
+    corpo: 3
+    dano: 2
+    forca: 2
+    sig: 4
+  mon_jardineiro_de_tumores:
+    arena: L3|off 74% | L3|on 68% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    forca: 1
+    sig: 0
+  mon_jotun_cinza:
+    arena: L3|off 78% | L3|on 67% (arena final, 40 seeds)
+    dano: -2
+    sig: -2
+  mon_lacado_de_hifas:
+    arena: L3|off 71% | L3|on 72% (arena final, 40 seeds)
+  mon_lacrador_de_saidas:
+    arena: L3|off 56% | L3|on 82% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_ladrao_de_lume:
+    arena: L3|off 76% | L3|on 82% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 0
+  mon_lagarta_da_hora:
+    arena: L3|off 68% | L3|on 72% (arena final, 40 seeds)
+  mon_lagarta_de_visgo:
+    arena: L3|off 70% | L3|on 72% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_lagarta_sete_invernos:
+    arena: L3|off 72% | L3|on 81% (arena final, 40 seeds)
+    corpo: -3
+    dano: -2
+    sig: 0
+  mon_lagarto_de_mudas:
+    arena: L3|off 84% | L3|on 66% (arena final, 40 seeds)
+  mon_lagarto_espirrador:
+    arena: L3|off 84% | L3|on 71% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 0
+  mon_lambedor_de_aboboda:
+    arena: L3|off 67% | L3|on 81% (arena final, 40 seeds)
+  mon_lambedor_de_halito:
+    arena: L3|off 66% | L3|on 64% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    forca: 0
+    sig: 0
+  mon_lamelas_de_ferrugem:
+    arena: L3|off 68% | L3|on 78% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    forca: 0
+    sig: 0
+  mon_lascador_morno:
+    arena: L3|off 80% | L3|on 82% (arena final, 40 seeds)
+    corpo: 2
+    dano: 1
+    forca: 1
+    sig: 0
+  mon_lastreiro_da_cratera:
+    arena: L3|off 74% | L3|on 72% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_lavado_da_mare_vermelha:
+    arena: L3|off 71% | L3|on 78% (arena final, 40 seeds)
+    corpo: -1
+    dano: 0
+    sig: 0
+  mon_leitor_de_cativos:
+    arena: L3|off 62% | L3|on 62% (arena final, 40 seeds)
+    corpo: 5
+    dano: 4
+    forca: 4
+    sig: 0
+  mon_lencol_de_chamine:
+    arena: L3|off 60% | L3|on 60% (SPEC-395 pós-R1, 40 seeds)
+  mon_lesma_de_penacho:
+    arena: L3|off 80% | L3|on 66% (arena final, 40 seeds)
+  mon_levantado_de_rubi:
+    arena: L3|off 64% | L3|on 70% (arena final, 40 seeds)
+    corpo: -1
+    dano: 0
+    sig: 0
+  mon_lingua_de_lima:
+    arena: L3|off 64% | L3|on 82% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_lixado_da_fronteira:
+    arena: L3|off 80% | L3|on 74% (arena final, 40 seeds)
+    corpo: 2
+    dano: 1
+    sig: 0
+  mon_mandriao_dois_bicos:
+    arena: L3|off 66% | L3|on 61% (arena final, 40 seeds)
+  mon_mao_da_borda:
+    arena: L3|off 74% | L3|on 69% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_mao_de_oghma:
+    arena: L3|off 71% | L3|on 52% (arena final, 40 seeds)
+  mon_mao_estendida:
+    arena: L3|off 63% | L3|on 60% (arena final, 40 seeds)
+  mon_maos_de_cinzel:
+    arena: L3|off 60% | L3|on 77%
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_maos_no_rosto:
+    arena: L3|off 80% | L3|on 66% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: -1
+  mon_mapa_de_cicatrizes:
+    arena: L3|off 41% | L3|on 65% (arena final, 40 seeds)
+    corpo: 6
+    dano: 6
+    forca: -4
+    sig: 1
+  mon_marco_que_aponta:
+    arena: L3|off 57% | L3|on 78% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: 1
+  mon_mascador_de_nectar:
+    arena: L3|off 70% | L3|on 74% (arena final, 40 seeds)
+  mon_mascador_de_raiz:
+    arena: L3|off 66% | L3|on 63% (arena final, 40 seeds)
+    corpo: 5
+    dano: 4
+    forca: 4
+    sig: 0
+  mon_mastro_de_trofeus:
+    arena: L3|off 52% | L3|on 64% (arena final, 40 seeds)
+  mon_mastro_dos_ultimos:
+    arena: L5|off 78% | L5|on 52% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: -7
+  mon_montaria_cravada:
+    arena: L3|off 57% | L3|on 82% (arena final, 40 seeds)
+  mon_monte_de_alheios:
+    arena: L3|off 70% | L3|on 84% (arena final, 40 seeds)
+  mon_morcego_rasteiro:
+    arena: L3|off 76% | L3|on 81% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 0
+  mon_mula_de_lagrimas:
+    arena: L3|off 62% | L3|on 68% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 2
+  mon_musaranho_de_dente_vermelho:
+    arena: L3|off 74% | L3|on 60% (arena final, 40 seeds)
+  mon_nadador_de_pedra:
+    arena: L3|off 80% | L3|on 80% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_nadador_escaldado:
+    arena: L3|off 80% | L3|on 68% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    forca: 1
+    sig: 0
+  mon_ninho_dos_mergulhadores:
+    arena: L3|off 62% | L3|on 80% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_novelo_de_anzois:
+    arena: L3|off 66% | L3|on 83% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_oco_da_fronteira:
+    arena: L3|off 62% | L3|on 61% (arena final, 40 seeds)
+    corpo: -3
+    dano: -2
+    sig: 0
+  mon_odre_de_oleo:
+    arena: L3|off 56% | L3|on 53% (SPEC-395 pós-R1, 40 seeds); 40-119 = 37%/46%, exceção nominal
+    corpo: 2
+    dano: 1
+    sig: 1
+  mon_olho_de_petala:
+    arena: L3|off 68% | L3|on 74% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_onca_vazada:
+    arena: L3|off 62% | L3|on 70% (arena final, 40 seeds)
+  mon_ossada_de_pomes:
+    arena: L3|off 76% | L3|on 72% (arena final, 40 seeds)
+  mon_ourico_de_lajedo:
+    arena: L3|off 76% | L3|on 82%
+    corpo: 1
+    dano: 0
+    forca: 0
+    sig: 0
+  mon_parado_do_sopro:
+    arena: L3|off 78% | L3|on 76% (arena final, 40 seeds)
+  mon_parelha_carmesim:
+    arena: L3|off 56% | L3|on 60% (arena final, 40 seeds)
+    corpo: -2
+    dano: -2
+    sig: 0
+  mon_patinador_de_oleo:
+    arena: L3|off 76% | L3|on 82% (arena final, 40 seeds)
+  mon_pavio_da_lista:
+    arena: L3|off 55% | L3|on 64%
+    corpo: -2
+    dano: -2
+    forca: 0
+    sig: 0
+  mon_peito_de_geodo:
+    arena: L3|off 81% | L3|on 82% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_peito_de_sino:
+    arena: L3|off 67% | L3|on 83% (arena final, 40 seeds)
+  mon_penhorado_do_poco:
+    arena: L3|off 81% | L3|on 76% (arena final, 40 seeds)
+  mon_pernalta_das_colunas:
+    arena: L3|off 68% | L3|on 80% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_pernalta_do_conselho:
+    arena: L3|off 62% | L3|on 62% (arena final, 40 seeds)
+  mon_pescador_de_lanterna:
+    arena: L3|off 78% | L3|on 84% (arena final, 40 seeds)
+  mon_peso_dos_vencidos:
+    arena: L5|off 66% | L5|on 26% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: -7
+  mon_petrel_de_papo_cheio:
+    arena: L3|off 72% | L3|on 76% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_picanco_de_espinheiro:
+    arena: L3|off 72% | L3|on 66% (arena final, 40 seeds)
+  mon_pisador_do_salao:
+    arena: L3|off 51% | L3|on 62% (arena final, 40 seeds)
+    corpo: -3
+    dano: -3
+    forca: -1
+    sig: 1
+  mon_podador_do_ciclo:
+    arena: L3|off 75% | L3|on 80% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: -1
+  mon_porca_da_queda:
+    arena: L3|off 70% | L3|on 74%
+    corpo: -2
+    dano: -2
+    forca: -1
+    sig: 0
+  mon_portao_que_morde:
+    arena: L3|off 61% | L3|on 63% (arena final, 40 seeds)
+    corpo: -2
+    dano: -1
+  mon_preguica_de_pomar:
+    arena: L3|off 57% | L3|on 72% (arena final, 40 seeds)
+    corpo: -3
+    dano: -3
+    forca: -3
+    sig: 5
+  mon_pressa_da_seiva:
+    arena: L3|off 71% | L3|on 58% (arena final, 40 seeds)
+  mon_profanador_cravejado:
+    arena: L3|off 82% | L3|on 82% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 0
+  mon_provador_da_borda:
+    arena: L3|off 82% | L3|on 85% (arena final, 40 seeds)
+    corpo: 2
+    dano: 1
+    forca: 1
+    sig: 0
+  mon_provador_de_cores:
+    arena: L3|off 82% | L3|on 78% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_puxado_do_oeste:
+    arena: L3|off 41% | L3|on 84% (arena final, 40 seeds)
+    corpo: 6
+    dano: 6
+    forca: 5
+    sig: 7
+  mon_quebrado_de_vitrine:
+    arena: L3|off 58% | L3|on 66% (arena final, 40 seeds)
+    corpo: 5
+    dano: 4
+    forca: 4
+    sig: 0
+  mon_queimado_de_breu:
+    arena: L3|off 62% | L3|on 76% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_queimado_de_frio:
+    arena: L3|off 56% | L3|on 74% (arena final, 40 seeds)
+    corpo: -1
+    dano: 1
+    sig: 2
+  mon_quilhado_do_estaleiro:
+    arena: L3|off 70% | L3|on 65% (arena final, 40 seeds)
+  mon_quimera_cristal:
+    arena: L3|off 79% | L3|on 71% (arena final, 40 seeds)
+    dano: 1
+    sig: 0
+  mon_rancor_de_pincas:
+    arena: L3|off 72% | L3|on 77% (arena final, 40 seeds)
+    corpo: -3
+    dano: -2
+    sig: 0
+  mon_raspadeira_de_barbatana:
+    arena: L3|off 81% | L3|on 76% (arena final, 40 seeds)
+  mon_recusado_do_ciclo:
+    arena: L3|off 46% | L3|on 61% (arena final, 40 seeds)
+    corpo: -2
+    dano: -1
+    sig: 0
+  mon_regaco_da_margem:
+    arena: L3|off 66% | L3|on 64% (arena final, 40 seeds)
+  mon_relicario_de_osso:
+    arena: L3|off 71% | L3|on 79% (arena final, 40 seeds)
+    corpo: -1
+    dano: 0
+  mon_remendado_de_osso:
+    arena: L3|off 63% | L3|on 82% (arena final, 40 seeds)
+  mon_remo_acorrentado:
+    arena: L3|off 67% | L3|on 58% (arena final, 40 seeds)
+  mon_remora_de_conves:
+    arena: L3|off 80% | L3|on 73% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    forca: 0
+    sig: 0
+  mon_ressecado_da_travessia:
+    arena: L3|off 74% | L3|on 70% (arena final, 40 seeds)
+  mon_retalho_das_duas_cidades:
+    arena: L3|off 70% | L3|on 82% (arena final, 40 seeds)
+  mon_roda_de_mandibulas:
+    arena: L5|off 65% | L5|on 54% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: -3
+  mon_rodante_de_espinhos:
+    arena: L3|off 70% | L3|on 64% (arena final, 40 seeds)
+  mon_rolador_de_escarpa:
+    arena: L3|off 84% | L3|on 79% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_romeiro_de_ambar:
+    arena: L3|off 57% | L3|on 80% (arena final, 40 seeds)
+    corpo: 2
+    dano: 1
+    forca: 1
+    sig: 4
+  mon_rosario_de_vertebras:
+    arena: L3|off 68% | L3|on 84% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+  mon_saltador_de_palafita:
+    arena: L3|off 75% | L3|on 80% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    sig: 0
+  mon_saltador_de_poca:
+    arena: L3|off 66% | L3|on 80% (arena final, 40 seeds)
+  mon_saltao_de_galeria:
+    arena: L3|off 77% | L3|on 74% (arena final, 40 seeds)
+  mon_sangrado_da_clinica:
+    arena: L3|off 66% | L3|on 84% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+  mon_sangria_de_aluguel:
+    arena: L3|off 53% | L3|on 63% (arena final, 40 seeds)
+  mon_sino_de_enlace:
+    arena: L3|off 62% | L3|on 75% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 2
+  mon_sorvedouro_do_codigo:
+    arena: L3|off 59% | L3|on 59%
+    corpo: -5
+    dano: 4
+    forca: 4
+    sig: 2
+  mon_subida_de_cracas:
+    arena: L3|off 58% | L3|on 81% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: 1
+  mon_surdo_da_colmeia:
+    arena: L3|off 58% | L3|on 76% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 2
+    sig: 2
+  mon_tamandua_de_ponte:
+    arena: L3|off 66% | L3|on 77% (arena final, 40 seeds)
+  mon_tambor_do_ossario:
+    arena: L3|off 74% | L3|on 84% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 2
+  mon_tampao_da_camara:
+    arena: L3|off 57% | L3|on 77% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 2
+  mon_tatu_de_navalha:
+    arena: L3|off 78% | L3|on 74% (arena final, 40 seeds)
+  mon_tatuzinho_de_afogado:
+    arena: L3|off 68% | L3|on 80% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_tesoura_de_cordada:
+    arena: L3|off 82% | L3|on 78% (arena final, 40 seeds)
+  mon_ticao_do_juramento:
+    arena: L3|off 42% | L3|on 77% (arena final, 40 seeds)
+    corpo: 3
+    dano: 2
+    forca: 2
+    sig: 4
+  mon_toldo_das_clareiras:
+    arena: L5|off 47% | L5|on 32% (arena final, 40 seeds)
+    corpo: -7
+    dano: -7
+    forca: -7
+    sig: 0
+  mon_torcido_da_rinha:
+    arena: L3|off 34% | L3|on 86% (arena final, 40 seeds)
+    corpo: 7
+    dano: 7
+    forca: 6
+    sig: 7
+  mon_touro_de_banha:
+    arena: L3|off 60% | L3|on 83% (arena final, 40 seeds)
+    corpo: 1
+    dano: 0
+    sig: 1
+  mon_traca_do_sino_mudo:
+    arena: L3|off 72% | L3|on 85% (arena final, 40 seeds)
+  mon_trepano_de_borda:
+    arena: L3|off 70% | L3|on 78% (arena final, 40 seeds)
+  mon_tripeiro_de_fundo:
+    arena: L3|off 72% | L3|on 82% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
+  mon_tritao_de_sobra:
+    arena: L3|off 58% | L3|on 76% (arena final, 40 seeds)
+    corpo: -3
+    dano: -3
+    forca: -2
+    sig: 4
+  mon_tropel_sem_saida:
+    arena: L3|off 55% | L3|on 69% (arena final, 40 seeds)
+    corpo: -2
+    dano: -2
+    sig: 1
+  mon_turno_vencido:
+    arena: L3|off 52% | L3|on 76% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 2
+  mon_turu_de_casco:
+    arena: L3|off 55% | L3|on 82%
+    corpo: 3
+    dano: 3
+    forca: 2
+    sig: 2
+  mon_varano_vidrado:
+    arena: L3|off 70% | L3|on 84% (arena final, 40 seeds)
+  mon_vazado_da_mare:
+    arena: L3|off 60% | L3|on 75% (arena final, 40 seeds)
+  mon_vedado_de_piche:
+    arena: L3|off 63% | L3|on 65% (arena final, 40 seeds)
+  mon_vela_sem_barco:
+    arena: L3|off 65% | L3|on 67% (SPEC-373 passo manual)
+    corpo: 1
+    dano: 1
+    forca: 1
+    sig: 3
+  mon_ventre_partilhado:
+    arena: L3|off 60% | L3|on 74% (arena final, 40 seeds)
+  mon_vertedor_de_areia:
+    arena: L3|off 57% | L3|on 54% (arena final, 40 seeds)
+  mon_vespa_coveira:
+    arena: L3|off 66% | L3|on 63% (arena final, 40 seeds)
+  mon_vespa_oleira:
+    arena: L3|off 77% | L3|on 82% (arena final, 40 seeds)
+    corpo: 2
+    dano: 1
+    sig: 0
+  mon_vestido_de_gafanhotos:
+    arena: L3|off 69% | L3|on 61% (arena final, 40 seeds)
+  mon_veu_faminto:
+    arena: L3|off 58% | L3|on 72% (arena final, 40 seeds)
+    corpo: 2
+    dano: 2
+    forca: 1
+    sig: 0
+  mon_vidrado_do_morro:
+    arena: L3|off 51% | L3|on 62% (arena final, 40 seeds)
+    corpo: -3
+    dano: -3
+    sig: 1
+  mon_vigia_de_cor_errada:
+    arena: L3|off 46% | L3|on 91% (arena final, 40 seeds)
+    corpo: 4
+    dano: 4
+    forca: 3
+    sig: 5
+  mon_vira_costas_da_praca:
+    arena: L3|off 80% | L3|on 55% (arena final, 40 seeds)
+  mon_virado_do_avesso:
+    arena: L3|off 62% | L3|on 68% (arena final, 40 seeds)
+    corpo: -1
+    dano: -1
+    sig: 0
+  mon_viuvo_do_esporo:
+    arena: L3|off 79% | L3|on 78% (arena final, 40 seeds)
+    corpo: 1
+    dano: 1
+    sig: 0
