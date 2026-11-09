@@ -17,6 +17,10 @@
       "spec": "SPEC-394",
       "motivo": "derivada da 387 reprovada (F) na base pos-373; dials c1 d1 f0 s2 -> c1 d1 f1 s3, excecao registrada no relatorio"
     },
+    "mon_odre_de_oleo": {
+      "spec": "SPEC-401",
+      "motivo": "abissal deixou de fugir (SPEC-395, ficha sem dial) e caiu para 37/46 em 40-119; recalibrada pelos dials (c2 d1 f0 s1 -> c1 d1 f0 s1), 56/58 em 0-119"
+    },
     "mon_pavio_da_lista": {
       "spec": "SPEC-395",
       "motivo": "resistance absoluta deixou de fugir; recalibrada pelos dials (c1 d1 f1 s0 -> c-2 d-2 f0 s0)"
@@ -36,10 +40,6 @@
       "motivo": "action_key da prioridade absoluta deixou de ser flee pela correcao R1 (R3); sem dial mudado"
     },
     "mon_lencol_de_chamine": {
-      "spec": "SPEC-395",
-      "motivo": "action_key da prioridade absoluta deixou de ser flee pela correcao R1 (R3); sem dial mudado"
-    },
-    "mon_odre_de_oleo": {
       "spec": "SPEC-395",
       "motivo": "action_key da prioridade absoluta deixou de ser flee pela correcao R1 (R3); sem dial mudado"
     },

@@ -14548,7 +14548,7 @@
     "attributes": {
       "str": 12,
       "dex": 12,
-      "con": 14,
+      "con": 12,
       "int": 10,
       "wis": 10,
       "cha": 10
@@ -14580,16 +14580,16 @@
     "virtudes": {
       "forca": 2,
       "agilidade": 2,
-      "corpo": 3,
+      "corpo": 2,
       "mente": 1,
       "carisma": 1
     },
-    "max_vitalidade": 12,
-    "vitalidade": 12,
+    "max_vitalidade": 10,
+    "vitalidade": 10,
     "ferimento_espacos": {
-      "leve": 4,
+      "leve": 3,
       "grave": 2,
-      "critico": 2
+      "critico": 1
     },
     "ferimentos": {
       "leve": [],
@@ -23317,7 +23317,7 @@
     "attributes": {
       "str": 10,
       "dex": 12,
-      "con": 16,
+      "con": 18,
       "int": 12,
       "wis": 10,
       "cha": 10
@@ -23326,7 +23326,7 @@
       {
         "name": "Gancho de Mola",
         "type": "ranged",
-        "damage": "1d8"
+        "damage": "1d6"
       }
     ],
     "abilities": [
@@ -23349,16 +23349,16 @@
     "virtudes": {
       "forca": 1,
       "agilidade": 2,
-      "corpo": 4,
+      "corpo": 5,
       "mente": 2,
       "carisma": 1
     },
-    "max_vitalidade": 14,
-    "vitalidade": 14,
+    "max_vitalidade": 16,
+    "vitalidade": 16,
     "ferimento_espacos": {
-      "leve": 4,
+      "leve": 5,
       "grave": 3,
-      "critico": 2
+      "critico": 3
     },
     "ferimentos": {
       "leve": [],
@@ -35167,9 +35167,9 @@
     "categoria": "lacaio",
     "arquetipo": "covarde_oportunista",
     "attributes": {
-      "str": 14,
+      "str": 12,
       "dex": 12,
-      "con": 14,
+      "con": 18,
       "int": 12,
       "wis": 10,
       "cha": 12
@@ -35199,18 +35199,18 @@
       "cri_escuta_do_sinal_chamado_sob_o_gelo"
     ],
     "virtudes": {
-      "forca": 3,
+      "forca": 2,
       "agilidade": 2,
-      "corpo": 3,
+      "corpo": 5,
       "mente": 2,
       "carisma": 2
     },
-    "max_vitalidade": 12,
-    "vitalidade": 12,
+    "max_vitalidade": 16,
+    "vitalidade": 16,
     "ferimento_espacos": {
-      "leve": 4,
-      "grave": 2,
-      "critico": 2
+      "leve": 5,
+      "grave": 3,
+      "critico": 3
     },
     "ferimentos": {
       "leve": [],

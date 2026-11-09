@@ -194,11 +194,11 @@ ajustes:
   mon_ariete_de_medula:
     arena: L3|off 63% | L3|on 60% (arena final, 40 seeds)
   mon_armador_de_fosso:
-    arena: L3|off 50% | L3|on 86% (melhor de 6 rodadas)
-    corpo: 2
-    dano: 2
+    arena: L3|off 54% | L3|on 84%
+    corpo: 3
+    dano: 1
     forca: 0
-    sig: 4
+    sig: 0
   mon_arpeu_de_bracos:
     arena: L3|off 59% | L3|on 73%
     corpo: 2
@@ -579,10 +579,10 @@ ajustes:
     forca: 1
     sig: 4
   mon_escuta_do_sinal:
-    arena: L3|off 42% | L3|on 88% (melhor de 6 rodadas)
-    corpo: 1
-    dano: 1
-    forca: 1
+    arena: L3|off 48% | L3|on 83%
+    corpo: 3
+    dano: 0
+    forca: 0
     sig: 3
   mon_esfolado_da_tempestade:
     arena: L3|off 73% | L3|on 83% (arena final, 40 seeds)
@@ -887,8 +887,8 @@ ajustes:
     dano: -2
     sig: 0
   mon_odre_de_oleo:
-    arena: L3|off 56% | L3|on 53% (SPEC-395 pós-R1, 40 seeds); 40-119 = 37%/46%, exceção nominal
-    corpo: 2
+    arena: L3|off 56% | L3|on 58% (SPEC-401, seeds 0-119)
+    corpo: 1
     dano: 1
     sig: 1
   mon_olho_de_petala:

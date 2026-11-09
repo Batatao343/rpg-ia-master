@@ -1146,7 +1146,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 6,
+        "dano_base": 5,
         "dano_tipo": "perfurante"
       },
       "descricao": "O gancho costurado ao toco dispara como mola.",
@@ -1166,14 +1166,14 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "marcial",
-        "dano_base": 9,
+        "dano_base": 5,
         "dano_tipo": "perfurante"
       },
       "efeitos": [
         {
           "kind": "dano",
           "categoria_arma": "marcial",
-          "dano_base": 9,
+          "dano_base": 5,
           "dano_tipo": "perfurante"
         },
         {
@@ -1187,7 +1187,7 @@
           "valor": 1
         }
       ],
-      "custo_folego": 3,
+      "custo_folego": 2,
       "descricao": "Arma uma trava anã no chão e quem se mexe na direção dele a dispara.",
       "oculta": true
     },

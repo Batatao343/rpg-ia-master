@@ -730,7 +730,7 @@
       "efeito": {
         "kind": "dano",
         "categoria_arma": "leve",
-        "dano_base": 4,
+        "dano_base": 3,
         "dano_tipo": "impactante"
       },
       "descricao": "A corneta do crânio sopra um zumbido que dói nos dentes.",

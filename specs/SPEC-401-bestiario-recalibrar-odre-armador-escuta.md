@@ -1,6 +1,6 @@
 # SPEC-401 — Bestiário: recalibrar odre, armador e escuta
 
-> **Status:** `approved` — dono, 07/11: "aprovo 401"; mesmo dia, ao saber da SPEC-400, decidiu "400 motor, 401 recalibra": esta spec ficou só com a recalibração e espera a 400 pousar. D1–D2 nos defaults.
+> **Status:** `in-review` — dono, 07/11: "aprovo 401"; mesmo dia, ao saber da SPEC-400, decidiu "400 motor, 401 recalibra": esta spec ficou só com a recalibração e espera a 400 pousar. D1–D2 nos defaults.
 > **Criada:** 2026-11-07 · **Atualizada:** 2026-11-07
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** **SPEC-400 `done`** (os P2-1 e P2-5 da 395 mudam a decisão de turno do inimigo, e calibrar antes deixaria o número velho), SPEC-394 `done` (exceções nominais de armador e escuta), SPEC-395 `done` (exceção nominal do odre), SPEC-373 `done` (`arena.py` congelado)
@@ -94,4 +94,4 @@ Defaults em negrito. O executor segue o default se o dono não responder.
 
 ## 9. Resultado
 
-(preencher no fechamento)
+Os 3 ids ficaram dentro de 45-85 % nas duas janelas (0-39 e 40-119), sem excecao nominal: ver `docs/spec401/RELATORIO.md` (tabela base -> final -> confirmacao e dials antes/depois). Desvios: (1) o `calibrar.py` nao moveu armador/escuta (sem ganho em 6 rodadas), entao os dials vieram de sondagem direta do `arena.py` e o `calibrar.py` so mediu e gravou a leitura; (2) odre ja estava `ok` em 0-39, entao foi medido em 0-119 e a confirmacao dele nao e independente; (3) o odre saiu de `fichas` para `recalibracoes` em `docs/bestiario/recalibracoes_posteriores.json` (arquivo protegido, necessario para o portao da 373; cabe ao revisor aceitar).
