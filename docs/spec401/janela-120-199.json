@@ -1,0 +1,52 @@
+{
+ "regiao": "nova_arcadia",
+ "seeds": 80,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 51.6,
+ "criaturas": {
+  "mon_odre_de_oleo": {
+   "nome": "Odre de Óleo",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.585,
+    "L3|on": 0.562
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_armador_de_fosso": {
+   "nome": "Armador de Fosso",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.47,
+    "L3|on": 0.863
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 86% fora de 45-85%"
+   ]
+  },
+  "mon_escuta_do_sinal": {
+   "nome": "Escuta do Sinal",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.403,
+    "L3|on": 0.815
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 40% fora de 45-85%"
+   ]
+  }
+ },
+ "seed_inicio": 120
+}

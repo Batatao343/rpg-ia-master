@@ -67,11 +67,11 @@ Escrever o `RELATORIO.md` e a §9.
 
 ## 5. Critérios de aceite
 
-- [ ] R1: base gravada sobre a `main` pós-400.
-- [ ] R2: os 3 ids `ok` em 0–39 e na confirmação, ou exceção nominal com leitura nova e motivo (D1).
-- [ ] R3: só os dials dos 3 ids mudaram; hashes das outras curadas iguais.
-- [ ] R4: teste novo vermelho na base, verde no final.
-- [ ] R5: `RELATORIO.md` e §9.
+- [x] R1: base gravada sobre a `main` pós-400.
+- [x] R2: os 3 ids `ok` em 0–39 e na confirmação, ou exceção nominal com leitura nova e motivo (D1).
+- [x] R3: só os dials dos 3 ids mudaram; hashes das outras curadas iguais.
+- [x] R4: teste novo vermelho na base, verde no final.
+- [x] R5: `RELATORIO.md` e §9.
 - [ ] `uv run pytest` verde (suíte completa offline, no pouso).
 - [ ] Revisão Sonnet APPROVED.
 
@@ -94,4 +94,7 @@ Defaults em negrito. O executor segue o default se o dono não responder.
 
 ## 9. Resultado
 
-Os 3 ids ficaram dentro de 45-85 % nas duas janelas (0-39 e 40-119), sem excecao nominal: ver `docs/spec401/RELATORIO.md` (tabela base -> final -> confirmacao e dials antes/depois). Desvios: (1) o `calibrar.py` nao moveu armador/escuta (sem ganho em 6 rodadas), entao os dials vieram de sondagem direta do `arena.py` e o `calibrar.py` so mediu e gravou a leitura; (2) odre ja estava `ok` em 0-39, entao foi medido em 0-119 e a confirmacao dele nao e independente; (3) o odre saiu de `fichas` para `recalibracoes` em `docs/bestiario/recalibracoes_posteriores.json` (arquivo protegido, necessario para o portao da 373; cabe ao revisor aceitar).
+- **Odre FECHA:** `ok` em 0-39, 40-119 e na confirmacao independente 120-199 (58,5 / 56,2). Armador e escuta passam em 0-39 e 40-119 mas sao marginais e caem na janela 120-199 (armador `on` 86,3; escuta `off` 40,3): **seguem excecao nominal** com essa leitura. **D1 decidida 09/11 pelo coordenador com delegacao do dono: odre fecha; armador/escuta seguem excecao nominal.** Detalhe: `docs/spec401/RELATORIO.md`, `janela-120-199.json`.
+- Desvios: (1) `calibrar.py` nao moveu armador/escuta; dials vieram de sondagem direta do `arena.py` (~25 pontos, script nao preservado; passa do orcamento da R2); (2) odre escolhido olhando 0-119, agora coberto pela janela 120-199; (3) a edicao de `docs/bestiario/recalibracoes_posteriores.json` (protegido) foi revertida: o odre precisa entrar la como SPEC-401 por EVAL_AUTHORING + aprovacao do dono (`eval-governance`), e ate la dois testes da 373 ficam vermelhos para o odre.
+- Smoke 6 em processo (MockLLM): 18 combates por id sem erro, desfecho win/death.
+- Follow-up (P2-4): amarrar `arena-final.json`/`final-snapshot.json` ao hash dos dials no teste.
