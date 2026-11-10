@@ -23,6 +23,7 @@ certifi==2026.10.23
     # via
     #   httpcore
     #   httpx
+    #   langchain-core
     #   langchain-openai
     #   requests
 cffi==2.1.1 ; platform_python_implementation != 'PyPy'
@@ -105,7 +106,7 @@ langchain-classic==1.0.8
     # via langchain-community
 langchain-community==0.4.2
     # via rpg-ia-master
-langchain-core==1.7.0
+langchain-core==1.7.6
     # via
     #   langchain-classic
     #   langchain-community
@@ -119,7 +120,7 @@ langchain-core==1.7.0
     #   rpg-ia-master
 langchain-google-genai==3.2.0
     # via rpg-ia-master
-langchain-openai==1.7.3
+langchain-openai==1.7.4
     # via rpg-ia-master
 langchain-protocol==0.0.20
     # via
@@ -129,7 +130,7 @@ langchain-text-splitters==1.1.3
     # via
     #   langchain-classic
     #   rpg-ia-master
-langgraph==1.2.18
+langgraph==1.2.20
     # via rpg-ia-master
 langgraph-checkpoint==4.3.1
     # via
@@ -198,7 +199,7 @@ pyasn1-modules==0.4.2
     # via google-auth
 pycparser==3.12 ; implementation_name != 'PyPy' and platform_python_implementation != 'PyPy'
     # via cffi
-pydantic==2.14.1
+pydantic==2.14.3
     # via
     #   fastapi
     #   langchain-classic
@@ -209,7 +210,7 @@ pydantic==2.14.1
     #   openai
     #   pydantic-settings
     #   rpg-ia-master
-pydantic-core==2.50.1
+pydantic-core==2.50.4
     # via pydantic
 pydantic-settings==2.16.2
     # via langchain-community

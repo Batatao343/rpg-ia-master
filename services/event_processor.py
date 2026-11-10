@@ -125,6 +125,10 @@ def _canonicalize_proposal(
     return {**proposal, "detail": detail, "payload": payload}
 
 
+def _is_occupation(payload: dict) -> bool:
+    return payload.get("world_kind") == "libertar_ocupado"
+
+
 def apply_event(event: dict, projection: dict) -> dict:
     """Efeito DIRETO de um GameEvent na projection. Puro: não muta o argumento."""
     proj = copy.deepcopy(projection or {})
@@ -252,24 +256,23 @@ def apply_event(event: dict, projection: dict) -> dict:
             if frozenset((r.get("a"), r.get("b"))) != pair
         ]
 
-    elif etype in ("world_quest_relief", "quest_failed"):
-        # SPEC-305 R13/R17: marcas no estado de local (a projection segue sendo a fonte da
-        # verdade). Liberacao eleva a chance de retomada; falha de libertar consolida.
-        if payload.get("world_kind") == "libertar_ocupado":
-            row = (proj.get("location_states") or {}).get(payload.get("location_id") or target)
-            if isinstance(row, dict) and row.get("state") == "ocupado":
-                day = int(payload.get("day", turn) or 0)
-                if etype == "world_quest_relief":
-                    row["liberation_day"] = day
-                else:
-                    from services import world_pressures as _wp
+    # SPEC-305 R13/R17: marcas no estado de local (a projection segue sendo a fonte da
+    # verdade). Liberacao eleva a chance de retomada; falha de libertar consolida.
+    elif etype in ("world_quest_relief", "quest_failed") and _is_occupation(payload):
+        row = (proj.get("location_states") or {}).get(payload.get("location_id") or target)
+        if isinstance(row, dict) and row.get("state") == "ocupado":
+            day = int(payload.get("day", turn) or 0)
+            if etype == "world_quest_relief":
+                row["liberation_day"] = day
+            else:
+                from services import world_pressures as _wp
 
-                    consolidation = int(
-                        _wp._load_json("world_quests.json")["constants"][
-                            "OCCUPATION_CONSOLIDATION_DAYS"
-                        ]
-                    )
-                    row["consolidated_until_day"] = day + consolidation
+                consolidation = int(
+                    _wp._load_json("world_quests.json")["constants"][
+                        "OCCUPATION_CONSOLIDATION_DAYS"
+                    ]
+                )
+                row["consolidated_until_day"] = day + consolidation
 
     # quest_completed: nada na projection — o registro no event_log já é o efeito.
 

@@ -40,9 +40,9 @@ Majors (uuid-utils 1.x, langchain-google-genai 4.x, Playwright 1.65), código de
 
 ## 4. Critérios de aceite
 
-- [ ] Lock + `requirements.txt` coerentes (`uv lock --check`; o teste de reexport, se houver, verde).
-- [ ] `ruff check .` limpo.
-- [ ] Web: test/lint/typecheck/build verdes; `@playwright/test` continua `^1.64.1`.
+- [x] Lock + `requirements.txt` coerentes (`uv lock --check`; o teste de reexport, se houver, verde).
+- [x] `ruff check .` limpo.
+- [x] Web: test/lint/typecheck/build verdes; `@playwright/test` continua `^1.64.1`.
 - [ ] Suíte completa verde no pouso (coordenador).
 - [ ] PRs #71, #72, #67 e #65 fechados com comentário.
 
@@ -51,3 +51,10 @@ Majors (uuid-utils 1.x, langchain-google-genai 4.x, Playwright 1.65), código de
 - **D-403-1** — Playwright 1.65 adiado: o pin é de eval (`test_eval_frontend.py:142`) e o snapshot visual muda.
 - **D-403-2** — #65 adiado: major do provider do Gemini, só com spec e smoke real (o MockLLM esconde bug de mapeamento).
 - **D-403-3** — #67 adiado com o gatilho da 399 (#49).
+
+## 6. Execução (10/11, executor)
+
+- **pip (R1):** `uv lock --upgrade-package` de 14 pacotes (o lock da main já estava à frente do #72 nos demais): boto3 1.43.126, botocore 1.43.127, hypothesis-graphql 0.13.6, jsonschema-rs 0.60.3, langchain-anthropic 1.7.10, langchain-core 1.7.6, langchain-openai 1.7.4, langgraph 1.2.20, playwright (py) 1.64.1, pydantic 2.14.3, pydantic-core 2.50.4, pytest 9.2.0, ruff 0.17.4, schemathesis 4.33.1. Reexport com o comando de `requirements.txt:2` (5 pins mudaram: langchain-core, langchain-openai, langgraph, pydantic, pydantic-core). `uv lock --check` ok. Nenhum major.
+- **SIM102 (R2):** 3 `elif`+`if` combinados; em `event_processor.apply_event` a condição foi para o helper `_is_occupation` para a função não crescer (gate de tamanho). `ruff check .` e `format --check` limpos.
+- **npm (R3):** @capacitor/android, core e cli 8.6.0 (exatos), @vitejs/plugin-react 6.2.1 (`^6.2.1`; o `npm install` livre dava 6.3.0, fixado na versão do #71), globals 17.14.0. `@playwright/test` omitido (D-403-1), fica `^1.64.1`.
+- **Testes (R4):** web `npm test` 317 ok, lint, typecheck e build verdes. pytest -n 2: test_eval_baseline, test_eval_frontend, test_spec192_vercel_packaging, test_api_fuzz_harness, spec305*, rumor 313/360/372 e todos os que citam event_processor/rumor_adoption/world_quest_relief: verdes. Suíte completa e fechamento dos PRs ficam com o coordenador.

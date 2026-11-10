@@ -193,9 +193,8 @@ def _canon_reason(state: dict, claim: dict, day: int) -> str:
         entry = (gamedata.BESTIARY or {}).get(eid) or {}
         if not entry or is_boss(entry):
             return "canon"
-    elif kind == "npc_em_local":
-        if _npc_unavailable(state, eid):
-            return "canon"
+    elif kind == "npc_em_local" and _npc_unavailable(state, eid):
+        return "canon"
     return ""
 
 
@@ -346,9 +345,8 @@ def truth_p(state: dict, claim: Any, day: int | None = None) -> float:
             region, gamedata.BESTIARY or {}, (state or {}).get("bestiary_knowledge"), turn
         ):
             return 0.0
-    elif kind == "npc_em_local":
-        if not _npc_arrives_in_ttl(state, eid, loc_id, d):
-            return 0.0
+    elif kind == "npc_em_local" and not _npc_arrives_in_ttl(state, eid, loc_id, d):
+        return 0.0
     return max(0.0, min(1.0, p))
 
 
