@@ -322,3 +322,44 @@ e que nenhum commit de produto mexe nesses caminhos.
 M8 (prosa do `sempre`) não foi refeita: a guarda não mudou o hash, só acrescentou a exigência.
 Os arquivos não são protegidos (`evals/protected-paths.txt` não os lista); nada de isenção de ruff
 mudou.
+
+## 14. Adendo (10/11): entradas da SPEC-401 no registro de posteriores (P1-1 do Sol, `handoffs/SPEC-401-sol-review.md`)
+
+Autor de eval independente: não otimizou o produto da 401. A edição revertida pelo executor
+(`fc3ac772`) foi refeita aqui, em commit próprio.
+
+- **Acrescentadas/atualizadas** em `docs/bestiario/recalibracoes_posteriores.json`, `spec: SPEC-401`:
+  - `mon_odre_de_oleo`: sai de `fichas` (395, sem dial) e entra em `recalibracoes`. Dials
+    `c2 d1 s1 -> c1 d1 s1`. Fica **fechado**: 56/58 em 0–119 e 58,5/56,2 em 120–199. A janela
+    120–199 é a confirmação independente (`docs/spec401/janela-120-199.json`).
+  - `mon_armador_de_fosso` (`c2 d2 f0 s4 -> c3 d1 f0 s0`, 54/84 em 0–119) e `mon_escuta_do_sinal`
+    (`c1 d1 f1 s3 -> c3 d0 f0 s3`, 48/83 em 0–119): **recalibrados, ainda exceção nominal**. São
+    marginais e caem na janela 120–199 (armador `L3/on` 86,3; escuta `L3/off` 40,3, em
+    `docs/spec401/janela-120-199.json`). Decisão do coordenador por delegação do dono (09/11 e
+    10/11): os dials novos ficam, porque são melhores que os da main (armador 50/86, escuta 42/88).
+    As entradas da 394 dos dois foram substituídas, e o histórico da 394 está no `motivo`.
+- **Prova:** as três ids constam em `docs/spec401/RELATORIO.md` (a guarda `avaliar_posteriores`
+  passa). Nenhuma está em `recalibradas.json`. `git diff main...HEAD -- data/bestiario/mecanica/_ajustes.yaml`
+  muda dial só dessas três. `fichas` fica com 3 ids (portão, fervente, lençol), nenhuma com dial mudado.
+- **Perda M7/M9 do odre ao sair de `fichas`.** Em `recalibracoes`, o odre pula o snapshot R2 inteiro.
+  - **M7 (HP): aceita.** Dial muda HP e dano de propósito, então não existe hash fixo que valha.
+    Com isso o odre fica no mesmo regime das outras ids que já estavam em `recalibracoes` desde a 394/395.
+    O valor de jogo fica guardado pelos artefatos de arena da 401 (`test_spec401_calibragem`).
+    O vínculo artefato↔dial é o P2-4, follow-up do coordenador.
+  - **M9 (chave da `absoluta`): guarda nova.** O perfil não depende de dial, então dá para manter
+    a exigência. `tests/test_spec373_montagem.py::test_recalibradas_absoluta_com_chave_de_sempre`:
+    em toda id de `recalibracoes`, toda prioridade `absoluta` tem `action_key ==
+    chave_absoluta_esperada(arquetipo)`, o mesmo oráculo de tabela do §13, e arquétipo fora da
+    tabela reprova. Conferido antes: as 8 ids do registro já cumprem a regra, e as 5 que têm
+    `absoluta` usam a chave de `sempre`.
+- **Mutações** (no worktree, `data/bestiary.json` restaurado com `git checkout`, `git status` limpo em `data/`):
+
+| Mutação | Sem a guarda (só o registro) | Com a guarda |
+|---|---|---|
+| M0 linha de base | verde | verde (78 passed no escopo) |
+| M9 odre `absoluta` com `action_key: "flank"` | snapshot R2 **passa** (odre pulado); só `test_todo_bestiario_curado...` (`test_tactical_archetypes_runtime.py:542`) reprova | **F** `test_recalibradas_absoluta_com_chave_de_sempre` (`('mon_odre_de_oleo', 'flank', 'control')`) **e** F `test_todo_bestiario_curado...` |
+| M7 vitalidade do odre 10→99 | passa | passa (perda aceita, ver acima) |
+
+- O `_doc` do registro cita a guarda. O R8, `avaliar_posteriores`, `ficha_vs_base` e o hash da
+  373 não mudaram. `tests/test_spec373_montagem.py` não é protegido. O registro é, e a publicação
+  exige aprovação do dono via `eval-governance` (`/eval-publish`).

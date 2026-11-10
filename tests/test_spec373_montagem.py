@@ -163,6 +163,21 @@ def test_snapshot_off_existe_e_bate(monkeypatch):
             assert _hash(sheet) == snap[bid], bid
 
 
+def test_recalibradas_absoluta_com_chave_de_sempre(monkeypatch):
+    """Id em ``recalibracoes`` pula o R2 inteiro (dial muda HP/dano), mas não o perfil: toda
+    ``absoluta`` dela sai com a chave de ``sempre`` do arquétipo (adendo §14, M9 do odre)."""
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "off")
+    reg = BASE.parents[1] / "bestiario" / "recalibracoes_posteriores.json"
+    bestiary = load_bestiary()
+    for bid in json.loads(reg.read_text("utf-8"))["recalibracoes"]:
+        sheet = orch.ensure_combat_sheet({**json.loads(json.dumps(bestiary[bid])), "id": bid})
+        esperada = chave_absoluta_esperada(str(sheet.get("arquetipo") or ""))
+        assert esperada is not None, bid
+        for p in sheet["tactical_profile"]["priorities"]:
+            if p.get("resistance") == "absoluta":
+                assert p.get("action_key") == esperada, (bid, p.get("action_key"), esperada)
+
+
 def test_autoral_sem_assinatura_da_familia(monkeypatch):
     monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
     pop = _autorais()
