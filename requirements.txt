@@ -281,7 +281,7 @@ tzdata==2026.6 ; sys_platform == 'win32'
     # via psycopg
 urllib3==2.8.0
     # via requests
-uuid-utils==0.17.0
+uuid-utils==1.2.0
     # via
     #   langchain-core
     #   langsmith
