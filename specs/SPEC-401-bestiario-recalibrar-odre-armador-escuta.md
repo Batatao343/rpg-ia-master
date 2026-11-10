@@ -1,7 +1,7 @@
 # SPEC-401 — Bestiário: recalibrar odre, armador e escuta
 
-> **Status:** `in-review` — dono, 07/11: "aprovo 401"; mesmo dia, ao saber da SPEC-400, decidiu "400 motor, 401 recalibra": esta spec ficou só com a recalibração e espera a 400 pousar. D1–D2 nos defaults.
-> **Criada:** 2026-11-07 · **Atualizada:** 2026-11-07
+> **Status:** `done` (10/11, coordenador com delegacao do dono; revisao Sol r2 APPROVED `0111d550`; odre fecha, armador/escuta seguem excecao nominal com dial novo; registro protegido em `206306eb` aguarda aprovacao `eval-governance`) — antes: `in-review` — dono, 07/11: "aprovo 401"; mesmo dia, ao saber da SPEC-400, decidiu "400 motor, 401 recalibra": esta spec ficou só com a recalibração e espera a 400 pousar. D1–D2 nos defaults.
+> **Criada:** 2026-11-07 · **Atualizada:** 2026-11-10
 > **Épico:** SPEC-349 (bestiário) · SPEC-327 (Cartas)
 > **Depende de:** **SPEC-400 `done`** (os P2-1 e P2-5 da 395 mudam a decisão de turno do inimigo, e calibrar antes deixaria o número velho), SPEC-394 `done` (exceções nominais de armador e escuta), SPEC-395 `done` (exceção nominal do odre), SPEC-373 `done` (`arena.py` congelado)
 > **Desbloqueia:** veredito cheio do bestiário sem as 3 exceções nominais; `RPG_ENEMY_DECKS=on` com menos ressalvas
@@ -95,6 +95,6 @@ Defaults em negrito. O executor segue o default se o dono não responder.
 ## 9. Resultado
 
 - **Odre FECHA:** `ok` em 0-39, 40-119 e na confirmacao independente 120-199 (58,5 / 56,2). Armador e escuta passam em 0-39 e 40-119 mas sao marginais e caem na janela 120-199 (armador `on` 86,3; escuta `off` 40,3): **seguem excecao nominal** com essa leitura. **D1 decidida 09/11 pelo coordenador com delegacao do dono: odre fecha; armador/escuta seguem excecao nominal com o dial novo (melhor ajuste visto, mais perto da faixa que o da main; registro SPEC-401 em 206306eb).** Detalhe: `docs/spec401/RELATORIO.md`, `janela-120-199.json`.
-- Desvios: (1) `calibrar.py` nao moveu armador/escuta; dials vieram de sondagem direta do `arena.py` (~25 pontos, script nao preservado; passa do orcamento da R2); (2) odre escolhido olhando 0-119, agora coberto pela janela 120-199; (3) a edicao de `docs/bestiario/recalibracoes_posteriores.json` (protegido) foi revertida: o odre precisa entrar la como SPEC-401 por EVAL_AUTHORING + aprovacao do dono (`eval-governance`), e ate la dois testes da 373 ficam vermelhos para o odre.
+- Desvios: (1) `calibrar.py` nao moveu armador/escuta; dials vieram de sondagem direta do `arena.py` (~25 pontos, script nao preservado; passa do orcamento da R2); (2) odre escolhido olhando 0-119, agora coberto pela janela 120-199; (3) a edicao do executor em `docs/bestiario/recalibracoes_posteriores.json` (protegido) foi revertida e refeita pelo autor de eval em `206306eb` (adendo 14; testes da 373 verdes); a publicacao exige a aprovacao do dono em `eval-governance`.
 - Smoke 6 em processo (MockLLM): 18 combates por id sem erro, desfecho win/death.
 - Follow-up (P2-4): amarrar `arena-final.json`/`final-snapshot.json` ao hash dos dials no teste.

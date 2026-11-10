@@ -46,10 +46,10 @@ EXCECAO mon_escuta_do_sinal
   conhecidos: escuta 3/0/0/3 foi o unico dentro da faixa em 0-119; sig=-3/0/3 deram o mesmo resultado.
 - O sufixo `(SPEC-401, seeds 0-119)` do `arena:` do odre em `_ajustes.yaml` e manual (P2-2); armador
   e escuta usam o texto do `calibrar.py`.
-- `docs/bestiario/recalibracoes_posteriores.json` (protegido) NAO foi editado nesta branch (P1-1):
-  o odre precisa entrar nesse registro como SPEC-401 por EVAL_AUTHORING; ate la os testes
-  `test_spec373_artefatos::test_portao_recalibradas_igual_aos_dials_mudados` e
-  `test_spec373_montagem::test_snapshot_off_existe_e_bate` ficam vermelhos para o odre.
+- `docs/bestiario/recalibracoes_posteriores.json` (protegido): a edicao do executor foi revertida (P1-1) e
+  o registro foi refeito pelo autor de eval em `206306eb` (3 ids sob SPEC-401 + guarda nova, adendo 14 do
+  `handoffs/SPEC-373-eval-authoring.md`); os testes da 373 estao verdes. A publicacao exige a aprovacao do
+  dono em `eval-governance`.
 - Smoke 6 (em processo, como a SPEC-400; MockLLM, sem LLM): `M.fight` por id, 3 classes x 3 sementes
   x off/on, sem erro e com desfecho win/death: odre 13/5 (win/death total), armador 12/6, escuta 11/7.
 
