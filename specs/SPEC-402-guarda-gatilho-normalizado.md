@@ -1,6 +1,6 @@
 # SPEC-402 — guarda-gatilho-normalizado
 
-> **Status:** `approved` (10/11, coordenador com delegação do dono: "confio em vc nas decisoes" / "aprovar tudo conforme suas recomendações"; D1–D3 nos defaults; executar só depois da 401 pousar, com executor no papel de autor de eval)
+> **Status:** `done` (10/11, coordenador; revisão Sol APPROVED `b3e6a34c`; suíte completa no pouso) — antes: `approved` (10/11, coordenador com delegação do dono: "confio em vc nas decisoes" / "aprovar tudo conforme suas recomendações"; D1–D3 nos defaults; executar só depois da 401 pousar, com executor no papel de autor de eval)
 > **Criada:** 2026-11-09 · **Atualizada:** 2026-11-10
 > **Depende de:** SPEC-400 (`done`), SPEC-395, SPEC-373
 > **Desbloqueia:** nada (endurece guarda; origem N-1 de `handoffs/SPEC-400-sol-review.md:29`)
@@ -41,7 +41,7 @@ Produto (`services/`), `data/bestiary.json`, `_ajustes.yaml`, `evals/`, normaliz
 - [x] R4 pina a normalização; o bestiário curado continua verde.
 - [x] `git diff main -- services/ data/ evals/ tests/test_spec373_montagem.py` vazio.
 - [x] Nenhuma chamada a `normalize_runtime_profile` dentro de `erros_absoluta`.
-- [ ] Suíte completa verde no pouso (coordenador); revisão Sonnet independente.
+- [x] Suíte completa verde no pouso (coordenador); revisão Sonnet independente.
 
 ## 5. Decisões abertas (com default)
 
