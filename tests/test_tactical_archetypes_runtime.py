@@ -509,6 +509,72 @@ def test_estabilizacao_tatica_nao_duplica_tentativa_automatica_no_round():
     assert ward.get("dead") is not True
 
 
+def erros_absoluta(arquetipo: str, priorities: list[dict]) -> list[str]:
+    """Oraculo R3 (SPEC-395/400/402) para prioridades ``absoluta`` de um inimigo.
+
+    O gatilho e normalizado como o produto faz, sem passar pelo perfil completo do produto.
+    """
+    actions = tp._ENEMY_ARCHETYPE_ACTIONS[arquetipo]
+    expected = actions.get("sempre", "attack")
+    if expected in {"flee", "surrender"}:
+        expected = "attack"
+    erros: list[str] = []
+    for priority in priorities:
+        if priority.get("resistance") != "absoluta":
+            continue
+        key = priority.get("action_key")
+        if key in {"flee", "surrender"}:
+            erros.append(f"absoluta com {key}")
+        trigger = tp._normalize_archetype(priority.get("trigger") or "sempre")
+        levaria_a_fuga = actions.get(trigger, actions.get("sempre", "attack")) in {
+            "flee",
+            "surrender",
+        }
+        if levaria_a_fuga and key != expected:
+            erros.append(f"gatilho {trigger!r} exige {expected}, veio {key}")
+    return erros
+
+
+def _abs(trigger: str, key: str, resistance: str = "absoluta") -> list[dict]:
+    return [{"trigger": trigger, "action_key": key, "resistance": resistance}]
+
+
+def test_erros_absoluta_normaliza_gatilho():
+    # Gatilho nao canonico: o produto le "muito_ferido" (flee) e exige a chave de sempre.
+    assert len(erros_absoluta("bruto", _abs("Muito Ferído ", "flank"))) == 1
+
+
+@pytest.mark.parametrize(
+    ("arquetipo", "trigger", "key", "resistance"),
+    [
+        ("bruto", "muito_ferido", "attack", "absoluta"),
+        ("bruto", "Muito-Ferido", "attack", "absoluta"),
+        ("bruto", "Muito Ferido", "flee", "flexivel"),
+        ("guardiao", "Muito Ferido", "protect", "absoluta"),
+    ],
+)
+def test_erros_absoluta_known_good(arquetipo, trigger, key, resistance):
+    assert erros_absoluta(arquetipo, _abs(trigger, key, resistance)) == []
+
+
+@pytest.mark.parametrize(
+    ("arquetipo", "trigger", "key"),
+    [
+        ("bruto", "MUITO FERIDO", "flank"),
+        ("bruto", "sempre", "flee"),
+        ("bruto", "sempre", "surrender"),
+        ("conjurador", "Cercado", "attack"),
+    ],
+)
+def test_erros_absoluta_known_bad(arquetipo, trigger, key):
+    assert erros_absoluta(arquetipo, _abs(trigger, key))
+
+
+@pytest.mark.parametrize("raw", ["Muito Ferído ", "muito-ferido", "MUITO_FERIDO"])
+def test_normalizacao_de_gatilho_pinada(raw):
+    assert tp._normalize_archetype(raw) == "muito_ferido"
+
+
 def test_todo_bestiario_curado_normaliza_para_action_keys_fechadas():
     curated = bestiary._read_json(bestiary.BESTIARY_FILE)
 
@@ -526,20 +592,7 @@ def test_todo_bestiario_curado_normaliza_para_action_keys_fechadas():
         assert all(
             priority.get("action_key") in tp.TACTICAL_ACTION_KEYS for priority in priorities
         ), enemy_id
-        # SPEC-395: resistencia absoluta nunca sai com fuga/rendicao pela tabela.
-        # SPEC-400 R3: quando a tabela levaria o gatilho a fuga/rendicao, a chave e a de
-        # ``sempre`` do arquetipo (ou ``attack``), nao qualquer chave fora de fuga.
-        actions = tp._ENEMY_ARCHETYPE_ACTIONS[str(raw.get("arquetipo") or "")]
-        expected = actions.get("sempre", "attack")
-        if expected in {"flee", "surrender"}:
-            expected = "attack"
-        for priority in priorities:
-            if priority.get("resistance") != "absoluta":
-                continue
-            assert priority["action_key"] not in {"flee", "surrender"}, enemy_id
-            trigger = str(priority.get("trigger") or "sempre")
-            if actions.get(trigger, actions.get("sempre", "attack")) in {"flee", "surrender"}:
-                assert priority["action_key"] == expected, enemy_id
+        assert erros_absoluta(str(raw.get("arquetipo") or ""), priorities) == [], enemy_id
 
 
 def test_estado_terminal_falha_uma_vez_e_tenta_de_novo_na_rodada_seguinte():

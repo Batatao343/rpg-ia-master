@@ -36,11 +36,11 @@ Produto (`services/`), `data/bestiary.json`, `_ajustes.yaml`, `evals/`, normaliz
 
 ## 4. Critérios de aceite
 
-- [ ] Vermelho de R2 registrado com a lógica crua; verde com a normalizada.
-- [ ] R3: todos os known-good dão `[]` e todos os known-bad dão erro não vazio.
-- [ ] R4 pina a normalização; o bestiário curado continua verde.
-- [ ] `git diff main -- services/ data/ evals/ tests/test_spec373_montagem.py` vazio.
-- [ ] Nenhuma chamada a `normalize_runtime_profile` dentro de `erros_absoluta`.
+- [x] Vermelho de R2 registrado com a lógica crua; verde com a normalizada.
+- [x] R3: todos os known-good dão `[]` e todos os known-bad dão erro não vazio.
+- [x] R4 pina a normalização; o bestiário curado continua verde.
+- [x] `git diff main -- services/ data/ evals/ tests/test_spec373_montagem.py` vazio.
+- [x] Nenhuma chamada a `normalize_runtime_profile` dentro de `erros_absoluta`.
 - [ ] Suíte completa verde no pouso (coordenador); revisão Sonnet independente.
 
 ## 5. Decisões abertas (com default)
@@ -48,3 +48,9 @@ Produto (`services/`), `data/bestiary.json`, `_ajustes.yaml`, `evals/`, normaliz
 - **D1 — Circularidade de `_normalize_archetype`.** (**Default: reutilizar + pino R4.**) Não é circular no sentido da D2/400: a função testada é a regra "absoluta → `sempre`", e `_normalize_archetype` é só a canonização da chave. O risco residual: se ela mudar, produto e guarda mudam juntos. O pino R4 cobre isso. Alternativa: uma cópia local da normalização no teste, que fica independente mas pode divergir do produto em silêncio.
 - **D2 — Validador de conteúdo** que reprove gatilho não canônico no `bestiary.json`. (**Default: não**; se quiser, vira spec de conteúdo própria.)
 - **D3 — Normalizar `arquetipo`** em `chave_absoluta_esperada` e no R3. (**Default: não**: hoje falha fechado, e o `:518` já exige grafia canônica.) Mexer na guarda da 373 sem escape real só aumenta a superfície.
+
+## 6. Execução (10/11, executor no papel de autor de eval)
+
+- Vermelho de R2 com a lógica crua (`str(trigger or "sempre")`): `test_erros_absoluta_normaliza_gatilho` falhou com `assert 0 == 1` (`erros_absoluta('bruto', [{'trigger': 'Muito Ferído ', 'action_key': 'flank', ...}]) == []`); o known-bad `MUITO FERIDO`/`flank` também escapou. 2 failed, 3 passed.
+- Verde com `tp._normalize_archetype`: `test_tactical_archetypes_runtime`, `test_spec373_montagem`, `test_spec373_artefatos`, `test_size_budget` = 89 passed (`-n 2`); ruff format/check limpos.
+- `git diff main -- services/ data/ evals/ tests/test_spec373_montagem.py` vazio. Sem desvios. Suíte completa e revisão Sonnet: coordenador.
