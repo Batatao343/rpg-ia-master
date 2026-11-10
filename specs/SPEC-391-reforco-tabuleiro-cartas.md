@@ -1,6 +1,6 @@
 # SPEC-391 — Reforço de combate no tabuleiro de cartas ("Chamado do Bando" do líder de matilha)
 
-> **Status:** `in-progress` (05/11, dono: "aceito" → **D-391-4 revisto para a opção 3** (só faixa de vitória 45–85 % por Postura, sem teto de Δ): o gate 4 (L1+L2+L3, código atual) passa com vitória ON 57,4–79,0 % — [resultado](../docs/spec391/gate-resultado.md); alavancas L1–L3 ficam (já pousadas, reduzem a letalidade). Smoke §6 local feito 05/11 (passos 1–5 ok, 0 LLM por rodada, ~US$ 0,012 — [smoke](../docs/spec391/smoke-20261105.md)); falta: ligar no staging com o "liga" do dono (D-391-8) e conferir lá o retrato do pool do `_r1`; P3 novo: payload de combate encerrado ainda traz `stage=called`. Antes: 04/11 código pousado com `RPG_COMBAT_REINFORCEMENTS=off`, gate pela opção 2 reprovado (Δ +10,4 pp, Corruptor +17,4); follow-ups Sol P3-1/P3-6/P3-7)
+> **Status:** `done` (10/11, coordenador com delegação do dono; revisão de fechamento Sol/Opus APPROVED `1db1c11f`: R14 empírico em 7 pares de arenas + diff de código, byte-idênticos atribuídos, gate de flags verde; suíte completa verde na main 18a05688; follow-ups P3-9/10/11, D-391-10 e `stage=called` para spec futura) — antes: `in-progress` (05/11, dono: "aceito" → **D-391-4 revisto para a opção 3** (só faixa de vitória 45–85 % por Postura, sem teto de Δ): o gate 4 (L1+L2+L3, código atual) passa com vitória ON 57,4–79,0 % — [resultado](../docs/spec391/gate-resultado.md); alavancas L1–L3 ficam (já pousadas, reduzem a letalidade). Smoke §6 local feito 05/11 (passos 1–5 ok, 0 LLM por rodada, ~US$ 0,012 — [smoke](../docs/spec391/smoke-20261105.md)); falta: ligar no staging com o "liga" do dono (D-391-8) e conferir lá o retrato do pool do `_r1`; P3 novo: payload de combate encerrado ainda traz `stage=called`. Antes: 04/11 código pousado com `RPG_COMBAT_REINFORCEMENTS=off`, gate pela opção 2 reprovado (Δ +10,4 pp, Corruptor +17,4); follow-ups Sol P3-1/P3-6/P3-7)
 > **Criada:** 2026-11-04 · **Atualizada:** 2026-11-04 (Etapas 0 e 1 feitas: §4 "Execução")
 > **Depende de:** SPEC-381 pousada (`api.py` em routers: o bloco `reinforcement_warning` muda de arquivo);
 > SPEC-371/372 sem conflito em `agents/combat.py` (371 `done`; 372 `draft`: conferir W1 antes da Etapa 3);
@@ -523,17 +523,17 @@ a ficar congelado a partir do commit desta emenda.
 
 - [x] R1–R20 com teste verde (lista da Etapa 2/3/4; `tests/test_reinforcement_cards.py`, 32 testes; R11 por unidade web)
 - [x] Oráculo da Etapa 1 verde; `docs/spec391/arena_reforco_cartas.py` sem diff desde o commit da Etapa 1 (diff vazio nas Etapas 2-4)
-- [ ] Flag `off`: JSONs regerados das arenas 285/332/355/368 idênticos à `main` de partida (R14)
-- [ ] `scripts/cards/sim.py`, as arenas antigas e os arquivos de família de `data/cards/inimigos/` byte-idênticos
+- [x] Flag `off`: JSONs regerados das arenas 285/332/355/368 idênticos à `main` de partida (R14)
+- [x] `scripts/cards/sim.py`, as arenas antigas e os arquivos de família de `data/cards/inimigos/` byte-idênticos
 - [x] `tests/test_size_budget.py` verde (Etapas 2-4): `agents/combat.py`, `conflict_orchestrator.py`, `card_effects.py` e
       o router de combate com crescimento líquido ≤ 0
 - [x] Gate §8 aprovado pelo critério do D-391-4 (ou flag `off` com a medida registrada)
-- [ ] `config/flags.yaml` atualizado; gate de flags (SPEC-340) verde
-- [ ] `uv run pytest` verde (suíte completa offline, coordenador, 1×)
+- [x] `config/flags.yaml` atualizado; gate de flags (SPEC-340) verde
+- [x] `uv run pytest` verde (suíte completa offline, coordenador, 1×)
 - [x] Nenhum `with_structured_output` novo (não há LLM no fluxo); 0 LLM por rodada medido
 - [x] Saves antigos (sem campo e com estado do R16) continuam carregando
 - [x] Smoke §6 feito e registrado
-- [ ] Revisão independente `spec-reviewer` (Sol/Opus) APPROVED
+- [x] Revisão independente `spec-reviewer` (Sol/Opus) APPROVED
 
 ## 6. Smoke test real
 

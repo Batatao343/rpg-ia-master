@@ -24,7 +24,7 @@
 1. **SPEC-403** `done` (10/11, `18a05688`): Dependabot #71/#72 incorporados (14 pip + 5 npm minor/patch, 3 SIM102); PRs fechados. Adiados, e cada um vira spec própria: Playwright 1.65 (pin de eval), #65 (langchain-google-genai 4.x, exige smoke real) e #67 (uuid-utils 1.x). Nenhum PR aberto.
 2. Follow-ups para virar spec:
    - 398: overlay do bestiário entre encontros no hosted ou `RPG_FAUNA_SABER` no staging.
-   - 391: o `_r1` sem oferta de retrato pago no meio do combate (D-391-10) e o payload encerrado com `stage=called`.
+   - 391 (`done` 10/11, `1db1c11f`): o `_r1` sem oferta de retrato pago no meio do combate (D-391-10), o payload encerrado com `stage=called`, P3-9 (`lider_caido`), P3-10 (comentário do R20) e P3-11 (save `telegraphed` com flag off).
    - 401 P2-4: amarrar os artefatos de arena ao hash dos dials.
    - 382: helpers em módulo próprio; golden sem rede.
    - 396: VoiceOver real; sufixo do `PlayQueue`.
@@ -56,11 +56,11 @@ Decididas em 09/11 pelo coordenador, com delegação ("confio em vc nas decisoes
 Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
-- 2026-11-10 · SPEC-403 `approved` — deps-dependabot-minor-patch-11
+- 2026-11-10 · SPEC-403 `done` — deps-dependabot-minor-patch-11
 - 2026-11-10 · SPEC-402 `done` — guarda-gatilho-normalizado
 - 2026-11-10 · SPEC-401 `done` — Bestiário: recalibrar odre, armador e escuta
 - 2026-11-10 · SPEC-398 `done` — Cartas: contrato da mão coerente com o alvo, motivo do desfecho de objetivo falho, Vitalidade 0 no chip e inimigos ocultos juntos
-- 2026-11-10 · SPEC-391 `in-progress` — Reforço de combate no tabuleiro de cartas ("Chamado do Bando" do líder de matilha)
+- 2026-11-10 · SPEC-391 `done` — Reforço de combate no tabuleiro de cartas ("Chamado do Bando" do líder de matilha)
 - 2026-11-09 · SPEC-399 `done` — Dependabot: triagem e pouso dos 8 PRs de versão major
 - 2026-11-09 · SPEC-367 `done` — Cartas: acabamento do 5º smoke real (cotação por nome parcial, chip do retrato depois de confirmar, presságio na voz do jogador, retrato de inimigo de fallback, condição de inimigo que termina, ouro na narração da compra, timeout do pool dos scripts de operação)
 - 2026-11-09 · SPEC-364 `done` — Cartas: correções do 4º smoke real (trilha da fuga, consulta do mercado, débito do retrato, tempo do resumo, voz do registro e cenários não verificados)
