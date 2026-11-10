@@ -22,7 +22,7 @@ sao marginais (margem de 0,5-1 pp) e caem na janela 120-199; seguem como excecao
 leitura (gap off/on ~37 pp, estrutural: so spec de Carta/mecanica o fecha). Nenhum dial reajustado
 olhando a janela nova.
 
-D1 decidida 09/11 pelo coordenador com delegacao do dono: odre fecha; armador/escuta seguem excecao nominal.
+D1 decidida 09/11 pelo coordenador com delegacao do dono: odre fecha; armador/escuta seguem excecao nominal com o dial novo (melhor ajuste visto, mais perto da faixa que o da main; registro SPEC-401 em 206306eb).
 
 EXCECAO mon_armador_de_fosso
 EXCECAO mon_escuta_do_sinal
