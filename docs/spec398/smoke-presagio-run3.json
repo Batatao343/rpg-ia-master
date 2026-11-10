@@ -1,0 +1,1424 @@
+{
+ "refusals_409": 0,
+ "hand_contract_violations": [
+  {
+   "card": "bas_med_golpe",
+   "why": "inimigo_sem_alvo_mas_jogavel",
+   "round": 4
+  }
+ ],
+ "presagio": {
+  "conflicts": [
+   {
+    "opened": true,
+    "fams": [
+     "cervo_afogado"
+    ],
+    "known_family": false,
+    "opening_pressagios": [
+     {
+      "tipo": "ataque",
+      "faixa": null,
+      "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+      "alvo_id": "player",
+      "actor_id": "mon_cervo_afogado_1",
+      "carta_nome": null,
+      "valor_estimado": null
+     }
+    ],
+    "rounds": [
+     {
+      "rd": 1,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": null,
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Bisturi de Campanha → Cervo Afogado · 3d10 7 + 8 +1 = 16 vs 13 · acerto · Proteção −1 · 7 dano",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 10 + 8 +1 = 19 vs 13 · acerto · Proteção −1 · 7 dano",
+       "Cervo Afogado · Beber o Calor → Você · 2d10 10 + 10 +2 = 22 vs 11 · supercrítico (dupla de 10) · 6 dano",
+       "Beber o Calor → Cervo Afogado · cura · 1 Vitalidade"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 10,
+      "death_pending": false
+     },
+     {
+      "rd": 2,
+      "pressagios_before": [
+       {
+        "tipo": "enfraquecer",
+        "faixa": null,
+        "sinal": "Garras se abrem para prender, não para rasgar: Cervo Afogado quer você no chão.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 5 + 6 +1 = 12 vs 13 · erro",
+       "Cervo Afogado · Toque Gélido da Morte → Você · 2d10 7 + 4 +2 = 13 vs 11 · acerto"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 10,
+      "death_pending": false
+     },
+     {
+      "rd": 3,
+      "pressagios_before": [
+       {
+        "tipo": "enfraquecer",
+        "faixa": null,
+        "sinal": "Garras se abrem para prender, não para rasgar: Cervo Afogado quer você no chão.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "med_torniquete"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado · Lodo da Melancolia → Você · 2d10 7 + 3 +1 = 11 vs 11 · acerto",
+       "Toque Gélido da Morte → Você · dano contínuo · 3 dano",
+       "Lodo da Melancolia → Você · dano contínuo · 2 dano",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 5 + 4 +0 = 9 vs 13 · erro",
+       "Torniquete → Você · cura · 4 Vitalidade"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 9,
+      "death_pending": false
+     },
+     {
+      "rd": 4,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Toque Gélido da Morte → Você · dano contínuo · 3 dano",
+       "Lodo da Melancolia → Você · dano contínuo · 2 dano"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 4,
+      "death_pending": false
+     },
+     {
+      "rd": 5,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "med_sutura"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Toque Gélido da Morte → Você · dano contínuo · 3 dano",
+       "Lodo da Melancolia → Você · dano contínuo · 2 dano",
+       "Sangramento → Você · dano contínuo · 1 dano",
+       "Cervo Afogado → Você · 3d10 4 + 7 +1 = 12 vs 11 · acerto · Proteção −2 · Torpor −25 % · 0 dano",
+       "Sutura de Campo → Você · cura · 5 Vitalidade",
+       "O ferimento abre espaço no Baralho: Dor Surda."
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 5,
+      "death_pending": false
+     },
+     {
+      "rd": 6,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "med_torniquete"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Lodo da Melancolia → Você · dano contínuo · 2 dano",
+       "Cervo Afogado → Você · 2d10 4 + 9 +1 = 14 vs 11 · acerto · 3 dano",
+       "Torniquete → Você · cura · 4 Vitalidade"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 4,
+      "death_pending": false
+     },
+     {
+      "rd": 7,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 5 + 6 +1 = 12 vs 11 · acerto · Torpor −25 % · 2 dano",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 5 + 5 +0 = 10 vs 13 · crítico (dupla de 5) · Torpor −25 % · 12 dano",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 9 + 5 +0 = 14 vs 13 · acerto · Torpor −25 % · 6 dano"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 2,
+      "death_pending": false
+     },
+     {
+      "rd": 8,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": "Mimetismo Morto",
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "med_sutura"
+       },
+       {
+        "card_id": "med_torniquete"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Sangramento → Cervo Afogado · dano contínuo · 1 dano",
+       "Sutura de Campo → Você · cura · 5 Vitalidade",
+       "Torniquete → Você · cura · 4 Vitalidade"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 11,
+      "death_pending": false
+     }
+    ],
+    "fled": false,
+    "final": {
+     "outcome": null,
+     "outcome_reason": null,
+     "combat_result": {
+      "outcome": null,
+      "outcome_reason": null
+     },
+     "player_vit": 11,
+     "death_pending": false
+    }
+   },
+   {
+    "opened": true,
+    "fams": [
+     "cervo_afogado"
+    ],
+    "known_family": true,
+    "opening_pressagios": [
+     {
+      "tipo": "ataque",
+      "faixa": [
+       3,
+       6
+      ],
+      "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+      "alvo_id": "player",
+      "actor_id": "mon_cervo_afogado_1",
+      "carta_nome": null,
+      "valor_estimado": null
+     }
+    ],
+    "rounds": [
+     {
+      "rd": 1,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_guarda"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 3 + 6 +1 = 10 vs 11 · erro",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 4 + 2 +0 = 6 vs 13 · erro",
+       "O Abismo sussurra: uma Carta nova se oferece ao seu Baralho."
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 2,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_guarda"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 3,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": "Mimetismo Morto",
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 4,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": "Mimetismo Morto",
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 5,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": "Mimetismo Morto",
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 6,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": "Mimetismo Morto",
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 7,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": "Mimetismo Morto",
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 8,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": "Mimetismo Morto",
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     }
+    ],
+    "fled": true,
+    "final": {
+     "outcome": null,
+     "outcome_reason": null,
+     "combat_result": {
+      "outcome": null,
+      "outcome_reason": null
+     },
+     "player_vit": 6,
+     "death_pending": false
+    }
+   },
+   {
+    "opened": true,
+    "fams": [
+     "cervo_afogado"
+    ],
+    "known_family": true,
+    "opening_pressagios": [
+     {
+      "tipo": "enfraquecer",
+      "faixa": null,
+      "sinal": "Garras se abrem para prender, não para rasgar: Cervo Afogado quer você no chão.",
+      "alvo_id": "player",
+      "actor_id": "mon_cervo_afogado_1",
+      "carta_nome": null,
+      "valor_estimado": null
+     }
+    ],
+    "rounds": [
+     {
+      "rd": 1,
+      "pressagios_before": [
+       {
+        "tipo": "enfraquecer",
+        "faixa": null,
+        "sinal": "Garras se abrem para prender, não para rasgar: Cervo Afogado quer você no chão.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Bisturi de Campanha → Cervo Afogado · 3d10 7 + 8 +0 = 15 vs 13 · acerto · Proteção −1 · Torpor −25 % · 5 dano",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 8 + 1 +0 = 9 vs 13 · erro",
+       "Cervo Afogado · Lodo da Melancolia → Você · 2d10 10 + 3 +2 = 15 vs 11 · acerto"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 2,
+      "pressagios_before": [
+       {
+        "tipo": "enfraquecer",
+        "faixa": null,
+        "sinal": "Garras se abrem para prender, não para rasgar: Cervo Afogado quer você no chão.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "sus_sussurro_abismo",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado · Toque Gélido da Morte → Você · 2d10 3 + 1 +2 = 6 vs 11 · erro",
+       "Lodo da Melancolia → Você · dano contínuo · 2 dano",
+       "Você · Sussurro Faminto → Cervo Afogado · 2d10 9 + 7 +1 = 17 vs 13 · acerto · 13 dano"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 4,
+      "death_pending": false
+     },
+     {
+      "rd": 3,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_guarda"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Sangramento → Cervo Afogado · dano contínuo · 1 dano",
+       "Cervo Afogado → Você · 2d10 7 + 2 +1 = 10 vs 11 · erro",
+       "Lodo da Melancolia → Você · dano contínuo · 2 dano"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 2,
+      "death_pending": false
+     },
+     {
+      "rd": 4,
+      "pressagios_before": [
+       {
+        "tipo": "reforco_proprio",
+        "faixa": null,
+        "sinal": "Cervo Afogado reúne forças; algo nele está se preparando.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "med_sutura"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Lodo da Melancolia → Você · dano contínuo · 2 dano",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 9 + 8 +0 = 17 vs 13 · acerto · 8 dano",
+       "Sutura de Campo → Você · cura · 5 Vitalidade"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 5,
+      "death_pending": false
+     },
+     {
+      "rd": 5,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_guarda"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Sangramento → Cervo Afogado · dano contínuo · 1 dano",
+       "Cervo Afogado → Você · 2d10 5 + 8 +1 = 14 vs 11 · acerto · Torpor −25 % · 3 dano",
+       "Lodo da Melancolia → Você · dano contínuo · 2 dano"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 0,
+      "death_pending": false
+     },
+     {
+      "rd": 6,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_guarda"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 5 + 2 +1 = 8 vs 11 · erro"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 0,
+      "death_pending": false
+     },
+     {
+      "rd": 7,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "med_torniquete"
+       },
+       {
+        "card_id": "med_sutura"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 10 + 7 +1 = 18 vs 11 · acerto · Torpor −25 % · 2 dano",
+       "Torniquete → Você · cura · 4 Vitalidade",
+       "Sutura de Campo → Você · cura · 5 Vitalidade"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 7,
+      "death_pending": false
+     },
+     {
+      "rd": 8,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_guarda"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 7,
+      "death_pending": false
+     }
+    ],
+    "fled": false,
+    "final": {
+     "outcome": null,
+     "outcome_reason": null,
+     "combat_result": {
+      "outcome": null,
+      "outcome_reason": null
+     },
+     "player_vit": 7,
+     "death_pending": false
+    }
+   },
+   {
+    "opened": true,
+    "fams": [
+     "cervo_afogado"
+    ],
+    "known_family": true,
+    "opening_pressagios": [
+     {
+      "tipo": "ataque",
+      "faixa": [
+       3,
+       6
+      ],
+      "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+      "alvo_id": "player",
+      "actor_id": "mon_cervo_afogado_1",
+      "carta_nome": null,
+      "valor_estimado": null
+     }
+    ],
+    "rounds": [
+     {
+      "rd": 1,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_guarda"
+       },
+       {
+        "card_id": "med_torniquete"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 9 + 1 +1 = 11 vs 11 · acerto · 3 dano",
+       "Torniquete → Você · cura · 4 Vitalidade"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 2,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_guarda"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 3,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": "Mimetismo Morto",
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 1 + 6 +0 = 7 vs 13 · erro",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 5 + 3 +0 = 8 vs 13 · erro"
+      ],
+      "defense_played": false,
+      "outcome": "victory",
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": "victory",
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     }
+    ],
+    "final": {
+     "outcome": "victory",
+     "outcome_reason": null,
+     "combat_result": {
+      "outcome": "victory",
+      "outcome_reason": null
+     },
+     "player_vit": 6,
+     "death_pending": false
+    }
+   },
+   {
+    "opened": true,
+    "fams": [
+     "cervo_afogado"
+    ],
+    "known_family": true,
+    "opening_pressagios": [
+     {
+      "tipo": "enfraquecer",
+      "faixa": null,
+      "sinal": "Garras se abrem para prender, não para rasgar: Cervo Afogado quer você no chão.",
+      "alvo_id": "player",
+      "actor_id": "mon_cervo_afogado_1",
+      "carta_nome": null,
+      "valor_estimado": null
+     }
+    ],
+    "rounds": [
+     {
+      "rd": 1,
+      "pressagios_before": [
+       {
+        "tipo": "enfraquecer",
+        "faixa": null,
+        "sinal": "Garras se abrem para prender, não para rasgar: Cervo Afogado quer você no chão.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Bisturi de Campanha → Cervo Afogado · 3d10 1 + 6 +0 = 7 vs 13 · erro",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 3 + 10 +0 = 13 vs 13 · acerto · Proteção −1 · Torpor −25 % · 5 dano",
+       "Cervo Afogado · Lodo da Melancolia → Você · 2d10 1 + 2 +2 = 5 vs 11 · erro"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 2,
+      "pressagios_before": [
+       {
+        "tipo": "enfraquecer",
+        "faixa": null,
+        "sinal": "Garras se abrem para prender, não para rasgar: Cervo Afogado quer você no chão.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "sus_sussurro_abismo",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Sussurro Faminto → Cervo Afogado · 2d10 10 + 1 +1 = 12 vs 13 · erro",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 3 + 3 +1 = 7 vs 13 · crítico (dupla de 3) · Proteção −1 · 15 dano",
+       "Sangramento → Cervo Afogado · dano contínuo · 1 dano",
+       "Cervo Afogado · Toque Gélido da Morte → Você · 2d10 5 + 7 +2 = 14 vs 11 · acerto"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 6,
+      "death_pending": false
+     },
+     {
+      "rd": 3,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_guarda"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Toque Gélido da Morte → Você · dano contínuo · 3 dano",
+       "Cervo Afogado → Você · 2d10 3 + 7 +1 = 11 vs 11 · acerto · Proteção −2 · Torpor −25 % · 0 dano"
+      ],
+      "defense_played": true,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 3,
+      "death_pending": false
+     },
+     {
+      "rd": 4,
+      "pressagios_before": [
+       {
+        "tipo": "defesa",
+        "faixa": null,
+        "sinal": "Cervo Afogado se encolhe sobre si, pelo eriçado, e espera.",
+        "alvo_id": "mon_cervo_afogado_1",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Toque Gélido da Morte → Você · dano contínuo · 3 dano",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 10 + 6 +0 = 16 vs 13 · acerto · Proteção −6 · 2 dano",
+       "Você · Bisturi de Campanha → Cervo Afogado · 2d10 4 + 1 +0 = 5 vs 13 · erro"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": null,
+       "outcome_reason": null
+      },
+      "player_vit": 0,
+      "death_pending": false
+     },
+     {
+      "rd": 5,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         3,
+         6
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Cervo Afogado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_cervo_afogado_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "med_sutura"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_cervo_afogado_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Sangramento → Cervo Afogado · dano contínuo · 1 dano",
+       "Cervo Afogado → Você · 2d10 3 + 7 +1 = 11 vs 11 · acerto · Torpor −25 % · 2 dano",
+       "Última Ação: Você → Cervo Afogado (alvo declarado) · 3d10 4 + 10 +0 = 14 vs 13 · acerto · 5 dano",
+       "Toque Gélido da Morte → Você · dano contínuo · 3 dano",
+       "Sangramento → Você · dano contínuo · 1 dano"
+      ],
+      "defense_played": false,
+      "outcome": "death",
+      "outcome_reason": null,
+      "combat_result": {
+       "outcome": "death",
+       "outcome_reason": null
+      },
+      "player_vit": 0,
+      "death_pending": true
+     }
+    ],
+    "final": {
+     "outcome": "death",
+     "outcome_reason": null,
+     "combat_result": {
+      "outcome": "death",
+      "outcome_reason": null
+     },
+     "player_vit": 0,
+     "death_pending": true
+    }
+   }
+  ],
+  "item4_ok_conflict": 5,
+  "cleanup": {
+   "games": [
+    200
+   ],
+   "users": [
+    200
+   ],
+   "users_exist_after": [
+    false
+   ]
+  }
+ }
+}

@@ -1,0 +1,22 @@
+{
+ "refusals_409": 0,
+ "hand_contract_violations": [],
+ "purga": {
+  "region": "Skallgard",
+  "rows_before": [
+   "ready"
+  ],
+  "delete_status": 200,
+  "rows_after": 0,
+  "game_row_after": 0,
+  "cleanup": {
+   "games": [],
+   "users": [
+    200
+   ],
+   "users_exist_after": [
+    false
+   ]
+  }
+ }
+}

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-07T19:38:54.471044+00:00",
+  "at": "2026-11-10T17:37:19.256481+00:00",
   "base": "https://rpg-ia-master-staging.vercel.app",
   "checks": {
     "auth_config": {
@@ -76,7 +76,7 @@
     },
     "new_game": {
       "body_has_bearer": false,
-      "ms": 16724,
+      "ms": 23675,
       "ok": true,
       "simulated": false,
       "status": 200,
@@ -87,7 +87,7 @@
       "retry": {
         "has_done": true,
         "has_error": false,
-        "narration_chars": 1470,
+        "narration_chars": 1337,
         "sequence": [
           "accepted",
           "visual",
@@ -97,8 +97,8 @@
         "session_actions": 5,
         "state": true,
         "status": 200,
-        "total_ms": 327.2,
-        "ttfb_ms": 246.1,
+        "total_ms": 228.9,
+        "ttfb_ms": 142.7,
         "turn_count": 6
       }
     },
@@ -134,22 +134,22 @@
       ],
       "ok": true,
       "total_ms": {
-        "max_ms": 10150.1,
+        "max_ms": 9352.6,
         "n": 5,
-        "p50_ms": 5883.3,
-        "p95_ms": 10150.1
+        "p50_ms": 5965.2,
+        "p95_ms": 9352.6
       },
       "ttfb_ms": {
-        "max_ms": 189.1,
+        "max_ms": 383.3,
         "n": 5,
-        "p50_ms": 160.0,
-        "p95_ms": 189.1
+        "p50_ms": 161.2,
+        "p95_ms": 383.3
       },
       "turns": [
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 1136,
+          "narration_chars": 1469,
           "sequence": [
             "accepted",
             "phase",
@@ -164,14 +164,14 @@
           "session_actions": 1,
           "state": true,
           "status": 200,
-          "total_ms": 5883.3,
-          "ttfb_ms": 169.3,
+          "total_ms": 6553.9,
+          "ttfb_ms": 383.3,
           "turn_count": 2
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 1382,
+          "narration_chars": 1415,
           "sequence": [
             "accepted",
             "phase",
@@ -186,19 +186,18 @@
           "session_actions": 2,
           "state": true,
           "status": 200,
-          "total_ms": 5942.2,
-          "ttfb_ms": 189.1,
+          "total_ms": 5965.2,
+          "ttfb_ms": 146.0,
           "turn_count": 3
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 1010,
+          "narration_chars": 947,
           "sequence": [
             "accepted",
             "phase",
             "route",
-            "phase",
             "narrative",
             "phase",
             "narrative",
@@ -209,14 +208,14 @@
           "session_actions": 3,
           "state": true,
           "status": 200,
-          "total_ms": 4599.9,
-          "ttfb_ms": 160.0,
+          "total_ms": 5359.6,
+          "ttfb_ms": 161.2,
           "turn_count": 4
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 2039,
+          "narration_chars": 1137,
           "sequence": [
             "accepted",
             "phase",
@@ -231,14 +230,14 @@
           "session_actions": 4,
           "state": true,
           "status": 200,
-          "total_ms": 5461.1,
-          "ttfb_ms": 147.8,
+          "total_ms": 4996.6,
+          "ttfb_ms": 148.4,
           "turn_count": 5
         },
         {
           "has_done": true,
           "has_error": false,
-          "narration_chars": 1470,
+          "narration_chars": 1337,
           "sequence": [
             "accepted",
             "phase",
@@ -253,8 +252,8 @@
           "session_actions": 5,
           "state": true,
           "status": 200,
-          "total_ms": 10150.1,
-          "ttfb_ms": 153.4,
+          "total_ms": 9352.6,
+          "ttfb_ms": 244.9,
           "turn_count": 6
         }
       ]

@@ -1,7 +1,7 @@
 # SPEC-398 — Cartas: contrato da mão coerente com o alvo, motivo do desfecho de objetivo falho, Vitalidade 0 no chip e inimigos ocultos juntos
 
-> **Status:** `approved` (05/11, coordenador; o dono delegou a decisão do rótulo do desfecho, "oq vc achar melhor", e aprovou seguir)
-> **Criada:** 2026-11-05 · **Atualizada:** 2026-11-05
+> **Status:** `done` (10/11, coordenador; revisão Sol APPROVED após correções; smoke R6 no staging `d7aa4beb` em `docs/spec398/smoke.md`, com ressalva da faixa na abertura no perfil hosted)
+> **Criada:** 2026-11-05 · **Atualizada:** 2026-11-10
 > **Épico:** SPEC-327
 > **Origem:** [docs/spec369/diagnostico-combate-travado.md](../docs/spec369/diagnostico-combate-travado.md) (smoke da SPEC-369 no staging, item 5).
 > **Depende de:** SPEC-363 (alvo e 409 `invalid_target`), SPEC-331 R5 (objetivo de cena), SPEC-387 R20 (narração "segue de pé"), SPEC-397.
@@ -61,7 +61,7 @@ Mudar a mecânica de Vitalidade 0 ou de Ferimentos, o balanço (SPEC-369) e novo
 - [x] R3: `outcome_reason: "objective_failed"` gravado e lido pelos consumidores; `outcome` intacto; save antigo carrega.
 - [x] R4: chip com Vitalidade 0 legível.
 - [x] R5: causa registrada (e corrigida, se for bug).
-- [ ] R6: item 4 da 369 refeito no staging com o driver corrigido.
+- [x] R6: item 4 da 369 refeito no staging com o driver corrigido (10/11; ressalva da faixa na abertura no §6).
 - [x] R7: guardas e suíte completa verdes no pouso (09/11: suíte completa verde antes do rebase sobre a SPEC-400; depois do rebase, testes de cruzamento verdes, ver §6).
 
 ## 5. Decisões
@@ -83,3 +83,6 @@ Mudar a mecânica de Vitalidade 0 ou de Ferimentos, o balanço (SPEC-369) e novo
 **Correções da revisão Sol (CHANGES_REQUIRED):** P1-1 `merge_row_targeting` só sobrescreve Carta não-Fardo de tipo `reacao`/`passiva` (status e maldição seguem "Fardo: pesa na mão"; `blockReason` mantém `fardo` para `tipo` fora de reação/passiva). P2-2 textos: reação "você a usa quando o inimigo ataca, não se joga da mão"; passiva "Passiva: sempre ativa, não se joga". P3-1 round-trip save/load do `outcome_reason` (e save sem a chave). P3-2 teste com 1 escondido + 1 visível cobrindo Carta, atacar e Procurar. **P3-3 (comportamento registrado):** com escondidos e visíveis ao mesmo tempo, Procurar num inimigo visível dá 409 `no_valid_target` (antes era aceito e gastava a Ação à toa); atacar o escondido também dá 409 `no_valid_target`. Mantido por fazer sentido. P3-4 `types.ts`: `outcome_reason` em linha própria (duas linhas vizinhas fundidas para o arquivo não crescer).
 
 - **Pouso (09/11):** suíte completa (`-n 3`) verde, com `ruff`, `typecheck`, `typecheck:e2e` e `npm test`. A `main` recebeu a SPEC-400 (combate/`absoluta`) depois do sync. Após o rebase, os testes de cruzamento passaram: mão, desfecho, alvo, golden 382, 373, 400, guardas e `ruff`. Não houve uma segunda suíte completa, porque a RAM livre estava em 0,6 GB; o CI roda a suíte completa no push. Status segue `approved` até o smoke R6 no staging.
+
+- **Smoke R6 (10/11, staging `d7aa4beb`):** [docs/spec398/smoke.md](../docs/spec398/smoke.md), driver [docs/spec398/smoke_r6.py](../docs/spec398/smoke_r6.py) (alvo só de `valid_targets`; 409 `invalid_target` tira a jogada e reenvia; para após 3 recusas). Três execuções com 0 recusas 409 e nenhuma reação/passiva jogável na mão. Item 4 da 369: combate novo contra o mesmo arquétipo (`cervo_afogado`), faixa [3, 6] e, com `bas_med_guarda`, "acerto · Proteção −2 · Torpor −25 % · 0 dano" (abaixo do piso). Purga do retrato `unico` (SPEC-352 R14): `DELETE /game/save/{id}` com `Idempotency-Key` → 200 e 0 linhas `unico:<jogo>:` depois; `image_generation` voltou a `off`.
+- **Ressalva (decisão do coordenador por delegação do dono, 10/11):** no perfil hosted a faixa não aparece na abertura do 2º conflito contra o mesmo arquétipo, por design: o overlay do bestiário entre encontros só vale no perfil `legacy` (`agents/combat.py:762-784`, SPEC-272 fail-closed) e `RPG_FAUNA_SABER` está `off` no staging. A faixa aparece da rodada 2 em diante. Não bloqueia o `done`. **Follow-up (spec futura):** levar o overlay entre encontros ao perfil hosted / ligar `RPG_FAUNA_SABER` no staging após smoke.

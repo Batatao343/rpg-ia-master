@@ -1,0 +1,123 @@
+409 0 viol [{'card': 'bas_med_golpe', 'why': 'inimigo_sem_alvo_mas_jogavel', 'round': 4}]
+C fams ['cervo_afogado'] known False final {'outcome': None, 'outcome_reason': None, 'combat_result': {'outcome': None, 'outcome_reason': None}, 'player_vit': 11, 'death_pending': False} fled False
+  open_pres [('ataque', None, 'mon_cervo_afogado_1')]
+  rd 1 pres [('ataque', None, None)] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 10 False
+      Você · Bisturi de Campanha → Cervo Afogado · 3d10 7 + 8 +1 = 16 vs 13 · acerto · Proteção −1 · 7 dano
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 10 + 8 +1 = 19 vs 13 · acerto · Proteção −1 · 7 dano
+      Cervo Afogado · Beber o Calor → Você · 2d10 10 + 10 +2 = 22 vs 11 · supercrítico (dupla de 10) · 6 dano
+      Beber o Calor → Cervo Afogado · cura · 1 Vitalidade
+  rd 2 pres [('enfraquecer', None, None)] def True plays ['bas_med_golpe', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 10 False
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 5 + 6 +1 = 12 vs 13 · erro
+      Cervo Afogado · Toque Gélido da Morte → Você · 2d10 7 + 4 +2 = 13 vs 11 · acerto
+  rd 3 pres [('enfraquecer', None, None)] def False plays ['bas_med_golpe', 'med_torniquete'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 9 False
+      Cervo Afogado · Lodo da Melancolia → Você · 2d10 7 + 3 +1 = 11 vs 11 · acerto
+      Toque Gélido da Morte → Você · dano contínuo · 3 dano
+      Lodo da Melancolia → Você · dano contínuo · 2 dano
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 5 + 4 +0 = 9 vs 13 · erro
+      Torniquete → Você · cura · 4 Vitalidade
+  rd 4 pres [('defesa', None, None)] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 4 False
+      Toque Gélido da Morte → Você · dano contínuo · 3 dano
+      Lodo da Melancolia → Você · dano contínuo · 2 dano
+  rd 5 pres [('ataque', [3, 6], None)] def True plays ['med_sutura', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 5 False
+      Toque Gélido da Morte → Você · dano contínuo · 3 dano
+      Lodo da Melancolia → Você · dano contínuo · 2 dano
+      Sangramento → Você · dano contínuo · 1 dano
+      Cervo Afogado → Você · 3d10 4 + 7 +1 = 12 vs 11 · acerto · Proteção −2 · Torpor −25 % · 0 dano
+      Sutura de Campo → Você · cura · 5 Vitalidade
+  rd 6 pres [('ataque', [3, 6], None)] def True plays ['med_torniquete', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 4 False
+      Lodo da Melancolia → Você · dano contínuo · 2 dano
+      Cervo Afogado → Você · 2d10 4 + 9 +1 = 14 vs 11 · acerto · 3 dano
+      Torniquete → Você · cura · 4 Vitalidade
+  rd 7 pres [('ataque', [3, 6], None)] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 2 False
+      Cervo Afogado → Você · 2d10 5 + 6 +1 = 12 vs 11 · acerto · Torpor −25 % · 2 dano
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 5 + 5 +0 = 10 vs 13 · crítico (dupla de 5) · Torpor −25 % · 12 dano
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 9 + 5 +0 = 14 vs 13 · acerto · Torpor −25 % · 6 dano
+  rd 8 pres [('defesa', None, 'Mimetismo Morto')] def False plays ['med_sutura', 'med_torniquete'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 11 False
+      Sangramento → Cervo Afogado · dano contínuo · 1 dano
+      Sutura de Campo → Você · cura · 5 Vitalidade
+      Torniquete → Você · cura · 4 Vitalidade
+C fams ['cervo_afogado'] known True final {'outcome': None, 'outcome_reason': None, 'combat_result': {'outcome': None, 'outcome_reason': None}, 'player_vit': 6, 'death_pending': False} fled True
+  open_pres [('ataque', [3, 6], 'mon_cervo_afogado_1')]
+  rd 1 pres [('ataque', [3, 6], None)] def True plays ['bas_med_guarda', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 3 + 6 +1 = 10 vs 11 · erro
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 4 + 2 +0 = 6 vs 13 · erro
+      O Abismo sussurra: uma Carta nova se oferece ao seu Baralho.
+  rd 2 pres [('ataque', [3, 6], None)] def True plays ['bas_med_guarda', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro
+  rd 3 pres [('defesa', None, 'Mimetismo Morto')] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro
+  rd 4 pres [('defesa', None, 'Mimetismo Morto')] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro
+  rd 5 pres [('defesa', None, 'Mimetismo Morto')] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro
+  rd 6 pres [('defesa', None, 'Mimetismo Morto')] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro
+  rd 7 pres [('defesa', None, 'Mimetismo Morto')] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro
+  rd 8 pres [('defesa', None, 'Mimetismo Morto')] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro
+C fams ['cervo_afogado'] known True final {'outcome': None, 'outcome_reason': None, 'combat_result': {'outcome': None, 'outcome_reason': None}, 'player_vit': 7, 'death_pending': False} fled False
+  open_pres [('enfraquecer', None, 'mon_cervo_afogado_1')]
+  rd 1 pres [('enfraquecer', None, None)] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Você · Bisturi de Campanha → Cervo Afogado · 3d10 7 + 8 +0 = 15 vs 13 · acerto · Proteção −1 · Torpor −25 % · 5 dano
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 8 + 1 +0 = 9 vs 13 · erro
+      Cervo Afogado · Lodo da Melancolia → Você · 2d10 10 + 3 +2 = 15 vs 11 · acerto
+  rd 2 pres [('enfraquecer', None, None)] def True plays ['sus_sussurro_abismo', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 4 False
+      Cervo Afogado · Toque Gélido da Morte → Você · 2d10 3 + 1 +2 = 6 vs 11 · erro
+      Lodo da Melancolia → Você · dano contínuo · 2 dano
+      Você · Sussurro Faminto → Cervo Afogado · 2d10 9 + 7 +1 = 17 vs 13 · acerto · 13 dano
+  rd 3 pres [('ataque', [3, 6], None)] def True plays ['bas_med_guarda', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 2 False
+      Sangramento → Cervo Afogado · dano contínuo · 1 dano
+      Cervo Afogado → Você · 2d10 7 + 2 +1 = 10 vs 11 · erro
+      Lodo da Melancolia → Você · dano contínuo · 2 dano
+  rd 4 pres [('reforco_proprio', None, None)] def False plays ['med_sutura', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 5 False
+      Lodo da Melancolia → Você · dano contínuo · 2 dano
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 9 + 8 +0 = 17 vs 13 · acerto · 8 dano
+      Sutura de Campo → Você · cura · 5 Vitalidade
+  rd 5 pres [('ataque', [3, 6], None)] def True plays ['bas_med_guarda', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 0 False
+      Sangramento → Cervo Afogado · dano contínuo · 1 dano
+      Cervo Afogado → Você · 2d10 5 + 8 +1 = 14 vs 11 · acerto · Torpor −25 % · 3 dano
+      Lodo da Melancolia → Você · dano contínuo · 2 dano
+  rd 6 pres [('ataque', [3, 6], None)] def True plays ['bas_med_guarda', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 0 False
+      Cervo Afogado → Você · 2d10 5 + 2 +1 = 8 vs 11 · erro
+  rd 7 pres [('ataque', [3, 6], None)] def False plays ['med_torniquete', 'med_sutura'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 7 False
+      Cervo Afogado → Você · 2d10 10 + 7 +1 = 18 vs 11 · acerto · Torpor −25 % · 2 dano
+      Torniquete → Você · cura · 4 Vitalidade
+      Sutura de Campo → Você · cura · 5 Vitalidade
+  rd 8 pres [('defesa', None, None)] def True plays ['bas_med_guarda', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 7 False
+C fams ['cervo_afogado'] known True final {'outcome': 'victory', 'outcome_reason': None, 'combat_result': {'outcome': 'victory', 'outcome_reason': None}, 'player_vit': 6, 'death_pending': False} fled None
+  open_pres [('ataque', [3, 6], 'mon_cervo_afogado_1')]
+  rd 1 pres [('ataque', [3, 6], None)] def True plays ['bas_med_guarda', 'med_torniquete'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 9 + 1 +1 = 11 vs 11 · acerto · 3 dano
+      Torniquete → Você · cura · 4 Vitalidade
+  rd 2 pres [('ataque', [3, 6], None)] def True plays ['bas_med_guarda', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Cervo Afogado → Você · 2d10 4 + 3 +1 = 8 vs 11 · erro
+  rd 3 pres [('defesa', None, 'Mimetismo Morto')] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out victory {'outcome': 'victory', 'outcome_reason': None} vit 6 False
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 1 + 6 +0 = 7 vs 13 · erro
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 5 + 3 +0 = 8 vs 13 · erro
+C fams ['cervo_afogado'] known True final {'outcome': 'death', 'outcome_reason': None, 'combat_result': {'outcome': 'death', 'outcome_reason': None}, 'player_vit': 0, 'death_pending': True} fled None
+  open_pres [('enfraquecer', None, 'mon_cervo_afogado_1')]
+  rd 1 pres [('enfraquecer', None, None)] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Você · Bisturi de Campanha → Cervo Afogado · 3d10 1 + 6 +0 = 7 vs 13 · erro
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 3 + 10 +0 = 13 vs 13 · acerto · Proteção −1 · Torpor −25 % · 5 dano
+      Cervo Afogado · Lodo da Melancolia → Você · 2d10 1 + 2 +2 = 5 vs 11 · erro
+  rd 2 pres [('enfraquecer', None, None)] def False plays ['sus_sussurro_abismo', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 6 False
+      Você · Sussurro Faminto → Cervo Afogado · 2d10 10 + 1 +1 = 12 vs 13 · erro
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 3 + 3 +1 = 7 vs 13 · crítico (dupla de 3) · Proteção −1 · 15 dano
+      Sangramento → Cervo Afogado · dano contínuo · 1 dano
+      Cervo Afogado · Toque Gélido da Morte → Você · 2d10 5 + 7 +2 = 14 vs 11 · acerto
+  rd 3 pres [('ataque', [3, 6], None)] def True plays ['bas_med_guarda', 'bas_med_guarda'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 3 False
+      Toque Gélido da Morte → Você · dano contínuo · 3 dano
+      Cervo Afogado → Você · 2d10 3 + 7 +1 = 11 vs 11 · acerto · Proteção −2 · Torpor −25 % · 0 dano
+  rd 4 pres [('defesa', None, None)] def False plays ['bas_med_golpe', 'bas_med_golpe'] ref 0 out None {'outcome': None, 'outcome_reason': None} vit 0 False
+      Toque Gélido da Morte → Você · dano contínuo · 3 dano
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 10 + 6 +0 = 16 vs 13 · acerto · Proteção −6 · 2 dano
+      Você · Bisturi de Campanha → Cervo Afogado · 2d10 4 + 1 +0 = 5 vs 13 · erro
+  rd 5 pres [('ataque', [3, 6], None)] def False plays ['med_sutura', 'bas_med_golpe'] ref 0 out death {'outcome': 'death', 'outcome_reason': None} vit 0 True
+      Sangramento → Cervo Afogado · dano contínuo · 1 dano
+      Cervo Afogado → Você · 2d10 3 + 7 +1 = 11 vs 11 · acerto · Torpor −25 % · 2 dano
+      Última Ação: Você → Cervo Afogado (alvo declarado) · 3d10 4 + 10 +0 = 14 vs 13 · acerto · 5 dano
+      Toque Gélido da Morte → Você · dano contínuo · 3 dano
+      Sangramento → Você · dano contínuo · 1 dano
+item4_ok 5
+{'games': [200], 'users': [200], 'users_exist_after': [False]}

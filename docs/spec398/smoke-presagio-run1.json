@@ -1,0 +1,247 @@
+{
+ "refusals_409": 0,
+ "hand_contract_violations": [],
+ "presagio": {
+  "conflicts": [
+   {
+    "opened": true,
+    "fams": [
+     "covarde_oportunista",
+     "predador"
+    ],
+    "known_family": false,
+    "opening_pressagios": [
+     {
+      "tipo": "ataque",
+      "faixa": null,
+      "sinal": "Um rosnado baixo, dentes à mostra: Lençol de Chaminé vai saltar sobre você.",
+      "alvo_id": "player",
+      "actor_id": "mon_lencol_de_chamine_1",
+      "carta_nome": null,
+      "valor_estimado": null
+     },
+     {
+      "tipo": "mover",
+      "faixa": null,
+      "sinal": "Necromante Renegado se desloca para flanquear você.",
+      "alvo_id": "player",
+      "actor_id": "enemy_necromante_renegado_2",
+      "carta_nome": null,
+      "valor_estimado": null
+     }
+    ],
+    "rounds": [
+     {
+      "rd": 1,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": null,
+        "sinal": "Um rosnado baixo, dentes à mostra: Lençol de Chaminé vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_lencol_de_chamine_1",
+        "carta_nome": null,
+        "valor_estimado": null
+       },
+       {
+        "tipo": "mover",
+        "faixa": null,
+        "sinal": "Necromante Renegado se desloca para flanquear você.",
+        "alvo_id": "player",
+        "actor_id": "enemy_necromante_renegado_2",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_lencol_de_chamine_1"
+       },
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_lencol_de_chamine_1"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Bisturi de Campanha → Lençol de Chaminé · 3d10 1 + 3 +1 = 5 vs 13 · erro",
+       "Você · Bisturi de Campanha → Lençol de Chaminé · 2d10 8 + 2 +1 = 11 vs 13 · erro",
+       "Lençol de Chaminé · Cobrir e Apertar → Você · 2d10 8 + 4 +2 = 14 vs 11 · acerto · 4 dano"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null
+     },
+     {
+      "rd": 2,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         4,
+         8
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Lençol de Chaminé vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_lencol_de_chamine_1",
+        "prenuncio": "Lençol de Chaminé se contrai e as bordas se levantam mostrando o laranja de dentro.",
+        "carta_nome": "Cobrir e Apertar",
+        "valor_estimado": 4
+       },
+       {
+        "tipo": "ataque",
+        "faixa": [
+         4,
+         8
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Necromante Renegado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "enemy_necromante_renegado_2",
+        "prenuncio": "Necromante Renegado some do canto do olho e reaparece atrás de alguém.",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_lencol_de_chamine_1"
+       },
+       {
+        "card_id": "med_torniquete"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Bisturi de Campanha → Lençol de Chaminé · 2d10 5 + 10 +1 = 16 vs 13 · acerto · Proteção −1 · 7 dano",
+       "Necromante Renegado · Golpe pelas Costas → Você · 3d10 4 + 7 +1 = 12 vs 11 · acerto · 4 dano",
+       "Lençol de Chaminé · Cobrir e Apertar → Você · 2d10 1 + 3 +2 = 6 vs 11 · erro",
+       "Torniquete → Você · cura · 4 Vitalidade"
+      ],
+      "defense_played": false,
+      "outcome": null,
+      "outcome_reason": null
+     },
+     {
+      "rd": 3,
+      "pressagios_before": [
+       {
+        "tipo": "ataque",
+        "faixa": [
+         4,
+         8
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Lençol de Chaminé vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "mon_lencol_de_chamine_1",
+        "carta_nome": "Cobrir e Apertar",
+        "valor_estimado": 4
+       },
+       {
+        "tipo": "ataque",
+        "faixa": [
+         4,
+         8
+        ],
+        "sinal": "Um rosnado baixo, dentes à mostra: Necromante Renegado vai saltar sobre você.",
+        "alvo_id": "player",
+        "actor_id": "enemy_necromante_renegado_2",
+        "carta_nome": "Golpe pelas Costas",
+        "valor_estimado": 4
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "mon_lencol_de_chamine_1"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Bisturi de Campanha → Lençol de Chaminé · 2d10 6 + 10 +0 = 16 vs 13 · acerto · Torpor −25 % · 6 dano",
+       "Necromante Renegado · Golpe pelas Costas → Você · 2d10 9 + 8 +0 = 17 vs 11 · acerto · Proteção −2 · Torpor −25 % · 1 dano"
+      ],
+      "defense_played": true,
+      "outcome": "defeat",
+      "outcome_reason": null
+     }
+    ],
+    "final": {
+     "outcome": "defeat",
+     "outcome_reason": null
+    }
+   },
+   {
+    "opened": true,
+    "fams": [
+     "covarde_oportunista"
+    ],
+    "known_family": true,
+    "opening_pressagios": [
+     {
+      "tipo": "render-se",
+      "faixa": null,
+      "sinal": "Necromante Renegado largou o olhar de combate; a arma pesa em sua mão.",
+      "alvo_id": null,
+      "actor_id": "enemy_necromante_renegado_1",
+      "prenuncio": "Necromante Renegado esfrega a lâmina na lama e sorri de lado.",
+      "carta_nome": null,
+      "valor_estimado": null
+     }
+    ],
+    "rounds": [
+     {
+      "rd": 1,
+      "pressagios_before": [
+       {
+        "tipo": "render-se",
+        "faixa": null,
+        "sinal": "Necromante Renegado largou o olhar de combate; a arma pesa em sua mão.",
+        "alvo_id": null,
+        "actor_id": "enemy_necromante_renegado_1",
+        "prenuncio": "Necromante Renegado esfrega a lâmina na lama e sorri de lado.",
+        "carta_nome": null,
+        "valor_estimado": null
+       }
+      ],
+      "plays": [
+       {
+        "card_id": "bas_med_golpe",
+        "target_id": "enemy_necromante_renegado_1"
+       },
+       {
+        "card_id": "bas_med_guarda"
+       }
+      ],
+      "refusals": [],
+      "mech": [
+       "Você · Bisturi de Campanha → Necromante Renegado · 3d10 1 + 6 +0 = 7 vs 13 · erro"
+      ],
+      "defense_played": true,
+      "outcome": "victory",
+      "outcome_reason": null
+     }
+    ],
+    "final": {
+     "outcome": "victory",
+     "outcome_reason": null
+    }
+   }
+  ],
+  "cleanup": {
+   "games": [
+    200
+   ],
+   "users": [
+    200
+   ],
+   "users_exist_after": [
+    false
+   ]
+  }
+ }
+}

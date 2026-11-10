@@ -1,17 +1,17 @@
 {
   "base": "https://rpg-ia-master-staging.vercel.app",
-  "at": "2026-11-07T19:38:41.741246+00:00",
+  "at": "2026-11-10T17:38:43.922979+00:00",
   "checks": {
     "health": {
       "ok": true,
       "status": 200,
-      "ms": 236,
+      "ms": 122,
       "error": null,
       "headers": {
         "content-type": "application/json",
         "cache-control": "public, max-age=0, must-revalidate",
         "x-vercel-cache": "MISS",
-        "x-vercel-id": "gru1::gru1::wjs24-1794080326372-666a2cf55b02",
+        "x-vercel-id": "gru1::gru1::zch9v-1794332327250-b64406afc230",
         "server": "Vercel",
         "strict-transport-security": "max-age=63072000; includeSubDomains",
         "x-content-type-options": "nosniff",
@@ -23,13 +23,13 @@
     "static_index": {
       "ok": true,
       "status": 200,
-      "ms": 34,
+      "ms": 36,
       "error": null,
       "headers": {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "public, max-age=0, must-revalidate",
         "x-vercel-cache": "MISS",
-        "x-vercel-id": "gru1::gru1::fd8f7-1794080326945-1fb3f3cf412c",
+        "x-vercel-id": "gru1::gru1::8hwnq-1794332327685-8b358294a191",
         "server": "Vercel",
         "strict-transport-security": "max-age=63072000; includeSubDomains",
         "x-content-type-options": "nosniff",
@@ -41,37 +41,37 @@
     "cron_jobs": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 228,
+      "ms": 189,
       "body": {
         "ok": true,
         "processed": 0,
         "stopped_reason": "empty",
-        "elapsed_s": 0.107,
+        "elapsed_s": 0.044,
         "failed": 0,
         "dead": 0,
         "deferred": 0,
-        "duration_s": 0.196
+        "duration_s": 0.157
       },
       "ok": true
     },
     "cron_account-deletions": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 89,
+      "ms": 184,
       "body": {
         "ok": true,
         "claimed": 0,
         "deleted": 0,
         "failed": 0,
         "auth_buckets_purged": 0,
-        "duration_s": 0.06
+        "duration_s": 0.152
       },
       "ok": true
     },
     "cron_operations": {
       "noauth_status": 401,
       "auth_status": 200,
-      "ms": 255,
+      "ms": 223,
       "body": {
         "ok": true,
         "orphans_seen": 0,
@@ -90,16 +90,16 @@
         "purged_account_deletions_compacted": 0,
         "purged_account_deletions": 0,
         "failed": 0,
-        "duration_s": 0.226
+        "duration_s": 0.189
       },
       "ok": true
     }
   },
-  "first_request_ms": 236,
+  "first_request_ms": 122,
   "warm_ms": {
     "n": 10,
-    "p50": 35.5,
-    "max": 65
+    "p50": 38.0,
+    "max": 51
   },
   "ok": true
 }
