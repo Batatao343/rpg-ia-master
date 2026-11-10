@@ -45,7 +45,6 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera" → certificação |
 | Auth staging/prod (343) | confirmar e-mail obrigatório + captcha na Vercel | "confirmei" → fechar enumeração |
 | Branch remota `spec-380` | apagar no GitHub (já pousada) | — |
-| Sessão `rpg-ia-master-da` | está parada em `waiting` (prompt de permissão); a 401 já foi assumida e pousada pelo coordenador, então pode fechar a sessão | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
 | Lore 312 D1 / 313 D8 | ler `data/world/rumor_seed_overrides.json`, `lore_quests.json` | ajustes → reindexar |
 
