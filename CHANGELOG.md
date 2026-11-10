@@ -5,6 +5,12 @@
 
 ---
 
+## 2026-11-10 — notas de onda movidas do ESTADO (04/11–05/11)
+
+- 04/11: 375/376/377/378/381/383/388 `done` (383 parcial: hooks auth/turno → SPEC-392, rascunho em `spec-383-etapa4-wip`) (377 item 2: Fôlego unificado, nada protegido a publicar), 379 pousada. **381**: `api.py` 7.970 → 1.082 l. (`api_core`/`api_models`/`api_presenters`/`routes/*`); trava do `api.py` liberada; follow-ups: podar ~106 imports mortos (R17b), §6 no próximo deploy. **382** `done`: `storyteller_node` 1.553→118, `_combat_node` 1.037→125, `_run_round` 484→82 (golden reforçado 66 casos; W2 A=B; smoke real); follow-ups: helpers para módulo próprio, golden sem rede (Jina via `.env` muda eventos). **384** parcial: CLI `game_engine.py`, `set_deck`, alias `/art/player/confirm` e métrica SSE antiga apagados (zero chamadores provado); 3 flags reclassificadas; 7 aposentadorias esperam smoke real por flag no staging atual; D4 vira spec própria (G2: default `RPG_CARD_DECK=on` é decisão do dono). **380** pousada e publicada (eval-gates `41841868897` aprovado pelo dono): `cards_combat` 29 casos + baseline do CI com `compare`; dono ainda cria environment `llm-playtest` (3 chaves) e, após smoke, `RPG_WEEKLY_LLM_PLAYTEST=true`. **391** (flag `off`): dono aceitou o gate pela opção 3 (vitória ON 57–79 %); smoke §6 local ok 05/11 (`docs/spec391/smoke-20261105.md`) → ligar no staging espera o "liga". **Deps 04/11**: 45 bumps pip via `uv lock` + setup-uv + Dependabot `uv`; otel 1.45.2 (CVE); **396** `done` 05/11 (axe 4.14 + nomes acessíveis; PR #55 incorporado; follow-up: VoiceOver real, `PlayQueue` sem sufixo). 392 `draft`. **Index local** (375): `python -m project_index build`.
+
+---
+
 ## 2026-11-04 — épico de cartas fechado
 
 - SPEC-387 (Carta de cena sem cache de processo, oferta sem cache de falha, chip otimista, nome genérico vira criatura da região, Groq 120b no CLASSIFY, jogada inelegível explicada, escolta, seeds, `draft.py`), SPEC-389 (instrumentação `offer_view`, kill switch com idade máxima, entrega de quest pela rota NPC, P3 de texto) e SPEC-390 (voz "você" no Voto, título da missão no recibo) pousadas com Sol aprovado e smokes reais (staging `70c7ebc3`).

@@ -1,4 +1,4 @@
-# ESTADO_ATUAL — 2026-11-04
+# ESTADO_ATUAL — 2026-11-10
 
 > **Regra deste arquivo: substituir, nunca anexar.** Teto de 8 KB
 > (`uv run python scripts/spec_index.py estado-size` falha acima disso).
@@ -8,24 +8,27 @@
 
 ## Estado em 10 linhas
 
-- staging = `72b7605b` (05/11; cartas `on` + `RPG_PLOT_THREADS`/`RPG_FAUNA`/`RPG_CREATURE_GEN` `on` pelo preset `staging_flags.json`; post_deploy, vercel_smoke e e2e_session verdes). `image_generation` off.
-- **Épico de cartas fechado (04/11):** 327–336, 345–347, 352, 355, 357, 367, 368, 387, 389, 390 `done` após auditoria critério × evidência (8 smokes reais; notas "Fechamento" com ressalvas só-por-teste em cada spec).
-- Últimos smokes: Carta de cena serverless ok; oferta de retrato 12/12 em 3 instâncias (`docs/spec389/offer-measure-20261104.json`); quest de entrega fecha pela rota NPC; 0 LLM por rodada; débito 8 ≤ 15 milli.
-- **SPEC-369** `done` (05/11): balanço em 3 fases; confirmação 260–339 passou (`docs/spec369/CONFIRMACAO.md`); limites registrados pelo dono (D-369-10 a 13). **SPEC-397** `done`: corte do `draft.py`, abertura narra emboscada, passiva por recompensa vale sem ocupar Preparação.
-- **SPEC-393** `done` (04/11): smoke real das ressalvas do épico (`docs/smoke-ressalvas-cartas/`) + correções: texto de morte aceita, golpe final com vários alvos, guard da prosa de morte, compra "com minhas últimas moedas", aviso do import de arte.
-- **Bestiário (04/11), na `main`:** 370, 371, 372, 373, 374, 394 e 395 `done`.
-  - 373: veredito 253/281; chefes hospede/escavador fora da faixa por decisão do dono (D-373); R21 migrou para o Faro da 369; `bomba_estopim` nerfada.
-  - 395: `absoluta` não foge.
-  - Exceções nominais: odre, armador e escuta (dono, 07/11: sem recalibrar). SPEC-400 `done` (07/11): follow-ups da 395 (`absoluta` não foge na remontagem nem no legado; guarda exige a chave de `sempre`).
-- Balanço: Arcanista 49,7 %; Sangromante acima do teto (exceção do dono registrada na 335).
+- staging = `d7aa4beb` (10/11; cartas `on`, `RPG_PLOT_THREADS`/`RPG_FAUNA`/`RPG_CREATURE_GEN`/`RPG_COMBAT_REINFORCEMENTS` `on` pelo `staging_flags.json`; post_deploy, vercel_smoke e e2e_session verdes). `image_generation` off.
+- **Onda 09–10/11** (coordenador, com delegação do dono), toda na `main`:
+  - **398** `done`: contrato da mão, `outcome_reason=objective_failed` (D-398-1), chip "de pé, sem Vitalidade", Procurar mira escondidos. Smoke R6 no staging (`docs/spec398/smoke.md`): o item 4 da 369 passa e a purga do `unico` ao apagar o jogo também (352 R14).
+  - **399** `done`: Dependabot majors (multidict 7.2.1, websockets 17.4, setup-node v7.1.0, motion 14.10.1); PRs do `uv` exigem reexport do `requirements.txt` (D-399-4).
+  - **401** `done`: o odre fecha. Armador e escuta mantêm o dial novo, mais perto da faixa, e seguem como exceção nominal (caem na janela 120–199). Registro protegido `206306eb` publicado (eval-gates `42864248456` aprovado pelo dono), com guarda nova da `absoluta` nas recalibradas.
+  - **402** `done`: a guarda R3 normaliza o gatilho igual ao produto.
+- Épico de cartas fechado (04/11). 369 (balanço), 393 e 397 `done`. Bestiário 370–374, 394, 395 e 400 `done`.
+- Balanço: Arcanista 49,7 %; Sangromante acima do teto (exceção do dono, 335). Exceções nominais do bestiário: armador, escuta, chefes hospede/escavador (D-373).
 - Latência: 1ª narração p50 2,6 s; abertura de combate ~13 s (staging).
-- Project Index não é mais versionado (`51c70d85`): nada de reindex por commit.
+- Project Index não versionado: `python -m project_index build` sob demanda.
 
 ## Próximos 3 passos
 
-1. SPEC-398 (a escrever): contrato da mão (reação sem alvo vem `jogavel`), rótulo `defeat` no objetivo de cena falho, inimigos ocultos juntos, chip de Vitalidade 0, e o item 4 do smoke 369 (2º conflito contra a mesma família) com driver corrigido. Base: `docs/spec369/diagnostico-combate-travado.md`.
-2. Chefe `unico` entre 2 contas só no staging.
-3. Refatoração 375–385 (outra sessão); artes do staging (326 D2); smoke §6 de 349/359/360/361.
+1. **SPEC-403** (em execução): Dependabot #71/#72 (minor/patch + 3 SIM102); Playwright 1.65, #65 (genai 4.x) e #67 (uuid-utils 1.x) adiados.
+2. Follow-ups para virar spec:
+   - 398: overlay do bestiário entre encontros no hosted ou `RPG_FAUNA_SABER` no staging.
+   - 391: o `_r1` sem oferta de retrato pago no meio do combate (D-391-10) e o payload encerrado com `stage=called`.
+   - 401 P2-4: amarrar os artefatos de arena ao hash dos dials.
+   - 382: helpers em módulo próprio; golden sem rede.
+   - 396: VoiceOver real; sufixo do `PlayQueue`.
+3. Refatoração 375–385 restante (383/384 parciais, 392 `draft`); artes do staging (326 D2); smoke §6 de 349/359/360/361.
 
 ## Bloqueios no dono
 
@@ -36,22 +39,32 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 | Conta no staging (R-01) | entrar no staging e confirmar o e-mail | "confirmei" → fechar R-01 |
 | SPEC-222 compra de teste | Stripe teste: chave + webhook secret no `.env.staging` | "colei" → compra de teste, fechar 222 |
 | SPEC-222/197 domínio de produção | comprar domínio e apontar DNS para a Vercel | "comprei X" → URLs, CORS, checklist |
-| SPEC-197 | contas pagas, Stripe live, go/no-go ([lista](docs/spec197/decision-request.md)) | "go" → checklist production e release; spec de cold start |
+| SPEC-197 | contas pagas, Stripe live, go/no-go ([lista](docs/spec197/decision-request.md)), incluindo o teto de gasto de produção | "go" → checklist production e release; spec de cold start |
 | SPEC-198 | Play Console (taxa), package ID, service account | "criei" → upload interno |
 | Logs externos (Axiom) | token Axiom no `.env.staging` | "faz" → envio do app |
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera" → certificação |
 | Auth staging/prod (343) | confirmar e-mail obrigatório + captcha na Vercel | "confirmei" → fechar enumeração |
-| Decisões abertas | D-363-1 (crítico em dupla abaixo da defesa), D-363-2 (teto diário R$ 5), D-364-2 ("até 0,015 Estilhas"), D-367-2 (8 frases do Presságio em "você"), veto D-387-1..11 / D-389-1..8 | dono responde → registrar na spec |
+| Branch remota `spec-380` | apagar no GitHub (já pousada) | — |
+| Sessão `rpg-ia-master-da` | está parada em `waiting` (prompt de permissão); a 401 já foi assumida e pousada pelo coordenador, então pode fechar a sessão | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
-| SPEC-391 reforço | dizer "liga" para `RPG_COMBAT_REINFORCEMENTS=on` no staging | deploy + smoke do retrato do `_r1` |
 | Lore 312 D1 / 313 D8 | ler `data/world/rumor_seed_overrides.json`, `lore_quests.json` | ajustes → reindexar |
+
+Decididas em 09/11 pelo coordenador, com delegação ("confio em vc nas decisoes"): D-363-1 (mantém o crítico por dupla), D-363-2 (R$ 5/dia no staging), D-364-2 (teto exato), D-367-2 (8 reescritas), D-391-9/10. Veto do dono continua possível, registrado na spec.
 
 ## Decisões recentes (≤ 1 dia)
 
 Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
-- (nenhuma spec alterada na janela)
+- 2026-11-10 · SPEC-403 `approved` — deps-dependabot-minor-patch-11
+- 2026-11-10 · SPEC-402 `done` — guarda-gatilho-normalizado
+- 2026-11-10 · SPEC-401 `done` — Bestiário: recalibrar odre, armador e escuta
+- 2026-11-10 · SPEC-398 `done` — Cartas: contrato da mão coerente com o alvo, motivo do desfecho de objetivo falho, Vitalidade 0 no chip e inimigos ocultos juntos
+- 2026-11-10 · SPEC-391 `in-progress` — Reforço de combate no tabuleiro de cartas ("Chamado do Bando" do líder de matilha)
+- 2026-11-09 · SPEC-399 `done` — Dependabot: triagem e pouso dos 8 PRs de versão major
+- 2026-11-09 · SPEC-367 `done` — Cartas: acabamento do 5º smoke real (cotação por nome parcial, chip do retrato depois de confirmar, presságio na voz do jogador, retrato de inimigo de fallback, condição de inimigo que termina, ouro na narração da compra, timeout do pool dos scripts de operação)
+- 2026-11-09 · SPEC-364 `done` — Cartas: correções do 4º smoke real (trilha da fuga, consulta do mercado, débito do retrato, tempo do resumo, voz do registro e cenários não verificados)
+- 2026-11-09 · SPEC-363 `done` — Cartas: correções do 3º smoke real (retrato pago coerente, texto de morte, autoria do resumo, mira, fuga, ids e cenários raros)
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
@@ -59,9 +72,8 @@ Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os
 Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover para `CHANGELOG.md`.
 
 <!-- onda:inserir-aqui -->
-- Notas 27/10–02/11 → `CHANGELOG.md`.
-- 04/11: 375/376/377/378/381/383/388 `done` (383 parcial: hooks auth/turno → SPEC-392, rascunho em `spec-383-etapa4-wip`) (377 item 2: Fôlego unificado, nada protegido a publicar), 379 pousada. **381**: `api.py` 7.970 → 1.082 l. (`api_core`/`api_models`/`api_presenters`/`routes/*`); trava do `api.py` liberada; follow-ups: podar ~106 imports mortos (R17b), §6 no próximo deploy. **382** `done`: `storyteller_node` 1.553→118, `_combat_node` 1.037→125, `_run_round` 484→82 (golden reforçado 66 casos; W2 A=B; smoke real); follow-ups: helpers para módulo próprio, golden sem rede (Jina via `.env` muda eventos). **384** parcial: CLI `game_engine.py`, `set_deck`, alias `/art/player/confirm` e métrica SSE antiga apagados (zero chamadores provado); 3 flags reclassificadas; 7 aposentadorias esperam smoke real por flag no staging atual; D4 vira spec própria (G2: default `RPG_CARD_DECK=on` é decisão do dono). **380** pousada e publicada (eval-gates `41841868897` aprovado pelo dono): `cards_combat` 29 casos + baseline do CI com `compare`; dono ainda cria environment `llm-playtest` (3 chaves) e, após smoke, `RPG_WEEKLY_LLM_PLAYTEST=true`. **391** (flag `off`): dono aceitou o gate pela opção 3 (vitória ON 57–79 %); smoke §6 local ok 05/11 (`docs/spec391/smoke-20261105.md`) → ligar no staging espera o "liga". **Deps 04/11**: 45 bumps pip via `uv lock` + setup-uv + Dependabot `uv`; otel 1.45.2 (CVE); **396** `done` 05/11 (axe 4.14 + nomes acessíveis; PR #55 incorporado; follow-up: VoiceOver real, `PlayQueue` sem sufixo). 392 `draft`. **Index local** (375): `python -m project_index build`.
-
+- Notas 27/10–05/11 → `CHANGELOG.md`.
+- 09–10/11: o coordenador serializou os pousos 398 → 402 draft → 399 → 401 → 402. A sessão `da` travou em `waiting`, e a 401 foi retomada por executor próprio (r2 APPROVED). O autor de eval fez o registro protegido em commit separado. A 398 não repetiu a suíte completa pós-rebase (CI `a24bcd2a` verde).
 
 ## Como rodar
 
@@ -73,5 +85,6 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 - `legacy` sem login, serializa por processo (por design).
 - Cloud de produção não certificada (SPEC-104 on hold); só staging.
 - Arquivista `inline` no Vercel (`post_response` não compensa, 213).
+- No hosted, a faixa do bestiário só aparece da rodada 2 no reencontro (overlay SPEC-272 só `legacy`).
 - FAISS via `langchain-community` descontinuado (migração exige spec).
 - Flake conhecido: `WinError 5` no `os.replace` sob OneDrive (há retry).
