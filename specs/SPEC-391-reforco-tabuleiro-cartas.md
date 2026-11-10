@@ -636,3 +636,8 @@ L1 fica fora: o orçamento do nível 1 (3) não comporta Elite + Lacaio, então 
   comentário e somar o teste positivo · alternativa: apagar o teste.
 - **D-391-8 — Ligar e e2e.** Depois do gate e do smoke, ligar no `staging_flags.json` só com o "liga" do dono
   ([R]); e2e Playwright do chamado: [R] não (unidade web basta), ou sim.
+- **D-391-9 — Retrato do `_r1` no staging (09/11, decidida pelo coordenador com delegação do dono: "confio
+  em vc nas decisoes").** O `_r1` aparece com `marcador`, porque falta arte no pool para bruto e capanga. Para
+  fechar o critério, o `marcador` é aceito. A arte curada fica como follow-up da 326 D2.
+- **D-391-10 — Conflito 391 × 389 (09/11, coordenador com delegação do dono).** O reforço `_r1` **não** oferece
+  retrato pago (1 Estilha) no meio do combate. A correção vai para uma spec própria; nada muda nesta spec.
