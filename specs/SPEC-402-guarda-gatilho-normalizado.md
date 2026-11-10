@@ -1,7 +1,7 @@
 # SPEC-402 — guarda-gatilho-normalizado
 
-> **Status:** `draft`
-> **Criada:** 2026-11-09 · **Atualizada:** 2026-11-09
+> **Status:** `approved` (10/11, coordenador com delegação do dono: "confio em vc nas decisoes" / "aprovar tudo conforme suas recomendações"; D1–D3 nos defaults; executar só depois da 401 pousar, com executor no papel de autor de eval)
+> **Criada:** 2026-11-09 · **Atualizada:** 2026-11-10
 > **Depende de:** SPEC-400 (`done`), SPEC-395, SPEC-373
 > **Desbloqueia:** nada (endurece guarda; origem N-1 de `handoffs/SPEC-400-sol-review.md:29`)
 > **Risco:** `médio`. Só testes, nenhum diff de produto, e a mudança só aperta a guarda. Não é `baixo` porque mexe no oráculo R3 da 395/400, que segura a regra "absoluta não foge" (combate). Revisor Sonnet, que não seja o autor.
