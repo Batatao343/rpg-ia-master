@@ -21,7 +21,7 @@
 
 ## Próximos 3 passos
 
-1. **SPEC-403** (em execução): Dependabot #71/#72 (minor/patch + 3 SIM102); Playwright 1.65, #65 (genai 4.x) e #67 (uuid-utils 1.x) adiados.
+1. **SPEC-403** `done` (10/11, `18a05688`): Dependabot #71/#72 incorporados (14 pip + 5 npm minor/patch, 3 SIM102); PRs fechados. Adiados, e cada um vira spec própria: Playwright 1.65 (pin de eval), #65 (langchain-google-genai 4.x, exige smoke real) e #67 (uuid-utils 1.x). Nenhum PR aberto.
 2. Follow-ups para virar spec:
    - 398: overlay do bestiário entre encontros no hosted ou `RPG_FAUNA_SABER` no staging.
    - 391: o `_r1` sem oferta de retrato pago no meio do combate (D-391-10) e o payload encerrado com `stage=called`.

@@ -44,7 +44,7 @@ Majors (uuid-utils 1.x, langchain-google-genai 4.x, Playwright 1.65), código de
 - [x] `ruff check .` limpo.
 - [x] Web: test/lint/typecheck/build verdes; `@playwright/test` continua `^1.64.1`.
 - [x] Suíte completa verde no pouso (coordenador).
-- [ ] PRs #71, #72, #67 e #65 fechados com comentário.
+- [x] PRs #71, #72, #67 e #65 fechados com comentário (10/11, coordenador).
 
 ## 5. Decisões (coordenador, delegação do dono)
 
