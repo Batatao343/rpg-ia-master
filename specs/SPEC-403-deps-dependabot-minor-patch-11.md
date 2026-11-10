@@ -1,6 +1,6 @@
 # SPEC-403 — deps-dependabot-minor-patch-11
 
-> **Status:** `approved` (10/11, coordenador com delegação do dono: "confio em vc nas decisoes" / "aprovar tudo conforme suas recomendações"; molde da SPEC-399)
+> **Status:** `done` (10/11, coordenador; risco baixo: testes + lint; equivalência dos 3 SIM102 conferida pelo coordenador — último ramo de cada cadeia; suíte completa no pouso) — antes: `approved` (10/11, coordenador com delegação do dono: "confio em vc nas decisoes" / "aprovar tudo conforme suas recomendações"; molde da SPEC-399)
 > **Criada:** 2026-11-10 · **Atualizada:** 2026-11-10
 > **Depende de:** SPEC-399 (`done`)
 > **Desbloqueia:** fechar os PRs #71, #72, #67 e #65 do Dependabot
@@ -43,7 +43,7 @@ Majors (uuid-utils 1.x, langchain-google-genai 4.x, Playwright 1.65), código de
 - [x] Lock + `requirements.txt` coerentes (`uv lock --check`; o teste de reexport, se houver, verde).
 - [x] `ruff check .` limpo.
 - [x] Web: test/lint/typecheck/build verdes; `@playwright/test` continua `^1.64.1`.
-- [ ] Suíte completa verde no pouso (coordenador).
+- [x] Suíte completa verde no pouso (coordenador).
 - [ ] PRs #71, #72, #67 e #65 fechados com comentário.
 
 ## 5. Decisões (coordenador, delegação do dono)
