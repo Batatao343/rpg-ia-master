@@ -25,7 +25,9 @@ from services.shard_pricing import (
 )
 from services.usage_metering import RATE_CARD_VERSION, UsageEvent, normalize_attempts
 
-NOW = datetime(2026, 10, 8, 12, tzinfo=UTC)
+NOW = INSTALLED_RATE_CARD_OBSERVED_AT + timedelta(
+    hours=12
+)  # tied to the installed card, not a literal date
 
 
 def version(**changes) -> PricingVersion:

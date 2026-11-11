@@ -59,3 +59,35 @@ def test_production_guard_still_rejects_a_card_older_than_its_window():
     now = INSTALLED_RATE_CARD_OBSERVED_AT + timedelta(days=40)
     with pytest.raises(PricingUnavailable):
         _version(30 * 86400, now).require_fresh(now)
+
+
+def test_card_epoch_is_inside_every_installed_window():
+    from services.shard_pricing import DEFAULT_RATE_CARD_MAX_AGE_DAYS
+    from tests.fakes.local_pricing import card_epoch, card_observed_at
+
+    seen = card_observed_at()
+    assert set(seen) == {"llm", "image", "speech", "embedding"}
+    for name, observed in seen.items():
+        age = card_epoch() - observed
+        assert timedelta(0) <= age <= timedelta(days=DEFAULT_RATE_CARD_MAX_AGE_DAYS), name
+
+
+def test_pinned_card_clock_passes_with_real_window_logic(monkeypatch):
+    from services import finops_alerts
+    from tests.fakes.local_pricing import card_epoch, pin_card_clock
+
+    monkeypatch.delenv("RPG_RATE_CARD_MAX_AGE_DAYS", raising=False)
+    assert pin_card_clock(monkeypatch) == card_epoch()
+    finops_alerts.require_paid_effect("image")  # patched: "now" is the card epoch
+    finops_alerts.require_paid_effect("stt")
+
+
+def test_pinned_card_clock_does_not_disable_the_window(monkeypatch):
+    from services.finops_alerts import require_paid_effect
+    from tests.fakes.local_pricing import card_epoch
+
+    monkeypatch.delenv("RPG_RATE_CARD_MAX_AGE_DAYS", raising=False)
+    late = card_epoch() + timedelta(days=31)
+    for category in ("image", "stt"):
+        with pytest.raises(PricingUnavailable):
+            require_paid_effect(category, now=late)

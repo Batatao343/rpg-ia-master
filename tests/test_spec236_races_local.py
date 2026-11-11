@@ -15,10 +15,10 @@ import pytest
 from infrastructure.contracts import JobRequest, Principal
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
 from services.usage_metering import RATE_CARD_VERSION, normalize_attempts
-from tests.fakes.local_pricing import installed_card_max_age_seconds
+from tests.fakes.local_pricing import card_epoch, installed_card_max_age_seconds
 
 pytestmark = pytest.mark.infra_local
-AT = datetime(2026, 10, 12, 12, tzinfo=UTC)
+AT = card_epoch()
 
 
 @pytest.fixture

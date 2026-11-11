@@ -24,6 +24,7 @@ from services.art_triggers import ArtGenerationRequest, reserve_request
 from services.asset_pipeline import shared_object_key
 from tests.api_sources import api_source_text
 from tests.fakes.fake_image_generator import FakeImageGenerator
+from tests.fakes.local_pricing import pin_card_clock
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -175,6 +176,7 @@ def _combat_state(n=3):
 
 def _live(monkeypatch, rows=None, price=3):
     reg = _CountingRegistry(rows or {})
+    pin_card_clock(monkeypatch)  # price gate uses the card window, not the wall clock
     monkeypatch.setenv("RPG_CREATURE_ART", "on")
     monkeypatch.setattr(api_presenters, "_creature_art_live", lambda: True)
     monkeypatch.setattr(api_presenters, "_portrait_price_estilhas", lambda: price)

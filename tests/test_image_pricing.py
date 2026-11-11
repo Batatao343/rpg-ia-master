@@ -1,6 +1,6 @@
 """Documented direct Images API counter arithmetic and unsupported-format gates."""
 
-from datetime import datetime, timezone, UTC
+from datetime import datetime, timedelta, timezone, UTC
 from decimal import Decimal
 from uuid import uuid4
 
@@ -9,6 +9,7 @@ import pytest
 from services.image_pricing import IMAGE_PRICING_VERSION, price_image_event, require_image_prices
 from services.shard_pricing import PricingUnavailable
 from services.usage_metering import normalize_attempts, safe_provider_usage
+from tests.fakes.local_pricing import card_observed_at
 
 MODEL = "gpt-image-2-2026-04-21"
 USAGE = {
@@ -63,12 +64,14 @@ def test_incomplete_or_inconsistent_counter_breakdown_is_not_exact(usage):
     assert not reading(usage).billing_exact
 
 
-def test_unpublished_model_and_stale_card_cannot_authorize_dispatch():
+def test_unpublished_model_and_stale_card_cannot_authorize_dispatch(monkeypatch):
+    monkeypatch.delenv("RPG_RATE_CARD_MAX_AGE_DAYS", raising=False)
+    observed = card_observed_at()["image"]
     with pytest.raises(PricingUnavailable):
-        require_image_prices("unpublished", datetime(2026, 10, 12, tzinfo=UTC))
+        require_image_prices("unpublished", observed)
     with pytest.raises(PricingUnavailable):
         # SPEC-236 R7: default window is 30 d (RPG_RATE_CARD_MAX_AGE_DAYS), was a fixed 7 d.
-        require_image_prices(MODEL, datetime(2026, 11, 12, tzinfo=UTC))
+        require_image_prices(MODEL, observed + timedelta(days=31))
     assert not reading(USAGE, "unpublished").billing_exact
 
 

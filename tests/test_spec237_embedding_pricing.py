@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from decimal import Decimal
 from hashlib import sha256
-from pathlib import Path
 from uuid import UUID, uuid4
 
 import httpx
@@ -72,9 +71,9 @@ def test_failed_embedding_without_usage_is_still_no_spend():
 
 
 def test_main_rate_card_is_untouched_and_pinned():
+    from services.shard_pricing import _INSTALLED_CARD_PATH as path
     from services.shard_pricing import INSTALLED_RATE_CARD_SHA256
 
-    path = Path(__file__).resolve().parents[1] / "data/pricing/rate_card_2026-10-08.json"
     assert sha256(path.read_bytes()).hexdigest() == INSTALLED_RATE_CARD_SHA256
     assert "jina" not in path.read_text(encoding="utf-8")
 

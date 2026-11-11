@@ -670,7 +670,6 @@ def test_delete_game_also_drops_private_and_pending_rows(pc):
 def test_two_real_confirms_concurrently_one_reservation_one_job():
     """P2-5: dois `repo.confirm` completos em 2 conexões (claim -> reserve -> job): 1 vence, o outro `taken`."""
     import threading
-    from datetime import UTC, datetime
 
     from psycopg.rows import dict_row
     from psycopg.types.json import Jsonb
@@ -683,7 +682,7 @@ def test_two_real_confirms_concurrently_one_reservation_one_job():
         INSTALLED_RATE_CARD_SHA256,
     )
     from services.usage_metering import RATE_CARD_VERSION
-    from tests.fakes.local_pricing import installed_card_max_age_seconds
+    from tests.fakes.local_pricing import card_epoch, installed_card_max_age_seconds
 
     dsn = os.getenv("RPG_TEST_DATABASE_URL")
     if not dsn:
@@ -697,7 +696,7 @@ def test_two_real_confirms_concurrently_one_reservation_one_job():
     if admin.execute("select to_regclass('app.creature_portraits') as t").fetchone()["t"] is None:
         pytest.skip("migration da SPEC-352 não aplicada neste banco")
     pool = Pool()
-    at = datetime(2026, 10, 12, 12, tzinfo=UTC)
+    at = card_epoch()
     key = f"tipo:gen:cc{uuid4().hex[:10]}"
     version_id, profile_id = f"cc-v-{uuid4()}", f"cc-p-{uuid4()}"
     owners = [Principal(uuid4(), "test", "a"), Principal(uuid4(), "test", "b")]

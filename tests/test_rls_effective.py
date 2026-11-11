@@ -281,9 +281,9 @@ def _image_quote_case(world, monkeypatch):
     from services.image_quotes import ImageQuoteRepository
     from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
     from services.usage_metering import RATE_CARD_VERSION
-    from tests.fakes.local_pricing import installed_card_max_age_seconds
+    from tests.fakes.local_pricing import card_epoch, installed_card_max_age_seconds
 
-    at = datetime(2026, 10, 12, 12, tzinfo=UTC)
+    at = card_epoch()
 
     class FixedDatetime(datetime):
         @classmethod
