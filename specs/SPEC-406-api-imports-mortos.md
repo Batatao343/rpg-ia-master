@@ -1,6 +1,6 @@
 # SPEC-406 — api-imports-mortos
 
-> **Status:** `in-review` (11/11, executada; antes `approved`: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
+> **Status:** `done` (11/11: 91 imports mortos removidos de `api.py`, 1069 → 984 linhas, 18 reexports explícitos; revisão Sol APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-406-sol-review.md`; oráculo W2 sem diferença; suíte completa do coordenador no pouso; follow-up P3-1: endurecer o scanner de `tests/test_api_surface.py`; antes `approved`: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma. **Ordem recomendada: depois da SPEC-405** (a 405 R2 apaga `api.py:242–251`, `_CODE_RE` + `_error_code_of`, e com isso o único `F811` do arquivo; ver §7).
 > **Desbloqueia:** nada (follow-up R17b da SPEC-381 `done`; uma das 4 follow-ups de qualidade 405..408).
@@ -114,7 +114,7 @@ Executor roda só os testes da etapa (`bash scripts/dev/pt.sh`, máx. `-n 2`); s
 - [x] R0: `docs/spec406/README.md` com os 109 diagnósticos classificados por evidência; todo `morto` sem acerto em AST/grep de consumidores.
 - [x] R1: `tests/test_api_surface.py` verde na `main` antes da poda e depois; mutação (apagar `format_response`) o reprova.
 - [x] `bash scripts/dev/py.sh -m ruff check --isolated --select F401,F811,F841 api.py` → `All checks passed` (com a 405 pousada) ou só o `F811` de `re` (406 antes da 405).
-- [x] `ruff-baseline.toml`: entrada de `api.py` sem `F401`; `ruff_baseline.py --check` verde; mais nenhuma entrada alterada.
+- [x] `ruff-baseline.toml`: entrada de `api.py` sem `F401`; `ruff_baseline.py --check` verde; além de `api.py`, o gerador removeu duas entradas já defasadas na `main` (`C901` de `agents/storyteller.py` e a de `scripts/bestiario/calibrar.py`): só aperta o gate (§9, revisão Sol P3-3).
 - [x] `patch_liveness` A = B (mesmas chaves, nenhum `True`→`False`); mutação dos não-chamáveis igual.
 - [x] `api_surface_dump` byte-igual (6 arquivos × 2 perfis, incluindo `modules.json`); exceções de efeito colateral só as listadas no README, cada uma com `noqa` e motivo.
 - [x] `evals compare` A × B sem diferença; `playtest run --all --turns 10 --seed 0` com mesmas violações e desfechos.
