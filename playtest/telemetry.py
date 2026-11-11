@@ -16,6 +16,7 @@ from collections import Counter
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+from observability.latency import percentile as _percentile
 from playtest import pricing
 from playtest.runner import (
     CampaignResult,
@@ -827,14 +828,6 @@ def turn_to_record(rec: TurnRecord) -> dict:
 
 def write_turn(fp, record: dict) -> None:
     fp.write(json.dumps(record, ensure_ascii=False) + "\n")
-
-
-def _percentile(values: list[int], pct: float) -> int:
-    if not values:
-        return 0
-    s = sorted(values)
-    idx = min(len(s) - 1, int(round((pct / 100.0) * (len(s) - 1))))
-    return int(s[idx])
 
 
 def _min_active_entropy_cost(player: dict) -> int:

@@ -155,3 +155,9 @@ def test_percentile_nearest_rank_matches_playtest():
     values = [5, 1, 9, 3, 7, 2, 8]
     for pct in (50, 95):
         assert lat.percentile(values, pct) == _percentile(values, pct)
+
+
+def test_playtest_percentile_is_the_latency_one():
+    from playtest.telemetry import _percentile
+
+    assert _percentile is lat.percentile

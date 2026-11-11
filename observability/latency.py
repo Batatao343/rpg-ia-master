@@ -346,7 +346,7 @@ def summarize_phases(records: list[dict[str, Any]]) -> dict[str, dict[str, float
 
 
 def percentile(values: list[int], pct: float) -> int:
-    """Nearest-rank (mesmo critério de playtest.telemetry._percentile)."""
+    """Nearest-rank; `playtest.telemetry` importa daqui (uma só implementação)."""
     if not values:
         return 0
     s = sorted(values)
