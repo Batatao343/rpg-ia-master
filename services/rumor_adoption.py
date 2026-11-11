@@ -445,10 +445,6 @@ def _is_search(text: str) -> bool:
     return any(v in low for v in config()["search_vocab"])
 
 
-def search_intent(text: str) -> bool:
-    return _is_search(text or "")
-
-
 def nothing_found(state: dict, location_id: str, text: str) -> bool:
     """True se o heroi BUSCA no alvo de uma alegacao de achado adotada que NAO entrega nada agora
     (falsa, ou verdadeira ainda fora da janela/gatilho). O narrador recebe o fato "nada aqui"."""

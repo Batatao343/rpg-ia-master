@@ -210,10 +210,6 @@ def seed_labels(seed: NpcSeed) -> dict[str, str]:
     }
 
 
-def seed_ids(seed: NpcSeed) -> dict[str, list[str] | str | None]:
-    return seed.model_dump()
-
-
 def combinations_for_region(region: str, *, tables: dict | None = None) -> int:
     """Combinações possíveis (sem facção, conservador) para uma origem (R5)."""
     lore = _lore()

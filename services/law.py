@@ -16,7 +16,7 @@ import logging
 import math
 import random
 import re
-from typing import Any, TypedDict
+from typing import Any
 
 from observability.telemetry import log_event as _log_event
 from services import law_codes
@@ -122,32 +122,6 @@ CRIME_CLAIM_HINT = (
 def crime_hint_enabled(state: dict) -> bool:
     """A instrução de ``crime_claims`` só entra no prompt onde há lei (zero token fora)."""
     return _active() and law_codes.code_for_location(_here(state)) is not None
-
-
-class CrimeCandidate(TypedDict, total=False):
-    crime_type: str
-    victim_ref: str
-    covert: bool
-    source: str  # "llm_claim" | "engine"
-    location_id: str
-    turn: int
-    player_text: str
-    dedupe_key: str
-
-
-class PrisonerRef(TypedDict, total=False):
-    prisoner_id: str
-    name: str
-    enemy_id: str
-    faction_id: str
-    alive: bool
-
-
-class LawReceipt(TypedDict, total=False):
-    ok: bool
-    reason: str
-    gold: int
-    jurisdiction_id: str
 
 
 # --------------------------------------------------------------------------- #

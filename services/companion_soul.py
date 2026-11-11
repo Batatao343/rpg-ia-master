@@ -543,10 +543,6 @@ def _rest_turn(state: dict) -> bool:
     return True
 
 
-def _soul_for_quest(souls: dict, quest: dict) -> str:
-    return str(quest.get("personal_of") or "")
-
-
 def _fail_personal_quest(
     quests: list[dict], soul: dict, cid: str, *, turn: int, events: list[dict], name: str
 ) -> list[dict]:

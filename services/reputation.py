@@ -423,10 +423,6 @@ def register_deed_kind(event_type: str, weights: Mapping[str, int]) -> None:
     npc_knowledge.PLAYER_DEED_TYPES.add(str(event_type))
 
 
-def deed_event_types() -> set[str]:
-    return {"faction_deed", "quest_completed", "npc_killed", *_EXTRA_DEED_KINDS}
-
-
 def _faction_of_entity(entity_id: str) -> str:
     from services import graph_resolver as gr
 

@@ -37,11 +37,6 @@ def _config() -> dict:
     return _CONFIG
 
 
-def reload_config() -> None:
-    global _CONFIG
-    _CONFIG = None
-
-
 def shelf_config(mid: str) -> dict | None:
     row = (_config().get("mercadores") or {}).get(mid)
     return row if isinstance(row, dict) else None

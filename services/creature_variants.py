@@ -11,7 +11,6 @@ from __future__ import annotations
 import copy
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
 
 import yaml
 
@@ -313,18 +312,3 @@ __all__ = [
     "lint_variante",
     "modificador_por_id",
 ]
-
-
-def _debug_scores(mod_id: str, regiao: str, nucleo: str, categoria: str | None) -> list[Any]:
-    """Apoio de depuração (não usado em produção)."""
-    from services import creature_gen as cg
-
-    mod = modificador_por_id(mod_id) or {}
-    return sorted(
-        (
-            (round(score_base(f, mod, nucleo, categoria), 3), f["id"])
-            for f in cg.fichas_aprovadas().values()
-            if f.get("regiao") == regiao and _compativel(f, mod)
-        ),
-        reverse=True,
-    )

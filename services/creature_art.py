@@ -304,14 +304,6 @@ def portrait_for(
     }
 
 
-def has_curated_art(enemy: dict[str, Any]) -> bool:
-    """A view inclui `retrato` com a flag `off` só quando existe arte curada (R13.7)."""
-    bid = normalize_bestiary_id(enemy)
-    return bool(
-        (bid and _curated("creature", bid)) or _curated("creature_family", family_of(enemy))
-    )
-
-
 def curated_covers_key(enemy: dict[str, Any], key: str) -> bool:
     """SPEC-352 R5/D-352-6: ha arte curada que ja resolve essa chave (entao nao se oferece geracao)."""
     if key.startswith("npc:"):

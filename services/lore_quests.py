@@ -669,13 +669,6 @@ def seed_for_proposal(
     return seed, ""
 
 
-def seed_from_proposal(
-    state: dict, proposal: dict, npc_key: str, menu: list[dict], day: int
-) -> Any:
-    seed, _why = seed_for_proposal(state, proposal, npc_key, menu, day)
-    return seed
-
-
 # --- ganchos de jogo ---------------------------------------------------------------------------
 
 

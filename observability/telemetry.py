@@ -367,11 +367,6 @@ def contextualize(fn):
     return _runner
 
 
-def run_with_context(fn, *args: Any, **kwargs: Any) -> Any:
-    """Executa ``fn`` ja em uma copia do contexto atual (equivale a ``contextualize(fn)(...)``)."""
-    return contextualize(fn)(*args, **kwargs)
-
-
 @dataclass
 class Span:
     name: str

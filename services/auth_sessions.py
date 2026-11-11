@@ -10,7 +10,7 @@ import hashlib
 import hmac
 import secrets
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Protocol
 from urllib.parse import urlsplit
 from uuid import UUID
@@ -99,7 +99,3 @@ def principal_from_session(provider: IdentityProvider, access_token: str | None)
     if not principal.subject or principal.user_id != UUID(principal.subject):
         raise Unauthorized("subject inválido")
     return principal
-
-
-def utc_now() -> datetime:
-    return datetime.now(UTC)
