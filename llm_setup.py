@@ -1808,87 +1808,53 @@ def _legacy_model(provider: str, tier: ModelTier) -> str | None:
     return None
 
 
-def _legacy_get_llm(provider: str, temperature: float, tier: ModelTier):
-    """LLM_PROVIDER=<x> força TODOS os tiers a um único provider (ignora ROUTES)."""
-    # Gemini sem chave preserva o comportamento atual (jogável offline via MockLLM).
-    if provider == "gemini" and not os.getenv("GOOGLE_API_KEY"):
-        if os.getenv("RPG_NO_MOCK"):
-            _announce_once("fallback_llm_selected", "legacy_gemini_no_key", level="error")
-            return FallbackLLM("GOOGLE_API_KEY não configurada")
-        _announce_once("mock_selected", "legacy_gemini_no_key", level=_mock_level())
-        from mock_llm import MockLLM
+def _resolve_mode():
+    """SPEC-408: resolvedor único (services.llm_mode) com o contexto de llm_setup."""
+    from services.llm_mode import resolve_mode
 
-        return MockLLM(temperature=temperature)
+    return resolve_mode(
+        set(PROVIDER_KEY_ENV.values()),
+        lambda p: _legacy_model(p, ModelTier.FAST) is not None,
+    )
 
-    model = _legacy_model(provider, tier)
-    if model is None:
-        _announce_once("fallback_llm_selected", "unknown_provider", level="error")
-        return FallbackLLM(f"Provider desconhecido: {provider!r}")
-    # embrulha em RoutedLLM (1 candidato) para semântica uniforme de fallback/telemetria
-    return RoutedLLM(tier, temperature, [(provider, model)])
+
+_FALLBACK_MSG = {
+    "legacy_gemini_no_key": "GOOGLE_API_KEY não configurada",
+    "no_keys": "Nenhuma key de provider configurada",
+}
 
 
 def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):
-    """Resolve os candidatos do tier (respeitando overrides) e devolve um `RoutedLLM`.
+    """Resolve o modo (`services.llm_mode.resolve_mode`) e instancia o LLM do tier.
     Assinatura pública inalterada — back-compat total nos call sites.
 
-    Ordem de resolução (R8):
-      1. RPG_FORCE_MOCK=1  → MockLLM (suíte / offline determinístico)
-      2. LLM_PROVIDER=<x>  → provider legado único (ignora ROUTES)
-      3. sem key nenhuma   → MockLLM (zero-config) ou FallbackLLM (RPG_NO_MOCK)
-      4. default           → ROUTES (multi-provider com fallback)
-    """
-    if os.getenv("RPG_FORCE_MOCK"):
-        _announce_once("mock_selected", "force_mock", level=_mock_level())
+    Ordem de resolução: RPG_FORCE_MOCK → LLM_PROVIDER (legado único, ignora ROUTES)
+    → sem key (MockLLM ou FallbackLLM com RPG_NO_MOCK) → ROUTES (multi-provider)."""
+    m = _resolve_mode()
+    if m.kind == "mock":
+        _announce_once("mock_selected", m.reason, level=_mock_level())
         from mock_llm import MockLLM
 
         return MockLLM(temperature=temperature)
-
-    provider_override = os.getenv("LLM_PROVIDER", "").strip().lower()
-    if provider_override:
-        return _legacy_get_llm(provider_override, temperature, tier)
-
-    if not _any_key_available():
-        if os.getenv("RPG_NO_MOCK"):
-            _announce_once("fallback_llm_selected", "no_keys", level="error")
-            return FallbackLLM("Nenhuma key de provider configurada")
-        _announce_once("mock_selected", "no_keys", level=_mock_level())
-        from mock_llm import MockLLM
-
-        return MockLLM(temperature=temperature)
-
+    if m.kind == "fallback":
+        _announce_once("fallback_llm_selected", m.reason, level="error")
+        provider = os.getenv("LLM_PROVIDER", "").strip().lower()
+        return FallbackLLM(_FALLBACK_MSG.get(m.reason) or f"Provider desconhecido: {provider!r}")
+    if m.kind == "legacy":
+        # RoutedLLM (1 candidato) p/ semântica uniforme de fallback/telemetria
+        return RoutedLLM(tier, temperature, [(m.provider, _legacy_model(m.provider, tier))])
     return RoutedLLM(tier, temperature, _load_routes().get(tier, []))
 
 
 def is_simulated() -> bool:
-    """True quando `get_llm()` devolveria MockLLM (modo simulado, sem provider real).
-
-    Espelha a ordem de resolução do get_llm — auditoria A4: a flag `simulated`
-    da API olhava só GOOGLE_API_KEY e mentia com o jogo 100% real no Groq."""
-    if os.getenv("RPG_FORCE_MOCK"):
-        return True
-    if os.getenv("RPG_NO_MOCK"):
-        return False
-    provider = os.getenv("LLM_PROVIDER", "").strip().lower()
-    if provider:
-        return provider == "gemini" and not os.getenv("GOOGLE_API_KEY")
-    return not _any_key_available()
+    """True quando `get_llm()` devolveria MockLLM (modo simulado, sem provider real)."""
+    return _resolve_mode().kind == "mock"
 
 
 def llm_mode() -> str:
-    """SPEC-249/248: modo efetivo do LLM — ``routes|legacy:<provider>|mock|fallback``.
-
-    Espelha a ordem de resolução de ``get_llm`` (sem instanciar nada)."""
-    if os.getenv("RPG_FORCE_MOCK"):
-        return "mock"
-    provider = os.getenv("LLM_PROVIDER", "").strip().lower()
-    if provider:
-        if provider == "gemini" and not os.getenv("GOOGLE_API_KEY"):
-            return "fallback" if os.getenv("RPG_NO_MOCK") else "mock"
-        return f"legacy:{provider[:24]}"
-    if not _any_key_available():
-        return "fallback" if os.getenv("RPG_NO_MOCK") else "mock"
-    return "routes"
+    """SPEC-249/248: modo efetivo — ``routes|legacy:<provider>|mock|fallback`` (sem instanciar)."""
+    m = _resolve_mode()
+    return f"legacy:{m.provider[:24]}" if m.kind == "legacy" else m.kind
 
 
 def providers_with_key() -> list[str]:

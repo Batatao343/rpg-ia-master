@@ -1,6 +1,6 @@
 # SPEC-408 — llm-modo-resolvedor-unico
 
-> **Status:** `approved` (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
+> **Status:** `in-review` (executor 11/11; antes `approved`) (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma (independente de SPEC-405/406/407)
 > **Desbloqueia:** nada (follow-up de qualidade, SPEC-405..408)
@@ -89,13 +89,13 @@ Objetivo: um resolvedor puro único do qual as três derivam, para o desacordo n
 
 ## 5. Critérios de aceite
 
-- [ ] `tests/test_llm_mode.py` falhou antes da Etapa 3 (linhas `P=foo`) e passa depois, em toda a matriz.
-- [ ] `llm_mode()` com `LLM_PROVIDER=foo` devolve `fallback`; demais strings iguais às de hoje (`mock`, `routes`, `legacy:<p>`, `fallback`).
-- [ ] `is_simulated()` com valores idênticos em toda linha (os `test_is_simulated_*` de `tests/test_audit_fixes.py` seguem verdes sem edição).
-- [ ] Eventos `llm.mock_selected` / `llm.fallback_llm_selected`: mesmos `reason`, mesmos níveis, 1× por processo e motivo (R8).
-- [ ] `get_llm`, `is_simulated`, `llm_mode` não leem env fora do resolvedor, exceto o que `_legacy_model`/`_load_routes` já leem.
-- [ ] `git diff --stat llm_setup.py`: saldo ≤ 0; `tests/test_size_budget.py`, `ruff format --check`, `ruff check` verdes.
-- [ ] `tests/test_boot_log.py` verde (`"routes"` mantido).
+- [x] `tests/test_llm_mode.py` falhou antes da Etapa 3 (linhas `P=foo`) e passa depois, em toda a matriz.
+- [x] `llm_mode()` com `LLM_PROVIDER=foo` devolve `fallback`; demais strings iguais às de hoje (`mock`, `routes`, `legacy:<p>`, `fallback`).
+- [x] `is_simulated()` com valores idênticos em toda linha (os `test_is_simulated_*` de `tests/test_audit_fixes.py` seguem verdes sem edição).
+- [x] Eventos `llm.mock_selected` / `llm.fallback_llm_selected`: mesmos `reason`, mesmos níveis, 1× por processo e motivo (R8).
+- [x] `get_llm`, `is_simulated`, `llm_mode` não leem env fora do resolvedor, exceto o que `_legacy_model`/`_load_routes` já leem.
+- [x] `git diff --stat llm_setup.py`: saldo ≤ 0; `tests/test_size_budget.py`, `ruff format --check`, `ruff check` verdes.
+- [x] `tests/test_boot_log.py` verde (`"routes"` mantido).
 - [ ] Revisão Sonnet APPROVED.
 - [ ] `uv run pytest` verde (suíte completa offline, 1× pelo coordenador no pouso).
 

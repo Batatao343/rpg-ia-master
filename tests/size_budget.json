@@ -12,7 +12,7 @@
   "api_presenters.py": 1353,
   "combat_mechanics.py": 1089,
   "infrastructure/wallet.py": 1001,
-  "llm_setup.py": 1896,
+  "llm_setup.py": 1862,
   "mock_llm.py": 1103,
   "persistence.py": 1373,
   "playtest/invariants.py": 3053,
