@@ -43,7 +43,7 @@ import gamedata
 import persistence as persistence_module
 import progression
 from character_creator import create_player_character
-from gamedata import CLASSES, load_json_data, seed_factions
+from gamedata import CLASSES, seed_factions
 from infrastructure.contracts import (
     AuthUnavailable,
     CsrfError,
@@ -97,18 +97,11 @@ from services.visual_catalog import (
 from services.reputation import faction_tier
 from world_utils import starting_world
 from api_models import (
-    ActionRequest,
     ArtBriefRequest,
-    ArtConfirmRequest,
-    ArtQualityRequest,
-    ArtQuoteRequest,
     ChronicleSearchRequest,
-    CombatSimulatorRequest,
-    CreateCharacterRequest,
     EquipRequest,
     EspolioRequest,
     ForjaRequest,
-    GameResponse,
     LevelUpRequest,
     LojaCartasRequest,
     PrepareCardsRequest,
@@ -121,7 +114,6 @@ from api_core import (
     _CLIENT_LATENCY_PATH,
     _NOT_A_FAILURE,
     _account_reader,
-    _begin_state_mutation,
     _bind_corr,
     _captured_usage,
     _client_ip,
@@ -130,23 +122,18 @@ from api_core import (
     _current_request_id,
     _embedding_attempt_events,
     _embedding_telemetry_hook,
-    _enforce_owner_budget,
     _enqueue_turn_art,
     _error_response,
     _fail_operation,
     _llm_attempt_events,
-    _llm_log_fields,
     _llm_turn_events,
     _log_csrf_rejection,
-    _meter_auxiliary_operation,
     _metrics_authorized,
     _op_rejected,
     _op_replayed,
     _prologue_owner,
     _reject_archived,
     _reject_memorial,
-    _release_failed,
-    _turn_logger,
     _usage_attempts,
     _validated_receipt,
 )
@@ -154,27 +141,36 @@ from api_core import (
 import api_presenters
 from api_presenters import (
     _card_reward_blocks,
-    _cards_block,
-    _inventory_block,
     _levelup_block,
     _portrait_manifest_ctx,
-    _prepared_slots,
-    _public_art_refs,
     _simulation_manifest,
-    format_response,
 )
 
 # --- reexports (SPEC-381 R9): mesmo objeto do modulo-lar; nome patchado nunca entra ---
 from api_core import (
+    _begin_state_mutation as _begin_state_mutation,
+    _enforce_owner_budget as _enforce_owner_budget,
     _enqueue_art_generation as _enqueue_art_generation,
+    _llm_log_fields as _llm_log_fields,
+    _meter_auxiliary_operation as _meter_auxiliary_operation,
+    _release_failed as _release_failed,
+    _turn_logger as _turn_logger,
 )
 from api_models import (
+    ActionRequest as ActionRequest,
+    ArtConfirmRequest as ArtConfirmRequest,
+    ArtQualityRequest as ArtQualityRequest,
+    ArtQuoteRequest as ArtQuoteRequest,
+    CombatSimulatorRequest as CombatSimulatorRequest,
+    CreateCharacterRequest as CreateCharacterRequest,
+    GameResponse as GameResponse,
     PlayStepRequest as PlayStepRequest,
 )
 from api_presenters import (
     _PORTRAIT_PRICE_CACHE as _PORTRAIT_PRICE_CACHE,
     _ParticipantNames as _ParticipantNames,
     _abyss_tier_view as _abyss_tier_view,
+    _cards_block as _cards_block,
     _combat_block as _combat_block,
     _companion_feedback as _companion_feedback,
     _companion_labels as _companion_labels,
@@ -183,11 +179,15 @@ from api_presenters import (
     _enemy_portrait as _enemy_portrait,
     _factions_block as _factions_block,
     _image_effect_open as _image_effect_open,
+    _inventory_block as _inventory_block,
     _npcs_block as _npcs_block,
     _portrait_offer_price as _portrait_offer_price,
+    _prepared_slots as _prepared_slots,
     _public_art_offer as _public_art_offer,
+    _public_art_refs as _public_art_refs,
     _quest_block as _quest_block,
     _world_block as _world_block,
+    format_response as format_response,
 )
 from routes.art import (
     _monster_quote_inputs as _monster_quote_inputs,

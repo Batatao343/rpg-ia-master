@@ -12,6 +12,7 @@ from pydantic import ValidationError
 
 import api
 import api_core
+import gamedata
 import persistence
 import routes.turn
 from llm_setup import LLMAttemptEvent, ModelTier
@@ -19,9 +20,9 @@ from llm_setup import LLMAttemptEvent, ModelTier
 
 def _state(game_id: str, *, gold: int = 10) -> dict:
     req = api.CombatSimulatorRequest(
-        class_name=next(iter(api.gamedata.CLASSES)),
+        class_name=next(iter(gamedata.CLASSES)),
         level=1,
-        enemy_id=next(iter(api.gamedata.BESTIARY)),
+        enemy_id=next(iter(gamedata.BESTIARY)),
         quantity=1,
     )
     state = api._build_combat_simulator_state(req)
@@ -246,8 +247,8 @@ def test_criacao_rejeita_opcoes_fora_dos_catalogos():
     base = {
         "name": "Teste",
         "race": "Humano",
-        "class_name": next(iter(api.gamedata.CLASSES)),
-        "region": (api.load_json_data("origins.json")["regions"])[0]["name"],
+        "class_name": next(iter(gamedata.CLASSES)),
+        "region": (gamedata.load_json_data("origins.json")["regions"])[0]["name"],
         "level": 1,
     }
     for field, value in (

@@ -14,6 +14,7 @@ import agents.combat as combat_agent
 import api
 import api_core
 import character_creator
+import gamedata
 import persistence
 import routes.turn
 
@@ -32,12 +33,12 @@ def _request(**overrides) -> api.CombatSimulatorRequest:
 def test_opcoes_do_simulador_so_expoem_dados_canonicos():
     options = api.combat_simulator_options()
 
-    assert set(options["classes"]) == set(api.gamedata.CLASSES)
+    assert set(options["classes"]) == set(gamedata.CLASSES)
     assert options["levels"] == [1, 3, 5, 10]
     assert options["quantities"] == [1, 2, 3]
     assert len(options["enemies"]) >= 100
     assert all(
-        enemy["id"] in api.gamedata.BESTIARY
+        enemy["id"] in gamedata.BESTIARY
         and enemy["name"]
         and enemy["category"] in {"lacaio", "padrao", "elite", "chefe", "nomeado"}
         for enemy in options["enemies"]

@@ -18,6 +18,7 @@ from langchain_core.messages import AIMessage
 
 import api
 import api_core
+import gamedata
 import persistence
 import routes.turn
 from llm_setup import LLMAttemptEvent, ModelTier, _emit_attempt_telemetry
@@ -114,9 +115,9 @@ class _Graph:
 
 def _state(gid: str) -> dict:
     req = api.CombatSimulatorRequest(
-        class_name=next(iter(api.gamedata.CLASSES)),
+        class_name=next(iter(gamedata.CLASSES)),
         level=1,
-        enemy_id=next(iter(api.gamedata.BESTIARY)),
+        enemy_id=next(iter(gamedata.BESTIARY)),
         quantity=1,
     )
     state = api._build_combat_simulator_state(req)

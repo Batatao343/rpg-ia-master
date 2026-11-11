@@ -16,7 +16,17 @@ from pathlib import Path
 import api
 
 ROOT = Path(__file__).resolve().parents[1]
-_DIRS = ("tests", "playtest", "evals", "scripts", "services", "routes", "agents", "infrastructure", "observability")
+_DIRS = (
+    "tests",
+    "playtest",
+    "evals",
+    "scripts",
+    "services",
+    "routes",
+    "agents",
+    "infrastructure",
+    "observability",
+)
 
 
 def _consumer_files() -> list[Path]:
@@ -49,9 +59,9 @@ def _reads(path: Path) -> list[tuple[int, str]]:
             found.extend((node.lineno, a.name) for a in node.names if a.name != "*")
         elif isinstance(node, ast.Call) and len(node.args) >= 2:
             first, second = node.args[0], node.args[1]
-            if isinstance(first, ast.Name) and first.id in aliases:
-                if isinstance(second, ast.Constant) and isinstance(second.value, str):
-                    found.append((node.lineno, second.value))
+            is_api_call = isinstance(first, ast.Name) and first.id in aliases
+            if is_api_call and isinstance(second, ast.Constant) and isinstance(second.value, str):
+                found.append((node.lineno, second.value))
     return found
 
 
@@ -64,7 +74,12 @@ def _all_reads() -> dict[str, list[str]]:
 
 
 def test_api_attributes_read_by_consumers_exist():
-    missing = [f"{where} {name}" for name, wheres in _all_reads().items() if not hasattr(api, name) for where in wheres]
+    missing = [
+        f"{where} {name}"
+        for name, wheres in _all_reads().items()
+        if not hasattr(api, name)
+        for where in wheres
+    ]
     assert not missing, "consumidores leem atributo ausente de api:\n" + "\n".join(sorted(missing))
 
 
