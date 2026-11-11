@@ -555,3 +555,25 @@ def test_summary_conta_proveniencia_dos_writes_de_startup() -> None:
     )
     summary = build_summary(result, [])
     assert summary["memory"]["writes_by_provenance"] == {"inference": 4}
+
+
+def test_persist_memory_records_sempre_envia_metadatas(monkeypatch):
+    """SPEC-405 R4: o write único sempre leva ``metadatas`` alinhado aos textos."""
+    seen: dict = {}
+
+    def persist(game_id, texts, **kwargs):
+        seen.update(game_id=game_id, texts=list(texts), kwargs=kwargs)
+        return True
+
+    monkeypatch.setattr(archivist, "add_memory_to_session", persist)
+    assert archivist._persist_memory_records("g1", ["O portão range.", "A ponte caiu."]) is True
+    assert len(seen["texts"]) == 2
+    assert len(seen["kwargs"]["metadatas"]) == len(seen["texts"])
+
+
+def test_persist_memory_records_falha_do_rag_devolve_false(monkeypatch):
+    def boom(*_args, **_kwargs):
+        raise RuntimeError("rag fora")
+
+    monkeypatch.setattr(archivist, "add_memory_to_session", boom)
+    assert archivist._persist_memory_records("g1", ["O portão range."]) is False

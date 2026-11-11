@@ -76,7 +76,7 @@ def test_archivist_persiste_summary_uma_vez_e_limpa(monkeypatch):
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
-        lambda game_id, facts: saved.append((game_id, list(facts))) or True,
+        lambda game_id, facts, **_kwargs: saved.append((game_id, list(facts))) or True,
     )
     state = {
         "game_id": "game-summary",
@@ -109,7 +109,7 @@ def test_grafo_real_consume_combate_loot_e_summary_no_mesmo_invoke(monkeypatch):
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
-        lambda game_id, facts: writes.append((game_id, list(facts))) or True,
+        lambda game_id, facts, **_kwargs: writes.append((game_id, list(facts))) or True,
     )
     monkeypatch.setattr(
         loot,
@@ -249,7 +249,7 @@ def test_archivist_nao_reconsome_conflict_id_ja_confirmado(monkeypatch):
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
-        lambda game_id, facts: saved.append((game_id, list(facts))) or True,
+        lambda game_id, facts, **_kwargs: saved.append((game_id, list(facts))) or True,
     )
     pending = summary_service.build_summary(
         [
@@ -312,7 +312,7 @@ def test_archivist_substitui_resumo_que_reverte_morte(monkeypatch):
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
-        lambda _game_id, _facts: True,
+        lambda _game_id, _facts, **_kwargs: True,
     )
     out = archivist.archive_node(
         {
@@ -339,7 +339,7 @@ def test_archivist_falha_rag_preserva_summary_e_retry_sem_cronica(monkeypatch):
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
-        lambda game_id, facts: attempts.append((game_id, list(facts))) or False,
+        lambda game_id, facts, **_kwargs: attempts.append((game_id, list(facts))) or False,
     )
     pending = _summary()
     state = {
@@ -379,7 +379,7 @@ def test_archivist_falha_rag_preserva_summary_e_retry_sem_cronica(monkeypatch):
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
-        lambda game_id, facts: attempts.append((game_id, list(facts))) or True,
+        lambda game_id, facts, **_kwargs: attempts.append((game_id, list(facts))) or True,
     )
     retried = {**state, **failed}
     retried = {**retried, **archivist.archive_node(retried)}
@@ -403,7 +403,7 @@ def test_archivist_canonical_only_bloqueia_so_fatos_e_limpa_apos_commit(
     attempts = []
     succeeds = False
 
-    def persist(_game_id, facts):
+    def persist(_game_id, facts, **_kwargs):
         attempts.append(list(facts))
         return succeeds
 
@@ -756,7 +756,7 @@ def test_evento_rejeitado_nao_vira_fato_do_archivist(monkeypatch):
     saved = []
     monkeypatch.setattr(archivist, "get_llm", lambda **_kwargs: _ArchivistLLM())
     monkeypatch.setattr(
-        archivist, "add_memory_to_session", lambda _game_id, facts: saved.extend(facts) or True
+        archivist, "add_memory_to_session", lambda _game_id, facts, **_kwargs: saved.extend(facts) or True
     )
     state = {
         "game_id": "game-rejected",

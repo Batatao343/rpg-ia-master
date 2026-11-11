@@ -412,7 +412,7 @@ def test_archivist_detecta_rejeicao_nova_com_buffer_ja_capado(monkeypatch):
     monkeypatch.setattr(
         archivist,
         "add_memory_to_session",
-        lambda _game_id, facts: writes.extend(facts) or True,
+        lambda _game_id, facts, **_kwargs: writes.extend(facts) or True,
     )
     out = archivist.archive_node(
         {
