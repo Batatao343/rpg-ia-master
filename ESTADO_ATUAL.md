@@ -28,7 +28,7 @@
    - 401 P2-4: amarrar os artefatos de arena ao hash dos dials.
    - 382: helpers em módulo próprio; golden sem rede.
    - 396: VoiceOver real; sufixo do `PlayQueue`.
-3. Refatoração 375–385 restante (383/384 parciais, 392 `draft`); artes do staging (326 D2); smoke §6 de 349/359/360/361.
+3. **SPEC-404** `approved` (11/11): ≥ 10 rotas de entrega (312 D1 e 313 D8 aprovadas pelo dono). Refatoração 375–385 restante (383/384 parciais, 392 `draft`); artes do staging (326 D2); smoke §6 de 349/359/360/361.
 
 ## Bloqueios no dono
 
@@ -46,7 +46,6 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 | Auth staging/prod (343) | confirmar e-mail obrigatório + captcha na Vercel | "confirmei" → fechar enumeração |
 | Branch remota `spec-380` | apagar no GitHub (já pousada) | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
-| Lore 312 D1 / 313 D8 | ler `data/world/rumor_seed_overrides.json`, `lore_quests.json` | ajustes → reindexar |
 
 Decididas em 09/11 pelo coordenador, com delegação ("confio em vc nas decisoes"): D-363-1 (mantém o crítico por dupla), D-363-2 (R$ 5/dia no staging), D-364-2 (teto exato), D-367-2 (8 reescritas), D-391-9/10. Veto do dono continua possível, registrado na spec.
 

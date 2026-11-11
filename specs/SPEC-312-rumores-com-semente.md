@@ -796,6 +796,10 @@ RPG_NPC_KNOWLEDGE=on`): 0 erros, 0 violacoes. Cenario `mundo` (40 turnos): 10 ru
   (default baixa → falso, alta/média → verdadeiro), `public_names` (quem o povo conhece pelo
   nome; recomendado: só governantes — Valerius, Lady Aerwen) e `quest_eligible`. Recomendado:
   bloqueia só `RPG_RUMORS=on` no staging (como D8 da 297).
+  **Decidida (11/11, dono, após o vídeo de revisão dos 48 boatos de lore): "tudo aprovado e ok".**
+  Fica a tabela como está: verdades trocadas à mão (#8 Víbora falso; #23 e #35 verdadeiros),
+  só Valerius como nome público, 9 boatos travados por segredo, o Árbitro sem quest e os
+  quase repetidos da carcaça (Costa Negra) mantidos.
 - **D2 — "Região frequentada"** = região onde o herói esteve nos últimos 14 dias. Recomendado:
   **14** `[BALANCEAR]`.
 - **D3 — Defaults das flags.** Recomendado: `RPG_RUMORS=on` local e na suíte (segue o motor),

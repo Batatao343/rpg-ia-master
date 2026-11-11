@@ -863,6 +863,7 @@ Abertas (o executor segue o **recomendado** se o dono não disser nada):
 - **D7 — `ponto_fraco` de fação.** Recomendado: **fora**, para N5/N8 (são segredos).
 - **D8 — Revisão de conteúdo de `delivery_routes`.** As rotas são curadas (como as sementes da
   297 D8). O dono revisa a lista antes de `on` no staging; a suíte e o local rodam com ela.
+  **Decidida (11/11, dono): as 2 rotas aprovadas como estão; pediu mais rotas → SPEC-404.**
 - **D9 — Default de `RPG_LORE_QUESTS`.** Recomendado: `on` local e na suíte; `shadow` no staging
   até o smoke §6; `on` no staging depois do OK.
 - **D10 — Storyteller ancora?** Recomendado: **não** (só o `npc_actor`; R6).
