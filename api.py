@@ -6,30 +6,19 @@ Fase 10: game_id validado (UUID) na borda, CORS por env, rate limit mínimo,
 log JSON por turno.
 """
 
-import contextvars
-import hashlib
-import json
-import logging
 import os
-import queue
 import re
 import sys
-import threading
 import time
 import uuid  # <--- Necessário para gerar IDs de sessão
-from collections import Counter, defaultdict, deque
-from contextlib import contextmanager, nullcontext
-from copy import deepcopy
-from typing import Annotated, Any, Dict, List, Literal, Optional
-from collections.abc import Callable, Iterator
+from collections import defaultdict, deque
+from typing import Any
 
-from fastapi import APIRouter, FastAPI, HTTPException, Request, Response
+from fastapi import APIRouter, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from pydantic import BaseModel, ConfigDict, Field, field_validator
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from observability.telemetry import log_event as _log_event
