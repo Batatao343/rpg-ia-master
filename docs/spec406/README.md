@@ -128,3 +128,12 @@ Divergência do §3 da spec (a tabela prevalece): **20 nomes lidos de fora**, n�
 
 ## Etapa 1 — R1
 - `tests/test_api_surface.py` verde na base (2 passed). Mutação: apagar `format_response` do import de `api.py` reprova `test_api_attributes_read_by_consumers_exist` (lista `evals/core/adapters.py:1194`, `playtest/invariants.py:2177` e testes); revertido.
+
+## Execução (11/11) - resultado
+- Commits: E0/E1 `9f0d1427`; E2 `09770c4f`; E3 `b95af30d`; E4 `a7f72603`; E5 `0c1c4dc3`; baseline `8467f9ba`; fechamento (spec, README, size_budget) no commit seguinte.
+- Contagem (109 F401): **91 imports removidos** (27 stdlib/terceiros, 32 engine/serviços incluindo o módulo `gamedata`, 31 `api_models`/`api_core`/`api_presenters`, mais `load_json_data`), **18 viraram reexport `X as X`**, **0 ficaram por efeito colateral** (`modules.json` byte-igual em todos os lotes; só `import main  # noqa: F401` segue). `gamedata` e `load_json_data` não viraram reexport: 3 testes passaram a ler `gamedata.*` (D2).
+- `api.py`: 1069 -> 984 linhas (-85).
+- Oráculo: `api_surface_dump` legacy+hosted byte-igual a cada lote e no fechamento (B2..B5, B); `patch_liveness` A = B (387 chaves, 280 `True`, iguais; `-n 0`); mutação `LIVENESS_MUTATE=1` A = B (24 testes, 19 `failed`, iguais); `evals run` (13 suítes, `--seed 7`) A x B `compare` `passed: true`, `regressions: []`; `playtest run --all --turns 10 --seed 0`: 16 linhas por perfil iguais (só o run id muda).
+- `uvicorn api:app` (porta 18406): `smoke_api.sh` SMOKE OK; `tests/test_boot_policy.py` (inclui `importlib.reload(api)`) verde.
+- Gate: com `import hashlib` descartável o `ruff check api.py` reprova `F401`; revertido. `ruff check --isolated --select F401,F811,F841 api.py` -> All checks passed. `F841` nos vizinhos (D3, fora de escopo): **2** (`api_presenters.py:1167 climax`, `routes/turn.py:1468 exc`).
+- Testes: Etapa 2 `68`+`58` passed; Etapa 3 `287` passed/24 skipped; Etapa 4 `424`/25 skipped; Etapa 5 `633`/27 skipped; `test_size_budget.py` 4 passed.

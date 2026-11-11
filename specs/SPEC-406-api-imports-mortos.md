@@ -1,6 +1,6 @@
 # SPEC-406 — api-imports-mortos
 
-> **Status:** `approved` (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
+> **Status:** `in-review` (11/11, executada; antes `approved`: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma. **Ordem recomendada: depois da SPEC-405** (a 405 R2 apaga `api.py:242–251`, `_CODE_RE` + `_error_code_of`, e com isso o único `F811` do arquivo; ver §7).
 > **Desbloqueia:** nada (follow-up R17b da SPEC-381 `done`; uma das 4 follow-ups de qualidade 405..408).
@@ -111,19 +111,19 @@ Executor roda só os testes da etapa (`bash scripts/dev/pt.sh`, máx. `-n 2`); s
 
 ## 5. Critérios de aceite
 
-- [ ] R0: `docs/spec406/README.md` com os 109 diagnósticos classificados por evidência; todo `morto` sem acerto em AST/grep de consumidores.
-- [ ] R1: `tests/test_api_surface.py` verde na `main` antes da poda e depois; mutação (apagar `format_response`) o reprova.
-- [ ] `bash scripts/dev/py.sh -m ruff check --isolated --select F401,F811,F841 api.py` → `All checks passed` (com a 405 pousada) ou só o `F811` de `re` (406 antes da 405).
-- [ ] `ruff-baseline.toml`: entrada de `api.py` sem `F401`; `ruff_baseline.py --check` verde; mais nenhuma entrada alterada.
-- [ ] `patch_liveness` A = B (mesmas chaves, nenhum `True`→`False`); mutação dos não-chamáveis igual.
-- [ ] `api_surface_dump` byte-igual (6 arquivos × 2 perfis, incluindo `modules.json`); exceções de efeito colateral só as listadas no README, cada uma com `noqa` e motivo.
-- [ ] `evals compare` A × B sem diferença; `playtest run --all --turns 10 --seed 0` com mesmas violações e desfechos.
-- [ ] `uvicorn api:app` sobe e `/health` responde; `smoke_api.sh` verde; `importlib.reload(api)` verde.
-- [ ] `tests/test_spec381_structure.py` e testes do escopo (contagem no hand-back) verdes; nenhuma asserção de teste mudou (só os 3 prefixos `api.gamedata` → `gamedata`).
-- [ ] `ruff format --check`, `ruff check`, `test_size_budget.py` verdes; saldo de linhas negativo; sem helper novo.
+- [x] R0: `docs/spec406/README.md` com os 109 diagnósticos classificados por evidência; todo `morto` sem acerto em AST/grep de consumidores.
+- [x] R1: `tests/test_api_surface.py` verde na `main` antes da poda e depois; mutação (apagar `format_response`) o reprova.
+- [x] `bash scripts/dev/py.sh -m ruff check --isolated --select F401,F811,F841 api.py` → `All checks passed` (com a 405 pousada) ou só o `F811` de `re` (406 antes da 405).
+- [x] `ruff-baseline.toml`: entrada de `api.py` sem `F401`; `ruff_baseline.py --check` verde; mais nenhuma entrada alterada.
+- [x] `patch_liveness` A = B (mesmas chaves, nenhum `True`→`False`); mutação dos não-chamáveis igual.
+- [x] `api_surface_dump` byte-igual (6 arquivos × 2 perfis, incluindo `modules.json`); exceções de efeito colateral só as listadas no README, cada uma com `noqa` e motivo.
+- [x] `evals compare` A × B sem diferença; `playtest run --all --turns 10 --seed 0` com mesmas violações e desfechos.
+- [x] `uvicorn api:app` sobe e `/health` responde; `smoke_api.sh` verde; `importlib.reload(api)` verde.
+- [x] `tests/test_spec381_structure.py` e testes do escopo (contagem no hand-back) verdes; nenhuma asserção de teste mudou (só os 3 prefixos `api.gamedata` → `gamedata`).
+- [x] `ruff format --check`, `ruff check`, `test_size_budget.py` verdes; saldo de linhas negativo; sem helper novo.
 - [ ] Revisão Sol (`spec-reviewer`) APPROVED.
 - [ ] `uv run pytest` verde (suíte completa offline, 1× pelo coordenador no pouso).
-- [ ] Saves antigos continuam carregando (nenhum `GameState` ou persistência tocado).
+- [x] Saves antigos continuam carregando (nenhum `GameState` ou persistência tocado).
 
 ## 6. Smoke test com LLM real
 
@@ -146,3 +146,13 @@ Nenhuma bloqueante. Para confirmar na aprovação:
 - **D2** — O módulo `gamedata` lido por 3 testes: migrar os testes para `import gamedata` (recomendado, 7 trocas de prefixo, nenhuma asserção) em vez de manter `import gamedata as gamedata` em `api.py`? Proposta: migrar.
 - **D3** — Registrar `F841` de `api_presenters.py`/`routes/turn.py` como follow-up (SPEC-407/408 já reservadas são de outro assunto; pode ser uma 409) e manter fora desta spec? Proposta: sim.
 - **D4** — Aceitar o oráculo (superfície byte-igual + `patch_liveness` + evals/playtest MockLLM) no lugar do smoke real (§6), como na SPEC-376/405? Proposta: sim.
+
+## 9. Desvios da execução (11/11)
+
+- **20 nomes lidos, não 18** (R0 prevalece): além dos 18, `_inventory_block` e `_enforce_owner_budget`. 18 viraram `X as X` no bloco de reexports; `load_json_data` e o módulo `gamedata` **não** (o teste de identidade da 381 só conhece os módulos-lar de `MODULES`): os testes que liam `api.gamedata.*` e `api.load_json_data` passaram a ler `gamedata.*` (D2, 3 arquivos, nenhuma asserção mudou).
+- **`patch_liveness` não é xdist-safe** (o controller sobrescreve o JSON com `{}`): A e B rodaram com `-n 0`, não `-n 2`.
+- **Dump nos lotes, liveness só no fechamento:** `api_surface_dump` (byte-igual) a cada lote; `patch_liveness`+mutação, evals e playtest uma vez, na ponta (custo de ~20 min por rodada serial).
+- **Nenhum import `efeito`:** `modules.json` ficou byte-igual nos dois perfis depois de cada lote; só `import main  # noqa: F401` segue.
+- **`ruff-baseline.toml`:** o script regenerou também `agents/storyteller.py` (sai `C901`) e `scripts/bestiario/calibrar.py` (entrada some); a baseline da `main` já estava defasada nesses dois. Mantido o que o gerador produz (`--check` verde). Em `api.py` saíram `F401` e `UP035`.
+- **`tests/size_budget.json`:** `api.py` (984 linhas) caiu abaixo de 1000; removida só a linha de `api.py` (o `--update` mexeria em outras 30 entradas).
+- Falha alheia na base: `tests/test_spec352_creature_portraits.py::test_view_offer_present_when_eligible` (rate card vencido).
