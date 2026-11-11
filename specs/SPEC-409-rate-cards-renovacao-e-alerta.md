@@ -1,70 +1,166 @@
 # SPEC-409 — rate-cards-renovacao-e-alerta
 
-> **Status:** `draft`
+> **Status:** `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
-> **Risco:** `baixo` | `médio` | `alto` (define a revisão — AGENTS.md § Qualidade, revisão e evidência)
-> **Evidência:** <teste que falha antes / oráculo de equivalência / smoke que prova o comportamento>
+> **Depende de:** nenhuma (SPEC-236 R7, SPEC-237 e SPEC-405 já `done`). **R1 depende de acesso à web** (ver §8 e Etapa 3).
+> **Desbloqueia:** cotação de imagem (retrato pago) e STT no staging; fecha o follow-up "relógio real nos testes de pricing" achado no pouso da SPEC-405.
+> **Risco:** `alto` (pagamento/pricing: o card entra na cotação de imagem, no débito de STT e, via hash, em `app.pricing_versions`) → `spec-reviewer` obrigatório (AGENTS.md § Qualidade, revisão e evidência).
+> **EXECUTOR_MODEL:** `Terra` (`spec-executor`, Sonnet), uma etapa por vez · **REVIEW_MODEL:** `spec-reviewer` (Opus), obrigatório nas Etapas 3–5.
+> **EVAL_AUTHORING_REQUIRED:** `false`. Conferido em 11/11: `evals/` e `playtest/` não leem `data/pricing/` nem os módulos de pricing (Grep `rate_card|data/pricing|*_pricing` → 0 arquivos), e `evals/protected-paths.txt` não cita pricing. Nenhum baseline, expected ou dataset muda.
+> **Evidência:** (R2) `tests/test_spec352_creature_portraits.py::test_view_offer_present_when_eligible` vermelho hoje, verde sem renovar e sem `RPG_RATE_CARD_MAX_AGE_DAYS`; (R3) teste novo falha com relógio simulado a menos de N dias do vencimento e passa 1 dia antes da janela de aviso; (R4) teste do cron com card vencido devolve 500 e `failed=1`; (R1) hash/`observed_at`/URLs do JSON conferidos por teste e `docs/spec409/`; smoke §6 no staging.
 
 ---
 
 ## 1. Contexto & Objetivo
 
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+Os rate cards versionados em `data/pricing/` venceram sem que ninguém fosse avisado. Em 11/11/2026 (pouso da SPEC-405, confirmado por revisão independente) a `main` ficou vermelha em `test_view_offer_present_when_eligible`, e no staging a cotação de imagem e o STT passaram a recusar com 503 (falha fechada, como projetado na SPEC-236 R7). Estado dos cards hoje, com a janela default de 30 dias (`services/shard_pricing.py:35`):
+
+| Card | Arquivo | `observed_at` | Vence | Quem lê |
+|---|---|---|---|---|
+| Imagem | `image_rate_card_2026-10-12.json` | 12/10 | **11/11 (venceu)** | `services/image_pricing.py:15-19` |
+| STT | `speech_rate_card_2026-10-12.json` | 12/10 | **11/11 (venceu)** | `services/speech_pricing.py:14-18` |
+| LLM geral | `rate_card_2026-10-08.json` | 08/10 | **07/11 (venceu)**, janela própria `RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS` (`services/finops_alerts.py:414`) | `services/shard_pricing.py:23-32` **e** `services/usage_metering.py:19-24` (dois leitores do mesmo caminho fixo) |
+| Embedding | `embedding_rate_card_2026-10-17.json` | 17/10 | 16/11 | `services/embedding_pricing.py:16-20`; **nenhum guard de frescor nem alerta o cobre** (não está em `installed_freshness()`, `finops_alerts.py:399-420`, nem em `EXPIRING_CARD_NAMES`, `:45`) |
+
+Por que ninguém soube: `rate_card_expiring` (T-`RPG_RATE_CARD_WARN_DAYS`, default 3, `finops_alerts.py:200-225`) e `stale_rate_card` (`:182-197`) só viram log, gauge `rpg_finops_alert_active` e linha em `app.finops_evaluations`. `run_finops` devolve `failed` só para erro do cap diário (`services/finops_job.py:138-139`; alerta bloqueante comum não entra), então o cron responde 200. O envio de logs externos (Axiom) está bloqueado no dono (`ESTADO_ATUAL.md` § Bloqueios) e as regras Prometheus de `observability/alerts/finops.yml:14-17,44-47` não têm scrape no Vercel. O único alarme é humano: a rotina diária/semanal do runbook (`docs/spec197/runbooks/budget.md:42-44`) e o `docs/ratecard-refresh-2026-10-17.md` ("Before 2026-11-07: renew the cards") ficaram sem dono.
+
+Além do vencimento, a leitura do código mostrou **três armadilhas** que esta spec trata, porque tornam a "renovação simples" mais cara do que parece:
+
+1. **Renovar o card LLM geral não é só trocar arquivo.** `PricingVersion.require_fresh` (`shard_pricing.py:171-185`) exige `rate_card_sha256 == INSTALLED_RATE_CARD_SHA256` e `rate_card_observed_at == INSTALLED_RATE_CARD_OBSERVED_AT` (`:23-32`) contra a linha **imutável** de `app.pricing_versions` (`supabase/migrations/20261008160000_pricing_versions.sql:3-22,62-73`: triggers rejeitam update/delete). Arquivo novo ⇒ hash e data novos ⇒ toda linha existente falha com `PricingUnavailable("conteúdo do rate card divergiu")` / `"instante do rate card divergiu da fonte"`. Na cotação de imagem o caminho é `image_price_profiles.pricing_version_id → pricing_versions` (`services/image_quotes.py:62-86`), e no STT `RPG_SPEECH_PRICING_VERSION=spec197-restore-b` (`scripts/staging/vercel_env.py:54`). Os cards de imagem, STT e embedding **não** entram nesse hash (só a versão+hash do próprio arquivo, em `IMAGE_PRICING_VERSION`/`SPEECH_PRICING_VERSION`/`EMBEDDING_PRICING_VERSION`): renová-los não toca `pricing_versions`.
+2. **Testes com data literal quebram na renovação.** Vários testes fixam `NOW`/`AT` em 08/10 ou 12/10 e usam o `observed_at` do card instalado; com card novo (data posterior) a idade fica negativa (`shard_pricing.py:183-185`, `image_pricing.py:25`) e eles falham.
+3. **Evento de uso carrega a versão do card.** `quote_usage` (`shard_pricing.py:320-360`) só aceita evento `rate_card` de imagem/STT cuja `pricing_version` seja a **atual** (`IMAGE_PRICING_VERSION`/`SPEECH_PRICING_VERSION`), mesmo com `authorized_snapshot=True` (o check está fora do `if` de `:312`). O runbook já avisa isso para STT (`budget.md:69-73`); a leitura indica que vale igual para imagem. Deploy de card novo com reserva/job em voo trava a liquidação.
+
+Princípio (AGENTS.md): "mecânica é Python; falha fechada em dinheiro". Esta spec não afrouxa nenhum guard: conserta o que está vencido, prova com evidência o preço que entra, tira o relógio real dos testes que não são o guarda de vencimento e faz o vencimento próximo **falhar alto** onde alguém olha (CI e watchdog de cron).
 
 ## 2. Requisitos
 
-Numerados, testáveis. Cada requisito deve poder virar assert.
+Linhas citadas = `main` em `0514cafa`.
 
-- **R1** — ...
-- **R2** — ...
+- **R0 — Medição antes de mexer (Etapa 0).** O executor produz `docs/spec409/README.md` com: (a) a lista de testes que dependem do relógio real, pelo oráculo de duas janelas (R2); (b) `select version_id, rate_card_sha256, rate_card_observed_at, rate_card_max_age_seconds from app.pricing_versions` e `select profile_id, pricing_version_id, model, expires_at from app.image_price_profiles` do staging (somente leitura; **`expires_at` do profile é outro relógio que pode vencer à parte**); (c) `select kind, blocking, message from app.finops_evaluations order by 1 desc limit 20` e a contagem de `wallet_uncertain_hold`/reservas e jobs de imagem em voo (pré-condição da armadilha 3); (d) confirmação se há acesso à web (R1).
+- **R1 — Renovação dos cards (separável; precisa de evidência).** Para cada tipo, novo arquivo `data/pricing/<tipo>_rate_card_<AAAA-MM-DD>.json`, **sem editar o antigo no lugar** (o antigo fica no repositório, imutável, como histórico). **Regra dura:** preço e `observed_at` só entram com evidência: URL da página pública de preços do provedor + data/hora da leitura, no próprio JSON (campos `sources`/`source` e `observed_at` = dia da leitura) **e** em `docs/spec409/evidencia-<tipo>.md` (trecho literal do preço lido, URL, data). Proibido inventar preço, copiar de memória ou só trocar a data. Sem acesso à web, o executor **para** a etapa, registra `BLOQUEADO: sem acesso à web` no hand-back e no README, e as Etapas 1, 2 e 6 seguem sem ela. Por card, o que consta e de onde vem cada número:
+  - **R1.1 Imagem** (`openai-image-standard-…`): modelo `gpt-image-2-2026-04-21`; `text_input_per_million` 5.00, `image_input_per_million` 8.00, `image_output_per_million` 30.00, sem desconto de cache. Fontes atuais: `developers.openai.com/api/docs/models/gpt-image-2`, `…/pricing`, `…/guides/image-generation`, `…/guides/batch`. Hoje o input Standard é **derivado** (Batch 2.50/4.00 × 2, campo `derivation` do JSON). Reler a página; se o Standard agora é listado direto, usar o número direto e atualizar `derivation`; se o snapshot do modelo saiu de linha ou o `model` mudou, **parar** (é decisão de produto: o `model` casa com `image_price_profiles.model` e com a config de arte; vira hand-back, não renovação). `observed_at` mantém offset (`"…T00:00:00+00:00"`): `require_image_prices` faz `datetime.fromisoformat` e subtrai de um `datetime` com fuso (`image_pricing.py:23-24`).
+  - **R1.2 STT** (`speech-…-v1`): `groq:whisper-large-v3-turbo` (`usd_per_hour` 0.04, `minimum_seconds` 10, `max_cost_usd` 0.000666667; fonte `console.groq.com/docs/speech-to-text`) e `openai:gpt-4o-mini-transcribe` (tokens: input 1.25 / output 5.00 por milhão, tetos 16000/2000 tokens, `max_cost_usd` 0.030000000; fonte `developers.openai.com/api/docs/models/gpt-4o-mini-transcribe`). Recalcular `max_cost_usd` a partir dos tetos e preços lidos (mostrar a conta no `evidencia-speech.md`); se algum teto mudar, o executor registra e não "ajusta para caber".
+  - **R1.3 Embedding** (`embedding-…-v1`): `jina:jina-embeddings-v3`, `input_per_million` 0.05 (Standard US$ 50 / 1B tokens; usa-se o preço Standard, o mais alto do Premium de 0.045). A fonte atual cita uma página de terceiro (`usagepricing.com/blueprint/jina-ai`); preferir `jina.ai/api-dashboard/pricing`/docs oficiais e registrar qual foi lida; se só houver fonte secundária, dizer no JSON e no README (não esconder).
+  - **R1.4 LLM geral** (`2026-…-v1`): `groq:openai/gpt-oss-20b` (0.075 in / 0.037 cache / 0.30 out), `groq:openai/gpt-oss-120b` (0.15 / 0.075 / 0.60) — fonte `console.groq.com/docs/models`; `deepseek:deepseek-flash` e `deepseek:deepseek-v4-flash` (0.30 / 0.006 / 1.20, `pricing_mode: conservative_peak`, o maior preço publicado porque a tarifa varia por horário) — fonte `api-docs.deepseek.com/quick_start/pricing/`. Manter `max_input_units`/`max_output_units` salvo evidência de mudança. **Sub-etapa separada (Etapa 4)**: arquivo novo muda `RATE_CARD_VERSION` (`usage_metering.py:24`), `INSTALLED_RATE_CARD_SHA256` e `INSTALLED_RATE_CARD_OBSERVED_AT`; ver R1.5.
+  - **R1.5 Apontar e publicar.** Atualizar os leitores para o arquivo novo: `image_pricing.py:16`, `speech_pricing.py:15`, `embedding_pricing.py:17`, e, no LLM, **os dois** pontos `shard_pricing.py:24` e `usage_metering.py:20` (mudar só um deixa `RATE_CARD_VERSION` e o hash divergentes). Renovar o LLM exige **publicar uma `pricing_versions` nova** no banco alvo (linha nova, append-only; **não há migração de schema**), com `rate_card_version`/`sha256`/`observed_at` do arquivo novo, e apontar o que referencia a antiga: `image_price_profiles` novos (linhas imutáveis) para `RPG_IMAGE_PRICE_PROFILE_PORTRAIT/_SCENE` (`vercel_env.py:116-120`), `RPG_SPEECH_PRICING_VERSION` (`:54`) e, se houver venda, SKUs novos (`purchase_skus.pricing_version_id` é FK imutável). A antiga permanece (histórico de compras). No staging, usar o caminho de `scripts/staging/synthetic_data.py::seed_wallet_prereqs` (`:54-82`) com **id novo** (o `on conflict do nothing` não atualiza a linha antiga) — o executor adapta o script (sem commitar segredo) e registra os ids. Produção: fora de escopo (ainda sem go, SPEC-197).
+- **R2 — Testes sem relógio real.** (a) Nenhum teste da suíte default, exceto o guarda do R3, depende de `datetime.now()`/`time.time()` contra a data de um card. (b) `test_view_offer_present_when_eligible` volta a verde **sem** renovar e **sem** `RPG_RATE_CARD_MAX_AGE_DAYS`. (c) Testes com data literal (08/10, 12/10, 12/11) passam a derivar a data do `observed_at` do card instalado, para sobreviverem à renovação. Mecanismo (menos invasivo, **zero código de produto**): helper em `tests/fakes/local_pricing.py` (já é o lar do fixture de pricing, `installed_card_max_age_seconds`, `:19-22`) `card_epoch() -> datetime` = maior `observed_at` entre os quatro cards instalados + 12 h, e fixture `pinned_card_clock(monkeypatch)` que troca `services.finops_alerts.require_paid_effect` por `functools.partial(original, now=card_epoch())`. O `gate()` importa `require_paid_effect` dentro da função (`services/portrait_offer.py:44`), então o patch vale; a lógica real de janela continua testada, só o "agora" é fixo. Não usar env `RPG_RATE_CARD_MAX_AGE_DAYS=365` global (quebra os testes que provam a janela default de 30 d, ex. `tests/test_image_pricing.py:68-71`, e some em 12/10/2027 por causa do teto 1..365 de `shard_pricing.py:50`). `freezegun`/`time-machine` não estão nas dependências (Grep 11/11): não adicionar.
+- **R3 — Guarda de vencimento no CI (única exceção de relógio real).** `installed_freshness()` passa a incluir o card de embedding (`Freshness("embedding", …)`, janela `rate_card_max_age()`), e `EXPIRING_CARD_NAMES` ganha `"embedding"`. Teste novo `tests/test_rate_card_freshness.py::test_installed_rate_cards_not_near_expiry` usa `datetime.now(UTC)`, limpa `RPG_RATE_CARD_MAX_AGE_DAYS`, `RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS` e `RPG_RATE_CARD_WARN_DAYS` (hermético ao ambiente) e **falha** se `stale_rate_cards(installed_freshness(), agora)` ou `expiring_rate_cards(installed_freshness(), agora, warn=timedelta(days=N))` devolver algo, com **N = 10** e mensagem: nome do card, dias restantes, "renove: docs/spec197/runbooks/budget.md § Renovação de rate cards (SPEC-409)". Testes irmãos, com relógio simulado (`agora` explícito), provam a detecção: falha a T-9 d, falha vencido, passa a T-11 d, e embedding entra na lista. **Declaração da exceção:** esse é o único teste que lê o relógio real contra um card; o docstring diz isso e um teste de arquitetura leve (`Grep` no próprio arquivo de teste) garante que `datetime.now` só aparece ali — ver Etapa 2. Complemento: o job semanal agendado do `validate.yml` (`:5-7`, segunda 06:23 UTC) **pula** o job `test` (`:49`, `github.event_name != 'schedule'`); acrescentar um job `rate-cards` que roda só esse teste no `schedule`, para que o aviso chegue em semana sem push (falha de workflow agendado notifica por e-mail o dono do repositório; mesmo `runs-on: ubuntu-24.04` e actions pinadas por SHA do arquivo).
+- **R4 — Alerta que chega a alguém, sem Axiom.** Mecanismo escolhido: **reaproveitar o contrato `failed` do cron**. `_run_scoped` já transforma `failed > 0` em HTTP 500 (`services/cron_internal.py:166-176`, comentário: "non-2xx so pg_net's _http_response.status_code flags the run"), e `app.cron_health_check()` (`supabase/migrations/20261015125000_cron_health.sql:28-54`) insere linha em `app.cron_health_alerts` + `RAISE WARNING` quando as 3 últimas respostas resolvidas do mesmo job são não-2xx (cron do finops é horário, `scripts/staging/schedule_cron.py:20` ⇒ ~3 h; no máximo 1 linha/hora/job). Mudança mínima em `services/finops_job.py`: `failed` passa a somar 1 quando existir alerta `stale_rate_card` (**só esse tipo**, não todo bloqueante: `wallet_mismatch`, `margin_below_target` etc. mudariam o contrato do cron sem decisão), com chave nova `stale_rate_cards` (nomes, separados por vírgula) no `summary`. `rate_card_expiring` continua não bloqueante e não falha o cron. Sem migração, sem env novo, sem tabela nova. **Limite honesto, a registrar no runbook:** `cron_health_alerts` é tabela + warning no log do Postgres; ninguém é notificado ativamente sem Axiom. O que chega a alguém é (i) o CI vermelho/e-mail do R3 (T-10 d, antes de qualquer efeito em produção) e (ii) a linha em `cron_health_alerts`/`finops_evaluations` na rotina diária. Se o dono quiser push de verdade, é decisão D5 (fora desta spec).
+- **R5 — Runbook atualizado.** `docs/spec197/runbooks/budget.md` § "Renovação de rate cards" reescrito com o passo a passo real: os quatro cards e seus leitores (incl. o card LLM de **caminho fixo em dois arquivos** e o de embedding), `observed_at` com offset no de imagem, evidência em `docs/spec409/`, ordem (arquivo novo → apontar → testes → publicar `pricing_versions`/profiles/env quando LLM → pré-condições de reserva/job em voo para imagem **e** STT → deploy), relação com `pricing_versions` (hash e data pinados), recuperação (`RPG_RATE_CARD_MAX_AGE_DAYS` só como alívio de emergência com prazo), o que `cron_health_alerts` faz e não faz, e o aviso de T-10 do CI. `docs/ratecard-refresh-2026-10-17.md` ganha uma linha de topo "superado por SPEC-409" (histórico, sem reescrever).
 
 ### Fora de escopo
 
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
+- Mudar a janela default de 30 dias (`DEFAULT_RATE_CARD_MAX_AGE_DAYS`) ou o teto 1..365.
+- Subir `RPG_RATE_CARD_MAX_AGE_DAYS` como correção. Só alívio de emergência, e só por decisão do dono (D1).
+- Automatizar leitura/scraping de preço, ou qualquer chamada de rede em teste/CI.
+- Margens, SKUs, preço ao jogador, FX, `target_margin_rate`, perfis de preço comerciais (`image_price_profiles.max_provider_usd`), troca de modelo/provedor.
+- Produção (SPEC-197/104): sem go; staging apenas.
+- Notificação ativa (e-mail/push/Axiom) do alerta de cron; é D5.
+- Corrigir a reconciliação de reserva presa em geral (SPEC-236); aqui só a pré-condição de deploy e um teste de caracterização.
+- Qualquer baseline, evaluator, expected ou dataset de `evals/`.
 
 ## 3. Design técnico
 
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
-
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
+- **Arquivos novos:**
+  - `data/pricing/image_rate_card_<AAAA-MM-DD>.json`, `speech_rate_card_<…>.json`, `embedding_rate_card_<…>.json`, `rate_card_<…>.json` (LLM), cada um com `version`, `observed_at`, preços, `source(s)`; datas = dia real da leitura. Formato = o dos atuais (ver tabela da §1); exemplo do cabeçalho do de imagem: `"version": "openai-image-standard-<data>"`, `"observed_at": "<data>T00:00:00+00:00"`.
+  - `docs/spec409/README.md` (R0 + decisões + hashes sha256 dos arquivos novos + resultado do smoke) e `docs/spec409/evidencia-{imagem,speech,embedding,llm}.md` (URL, data/hora, trecho literal, conta).
+  - `tests/test_rate_card_freshness.py` (R3).
+- **Arquivos alterados:**
+  - `tests/fakes/local_pricing.py`: `card_epoch()` e fixture `pinned_card_clock` (R2).
+  - Testes: `tests/test_spec352_creature_portraits.py` (usa a fixture), `tests/test_image_pricing.py:68,71` (datas derivadas do `_CARD`), `tests/test_shard_pricing.py:28`, `tests/test_shard_pricing_local.py:32`, `tests/test_bug_finops_wallet_jobs_local.py:27`, `tests/test_image_quotes_local.py:56`, `tests/test_rls_effective.py:286`, `tests/test_spec236_races_local.py:21`, `tests/test_spec352_creature_portraits_db.py:700`, `tests/test_speech_finance_local.py:29` (todos: `AT/NOW` = `card_epoch()` em vez de literal), `tests/test_spec237_embedding_pricing.py:77` (caminho literal do card LLM ⇒ importar o caminho do módulo), e os testes de cron/`run_finops` que assertam `failed == 0`/status 200 (`tests/test_spec196_finops.py:489-506`, `tests/test_spec197_daily_cap.py:168`, `tests/test_bug_finops_wallet_jobs.py`) passam a fixar `installed_freshness` com cards "frescos" (necessário só depois do R4).
+  - `services/finops_alerts.py`: `installed_freshness()` ganha `embedding` (lê `services.embedding_pricing._CARD`); `EXPIRING_CARD_NAMES += "embedding"` (R3).
+  - `services/finops_job.py`: `failed += 1` se houver alerta `stale_rate_card`; chave `stale_rate_cards` (R4). Função `run_finops` já tem 153 linhas em `tests/size_budget.json:143`: **não pode crescer**; a lógica nova vai em helper de ≤ 15 linhas em módulo próprio (ex.: `services/finops_alerts.py::stale_card_failures(alerts) -> tuple[int, str]`), chamado em uma linha.
+  - `services/image_pricing.py:16`, `speech_pricing.py:15`, `embedding_pricing.py:17`, `shard_pricing.py:24`, `usage_metering.py:20`: só o caminho do arquivo (R1.5).
+  - `.github/workflows/validate.yml`: job `rate-cards` no `schedule` (R3).
+  - `docs/spec197/runbooks/budget.md`, `docs/ratecard-refresh-2026-10-17.md` (R5).
+  - `scripts/staging/synthetic_data.py`/`vercel_env.py`: só se necessário para o id novo de `pricing_versions`/profile no staging (Etapa 4).
+- **Assinaturas novas:** `card_epoch() -> datetime` (tests); `stale_card_failures(alerts: Sequence[Alert]) -> tuple[int, str]` (produto). Nenhum schema, nenhuma migração, nenhuma flag/env novo (`config/flags.yaml` fica igual; o gate de flags de SPEC-340 não é tocado: `N=10` é constante do teste).
+- **Hash e banco (resposta curta):** renovar imagem/STT/embedding **não** mexe em `app.pricing_versions` nem em migração. Renovar o LLM **exige** nova linha de `pricing_versions` (+ profiles/env/SKUs que a referenciam), por causa de `require_fresh` (`shard_pricing.py:174-177`) e das triggers de imutabilidade (`…pricing_versions.sql:62-73`). Sem a linha nova, "instante do rate card divergiu da fonte" derruba cotação e compra.
 
 ## 4. Plano passo a passo
 
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
+R2 e R3 primeiro (não dependem de preço observado); R1 depois; R4 só depois de R1 (senão o cron do staging fica 500 assim que o código subir); R5 por último. Um commit por etapa, inglês, Conventional Commits. **Pouso A** = Etapa 1 sozinha (conserta a `main` vermelha, sem tocar produto). **Pouso B** = Etapas 2–6 juntas (o teste do R3 com relógio real só pode entrar na `main` com todos os cards frescos; senão a `main` volta a ficar vermelha por desenho).
 
-### Etapa N — <nome>
+### Etapa 0 — Medição (sem código de produto)
+1. Criar `docs/spec409/README.md`. Rodar o **oráculo de duas janelas** nos testes do escopo (`Grep -l` por `finops_alerts|image_pricing|speech_pricing|shard_pricing|portrait_offer|require_paid_effect|api_presenters|routes.art|cron_internal` em `tests/`; no máx. `-n 2`, via `bash scripts/dev/pt.sh`): uma rodada com `RPG_RATE_CARD_MAX_AGE_DAYS=365 RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS=365` (tudo fresco) e outra com `…=1` (tudo vencido). Teste cujo resultado difere entre as duas depende do relógio. Esperado hoje: pelo menos `test_view_offer_present_when_eligible`. Registrar a lista real (levantamento por leitura em 11/11: **1 vermelho hoje**, **2–3 que passam a depender do relógio com o R4** — `test_cron_finops_auth_and_owner_free_response`, `test_spec197_daily_cap.py:168`, e os `run_finops` de `test_bug_finops_wallet_jobs.py` — e **9 arquivos com data literal** que quebram na renovação).
+2. R0(b)–(d): consultas somente leitura no staging e confirmação de acesso à web. Sem acesso ao staging, registrar "não medido" e seguir.
+3. Verificação: README com a lista e as saídas coladas; o que divergir deste levantamento corrige a spec.
 
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
+### Etapa 1 — R2: relógio fixo nos testes (Pouso A)
+1. **Testes primeiro:** em `tests/test_local_pricing_fixture.py` (já testa o helper, `:49-61`) acrescentar `test_card_epoch_is_inside_every_installed_window` (para cada um dos 4 cards, `0 <= card_epoch() - observed <= janela default`) e `test_pinned_card_clock_passes_with_real_window_logic` (com a fixture, `require_paid_effect("image")` passa; e com `now = card_epoch() + 31 d` explícito ainda levanta `PricingUnavailable`, provando que a lógica de janela continua real).
+2. **Implementação:** `card_epoch()` + `pinned_card_clock`; usar a fixture em `test_spec352_creature_portraits.py` (`_live`, `:176`); trocar as datas literais pelas derivadas nos 9 arquivos; `test_spec237_embedding_pricing.py:77` importa o caminho do módulo. Arquivos `_local` (Postgres) exigem stack local: se não estiver de pé, a edição é mecânica, revisada, e fica registrada como "não executada" no hand-back (o coordenador roda no ambiente que tiver).
+3. **Verificação:** `test_view_offer_present_when_eligible` verde com a `main` como está (cards vencidos); `bash scripts/dev/pt.sh tests/test_spec352_creature_portraits.py tests/test_image_pricing.py tests/test_shard_pricing.py tests/test_local_pricing_fixture.py tests/test_portrait_offer_causes.py tests/test_spec363_portrait_offer.py tests/test_spec364_portrait_debit.py tests/test_bug_finops_wallet_jobs.py tests/test_spec196_finops.py tests/test_spec237_embedding_pricing.py`; repetir a rodada de duas janelas: lista de dependentes do relógio **vazia** (fora do guarda do R3, que ainda não existe).
+
+### Etapa 2 — R3: guarda de vencimento
+1. **Testes primeiro** (`tests/test_rate_card_freshness.py`): `test_guard_fails_nine_days_before_expiry` (relógio simulado = vencimento − 9 d, helper de asserção levanta `AssertionError` com "budget.md" na mensagem); `test_guard_fails_when_already_stale`; `test_guard_passes_eleven_days_before_expiry`; `test_embedding_card_is_tracked` (nome `embedding` em `installed_freshness()`); `test_installed_rate_cards_not_near_expiry` (relógio **real**, único). `test_real_clock_only_in_freshness_guard`: lê o texto dos arquivos de teste que importam `finops_alerts.installed_freshness`/`rate_card_max_age` e exige que `datetime.now` apareça só no arquivo do guarda (caso (c) do inventário de `docs/guias/TESTES.md`: teste que lê código-fonte).
+2. **Implementação:** `installed_freshness()` com embedding; `EXPIRING_CARD_NAMES`; helper de asserção no próprio arquivo de teste; job `rate-cards` no `validate.yml` (rodando só o teste novo, `uv sync` + `uv run pytest -q tests/test_rate_card_freshness.py`).
+3. **Verificação:** os quatro testes simulados verdes; o de relógio real **vermelho enquanto R1 não pousar** (esperado, é a prova de que pega) e verde depois. Teste vermelho antes: o simulado `…nine_days…` falha antes da implementação (embedding ausente).
+
+### Etapa 3 — R1: imagem, STT e embedding (precisa de web; separável)
+1. **Testes primeiro** (`tests/test_pricing_card_files.py`, sem rede): para cada arquivo novo, `version` casa com o nome do arquivo, `observed_at` tem o formato do leitor (imagem com offset; STT/embedding data ISO), `observed_at <= hoje`, todos os preços são `Decimal` positivos, `source(s)` contém URL `https://`, `max_cost_usd` do STT bate com a conta dos tetos, e **o arquivo antigo continua byte a byte igual** (sha256 conferido, imutabilidade).
+2. **Implementação:** ler as páginas (R1.1–R1.3), gravar os JSON e `docs/spec409/evidencia-*.md`, apontar os 3 leitores. Sem web ⇒ parar aqui (BLOQUEADO) e entregar Etapas 1, 2 e 6.
+3. **Verificação:** `pt.sh tests/test_pricing_card_files.py tests/test_image_pricing.py tests/test_speech_to_text.py tests/test_speech_api.py tests/test_spec237_embedding_pricing.py tests/test_image_quotes.py tests/test_rate_card_freshness.py`. Caracterização (barata): `test_quote_usage_rejects_event_with_previous_card_version` em `tests/test_shard_pricing.py` documenta a armadilha 3 (evento de imagem/STT com versão antiga não é faturável) para o runbook apontar.
+
+### Etapa 4 — R1.4/R1.5: card LLM + publicação de `pricing_versions` (separável; depende de D3)
+1. **Testes primeiro:** `tests/test_pricing_card_files.py` ganha o card LLM (mesmos checks; `usage_metering.RATE_CARD_VERSION` e `shard_pricing.INSTALLED_RATE_CARD_SHA256` vêm **do mesmo arquivo**: teste de que os dois leitores resolvem o mesmo caminho); `tests/test_shard_pricing.py` já cobre divergência de hash/data; acrescentar `test_version_row_pinned_to_old_card_is_rejected_after_renewal` (linha com sha/data do card antigo ⇒ `PricingUnavailable`, que é exatamente o que o staging verá antes da publicação).
+2. **Implementação:** arquivo novo + os dois apontamentos; no staging, publicar `pricing_versions` nova (id novo, ex. `spec409-staging-<data>`), `image_price_profiles` novos (portrait/scene) e atualizar `RPG_IMAGE_PRICE_PROFILE_*`/`RPG_SPEECH_PRICING_VERSION` via `scripts/staging/vercel_env.py` (sem segredo no repositório); registrar ids no README. Pré-condição antes do deploy: sem `wallet_uncertain_hold` nem job/reserva de imagem ou STT em voo (R0(c)); se houver, reconciliar primeiro (runbook `budget.md:69-73`).
+3. **Verificação:** testes acima + `pt.sh tests/test_shard_pricing.py tests/test_bug_finops_wallet_jobs.py tests/test_spec196_finops.py tests/test_wallet*.py`. Os `_local` com Postgres, se houver stack.
+
+### Etapa 5 — R4: cron falha com card vencido
+1. **Testes primeiro** (`tests/test_spec196_finops.py` ou `tests/test_bug_finops_wallet_jobs.py`, junto dos de `run_finops`): `test_run_finops_fails_when_rate_card_stale` (reader fake + `installed_freshness` com um card vencido ⇒ `summary["failed"] == 1`, `"stale_rate_card"` em `alert_kinds`, `stale_rate_cards` nomeia o card); `test_run_finops_expiring_card_does_not_fail` (só `rate_card_expiring` ⇒ `failed == 0`); `test_run_finops_other_blocking_alert_does_not_fail` (ex. `wallet_mismatch` ⇒ `failed == 0`, contrato do cron intacto); `test_cron_finops_returns_500_on_stale_card` (`TestClient`, padrão de `tests/test_spec192_cron_endpoints.py:197`: `status_code == 500`, `ok is False`, corpo sem owner). Os testes que assertam `failed == 0`/200 usam cards frescos (R2).
+2. **Implementação:** `stale_card_failures` em `finops_alerts.py` e uma linha em `run_finops` (sem crescer a função além do orçamento).
+3. **Verificação:** `pt.sh tests/test_spec196_finops.py tests/test_spec197_daily_cap.py tests/test_bug_finops_wallet_jobs.py tests/test_spec192_cron_endpoints.py tests/test_cron_logging.py tests/test_size_budget.py`.
+
+### Etapa 6 — R5: runbook
+1. Reescrever a seção (R5); linha de topo em `docs/ratecard-refresh-2026-10-17.md`. `scripts/finops_margin_sim.py` (existe, `budget.md:39-40` o cita para "preços live") **não** é parte da renovação: o runbook diz isso para ninguém achar que ele lê os cards.
+2. **Verificação:** `uv run python scripts/check_md_links.py --baseline scripts/md_links_baseline.txt`; `uv run python scripts/validate_content.py`.
+
+### Etapa 7 — Fechamento e smoke
+`ruff format --check` + `ruff check` nos arquivos tocados; `scripts/dev/dup_helpers.py --diff main...HEAD`; `tests/test_size_budget.py`; revisão `spec-reviewer` (Opus); depois o coordenador: `/spec-land` com suíte completa 1×, deploy do staging e o smoke §6.
 
 ## 5. Critérios de aceite
 
-Checklist objetivo. A spec só vira `done` com todos marcados.
-
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
+- [ ] R0: `docs/spec409/README.md` com a lista medida de testes dependentes do relógio e as saídas das consultas do staging.
+- [ ] R2: rodada de duas janelas (`…=365` × `…=1`) sem nenhuma diferença fora de `test_rate_card_freshness.py`; `test_view_offer_present_when_eligible` verde com cards vencidos e sem `RPG_RATE_CARD_MAX_AGE_DAYS`; `git grep -n "datetime(2026, 10, \(8\|12\)" tests/` não devolve datas de card literais.
+- [ ] R3: `uv run pytest tests/test_rate_card_freshness.py -q` verde com cards renovados; falha com mensagem que cita `docs/spec197/runbooks/budget.md` quando o relógio simulado está a 9 dias do vencimento; é o único arquivo com `datetime.now` contra card; job `rate-cards` no `validate.yml` no `schedule`.
+- [ ] R1 (cada card): JSON novo com `observed_at` do dia da leitura, URL e preço conferidos em `docs/spec409/evidencia-*.md`; arquivo antigo intacto (sha256); leitores apontando para o novo; `POST /game/{id}/art/quote` e STT respondem no staging. **Ou** registrado `BLOQUEADO: sem acesso à web` e a spec fica `in-progress` (não `done`).
+- [ ] R1.4/R1.5: `app.pricing_versions` com a linha nova no staging, profiles/env apontados, `select kind, blocking from app.finops_evaluations order by evaluated_at desc limit 20` **sem** `stale_rate_card` após a próxima rodada do cron.
+- [ ] R4: os quatro testes novos verdes; `test_size_budget.py` verde (`run_finops` não cresceu); cron do staging responde 200 depois da renovação.
+- [ ] R5: runbook cobre os quatro cards, o card LLM de caminho fixo em dois arquivos, `pricing_versions`, pré-condições de reserva/job em voo, limite honesto do alerta.
+- [ ] `ruff format --check` e `ruff check` limpos; `dup_helpers.py --diff` sem helper novo genérico.
+- [ ] Revisão `spec-reviewer` APPROVED (independente).
+- [ ] `uv run pytest` verde (suíte completa offline, 1× pelo coordenador no pouso B).
+- [ ] Saves antigos continuam carregando (nenhum `GameState` muda).
 
 ## 6. Smoke test com LLM real
 
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
+Não usa o LLM de narração; é smoke de pricing no **staging**, depois do deploy do pouso B e da publicação da Etapa 4:
 
-1. ...
-2. ...
+1. `POST /game/{id}/art/quote` (retrato/cena) responde 200 com `credits`/ceiling, não 503 `image_pricing_unavailable`; a oferta de retrato aparece no combate (`retrato.gerar`) com a flag `on`. **Sem gerar imagem paga** (só cotar; custo de teste fica fora).
+2. STT: uma requisição WAV curta para o endpoint de fala responde com transcrição ou erro de provedor, **não** `speech rate card stale`/503 de pricing (saldo mínimo; Groq no free tier).
+3. `POST /internal/cron/finops` (Bearer do cron) responde 200 e `ok: true`; `select kind, blocking from app.finops_evaluations order by evaluated_at desc limit 20` sem `stale_rate_card`.
+4. Prova do R4 sem esperar o vencimento real: com a janela de teste `RPG_RATE_CARD_MAX_AGE_DAYS=1` apenas em ambiente local/CI (nunca no staging) o teste do cron cobre o 500; no staging, o item 3 é a prova do caminho feliz.
+5. Registrar o resultado em `docs/spec409/README.md` (sem tokens, sem ids de owner).
 
 ## 7. Riscos & compatibilidade
 
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+- **Cotação de imagem emitida com a versão antiga** deixa de valer: `services/image_quotes.py:325-326` levanta `image pricing changed; a new quote is required`. Esperado; o front pede nova cotação. Quote em voo durante o deploy falha no resgate; janela curta.
+- **Reserva/job em voo no deploy do card** (imagem **ou** STT): `quote_usage` (`shard_pricing.py:320-360`) recusa evento com versão de card antiga mesmo com `authorized_snapshot=True`; reserva `uncertain` fica travada. Mitigação: pré-condição da Etapa 4 (drenar), teste de caracterização, runbook.
+- **Divergência arquivo × banco** (LLM): sha/data do arquivo novo ≠ linha antiga de `pricing_versions` ⇒ cotação e compra recusam até publicar a linha nova. Mitigação: publicar a linha **antes** de apontar o deploy; o teste `…pinned_to_old_card_is_rejected…` documenta o sintoma. Rollback: reverter o commit dos leitores e manter a linha nova (append-only, inofensiva).
+- **`image_price_profiles.expires_at`** é outro relógio: um profile vencido dá `image pricing não configurado ou expirado` (`image_quotes.py:73-79`) mesmo com card fresco. Etapa 0 mede; se vencido, é decisão de preço (fora de escopo) e vai para o hand-back.
+- **Teste do R3 deixa a `main` vermelha por desenho** quando faltarem ≤ 10 dias. É a intenção; custo: pousos ficam travados até renovar. Mitigação: o job semanal avisa antes (a T-10 o primeiro aviso cai em até 7 dias de antecedência extra) e a renovação é rápida quando há web. Se o dono preferir aviso sem travar, D2.
+- **R4 e o staging:** com R4, card vencido ⇒ cron 500 horário ⇒ `cron_health_alerts` em ~3 h. Por isso R4 só pousa depois de R1 (todos os quatro frescos, inclusive embedding, que passa a ser vigiado); o embedding vence em 16/11 e **entra no alerta** pela primeira vez.
+- **Preço não verificado:** enquanto R1 não pousa, o staging recusa imagem/STT (falha fechada); isso é o comportamento certo, não um bug. Preço errado seria pior (cobraria o jogador a menos/mais): daí a regra dura de evidência.
+- **Alívio de emergência** (`RPG_RATE_CARD_MAX_AGE_DAYS`, 1..365) afeta imagem/STT/`require_paid_effect` de uma vez e esconde o vencimento; se usado, tem prazo escrito e some quando R1 pousar (D1). `RPG_FINOPS_BLOCK_STALE=0` **não** basta: só afrouxa `require_paid_effect`, não `require_image_prices`/`require_speech_prices`.
+- Compatibilidade: saves e MockLLM/FallbackLLM sem mudança; sem schema; sem impacto em quota/latência.
+
+## 8. Decisões do dono
+
+- **D1 — Alívio de emergência no staging hoje?** Hoje, no staging, cotação de imagem (retrato pago) e STT dão 503. Opção: `RPG_RATE_CARD_MAX_AGE_DAYS=45` via `vercel_env.py` + deploy, com prazo (remover quando R1 pousar). **Recomendação: não**, a não ser que alguém precise de arte/STT no staging antes do pouso B (o `ESTADO_ATUAL.md` não lista smoke que dependa disso hoje; 222 está bloqueada em chave Stripe). Preço de 30 dias atrás é aceitável em staging, mas a decisão é sua.
+- **D2 — Antecedência do guarda de CI:** N = 10 dias (padrão da spec) e falha na suíte. Alternativa: N = 7, ou aviso (warning) a T-10 e falha só a T-5. **Recomendação: N = 10 com falha**; a janela de 30 dias dá 20 dias de folga e o job semanal cobre semana sem push.
+- **D3 — Card LLM: renovar agora com publicação de `pricing_versions` (Etapa 4) ou adiar?** Renovar exige linha nova no banco, profiles novos e env novo no staging; adiar deixa `stale_rate_card` de `llm` ativo e impede o R4 (o cron falharia sempre). **Recomendação: renovar agora**, em etapa separada depois de imagem/STT/embedding, pelo coordenador ou executor com acesso ao staging; sem produção.
+- **D4 — Escopo do R4:** falhar o cron só por `stale_rate_card` (recomendado) ou por qualquer alerta bloqueante. **Recomendação:** só `stale_rate_card`; ampliar muda o contrato do cron para `wallet_mismatch`, `margin_below_target` etc. e merece spec própria.
+- **D5 — Notificação ativa:** `cron_health_alerts` + CI não notificam por push. Axiom está bloqueado no dono. Opção futura: e-mail/webhook no `cron_health_check`. **Recomendação:** aceitar o limite agora (R3 já avisa por CI/e-mail do GitHub a T-10) e tratar push na spec de Axiom.
+- **D6 — Embedding:** passa a ser vigiado (alerta bloqueante ao vencer ⇒ cron 500). Alternativa: vigiar só com `rate_card_expiring` e não falhar o cron. **Recomendação:** vigiar como os demais; o custo de embedding entra no teto diário de texto (`RPG_DAILY_SPEND_CAP_TEXT=1`).
+
+**Acesso externo que o executor precisa:** (1) web para ler as páginas públicas de preço (OpenAI, Groq, DeepSeek, Jina) — sem isso, Etapa 3/4 bloqueadas e a spec não vira `done`; (2) leitura do banco do staging (Etapa 0) e escrita de `pricing_versions`/`image_price_profiles` + `vercel_env.py` + deploy (Etapa 4, preferencialmente pelo coordenador); (3) stack Postgres local, opcional, para os testes `_local`.
