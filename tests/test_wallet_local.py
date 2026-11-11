@@ -6,8 +6,8 @@ import json
 import os
 import random
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta, timezone, UTC
-from uuid import UUID, uuid4
+from datetime import datetime, timedelta, UTC
+from uuid import uuid4
 
 import pytest
 

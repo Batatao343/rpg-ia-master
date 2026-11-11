@@ -8,7 +8,7 @@ production guard (installed card + its own published window) is untouched.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone, UTC
+from datetime import datetime, timedelta, UTC
 from math import ceil
 
 from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT
@@ -55,7 +55,11 @@ def pin_card_clock(monkeypatch) -> datetime:
 
     from services import finops_alerts
 
-    for name in ("RPG_RATE_CARD_MAX_AGE_DAYS", "RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS"):
+    for name in (
+        "RPG_RATE_CARD_MAX_AGE_DAYS",
+        "RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS",
+        "RPG_FINOPS_BLOCK_STALE",  # =0 no shell tornaria o gate no-op
+    ):
         monkeypatch.delenv(name, raising=False)
     monkeypatch.setattr(
         finops_alerts,

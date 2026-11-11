@@ -9,7 +9,7 @@ the card was observed, and every local paid-effect test started returning
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone, UTC
+from datetime import datetime, timedelta, UTC
 from decimal import Decimal
 
 import pytest
@@ -83,11 +83,11 @@ def test_pinned_card_clock_passes_with_real_window_logic(monkeypatch):
 
 
 def test_pinned_card_clock_does_not_disable_the_window(monkeypatch):
-    from services.finops_alerts import require_paid_effect
-    from tests.fakes.local_pricing import card_epoch
+    from services import finops_alerts
+    from tests.fakes.local_pricing import card_epoch, pin_card_clock
 
-    monkeypatch.delenv("RPG_RATE_CARD_MAX_AGE_DAYS", raising=False)
+    pin_card_clock(monkeypatch)  # com o pin ativo: `now=` explícito ainda vence e a janela recusa
     late = card_epoch() + timedelta(days=31)
     for category in ("image", "stt"):
         with pytest.raises(PricingUnavailable):
-            require_paid_effect(category, now=late)
+            finops_alerts.require_paid_effect(category, now=late)

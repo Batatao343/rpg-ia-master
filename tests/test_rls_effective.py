@@ -14,7 +14,6 @@ import pytest
 
 from infrastructure.contracts import Principal
 from infrastructure.request_context import principal_scope
-from datetime import UTC
 
 pytestmark = [pytest.mark.infra_local, pytest.mark.security_local]
 
@@ -270,7 +269,7 @@ def test_full_runtime_user_paths_under_rpg_api_and_system_paths_on_admin_pool(wo
 def _image_quote_case(world, monkeypatch):
     """Quote de imagem real (pricing/profile sinteticos) para exercitar efeitos financeiros no request."""
     psycopg = pytest.importorskip("psycopg")
-    from datetime import datetime, timedelta, timezone
+    from datetime import datetime, timedelta
 
     from psycopg.types.json import Jsonb
 

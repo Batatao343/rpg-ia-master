@@ -3,7 +3,7 @@
 import os
 from contextlib import nullcontext
 from dataclasses import replace
-from datetime import datetime, timedelta, timezone, UTC
+from datetime import datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import UUID, uuid4

@@ -1,6 +1,6 @@
 """Documented direct Images API counter arithmetic and unsupported-format gates."""
 
-from datetime import datetime, timedelta, timezone, UTC
+from datetime import timedelta
 from decimal import Decimal
 from uuid import uuid4
 

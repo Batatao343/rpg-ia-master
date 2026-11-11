@@ -7,7 +7,7 @@ import io
 import os
 import wave
 from contextlib import nullcontext
-from datetime import datetime, timezone, UTC
+from datetime import datetime, UTC
 from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace

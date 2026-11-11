@@ -6,7 +6,6 @@ import asyncio
 import io
 import os
 import wave
-from datetime import datetime, timezone, UTC
 from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
