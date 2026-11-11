@@ -1838,8 +1838,7 @@ def get_llm(temperature: float = 0.1, tier: ModelTier = ModelTier.FAST):
         return MockLLM(temperature=temperature)
     if m.kind == "fallback":
         _announce_once("fallback_llm_selected", m.reason, level="error")
-        provider = os.getenv("LLM_PROVIDER", "").strip().lower()
-        return FallbackLLM(_FALLBACK_MSG.get(m.reason) or f"Provider desconhecido: {provider!r}")
+        return FallbackLLM(_FALLBACK_MSG.get(m.reason) or f"Provider desconhecido: {m.provider!r}")
     if m.kind == "legacy":
         # RoutedLLM (1 candidato) p/ semântica uniforme de fallback/telemetria
         return RoutedLLM(tier, temperature, [(m.provider, _legacy_model(m.provider, tier))])

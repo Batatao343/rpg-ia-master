@@ -11,7 +11,7 @@ from typing import NamedTuple
 
 class LlmMode(NamedTuple):
     kind: str  # mock | fallback | legacy | routes
-    provider: str = ""  # normalizado; só em kind == "legacy"
+    provider: str = ""  # normalizado; em kind == "legacy" e em unknown_provider
     reason: str = ""  # force_mock | legacy_gemini_no_key | unknown_provider | no_keys | ""
 
 
@@ -26,7 +26,7 @@ def resolve_mode(key_envs: Iterable[str], is_known_provider: Callable[[str], boo
         if provider == "gemini" and not os.getenv("GOOGLE_API_KEY"):
             return LlmMode(sem_chave, reason="legacy_gemini_no_key")
         if not is_known_provider(provider):
-            return LlmMode("fallback", reason="unknown_provider")
+            return LlmMode("fallback", provider, "unknown_provider")
         return LlmMode("legacy", provider)
     if not any(os.getenv(env) for env in key_envs):
         return LlmMode(sem_chave, reason="no_keys")

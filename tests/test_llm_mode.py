@@ -75,7 +75,7 @@ def _resolve(monkeypatch, force, no_mock, provider, key):
         ((False, False, "gemini", None), "mock", "", "legacy_gemini_no_key"),
         ((False, True, "gemini", None), "fallback", "", "legacy_gemini_no_key"),
         ((False, False, " Gemini ", "GOOGLE_API_KEY"), "legacy", "gemini", ""),
-        ((False, False, "foo", None), "fallback", "", "unknown_provider"),
+        ((False, False, "foo", None), "fallback", "foo", "unknown_provider"),
         ((False, False, None, None), "mock", "", "no_keys"),
         ((False, True, None, None), "fallback", "", "no_keys"),
         ((False, False, None, "GROQ_API_KEY"), "routes", "", ""),

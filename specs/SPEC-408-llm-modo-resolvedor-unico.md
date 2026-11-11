@@ -1,6 +1,6 @@
 # SPEC-408 — llm-modo-resolvedor-unico
 
-> **Status:** `in-review` (executor 11/11; antes `approved`) (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
+> **Status:** `done` (11/11: resolvedor único em `services/llm_mode.py`; `llm_setup.py` 1896 → 1861 linhas; revisão Sonnet independente APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-408-terra-review.md`, P2-1 aplicado pelo coordenador (`LlmMode.provider` preenchido em `unknown_provider`, `get_llm` não lê mais env); única mudança observável: `llm_mode` do log de boot com provider desconhecido `legacy:x` → `fallback` (D1); suíte completa do coordenador no pouso) · antes `in-review` (executor 11/11; antes `approved`) (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma (independente de SPEC-405/406/407)
 > **Desbloqueia:** nada (follow-up de qualidade, SPEC-405..408)
