@@ -139,29 +139,14 @@ _ARCHIVE_EVERY = 10  # turnos sem evento relevante antes de forçar um arquivame
 
 
 def _persist_memory_records(game_id: str, records: list[dict]) -> bool:
-    """Write único com metadata; aceita stubs antigos de dois argumentos."""
+    """Write único com metadata (``metadatas`` sempre enviado)."""
     records = normalize_memory_facts(records)
     if not records:
         return True
     texts = [record["text"] for record in records]
     metadatas = [memory_metadata(record) for record in records]
     try:
-        parameters = inspect.signature(add_memory_to_session).parameters.values()
-        accepts_metadata = any(
-            parameter.name == "metadatas" or parameter.kind == inspect.Parameter.VAR_KEYWORD
-            for parameter in parameters
-        )
-    except (TypeError, ValueError):
-        accepts_metadata = True
-    try:
-        if accepts_metadata:
-            ok = add_memory_to_session(
-                game_id,
-                texts,
-                metadatas=metadatas,
-            )
-        else:  # compatibilidade de testes/callers que monkeypatcham a função
-            ok = add_memory_to_session(game_id, texts)
+        ok = add_memory_to_session(game_id, texts, metadatas=metadatas)
     except Exception as exc:
         _log_event("archivist", "rag_persist_failed", level="warning", error=type(exc).__name__)
         return False
