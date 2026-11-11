@@ -13,7 +13,8 @@ def test_repo_respects_size_budget() -> None:
     assert not found, "\n".join(
         [
             *found,
-            "Extraia o código novo para módulo próprio; exceção = size_budget.py --update + motivo no commit.",
+            "Extraia o código novo para módulo próprio; encolheu = size_budget.py --tighten;"
+            " exceção = size_budget.py --update + motivo no commit.",
         ]
     )
 
@@ -24,7 +25,7 @@ def _py(lines: int, func_lines: int) -> str:
     return f"def big():\n{body}\n{filler}\n"
 
 
-def test_growth_and_new_offenders_fail_shrink_passes(tmp_path: Path) -> None:
+def test_growth_and_new_offenders_fail(tmp_path: Path) -> None:
     (tmp_path / "god.py").write_text(_py(sb.FILE_LIMIT + 50, 20), encoding="utf-8")
     (tmp_path / "fn.py").write_text(_py(10, sb.FUNC_LIMIT + 5), encoding="utf-8")
     current = sb.measure(tmp_path, ["god.py", "fn.py"])
@@ -38,7 +39,8 @@ def test_growth_and_new_offenders_fail_shrink_passes(tmp_path: Path) -> None:
         f"file cresceu: god.py {sb.FILE_LIMIT + 10} -> {sb.FILE_LIMIT + 50} (+40)"
     ]
     bigger = {"files": {"god.py": sb.FILE_LIMIT + 99}, "functions": {"fn.py::big": 500}}
-    assert sb.problems(current, bigger) == []  # encolher é livre
+    slack = sb.problems(current, bigger)  # folga acima da tolerância falha
+    assert len(slack) == 2 and all("baseline folgada" in m for m in slack)
 
 
 def test_methods_and_nested_functions_are_qualified(tmp_path: Path) -> None:
@@ -52,3 +54,55 @@ def test_baseline_round_trip(tmp_path: Path) -> None:
     path = tmp_path / "b.json"
     sb.write_baseline(data, path)
     assert sb.load_baseline(path) == data
+
+
+def test_slack_baseline_fails_beyond_tolerance() -> None:
+    current = {"files": {"a.py": 1100}, "functions": {"a.py::f": 120}}
+    ok = {
+        "files": {"a.py": 1100 + sb.SLACK_FILE},
+        "functions": {"a.py::f": 120 + sb.SLACK_FUNC},
+    }
+    assert sb.problems(current, ok) == []
+    loose = {
+        "files": {"a.py": 1100 + sb.SLACK_FILE + 1},
+        "functions": {"a.py::f": 120 + sb.SLACK_FUNC + 1},
+    }
+    found = sb.problems(current, loose)
+    assert len(found) == 2
+    assert all("baseline folgada" in m and "--tighten" in m for m in found)
+
+
+def test_orphan_baseline_entries_fail() -> None:
+    baseline = {"files": {"gone.py": 1200}, "functions": {"gone.py::f": 150}}
+    found = sb.problems({"files": {}, "functions": {}}, baseline)
+    assert len(found) == 2 and all("entrada órfã" in m for m in found)
+
+
+def test_tightened_only_lowers_and_drops_orphans() -> None:
+    current = {
+        "files": {"a.py": 1100, "grown.py": 1500, "new.py": 1300},
+        "functions": {"a.py::f": 120},
+    }
+    baseline = {
+        "files": {"a.py": 1200, "grown.py": 1400, "gone.py": 1100},
+        "functions": {"a.py::f": 130, "gone.py::g": 101},
+    }
+    out = sb.tightened(current, baseline)
+    assert out == {
+        "files": {"a.py": 1100, "grown.py": 1400},
+        "functions": {"a.py::f": 120},
+    }
+    assert sb.tightened(current, out) == out
+
+
+def test_run_tighten_refuses_growth_and_writes_otherwise(tmp_path: Path) -> None:
+    path = tmp_path / "b.json"
+    sb.write_baseline({"files": {"a.py": 1200}, "functions": {}}, path)
+    before = path.read_text(encoding="utf-8")
+    grown = {"files": {"a.py": 1300}, "functions": {}}
+    assert sb.run_tighten(grown, path) == 1
+    assert path.read_text(encoding="utf-8") == before
+    shrunk = {"files": {"a.py": 1100}, "functions": {}}
+    assert sb.run_tighten(shrunk, path) == 0
+    assert sb.load_baseline(path) == shrunk
+    assert sb.run_tighten(shrunk, path) == 0  # idempotente
