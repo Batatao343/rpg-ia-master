@@ -79,6 +79,13 @@ A baseline fica em `docs/spec379/coverage-baseline.md`.
   Arquivo novo recebe todas as regras.
 - Degraus 1–3 concluídos (I, UP, format). Antes de commitar: `ruff check --fix` + `ruff format`.
 
+## Orçamento de tamanho (SPEC-407)
+
+- `scripts/dev/size_budget.py` (e `tests/test_size_budget.py`) reprova arquivo > 1.000 / função > 100 linhas que
+  cresça ou seja novo, baseline folgada (> 25 linhas por arquivo, > 10 por função) e entrada órfã.
+- Encolheu: `size_budget.py --tighten` (só desce e remove órfãs; recusa gravar se houver crescimento) e commite
+  `tests/size_budget.json`. Exceção justificada: `--update` (pode subir) com o motivo na mensagem do commit.
+
 ## Frontend
 
 - `npm run typecheck` (src, bloqueante via build), `npm run typecheck:e2e`

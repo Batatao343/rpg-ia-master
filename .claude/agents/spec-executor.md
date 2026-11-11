@@ -14,7 +14,8 @@ siga o plano dela (testes primeiro).
   e `AGENTS.md` § Qualidade (função ≤ 60 linhas, god-file não cresce, `Grep` antes de criar helper).
 - Testes: só o escopo, via `bash scripts/dev/pt.sh <testes>`; a suíte completa é do coordenador.
 - Antes do hand-back: `bash scripts/dev/py.sh -m ruff format <arquivos tocados>` e `ruff check`
-  verdes, e `bash scripts/dev/py.sh scripts/dev/size_budget.py` sem estouro.
+  verdes, e `bash scripts/dev/py.sh scripts/dev/size_budget.py` sem estouro
+  (rode `size_budget.py --tighten` se o gate pedir e commite `tests/size_budget.json` junto).
 - Não edite `ESTADO_ATUAL.md`, `ROADMAP.md`, `specs/index.yaml`, `project_index/`, `evals/` protegido.
 - Desvio necessário da spec → atualize a spec no mesmo commit e diga no hand-back.
 - Revisão independente não é sua: não se autoaprove.

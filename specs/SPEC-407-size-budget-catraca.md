@@ -1,6 +1,6 @@
 # SPEC-407 — size-budget-catraca
 
-> **Status:** `approved` (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
+> **Status:** `in-review` (11/11, executor; antes `approved`) (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma. **Ordem:** pousar **depois** de 405 e 406 (ver §7): elas encolhem arquivos da baseline e, com a catraca já ativa, cada uma teria de regravar o `size_budget.json` na própria branch (conflito certo entre as duas). Depois delas, uma só regravação (Etapa 2) cobre tudo.
 > **Desbloqueia:** nada (uma das 4 follow-ups de qualidade, SPEC-405..408)
@@ -77,12 +77,12 @@ Editar as 3 linhas de docs/agente; `ruff format --check` e `ruff check` nos `.py
 
 ## 5. Critérios de aceite
 
-- [ ] `uv run pytest tests/test_size_budget.py -q` verde; os testes 1, 2 e o teste invertido da Etapa 1 foram vistos falhando antes da implementação.
-- [ ] `bash scripts/dev/py.sh scripts/dev/size_budget.py` rc 0 na baseline regravada; `... --tighten` rodado de novo não altera o arquivo (idempotente: `git diff --exit-code tests/size_budget.json`).
-- [ ] `git grep -n "wt.sh sync\|--tighten" -- .claude docs/guias` mostra `--tighten` apenas nos 3 pontos do R7; nenhuma skill alterada.
-- [ ] `docs/spec407/tighten.md` lista antes/depois, com ≥ 10 entradas apertadas, e informa órfãs removidas (ou "nenhuma").
-- [ ] Nenhum valor da baseline subiu nem chave nova entrou no diff de `tests/size_budget.json` (`git diff` só tem linhas `-`/`+` com valor menor, ou `-` de órfã).
-- [ ] `ruff format --check` e `ruff check` limpos nos arquivos tocados; `dup_helpers.py --diff main...HEAD` sem helper novo.
+- [x] `uv run pytest tests/test_size_budget.py -q` verde; os testes 1, 2 e o teste invertido da Etapa 1 foram vistos falhando antes da implementação.
+- [x] `bash scripts/dev/py.sh scripts/dev/size_budget.py` rc 0 na baseline regravada; `... --tighten` rodado de novo não altera o arquivo (idempotente: `git diff --exit-code tests/size_budget.json`).
+- [x] `git grep -n "wt.sh sync\|--tighten" -- .claude docs/guias` mostra `--tighten` apenas nos 3 pontos do R7; nenhuma skill alterada.
+- [x] `docs/spec407/tighten.md` lista antes/depois, com ≥ 10 entradas apertadas, e informa órfãs removidas (ou "nenhuma").
+- [x] Nenhum valor da baseline subiu nem chave nova entrou no diff de `tests/size_budget.json` (`git diff` só tem linhas `-`/`+` com valor menor, ou `-` de órfã).
+- [x] `ruff format --check` e `ruff check` limpos nos arquivos tocados; `dup_helpers.py --diff main...HEAD` sem helper novo.
 - [ ] `uv run pytest` verde (suíte completa, 1× pelo coordenador no pouso).
 
 ## 6. Smoke test com LLM real
