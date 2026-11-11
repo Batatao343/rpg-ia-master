@@ -187,3 +187,36 @@ def test_turn_line_aggregates_errors_and_http_statuses():
     ]
     fields = api._llm_log_fields([{"provider": "p2", "fell_back": True}], attempts)
     assert fields["llm_errors"] == {"_Err": 1} and fields["llm_http_statuses"] == {"429": 1}
+
+
+def _limpa(monkeypatch):
+    for env in (
+        "RPG_FORCE_MOCK",
+        "RPG_NO_MOCK",
+        "LLM_PROVIDER",
+        *llm_setup.PROVIDER_KEY_ENV.values(),
+    ):
+        monkeypatch.delenv(env, raising=False)
+    llm_setup._ANNOUNCED.clear()
+
+
+@pytest.mark.parametrize(
+    ("provider", "no_mock", "event", "reason", "level"),
+    [
+        ("gemini", False, "llm.mock_selected", "legacy_gemini_no_key", "warning"),
+        ("gemini", True, "llm.fallback_llm_selected", "legacy_gemini_no_key", "error"),
+        ("foo", False, "llm.fallback_llm_selected", "unknown_provider", "error"),
+        (None, False, "llm.mock_selected", "no_keys", "warning"),
+        (None, True, "llm.fallback_llm_selected", "no_keys", "error"),
+    ],
+)
+def test_spec408_eventos_de_selecao(capsys, monkeypatch, provider, no_mock, event, reason, level):
+    _limpa(monkeypatch)
+    if provider:
+        monkeypatch.setenv("LLM_PROVIDER", provider)
+    if no_mock:
+        monkeypatch.setenv("RPG_NO_MOCK", "1")
+    llm_setup.get_llm()
+    llm_setup.get_llm()
+    (line,) = [x for x in _lines(capsys) if x["event"] == event]
+    assert line["reason"] == reason and line["level"] == level
