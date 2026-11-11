@@ -1,6 +1,6 @@
 # SPEC-407 — size-budget-catraca
 
-> **Status:** `in-review` (11/11, executor; antes `approved`) (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
+> **Status:** `done` (11/11: gate de tamanho virou catraca, tolerância 25/10, `--tighten`; baseline apertada em 16 entradas e 1 órfã removida; risco baixo, testes + lint; DESVIO do coordenador: as duas linhas de `docs/guias/TESTES.md` e `docs/guias/BRIEF_SUBAGENTE.md` ficaram FORA deste pouso porque o checkout principal tem edições alheias não commitadas nesses arquivos (ff recusaria); a mensagem do próprio gate e `.claude/agents/spec-executor.md` já apontam o `--tighten`; follow-up: aplicar as duas linhas quando a outra sessão commitar) · antes `in-review` (11/11, executor; antes `approved`) (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma. **Ordem:** pousar **depois** de 405 e 406 (ver §7): elas encolhem arquivos da baseline e, com a catraca já ativa, cada uma teria de regravar o `size_budget.json` na própria branch (conflito certo entre as duas). Depois delas, uma só regravação (Etapa 2) cobre tudo.
 > **Desbloqueia:** nada (uma das 4 follow-ups de qualidade, SPEC-405..408)
