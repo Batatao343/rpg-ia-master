@@ -22,17 +22,11 @@ from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from observability.telemetry import log_event as _log_event
-from observability.telemetry import log_fallback
 
 # Adiciona raiz ao path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Imports do seu motor
-import gamedata
-import persistence as persistence_module
-import progression
-from character_creator import create_player_character
-from gamedata import CLASSES, seed_factions
 from infrastructure.contracts import (
     AuthUnavailable,
     CsrfError,
@@ -47,44 +41,11 @@ from infrastructure.db_roles import admin_connection
 # --- CONFIGURAÇÃO DA API ---
 # SPEC-218: boot fail-closed. Processo exposto (plataforma/bind) nunca sobe em
 # `legacy`; perfis DB validam a config de segurança já no import, não no 1º request.
-from infrastructure.runtime import assert_boot_policy, docs_enabled, is_hardened
-from llm_setup import (
-    LLMAttemptEvent,
-    is_simulated,
-    set_llm_attempt_telemetry_hook,
-    set_llm_telemetry_hook,
-)
+from infrastructure.runtime import assert_boot_policy, docs_enabled
+from llm_setup import LLMAttemptEvent, set_llm_attempt_telemetry_hook, set_llm_telemetry_hook
 import main  # noqa: F401  # SPEC-381: mesma posicao de import; game_graph mora em routes.turn
-from persistence import (
-    IncompatibleSaveError,
-    _serialize_messages,
-    save_path,
-)
-from services import combat_flags
-from services.checkout_retry import retry_once
-from services import portrait_offer
-from services.portrait_offer_log import log_offer_omitted
-from services import enemy_intent as _enemy_intent
-from services import npc_world as _npc_world
-from services import quest_log
-from services import state_views as sv
-from services.chronicle import default_chapter_title
-from services.discovery import player_codex
-from services.error_codes import api_error
-from services.prologue import (
-    StartScenarioIn,
-    build_start_scenario_ctx,
-    scenario_to_state_seed,
-)
-from services.prompt_guard import origin_fragment
-from services.usage_metering import normalize_attempts, operation_cost
-from services.visual_catalog import (
-    creation_visuals,
-    resolve_turn_visual_state,
-    visual_response,
-)
-from services.reputation import faction_tier
-from world_utils import starting_world
+from persistence import IncompatibleSaveError
+from services.usage_metering import normalize_attempts
 from api_models import (
     ArtBriefRequest,
     ChronicleSearchRequest,
