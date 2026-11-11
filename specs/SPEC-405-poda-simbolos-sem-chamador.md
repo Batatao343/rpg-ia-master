@@ -1,6 +1,6 @@
 # SPEC-405 — poda-simbolos-sem-chamador
 
-> **Status:** `approved` (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
+> **Status:** `in-review` (executor 11/11; falta revisão Etapa 4 e suíte completa do coordenador; antes `approved`) (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma
 > **Desbloqueia:** nada (uma das 4 follow-ups de qualidade, SPEC-405..408)
@@ -127,18 +127,18 @@ Uma etapa por R, em ordem de menor para maior risco. Executor roda só os testes
 
 ## 5. Critérios de aceite
 
-- [ ] R0: `docs/spec405/README.md` com o re-grep dos 19 símbolos; todo símbolo apagado só tinha a definição. Símbolos que mostraram uso estão no hand-back e fora do diff.
-- [ ] `git grep -nw -e CrimeCandidate -e PrisonerRef -e LawReceipt -e _debug_scores -e has_curated_art -e reload_config -e seed_from_proposal -e search_intent -e deed_event_types -e seed_ids -e _soul_for_quest -e utc_now -e run_with_context -e _TRAVEL_CUES -e ARMADURAS -e ESCUDOS -e _error_code_of -e _MEMORIAL_DETAIL -e CalendarDate -- '*.py'` não devolve nada.
-- [ ] `git grep -n "_CODE_RE" api.py` vazio; `services/error_codes.py` intacto.
-- [ ] Os três scripts do R3 não existem; `ruff check .` verde.
-- [ ] `grep -n "inspect.signature(add_memory_to_session)" agents/archivist.py` vazio; `_persist_memory_records` chama `add_memory_to_session(..., metadatas=...)` uma só vez; nenhum assert de teste mudou (só assinaturas de stub); `world_simulator` intacto.
-- [ ] `tests/test_spec378_text_fold.py` com as 2 linhas novas verdes; `_fold` de `plot_threads` e `_fold_txt` de `world_utils` delegam a `services.text.fold`.
-- [ ] `playtest.telemetry._percentile is observability.latency.percentile`; a def duplicada não existe.
-- [ ] W2: `evals compare` A × B sem diferença; playtest `--all --turns 10 --seed 0` com mesmas violações e desfechos por perfil.
-- [ ] Testes do escopo de cada etapa verdes (contagem no hand-back); `ruff format --check`, `ruff check`, `test_size_budget.py` verdes; saldo de linhas negativo.
-- [ ] Revisão Sonnet da Etapa 4 APPROVED.
+- [x] R0: `docs/spec405/README.md` com o re-grep dos 19 símbolos; todo símbolo apagado só tinha a definição. Símbolos que mostraram uso estão no hand-back e fora do diff.
+- [x] `git grep -nw -e CrimeCandidate -e PrisonerRef -e LawReceipt -e _debug_scores -e has_curated_art -e reload_config -e seed_from_proposal -e search_intent -e deed_event_types -e seed_ids -e _soul_for_quest -e utc_now -e run_with_context -e _TRAVEL_CUES -e ARMADURAS -e ESCUDOS -e _error_code_of -e _MEMORIAL_DETAIL -e CalendarDate -- '*.py'` não devolve nada.
+- [x] `git grep -n "_CODE_RE" api.py` vazio; `services/error_codes.py` intacto.
+- [x] Os três scripts do R3 não existem; `ruff check .` verde.
+- [x] `grep -n "inspect.signature(add_memory_to_session)" agents/archivist.py` vazio; `_persist_memory_records` chama `add_memory_to_session(..., metadatas=...)` uma só vez; nenhum assert de teste mudou (só assinaturas de stub); `world_simulator` intacto.
+- [x] `tests/test_spec378_text_fold.py` com as 2 linhas novas verdes; `_fold` de `plot_threads` e `_fold_txt` de `world_utils` delegam a `services.text.fold`.
+- [x] `playtest.telemetry._percentile is observability.latency.percentile`; a def duplicada não existe.
+- [x] W2: `evals compare` A × B sem diferença; playtest `--all --turns 10 --seed 0` com mesmas violações e desfechos por perfil.
+- [x] Testes do escopo de cada etapa verdes (contagem no hand-back); `ruff format --check`, `ruff check`, `test_size_budget.py` verdes; saldo de linhas negativo.
+- [ ] Revisão Sonnet da Etapa 4 APPROVED (pendente, independente).
 - [ ] `uv run pytest` verde (suíte completa offline, 1× pelo coordenador no pouso).
-- [ ] Saves antigos continuam carregando (nenhum `GameState` mudou; `CalendarDate` é só tipo).
+- [x] Saves antigos continuam carregando (nenhum `GameState` mudou; `CalendarDate` é só tipo).
 
 ## 6. Smoke test com LLM real
 
