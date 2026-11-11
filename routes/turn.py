@@ -1485,11 +1485,6 @@ def game_death(req: DeathChoiceRequest):
 
 # --- STREAMING DO TURNO (spec streaming-turno-sse) ---------------------------
 
-_MEMORIAL_DETAIL = (
-    "Esta saga terminou. A crônica permanece como memorial — comece uma nova jornada."
-)
-
-
 _SSE_PING_S = 10.0
 
 

@@ -262,20 +262,6 @@ def card_tier_for_level(level: int) -> int:
 # Dano-base por categoria de arma (R1).
 DANO_BASE_ARMA = {"leve": 3, "marcial": 4, "versatil": 6, "pesada": 8}
 
-# Armaduras (R5): protecao / integridade_max / penalidade_esquiva / reducoes_max_por_ataque.
-ARMADURAS = {
-    "leve": {"protecao": 1, "integridade_max": 4, "penalidade_esquiva": 0, "reducoes_max": 1},
-    "media": {"protecao": 2, "integridade_max": 6, "penalidade_esquiva": 1, "reducoes_max": 2},
-    "pesada": {"protecao": 3, "integridade_max": 8, "penalidade_esquiva": 2, "reducoes_max": 3},
-}
-
-# Escudos (R6): protecao / integridade_max / requisito_forca.
-ESCUDOS = {
-    "broquel": {"protecao": 1, "integridade_max": 3, "requisito_forca": 0},
-    "comum": {"protecao": 2, "integridade_max": 5, "requisito_forca": 2},
-    "pesado": {"protecao": 3, "integridade_max": 7, "requisito_forca": 3},
-}
-
 # Ajuste de dano por Resistência/Vulnerabilidade (R4).
 RESIST_MODIFIER = {
     "resistencia": -2,

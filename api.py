@@ -239,18 +239,6 @@ app = FastAPI(
 )
 
 
-_CODE_RE = None
-
-
-def _error_code_of(detail: Any) -> str | None:
-    """Codigo curto/fechado quando o detail JA e um codigo (nunca prosa)."""
-    global _CODE_RE
-    import re
-
-    _CODE_RE = _CODE_RE or re.compile(r"^[a-z][a-z0-9_.]{1,63}$")
-    return detail if isinstance(detail, str) and _CODE_RE.match(detail) else None
-
-
 @app.exception_handler(StarletteHTTPException)
 async def _http_exception_handler(request: Request, exc: StarletteHTTPException):
     """SPEC-241 R3 + SPEC-242: corpo atual preservado + ``code`` + request_id (corpo e header)."""

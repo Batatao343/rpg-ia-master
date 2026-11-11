@@ -248,22 +248,6 @@ class CalendarParams(TypedDict, total=False):
     migrated_from: int  # 1, so quando veio da SPEC-303
 
 
-class CalendarDate(TypedDict):
-    """SPEC-307 R4: data derivada (nunca gravada como verdade)."""
-
-    year: int  # exibido (R14)
-    month_index: int  # 0..6
-    month_id: str
-    day_of_month: int  # 1..20
-    weekday_index: int  # 0..4
-    weekday_id: str
-    season: str  # chave canonica da SPEC-303
-    climate: Climate
-    day_of_year: int  # 0..139
-    day_in_season: int  # 1..season_len
-    season_len: int
-
-
 class DateView(TypedDict):
     """SPEC-307 R15: `world["date"]` e `world` da API (sem day_of_year/epoch)."""
 

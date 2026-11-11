@@ -12,25 +12,6 @@ PERIODS = ["Amanhecer", "Manhã", "Tarde", "Anoitecer", "Noite"]
 
 # Pistas de intenção
 _REST_WORDS = ["descans", "dormir", "durmo", "acamp", "repous", "pernoit", "descabel"]
-_TRAVEL_CUES = [
-    "vou",
-    "viaj",
-    "ir para",
-    "ir até",
-    "ir a",
-    "sigo para",
-    "sigo até",
-    "caminho para",
-    "rumo a",
-    "parto",
-    "vamos para",
-    "seguir para",
-    "me dirijo",
-    "atravesso para",
-    "voltar para",
-    "volto para",
-    "viajo",
-]
 
 
 def ensure_world(world: dict) -> dict:
