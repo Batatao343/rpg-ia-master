@@ -46,55 +46,20 @@ from llm_setup import LLMAttemptEvent, set_llm_attempt_telemetry_hook, set_llm_t
 import main  # noqa: F401  # SPEC-381: mesma posicao de import; game_graph mora em routes.turn
 from persistence import IncompatibleSaveError
 from services.usage_metering import normalize_attempts
-from api_models import (
-    ArtBriefRequest,
-    ChronicleSearchRequest,
-    EquipRequest,
-    EspolioRequest,
-    ForjaRequest,
-    LevelUpRequest,
-    LojaCartasRequest,
-    PrepareCardsRequest,
-)
 
 import api_core
 from api_core import (
     QuotaExceeded,
     _CLIENT_ERROR_PATH,
-    _CLIENT_LATENCY_PATH,
-    _NOT_A_FAILURE,
-    _account_reader,
-    _bind_corr,
-    _captured_usage,
     _client_ip,
-    _client_latency_enabled,
-    _commit_state_mutation,
     _current_request_id,
-    _embedding_attempt_events,
-    _embedding_telemetry_hook,
-    _enqueue_turn_art,
     _error_response,
-    _fail_operation,
     _llm_attempt_events,
     _llm_turn_events,
     _log_csrf_rejection,
     _metrics_authorized,
-    _op_rejected,
-    _op_replayed,
-    _prologue_owner,
-    _reject_archived,
-    _reject_memorial,
-    _usage_attempts,
-    _validated_receipt,
 )
 
-import api_presenters
-from api_presenters import (
-    _card_reward_blocks,
-    _levelup_block,
-    _portrait_manifest_ctx,
-    _simulation_manifest,
-)
 
 # --- reexports (SPEC-381 R9): mesmo objeto do modulo-lar; nome patchado nunca entra ---
 from api_core import (
