@@ -10,11 +10,12 @@ Nada aqui devolve `segredo_*`, `secret_ids` nem texto de doc oculto (R25).
 from __future__ import annotations
 
 import os
-import unicodedata
 from functools import lru_cache
 from typing import Any, Literal
 
 from pydantic import BaseModel
+
+from services import text as _text
 
 CATALOG_PATH = os.path.join("data", "world", "plot_threads.json")
 MODES = ("off", "on")
@@ -155,9 +156,7 @@ def clear_cache() -> None:
 
 
 def _fold(text: object) -> str:
-    nfkd = unicodedata.normalize("NFKD", str(text or ""))
-    stripped = "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
-    return " ".join(stripped.split())
+    return _text.fold(text, collapse=True)
 
 
 # --------------------------------------------------------------------------- #

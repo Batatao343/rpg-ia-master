@@ -7,6 +7,7 @@ Tudo determinístico (sem LLM) — funciona igual no modo simulado.
 from typing import Optional, Tuple
 
 import gamedata
+from services import text as _text
 
 PERIODS = ["Amanhecer", "Manhã", "Tarde", "Anoitecer", "Noite"]
 
@@ -61,10 +62,7 @@ def is_rest(text: str) -> bool:
 
 def _fold_txt(s: str) -> str:
     """lower + sem acento — 'Pantano' tem que casar 'Pântano' (smoke 2026-07-05)."""
-    import unicodedata
-
-    nfkd = unicodedata.normalize("NFKD", str(s or ""))
-    return "".join(c for c in nfkd if not unicodedata.combining(c)).lower()
+    return _text.fold(s, case="lower")
 
 
 _TRAVEL_VERBS = (

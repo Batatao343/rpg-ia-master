@@ -163,6 +163,17 @@ def _legacy_services_world_validators(value: object) -> str:
     return " ".join("".join(c for c in folded if not unicodedata.combining(c)).casefold().split())
 
 
+def _legacy_services_plot_threads(text: object) -> str:
+    nfkd = unicodedata.normalize("NFKD", str(text or ""))
+    stripped = "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
+    return " ".join(stripped.split())
+
+
+def _legacy_world_utils(s: str) -> str:
+    nfkd = unicodedata.normalize("NFKD", str(s or ""))
+    return "".join(c for c in nfkd if not unicodedata.combining(c)).lower()
+
+
 SITES = [
     ("party", "_fold", _legacy_party, {"case": "lower"}),
     ("services.combat_intents", "_fold", _legacy_services_combat_intents, {"case": "lower"}),
@@ -184,6 +195,8 @@ SITES = [
     ),
     ("services.quest_log", "_fold_name", _legacy_services_quest_log, {"collapse": True}),
     ("services.world_validators", "_fold", _legacy_services_world_validators, {"collapse": True}),
+    ("services.plot_threads", "_fold", _legacy_services_plot_threads, {"collapse": True}),
+    ("world_utils", "_fold_txt", _legacy_world_utils, {"case": "lower"}),
 ]
 
 
