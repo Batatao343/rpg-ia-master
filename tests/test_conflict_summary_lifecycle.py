@@ -756,7 +756,9 @@ def test_evento_rejeitado_nao_vira_fato_do_archivist(monkeypatch):
     saved = []
     monkeypatch.setattr(archivist, "get_llm", lambda **_kwargs: _ArchivistLLM())
     monkeypatch.setattr(
-        archivist, "add_memory_to_session", lambda _game_id, facts, **_kwargs: saved.extend(facts) or True
+        archivist,
+        "add_memory_to_session",
+        lambda _game_id, facts, **_kwargs: saved.extend(facts) or True,
     )
     state = {
         "game_id": "game-rejected",
