@@ -1,6 +1,6 @@
 # SPEC-405 — poda-simbolos-sem-chamador
 
-> **Status:** `in-review` (executor 11/11; falta revisão Etapa 4 e suíte completa do coordenador; antes `approved`) (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
+> **Status:** `done` (11/11: etapas 0–7, saldo −350 linhas; revisão Sonnet independente APPROVED em `handoffs/SPEC-405-sonnet-review.md`; oráculo W2 sem diferença; suíte completa do coordenador no pouso; antes `approved`) (11/11: aprovada pelo coordenador por delegação do dono, "as decisões deixo para vc"; decisões do §8 = recomendações; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma
 > **Desbloqueia:** nada (uma das 4 follow-ups de qualidade, SPEC-405..408)
