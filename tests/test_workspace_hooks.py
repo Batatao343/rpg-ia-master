@@ -124,11 +124,80 @@ def test_subagent_heavy_pytest_is_denied(tmp_path: Path, flag: str) -> None:
     )
 
 
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "bash scripts/dev/pt.sh tests/ -n 4",
+        "bash scripts/dev/py.sh -m pytest -n auto",
+        "PYTHONUTF8=1 uv run --frozen python -m pytest --numprocesses 4",
+        "cd sub && uv run pytest -nauto | tail -n 5",
+    ],
+)
+def test_subagent_heavy_pytest_forms_are_denied(tmp_path: Path, cmd: str) -> None:
+    assert _denied(_run("guard_tools.py", _sh(cmd, tmp_path, agent=True)))
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "sed -n 80,200p tests/x.py | grep pytest",
+        "git log -n 5 --grep pytest",
+        "uv run pytest tests/x.py | tail -n 40",
+        "echo pytest && head -n 50 README.md",
+    ],
+)
+def test_subagent_non_pytest_dash_n_is_allowed(tmp_path: Path, cmd: str) -> None:
+    assert _run("guard_tools.py", _sh(cmd, tmp_path, agent=True)) is None
+
+
+def test_subagent_cannot_run_full_suite(tmp_path: Path) -> None:
+    cmd = "bash scripts/dev/full.sh"
+    assert _denied(_run("guard_tools.py", _sh(cmd, tmp_path, agent=True)))
+    assert _run("guard_tools.py", _sh(cmd, tmp_path, agent=False)) is None
+
+
+def _agent(subagent_type: object, prompt: object, tool: str = "Agent") -> dict:
+    ti: dict = {"prompt": prompt}
+    if subagent_type is not None:
+        ti["subagent_type"] = subagent_type
+    return {"tool_name": tool, "tool_input": ti, "cwd": "."}
+
+
+@pytest.mark.parametrize("stype", [None, "", "general-purpose", "claude", "General-Purpose"])
+def test_agent_without_type_needs_reason(stype: str | None) -> None:
+    denied = _run("guard_tools.py", _agent(stype, "faça x"))
+    assert _denied(denied)
+    assert "Motivo sem tipo:" in denied["hookSpecificOutput"]["permissionDecisionReason"]
+    ok = "SPEC-1\nMotivo sem tipo: precisa de web e edição juntos\nfim"
+    assert _run("guard_tools.py", _agent(stype, ok)) is None
+    assert _denied(_run("guard_tools.py", _agent(stype, "Motivo sem tipo: ok")))
+    late = "x Motivo sem tipo: precisa de web e edição"
+    assert _denied(_run("guard_tools.py", _agent(stype, late)))
+
+
+@pytest.mark.parametrize(
+    "stype",
+    ["spec-executor", "code-locator", "Explore", "Plan", "claude-code-guide", "tipo-novo"],
+)
+@pytest.mark.parametrize("tool", ["Agent", "Task"])
+def test_agent_typed_or_builtin_is_free(stype: str, tool: str) -> None:
+    assert _run("guard_tools.py", _agent(stype, "faça x", tool)) is None
+
+
+def test_agent_guard_never_crashes() -> None:
+    bad = {"tool_name": "Agent", "tool_input": {"subagent_type": "general-purpose"}}
+    assert _denied(_run("guard_tools.py", bad))  # sem prompt: sem marcador
+    assert _denied(_run("guard_tools.py", _agent("general-purpose", 42)))
+    assert _run("guard_tools.py", {"tool_name": "Agent", "tool_input": "texto"}) is None
+
+
 def test_pytest_light_or_coordinator_is_allowed(tmp_path: Path) -> None:
     assert (
         _run("guard_tools.py", _sh("uv run pytest -n 2 tests/x.py", tmp_path, agent=True)) is None
     )
     assert _run("guard_tools.py", _sh("uv run pytest -n auto", tmp_path, agent=False)) is None
+    cmd = "uv run pytest -n 2 tests | tail -n 40"
+    assert _run("guard_tools.py", _sh(cmd, tmp_path, agent=True)) is None
 
 
 def test_guard_never_crashes_on_garbage() -> None:
@@ -210,6 +279,13 @@ def test_settings_register_every_hook_checkout_relative() -> None:
         cmd = next(c for c in commands if script in c)
         assert "$CLAUDE_PROJECT_DIR/.claude/hooks/" in cmd and "Trabalho" not in cmd
         assert (HOOKS / script).is_file()
+    guard = next(
+        g
+        for groups in settings["hooks"].values()
+        for g in groups
+        if any("guard_tools.py" in h["command"] for h in g["hooks"])
+    )
+    assert {"Agent", "Task"} <= set(guard["matcher"].split("|"))
 
 
 def test_ruff_hook_skips_protected_eval_paths(tmp_path: Path) -> None:

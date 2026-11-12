@@ -9,9 +9,9 @@ Funciona em qualquer worktree (sem caminho fixo). Camadas em `docs/guias/TESTES.
 
 | Camada | Quando | Comando |
 |---|---|---|
-| 0 | a cada iteração | `bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider --lf -x 2>&1 \| tail -15` |
-| 1 | antes do hand-back de um executor | `bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider tests/test_<escopo>*.py 2>&1 \| tail -15` |
-| 2 | `/qa --full` — só coordenador / fim de tarefa, 1× | `bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n auto 2>&1 \| tail -15` em background (`run_in_background: true`, `timeout: 1200000`) |
+| 0 | a cada iteração | `bash scripts/dev/pt.sh --lf` |
+| 1 | antes do hand-back de um executor | `bash scripts/dev/pt.sh tests/test_<escopo>*.py` |
+| 2 | `/qa --full` — suíte completa: só coordenador / fim de tarefa, 1× | `bash scripts/dev/full.sh` em background (`run_in_background: true`, `timeout: 1200000`); escolhe `-n` pela RAM, rc 3 abaixo do piso (`FULL_N=<n>` força) |
 
 Lint rápido antes de rodar teste: `bash scripts/dev/py.sh -m ruff check <arquivos tocados>`.
 

@@ -64,3 +64,22 @@ def test_eval_publish_prints_owner_approval_command() -> None:
     command = eval_publish.approval_command("o/r", "123", "456")
     assert command.startswith("gh api -X POST repos/o/r/actions/runs/123/pending_deployments")
     assert "environment_ids[]=456" in command and "state=approved" in command
+
+
+@pytest.mark.parametrize("name", ["qa", "wrap-up", "spec-land"])
+def test_test_skills_use_wrappers(name: str) -> None:
+    """SPEC-414 R2: skills de teste usam os wrappers, nunca pytest com pipe nem xdist auto."""
+    text = (
+        Path(__file__).resolve().parents[1] / ".claude" / "skills" / name / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    assert not re.search(r"pytest[^\n`]*\|\s*tail", text)
+    assert "-n " + "auto" not in text
+    assert "scripts/dev/full.sh" in text
+
+
+@pytest.mark.parametrize("name", ["qa", "wrap-up"])
+def test_full_suite_skills_say_coordinator_only(name: str) -> None:
+    text = (
+        Path(__file__).resolve().parents[1] / ".claude" / "skills" / name / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    assert "suíte completa: só coordenador" in text

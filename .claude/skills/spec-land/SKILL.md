@@ -20,7 +20,7 @@ separado de índice. Quem roda é o **coordenador**.
    rebase em andamento.
 3. **Suíte completa 1×** (camada 2, `docs/guias/TESTES.md`), em background com
    timeout longo, no worktree:
-   `bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n auto` (Bash com
+   `bash scripts/dev/full.sh` (Bash com
    `run_in_background: true`, `timeout: 1200000`). Espere com **uma** notificação; não
    faça `sleep` em loop. Vermelho → devolva ao executor, não pouse.
 4. **Pouso**: `bash scripts/dev/wt.sh land NNN` (re-sincroniza se a `main` andou e

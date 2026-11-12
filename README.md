@@ -23,7 +23,7 @@ Groq, MiniMax, Qwen, Anthropic e Gemini. A configuração efetiva vive em
 ## Setup
 
 ```bash
-uv sync                        # cria o venv (Python 3.13) e instala deps
+uv sync --all-extras                    # cria o venv (Python 3.13) e instala deps
 cp .env.example .env           # configure uma ou mais chaves de provider
 ```
 

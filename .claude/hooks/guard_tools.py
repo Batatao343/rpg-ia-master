@@ -19,7 +19,10 @@ CAT_CMDS = {"cat", "type", "get-content", "gc"}
 GC_CAPS = {"-totalcount", "-tail", "-first", "-head"}
 SEGMENT_SPLIT = re.compile(r"&&|\|\||;|\n")
 CD_RE = re.compile(r"^\s*cd\s+(.+?)\s*$")
-XDIST_RE = re.compile(r"(?:^|\s)(?:-n\s*|--numprocesses[=\s]+)(auto|logical|\d+)\b")
+XDIST_RE = re.compile(r"^(?:-n|--numprocesses=?)(auto|logical|\d+)?$")
+PYTEST_TOKENS = {"pytest", "py.test", "pt.sh", "full.sh"}
+UNTYPED = {"", "general-purpose", "claude"}
+REASON_RE = re.compile(r"^\s*Motivo sem tipo:\s*(\S.{9,})$", re.MULTILINE)
 
 
 def _deny(reason: str) -> None:
@@ -91,14 +94,65 @@ def _words(text: str) -> list[str]:
     return words if posix else [w.strip("\"'") for w in words]
 
 
-def check_shell(command: str, cwd: str, is_subagent: bool) -> None:
-    if is_subagent and "pytest" in command:
-        m = XDIST_RE.search(command)
-        if m and (not m.group(1).isdigit() or int(m.group(1)) > 2):
+def _base(word: str) -> str:
+    name = word.replace("\\", "/").rsplit("/", 1)[-1].lower()
+    return name[:-4] if name.endswith(".exe") else name
+
+
+def _after_pytest(words: list[str]) -> list[str] | None:
+    """Palavras depois do token de pytest (`pytest`, `-m pytest`, `pt.sh`...); None = não é pytest."""
+    for i, w in enumerate(words):
+        if _base(w) in PYTEST_TOKENS:
+            return words[i + 1 :]
+    return None
+
+
+def _xdist_value(rest: list[str]) -> str | None:
+    for i, w in enumerate(rest):
+        m = XDIST_RE.match(w)
+        if not m:
+            continue
+        value = m.group(1) or (rest[i + 1] if i + 1 < len(rest) else "")
+        if re.fullmatch(r"auto|logical|\d+", value):
+            return value
+    return None
+
+
+def _heavy_xdist(segment: str) -> bool:
+    for part in _split_pipeline(segment):
+        rest = _after_pytest(_words(part))
+        value = _xdist_value(rest) if rest else None
+        if value and (not value.isdigit() or int(value) > 2):
+            return True
+    return False
+
+
+def _runs_full_suite(segment: str) -> bool:
+    for part in _split_pipeline(segment):
+        words = _words(part)
+        for i, w in enumerate(words):
+            if _base(w) == "full.sh" and (i == 0 or _base(words[i - 1]) in {"bash", "sh", "."}):
+                return True
+    return False
+
+
+def _check_subagent(command: str) -> None:
+    for seg in SEGMENT_SPLIT.split(command):
+        if _runs_full_suite(seg):
+            _deny(
+                "Suíte completa é do coordenador; use `bash scripts/dev/pt.sh <testes>` "
+                "(já usa -n 2)."
+            )
+        if _heavy_xdist(seg):
             _deny(
                 "Subagente não roda pytest com -n auto nem -n > 2 (RAM da máquina). "
                 "Use `bash scripts/dev/pt.sh <testes>` (já usa -n 2)."
             )
+
+
+def check_shell(command: str, cwd: str, is_subagent: bool) -> None:
+    if is_subagent:
+        _check_subagent(command)
     here = cwd
     for segment in SEGMENT_SPLIT.split(command):
         cd = CD_RE.match(segment)
@@ -134,6 +188,23 @@ def check_shell(command: str, cwd: str, is_subagent: bool) -> None:
                 )
 
 
+def check_agent(ti: object) -> None:
+    """SPEC-414 R6: `Agent` sem tipo (ou general-purpose/claude) exige `Motivo sem tipo: <motivo>`."""
+    if not isinstance(ti, dict):
+        return
+    stype = str(ti.get("subagent_type") or "").strip().lower()
+    if stype not in UNTYPED:
+        return
+    prompt = ti.get("prompt")
+    if isinstance(prompt, str) and REASON_RE.search(prompt):
+        return
+    _deny(
+        "Agent sem tipo exige linha `Motivo sem tipo: <por quê>` no prompt. Tipos do repo: "
+        "spec-executor, spec-reviewer, spec-author, code-locator, audit-reader, ci-watcher "
+        "(ver CLAUDE.md)."
+    )
+
+
 def main() -> None:
     try:
         data = json.loads(sys.stdin.buffer.read().decode("utf-8"))
@@ -145,6 +216,8 @@ def main() -> None:
         cwd = data.get("cwd") or os.getcwd()
         if tool == "Read":
             check_read(ti, cwd)
+        elif tool in {"Agent", "Task"}:
+            check_agent(ti)
         elif tool in {"Bash", "PowerShell"}:
             check_shell(str(ti.get("command") or ""), cwd, bool(data.get("agent_id")))
     except SystemExit:

@@ -37,23 +37,33 @@ for _name in _EXPOSURE_ENV:
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
-    """Windows + pytest-xdist: short per-checkout basetemp (workspace #5).
+    """Windows + pytest-xdist: short basetemp per checkout **and per run** (workspace #5, SPEC-414 R3).
 
     xdist adds ``popen-gwN`` to every tmp path; nested blob paths then pass the
-    260-char MAX_PATH and ``os.replace`` fails with WinError 3. A short, per-checkout
-    directory keeps paths short and parallel worktrees from wiping each other.
+    260-char MAX_PATH and ``os.replace`` fails with WinError 3. A short directory
+    ``pt-<sha8 do checkout>-<pid>`` keeps paths short; the PID keeps two runs in the
+    same checkout from wiping each other. Old ``pt-*`` (> 6 h) are pruned first.
     """
-    import hashlib
     import sys
     import tempfile
+    import time
     from pathlib import Path
 
-    if sys.platform != "win32" or os.environ.get("PYTEST_XDIST_WORKER"):
-        return
-    if config.option.basetemp or not getattr(config.option, "numprocesses", None):
-        return
-    checkout = hashlib.sha1(str(Path(__file__).resolve().parents[1]).encode()).hexdigest()[:8]
-    config.option.basetemp = str(Path(tempfile.gettempdir()) / f"pt-{checkout}")
+    from tests.basetemp_support import choose_basetemp, prune_old_basetemps
+
+    tmpdir = Path(tempfile.gettempdir())
+    chosen = choose_basetemp(
+        sys.platform,
+        bool(os.environ.get("PYTEST_XDIST_WORKER")),
+        bool(config.option.basetemp),
+        getattr(config.option, "numprocesses", None),
+        Path(__file__).resolve().parents[1],
+        tmpdir,
+        os.getpid(),
+    )
+    if chosen:
+        prune_old_basetemps(tmpdir, time.time())
+        config.option.basetemp = chosen
 
 
 @pytest.fixture(autouse=True)

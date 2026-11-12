@@ -93,6 +93,11 @@ case "$cmd" in
       powershell.exe -NoProfile -Command "New-Item -ItemType Junction -Path \"$(cygpath -w "$WT/web/node_modules")\" -Target \"$(cygpath -w "$MAIN/web/node_modules")\" | Out-Null" \
         || echo "warning: could not junction web/node_modules" >&2
     fi
+    if [ -d "$MAIN/.venv" ]; then
+      echo "venv: $MAIN/.venv (não rode \`uv sync\` no worktree)" >&2
+    else
+      echo "sem venv no principal: rode \`uv sync --all-extras\` em $MAIN" >&2
+    fi
     echo "$WT";;
   sync)
     sync_branch;;

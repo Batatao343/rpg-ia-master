@@ -75,7 +75,7 @@ um parágrafo no hand-back e o coordenador integra.
 > Detalhes do ambiente: `ESTADO_ATUAL.md`.
 
 ```bash
-uv sync                                   # cria .venv (Python 3.13)
+uv sync --all-extras                               # cria .venv (Python 3.13)
 uv run uvicorn api:app --port 8000        # API REST + frontend web (http://localhost:8000)
 uv run python rag.py                      # re-indexar lore (data/codex/) + regras (data/rules.txt)
 uv run pytest                             # suíte offline (força MockLLM, não precisa de chave)

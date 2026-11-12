@@ -11,6 +11,7 @@
       "Bash(uv run ruff:*)",
       "Bash(bash scripts/dev/py.sh:*)",
       "Bash(bash scripts/dev/pt.sh:*)",
+      "Bash(bash scripts/dev/full.sh:*)",
       "Bash(bash scripts/dev/cap.sh:*)",
       "Bash(bash scripts/dev/ram.sh)",
       "Bash(bash scripts/dev/wt.sh path:*)",
@@ -52,7 +53,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Read|Bash|PowerShell",
+        "matcher": "Read|Bash|PowerShell|Agent|Task",
         "hooks": [
           {
             "type": "command",

@@ -7,8 +7,8 @@ description: Ritual obrigatório de fim de tarefa do projeto — suíte completa
 
 Não declarar a tarefa concluída sem todos os passos. Funciona em qualquer worktree.
 
-1. **Suíte completa** (camada 2 do `/qa`), em background com timeout longo:
-   `bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n auto 2>&1 | tail -15`.
+1. **Suíte** (camada 2 do `/qa`; suíte completa: só coordenador), em background com timeout longo
+   (`timeout: 1200000`): `bash scripts/dev/full.sh`. Subagente roda só `pt.sh <escopo>`.
    Vermelho → corrigir e repetir. Nunca seguir com falha.
 2. **Spec**: status final no cabeçalho da spec (fonte única); `specs/index.yaml` é
    gerado (`scripts/spec_index.py build`), nunca editado à mão.

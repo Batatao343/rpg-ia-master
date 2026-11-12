@@ -9,7 +9,7 @@
 |---|---|---|---|
 | 0 | `ruff check <arquivos>` + `pytest -q --lf -x` | executor, a cada iteração (`/qa`) | < 30 s |
 | 1 | `pytest -q -p no:cacheprovider tests/test_<escopo>*.py` | executor, antes do hand-back | 1–2 min |
-| 2 | `pytest -q -p no:cacheprovider -n auto` | **coordenador**, 1× por spec no `/spec-land`, em background | ~2 min local (antes ~11 min serial) |
+| 2 | `bash scripts/dev/full.sh` | **coordenador**, 1× por spec no `/spec-land`, em background | ~2 min local (antes ~11 min serial) |
 | 3 | suíte completa `-n auto` + evals + Playwright | CI | como hoje |
 
 Regras: executor **não** roda a camada 2; comando > 2 min vai para background com
@@ -20,7 +20,13 @@ Regras: executor **não** roda a camada 2; comando > 2 min vai para background c
 - `-n auto` é opt-in (o default local segue serial para não disputar CPU com
   agentes paralelos). Medido em 19/10: suíte inteira em 1m44s com `-n auto`.
 - No Windows, `tests/conftest.py` aponta o `basetemp` para `%TEMP%\pt-<hash do
-  checkout>` quando há `-n`: o `popen-gwN` estourava o MAX_PATH de 260 chars.
+  checkout>-<pid>` quando há `-n`: o `popen-gwN` estourava o MAX_PATH de 260 chars; o PID
+  evita que duas execuções no mesmo checkout se apaguem. `pt-*` com mais de 6 h são
+  removidos no início da execução.
+- `full.sh` (SPEC-414): `-n` pela RAM livre (rc 3 abaixo de 3 GB; `FULL_N=<n>` força);
+  worker morto é re-rodado em série (até 20 ids); rc é o da pytest.
+- Worktree usa o venv do principal quando o `uv.lock` é igual (`env.sh`); não rode
+  `uv sync` nele. `wt.sh new` avisa em stderr.
 - `timeout = 300` por teste (`pytest-timeout`) — nada pendura a suíte.
 - Coleta tem de ser determinística (ids de `parametrize` sem `time()`/uuid), senão o
   xdist recusa ("Different tests were collected").
@@ -28,7 +34,7 @@ Regras: executor **não** roda a camada 2; comando > 2 min vai para background c
   `conftest.py` já isola saves, memória, cache de runtime e `saves_playtest/`).
 - Markers `infra_local`/`security_local`/`browser_local`/`chaos_local` pulam sem a
   stack local; com stack, rode-os **sem** `-n` (compartilham Postgres/porta).
-- Fuzz da API (SPEC-338, `api_fuzz`, fora do default): `uv sync --group fuzz` e `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider` (~20 s; `RPG_API_FUZZ_MAX_EXAMPLES=5` para iterar). Job `api-fuzz` do CI é bloqueante.
+- Fuzz da API (SPEC-338, `api_fuzz`, fora do default): `uv sync --all-extras --group fuzz` e `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider` (~20 s; `RPG_API_FUZZ_MAX_EXAMPLES=5` para iterar). Job `api-fuzz` do CI é bloqueante.
 - `project_index/repo_graph.json`/`manifest.json` são artefatos locais não versionados;
   `python -m project_index check` acusa "stale" com arquivo **rastreado** editado (rode
   `build`). Os testes do índice real constroem em diretório temporário (`index_dir`).

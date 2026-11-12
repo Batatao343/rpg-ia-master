@@ -21,8 +21,8 @@ O conteúdo antigo daqui (cópia de `AGENTS.md` + changelog) está preservado em
 escreveu, `spec-author` (Opus) escreve spec, `code-locator`/`ci-watcher` (Haiku)
 localizam código e vigiam CI, `audit-reader` (Sonnet) audita só leitura. O prompt
 leva só `SPEC-NNN · worktree · decisões do dono`; regras comuns em
-`docs/guias/BRIEF_SUBAGENTE.md`. `general-purpose`/sem tipo só com motivo (até 03/11
-foram 45 % das chamadas); "onde fica X" é `code-locator`. Passe `model` sempre.
+`docs/guias/BRIEF_SUBAGENTE.md`. `general-purpose`/sem tipo só com motivo (linha
+`Motivo sem tipo: …` no prompt; o hook nega sem ela; até 03/11 foram 45 % das chamadas); "onde fica X" é `code-locator`. Passe `model` sempre.
 Revisor por risco da spec (`AGENTS.md` § Qualidade, revisão e evidência).
 
 **Memória da máquina (regra do dono, 24/10 — máquina de 16 GB; já travou):**
