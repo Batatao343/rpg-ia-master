@@ -166,17 +166,25 @@ TRADE_ARGS = {
 def test_p4_trade_conserves_gold_and_stock(
     location: str, gold: int, mode: str, pick: int, qty: int
 ) -> None:
-    """P4 (a, b): ouro bate com `gold_delta` e o estoque devolvido nunca fica negativo."""
+    """P4 (a, b): `gold_delta` = -/+ preço x qtd, ouro bate, estoque cai na compra e nunca fica < 0."""
     prepared = _trade_input(location, gold, mode, pick)
     if prepared is None:
         return
     state, item = prepared
     qty_before_all = copy.deepcopy(state["player"]["inventory"])
+    mid, _ = economy.merchant_stock(state, location)
+    stock_before = dict(state["world"]["merchant_stocks"].get(mid, {}))
+    merchant = economy.MERCHANTS.get(mid, {})
+    expected_unit = economy.price(item, mode=mode, state=state, merchant=merchant or None)
     out = economy.execute_trade(state, mode, item, qty)
     if not out["ok"]:
         return
     player = out["player"]
     assert player["gold"] == gold + out["gold_delta"] >= 0
+    sign = -1 if mode == "buy" else 1
+    assert out["gold_delta"] == sign * expected_unit * out["qty"]
+    if mode == "buy":
+        assert out["world"]["merchant_stocks"][mid][item] == stock_before[item] - out["qty"]
     qty_before = economy.get_qty(qty_before_all, out["item_id"])
     qty_after = economy.get_qty(player["inventory"], out["item_id"])
     assert qty_after == qty_before + (out["qty"] if mode == "buy" else -out["qty"])

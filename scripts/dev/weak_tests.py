@@ -23,14 +23,26 @@ except ImportError:  # executado como script: scripts/dev e o sys.path[0]
 
 # Helpers que levantam AssertionError sem prefixo de asserção (crescer aparece no diff).
 ASSERT_HELPERS = frozenset({"fuzz_operation"})
-_ASSERT_PREFIXES = ("assert", "check_", "expect_", "verify_")
-_RAISES_CALLS = frozenset({"raises", "warns", "deprecated_call", "fail"})
+_ASSERT_NAME_RE = re.compile(r"^(?:assert|(?:check|expect|verify)(?:_|$))")
+_RAISES_CALLS = frozenset(
+    {"pytest.raises", "pytest.warns", "pytest.deprecated_call", "pytest.fail"}
+)
 _MARK_KINDS = {"skip", "skipif", "xfail"}
+_UNITTEST_KINDS = {
+    "skip": "skip",
+    "skipIf": "skipif",
+    "skipUnless": "skipif",
+    "expectedFailure": "xfail",
+}
 _CALL_KINDS = {"skip", "xfail", "importorskip"}
-_JUSTIFY_WORDS = ("skip", "skipif", "xfail", "importorskip")
 _TEST_FILE_RE = re.compile(r"^tests/(?:.*/)?(?:test_[^/]*\.py|conftest\.py)$")
 _BRANCH_RE = re.compile(r"^spec-(\d{3})")
 _MAX_DELTA_LINES = 10
+HELP = (
+    "uso: weak_tests.py [--base B] [--head H] [--spec NNN] [--worktree] [--repo DIR]\n"
+    "justificativa na spec: uma linha com o nome do teste (palavra inteira) e a palavra da "
+    "própria marca (skip, skipif, xfail, importorskip)."
+)
 
 Func = ast.FunctionDef | ast.AsyncFunctionDef
 
@@ -62,54 +74,91 @@ def _dotted(node: ast.AST) -> str:
     return ""
 
 
+def _aliases(tree: ast.AST) -> dict[str, str]:
+    """Nome local -> nome canonico, para `pytest`/`unittest` (import as, from-import)."""
+    found: dict[str, str] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for a in node.names:
+                if a.asname and a.name in ("pytest", "unittest"):
+                    found[a.asname] = a.name
+        elif isinstance(node, ast.ImportFrom) and node.module in ("pytest", "unittest"):
+            for a in node.names:
+                found[a.asname or a.name] = f"{node.module}.{a.name}"
+    return found
+
+
+def _canon(node: ast.AST, aliases: dict[str, str]) -> str:
+    name = _dotted(node)
+    first, dot, rest = name.partition(".")
+    return aliases[first] + dot + rest if first in aliases else name
+
+
 def _nonempty_str(node: ast.AST | None) -> bool:
     if isinstance(node, ast.JoinedStr):
         return True
     return isinstance(node, ast.Constant) and isinstance(node.value, str) and bool(node.value)
 
 
-def _reason_and_strict(call: ast.Call | None, kind: str, is_call: bool) -> tuple[bool, bool]:
+def _reason_and_strict(
+    call: ast.Call | None, kind: str, is_call: bool, raw_kind: str = ""
+) -> tuple[bool, bool]:
     if call is None:
         return False, False
     kws = {kw.arg: kw.value for kw in call.keywords if kw.arg}
     reason = _nonempty_str(kws.get("reason"))
-    positional_ok = kind == "skip" or (is_call and kind == "xfail")
-    if not reason and positional_ok and call.args:
+    if raw_kind in ("skipIf", "skipUnless"):  # unittest: (condicao, motivo)
+        reason = reason or (len(call.args) > 1 and _nonempty_str(call.args[1]))
+    elif not reason and (kind == "skip" or (is_call and kind == "xfail")) and call.args:
         reason = _nonempty_str(call.args[0])
     strict = isinstance(kws.get("strict"), ast.Constant) and kws["strict"].value is True  # type: ignore[union-attr]
-    return reason, strict
-
-
-def _mark_from_expr(expr: ast.AST, qual: str) -> Mark | None:
-    call = expr if isinstance(expr, ast.Call) else None
-    name = _dotted(call.func if call else expr)
-    head, _, kind = name.rpartition(".")
-    if head not in ("pytest.mark", "mark") or kind not in _MARK_KINDS:
-        return None
-    reason, strict = _reason_and_strict(call, kind, False)
-    return Mark(qual, kind, reason, strict, getattr(expr, "lineno", 0))
-
-
-def _marks_in(value: ast.AST | None, qual: str) -> list[Mark]:
-    if value is None:
-        return []
-    items = value.elts if isinstance(value, ast.List | ast.Tuple) else [value]
-    return [m for item in items if (m := _mark_from_expr(item, qual))]
+    return bool(reason), strict
 
 
 class _MarkVisitor(ast.NodeVisitor):
-    def __init__(self) -> None:
+    def __init__(self, tree: ast.Module) -> None:
         self.stack: list[str] = []
         self.found: list[Mark] = []
+        self.aliases = _aliases(tree)
+        self.mark_vars: dict[str, ast.AST] = {}
+        for node in tree.body:  # marca guardada em variavel de modulo, usada como decorador
+            if isinstance(node, ast.Assign) and len(node.targets) == 1:
+                target = node.targets[0]
+                if (
+                    isinstance(target, ast.Name)
+                    and self._mark_from_expr(node.value, "") is not None
+                ):
+                    self.mark_vars[target.id] = node.value
 
     @property
     def qual(self) -> str:
         return ".".join(self.stack) or "<module>"
 
+    def _mark_from_expr(self, expr: ast.AST, qual: str) -> Mark | None:
+        line = getattr(expr, "lineno", 0)
+        if isinstance(expr, ast.Name) and expr.id in self.mark_vars:
+            expr = self.mark_vars[expr.id]
+        call = expr if isinstance(expr, ast.Call) else None
+        head, _, raw = _canon(call.func if call else expr, self.aliases).rpartition(".")
+        if head in ("pytest.mark", "mark") and raw in _MARK_KINDS:
+            kind = raw
+        elif head == "unittest" and raw in _UNITTEST_KINDS:
+            kind = _UNITTEST_KINDS[raw]
+        else:
+            return None
+        reason, strict = _reason_and_strict(call, kind, False, raw)
+        return Mark(qual, kind, reason, strict, line)
+
+    def _marks_in(self, value: ast.AST | None, qual: str) -> list[Mark]:
+        if value is None:
+            return []
+        items = value.elts if isinstance(value, ast.List | ast.Tuple) else [value]
+        return [m for item in items if (m := self._mark_from_expr(item, qual))]
+
     def _scoped(self, node: Func | ast.ClassDef) -> None:
         self.stack.append(node.name)
         for deco in node.decorator_list:
-            self.found += _marks_in(deco, self.qual)
+            self.found += self._marks_in(deco, self.qual)
             self.visit(deco)
         for child in node.body:
             self.visit(child)
@@ -117,13 +166,20 @@ class _MarkVisitor(ast.NodeVisitor):
 
     visit_FunctionDef = visit_AsyncFunctionDef = visit_ClassDef = _scoped  # type: ignore[assignment]
 
+    def _pytestmark(self, targets: list[ast.expr], value: ast.AST | None) -> None:
+        if any(isinstance(t, ast.Name) and t.id == "pytestmark" for t in targets):
+            self.found += self._marks_in(value, self.qual)
+
     def visit_Assign(self, node: ast.Assign) -> None:
-        if any(isinstance(t, ast.Name) and t.id == "pytestmark" for t in node.targets):
-            self.found += _marks_in(node.value, self.qual)
+        self._pytestmark(node.targets, node.value)
+        self.generic_visit(node)
+
+    def visit_AnnAssign(self, node: ast.AnnAssign) -> None:
+        self._pytestmark([node.target], node.value)
         self.generic_visit(node)
 
     def visit_Call(self, node: ast.Call) -> None:
-        name = _dotted(node.func)
+        name = _canon(node.func, self.aliases)
         head, _, kind = name.rpartition(".")
         if head == "pytest" and kind in _CALL_KINDS:
             reason, strict = _reason_and_strict(node, kind, True)
@@ -131,13 +187,14 @@ class _MarkVisitor(ast.NodeVisitor):
         elif name == "pytest.param":
             for kw in node.keywords:
                 if kw.arg == "marks":
-                    self.found += _marks_in(kw.value, self.qual)
+                    self.found += self._marks_in(kw.value, self.qual)
         self.generic_visit(node)
 
 
 def marks(src: str) -> list[Mark]:
-    visitor = _MarkVisitor()
-    visitor.visit(ast.parse(src))
+    tree = ast.parse(src)
+    visitor = _MarkVisitor(tree)
+    visitor.visit(tree)
     return visitor.found
 
 
@@ -155,19 +212,20 @@ def new_marks(old_src: str | None, new_src: str) -> list[Mark]:
 
 
 def justified(mark: Mark, path: str, spec_text: str | None) -> bool:
-    """R3: uma linha da spec com o nome do teste (ou arquivo, no `<module>`) e a palavra da marca."""
+    """R3: linha da spec com o nome do teste (palavra inteira; arquivo, no `<module>`) e a
+    palavra da própria marca (também palavra inteira)."""
     if not spec_text:
         return False
     needle = Path(path).name if mark.qualname == "<module>" else mark.qualname.rsplit(".", 1)[-1]
-    return any(
-        needle in line and any(w in line for w in _JUSTIFY_WORDS) for line in spec_text.splitlines()
-    )
+    name_re = re.compile(rf"(?<![\w.]){re.escape(needle)}(?!\w)")
+    kind_re = re.compile(rf"\b{re.escape(mark.kind)}\b")
+    return any(name_re.search(line) and kind_re.search(line) for line in spec_text.splitlines())
 
 
 # Asserções, R5
 
 
-def _call_name(call: ast.Call) -> str:
+def _call_base(call: ast.Call) -> str:
     func = call.func
     name = (
         func.id
@@ -179,7 +237,7 @@ def _call_name(call: ast.Call) -> str:
     return name.lstrip("_")
 
 
-def _counts_as_assert(node: ast.AST, local_helpers: set[str]) -> bool:
+def _counts_as_assert(node: ast.AST, helpers: set[str], aliases: dict[str, str]) -> bool:
     if isinstance(node, ast.Assert):
         return not (isinstance(node.test, ast.Constant) and bool(node.test.value))
     if isinstance(node, ast.Raise):
@@ -187,27 +245,32 @@ def _counts_as_assert(node: ast.AST, local_helpers: set[str]) -> bool:
         return _dotted(exc) == "AssertionError" if exc else False
     if not isinstance(node, ast.Call):
         return False
-    name = _call_name(node)
+    base = _call_base(node)
     return (
-        name in _RAISES_CALLS
-        or name.startswith(_ASSERT_PREFIXES)
-        or name in local_helpers
-        or name in ASSERT_HELPERS
+        _canon(node.func, aliases) in _RAISES_CALLS
+        or _dotted(node.func) == "self.fail"
+        or bool(_ASSERT_NAME_RE.match(base))
+        or base in helpers
+        or base in ASSERT_HELPERS
     )
 
 
-def assertion_count(node: ast.AST, local_helpers: set[str]) -> int:
-    return sum(_counts_as_assert(sub, local_helpers) for sub in ast.walk(node))
+def assertion_count(
+    node: ast.AST, local_helpers: set[str], aliases: dict[str, str] | None = None
+) -> int:
+    al = aliases or {}
+    return sum(_counts_as_assert(sub, local_helpers, al) for sub in ast.walk(node))
 
 
 def local_assert_helpers(tree: ast.Module) -> set[str]:
     """Funcoes do modulo com asserção propria (um nivel so)."""
+    al = _aliases(tree)
     return {
         n.name
         for n in tree.body
         if isinstance(n, ast.FunctionDef | ast.AsyncFunctionDef)
         and not n.name.startswith("test_")
-        and assertion_count(n, set()) > 0
+        and assertion_count(n, set(), al) > 0
     }
 
 
@@ -218,14 +281,18 @@ def _is_fixture(node: Func) -> bool:
     )
 
 
+def _is_test_class(node: ast.ClassDef) -> bool:
+    return node.name.startswith("Test") or any(_dotted(b).endswith("TestCase") for b in node.bases)
+
+
 def test_functions(src: str) -> dict[str, Func]:
-    """`test_*` de modulo e de classe `Test*` (qualname `Classe.metodo`), sem fixtures."""
+    """`test_*` de modulo e de classe `Test*`/`TestCase` (qualname `Classe.metodo`), sem fixtures."""
     found: dict[str, Func] = {}
     for node in ast.parse(src).body:
         if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
             if node.name.startswith("test_") and not _is_fixture(node):
                 found[node.name] = node
-        elif isinstance(node, ast.ClassDef) and node.name.startswith("Test"):
+        elif isinstance(node, ast.ClassDef) and _is_test_class(node):
             for sub in node.body:
                 is_fn = isinstance(sub, ast.FunctionDef | ast.AsyncFunctionDef)
                 if is_fn and sub.name.startswith("test_") and not _is_fixture(sub):  # type: ignore[union-attr]
@@ -234,18 +301,23 @@ def test_functions(src: str) -> dict[str, Func]:
 
 
 def weak_new_tests(old_src: str | None, new_src: str) -> list[str]:
-    """Qualnames de testes novos (deteccao de `red_green.added_tests`) sem asserção."""
+    """Qualnames de testes novos (`red_green.added_tests` + classes `TestCase`) sem asserção."""
     tree = ast.parse(new_src)
-    helpers = local_assert_helpers(tree)
+    helpers, al = local_assert_helpers(tree), _aliases(tree)
     tests = test_functions(new_src)
     fresh = {n.replace("::", ".") for n in added_tests(old_src, new_src)}
-    return [q for q, node in tests.items() if q in fresh and assertion_count(node, helpers) == 0]
+    old_names = set(test_functions(old_src)) if old_src else set()
+    fresh |= {q for q in tests if not q.startswith("Test") and q not in old_names and "." in q}
+    return [
+        q for q, node in tests.items() if q in fresh and assertion_count(node, helpers, al) == 0
+    ]
 
 
 def _file_asserts(src: str) -> tuple[int, set[str]]:
-    helpers = local_assert_helpers(ast.parse(src))
+    tree = ast.parse(src)
+    helpers, al = local_assert_helpers(tree), _aliases(tree)
     tests = test_functions(src)
-    return sum(assertion_count(n, helpers) for n in tests.values()), set(tests)
+    return sum(assertion_count(n, helpers, al) for n in tests.values()), set(tests)
 
 
 def assert_delta(old_src: str, new_src: str) -> tuple[int, int, int]:
@@ -340,6 +412,38 @@ def _delta_findings(deltas: list[tuple[int, str, int, int, int]]) -> list[Findin
     return out
 
 
+def _file_findings(
+    path: str, old: str | None, new: str | None, spec_text: str | None, nnn: str
+) -> tuple[list[Finding], int, int, tuple[int, str, int, int, int] | None]:
+    """Achados de um arquivo: (findings, testes novos, marcas novas, delta de asserções)."""
+    try:
+        if old is not None:
+            ast.parse(old)
+    except SyntaxError:  # versao antiga ilegivel nao pode virar atalho para esconder pulo
+        return [Finding("FAIL", f"weak-tests: {path} versão antiga não parseia")], 0, 0, None
+    findings: list[Finding] = []
+    n_new = n_mk = 0
+    delta = None
+    try:
+        if new is not None:
+            findings += _marks_findings(path, old, new, spec_text, nnn)
+            n_mk = len(new_marks(old, new))
+            n_new = len(added_tests(old, new))
+            findings += [
+                Finding(
+                    "FAIL", f"weak-tests: {path}::{q} sem assert/pytest.raises/helper de asserção"
+                )
+                for q in weak_new_tests(old, new)
+            ]
+        if old is not None:
+            before, after, removed = assert_delta(old, new or "")
+            if after < before:
+                delta = (after - before, path, before, after, removed)
+    except SyntaxError:
+        findings.append(Finding("INFO", f"weak-tests: {path} não parseia, pulado"))
+    return findings, n_new, n_mk, delta
+
+
 def check(
     repo: Path,
     base: str,
@@ -362,25 +466,12 @@ def check(
         path = new_path or old_path or ""
         old = _read_old(repo, merge_base, old_path)
         new = _read_new(repo, head, new_path, worktree)
-        try:
-            if new is not None:
-                findings += _marks_findings(path, old, new, spec_text, spec_nnn)
-                n_marks += len(new_marks(old, new))
-                weak = weak_new_tests(old, new)
-                new_tests += len(added_tests(old, new))
-                findings += [
-                    Finding(
-                        "FAIL",
-                        f"weak-tests: {path}::{q} sem assert/pytest.raises/helper de asserção",
-                    )
-                    for q in weak
-                ]
-            if old is not None:
-                before, after, removed = assert_delta(old, new or "")
-                if after < before:
-                    deltas.append((after - before, path, before, after, removed))
-        except SyntaxError:
-            findings.append(Finding("INFO", f"weak-tests: {path} não parseia, pulado"))
+        found, n_new, n_mk, delta = _file_findings(path, old, new, spec_text, spec_nnn)
+        findings += found
+        new_tests += n_new
+        n_marks += n_mk
+        if delta:
+            deltas.append(delta)
     findings += _delta_findings(deltas)
     if not any(f.level == "FAIL" for f in findings):
         findings.append(
@@ -441,12 +532,13 @@ def _spec_context(repo: Path, opts: dict[str, str | bool]) -> tuple[str, str | N
 
 
 def main(argv: list[str] | None = None) -> int:
-    opts = _parse(sys.argv[1:] if argv is None else argv)
+    args = sys.argv[1:] if argv is None else argv
+    if "--help" in args or "-h" in args:
+        print(HELP)
+        return 0
+    opts = _parse(args)
     if opts is None:
-        print(
-            "uso: weak_tests.py [--base B] [--head H] [--spec NNN] [--worktree] [--repo DIR]",
-            file=sys.stderr,
-        )
+        print(HELP, file=sys.stderr)
         return 2
     repo = Path(str(opts["repo"])).resolve()
     nnn, spec_text, notes = _spec_context(repo, opts)

@@ -24,6 +24,11 @@ from tests.fakes.property_settings import deterministic_settings
 
 PLAYER_EXTRA = {"vitalidade_base_bonus"}
 WORLD_EXTRA = {"shelter"}
+CONFLICT_EXTRA = {"conflict_id", "conflict_turn"}
+EXTRA_KEYS = {"player": PLAYER_EXTRA, "world": WORLD_EXTRA}
+# Normalizações declaradas do round-trip (SPEC-417 R13), tratadas à parte em RT1.
+NORMALIZED_TOP = frozenset({"messages", "processed_action_ids", "conflict_summary"})
+MISSING = object()
 TEXT = st.text(st.characters(blacklist_categories=("Cs",)), max_size=40)
 MESSAGES = st.lists(
     st.builds(
@@ -49,6 +54,9 @@ def states(draw: st.DrawFn) -> dict[str, Any]:
     player = state["player"]
     player["gold"] = draw(st.integers(0, 5000))
     player["vitalidade"] = draw(st.integers(0, int(player["max_vitalidade"])))
+    player["hp"] = player["vitalidade"]  # alias legado: o load o religa à vitalidade
+    # o load reconcilia equipamento com inventário: estado consistente = nada equipado
+    player["equipment"] = {"weapon": None, "armor": None, "accessory": None}
     ids = draw(st.lists(st.sampled_from(sorted(ARTIFACTS_DB)), max_size=5, unique=True))
     player["inventory"] = [{"id": i, "qty": draw(st.integers(1, 99))} for i in ids]
     state["world"]["turn_count"] = draw(st.integers(0, 10_000))
@@ -72,23 +80,23 @@ def _msgs(messages: list[Any]) -> list[tuple[str, str]]:
 @deterministic_settings(max_examples=20)
 @given(s0=states())
 def test_rt1_save_load_preserves_mutated_fields(s0: dict[str, Any]) -> None:
-    """RT1: cada campo mutado volta igual, salvo as normalizações documentadas."""
+    """RT1: o estado inteiro volta igual, exceto `NORMALIZED_TOP` e as chaves extras declaradas."""
     s1 = _save_load(s0)
-    p0, p1 = s0["player"], s1["player"]
-    for key in ("gold", "vitalidade", "inventory"):
-        assert p1[key] == p0[key], key
-    assert set(p1) - set(p0) <= PLAYER_EXTRA
-    assert set(s1["world"]) - set(s0["world"]) <= WORLD_EXTRA
-    assert s1["world"]["turn_count"] == s0["world"]["turn_count"]
+    for key, value in s0.items():
+        if key in NORMALIZED_TOP:
+            continue
+        got = s1.get(key, MISSING)
+        if key in EXTRA_KEYS and isinstance(got, dict):
+            got = {k: v for k, v in got.items() if k not in EXTRA_KEYS[key]}
+        assert got == value, f"campo {key!r} mudou ou sumiu no round-trip"
     assert s1["processed_action_ids"] == s0["processed_action_ids"][-64:]
-    assert s1["archivist_last_run"] == s0["archivist_last_run"]
     assert _msgs(s1["messages"]) == _msgs(s0["messages"])
     c0, c1 = s0["conflict_summary"], s1["conflict_summary"]
     if c0 is None:
         assert c1 is None
     else:
         assert {k: v for k, v in c1.items() if k in c0} == c0
-        assert set(c1) - set(c0) <= {"conflict_id", "conflict_turn"}
+        assert set(c1) - set(c0) <= CONFLICT_EXTRA
 
 
 @deterministic_settings(max_examples=20)

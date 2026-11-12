@@ -173,3 +173,103 @@ def test_cli_em_repo_sintetico(tmp_path: Path, capsys: pytest.CaptureFixture[str
 def test_ref_inexistente_e_rc2(tmp_path: Path) -> None:
     repo = _git_repo(tmp_path)
     assert wt.main(["--repo", str(repo), "--base", "nao-existe", "--head", "HEAD"]) == 2
+
+
+@pytest.mark.parametrize(
+    ("src", "kind"),
+    [
+        ("import pytest as pt\n\n@pt.mark.skip\ndef test_a():\n    assert 1 == 1\n", "skip"),
+        ("import pytest as pt\n\ndef test_a():\n    pt.skip()\n", "skip"),
+        ("from pytest import skip\n\ndef test_a():\n    skip()\n", "skip"),
+        ("from pytest import xfail\n\ndef test_a():\n    xfail()\n", "xfail"),
+        (
+            "from pytest import mark as m\n\n@m.skipif(True)\ndef test_a():\n    assert 1\n",
+            "skipif",
+        ),
+        ("import unittest\n\n@unittest.skip\ndef test_a():\n    assert 1\n", "skip"),
+        ("import unittest\n\n@unittest.skipIf(True, 'x')\ndef test_a():\n    assert 1\n", "skipif"),
+        ("import unittest\n\n@unittest.expectedFailure\ndef test_a():\n    assert 1\n", "xfail"),
+        ("from unittest import skip\n\n@skip('m')\ndef test_a():\n    assert 1\n", "skip"),
+        ("import pytest\npytestmark: list = [pytest.mark.skip]\n", "skip"),
+        (
+            "import pytest\nslow = pytest.mark.skip\n\n@slow\ndef test_a():\n    assert 1\n",
+            "skip",
+        ),
+    ],
+)
+def test_formas_equivalentes_de_pulo(src: str, kind: str) -> None:
+    """SPEC-417 P2-1: alias, from-import, unittest, AnnAssign e marca em variavel."""
+    assert [m.kind for m in wt.marks(src)] == [kind]
+
+
+def test_motivo_posicional_do_unittest() -> None:
+    skip_if = "import unittest\n\n@unittest.skipIf(True, 'porque')\ndef test_a():\n    assert 1\n"
+    assert [m.has_reason for m in wt.marks(skip_if)] == [True]
+    no_reason = "import unittest\n\n@unittest.skipIf(True)\ndef test_a():\n    assert 1\n"
+    assert [m.has_reason for m in wt.marks(no_reason)] == [False]
+
+
+def test_justificativa_exige_palavra_inteira_e_a_propria_marca() -> None:
+    """SPEC-417 P2-2: `test_a` nao casa `test_abc`; a palavra e a da marca (`skip`, nao `xfail`)."""
+    mark = wt.Mark("test_a", "skip", False, False, 3)
+    assert not wt.justified(mark, "tests/test_x.py", "`test_abc` fica em skip\n")
+    assert not wt.justified(mark, "tests/test_x.py", "`test_a` fica em xfail\n")
+    assert not wt.justified(mark, "tests/test_x.py", "`test_a` fica em skipif\n")
+    assert wt.justified(mark, "tests/test_x.py", "`test_a` fica em skip\n")
+    assert "palavra inteira" in wt.HELP
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "    foo.fail()\n",
+        "    _unrelated()\n",
+        "    helper_sem_assert()\n",
+    ],
+)
+def test_nao_conta_como_assert(body: str) -> None:
+    """SPEC-417 P2-3: `foo.fail()` solto nao e assercao."""
+    assert wt.weak_new_tests(None, "def test_b():\n" + body) == ["test_b"]
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "    _verify(x)\n",
+        "    _check(x)\n",
+        "    _assert_ok(x)\n",
+        "    self.fail('x')\n",
+        "    pytest.fail('x')\n",
+    ],
+)
+def test_conta_como_assert(body: str) -> None:
+    assert wt.weak_new_tests(None, "import pytest\n\ndef test_b(self):\n" + body) == []
+
+
+def test_alias_de_raises_conta() -> None:
+    src = "from pytest import raises\n\ndef test_b():\n    with raises(ValueError):\n        f()\n"
+    assert wt.weak_new_tests(None, src) == []
+
+
+def test_metodos_de_unittest_testcase_sao_checados() -> None:
+    src = (
+        "import unittest\n\nclass Casos(unittest.TestCase):\n    def test_m(self):\n        pass\n"
+    )
+    assert wt.weak_new_tests(None, src) == ["Casos.test_m"]
+
+
+def test_arquivo_antigo_que_nao_parseia_e_fail(tmp_path: Path) -> None:
+    repo = _git_repo(tmp_path)
+    (repo / "tests" / "test_x.py").write_text("def test_a(:\n", encoding="utf-8")
+    _git(repo, "commit", "-qam", "quebrado")
+    _git(repo, "checkout", "-q", "-b", "spec-999")
+    skipped = "import pytest\n\n@pytest.mark.skip\ndef test_a():\n    assert 1 == 1\n"
+    (repo / "tests" / "test_x.py").write_text(skipped, encoding="utf-8")
+    _git(repo, "commit", "-qam", "esconde pulo")
+    findings = wt.check(repo, "main", "HEAD", None)
+    assert any(f.level == "FAIL" and "antiga não parseia" in f.text for f in findings)
+
+
+def test_help_documenta_a_regra(capsys: pytest.CaptureFixture[str]) -> None:
+    assert wt.main(["--help"]) == 0
+    assert "palavra inteira" in capsys.readouterr().out
