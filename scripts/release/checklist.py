@@ -60,6 +60,8 @@ FORBIDDEN_IN_PROD = tuple(
             "RPG_FORCE_MOCK",
             "RPG_GOOGLE_PLAY_FAKE",
             "RPG_PLAY_ACCEPT_TEST_PURCHASES",
+            # SPEC-411 R1: o marcador só existe no staging; produção = marcador AUSENTE.
+            "RPG_DEPLOY_ENV",
         )
     )
 )

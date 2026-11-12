@@ -249,8 +249,10 @@ def test_requirements_parity_with_release_checklist() -> None:
     # não entram na lista fixa porque o QA de staging as liga: o boot as aceita só com o marcador
     # RPG_DEPLOY_ENV=staging (SPEC-411 R1, requisito condicional em HOSTED_SECURITY_REQUIREMENTS).
     assert set(rt.FORBIDDEN_IN_HOSTED) <= set(checklist.FORBIDDEN_IN_PROD)
-    assert set(checklist.FORBIDDEN_IN_PROD) - set(rt.FORBIDDEN_IN_HOSTED) <= {
-        "RPG_PLAY_ACCEPT_TEST_PURCHASES"
+    # O marcador em si também é proibido em produção (lá ele fica ausente): segunda camada.
+    assert set(checklist.FORBIDDEN_IN_PROD) - set(rt.FORBIDDEN_IN_HOSTED) == {
+        "RPG_PLAY_ACCEPT_TEST_PURCHASES",
+        "RPG_DEPLOY_ENV",
     }
     for forbidden in (
         "RPG_ALLOW_INSECURE_HOSTED",

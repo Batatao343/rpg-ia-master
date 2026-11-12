@@ -264,3 +264,12 @@ def test_environments_require_dated_manual_verification(tmp_path: Path):
     assert c.check_environments_verified(doc).status == "fail"
     doc.write_text("ENVIRONMENTS_VERIFIED: 2026-10-16\n", encoding="utf-8")
     assert c.check_environments_verified(doc).detail == {"verified_on": "2026-10-16"}
+
+
+def test_prod_forbids_the_staging_deploy_marker():
+    """SPEC-411 R1: produção é a AUSÊNCIA do marcador; presente em produção, o checklist recusa."""
+    full = set(c.REQUIRED_ENV["production"]) | {"RPG_DEPLOY_ENV"}
+    r = c.check_env_names("production", c.Deps(vercel_env_names=lambda e: full))
+    assert r.status == "fail" and r.detail["forbidden_present"] == ["RPG_DEPLOY_ENV"]
+    staging = set(c.REQUIRED_ENV["staging"]) | {"RPG_DEPLOY_ENV"}
+    assert c.check_env_names("staging", c.Deps(vercel_env_names=lambda e: staging)).status == "pass"
