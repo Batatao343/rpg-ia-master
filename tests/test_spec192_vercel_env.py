@@ -349,3 +349,10 @@ def test_card_flags_are_allowlisted_off_on_only():
             ve.build_env(FILES, world_flags={name: "shadow"})
     plain, _ = ve.build_env(FILES)
     assert set(CARD_FLAGS) <= set(ve.stale_names(plain))  # ausente => o script apaga a antiga
+
+
+def test_staging_marker_sent_to_staging_and_never_to_preview():
+    """SPEC-411 R1.4: RPG_DEPLOY_ENV=staging so no projeto de staging (nunca no preview)."""
+    prod, prev = ve.build_env(FILES)
+    assert prod["RPG_DEPLOY_ENV"] == "staging"
+    assert "RPG_DEPLOY_ENV" not in prev

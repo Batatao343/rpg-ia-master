@@ -324,6 +324,11 @@ RPG_DB_SLOW_MS:
   default: "500"
   spec: SPEC-254
   note: "ajuste operacional (db slow ms)"
+RPG_DEPLOY_ENV:
+  kind: config
+  default: null
+  spec: SPEC-411
+  note: "marcador de ambiente: staging libera RPG_PLAY_ACCEPT_TEST_PURCHASES; ausente = producao"
 RPG_DYNAMIC_ART_ENABLED:
   kind: ops
   default: "0"

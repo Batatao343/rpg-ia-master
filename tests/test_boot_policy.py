@@ -246,7 +246,8 @@ def test_requirements_parity_with_release_checklist() -> None:
     for env in ("staging", "production"):
         assert set(HOSTED_REQUIRED_ENV) <= set(checklist.REQUIRED_ENV[env])
     # Produção proíbe tudo o que o boot hospedado proíbe; compras de teste do Play (SPEC-225 R8)
-    # ficam só na lista de produção porque o QA de staging (perfil hospedado) as liga.
+    # não entram na lista fixa porque o QA de staging as liga: o boot as aceita só com o marcador
+    # RPG_DEPLOY_ENV=staging (SPEC-411 R1, requisito condicional em HOSTED_SECURITY_REQUIREMENTS).
     assert set(rt.FORBIDDEN_IN_HOSTED) <= set(checklist.FORBIDDEN_IN_PROD)
     assert set(checklist.FORBIDDEN_IN_PROD) - set(rt.FORBIDDEN_IN_HOSTED) <= {
         "RPG_PLAY_ACCEPT_TEST_PURCHASES"
@@ -458,3 +459,46 @@ def test_rpg_host_non_loopback_is_exposure_marker() -> None:
     assert exposure_markers({"RPG_HOST": "127.0.0.1"}) == set()
     with pytest.raises(RuntimeError, match="legacy_profile_exposed: markers=RPG_HOST"):
         assert_boot_policy({"RPG_HOST": "0.0.0.0"})
+
+
+# --- SPEC-411 R1: compras de teste do Play só com o marcador de staging ----------
+_PURCHASES = "RPG_PLAY_ACCEPT_TEST_PURCHASES"
+
+
+@pytest.mark.parametrize("marker", [None, "", "production", "prod", "stagingx"])
+def test_play_test_purchases_recusada_sem_marcador_de_staging(marker: str | None) -> None:
+    env = secure_env(**{_PURCHASES: "1"}, **({} if marker is None else {"RPG_DEPLOY_ENV": marker}))
+    problems = hosted_security_problems(env)
+    assert any(p.startswith(_PURCHASES) for p in problems)
+    assert not is_hardened(env)
+
+
+def test_play_test_purchases_aceita_com_marcador_staging() -> None:
+    for marker in ("staging", " Staging "):
+        env = secure_env(**{_PURCHASES: "1", "RPG_DEPLOY_ENV": marker})
+        assert hosted_security_problems(env) == []
+        assert is_hardened(env)
+
+
+def test_play_test_purchases_flag_ausente_ou_zero_nao_exige_marcador() -> None:
+    assert hosted_security_problems(secure_env()) == []
+    assert hosted_security_problems(secure_env(**{_PURCHASES: "0"})) == []
+
+
+def test_play_test_purchases_sem_marcador_derruba_boot_hosted() -> None:
+    with pytest.raises(ValueError, match="hosted_config_insecure.*" + _PURCHASES):
+        RuntimeConfig.from_env(secure_env(**{_PURCHASES: "1"}))
+    RuntimeConfig.from_env(secure_env(**{_PURCHASES: "1", "RPG_DEPLOY_ENV": "staging"}))
+
+
+def test_play_test_purchases_nao_afeta_legacy_e_local() -> None:
+    assert _PURCHASES not in rt.FORBIDDEN_IN_HOSTED
+    RuntimeConfig.from_env({_PURCHASES: "1"})  # legacy
+    RuntimeConfig.from_env(
+        {
+            "RPG_RUNTIME_PROFILE": "local",
+            "DATABASE_URL": "postgresql://u:p@127.0.0.1:54322/postgres",
+            "SUPABASE_URL": "http://127.0.0.1:54321",
+            _PURCHASES: "1",
+        }
+    )

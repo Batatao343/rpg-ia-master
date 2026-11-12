@@ -38,6 +38,8 @@ SECRET_FROM_FILE = (
 )
 NON_SECRET_LITERALS = {
     "RPG_RUNTIME_PROFILE": "hosted-supabase",
+    # SPEC-411 R1: marcador de staging (ausente = producao); habilita RPG_PLAY_ACCEPT_TEST_PURCHASES.
+    "RPG_DEPLOY_ENV": "staging",
     "RPG_BIND_HOST": "0.0.0.0",
     "RPG_COOKIE_SECURE": "1",
     "RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED": "1",

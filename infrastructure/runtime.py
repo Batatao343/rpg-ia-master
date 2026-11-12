@@ -579,6 +579,15 @@ def _forbidden_problem(env: Mapping[str, str]) -> str | None:
     return ("variaveis proibidas presentes: " + ",".join(present)) if present else None
 
 
+def _test_purchases_problem(env: Mapping[str, str]) -> str | None:
+    """SPEC-411 R1: compra de teste do Play so no staging (marcador explicito; ausente = producao)."""
+    if not _truthy(env, "RPG_PLAY_ACCEPT_TEST_PURCHASES"):
+        return None
+    if str(env.get("RPG_DEPLOY_ENV", "")).strip().lower() == "staging":
+        return None
+    return "permitida so com RPG_DEPLOY_ENV=staging"
+
+
 def _llm_provider_problem(env: Mapping[str, str]) -> str | None:
     value = str(env.get("LLM_PROVIDER", "")).strip().lower()
     return None if not value or value in _LLM_PROVIDER_ALLOWLIST else "fora da allowlist"
@@ -610,6 +619,7 @@ HOSTED_SECURITY_REQUIREMENTS: tuple[Requirement, ...] = (
     Requirement("RPG_NO_MOCK", _provider_key_problem),
     Requirement("LLM_PROVIDER", _llm_provider_problem),
     Requirement("FORBIDDEN_IN_HOSTED", _forbidden_problem),
+    Requirement("RPG_PLAY_ACCEPT_TEST_PURCHASES", _test_purchases_problem),
 )
 
 
