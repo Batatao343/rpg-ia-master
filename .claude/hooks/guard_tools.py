@@ -136,8 +136,41 @@ def _runs_full_suite(segment: str) -> bool:
     return False
 
 
+# SPEC-416 R28: script de baseline -> flag que SOBE o teto (ruff_baseline: tudo exceto os flags livres).
+BASELINE_SCRIPTS = {
+    "size_budget": ("--update",),
+    "clock_asserts": ("--update",),
+    "ruff_baseline": (),
+}
+RUNNERS = {"py.sh", "python", "python3", "-m"}
+
+
+def _script_name(word: str) -> str:
+    name = _base(word)
+    name = name.rsplit(".", 1)[-1] if name.startswith("scripts.dev.") else name
+    return name[:-3] if name.endswith(".py") else name
+
+
+def _raises_baseline(words: list[str]) -> bool:
+    """O comando executa um script de baseline pedindo para subir o teto (só o coordenador)."""
+    for i, w in enumerate(words):
+        script = _script_name(w)
+        if script not in BASELINE_SCRIPTS or not (i == 0 or _base(words[i - 1]) in RUNNERS):
+            continue
+        rest = words[i + 1 :]
+        if script == "ruff_baseline":
+            return not {"--check", "--tighten"} & set(rest)
+        return any(flag in rest for flag in BASELINE_SCRIPTS[script])
+    return False
+
+
 def _check_subagent(command: str) -> None:
     for seg in SEGMENT_SPLIT.split(command):
+        if any(_raises_baseline(_words(part)) for part in _split_pipeline(seg)):
+            _deny(
+                "Subir baseline é do coordenador: extraia o código ou peça no hand-back "
+                "com o motivo (`--tighten` e o check continuam livres)."
+            )
         if _runs_full_suite(seg):
             _deny(
                 "Suíte completa é do coordenador; use `bash scripts/dev/pt.sh <testes>` "

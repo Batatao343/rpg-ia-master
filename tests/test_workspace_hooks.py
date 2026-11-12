@@ -320,3 +320,37 @@ def test_ruff_hook_skips_files_listed_in_protected_paths(tmp_path: Path) -> None
     py.write_text("x=1\n", encoding="utf-8")
     assert _run("ruff_after_edit.py", {"tool_input": {"file_path": str(py)}}) is None
     assert py.read_text(encoding="utf-8") == "x=1\n"
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "bash scripts/dev/py.sh scripts/dev/size_budget.py --update",
+        "uv run python scripts/dev/clock_asserts.py --update",
+        "bash scripts/dev/py.sh scripts/dev/ruff_baseline.py",
+        "bash scripts/dev/py.sh -m scripts.dev.size_budget --update | tail -3",
+        "cd x && bash scripts/dev/py.sh scripts/dev/ruff_baseline.py",
+    ],
+)
+def test_subagente_nao_sobe_baseline(tmp_path: Path, cmd: str) -> None:
+    """SPEC-416 R28: subir teto de baseline é do coordenador."""
+    assert _denied(_run("guard_tools.py", _sh(cmd, tmp_path, agent=True)))
+
+
+@pytest.mark.parametrize(
+    ("cmd", "agent"),
+    [
+        ("bash scripts/dev/py.sh scripts/dev/size_budget.py --tighten", True),
+        ("bash scripts/dev/py.sh scripts/dev/size_budget.py", True),
+        ("bash scripts/dev/py.sh scripts/dev/clock_asserts.py --tighten", True),
+        ("bash scripts/dev/py.sh scripts/dev/ruff_baseline.py --check", True),
+        ("bash scripts/dev/py.sh scripts/dev/ruff_baseline.py --tighten", True),
+        ("bash scripts/dev/py.sh -m ruff format scripts/dev/ruff_baseline.py", True),
+        ("sed -n 1,5p scripts/dev/size_budget.py", True),
+        ("git diff -- scripts/dev/ruff_baseline.py", True),
+        ("bash scripts/dev/py.sh scripts/dev/size_budget.py --update", False),
+        ("bash scripts/dev/py.sh scripts/dev/ruff_baseline.py", False),
+    ],
+)
+def test_tighten_check_e_coordenador_liberados(tmp_path: Path, cmd: str, agent: bool) -> None:
+    assert not _denied(_run("guard_tools.py", _sh(cmd, tmp_path, agent=agent)))
