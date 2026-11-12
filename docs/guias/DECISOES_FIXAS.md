@@ -42,6 +42,6 @@ Achado que contradiz uma linha cita o `D-NN`. `ID` nunca é reaproveitado; teto 
 | D-33 | skills `taste`/`impeccable` | manter (escolha do dono) | docs/auditorias/auditoria-workspace-2026-11-03.md:214 | decisão do dono |
 | D-34 | lock entre sessões | não: o preflight da SPEC-415 resolve | docs/auditorias/auditoria-workspace-2026-11-11.md:47 | preflight deixa passar uma colisão |
 | D-35 | web no executor | não: injeção de prompt | docs/auditorias/auditoria-workspace-2026-11-11.md:47 | decisão do dono |
-| D-36 | Postgres/Docker local nesta máquina | não: Postgres só no CI | docs/auditorias/auditoria-workspace-2026-11-11.md:47 | máquina nova |
+| D-36 | Postgres/Docker local nesta máquina | não instalar (auditoria 11/11, "Não fazer") | docs/auditorias/auditoria-workspace-2026-11-11.md:47 | troca de máquina ou decisão do dono |
 | D-37 | `DTZ` global no ruff | não: catraca AST de teste (SPEC-416) | docs/auditorias/auditoria-workspace-2026-11-11.md:47 | decisão do dono |
 | D-38 | hook que bloqueie todo `\| tail` | não | docs/auditorias/auditoria-workspace-2026-11-11.md:47 | decisão do dono |

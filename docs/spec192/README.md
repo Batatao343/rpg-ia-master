@@ -12,7 +12,7 @@
 uv run python scripts/staging/vercel_env.py [--dry-run]   # envia env (só imprime nomes)
 # deploy (token injetado do .env por subprocess; nunca na linha de comando)
 npx vercel@64.2.0 deploy --prod --yes -e GIT_SHA=$(git rev-parse HEAD)
-uv run python scripts/staging/vercel_smoke.py             # grava docs/spec192/evidence/smoke.json
+uv run python scripts/staging/vercel_smoke.py             # grava .tmp/evidence/ por padrão; versionar: --out docs/spec192/evidence/smoke.json
 npx vercel@64.2.0 logs --environment production --since 15m --query level:error
 ```
 

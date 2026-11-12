@@ -3,7 +3,7 @@
 Ferramentas em `scripts/staging/` (rodar da raiz: `uv run python -m scripts.staging.<modulo> ...`).
 Toda execução exige `--confirm-staging <ref>` igual a `SUPABASE_PROJECT_REF` e recusa refs listados em
 `RPG_PROTECTED_PROJECT_REFS` (lista separada por vírgula). Saídas são JSON sem segredos (tokens/chaves/DSN
-mascarados; e-mails viram `email:<hash>`), por padrão em `docs/spec191/evidence/<nome>.json` (`--out` muda).
+mascarados; e-mails viram `email:<hash>`), por padrão em `.tmp/evidence/<nome>.json`; evidência versionada só com `--out docs/spec191/evidence/<nome>.json` (SPEC-416).
 
 ## Ordem de execução
 
