@@ -18,6 +18,9 @@ set -euo pipefail
 cmd="${1:-}"; name="${2:-}"
 [ -n "$cmd" ] && [ -n "$name" ] || { sed -n '2,15p' "$0"; exit 2; }
 case "$name" in [0-9]*) BR="spec-$name";; *) BR="$name";; esac
+if [ "$cmd" = "ci" ]; then  # antes de qualquer git: nunca empurra main nem branch alheia
+  case "$BR" in spec-[0-9][0-9][0-9]) ;; *) echo "ci: alvo deve ser spec-NNN ou NNN (recebi '$name')" >&2; exit 2;; esac
+fi
 
 MAIN="$(git worktree list --porcelain | sed -n '1s/^worktree //p')"
 if [ -n "${RPG_WT_ROOT:-}" ]; then ROOT_DIR="$RPG_WT_ROOT"

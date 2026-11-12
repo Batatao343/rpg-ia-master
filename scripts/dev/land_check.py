@@ -30,7 +30,9 @@ Result = tuple[str, str]  # (OK|WARN|FAIL, detalhe)
 _VERDICT_RE = re.compile(r"APPROVED_WITH_FOLLOWUPS|APPROVED|CHANGES_REQUIRED")
 _RISK_RE = re.compile(r"^>\s*\*\*Risco:\*\*\s*`([^`]+)`(?!\s*\|\s*`)", re.MULTILINE)
 _RISKS = ("baixo", "médio", "alto")
-_MEASURE_RE = re.compile(r"(?<!`)<MEDIR:")
+_MEASURE_RE = re.compile(r"<MEDIR:")
+_CODE_SPAN_RE = re.compile(r"`[^`]*`")
+_VERDICT_LINE_RE = re.compile(r"^>\s*\*\*Veredito:\*\*(.*)$", re.MULTILINE)
 _RAM_RE = re.compile(r"RAM livre:\s*(\d+(?:[.,]\d+)?)\s*GB")
 _ORPHAN_RE = re.compile(r"^\s*(\d+)\s+\d+\s*MB\s", re.MULTILINE)
 
@@ -96,8 +98,12 @@ def parse_risk(spec_text: str) -> str | None:
 
 
 def last_verdict(handoff_text: str) -> str | None:
-    found = _VERDICT_RE.findall(handoff_text)
-    return found[-1] if found else None
+    """Veredito da ultima linha `> **Veredito:** ...`; sem essa linha, None (invalido)."""
+    for line in reversed(_VERDICT_LINE_RE.findall(handoff_text)):
+        found = _VERDICT_RE.findall(line)
+        if found:
+            return found[0]
+    return None
 
 
 def _evidence_filled(text: str) -> bool:
@@ -121,32 +127,41 @@ def _name_ok(name: str) -> bool:
 
 
 def review_problems(risk: str | None, handoffs: Mapping[str, str]) -> list[str]:
-    """`handoffs`: nome do arquivo -> texto. Regras do R7."""
+    """`handoffs`: nome -> texto. R7: o handoff mais recente de CADA papel conta; qualquer
+    CHANGES_REQUIRED bloqueia; precisa de ao menos um aprovando (sol/astra se `alto`)."""
     if risk is None:
         return ["campo Risco nao preenchido no cabecalho da spec"]
     if risk == "baixo":
         return []
     valid = {n: t for n, t in handoffs.items() if _name_ok(n)}
-    if risk == "alto":
-        valid = {n: t for n, t in valid.items() if _handoff_role(n) in ("sol", "astra")}
-        if not valid:
-            return ["Risco alto exige handoff de revisor Opus (-sol- ou -astra-)"]
     if not valid:
         return [f"Risco {risk} exige handoffs/SPEC-NNN-<papel>-review.md aceito pelo lint de nomes"]
+    latest: dict[str, tuple[str, str]] = {}
+    for name in sorted(valid):
+        latest[_handoff_role(name)] = (name, valid[name])
     problems: list[str] = []
-    for name, text in sorted(valid.items()):
-        if last_verdict(text) == "CHANGES_REQUIRED":
-            problems.append(f"{name}: ultimo veredito CHANGES_REQUIRED")
+    approvers: set[str] = set()
+    for role, (name, text) in sorted(latest.items()):
+        verdict = last_verdict(text)
+        if verdict is None:
+            problems.append(f"{name}: sem linha '> **Veredito:**' valida")
+        elif verdict == "CHANGES_REQUIRED":
+            problems.append(f"{name}: veredito CHANGES_REQUIRED")
         elif not _evidence_filled(text):
             problems.append(f"{name}: falta '## Evidencia verificada' preenchida")
-    return problems if len(problems) == len(valid) else []
+        else:
+            approvers.add(role)
+    if not problems and risk == "alto" and not approvers & {"sol", "astra"}:
+        problems.append("Risco alto exige handoff aprovado de revisor Opus (-sol- ou -astra-)")
+    return problems
 
 
 def pending_measures(spec_text: str) -> list[str]:
+    """Linhas com `<MEDIR:` fora de trecho entre crases (mencao em codigo nao conta)."""
     return [
         f"linha {n}: {line.strip()[:80]}"
         for n, line in enumerate(spec_text.splitlines(), 1)
-        if _MEASURE_RE.search(line)
+        if _MEASURE_RE.search(_CODE_SPAN_RE.sub("", line))
     ]
 
 

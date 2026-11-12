@@ -124,3 +124,10 @@ def test_ci_is_off_without_env(repo: tuple[Path, Path]) -> None:
     out = _wt(main, root, "ci", "999")
     assert out.returncode == 3
     assert "desligado" in out.stderr
+
+
+def test_ci_rejects_non_spec_target(repo: tuple[Path, Path]) -> None:
+    main, root = repo
+    out = _wt(main, root, "ci", "main", RPG_WT_PUSH="1")
+    assert out.returncode == 2
+    assert "spec-NNN" in out.stderr

@@ -59,6 +59,7 @@ Os tipos em `.claude/agents/` já embutem o papel; este arquivo é a regra comum
 `ESTADO_ATUAL.md`, `ROADMAP.md`, `specs/index.yaml` (gerado), os curados de `project_index/`
 (`domains.yaml` etc.; o grafo gerado é local, `python -m project_index build`) e, se você otimiza produto, nada de `evals/` protegido
 (`evals/protected-paths.txt`). Status de spec = só o cabeçalho da sua spec.
+Exceção: o `spec-reviewer` edita, além do handoff, só `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md`.
 
 ## Commits
 

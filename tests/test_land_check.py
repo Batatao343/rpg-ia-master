@@ -30,31 +30,51 @@ def test_parse_risk() -> None:
     assert lc.parse_risk("> **Risco:** `médio`. Não é baixo porque `x`.\n") == "médio"
 
 
-def test_last_verdict_handles_two_rounds_and_formats() -> None:
-    text = "> Veredito: CHANGES_REQUIRED\n...\n**Veredito: APPROVED_WITH_FOLLOWUPS**\n"
-    assert lc.last_verdict(text) == "APPROVED_WITH_FOLLOWUPS"
+def test_last_verdict_uses_only_verdict_line() -> None:
+    two = "> **Veredito:** `CHANGES_REQUIRED`\n...\n> **Veredito:** `APPROVED_WITH_FOLLOWUPS`\n"
+    assert lc.last_verdict(two) == "APPROVED_WITH_FOLLOWUPS"
     assert lc.last_verdict("sem veredito") is None
+    rejected = "> **Veredito:** `CHANGES_REQUIRED`\n## Pendências\nre-revisar até APPROVED\n"
+    assert lc.last_verdict(rejected) == "CHANGES_REQUIRED"
+    approved = "> **Veredito:** `APPROVED`\nantes era CHANGES_REQUIRED\n"
+    assert lc.last_verdict(approved) == "APPROVED"
+    assert lc.last_verdict("Veredito: APPROVED\n") is None
 
 
 def test_review_problems_by_risk() -> None:
-    ok = "Veredito: APPROVED\n## Evidência verificada\n| t | main | branch |\n## Pendências\n"
+    ok = "> **Veredito:** `APPROVED`\n## Evidência verificada\n| t | main |\n## Pendências\n"
     assert lc.review_problems("baixo", {}) == []
     assert lc.review_problems(None, {}) != []
     assert len(lc.review_problems("médio", {})) == 1
     assert len(lc.review_problems("alto", {"SPEC-999-terra-review.md": ok})) == 1
-    bad = "Veredito: CHANGES_REQUIRED\n## Evidência verificada\nx\n"
+    bad = "> **Veredito:** `CHANGES_REQUIRED`\n## Evidência verificada\nx\n"
     assert len(lc.review_problems("alto", {"SPEC-999-sol-review.md": bad})) == 1
-    noev = "Veredito: APPROVED\n## Evidência verificada\n\n## Pendências\n"
+    noev = "> **Veredito:** `APPROVED`\n## Evidência verificada\n\n## Pendências\n"
     assert len(lc.review_problems("alto", {"SPEC-999-sol-review.md": noev})) == 1
     assert lc.review_problems("alto", {"SPEC-999-sol-review.md": ok}) == []
     assert lc.review_problems("médio", {"SPEC-999-terra-review.md": ok}) == []
-    # nome fora do lint nao conta
+    # nome fora do lint nao conta; handoff sem linha de veredito e invalido
     assert len(lc.review_problems("médio", {"SPEC-999-Terra-review.md": ok})) == 1
+    assert len(lc.review_problems("médio", {"SPEC-999-terra-review.md": "APPROVED\n"})) == 1
+
+
+def test_review_problems_any_role_rejecting_blocks() -> None:
+    ok = "> **Veredito:** `APPROVED`\n## Evidência verificada\nx\n"
+    bad = "> **Veredito:** `CHANGES_REQUIRED`\n## Evidência verificada\nx\n"
+    both = {"SPEC-999-terra-review.md": bad, "SPEC-999-luna-review.md": ok}
+    assert len(lc.review_problems("médio", both)) == 1
+    # so o mais recente de cada papel conta (ordem de nome)
+    rounds = {"SPEC-999-terra-independent-review.md": bad, "SPEC-999-terra-review.md": ok}
+    assert lc.review_problems("médio", rounds) == []
+    opus = {"SPEC-999-sol-review.md": ok, "SPEC-999-terra-review.md": ok}
+    assert lc.review_problems("alto", opus) == []
 
 
 def test_pending_measures() -> None:
     assert len(lc.pending_measures("a\nvalor <MEDIR: wc -l x>\n")) == 1
     assert lc.pending_measures("o marcador `<MEDIR: x>` e so convencao\n") == []
+    assert lc.pending_measures("valor `texto <MEDIR: x>` aqui\n") == []
+    assert len(lc.pending_measures("`ok` e <MEDIR: x> cru\n")) == 1
 
 
 def test_parse_free_ram_gb_comma_and_dot() -> None:
