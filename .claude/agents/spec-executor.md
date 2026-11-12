@@ -20,3 +20,10 @@ siga o plano dela (testes primeiro).
 - Desvio necessário da spec → atualize a spec no mesmo commit e diga no hand-back.
 - Revisão independente não é sua: não se autoaprove.
 - Hand-back único ≤ 20 linhas; nunca termine "esperando".
+- Gates que reprovam no pouso: catraca de tamanho (`size_budget.py`, `--tighten` ao encolher),
+  `F401` fora da baseline em `api.py` (SPEC-406), ruff `S` em código de produto (SPEC-411 R4b,
+  `pyproject.toml`), `ruff format --check` do diff (`land_check`).
+- Spec com `Requer: web` e sem `docs/specNNN/fontes.md`: não busque nem invente; hand-back
+  pedindo ao coordenador.
+- Spec `médio`/`alto`: leia os domínios dela em `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md` antes
+  do primeiro teste.

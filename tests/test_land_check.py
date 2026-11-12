@@ -86,7 +86,10 @@ class FakeGit:
     def __call__(self, args: list[str], cwd: str | None = None) -> tuple[int, str]:
         self.calls.append(args)
         if args[:3] == ["git", "worktree", "list"]:
-            return 0, f"worktree /principal\nbranch refs/heads/main\n\nworktree {self.tmp}\nbranch refs/heads/spec-999\n"
+            return (
+                0,
+                f"worktree /principal\nbranch refs/heads/main\n\nworktree {self.tmp}\nbranch refs/heads/spec-999\n",
+            )
         if args[:2] == ["git", "rev-parse"]:
             return 0, "b" * 40 + "\n"
         if args[:2] == ["bash", "scripts/dev/ram.sh"]:

@@ -24,6 +24,7 @@ leva só `SPEC-NNN · worktree · decisões do dono`; regras comuns em
 `docs/guias/BRIEF_SUBAGENTE.md`. `general-purpose`/sem tipo só com motivo (linha
 `Motivo sem tipo: …` no prompt; o hook nega sem ela; até 03/11 foram 45 % das chamadas); "onde fica X" é `code-locator`. Passe `model` sempre.
 Revisor por risco da spec (`AGENTS.md` § Qualidade, revisão e evidência).
+Spec com `Requer: web`: antes de disparar o executor, o coordenador busca o que ela pede e grava `docs/specNNN/fontes.md` (URL, data de acesso, trecho citado ≤ 10 linhas por fonte); o executor não tem web.
 
 **Memória da máquina (regra do dono, 24/10 — máquina de 16 GB; já travou):**
 - Não há teto fixo de agentes; o problema é **exagerar em rajada**. Dispare aos

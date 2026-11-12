@@ -24,3 +24,11 @@ Depois, à mão e **substituindo** linhas (nunca criando novas):
 
 `estado-size` vermelho → mova detalhe para `CHANGELOG.md`/`docs/historico/`.
 Mostre o `git diff --stat` e deixe o commit para o `/wrap-up` ou o coordenador.
+
+## /estado --handoff
+
+Antes de `/compact` ou `/clear` (sessão acima de ~350 K): `bash scripts/dev/py.sh scripts/dev/handoff.py`
+grava `.tmp/handoff-AAAA-MM-DD.md` (o do mesmo dia vira `.prev.md`). Preencha à mão os
+`<PREENCHER>` (testes rodados, decisões do dono, bloqueios, próximo passo, não refazer), rode
+`bash scripts/dev/py.sh scripts/dev/handoff.py --check .tmp/handoff-AAAA-MM-DD.md` (rc 0) e só então compacte.
+Sem `--handoff`, o `/estado` não muda.

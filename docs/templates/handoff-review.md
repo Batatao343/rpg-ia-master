@@ -16,6 +16,11 @@ O que foi revisado (branch, intervalo de commits, arquivos) e o que ficou fora.
 |---|---|---|---|---|
 | P0-1 | P0 | | | |
 
+## Evidência verificada
+
+Saída do `bash scripts/dev/red_green.sh NNN` (tabela `| teste | main | branch | veredito |` e a
+linha `red_green: K/N OK`), ou `N/A — Risco baixo`. Exigida por `land_check` (Risco médio/alto).
+
 ## Correções aplicadas
 
 Lista do que o executor corrigiu após a revisão (commit por item).

@@ -5,6 +5,8 @@
 > **Depende de:** <specs anteriores que precisam estar `done`>
 > **Desbloqueia:** <specs/features que dependem desta>
 > **Risco:** `baixo` | `médio` | `alto` (define a revisão — AGENTS.md § Qualidade, revisão e evidência)
+> **Requer:** nada | web: <o que buscar> | staging | dono: <o quê>
+> **Domínios de revisão:** <0+ de: concorrência, sql-rls, api, persistência, llm-structured> (guia: `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md`)
 > **Evidência:** <teste que falha antes / oráculo de equivalência / smoke que prova o comportamento>
 
 ---
@@ -25,6 +27,12 @@ Numerados, testáveis. Cada requisito deve poder virar assert.
 
 Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
 
+### Invariantes
+
+O que nunca pode ser falso antes, durante e depois da mudança, cada um com o teste que o prova.
+
+- **I1** — ... (teste: `test_...`)
+
 ## 3. Design técnico
 
 Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
@@ -34,6 +42,15 @@ Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadm
 - **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
 - **Assinaturas** — funções públicas com tipos
 - **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
+
+### Concorrência
+
+Preencha quando a spec cria ou muda thread, `asyncio`, cancelamento, timeout, retry ou lock;
+caso contrário escreva `N/A — sem thread/async/cancelamento`.
+
+| Evento | Estado no momento | Resultado esperado | Teste |
+|---|---|---|---|
+| cancelamento durante await to_thread(finance.admit) | ticket admitido no thread, evento ainda não anexado | finish espera o admit e registra evento cancelled | test_cancelar_durante_admit |
 
 ## 4. Plano passo a passo
 
@@ -62,6 +79,13 @@ MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes
 
 1. ...
 2. ...
+
+## Não rodou e por quê
+
+Lista do que a spec pedia e não foi executado (SQL sem Postgres, smoke sem chave, CI desligado),
+com motivo e quem roda depois. Nada a listar: escreva `Nada.`
+
+- ...
 
 ## 7. Riscos & compatibilidade
 

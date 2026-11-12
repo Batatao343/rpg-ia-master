@@ -9,6 +9,8 @@ Substitui `wt.sh land` + `resolve_*` + `stateline.py` + o commit
 separado de índice. Quem roda é o **coordenador**.
 
 1. **Pré-checagem no worktree** (`bash scripts/dev/wt.sh path NNN`):
+   - `bash scripts/dev/land_check.sh NNN` (colisão com o principal sujo, `ruff format` do diff,
+     RAM, handoff de revisão por `Risco`, `<MEDIR:` pendente, CI de `Risco: alto`); `FAIL` = não pouse;
    - cabeçalho da spec com o status final (`done`/`in-progress`) — é a ÚNICA fonte;
    - `git status --porcelain --untracked-files=no` vazio (tudo commitado);
    - `uv run --frozen ruff check $(git diff --name-only main...HEAD -- '*.py')`.
@@ -23,8 +25,11 @@ separado de índice. Quem roda é o **coordenador**.
    `bash scripts/dev/full.sh` (Bash com
    `run_in_background: true`, `timeout: 1200000`). Espere com **uma** notificação; não
    faça `sleep` em loop. Vermelho → devolva ao executor, não pouse.
-4. **Pouso**: `bash scripts/dev/wt.sh land NNN` (re-sincroniza se a `main` andou e
-   faz `--ff-only`). Depois `bash scripts/dev/wt.sh drop NNN`.
+   `Risco: alto` com `RPG_WT_PUSH=1`: `bash scripts/dev/wt.sh ci NNN` e um `ci-watcher`
+   (Haiku) para o run; sem a variável, registre na spec em "Não rodou e por quê" (push de
+   branch não autorizado).
+4. **Pouso**: `bash scripts/dev/wt.sh land NNN` (re-sincroniza se a `main` andou, repete o
+   `land_check` e recusa o `ff` se falhar; depois faz `--ff-only`). Depois `bash scripts/dev/wt.sh drop NNN`.
 5. **Estado**: rode `/estado` (gera "Decisões recentes" e confere o teto de 8 KB).
    ROADMAP só muda se o plano mudou.
 
