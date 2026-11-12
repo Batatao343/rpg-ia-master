@@ -170,3 +170,18 @@ def test_missing_branch_is_rc2() -> None:
         return 0, "worktree /principal\nbranch refs/heads/main\n"
 
     assert lc.main(["999"], run, {}) == 2
+
+
+def test_growth_check_reports_rc(tmp_path: Path, capsys) -> None:
+    """SPEC-416 R30: `growth` roda o relatorio de baselines e reprova se algum subiu."""
+    run = FakeGit(tmp_path)
+    assert lc.main(["999", "--only", "growth"], run, {}) == 0
+    assert "OK growth" in capsys.readouterr().out
+
+    def failing(args: list[str], cwd: str | None = None) -> tuple[int, str]:
+        if "baseline_growth.py" in " ".join(args):
+            return 1, "tests/size_budget.json: subiu functions::a.py::f 110 -> 120\n"
+        return run(args, cwd)
+
+    assert lc.main(["999", "--only", "growth"], failing, {}) == 1
+    assert "FAIL growth" in capsys.readouterr().out

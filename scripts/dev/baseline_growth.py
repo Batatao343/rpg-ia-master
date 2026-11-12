@@ -67,9 +67,11 @@ def growth(old: dict[str, int], new: dict[str, int], label: str) -> list[str]:
     return found
 
 
-def report(root: Path, base: str) -> list[str]:
+def report(root: Path, base: str, ignore_new_files: bool = False) -> list[str]:
     found: list[str] = []
     for rel, sections in JSON_FILES.items():
+        if ignore_new_files and not _base_text(root, base, rel):
+            continue
         path = root / rel
         new = _json_view(path.read_text(encoding="utf-8"), sections) if path.is_file() else {}
         found += growth(_json_view(_base_text(root, base, rel), sections), new, rel)
@@ -82,8 +84,13 @@ def report(root: Path, base: str) -> list[str]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", default="main")
+    parser.add_argument(
+        "--ignore-new-files",
+        action="store_true",
+        help="baseline ausente na base = criação, não crescimento",
+    )
     args = parser.parse_args(argv)
-    found = report(ROOT, args.base)
+    found = report(ROOT, args.base, args.ignore_new_files)
     print("\n".join(found) if found else "nenhum baseline cresceu")
     return 1 if found else 0
 

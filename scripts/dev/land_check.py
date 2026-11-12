@@ -1,7 +1,7 @@
 """SPEC-415 R1-R9: pre-checagens do pouso num lugar so (`scripts/dev/land_check.sh NNN`).
 
 Saida: uma linha por check, `OK|WARN|FAIL <check>: <detalhe>`; rc 0 sem FAIL, 1 com FAIL,
-2 para uso errado. Checks (nessa ordem): collision, format, ram, review, measure, ci.
+2 para uso errado. Checks (nessa ordem): collision, format, ram, review, measure, growth, ci.
 
     land_check.sh NNN [--only collision,ram]
 
@@ -22,7 +22,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CHECKS = ("collision", "format", "ram", "review", "measure", "ci")
+CHECKS = ("collision", "format", "ram", "review", "measure", "growth", "ci")
 SKIPPABLE = frozenset({"ram", "ci"})
 Runner = Callable[[list[str], str | None], tuple[int, str]]
 Result = tuple[str, str]  # (OK|WARN|FAIL, detalhe)
@@ -316,6 +316,16 @@ def check_measure(ctx: Ctx) -> Result:
     return "OK", "nenhuma medicao pendente"
 
 
+def check_growth(ctx: Ctx) -> Result:
+    """SPEC-416 R29: nenhum baseline (size/clock/ruff) cresceu em relacao a `main`."""
+    cmd = [sys.executable, "scripts/dev/baseline_growth.py", "--base", "main", "--ignore-new-files"]
+    rc, out = ctx.run(cmd, ctx.wt)
+    if rc == 0:
+        return "OK", "nenhum baseline cresceu"
+    lines = [ln for ln in out.splitlines() if ln.strip()]
+    return "FAIL", f"{len(lines)} baseline(s) subiu: " + "; ".join(lines[:3])
+
+
 def check_ci(ctx: Ctx) -> Result:
     if parse_risk(ctx.spec_text()) != "alto":
         return "OK", "nao exigido"
@@ -348,6 +358,7 @@ _FUNCS: dict[str, Callable[[Ctx], Result]] = {
     "ram": check_ram,
     "review": check_review,
     "measure": check_measure,
+    "growth": check_growth,
     "ci": check_ci,
 }
 

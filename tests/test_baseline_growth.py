@@ -57,3 +57,11 @@ def test_arquivo_ausente_na_base_conta_como_vazio(tmp_path):
     assert bg.report(root, "main") == [
         "ruff-baseline-counts.json: chave nova counts::x.py::BLE001 (2)"
     ]
+
+
+def test_ignore_new_files_pula_baseline_criada(tmp_path):
+    root = _repo(tmp_path, {})
+    (root / "ruff-baseline-counts.json").write_text(
+        json.dumps({"counts": {"x.py": {"BLE001": 2}}}), encoding="utf-8"
+    )
+    assert bg.report(root, "main", ignore_new_files=True) == []
