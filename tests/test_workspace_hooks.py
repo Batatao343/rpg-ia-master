@@ -117,7 +117,7 @@ def test_capped_or_small_reads_are_allowed(big: Path, small: Path, cmd: str) -> 
     assert _run("guard_tools.py", _sh(cmd, big.parent, tool=tool)) is None
 
 
-@pytest.mark.parametrize("flag", ["-n auto", "-n 4", "--numprocesses=auto", "-nauto"])
+@pytest.mark.parametrize("flag", ["-n auto", "-n 4", "--numprocesses=auto", "-nauto", "-n=auto"])
 def test_subagent_heavy_pytest_is_denied(tmp_path: Path, flag: str) -> None:
     assert _denied(
         _run("guard_tools.py", _sh(f"uv run pytest {flag} tests/", tmp_path, agent=True))

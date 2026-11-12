@@ -19,7 +19,7 @@ CAT_CMDS = {"cat", "type", "get-content", "gc"}
 GC_CAPS = {"-totalcount", "-tail", "-first", "-head"}
 SEGMENT_SPLIT = re.compile(r"&&|\|\||;|\n")
 CD_RE = re.compile(r"^\s*cd\s+(.+?)\s*$")
-XDIST_RE = re.compile(r"^(?:-n|--numprocesses=?)(auto|logical|\d+)?$")
+XDIST_RE = re.compile(r"^(?:-n=?|--numprocesses=?)(auto|logical|\d+)?$")
 PYTEST_TOKENS = {"pytest", "py.test", "pt.sh", "full.sh"}
 UNTYPED = {"", "general-purpose", "claude"}
 REASON_RE = re.compile(r"^\s*Motivo sem tipo:\s*(\S.{9,})$", re.MULTILINE)
@@ -222,7 +222,9 @@ def main() -> None:
             check_shell(str(ti.get("command") or ""), cwd, bool(data.get("agent_id")))
     except SystemExit:
         raise
-    except Exception:  # silent-ok: hook nunca derruba a sessão
+    except Exception as exc:  # noqa: BLE001 - hook nunca derruba a sessão (falha aberto)
+        # Falha aberto, mas com sinal: bug do próprio hook não pode virar "sem proteção" calado.
+        print(f"guard_tools: erro interno, guarda inativa: {exc!r}", file=sys.stderr)
         return
 
 

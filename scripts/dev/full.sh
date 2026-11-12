@@ -2,7 +2,7 @@
 # Suíte completa local (SPEC-414 R1) — só coordenador; subagente usa pt.sh.
 #   bash scripts/dev/full.sh [args extras da pytest]
 # -n pela RAM livre (full_plan.py); FULL_N=<n> força. Piso de RAM => rc 3.
-# Worker morto (xdist) é re-rodado em série; rc = o da pytest, nunca o de um filtro.
+# Worker morto (xdist) é re-rodado em série; rc = o da pytest (ou o veredito do rerun), nunca o de um filtro.
 # FULL_PYTEST troca o comando da pytest (só para teste).
 set -uo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/env.sh"
