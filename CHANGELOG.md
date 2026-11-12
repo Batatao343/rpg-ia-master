@@ -5,6 +5,18 @@
 
 ---
 
+## 2026-11-12 — onda de workspace (specs 414–418)
+
+- **Origem:** varredura do workspace + 3 pesquisas Sonnet de práticas de mercado + revisão Fable em contexto vazio, que cortou duplicatas e um fato errado (o `audit-local` já subia Postgres real; faltava só pgTAP).
+- **414** `done`: `scripts/dev/full.sh` + `full_plan.py` (`-n` pela RAM, rc real, rerun de worker morto; pico medido 1,11 GB por worker), basetemp por PID, venv do principal em worktree com lock igual, hook nega `Agent` `general-purpose`/`claude` sem linha `Motivo sem tipo:`, B1 do `guard_tools.py`.
+- **415** `done`: `land_check` (collision, format, ram, review, measure, growth, weak-tests, types, ci) chamado por `wt.sh sync/land`; `red_green.sh` (revisor prova vermelho na `main`, verde na branch); template com invariantes, concorrência e "não rodou"; `CASOS_QUE_O_REVISOR_PEDE.md`; `/estado --handoff`. CI pré-pouso (`wt.sh ci`) implementado e desligado.
+- **416** `done`: pgTAP bloqueante no `audit-local` (63 asserções verdes no CI); catraca de relógio real em teste (24 funções na baseline); baseline do ruff por contagem; `DECISOES_FIXAS.md` (38 linhas com fonte); evidência de staging em `.tmp/evidence/` por padrão; hook nega subir baseline em subagente.
+- **417** `done`: `weak_tests.py` (skip/xfail novo sem motivo e teste novo sem asserção bloqueiam o pouso); 5 propriedades de mecânica e 3 de round-trip de save com Hypothesis. Achou `execute_trade` mutando o estado de entrada.
+- **418** `done`: gate de tipos com basedpyright 1.40.2, baseline de 66 entradas que só encolhe, job `types` em calibração. Escopo cortado por RAM para `infrastructure/`, `state.py`, `persistence.py` e 5 arquivos de `services/`.
+- **Config:** `ESTADO_ATUAL.md` fora do import do `CLAUDE.md`; `omitClaudeMd` em `code-locator`/`ci-watcher`; plugins design, productivity e pdf-viewer desligados no projeto; 7 memórias vencidas podadas.
+- **Medido:** saída de Bash em subagente (04–11/11) = 12,6 M chars, dos quais pytest só 0,56 M; leitura por `cat`/`sed` 4,4 M e `git diff` 1,7 M. Hook de saída enxuta descartado.
+- **Push:** `main` empurrada em 12/11 (primeiro push desde 11/11 16h). `validate` e `eval-gates` verdes; `audit-local` vermelho só pelo rate card de imagem vencido.
+
 ## 2026-11-11 — onda de segurança e qualidade (specs 405–413)
 
 - **Auditoria ponytail** (5 subagentes) + revisão Fable: a revisão derrubou a maior parte (8 itens já decididos em 18/10 e 03/11). Sobrou: 405, 406, 407, 408.

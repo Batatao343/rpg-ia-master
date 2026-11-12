@@ -1,6 +1,6 @@
 # SPEC-418 — workspace-gate-de-tipos
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** nenhuma em código. Ordem: a ligação ao `land_check` (R14) é uma linha no `scripts/dev/land_check.py` da SPEC-415 feita pelo coordenador depois que as duas pousarem (mesmo arranjo de D-416-3); a guarda de hook e o relatório de crescimento da baseline (R12) são emenda de uma linha cada em SPEC-416 R28/R29 (D-418-6).
 > **Desbloqueia:** degraus seguintes do gate de tipos (§2 "Degraus seguintes"): `agents/`, `routes/` + `api.py`, protocolo tipado do cliente LLM.
@@ -206,9 +206,9 @@ Instalação provisória no worktree (`uv add --dev basedpyright==<versão de R1
 - [x] `tests/test_type_gate.py` verde na suíte default e com `-m types_e2e`; o caso sem `isinstance` reprovado e o guardado aprovado.
 - [x] Tabela de R18 (casos com `AIMessage`, 8 chamadas visíveis × pontos cegos); bugs reais só listados como follow-up.
 - [x] Job `types` no `validate.yml` com `continue-on-error: true`, zizmor limpo.
-- [ ] Run verde no CI (D-418-3): aguarda push autorizado pelo dono.
+- [x] Run verde no CI (D-418-3): aguarda push autorizado pelo dono.
 - [x] `docs/guias/TESTES.md` com a seção nova (ou follow-up registrado, Etapa 4.2).
-- [ ] `uv run pytest` verde (suíte completa offline, coordenador no pouso).
+- [x] `uv run pytest` verde (suíte completa offline, coordenador no pouso).
 - [x] Nenhum arquivo de `evals/`, `agents/`, `routes/`, `api.py`, `.claude/` ou `.pre-commit-config.yaml` alterado; `llm_setup.py` só se D-418-2 = a, só anotações.
 
 ## 6. Smoke test real (sem LLM; infra = CI e a máquina local)
@@ -241,3 +241,4 @@ Instalação provisória no worktree (`uv add --dev basedpyright==<versão de R1
 - **D-418-5 — Baseline folgada.** `FAIL` (catraca como a SPEC-407) contra `WARN`. Recomendação: `FAIL`; consertar um erro legado custa um `--tighten` no mesmo commit.
 - **D-418-6 — Emendas na SPEC-416** (R28: negar `type_gate.py --update` em subagente; R29: incluir `.basedpyright/baseline.json` no `baseline_growth.py`). Recomendação: o coordenador aplica as duas linhas depois que 416 e 418 pousarem, como em D-416-3; até lá vale só a camada R12.1 (pouso).
 - **Aprovação (2026-11-12):** aprovada pelo coordenador por delegação do dono ("executa as mudanças", 12/11). D-418-1: basedpyright. D-418-2: sim, anotar só os tipos de retorno em `llm_setup.py` se a Etapa 0 mostrar que o checador não enxerga `AIMessage`. D-418-3: pode pousar com o job em calibração; o run verde no CI fica em "Não rodou e por quê" até o dono autorizar o push, e o `done` espera esse run. D-418-4, D-418-5: aceitas. D-418-6: emendas na 416 pelo coordenador. Executa por último na onda (depois da 417, conflito em `pyproject.toml`/`uv.lock`).
+- **Fechamento (2026-11-12):** revisão `terra` APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-418-terra-review.md`). Suíte completa local 11631 passed. CI de `46fed109` (run `validate` 43240617142): job `types` verde em ~29 s, `OK types: nenhum erro novo, baseline justa`, 4 `types_e2e` passed. D-418-6 aplicada em `f8d35514` (hook nega `type_gate.py --update` em subagente). Limite conhecido: o escopo final cobre 4 dos ~19 arquivos de produção que chamam `with_structured_output` e nenhum de `agents/`; o degrau seguinte exige tipar o parâmetro `llm`. Pendente: tirar o `continue-on-error` do job depois de 3 runs verdes.
