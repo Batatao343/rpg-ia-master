@@ -1,6 +1,6 @@
 # SPEC-413 — rpcs-security-definer-publicas
 
-> **Status:** `in-review` (11/11: código e SQL entregues; aplicação no staging, advisor e smoke pendentes do coordenador) · antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
+> **Status:** `in-progress` (11/11: migração, rollback, pgTAP e consumidores na `main`; revisão Sol APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-413-sol-review.md`, P2-1 aplicado (smoke exige 404 `PGRST202`); SQL novo ainda NÃO executado em Postgres: falta aplicar no staging com as pré-checagens PC-1..PC-4 e registrar a evidência R6) · antes `in-review` (11/11: código e SQL entregues; aplicação no staging, advisor e smoke pendentes do coordenador) · antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma (independente da SPEC-410; ordem de timestamps em §3)
 > **Desbloqueia:** nada

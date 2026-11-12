@@ -294,6 +294,7 @@ def check_wallet(ctx: Ctx) -> dict:
     from infrastructure.wallet import PostgresWallet
 
     res: dict[str, Any] = {"ok": False}
+    rpc_gone: list[bool] = []
     for who, headers in (("a", ctx.user_headers("A")), ("anon", {"apikey": ctx.anon})):
         for fn, body in (
             ("rpg_wallet_balance", {}),
@@ -302,7 +303,8 @@ def check_wallet(ctx: Ctx) -> dict:
         ):
             r = ctx.http.post(f"{ctx.url}/rest/v1/rpc/{fn}", headers=headers, json=body)
             res[f"{who}_{fn}_status"] = r.status_code
-    rpc_statuses = [v for k, v in res.items() if k.endswith("_status")]
+            # SPEC-413: só "função inexistente" prova que a RPC saiu; 401/5xx não contam.
+            rpc_gone.append(r.status_code == 404 and _pgrst_code(r) == "PGRST202")
     _seed_wallet_prereqs(ctx.dsn)
     uid_a, uid_b = ctx.users["A"]["id"], ctx.users["B"]["id"]
     principal_a = Principal(UUID(uid_a), "supabase", uid_a)
@@ -323,11 +325,18 @@ def check_wallet(ctx: Ctx) -> dict:
     finally:
         pool.close()
     res["ok"] = bool(
-        all(status >= 400 for status in rpc_statuses)
-        and res["a_available_milli_ge_311"]
-        and res["b_available_milli"] == 0
+        all(rpc_gone) and res["a_available_milli_ge_311"] and res["b_available_milli"] == 0
     )
     return res
+
+
+def _pgrst_code(response: Any) -> str:
+    """Código de erro do PostgREST (ex.: PGRST202 = função não encontrada); "" se não for JSON."""
+    try:
+        body = response.json()
+    except ValueError:
+        return ""
+    return str(body.get("code", "")) if isinstance(body, dict) else ""
 
 
 def check_auth_captcha(ctx: Ctx) -> dict:
