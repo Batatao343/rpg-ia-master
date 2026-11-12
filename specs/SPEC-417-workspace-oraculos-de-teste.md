@@ -1,6 +1,6 @@
 # SPEC-417 — workspace-oraculos-de-teste
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** SPEC-338 `done` (perfil Hypothesis R16), SPEC-379 `done` (`tests/factories.py`), SPEC-407 `done` (desenho de catraca). **Ordem com a SPEC-415** (`approved`, cria `land_check`): independente; ver D2 e §7.
 > **Desbloqueia:** check `weak-tests` dentro do `land_check` (uma linha na SPEC-415 ou follow-up, D2).
@@ -200,16 +200,16 @@ Executor roda só os arquivos do escopo, `bash scripts/dev/pt.sh <arquivos>` (`-
 
 ## 5. Critérios de aceite
 
-- [ ] `tests/test_weak_tests.py` verde; `test_cli_em_repo_sintetico` visto vermelho antes do script (hand-back).
-- [ ] R9: tabela 405–413 em §9, falso positivo = 0 (ou justificado um a um).
-- [ ] `weak_tests.py --spec 417` na branch desta spec: rc 0, linha `OK`.
-- [ ] `hypothesis` no grupo `dev`; `git diff --exit-code requirements.txt` limpo; versão do lock inalterada; `tests/test_spec192_vercel_packaging.py` verde.
-- [ ] As 11 mutações de §4.4 vistas falhando e voltando ao verde (registro em §9), salvo propriedades em `xfail` por R15.
-- [ ] Tempos de R14 dentro da meta (valores em §9); nenhum `.hypothesis/` no `git status`.
-- [ ] Todo achado de bug listado em §9 com teste `xfail(strict=True)` + `@example`, e nenhum arquivo de produto no diff (`git diff --name-only main...HEAD` sem `*.py` fora de `tests/` e `scripts/dev/weak_tests.py`).
-- [ ] `docs/guias/TESTES.md` com a linha de R17.
-- [ ] `ruff format --check`/`ruff check` limpos; `dup_helpers.py --diff` sem helper duplicado (D2).
-- [ ] `uv run pytest` verde (suíte completa, 1× pelo coordenador no pouso).
+- [x] `tests/test_weak_tests.py` verde; `test_cli_em_repo_sintetico` visto vermelho antes do script (hand-back).
+- [x] R9: tabela 405–413 em §9, falso positivo = 0 (ou justificado um a um).
+- [x] `weak_tests.py --spec 417` na branch desta spec: rc 0, linha `OK`.
+- [x] `hypothesis` no grupo `dev`; `git diff --exit-code requirements.txt` limpo; versão do lock inalterada; `tests/test_spec192_vercel_packaging.py` verde.
+- [x] As 11 mutações de §4.4 vistas falhando e voltando ao verde (registro em §9), salvo propriedades em `xfail` por R15.
+- [x] Tempos de R14 dentro da meta (valores em §9); nenhum `.hypothesis/` no `git status`.
+- [x] Todo achado de bug listado em §9 com teste `xfail(strict=True)` + `@example`, e nenhum arquivo de produto no diff (`git diff --name-only main...HEAD` sem `*.py` fora de `tests/` e `scripts/dev/weak_tests.py`).
+- [x] `docs/guias/TESTES.md` com a linha de R17.
+- [x] `ruff format --check`/`ruff check` limpos; `dup_helpers.py --diff` sem helper duplicado (D2).
+- [x] `uv run pytest` verde (suíte completa, 1× pelo coordenador no pouso).
 
 ## 6. Smoke test com LLM real
 
@@ -248,3 +248,4 @@ Delegadas ao coordenador; proposta entre parênteses.
   - Limites escritos: P5 não monta estado de keeper/patente (varre item x mercador no estado base); P3 controla o clima trocando `world_utils.weather_effects` (os dois ramos); RT1 aceita como normalização de save/load que `conflict_summary` ganhe `conflict_id`/`conflict_turn`.
   - **Achado 1 (R15, bug de produto, não consertado):** `economy.execute_trade` muta o `state` de entrada quando a loja já foi visitada, pois `world = dict(state["world"])` é cópia rasa e `world["merchant_stocks"][mid][iid] -= qty` (`services/economy.py:812`) escreve no dicionário compartilhado (a venda de item único também, `:876`). Teste `test_p4_trade_does_not_mutate_input`: `xfail` estrito com `@example(location="brekmar", gold=5000, mode="buy", pick=0, qty=1)`.
   - D4: sem surrogates no gerador (default aceito).
+- **Fechamento (2026-11-12):** revisão `terra` APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-417-terra-review.md`); os cinco P2 do revisor (alias de skip, justificativa por palavra inteira, helpers de asserção e arquivo antigo que não parseia, `gold_delta` em P4, RT1 comparando o estado inteiro) foram fechados pelo executor em `8efd4ae7`, com testes; esse commit não teve segunda rodada de revisão. Achado de produto (R15, não consertado aqui): `economy.execute_trade` muta o `state` de entrada (`services/economy.py:812`), em `xfail(strict=True)`; vira spec própria.
