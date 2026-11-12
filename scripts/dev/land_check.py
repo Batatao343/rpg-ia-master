@@ -318,7 +318,9 @@ def check_measure(ctx: Ctx) -> Result:
 
 def check_growth(ctx: Ctx) -> Result:
     """SPEC-416 R29: nenhum baseline (size/clock/ruff) cresceu em relacao a `main`."""
-    cmd = [sys.executable, "scripts/dev/baseline_growth.py", "--base", "main", "--ignore-new-files"]
+    # script irmao deste arquivo (nao o do worktree): branch antiga sem o script ainda e checada
+    script = str(Path(__file__).with_name("baseline_growth.py"))
+    cmd = [sys.executable, script, "--base", "main", "--ignore-new-files"]
     rc, out = ctx.run(cmd, ctx.wt)
     if rc == 0:
         return "OK", "nenhum baseline cresceu"

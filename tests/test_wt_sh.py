@@ -55,7 +55,7 @@ def repo(tmp_path: Path) -> tuple[Path, Path]:
     (main / "scripts" / "dev").mkdir(parents=True)
     (main / "specs").mkdir()
     (main / "docs").mkdir()
-    for name in ("wt.sh", "land_check.sh", "land_check.py"):
+    for name in ("wt.sh", "land_check.sh", "land_check.py", "baseline_growth.py"):
         if (
             ROOT / "scripts" / "dev" / name
         ).exists():  # na main (sem land_check) o teste fica vermelho de verdade
