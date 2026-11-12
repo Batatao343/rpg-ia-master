@@ -22,7 +22,7 @@ from urllib.parse import quote
 import httpx
 
 API_ROOT = "https://androidpublisher.googleapis.com/androidpublisher/v3/applications"
-TOKEN_URL = "https://oauth2.googleapis.com/token"
+TOKEN_URL = "https://oauth2.googleapis.com/token"  # noqa: S105  # URL publica do OAuth, nao e segredo
 SCOPE = "https://www.googleapis.com/auth/androidpublisher"
 
 PURCHASED, CANCELLED, PENDING = 0, 1, 2

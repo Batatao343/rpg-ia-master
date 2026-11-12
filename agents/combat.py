@@ -14,6 +14,7 @@ Fluxo de 1 chamada = 1 RODADA:
   → espelhar Vitalidade→hp (HUD/checkpoints) → narrar → summary→loot na vitória.
 """
 
+import hashlib
 import random
 import re
 import zlib
@@ -522,19 +523,18 @@ def _chase_party_choices(
     sides["ally"] = [i for i in sides.get("ally", []) if str(i) != key]
     player["_party_active"] = bool(allies)
     name = str(entry.get("name") or key)
+    fate_seed = entry["pending_fate"]["seed"].encode()  # seal_fate acima garante a chave
     res["flee"] = True
     res["abandoned"].append(key)
     if sacrificed:
         res["sacrificed"] = sacrificed
         res["logs"].append(f"{name} fica para trás para segurar os perseguidores.")
-        import hashlib
-
         # Decisão do coordenador (B-P2-6): evento + marco de crônica percebidos, sem o destino e
         # sem efeito extra de reputação (a SPEC-300 pode etiquetar pelo catálogo de tags).
         res["events"].append(
             {
                 "event_id": "sacrifice-"
-                + hashlib.sha1(entry["pending_fate"]["seed"].encode()).hexdigest()[:16],
+                + hashlib.sha1(fate_seed, usedforsecurity=False).hexdigest()[:16],
                 "turn": int(world.get("turn_count", 0) or 0),
                 "type": "companion_sacrificed",
                 "actor_id": "player",
@@ -547,13 +547,11 @@ def _chase_party_choices(
     else:
         res["logs"].append(f"{name} ficou para trás.")
         combat_meta["chase"] = {**prev, "abandoned": [*(prev.get("abandoned") or []), key]}
-        import hashlib
-
         res["events"].append(
             {
                 # id estável por (instância, aliado, rodada), sem expor a seed do destino
                 "event_id": "abandon-"
-                + hashlib.sha1(entry["pending_fate"]["seed"].encode()).hexdigest()[:16],
+                + hashlib.sha1(fate_seed, usedforsecurity=False).hexdigest()[:16],
                 "turn": int(world.get("turn_count", 0) or 0),
                 "type": "companion_abandoned",
                 "actor_id": "player",

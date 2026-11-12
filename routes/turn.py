@@ -1783,7 +1783,7 @@ def _stream_turn_events(
                 piece = str((data or {}).get("text") or "")
                 if not piece:
                     continue
-                if token_mode == "on":
+                if token_mode == "on":  # noqa: S105  # nome de modo da flag, nao e segredo
                     if timeline.mark_ms("first_token") is None:
                         timeline.mark("first_token")
                         _observe_delivery("first_token", "rpg_turn_first_token_seconds")
@@ -1800,7 +1800,7 @@ def _stream_turn_events(
                     tok["shadow"] += piece
                 continue
             if mode == "narrative_reset":
-                if token_mode == "on" and tok["text"]:
+                if token_mode == "on" and tok["text"]:  # noqa: S105  # nome de modo, nao e segredo
                     tok["text"] = ""
                     yield _sse("narrative", {"chunk": "", "done": False, "reset": True})
                 tok["shadow"] = ""
@@ -1830,7 +1830,7 @@ def _stream_turn_events(
             resp = payload
             outcome["phase"] = "narrative"
             narrative = resp.message or ""
-            if token_mode == "shadow" and tok["shadow"]:
+            if token_mode == "shadow" and tok["shadow"]:  # noqa: S105  # nome de modo, nao e segredo
                 _sse_log(
                     "token_stream_shadow",
                     ttft_shadow_ms=timeline.mark_ms("first_token_shadow"),

@@ -1,6 +1,6 @@
 # SPEC-411 — seguranca-higiene-boot-ci
 
-> **Status:** `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
+> **Status:** `in-progress` (11/11: R1–R4 e R6 entregues; R5 pendente de autor de eval + clique do dono no `eval-governance`). Antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma (R4b/zizmor limpo depende do R2 da própria spec)
 > **Desbloqueia:** nada (follow-up da varredura de segurança de 11/11; irmã de SPEC-409/410)
@@ -94,6 +94,8 @@ Já existem em `validate.yml` e **não são duplicados**: `pip-audit` (`:59-60`,
 - **R6.2** Testes (no arquivo que já cobre o limite de `/metrics`; `Grep "_rate_limit_metrics|/metrics" tests/` define, provável `tests/test_surfaces_221.py`): (a) com `VERCEL=1` e `RPG_METRICS_TOKEN` ausente, 13 requisições com `x-vercel-forwarded-for` **distintos** → nenhuma 429; (b) 13 do **mesmo** `x-vercel-forwarded-for` → a 13ª é 429 com `Retry-After`; (c) com `RPG_TRUSTED_PROXY_HOPS=1` e `X-Forwarded-For: spoof, 203.0.113.9` o balde é `203.0.113.9` (o valor à esquerda é ignorado); (d) sem marcador de proxy e sem hops, `X-Forwarded-For` é **ignorado** (comportamento atual preservado, sem spoof). O teste (a) falha hoje.
 - **R6.3** O scraper autenticado continua isento (`api.py:903-904` intocado).
 
+**Registro de execução (11/11):** boot em `hosted*` LEVANTA `hosted_config_insecure` (ver `docs/spec411/README.md`). O `/metrics` está em `api.py` linha ~820 (não 905). `agents/combat.py` ganhou `import hashlib` no topo e `fate_seed` local para o `S324` não crescer o arquivo. `ruff-baseline.toml` regenerado pelo script (só encolheu; já estava stale). Follow-up de doc: `docs/guias/*`/`AGENTS.md` não editados (checkout principal sujo).
+
 ### Fora de escopo (com motivo)
 
 - `/health` devolver `profile`/`hardened`: decidido em SPEC-218 R9 e SPEC-221.
@@ -168,12 +170,12 @@ Uma etapa por item, independentes (exceto R4a depois de R2). Um commit por etapa
 
 ## 5. Critérios de aceite
 
-- [ ] R1: com `RPG_RUNTIME_PROFILE=hosted-supabase`, config segura e `RPG_PLAY_ACCEPT_TEST_PURCHASES=1`, `hosted_security_problems` acusa a flag sem `RPG_DEPLOY_ENV=staging` e fica limpo com ele; `RPG_DEPLOY_ENV` registrada em `config/flags.yaml`; `vercel_env.py` envia o marcador só ao staging; runbook com a ordem 1-2-3 no `docs/spec411/README.md`.
-- [ ] R2: `Grep persist-credentials` = 19/19 checkouts; `zizmor` sem `artipacked`; nenhum job do CI quebrou (CI verde).
-- [ ] R3: `cooldown.default-days: 7` nos 3 ecossistemas; item de doc do R3.2 confirmado e registrado.
-- [ ] R4a: job `workflow-lint` com `zizmor` de versão fixada, verde. R4b: regras `S324,S602,S604,S605,S105,S106,S107` no `select`, `S` ignorada em `tests/scripts/evals/playtest/.claude`, 0 hit no produto, `ruff-baseline.toml` sem entrada nova, `S608` conforme D4 (teste de allowlist se aceita a recomendação).
+- [x] R1: com `RPG_RUNTIME_PROFILE=hosted-supabase`, config segura e `RPG_PLAY_ACCEPT_TEST_PURCHASES=1`, `hosted_security_problems` acusa a flag sem `RPG_DEPLOY_ENV=staging` e fica limpo com ele; `RPG_DEPLOY_ENV` registrada em `config/flags.yaml`; `vercel_env.py` envia o marcador só ao staging; runbook com a ordem 1-2-3 no `docs/spec411/README.md`.
+- [x] R2: `Grep persist-credentials` = 19/19 checkouts; `zizmor` sem `artipacked`; nenhum job do CI quebrou (CI verde).
+- [x] R3: `cooldown.default-days: 7` nos 3 ecossistemas; item de doc do R3.2 confirmado e registrado.
+- [x] R4a: job `workflow-lint` com `zizmor` de versão fixada, verde. R4b: regras `S324,S602,S604,S605,S105,S106,S107` no `select`, `S` ignorada em `tests/scripts/evals/playtest/.claude`, 0 hit no produto, `ruff-baseline.toml` sem entrada nova, `S608` conforme D4 (teste de allowlist se aceita a recomendação).
 - [ ] R5: as 3 linhas em `evals/protected-paths.txt`, teste verde, `test_ruff_protected_exempt.py` verde, publicado com aprovação do dono no `eval-governance` e `compare` exit 0. (Único item que pode manter a spec `in-progress`.)
-- [ ] R6: limite de `/metrics` por `_client_ip`; testes (a)–(d) verdes; scraper autenticado continua isento.
+- [x] R6: limite de `/metrics` por `_client_ip`; testes (a)–(d) verdes; scraper autenticado continua isento.
 - [ ] `uv run pytest` verde (suíte completa offline, 1× pelo coordenador no pouso)
 - [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo)
 - [ ] Saves antigos continuam carregando (nenhum formato muda)

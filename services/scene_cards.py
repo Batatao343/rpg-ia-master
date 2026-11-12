@@ -660,7 +660,8 @@ def _object_card(obj: dict, it: dict) -> dict | None:
     else:
         return None
     digest = hashlib.sha1(
-        json.dumps([obj.get("id"), it.get("label"), efeito], sort_keys=True).encode()
+        json.dumps([obj.get("id"), it.get("label"), efeito], sort_keys=True).encode(),
+        usedforsecurity=False,
     ).hexdigest()[:8]
     label = str(it.get("label") or "usar")
     oname = str(obj.get("name") or obj.get("id"))
