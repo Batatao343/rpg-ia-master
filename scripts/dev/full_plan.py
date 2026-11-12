@@ -16,7 +16,7 @@ import sys
 PISO_GB = 3.0
 RESERVA_GB = 2.0
 MAX_WORKERS = 6
-POR_WORKER_GB = 1.0  # provisório; o coordenador mede no pouso (SPEC-414 Etapa 0.2)
+POR_WORKER_GB = 1.25  # pico medido 1,11 GB em 12/11 (docs/spec414/medicoes.md § 0.2)
 MAX_RERUN = 20
 
 _CRASH_RE = re.compile(r"worker '(gw\d+)' crashed while running '([^']+)'")

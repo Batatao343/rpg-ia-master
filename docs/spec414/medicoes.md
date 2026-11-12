@@ -24,8 +24,10 @@ Veredito: **R4.1 implementado.**
 
 ## 0.2 `POR_WORKER_GB`
 
-Não medido pelo executor (é do coordenador, suíte completa). `full_plan.py` usa 1,0 GB provisório
-(`POR_WORKER_GB`), a trocar pelo pico medido (arredondado para cima em 0,25 GB).
+Medido pelo coordenador em 2026-11-12, suíte completa via `FULL_N=2 bash scripts/dev/full.sh` no
+worktree (11471 passed, 330 skipped, 1 xfailed em 765 s; `full rc=0 · n=2 · mortos=0`), amostrando o
+WorkingSet dos processos `python` a cada 20 s: pico de 1.110 MB num worker (o outro ficou em ~380 MB).
+Arredondado para cima em 0,25 GB: `POR_WORKER_GB = 1.25`.
 
 ## 0.3 Formato do crash no xdist instalado
 
