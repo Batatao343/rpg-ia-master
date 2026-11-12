@@ -61,6 +61,7 @@ def repo(tmp_path: Path) -> tuple[Path, Path]:
         "land_check.py",
         "baseline_growth.py",
         "weak_tests.py",
+        "type_gate.py",
         "red_green.py",
     ):
         if (

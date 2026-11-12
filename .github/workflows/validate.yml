@@ -123,6 +123,22 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  types:
+    # SPEC-418: gate de tipos (basedpyright); calibração: continue-on-error até 3 runs limpos (R17).
+    needs: scope
+    if: github.event_name != 'schedule' && needs.scope.outputs.docs_only != 'true'
+    runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv sync --all-extras
+      - run: uv run python scripts/dev/type_gate.py --check
+      - run: uv run pytest tests/test_type_gate.py -m types_e2e -p no:cacheprovider --tb=short
+
   secret-scan:
     # SPEC-225 R5: gitleaks no diff do PR/push e, semanalmente, no histórico completo.
     runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso

@@ -53,6 +53,7 @@ dev = [
     "pytest-xdist>=3.8.0",
     "hypothesis>=6.170,<7",
     "ruff>=0.9",
+    "basedpyright==1.40.2",
 ]
 fuzz = [
     "schemathesis>=4.32,<5",
@@ -120,7 +121,7 @@ testpaths = ["tests"]
 # Fase 11 / Fase 5: testes com LLM real ficam FORA da suíte offline default —
 # rodar com: uv run pytest -m llm_contract -v -s   (contratos de shape)
 #            uv run pytest -m llm_playtest -v -s    (campanhas curtas por perfil)
-addopts = "-q -m \"not llm_contract and not llm_playtest and not api_fuzz\""
+addopts = "-q -m \"not llm_contract and not llm_playtest and not api_fuzz and not types_e2e\""
 # pytest-timeout: nenhum teste pendura a suíte (workspace #5). Paralelo é opt-in:
 # `pytest -n auto` (camada 2 / CI) — ver docs/guias/TESTES.md.
 timeout = 300
@@ -132,6 +133,7 @@ markers = [
     "security_local: testes opt-in de RLS, CSRF, ownership e secrets locais",
     "chaos_local: testes opt-in de kill/restart/timeouts na stack local",
     "browser_local: browser real opt-in contra servidor local",
+    "types_e2e: roda o basedpyright de verdade (SPEC-418; job types, ~15 s e ~1,8 GB)",
 ]
 
 [tool.vercel]
@@ -153,3 +155,40 @@ source = [
 [tool.coverage.report]
 skip_empty = true
 precision = 1
+
+[tool.basedpyright]
+# SPEC-418: gate de tipos estreito; legado congelado em .basedpyright/baseline.json.
+# Escopo cortado por E0.7.3 (pico de RAM > 2 GB no escopo cheio; ver docs/spec418/medicao.md):
+# infrastructure/state/persistence + os arquivos de services/ que importam llm_setup.
+include = [
+    "infrastructure",
+    "state.py",
+    "persistence.py",
+    "services/chronicle_compression.py",
+    "services/creature_gen.py",
+    "services/daily_spend_cap.py",
+    "services/prologue.py",
+    "services/shared_pool.py",
+]
+pythonVersion = "3.13"
+pythonPlatform = "Linux"
+typeCheckingMode = "standard"
+useLibraryCodeForTypes = true
+reportMissingTypeStubs = "none"
+reportUnnecessaryTypeIgnoreComment = "none"
+# As 7 regras do gate + o type: ignore sem regra (R5)
+reportIgnoreCommentWithoutRule = "error"
+reportOptionalMemberAccess = "error"
+reportAttributeAccessIssue = "error"
+reportCallIssue = "error"
+reportArgumentType = "error"
+reportReturnType = "error"
+reportOptionalSubscript = "error"
+reportPossiblyUnboundVariable = "error"
+# Contagem > 0 na Etapa 0: warning (fora da baseline), voltam no degrau 1 (R5)
+reportInvalidTypeForm = "warning"
+reportOptionalCall = "warning"
+reportIncompatibleVariableOverride = "warning"
+reportAssignmentType = "warning"
+reportOperatorIssue = "warning"
+reportRedeclaration = "warning"

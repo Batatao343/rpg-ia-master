@@ -91,6 +91,17 @@ A baseline fica em `docs/spec379/coverage-baseline.md`.
   Arquivo novo recebe todas as regras.
 - Degraus 1–3 concluídos (I, UP, format). Antes de commitar: `ruff check --fix` + `ruff format`.
 
+## Tipos (basedpyright, SPEC-418)
+
+- Escopo: `infrastructure/`, `state.py`, `persistence.py` e os `services/` que importam `llm_setup`
+  (`[tool.basedpyright].include`; medição em `docs/spec418/medicao.md`). Legado em `.basedpyright/baseline.json`.
+- `bash scripts/dev/py.sh scripts/dev/type_gate.py --check` (≈ 13 s, ≈ 1,8 GB: só com RAM livre ≥ 3 GB, nunca em
+  paralelo com pytest). Erro novo ou baseline folgada reprova; `--tighten` ao consertar legado (livre);
+  `--update --reason` sobe a baseline: só o coordenador. O `land_check` roda o check `types` só se o diff tocar
+  `.py`/config e dá WARN se o venv não tiver basedpyright. Conflito de rebase na baseline: aceite a da `main` e rode `--tighten`.
+- Cego onde o parâmetro `llm` não tem tipo (`death_flow`, `encounter_preparation`, `narrative_sink`,
+  `tactical_profile`): o gate só vê o que flui de `get_llm`. `pytest -m types_e2e` roda o checador de verdade.
+
 ## Frontend
 
 - `npm run typecheck` (src, bloqueante via build), `npm run typecheck:e2e`

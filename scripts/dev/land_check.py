@@ -1,7 +1,7 @@
 """SPEC-415 R1-R9: pre-checagens do pouso num lugar so (`scripts/dev/land_check.sh NNN`).
 
 Saida: uma linha por check, `OK|WARN|FAIL <check>: <detalhe>`; rc 0 sem FAIL, 1 com FAIL,
-2 para uso errado. Checks (nessa ordem): collision, format, ram, review, measure, growth, weak-tests, ci.
+2 para uso errado. Checks (nessa ordem): collision, format, ram, review, measure, growth, weak-tests, types, ci.
 
     land_check.sh NNN [--only collision,ram]
 
@@ -22,7 +22,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CHECKS = ("collision", "format", "ram", "review", "measure", "growth", "weak-tests", "ci")
+CHECKS = ("collision", "format", "ram", "review", "measure", "growth", "weak-tests", "types", "ci")
 SKIPPABLE = frozenset({"ram", "ci"})
 Runner = Callable[[list[str], str | None], tuple[int, str]]
 Result = tuple[str, str]  # (OK|WARN|FAIL, detalhe)
@@ -341,6 +341,19 @@ def check_weak_tests(ctx: Ctx) -> Result:
     return "FAIL", f"{len(fails) or 1} achado(s): " + "; ".join(fails[:3] or lines[:1])
 
 
+def check_types(ctx: Ctx) -> Result:
+    """SPEC-418 R14: gate de tipos so quando o diff toca Python/config; sem basedpyright vira WARN."""
+    script = str(Path(__file__).with_name("type_gate.py"))  # irmao deste arquivo, como `growth`
+    _rc, out = ctx.run(
+        [sys.executable, script, "--land", "--base", "main", "--repo", ctx.wt], ctx.wt
+    )
+    lines = [ln for ln in out.splitlines() if ln.startswith(("OK ", "WARN ", "FAIL "))]
+    if not lines:
+        return "FAIL", "type_gate sem saida legivel: " + out.strip()[:120]
+    level, _, detail = lines[-1].partition(" types: ")
+    return (level, detail) if level in ("OK", "WARN", "FAIL") else ("FAIL", lines[-1])
+
+
 def check_ci(ctx: Ctx) -> Result:
     if parse_risk(ctx.spec_text()) != "alto":
         return "OK", "nao exigido"
@@ -375,6 +388,7 @@ _FUNCS: dict[str, Callable[[Ctx], Result]] = {
     "measure": check_measure,
     "growth": check_growth,
     "weak-tests": check_weak_tests,
+    "types": check_types,
     "ci": check_ci,
 }
 

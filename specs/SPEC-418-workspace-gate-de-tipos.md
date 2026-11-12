@@ -1,6 +1,6 @@
 # SPEC-418 — workspace-gate-de-tipos
 
-> **Status:** `approved`
+> **Status:** `in-progress`
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** nenhuma em código. Ordem: a ligação ao `land_check` (R14) é uma linha no `scripts/dev/land_check.py` da SPEC-415 feita pelo coordenador depois que as duas pousarem (mesmo arranjo de D-416-3); a guarda de hook e o relatório de crescimento da baseline (R12) são emenda de uma linha cada em SPEC-416 R28/R29 (D-418-6).
 > **Desbloqueia:** degraus seguintes do gate de tipos (§2 "Degraus seguintes"): `agents/`, `routes/` + `api.py`, protocolo tipado do cliente LLM.
@@ -26,7 +26,7 @@ Linhas citadas = `main` em `312222db`.
 
 ### Ferramenta e versão
 
-- **R1 — basedpyright, versão exata.** O checador é o `basedpyright` (fork do pyright), pinado com `==` no grupo `dev` (`pyproject.toml:49-55`) e travado no `uv.lock`. Versão: a mais recente publicada no PyPI há ≥ 7 dias na data da Etapa 0 (`<MEDIR: uv pip index versions basedpyright | head -3` ou a página do PyPI, com data>). `requirements.txt` não muda (é exportado sem `dev`; `tests/test_spec192_vercel_packaging.py:41` segue verde). Justificativa (D-418-1):
+- **R1 — basedpyright, versão exata.** O checador é o `basedpyright` (fork do pyright), pinado com `==` no grupo `dev` (`pyproject.toml:49-55`) e travado no `uv.lock`. Versão: a mais recente publicada no PyPI há ≥ 7 dias na data da Etapa 0 (medido, 1.40.2, publicada em 2026-10-04 (`docs/spec418/medicao.md` E0.1)). `requirements.txt` não muda (é exportado sem `dev`; `tests/test_spec192_vercel_packaging.py:41` segue verde). Justificativa (D-418-1):
   1. **Instalação hermética nas duas máquinas.** O pacote do PyPI traz o Node via `nodejs-wheel-binaries`; entra por `uv sync` como qualquer dependência, com hash no lock, e roda igual no Windows de 16 GB e no runner Linux. O `pyright` do PyPI é um invólucro que baixa o pacote npm na primeira execução (rede em runtime, cache fora do lock, versão por variável de ambiente); o `npx pyright` exigiria Node pinado também no job Python.
   2. **Baseline nativa** (`--writebaseline`), casada por arquivo + regra + intervalo de colunas, tolerante a deslocamento de linha; com pyright puro seria um script próprio de comparação (~150 linhas a manter), com o risco de casamento frágil.
   3. **Regra `reportIgnoreCommentWithoutRule`**, exclusiva do basedpyright: barra `# type: ignore` sem regra em código novo, o que cumpre "ruído tratado por configuração, não por `# type: ignore` em massa".
@@ -35,9 +35,9 @@ Linhas citadas = `main` em `312222db`.
 
 ### Escopo e configuração
 
-- **R3 — Escopo.** `[tool.basedpyright].include = ["services", "infrastructure", "state.py", "persistence.py"]`. Ficam fora: `agents/`, `routes/`, `api.py`, `tests/`, `evals/`, `playtest/`, `scripts/`, `web/`, `data/`. Módulos fora do escopo continuam sendo **lidos** para inferência (ex.: `llm_setup.py`, `mock_llm.py`), mas não geram diagnóstico.
+- **R3 — Escopo.** `[tool.basedpyright].include = ["services", "infrastructure", "state.py", "persistence.py"]` na redação original; **valor final após o corte de E0.7.3** (pico 2,4-2,7 GB > 2 GB): `infrastructure`, `state.py`, `persistence.py` e os 5 arquivos de `services/` que importam `llm_setup` (`chronicle_compression`, `creature_gen`, `daily_spend_cap`, `prologue`, `shared_pool`); o resto de `services/` é degrau seguinte. Ficam fora: `agents/`, `routes/`, `api.py`, `tests/`, `evals/`, `playtest/`, `scripts/`, `web/`, `data/`. Módulos fora do escopo continuam sendo **lidos** para inferência (ex.: `llm_setup.py`, `mock_llm.py`), mas não geram diagnóstico.
 - **R4 — Plataforma fixa.** `pythonVersion = "3.13"` e `pythonPlatform = "Linux"`, para que Windows e CI produzam o mesmo conjunto de diagnósticos e a mesma baseline. Sem `venvPath`/`venv` na configuração: o comando roda via `uv run`/`py.sh`, que põe o venv do checkout (ou do worktree, SPEC-414) no `PATH`.
-- **R5 — Modo `standard`, gate nas 7 regras.** `typeCheckingMode = "standard"` (não `strict`: `strict` liga `reportUnknown*` e `reportMissingTypeStubs`, que no LangChain/LangGraph/FAISS produziriam milhares de achados sem bug). Ficam `"error"` explicitamente: `reportOptionalMemberAccess`, `reportAttributeAccessIssue`, `reportCallIssue`, `reportArgumentType`, `reportReturnType`, `reportOptionalSubscript`, `reportPossiblyUnbound`, mais `reportIgnoreCommentWithoutRule` (R1.3). Toda outra regra que o `standard` reporta como erro segue este critério, aplicado com os números da Etapa 0 (não um número fixado agora):
+- **R5 — Modo `standard`, gate nas 7 regras.** `typeCheckingMode = "standard"` (não `strict`: `strict` liga `reportUnknown*` e `reportMissingTypeStubs`, que no LangChain/LangGraph/FAISS produziriam milhares de achados sem bug). Ficam `"error"` explicitamente: `reportOptionalMemberAccess`, `reportAttributeAccessIssue`, `reportCallIssue`, `reportArgumentType`, `reportReturnType`, `reportOptionalSubscript`, `reportPossiblyUnboundVariable` (nome na 1.40.2; `reportPossiblyUnbound` é rejeitado), mais `reportIgnoreCommentWithoutRule` (R1.3). Toda outra regra que o `standard` reporta como erro segue este critério, aplicado com os números da Etapa 0 (não um número fixado agora):
   - contagem **zero** no escopo → fica `"error"` (ligar não custa baseline);
   - contagem > 0 → `"warning"` na primeira rodada (aparece no relatório, não bloqueia, **não** entra na baseline), registrada em `docs/spec418/medicao.md` para o degrau 2.
   As regras exclusivas do basedpyright que não são do `standard` do pyright (`reportAny`, `reportUnusedCallResult`, `reportImplicitOverride` etc.) ficam `"none"`.
@@ -63,7 +63,7 @@ Linhas citadas = `main` em `312222db`.
   - senão roda R9 + R10 + o teste de crescimento de R12.1 e resume (`FAIL types: 2 erros novos (services/x.py:12 reportAttributeAccessIssue …)`).
   A linha que chama isto dentro do `land_check.py` é do coordenador, depois do pouso da 415 (esta spec não toca `scripts/dev/land_check.*`).
 - **R15 — Sem hook de edição e sem pre-commit.** Nenhuma entrada nova em `.claude/settings.json`, `.claude/hooks/` ou `.pre-commit-config.yaml`. Localmente, o gate roda só por comando explícito (`type_gate.py`) e no pouso (R14). Subagente que tocar o escopo pode rodar `type_gate.py --check` uma vez antes do hand-back se a RAM livre for ≥ 3 GB (`bash scripts/dev/ram.sh`); senão registra "não rodei, CI cobre".
-- **R16 — Job `types` no CI.** Novo job em `.github/workflows/validate.yml`, irmão do `api-fuzz` (`:97-124`): `needs: scope`; `if: github.event_name != 'schedule' && needs.scope.outputs.docs_only != 'true'`; `runs-on: ubuntu-24.04`; `timeout-minutes` = `<MEDIR: tempo da Etapa 0 no CI>` × 3, arredondado para cima, mínimo 10; `actions/checkout` e `astral-sh/setup-uv` com os mesmos SHAs pinados e `persist-credentials: false` (zizmor, `:158-167`); passos: `uv sync --all-extras`, `uv run python scripts/dev/type_gate.py --check`, `uv run pytest tests/test_type_gate.py -m types_e2e -p no:cacheprovider --tb=short`. Herda `permissions: contents: read` (`:8-9`).
+- **R16 — Job `types` no CI.** Novo job em `.github/workflows/validate.yml`, irmão do `api-fuzz` (`:97-124`): `needs: scope`; `if: github.event_name != 'schedule' && needs.scope.outputs.docs_only != 'true'`; `runs-on: ubuntu-24.04`; `timeout-minutes` = 10 (mínimo; medido: 13 s locais, o ×3 dá < 1 min); `actions/checkout` e `astral-sh/setup-uv` com os mesmos SHAs pinados e `persist-credentials: false` (zizmor, `:158-167`); passos: `uv sync --all-extras`, `uv run python scripts/dev/type_gate.py --check`, `uv run pytest tests/test_type_gate.py -m types_e2e -p no:cacheprovider --tb=short`. Herda `permissions: contents: read` (`:8-9`).
 - **R17 — Calibração, depois bloqueante.** Na primeira rodada o job tem `continue-on-error: true`. O coordenador remove essa linha (commit `ci(types): make type gate blocking`) quando, juntos: (a) o job rodou em ≥ 3 commits distintos (push na `main` ou PR); (b) todo vermelho nesses runs foi erro novo verdadeiro, nenhum por divergência Windows × Linux, casamento de baseline ou instalação; (c) a duração ficou dentro do `timeout-minutes`. Cada run da calibração vai numa linha de `docs/spec418/medicao.md` (run id, duração, rc, motivo de vermelho). Como o push depende do dono (`ESTADO_ATUAL.md` § Bloqueios), ver D-418-3 sobre quando a spec vira `done`.
 
 ### Prova de valor
@@ -110,16 +110,16 @@ Linhas citadas = `main` em `312222db`.
 
 - `pyproject.toml` — `basedpyright==X.Y.Z` no grupo `dev` (`:49-55`); seção `[tool.basedpyright]` nova (R3–R7); marcador `types_e2e` em `markers` (`:126-134`) e `and not types_e2e` no `addopts` (`:122`).
 - `uv.lock` — regravado por `uv lock`.
-- `.github/workflows/validate.yml` — job `types` novo, acrescentado **depois** de `api-fuzz` (`:124`), sem tocar os jobs existentes.
+- `scripts/dev/land_check.py` (+ `tests/test_wt_sh.py`, `tests/test_land_check.py`) — check `types` ligado a pedido do coordenador (WARN se o venv não tiver basedpyright; só roda se o diff toca `.py`/config). `.github/workflows/validate.yml` — job `types` novo, acrescentado **depois** de `api-fuzz` (`:124`), sem tocar os jobs existentes.
 - `docs/guias/TESTES.md` — seção nova "Tipos (basedpyright)" logo depois de "Ruff (incremental)" (`:69-80`), ≤ 8 linhas: escopo, os três comandos, quem pode `--update`, catraca.
-- Condicional (D-418-2): `llm_setup.py` — só anotações de retorno em `get_llm` (`:1827`), `FallbackLLM.invoke` (`:421`) e `FallbackLLM.with_structured_output` (`:415`), sem mudar linhas de lógica nem o tamanho do arquivo além de 0 linhas (o arquivo está na baseline de tamanho).
+- Condicional (D-418-2; **não acionado**, E0.6 mostrou que o checador enxerga `AIMessage`): `llm_setup.py` — só anotações de retorno em `get_llm` (`:1827`), `FallbackLLM.invoke` (`:421`) e `FallbackLLM.with_structured_output` (`:415`), sem mudar linhas de lógica nem o tamanho do arquivo além de 0 linhas (o arquivo está na baseline de tamanho).
 - Condicional (R8/E0.7): nada no `.pre-commit-config.yaml`; se a baseline passar de 500 KB, o corte é de escopo/regra, não exceção no hook.
 
 ### 3.3 Configuração (forma; os níveis finais saem da Etapa 0)
 
 ```toml
 [tool.basedpyright]
-include = ["services", "infrastructure", "state.py", "persistence.py"]
+include = ["infrastructure", "state.py", "persistence.py", "services/..."]  # corte E0.7.3, ver R3
 pythonVersion = "3.13"
 pythonPlatform = "Linux"
 typeCheckingMode = "standard"
@@ -133,8 +133,9 @@ reportCallIssue = "error"
 reportArgumentType = "error"
 reportReturnType = "error"
 reportOptionalSubscript = "error"
-reportPossiblyUnbound = "error"
-# demais regras do standard: "error" se contagem 0 na Etapa 0, senão "warning" (R5)
+reportPossiblyUnboundVariable = "error"
+# demais regras do standard: "error" se contagem 0 na Etapa 0, senão "warning" (R5): InvalidTypeForm, OptionalCall,
+# IncompatibleVariableOverride, AssignmentType, OperatorIssue, Redeclaration ficaram "warning"
 # regras só do basedpyright fora do standard: "none" (R5)
 ```
 
@@ -156,20 +157,20 @@ Executor: só `tests/test_type_gate.py` (e `tests/test_spec192_vercel_packaging.
 
 Instalação provisória no worktree (`uv add --dev basedpyright==<versão de R1>`) e uma configuração provisória **sem** baseline, com R3–R7 e todas as regras do `standard` em `error` (para medir tudo). Saída em `.tmp/spec418/` (não versionado). Resultados em `docs/spec418/medicao.md`.
 
-- **E0.1 Versão.** `<MEDIR: versão escolhida + data de publicação; uv run basedpyright --version>`.
-- **E0.2 Contagem.** `<MEDIR: uv run basedpyright --outputjson > .tmp/spec418/e0.json; bash scripts/dev/py.sh -c "import json,collections as c; d=json.load(open('.tmp/spec418/e0.json',encoding='utf-8'))['generalDiagnostics']; print(c.Counter((x.get('rule'),x['severity']) for x in d).most_common()); print(c.Counter(x['file'].replace(chr(92),'/').split('/rpg')[-1].split('/')[1] for x in d).most_common(10))">` — por regra × severidade e por pasta (`services`, `infrastructure`, `state.py`, `persistence.py`); também total de arquivos no escopo e arquivos com ≥ 1 erro.
-- **E0.3 Tempo e RAM, Windows.** `<MEDIR: PowerShell — Measure-Command { uv run basedpyright --outputjson > .tmp/spec418/e0.json }` + pico do maior `node.exe` amostrado a cada 2 s (`Get-Process node | Sort-Object WorkingSet64 -Descending | Select-Object -First 1 PeakWorkingSet64`) e `bash scripts/dev/ram.sh` antes e durante>. Repetir 2× (frio/quente).
-- **E0.4 Formato da baseline e opções da CLI.** `<MEDIR: uv run basedpyright --help | grep -i baseline>` (existe `--baselinefile`?); gravar uma baseline numa cópia (`--writebaseline` em `.tmp/`) e registrar o formato do JSON (chaves por arquivo, `code`, `range`) e o tamanho em KB. Confirmar se a CLI **encolhe sozinha** a baseline quando um erro some (R9 não depende disso, mas o `--tighten` pode usar).
+- **E0.1 Versão.** medido: `basedpyright==1.40.2` (pyright 1.1.414), publicada em 2026-10-04; resultado em `docs/spec418/medicao.md`.
+- **E0.2 Contagem.** medido: escopo cheio 325 erros em 72 de 246 arquivos; escopo final 66 erros em 10 arquivos; tabelas em `docs/spec418/medicao.md` — por regra × severidade e por pasta (`services`, `infrastructure`, `state.py`, `persistence.py`); também total de arquivos no escopo e arquivos com ≥ 1 erro.
+- **E0.3 Tempo e RAM, Windows.** medido: escopo cheio 108 s frio / 62 s quente e pico 2,4-2,7 GB; escopo final 13 s e 1,8 GB. Repetir 2× (frio/quente).
+- **E0.4 Formato da baseline e opções da CLI.** medido: `--baselinefile` e `--writebaseline` existem; baseline de 66 entradas = 16 KB; a CLI não encolhe sozinha sem `--writebaseline` (existe `--baselinefile`?); gravar uma baseline numa cópia (`--writebaseline` em `.tmp/`) e registrar o formato do JSON (chaves por arquivo, `code`, `range`) e o tamanho em KB. Confirmar se a CLI **encolhe sozinha** a baseline quando um erro some (R9 não depende disso, mas o `--tighten` pode usar).
 - **E0.5 Estabilidade do casamento.** Na cópia: inserir 5 linhas em branco no topo de 3 arquivos com erro baselinado, rodar com a baseline → 0 erros novos esperados. Trocar o nome de uma variável numa linha com erro baselinado → registrar se vira erro novo. Falha do primeiro caso aciona R2.
-- **E0.6 Prova de valor real.** Rodar os testes de R19 contra a configuração provisória (escrevê-los já aqui, Etapa 1 adiantada). Se `test_unguarded_structured_output_is_rejected` **não** reprovar (inferência de `get_llm` vira `Unknown`), registrar o tipo revelado (`reveal_type` no arquivo do teste) e aplicar D-418-2. Contar os casos de R18 (`<MEDIR: filtro de e0.json por "AIMessage" na mensagem>`) e preencher a tabela das 8 chamadas.
+- **E0.6 Prova de valor real.** Rodar os testes de R19 contra a configuração provisória (escrevê-los já aqui, Etapa 1 adiantada). Se `test_unguarded_structured_output_is_rejected` **não** reprovar (inferência de `get_llm` vira `Unknown`), registrar o tipo revelado (`reveal_type` no arquivo do teste) e aplicar D-418-2. Contar os casos de R18 (medido: 0 diagnósticos citam `AIMessage` no repo; tabela das 8 chamadas em `docs/spec418/medicao.md`) e preencher a tabela das 8 chamadas.
 - **E0.7 Critério de corte (escrito; os números saem de E0.2).** Para cada uma das 7 regras de R5 com contagem > 0: amostrar min(20, n) diagnósticos e classificar cada um em **bug real**, **hint faltando/errado no nosso código** ou **ruído de biblioteca**. Decisão:
   1. ruído de biblioteca ≥ metade da amostra → aplicar a ordem de R6 para aquela biblioteca e medir de novo (a regra **não** é desligada);
   2. depois de R6, se a regra ainda tiver 0 bug real **e** ruído ≥ metade, ela fica `warning` nesta rodada (registrado, volta no degrau 1), exceto `reportAttributeAccessIssue` e `reportOptionalMemberAccess`, que são a razão da spec e ficam `error` de qualquer jeito;
-  3. tempo de E0.3 > 120 s em quente **ou** pico > 2 GB → cortar o escopo para `infrastructure/`, `state.py`, `persistence.py` e os arquivos de `services/` que importam `llm_setup` (`<MEDIR: Grep "from llm_setup import|import llm_setup" services/>`), registrando o restante de `services/` como degrau;
+  3. tempo de E0.3 > 120 s em quente **ou** pico > 2 GB → cortar o escopo para `infrastructure/`, `state.py`, `persistence.py` e os arquivos de `services/` que importam `llm_setup` (medido: `chronicle_compression`, `creature_gen`, `daily_spend_cap`, `prologue`, `shared_pool`), registrando o restante de `services/` como degrau;
   4. baseline de E0.4 > 500 KB → aplicar 1–2 e, se ainda passar, o corte de escopo de 3;
   5. em nenhum caso o corte é "subir o limite" ou ignorar arquivo por glob para esconder contagem.
   "A baseline esconde quase tudo" deixa de ser problema por si: ela congela o legado e o gate vale para código novo e para arquivos novos (R13); o que o critério barra é regra sem sinal (2) e custo que inviabiliza rodar (3, 4).
-- **E0.8 Windows × Linux.** Sem push (bloqueado no dono), a comparação real fica para o primeiro run da calibração (R17 b). Localmente: `<MEDIR: diff dos multiconjuntos (arquivo, regra) entre uma rodada com pythonPlatform="Linux" e outra com "Windows">` — se divergir, confirma a necessidade de R4.
+- **E0.8 Windows × Linux.** Sem push (bloqueado no dono), a comparação real fica para o primeiro run da calibração (R17 b). Localmente: medido: 66 contagens idênticas entre `Linux` e `Windows` no escopo final — se divergir, confirma a necessidade de R4.
 
 ### Etapa 1 — Testes primeiro
 
@@ -187,32 +188,33 @@ Instalação provisória no worktree (`uv add --dev basedpyright==<versão de R1
 
 1. Teste: `test_unguarded_structured_output_is_rejected` vermelho com a inferência atual (registrado em E0.6).
 2. Anotar os retornos (§3.2). `type_gate.py --check` rc 0 (a anotação pode criar erro novo no escopo: se criar, é bug real do guard e vai para R18, com a entrada adicionada pelo `--update` com motivo).
-3. `pt.sh tests/test_llm_*.py` do escopo de `llm_setup` (`<MEDIR: Glob tests/test_llm*.py>`), sem mudança de comportamento.
+3. `pt.sh tests/test_llm_*.py` do escopo de `llm_setup` (medido: não acionada, D-418-2 sem efeito), sem mudança de comportamento.
 
 ### Etapa 4 — CI e documentação
 
-1. Job `types` (R16) com `continue-on-error: true` (R17). `actionlint` e `zizmor` limpos: `<MEDIR: uvx --from zizmor==1.32.0 zizmor .github/workflows/validate.yml>`. `pt.sh tests/test_ci_docs_only.py tests/test_type_gate.py`.
+1. Job `types` (R16) com `continue-on-error: true` (R17). `actionlint` e `zizmor` limpos: zizmor 1.32.0 offline: sem achados (rodado pelo executor). `pt.sh tests/test_ci_docs_only.py tests/test_type_gate.py`.
 2. `docs/guias/TESTES.md` (§3.2). Se o checkout principal tiver edição não commitada nesse arquivo (o `land_check` `collision` da 415 acusa), as linhas ficam fora deste pouso como na SPEC-407 e viram follow-up.
 3. Hand-back com: números de E0, níveis finais de R5, versão, tamanho da baseline, tabela de R18, comando de R14 para o coordenador ligar no `land_check`.
 
 ## 5. Critérios de aceite
 
-- [ ] `docs/spec418/medicao.md` com E0.1–E0.8 preenchidos e o critério de E0.7 aplicado (nenhum `<MEDIR:` restante na spec; o `measure` do `land_check` da 415 cobra).
-- [ ] `basedpyright==X.Y.Z` exato no grupo `dev`; `uv.lock` regravado; `requirements.txt` idêntico.
-- [ ] `[tool.basedpyright]` com R3–R7; as 7 regras e `reportIgnoreCommentWithoutRule` em `error`.
-- [ ] `.basedpyright/baseline.json` versionada, ≤ 500 KB; `type_gate.py --check` rc 0 na branch; `--tighten` idempotente.
-- [ ] `type_gate.py --land --base main` imprime uma linha `OK|FAIL types:` e reprova crescimento de baseline (teste R20).
-- [ ] `tests/test_type_gate.py` verde na suíte default e com `-m types_e2e`; o caso sem `isinstance` reprovado e o guardado aprovado.
-- [ ] Tabela de R18 (casos com `AIMessage`, 8 chamadas visíveis × pontos cegos); bugs reais só listados como follow-up.
-- [ ] Job `types` no `validate.yml` com `continue-on-error: true`, zizmor limpo; pelo menos um run verde registrado (D-418-3).
-- [ ] `docs/guias/TESTES.md` com a seção nova (ou follow-up registrado, Etapa 4.2).
+- [x] `docs/spec418/medicao.md` com E0.1–E0.8 preenchidos e o critério de E0.7 aplicado (nenhum `<MEDIR:` restante na spec; o `measure` do `land_check` da 415 cobra).
+- [x] `basedpyright==X.Y.Z` exato no grupo `dev`; `uv.lock` regravado; `requirements.txt` idêntico.
+- [x] `[tool.basedpyright]` com R3–R7; as 7 regras e `reportIgnoreCommentWithoutRule` em `error`.
+- [x] `.basedpyright/baseline.json` versionada, ≤ 500 KB; `type_gate.py --check` rc 0 na branch; `--tighten` idempotente.
+- [x] `type_gate.py --land --base main` imprime uma linha `OK|FAIL types:` e reprova crescimento de baseline (teste R20).
+- [x] `tests/test_type_gate.py` verde na suíte default e com `-m types_e2e`; o caso sem `isinstance` reprovado e o guardado aprovado.
+- [x] Tabela de R18 (casos com `AIMessage`, 8 chamadas visíveis × pontos cegos); bugs reais só listados como follow-up.
+- [x] Job `types` no `validate.yml` com `continue-on-error: true`, zizmor limpo.
+- [ ] Run verde no CI (D-418-3): aguarda push autorizado pelo dono.
+- [x] `docs/guias/TESTES.md` com a seção nova (ou follow-up registrado, Etapa 4.2).
 - [ ] `uv run pytest` verde (suíte completa offline, coordenador no pouso).
-- [ ] Nenhum arquivo de `evals/`, `agents/`, `routes/`, `api.py`, `.claude/` ou `.pre-commit-config.yaml` alterado; `llm_setup.py` só se D-418-2 = a, só anotações.
+- [x] Nenhum arquivo de `evals/`, `agents/`, `routes/`, `api.py`, `.claude/` ou `.pre-commit-config.yaml` alterado; `llm_setup.py` só se D-418-2 = a, só anotações.
 
 ## 6. Smoke test real (sem LLM; infra = CI e a máquina local)
 
-1. Worktree limpo, RAM ≥ 3 GB: `bash scripts/dev/py.sh scripts/dev/type_gate.py --check` → rc 0. `<MEDIR: tempo de parede e pico de RAM; comparar com E0.3>`.
-2. Num arquivo real do escopo, na cópia de trabalho (sem commit): acrescentar no fim de `services/chronicle_compression.py` uma função que faz `get_llm().with_structured_output(ChronicleDigestLLM).invoke([]).summary` sem `isinstance` → `--check` rc 1 apontando a linha; `git checkout -- services/chronicle_compression.py` → rc 0. (Usar o nome de campo real do schema: `<MEDIR: Grep "class ChronicleDigestLLM" -A 6 services/chronicle_compression.py>`.)
+1. Worktree limpo, RAM ≥ 3 GB: `bash scripts/dev/py.sh scripts/dev/type_gate.py --check` → rc 0. medido: 13 s e 1,8 GB, igual à E0.3.
+2. Num arquivo real do escopo, na cópia de trabalho (sem commit): acrescentar no fim de `services/chronicle_compression.py` uma função que faz `get_llm().with_structured_output(ChronicleDigestLLM).invoke([]).summary` sem `isinstance` → `--check` rc 1 apontando a linha; `git checkout -- services/chronicle_compression.py` → rc 0. (Usar o nome de campo real do schema: medido: campo `summary`.)
 3. `type_gate.py --land --base main` na branch → `OK types: …`; num branch de teste com uma entrada extra na baseline → `FAIL types: baseline cresceu …`.
 4. CI (depende do push autorizado pelo dono): job `types` verde no run do branch ou da `main`; registrar run id, duração e se o conjunto de diagnósticos bate com o local (R17 b) em `docs/spec418/medicao.md`.
 

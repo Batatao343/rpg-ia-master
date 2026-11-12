@@ -206,3 +206,24 @@ def test_weak_tests_check_reports_rc(tmp_path: Path, capsys) -> None:
 
     assert lc.main(["999", "--only", "weak-tests"], failing, {}) == 1
     assert "FAIL weak-tests" in capsys.readouterr().out
+
+
+def test_types_check_relays_gate_line(tmp_path: Path, capsys) -> None:
+    """SPEC-418 R14: `types` repassa a linha do `type_gate.py --land`; WARN nao reprova."""
+    run = FakeGit(tmp_path)
+
+    def gate(line: str, rc: int):
+        def fake(args: list[str], cwd: str | None = None) -> tuple[int, str]:
+            if "type_gate.py" in " ".join(args):
+                return rc, line + "\n"
+            return run(args, cwd)
+
+        return fake
+
+    assert lc.main(["999", "--only", "types"], gate("OK types: nada a checar", 0), {}) == 0
+    assert "OK types: nada a checar" in capsys.readouterr().out
+    warn = gate("WARN types: basedpyright nao instalado neste venv", 0)
+    assert lc.main(["999", "--only", "types"], warn, {}) == 0
+    assert "WARN types: basedpyright nao instalado" in capsys.readouterr().out
+    assert lc.main(["999", "--only", "types"], gate("FAIL types: 2 erros novos", 1), {}) == 1
+    assert "FAIL types: 2 erros novos" in capsys.readouterr().out
