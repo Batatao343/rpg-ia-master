@@ -1,6 +1,6 @@
 # SPEC-414 — workspace-pytest-confiavel
 
-> **Status:** `approved`
+> **Status:** `in-progress`
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** nenhuma (SPEC-386 `done` é a base dos hooks; não é reaberta). Mesma onda de 415–418, sem arquivo em comum (ver Fora de escopo).
 > **Desbloqueia:** SPEC-415 (o `land_check.sh` pode chamar `full.sh`), auditoria W-A fechada.
