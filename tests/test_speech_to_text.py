@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import asyncio
 import io
+import threading
+import time
 import wave
 from datetime import datetime, timezone, UTC
 from decimal import Decimal
@@ -359,7 +361,8 @@ def test_cancelled_wait_removes_audio_and_records_ticket():
                 wav_bytes(), "audio/wav", uuid4(), finance, provider=provider, candidates=[GROQ]
             )
         )
-        await asyncio.sleep(0)
+        while not provider.paths:  # SPEC-412: prepare roda em thread; espere o provider
+            await asyncio.sleep(0.01)
         task.cancel()
         with pytest.raises(asyncio.CancelledError):
             await task
@@ -463,3 +466,124 @@ def test_quote_accepts_only_registered_exact_speech_card():
             at=datetime.now(UTC),
             authorized_snapshot=True,
         )
+
+
+# SPEC-412: trabalho bloqueante da rota de STT roda fora do event loop.
+def test_prepare_audio_nao_bloqueia_o_loop(monkeypatch, tmp_path):
+    state = {"in_call": False, "ticks_during": 0}
+
+    def slow_prepare(payload, mime, temp):
+        state["in_call"] = True
+        time.sleep(0.5)
+        state["in_call"] = False
+        return tmp_path / "a.wav", Decimal(1)
+
+    monkeypatch.setattr("services.speech_to_text.prepare_audio", slow_prepare)
+
+    async def ticker():
+        for _ in range(20):
+            await asyncio.sleep(0.01)
+            if state["in_call"]:
+                state["ticks_during"] += 1
+
+    async def scenario():
+        provider = FakeProvider(ProviderReading(200, "Texto", {}))
+
+        async def fake(candidate, audio):
+            return ProviderReading(200, "Texto", {})
+
+        provider.transcribe = fake
+        await asyncio.gather(
+            transcribe_audio(
+                wav_bytes(),
+                "audio/wav",
+                uuid4(),
+                FakeFinance(),
+                provider=provider,
+                candidates=[GROQ],
+                circuit=SpeechCircuit(),
+            ),
+            ticker(),
+        )
+
+    asyncio.run(scenario())
+    # Progresso relativo: com o loop livre o ticker avança varias vezes durante a chamada.
+    assert state["ticks_during"] >= 5
+
+
+def test_finance_roda_em_thread_com_principal():
+    from infrastructure.contracts import Principal
+    from infrastructure.request_context import active_principal, principal_scope
+
+    owner = uuid4()
+    principal = Principal(owner, "test", str(owner))
+    seen = {}
+
+    class ThreadFinance(FakeFinance):
+        def _mark(self, name):
+            seen[name] = (threading.get_ident(), active_principal())
+
+        def begin(self, *a):
+            self._mark("begin")
+
+        def admit(self, *a):
+            self._mark("admit")
+
+        def finish(self, events, success):
+            self._mark("finish")
+            return "settled"
+
+    async def scenario():
+        provider = FakeProvider(ProviderReading(200, "Texto", {}))
+        with principal_scope(principal):
+            await transcribe_audio(
+                wav_bytes(),
+                "audio/wav",
+                uuid4(),
+                ThreadFinance(),
+                provider=provider,
+                candidates=[GROQ],
+                circuit=SpeechCircuit(),
+            )
+        return threading.get_ident()
+
+    loop_thread = asyncio.run(scenario())
+    assert set(seen) == {"begin", "admit", "finish"}
+    for ident, who in seen.values():
+        assert ident != loop_thread and who == principal
+
+
+def test_cancelar_durante_prepare_nao_vaza_e_finance_finish_nao_roda_sem_begin(
+    monkeypatch, tmp_path
+):
+    temps = []
+
+    def slow_prepare(payload, mime, temp):
+        temps.append(temp)
+        time.sleep(0.3)
+        return tmp_path / "a.wav", Decimal(1)
+
+    monkeypatch.setattr("services.speech_to_text.prepare_audio", slow_prepare)
+    finance = FakeFinance()
+
+    async def scenario():
+        task = asyncio.create_task(
+            transcribe_audio(
+                wav_bytes(),
+                "audio/wav",
+                uuid4(),
+                finance,
+                provider=FakeProvider(),
+                candidates=[GROQ],
+                circuit=SpeechCircuit(),
+            )
+        )
+        await asyncio.sleep(0.05)
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+
+    asyncio.run(scenario())
+    time.sleep(0.4)  # deixa o thread orfao terminar
+    assert finance.calls == []
+    assert all(not t.exists() for t in temps)

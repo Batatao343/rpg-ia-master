@@ -176,3 +176,23 @@ def test_internal_error_does_not_expose_transcript_or_provider_body(speech_clien
     monkeypatch.setattr("services.speech_to_text.HttpSpeechProvider.transcribe", fail)
     response = client.post("/account/transcriptions", headers=headers, content=payload)
     assert response.status_code == 503 and response.json()["detail"] == "speech_internal_error"
+
+
+def test_rate_limit_do_handler_roda_em_thread_com_principal(speech_client):
+    import asyncio
+
+    from infrastructure.request_context import active_principal
+
+    client, headers, payload, _, rate_calls, runtime, owner = speech_client
+    seen = {}
+
+    def consume(key, **kwargs):
+        seen["in_loop"] = asyncio._get_running_loop() is not None
+        seen["principal"] = active_principal()
+        return SimpleNamespace(allowed=False, retry_after_seconds=17)
+
+    runtime.rate_limiter.consume = consume
+    response = client.post("/account/transcriptions", headers=headers, content=payload)
+    assert response.status_code == 429 and response.headers["retry-after"] == "17"
+    assert seen["in_loop"] is False  # thread de trabalho, nao o event loop
+    assert seen["principal"] is not None and seen["principal"].user_id == owner
