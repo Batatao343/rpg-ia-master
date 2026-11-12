@@ -327,6 +327,7 @@ def test_ruff_hook_skips_files_listed_in_protected_paths(tmp_path: Path) -> None
     [
         "bash scripts/dev/py.sh scripts/dev/size_budget.py --update",
         "uv run python scripts/dev/clock_asserts.py --update",
+        "bash scripts/dev/py.sh scripts/dev/type_gate.py --update --reason x",
         "bash scripts/dev/py.sh scripts/dev/ruff_baseline.py",
         "bash scripts/dev/py.sh -m scripts.dev.size_budget --update | tail -3",
         "cd x && bash scripts/dev/py.sh scripts/dev/ruff_baseline.py",
@@ -345,6 +346,7 @@ def test_subagente_nao_sobe_baseline(tmp_path: Path, cmd: str) -> None:
         ("bash scripts/dev/py.sh scripts/dev/clock_asserts.py --tighten", True),
         ("bash scripts/dev/py.sh scripts/dev/ruff_baseline.py --check", True),
         ("bash scripts/dev/py.sh scripts/dev/ruff_baseline.py --tighten", True),
+        ("bash scripts/dev/py.sh scripts/dev/type_gate.py --check", True),
         ("bash scripts/dev/py.sh -m ruff format scripts/dev/ruff_baseline.py", True),
         ("sed -n 1,5p scripts/dev/size_budget.py", True),
         ("git diff -- scripts/dev/ruff_baseline.py", True),

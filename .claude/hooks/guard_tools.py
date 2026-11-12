@@ -140,6 +140,7 @@ def _runs_full_suite(segment: str) -> bool:
 BASELINE_SCRIPTS = {
     "size_budget": ("--update",),
     "clock_asserts": ("--update",),
+    "type_gate": ("--update",),  # SPEC-418 D-418-6
     "ruff_baseline": (),
 }
 RUNNERS = {"py.sh", "python", "python3", "-m"}
