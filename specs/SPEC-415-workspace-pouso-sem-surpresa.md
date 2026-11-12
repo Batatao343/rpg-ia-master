@@ -1,6 +1,6 @@
 # SPEC-415 — workspace-pouso-sem-surpresa
 
-> **Status:** `approved`
+> **Status:** `in-progress`
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** SPEC-414 (`done` antes deste pouso: as duas mexem em `.claude/skills/spec-land/SKILL.md` e `scripts/dev/wt.sh`, ver §7.1).
 > **Desbloqueia:** nada direto. É a proposta W-B de `docs/auditorias/auditoria-workspace-2026-11-11.md:42-43`, executada por decisão do dono (12/11, delegada ao coordenador).
@@ -28,7 +28,7 @@ Linhas citadas = `main` em `ef5d1607`.
 - **R2 — `collision`.** Conjunto B = `git diff --name-only main...spec-NNN` (rodado no worktree). Conjunto D = caminhos de `git -C <principal> status --porcelain -z --untracked-files=normal` (modificados, adicionados, renomeados nos dois lados do rename, e não rastreados). Entrada de D terminada em `/` (diretório não rastreado colapsado, como `?? docs/descricao_projeto/aulas/` no status atual) colide com todo caminho de B que comece com ela. `FAIL` lista B ∩ D com a frase "o `ff` da main vai recusar; commite/descarte no principal ou tire da branch". Caso vazio: `OK`.
 - **R3 — `collision` também no `sync`.** `wt.sh sync` chama `land_check.sh NNN --only collision` **depois** do rebase e do commit de índice (`wt.sh:72-86`), de modo que `specs/index.yaml` entra em B. `FAIL` faz o `sync` sair 1 (a branch fica rebaseada e com o commit de índice; nada é desfeito). `wt.sh land` chama `land_check.sh NNN` (todos os checks) entre o `sync_branch` e o `merge --ff-only` (`wt.sh:100-103`); `FAIL` → não faz o `ff`, sai 1.
 - **R4 — `format`.** Arquivos `.py` de B que existem na branch (exclui deletados): `ruff format --check --force-exclude <arquivos>`. O `--force-exclude` é obrigatório: sem ele, caminho passado explicitamente ignora o `exclude` do `pyproject.toml` e os evals protegidos (`pyproject.toml:71`) seriam cobrados. Nenhum `.py` em B → `OK (nada a checar)`. `FAIL` lista os arquivos e o comando de correção.
-- **R5 — Specs e handoffs fora do `ruff format`.** `[tool.ruff.format].exclude` (`pyproject.toml:71`) ganha `"specs/**"` e `"handoffs/**"`. `ruff format --check .` na `main` depois do pouso não lista nenhum arquivo nessas pastas. <MEDIR: `bash scripts/dev/py.sh -m ruff --version` e `bash scripts/dev/py.sh -m ruff format --check . 2>&1 | tail -15` na `main`, para registrar no §6 quais arquivos falham hoje e se o ruff instalado formata `.md`.>
+- **R5 — Specs e handoffs fora do `ruff format`.** `[tool.ruff.format].exclude` (`pyproject.toml:71`) ganha `"specs/**"` e `"handoffs/**"`. `ruff format --check .` na `main` depois do pouso não lista nenhum arquivo nessas pastas. Medido (12/11): ruff 0.17.4, `1994 files already formatted`; a exclusão é preventiva (`docs/spec415/medicoes.md` item 1).
 - **R6 — `ram`.** Lê a saída de `bash scripts/dev/ram.sh` (`scripts/dev/ram.ps1:3`: `RAM livre: {0:N1} GB de …`, separador decimal da cultura do Windows, vírgula em pt-BR). Livre < `RPG_LAND_MIN_RAM_GB` (default `3.0`, o "~3 GB" de `CLAUDE.md` § Memória) → `FAIL` com o valor; sem conseguir ler → `WARN` (não bloqueia). Processos `pytest`/`python` órfãos listados pelo `ram.sh` → `WARN` com os PIDs. `RPG_LAND_SKIP=ram` transforma o `FAIL` em `WARN "ram ignorada (RPG_LAND_SKIP)"`, para as sessões em que o dono libera o piso (memórias `sem-trava-ram-*`). `RPG_LAND_SKIP` só aceita `ram` e `ci`; outro valor → rc 2.
 - **R7 — `review`.** Lê `Risco` do cabeçalho da spec (`> **Risco:** \`<valor>\``, primeiro valor entre crases; o texto literal do template `` `baixo` | `médio` | `alto` `` conta como **não preenchido**). Não preenchido → `FAIL`. `baixo` → `OK (sem revisor obrigatório)`. `médio` → exige ao menos um `handoffs/SPEC-NNN-<papel>-review.md` ou `…-independent-review.md` na branch, com nome aceito por `scripts/check_handoff_names.py:18-19`. `alto` → idem, mas o papel tem de ser `sol` ou `astra` (Opus; AGENTS.md § Qualidade: `alto` → `spec-reviewer` obrigatório). Em ambos: o **último** veredito do arquivo (última ocorrência de `APPROVED_WITH_FOLLOWUPS|APPROVED|CHANGES_REQUIRED`, com ou sem crase e com ou sem `> **Veredito:**`, porque `handoffs/SPEC-412-terra-review.md:3` e `:62` usam formatos diferentes) não pode ser `CHANGES_REQUIRED`; e o arquivo tem a seção `## Evidência verificada` (R20) não vazia.
 - **R8 — `measure`.** A spec não pode conter marcador de medição pendente (R15): `<MEDIR:` que **não** esteja precedido de crase. A menção em código inline (como nesta frase) não conta, para que specs que falam da convenção, como esta, possam pousar. Encontrado → `FAIL` com as linhas.
@@ -244,12 +244,12 @@ O revisor (`terra`) roda `bash scripts/dev/red_green.sh 415` sobre esta própria
 
 Rodado pelo coordenador no checkout real, sem push:
 
-1. `bash scripts/dev/land_check.sh 415` no worktree desta spec, com o checkout principal no estado atual (o `git status` de 12/11 tem `docs/descricao_projeto/video/*` modificado e vários `??`): esperado `OK collision` (a branch não toca essas pastas), linha `ram` com o valor real, `review` coerente com o handoff. <MEDIR: tempo de parede do `land_check.sh 415`; meta < 15 s.>
+1. `bash scripts/dev/land_check.sh 415` no worktree desta spec, com o checkout principal no estado atual (o `git status` de 12/11 tem `docs/descricao_projeto/video/*` modificado e vários `??`): esperado `OK collision` (a branch não toca essas pastas), linha `ram` com o valor real, `review` coerente com o handoff. Medido: 7,9 s.
 2. Colisão real: no principal, `touch` sem commit num arquivo que a branch altera (por exemplo uma linha em branco em `specs/TEMPLATE.md`), `wt.sh sync 415` → rc 1 citando o arquivo; desfazer a edição; `sync` → rc 0.
-3. `bash scripts/dev/red_green.sh 415` → tabela com todos OK; conferir que `git worktree list` não tem `rpg-redgreen-415` ao fim. <MEDIR: tempo de parede do `red_green.sh 415`; meta < 3 min.>
+3. `bash scripts/dev/red_green.sh 415` → tabela com todos OK; conferir que `git worktree list` não tem `rpg-redgreen-415` ao fim. Medido: 39,4 s.
 4. `bash scripts/dev/py.sh scripts/dev/handoff.py --out .tmp/handoff-smoke.md` → arquivo com as 8 seções; `--check` → rc 1 (placeholders); apagar o arquivo.
-5. `bash scripts/dev/ram.sh | head -3` para conferir o separador decimal que o `parse_free_ram_gb` recebe nesta máquina. <MEDIR: `bash scripts/dev/ram.sh | head -3`.>
-6. `gh --version` (pré-requisito do R9 quando o dono ligar o CI). <MEDIR: `gh --version | head -1`.>
+5. `bash scripts/dev/ram.sh | head -3` para conferir o separador decimal que o `parse_free_ram_gb` recebe nesta máquina. Medido: `RAM livre: 2,8 GB de 15,7 GB` (vírgula).
+6. `gh --version` (pré-requisito do R9 quando o dono ligar o CI). Medido: gh 2.95.0.
 
 ## 7. Riscos & compatibilidade
 
@@ -266,7 +266,7 @@ Rodado pelo coordenador no checkout real, sem push:
 - `wt.sh land` já re-sincroniza (`:100`): se a `main` andou depois do run de CI, o sha muda e `ci` (quando ligado) reprova até um novo `wt.sh ci`. Custo aceito; o `WARN`/`FAIL` diz isso.
 - `red_green` roda pytest duas vezes com `-n 2`: dentro da regra de memória do `CLAUDE.md`. Worktree temporário usa o venv do principal via `py.sh` (o mesmo caminho que a 414 consolida).
 - `merge=union` no guia: duas linhas novas no mesmo domínio entram as duas, podendo passar de 12; `test_reviewer_cases_guide_shape` acusa na suíte do pouso seguinte e o revisor funde (R12c).
-- Specs antigas sem as seções novas continuam válidas (`spec_index.py` só lê `Status`); `land_check` só exige `Risco` preenchido, o que as specs pousadas desde a 386 já têm. <MEDIR: `bash scripts/dev/py.sh scripts/spec_index.py summary` e conferir quantas specs `approved`/`in-progress` têm `Risco` não preenchido; essas reprovariam no `land_check` e precisam do campo antes do pouso.>
+- Specs antigas sem as seções novas continuam válidas (`spec_index.py` só lê `Status`); `land_check` só exige `Risco` preenchido, o que as specs pousadas desde a 386 já têm. Medido: 197, 198, 222, 297, 359, 379, 380, 384 estão `approved`/`in-progress` sem `Risco`; precisam do campo antes de pousar (`docs/spec415/medicoes.md` item 6).
 - `spec-author` com `Bash`: a regra "só leitura" é de prompt, sem guarda técnica nesta spec (D-415-3).
 
 ### 7.3 Bloqueio no dono: push de branch
@@ -283,3 +283,12 @@ O passo de CI pré-pouso (R9, R10) precisa de autorização **permanente** do do
 - **D-415-6 — Handoff de sessão: um arquivo por dia**, o anterior vira `.prev.md` (um nível), em vez de anexar seções "Atualização" como em `.tmp/handoff-semana-seguranca-2026-11-11.md`.
 - **D-415-7 — `Requer: web` grava `docs/specNNN/fontes.md`** (versionado, com URL e data), para o revisor conferir a mesma fonte que o executor usou.
 - **Aprovação (2026-11-12):** aprovada pelo coordenador por delegação do dono ("executa as mudanças", 12/11). Decisões do autor aceitas como escritas. Executa só depois da SPEC-414 pousar (conflito em `spec-land` e `wt.sh`). CI pré-pouso segue desligado até o dono autorizar push de branch.
+
+## 9. Execução (12/11, executor Terra) — desvios e pendências
+
+- `junit_outcomes` devolve chaves `arquivo::[Classe::]nome` (e não só o nome base), para não colidir testes homônimos de arquivos diferentes; erro de coleta = nomes ausentes do XML, tratados como `error` em `classify`.
+- `default_run` (land_check/red_green) resolve o executável por `shutil.which`: no Windows, `subprocess` acha o `bash` do WSL (System32) antes do Git Bash. Achado de execução, ver `docs/spec415/medicoes.md`.
+- `wt.sh`: o `sed -n` do uso passou de `2,17p` (que imprimia até `set -euo`) para `2,15p` (só o comentário).
+- `review_problems` aprova se ao menos um handoff válido (nome aceito, papel certo, último veredito ≠ `CHANGES_REQUIRED`, evidência preenchida) existir; rodadas antigas reprovadas não travam o pouso.
+- Não rodou: `wt.sh ci` com `RPG_WT_PUSH=1` e o `ci` do `land_check` com `gh` (sem push autorizado, §7.3); só o caminho desligado é testado.
+- Pendente para o pouso: handoff `handoffs/SPEC-415-terra-review.md` com `## Evidência verificada` (revisor Sonnet); `Risco` preenchido nas 8 specs listadas em `docs/spec415/medicoes.md`; critérios abaixo ficam desmarcados até a revisão e a suíte completa do coordenador.
