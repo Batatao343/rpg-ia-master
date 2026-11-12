@@ -22,3 +22,4 @@ como exemplo de nível de detalhe.
   `Requer: web: <o quê>`; o coordenador busca e grava `docs/specNNN/fontes.md`.
 - Use as seções do template: Invariantes, Concorrência (ou `N/A`), Não rodou e por quê, e os
   `Domínios de revisão` do guia `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md`.
+- Antes de reportar, leia `docs/guias/DECISOES_FIXAS.md`. Achado que contradiz uma linha cita o `D-NN` e o fato novo (arquivo:linha ou commit posterior à fonte); sem fato novo, o achado não entra.
