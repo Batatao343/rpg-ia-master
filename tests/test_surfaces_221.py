@@ -250,3 +250,68 @@ def test_metrics_rate_limit_so_para_sondas_scraper_autenticado_livre(client, mon
         assert codes[:12] == [404] * 12 and codes[12] == 429
     finally:
         api._metrics_hits.clear()
+
+
+# ---- SPEC-411 R6: /metrics limita pelo IP do cliente real ---------------------
+
+
+def _metrics_probe_setup(monkeypatch):
+    monkeypatch.setattr(api_core, "_database_profile", lambda: True)
+    monkeypatch.setattr(routes.ops, "_load_metrics_sql", lambda: None)
+    monkeypatch.delenv("RPG_METRICS_TOKEN", raising=False)
+    monkeypatch.setenv("RPG_RATE_LIMIT", "30")
+    monkeypatch.delenv("VERCEL", raising=False)
+    monkeypatch.delenv("RPG_TRUSTED_PROXY_HOPS", raising=False)
+    api._metrics_hits.clear()
+
+
+def test_metrics_vercel_ips_distintos_nao_dividem_balde(client, monkeypatch):
+    _metrics_probe_setup(monkeypatch)
+    monkeypatch.setenv("VERCEL", "1")
+    try:
+        codes = [
+            client.get("/metrics", headers={"x-vercel-forwarded-for": f"203.0.113.{i}"}).status_code
+            for i in range(1, 14)
+        ]
+        assert 429 not in codes
+    finally:
+        api._metrics_hits.clear()
+
+
+def test_metrics_vercel_mesmo_ip_leva_429_na_13a(client, monkeypatch):
+    _metrics_probe_setup(monkeypatch)
+    monkeypatch.setenv("VERCEL", "1")
+    h = {"x-vercel-forwarded-for": "203.0.113.7"}
+    try:
+        responses = [client.get("/metrics", headers=h) for _ in range(13)]
+        assert responses[12].status_code == 429
+        assert responses[12].headers["Retry-After"] == "60"
+        assert all(r.status_code != 429 for r in responses[:12])
+    finally:
+        api._metrics_hits.clear()
+
+
+def test_metrics_proxy_hops_ignora_valor_forjado_a_esquerda(client, monkeypatch):
+    _metrics_probe_setup(monkeypatch)
+    monkeypatch.setenv("RPG_TRUSTED_PROXY_HOPS", "1")
+    try:
+        for i in range(12):
+            client.get("/metrics", headers={"X-Forwarded-For": f"spoof{i}, 203.0.113.9"})
+        assert "203.0.113.9" in api._metrics_hits
+        assert not any(k.startswith("spoof") for k in api._metrics_hits)
+        r = client.get("/metrics", headers={"X-Forwarded-For": "outro, 203.0.113.9"})
+        assert r.status_code == 429
+    finally:
+        api._metrics_hits.clear()
+
+
+def test_metrics_sem_proxy_xff_e_ignorado(client, monkeypatch):
+    _metrics_probe_setup(monkeypatch)
+    try:
+        codes = [
+            client.get("/metrics", headers={"X-Forwarded-For": f"198.51.100.{i}"}).status_code
+            for i in range(1, 14)
+        ]
+        assert codes[12] == 429  # todos caem no balde do client.host
+    finally:
+        api._metrics_hits.clear()

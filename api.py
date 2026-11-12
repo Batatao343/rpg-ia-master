@@ -817,7 +817,7 @@ async def _rate_limit_metrics(request: Request, call_next):
     custo de DB do scraper legitimo ja e limitado pelo cache SQL (R2)."""
     if os.getenv("RPG_METRICS_TOKEN") and _metrics_authorized(request):
         return await call_next(request)
-    ip = request.client.host if request.client else "?"
+    ip = _client_ip(request)
     now = time.monotonic()
     hits = _metrics_hits[ip]
     while hits and now - hits[0] > _RATE_WINDOW_S:
