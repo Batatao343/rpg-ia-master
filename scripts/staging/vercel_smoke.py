@@ -1,4 +1,4 @@
-"""SPEC-192: smoke do staging na Vercel. Evidência sem segredos em docs/spec192/evidence/smoke.json."""
+"""SPEC-192: smoke do staging na Vercel. Evidência sem segredos em `.tmp/evidence/smoke.json` por padrão; `--out docs/…` para versionar."""
 
 from __future__ import annotations
 
@@ -107,7 +107,7 @@ def run(base: str, secret: str) -> dict:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default=DEFAULT_BASE)
-    ap.add_argument("--out", default=str(ROOT / "docs/spec192/evidence/smoke.json"))
+    ap.add_argument("--out", default=str(ROOT / ".tmp" / "evidence" / "smoke.json"))
     a = ap.parse_args(argv)
     secret = dotenv_values(ROOT / ".env.staging").get("RPG_CRON_SECRET", "")
     result = run(a.base, secret)

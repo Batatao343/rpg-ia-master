@@ -5,7 +5,7 @@ Flow (real user path, one paid image ~US$ 0.04):
   -> /art/quote -> /art/confirm -> cron /internal/cron/jobs generates the image (OpenAI) -> object in bucket
   -> DELETE /game/save/{id} -> cron drains ``purge_blobs`` -> object gone.
 
-Evidence: docs/staging-wave-2026-10-17/evidence/spec222_art_purge.json (ids hashed, no PII, no secrets).
+Evidence: `.tmp/evidence/spec222_art_purge.json` by default; `--out docs/…` to version (ids hashed, no PII, no secrets).
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ import httpx
 
 from scripts.staging import common, s192
 
-EVIDENCE = common.ROOT / "docs" / "staging-wave-2026-10-17" / "evidence"
+EVIDENCE = common.ROOT / ".tmp" / "evidence"
 BUCKET = "rpg-dynamic"
 MAX_QUOTE_USD = 0.20  # task ceiling
 
@@ -288,10 +288,11 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default=s192.BASE)
     ap.add_argument("--wait", type=int, default=420, help="seconds to wait for the image job")
+    ap.add_argument("--out", default=str(EVIDENCE / "spec222_art_purge.json"))
     a = ap.parse_args(argv)
     env = s192.load_env()
     res = run(a.base, env, a.wait)
-    path = common.write_evidence("spec222_art_purge", res, EVIDENCE / "spec222_art_purge.json")
+    path = common.write_evidence("spec222_art_purge", res, a.out)
     print(
         json.dumps(
             {

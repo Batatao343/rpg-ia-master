@@ -24,13 +24,7 @@ from scripts.staging.two_user_smoke import User
 from scripts.staging.voice_smoke import synthetic_wav
 
 GROQ_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
-OUT = (
-    s192.common.ROOT
-    / "docs"
-    / "staging-wave-2026-10-17"
-    / "evidence"
-    / "spec236_s63_stt_fallback.json"
-)
+OUT = s192.common.ROOT / ".tmp" / "evidence" / "spec236_s63_stt_fallback.json"
 
 
 class GroqBurst:

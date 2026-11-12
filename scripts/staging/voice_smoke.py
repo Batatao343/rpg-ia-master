@@ -21,7 +21,7 @@ from scripts.staging.e2e_session import _h
 from scripts.staging.synthetic_data import WALLET_SKU, seed_wallet_prereqs
 from scripts.staging.two_user_smoke import User
 
-OUT = s192.common.ROOT / "docs" / "spec197" / "evidence" / "voice_smoke.json"
+OUT = s192.common.ROOT / ".tmp" / "evidence" / "voice_smoke.json"
 
 
 def synthetic_wav(seconds: float = 1.5, rate: int = 16000, freq: float = 220.0) -> bytes:

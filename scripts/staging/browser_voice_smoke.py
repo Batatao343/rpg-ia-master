@@ -18,7 +18,7 @@ from scripts.staging.synthetic_data import WALLET_SKU, seed_wallet_prereqs
 from scripts.staging.two_user_smoke import User
 from scripts.staging.voice_smoke import synthetic_wav
 
-OUT = s192.common.ROOT / "docs" / "spec197" / "evidence" / "browser_voice_smoke.json"
+OUT = s192.common.ROOT / ".tmp" / "evidence" / "browser_voice_smoke.json"
 
 
 def _chrome() -> str | None:

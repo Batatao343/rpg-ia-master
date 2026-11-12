@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
-const OUT = path.resolve(process.argv[2] || 'docs/spec194/evidence');
+const OUT = path.resolve(process.argv[2] || '.tmp/evidence/spec194');
 const DIST = path.resolve('web/dist');
 const ADB = path.join(process.env.ANDROID_HOME || process.env.LOCALAPPDATA + '/Android/Sdk', 'platform-tools', 'adb.exe');
 const PKG = 'dev.rpgia.valoria.staging';

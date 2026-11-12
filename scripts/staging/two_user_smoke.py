@@ -19,7 +19,7 @@ from scripts.staging import s192
 from scripts.staging.e2e_session import _h, stream_turn
 from scripts.staging.synthetic_data import WALLET_SHARDS, WALLET_SKU, seed_wallet_prereqs
 
-OUT = s192.common.ROOT / "docs" / "spec197" / "evidence" / "two_user_smoke.json"
+OUT = s192.common.ROOT / ".tmp" / "evidence" / "two_user_smoke.json"
 
 
 class User:

@@ -4,7 +4,7 @@ Numa so execucao (<= 15 min): (1) grava o estado dos kill switches (`list` + 5 l
 (2) faz N leituras de `GET /game/state?game_id=...` pelo cliente da API e N carregamentos do navegador
 (Playwright, larguras do §6), registrando hora, `X-Request-ID`, `x-vercel-id`, hash curto do jogo,
 endpoint e se `gerar` veio; (3) baixa os logs da janela (`vercel logs --json`) e junta cada amostra ao
-seu `creature_portrait.offer_view` pelo `request_id`; (4) grava `docs/spec389/offer-measure-<hora>.json`.
+seu `creature_portrait.offer_view` pelo `request_id`; (4) grava `.tmp/evidence/offer-measure-<hora>.json` por padrão; `--out docs/…` para versionar.
 
 Controle positivo: se alguma amostra ficar sem `offer_view`, o script FALHA (sem linha, o problema e o
 log, nao a oferta). Saida sem segredo, cookie nem id de jogo (so hash curto).
@@ -297,7 +297,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     result = run(args)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S")
-    out = Path(args.out) if args.out else ROOT / "docs" / "spec389" / f"offer-measure-{stamp}.json"
+    out = Path(args.out) if args.out else ROOT / ".tmp" / "evidence" / f"offer-measure-{stamp}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(result["summary"], ensure_ascii=False))

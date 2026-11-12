@@ -18,7 +18,7 @@ import httpx
 from scripts.staging import common
 
 BASE = "https://rpg-ia-master-staging.vercel.app"
-EVIDENCE = common.ROOT / "docs" / "spec192" / "evidence"
+EVIDENCE = common.ROOT / ".tmp" / "evidence" / "spec192"
 CAPTCHA_TEST = "XXXX.DUMMY.TOKEN.XXXX"
 _JWT = re.compile(r"eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]*")
 

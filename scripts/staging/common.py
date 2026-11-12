@@ -115,7 +115,7 @@ def add_guard_args(parser: argparse.ArgumentParser) -> None:
 
 
 def write_evidence(name: str, payload: dict, out: str | Path | None = None) -> Path:
-    path = Path(out) if out else ROOT / "docs" / "spec191" / "evidence" / f"{name}.json"
+    path = Path(out) if out else ROOT / ".tmp" / "evidence" / f"{name}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(redact(payload), ensure_ascii=False, indent=2, sort_keys=True, default=str)

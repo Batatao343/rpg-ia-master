@@ -5,7 +5,7 @@ kill-switch : flips ``image_generation`` OFF with scripts/admin_kill_switch.py a
               readable), flips it back ON and polls until the quote works again. No provider is called.
 rollback    : ``vercel rollback <url>`` to a previous production deployment, waits until the alias serves the old
               ``git_sha``, then ``vercel promote <url>`` back to the current one and waits again.
-Both write timings (seconds) to docs/spec197/evidence/incident_drill.json. Deployment URLs are not secrets.
+Both write timings (seconds) to `.tmp/evidence/incident_drill.json` by default; `--out docs/…` to version it. Deployment URLs are not secrets.
 """
 
 from __future__ import annotations
@@ -16,6 +16,7 @@ import os
 import subprocess
 import sys
 import time
+from pathlib import Path
 from uuid import uuid4
 
 import httpx
@@ -23,7 +24,7 @@ import httpx
 from scripts.staging import s192
 from scripts.staging.two_user_smoke import User
 
-OUT = s192.common.ROOT / "docs" / "spec197" / "evidence" / "incident_drill.json"
+OUT = s192.common.ROOT / ".tmp" / "evidence" / "incident_drill.json"
 ACTOR = "drill-spec197"
 
 
@@ -192,13 +193,15 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("part", choices=["kill-switch", "rollback"])
     ap.add_argument("--base", default=s192.BASE)
+    ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--previous-url")
     ap.add_argument("--current-url")
     ap.add_argument("--previous-sha")
     ap.add_argument("--current-sha")
     a = ap.parse_args(argv)
     env = s192.load_env()
-    prior = json.loads(OUT.read_text(encoding="utf-8")) if OUT.exists() else {}
+    out = Path(a.out)
+    prior = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
     if a.part == "kill-switch":
         prior["kill_switch"] = kill_switch(a.base, env)
     else:
@@ -207,7 +210,7 @@ def main(argv=None) -> int:
         )
     prior["at"] = s192.now_iso()
     prior["ok"] = all(v.get("ok") for k, v in prior.items() if isinstance(v, dict))
-    print(s192.common.write_evidence("incident_drill", prior, str(OUT)))
+    print(s192.common.write_evidence("incident_drill", prior, str(out)))
     return 0 if prior["ok"] else 1
 
 
