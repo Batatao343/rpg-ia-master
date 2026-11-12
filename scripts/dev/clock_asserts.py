@@ -121,9 +121,12 @@ def count_in_function(func: ast.AST, module_aliases: dict[str, str]) -> int:
     for node in nodes:
         if isinstance(node, ast.Assert):
             count += _has_clock(node.test, aliases, tainted)
-        elif isinstance(node, ast.Assign | ast.AnnAssign | ast.AugAssign | ast.NamedExpr):
-            if node.value is not None and _has_clock(node.value, aliases, tainted):
-                tainted.update(_targets(node))
+        elif (
+            isinstance(node, ast.Assign | ast.AnnAssign | ast.AugAssign | ast.NamedExpr)
+            and node.value is not None
+            and _has_clock(node.value, aliases, tainted)
+        ):
+            tainted.update(_targets(node))
     return count
 
 
@@ -145,7 +148,7 @@ def measure(root: Path, files: list[str]) -> dict[str, int]:
             tree = ast.parse((root / rel).read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError, SyntaxError):
             continue
-        module_aliases = _aliases([n for n in tree.body])
+        module_aliases = _aliases(list(tree.body))
         for name, func in _functions(tree):
             n = count_in_function(func, module_aliases)
             if n:
