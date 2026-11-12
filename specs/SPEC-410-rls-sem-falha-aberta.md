@@ -73,9 +73,14 @@ Alternativas avaliadas para os (c): (1) parâmetro `as_admin` em cada método de
 Arquivo `infrastructure/request_context.py` (já é o dono do contextvar de principal; sem módulo novo):
 
 ```python
-_system_caller: contextvars.ContextVar[str | None]   # default None
+_system_caller: contextvars.ContextVar[str | None]  # default None
 
-def system_caller(reason: str) -> ContextManager[None]: ...   # fixa/restaura; reason = "cron:jobs", "worker", "script:admin_wallet_adjust"
+
+def system_caller(
+    reason: str,
+) -> ContextManager[
+    None
+]: ...  # fixa/restaura; reason = "cron:jobs", "worker", "script:admin_wallet_adjust"
 def active_system_caller() -> str | None: ...
 ```
 
