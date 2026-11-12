@@ -76,6 +76,7 @@ Verificação: `bash scripts/dev/pt.sh tests/test_speech_to_text.py tests/test_s
 - [x] `transcribe_audio` não chama `prepare_audio`, `finance.begin/admit/finish` diretamente no loop; `routes/billing.py` não chama `rate_limiter.consume` direto em `account_transcription` (`Grep`).
 - [x] Testes existentes de STT/wallet-STT verdes sem mudar nenhum assert (R5).
 - [x] `docs/spec412/README.md` com inventário `async`, conclusão ffmpeg/Vercel e concorrência da Vercel.
+- [x] Cancelamento em begin/admit/finish sem janela nova (rodada 2, `_run_financial`).
 - [ ] `ruff format --check`, `ruff check`, `test_size_budget.py` verdes; revisão Sonnet APPROVED.
 - [ ] `uv run pytest` verde (suíte completa, 1× no pouso).
 
@@ -96,3 +97,11 @@ Não há LLM nem mudança de mapeamento de campo, preço ou provider; a mudança
 - **D1 — Smoke real:** aceitar testes determinísticos como prova suficiente, com `voice_smoke.py` oportunista depois da SPEC-409? Recomendo sim.
 - **D2 — Semáforo do ffmpeg e pré-checagem de saldo:** deixar fora (motivos no §2)? Recomendo sim; ambos só se a medição pedir.
 - **D3 — Middlewares `async` do `api.py`:** abrir spec própria para `_rate_limit`/`_session_boundary` (padrão-raiz, afeta toda rota)? Recomendo sim, depois da 410, por tocar auth e principal.
+
+## Resposta à revisão (rodada 2, status `in-review`)
+
+- P1 (cancelar durante `admit`): `admit` roda via `_run_financial` (shield + espera do thread); o ordinal admitido e marcado no thread e o `finally` registra o evento `unknown` se faltar; `finish` 1x, depois do `admit`. Teste `test_cancelar_durante_admit_...`.
+- P2 (cancelar durante `begin`): `begun` marcado dentro do thread; `finish` roda e libera a reserva. Teste `test_cancelar_durante_begin_...`.
+- P2 (cancelar durante `finish`): sem execucao dupla; `CancelledError` mascara a `SpeechError`/`billing` (documentado no README, R7). Teste `test_cancelar_durante_finish_...`.
+- P3: `run_in_threadpool` importado no topo de `routes/billing.py`.
+- Docs: README R7 reescrito com a tabela ponto x efeito x antes x agora. Sem desvio da spec (finance continua em thread).

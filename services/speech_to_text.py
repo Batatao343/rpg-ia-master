@@ -293,6 +293,54 @@ def prepare_audio(payload: bytes, mime: str, directory: Path) -> tuple[Path, Dec
     return audio, _wav_duration(audio)
 
 
+async def _run_financial(func, *args):
+    """Run a blocking financial step in a thread that cancellation cannot cut short.
+
+    SPEC-412 R7: the thread keeps running after the coroutine is cancelled, so on
+    cancellation we wait for it to finish (no concurrent ``finish``) and only then
+    propagate ``CancelledError``.
+    """
+    future = asyncio.ensure_future(asyncio.to_thread(func, *args))
+    try:
+        return await asyncio.shield(future)
+    except asyncio.CancelledError:
+        while not future.done():
+            try:
+                await asyncio.wait({future})
+            except asyncio.CancelledError:
+                continue  # repeated cancel: still wait for the financial thread
+        if not future.cancelled():
+            future.exception()  # mark retrieved; cancellation wins over the result
+        raise
+
+
+class _FinanceGate:
+    """Marks, inside the worker thread, which financial steps really took effect."""
+
+    def __init__(self, finance: SpeechFinance) -> None:
+        self.finance = finance
+        self.begun = False
+        self.admitted = -1
+
+    def begin(self, *args) -> None:
+        self.finance.begin(*args)
+        self.begun = True  # set in the thread: survives a cancelled await
+
+    def admit(self, ordinal: int, candidate: Candidate) -> None:
+        self.finance.admit(ordinal, candidate)
+        self.admitted = ordinal
+
+    def fill_missing_event(
+        self, events: list[UsageEvent], operation_id: UUID, candidates: list[Candidate]
+    ) -> None:
+        """Cancelled after admit and before the attempt: the ticket still needs its event."""
+        if self.admitted >= len(events):
+            cand = candidates[self.admitted]
+            events.append(
+                speech_event(operation_id, self.admitted, cand.provider, cand.model, "unknown", {})
+            )
+
+
 async def transcribe_audio(
     payload: bytes,
     mime: str,
@@ -311,7 +359,7 @@ async def transcribe_audio(
     candidates = configured_candidates() if candidates is None else candidates
     events: list[UsageEvent] = []
     text = None
-    begun = False
+    gate = _FinanceGate(finance)
     with tempfile.TemporaryDirectory(prefix="rpg-speech-") as temp:
         audio, duration = await asyncio.to_thread(prepare_audio, payload, mime, Path(temp))
         if not candidates:
@@ -320,10 +368,9 @@ async def transcribe_audio(
             (canonical_mime(mime) + ":" + hashlib.sha256(payload).hexdigest()).encode()
         ).hexdigest()
         try:
-            await asyncio.to_thread(finance.begin, operation_id, request_hash, candidates)
-            begun = True
+            await _run_financial(gate.begin, operation_id, request_hash, candidates)
             for ordinal, candidate in enumerate(candidates):
-                await asyncio.to_thread(finance.admit, ordinal, candidate)
+                await _run_financial(gate.admit, ordinal, candidate)
                 # Ticket precedes dispatch. Every ticket receives a usage event,
                 # including cancellation, timeout and internal transport failure.
                 event = speech_event(
@@ -401,6 +448,7 @@ async def transcribe_audio(
             if text is None:
                 raise SpeechError("speech_provider_failed")
         finally:
-            if begun:
-                billing = await asyncio.to_thread(finance.finish, events, text is not None)
+            if gate.begun:
+                gate.fill_missing_event(events, operation_id, candidates)
+                billing = await _run_financial(finance.finish, events, text is not None)
     return {"operation_id": str(operation_id), "text": text, "billing_status": billing}

@@ -27,9 +27,26 @@ Não verificado (sem acesso à documentação nesta execução; `vercel.json` s�
 Não bloqueia a spec.
 
 ## Cancelamento (R7)
-Cancelar a requisição durante `to_thread(prepare_audio)` deixa o thread terminar sozinho (ffmpeg
-tem `timeout=10`); o `TemporaryDirectory` é removido na saída do `with`. `begun` fica falso, então
-`finance.finish` não roda. Coberto por `test_cancelar_durante_prepare_...`.
+`to_thread` nao interrompe o thread quando a corrotina e cancelada: ele roda ate o fim. Desenho:
+`prepare_audio` fica em `to_thread` simples (nao tem efeito financeiro; `TemporaryDirectory` remove o
+arquivo na saida do `with`). `begin`, `admit` e `finish` passam por `_run_financial`
+(`asyncio.shield` + espera do thread); se a task e cancelada, ela AGUARDA o thread financeiro em
+curso terminar e so entao propaga `CancelledError`. `begun` e o ordinal admitido sao marcados
+dentro do thread, entao o `finally` sabe o que de fato efetivou. Se o cancelamento pegou depois do
+`admit` e antes do evento, o `finally` registra o evento `unknown` daquele ordinal (o mesmo que o
+codigo sincrono produzia quando o cancelamento chegava no `await` do provider) e roda `finish` 1x,
+nunca concorrente com `admit`/`begin`.
+
+| Cancelamento durante | Antes (sincrono) | Agora |
+|---|---|---|
+| `prepare_audio` | impossivel cancelar no meio; nada financeiro | thread termina sozinho; sem claim/reserva/ticket; temp removido; `finish` nao roda |
+| `begin` | impossivel | espera `begin` terminar; `begun` marcado no thread; `finish` roda 1x sem eventos e libera a reserva (`release_pre_effect`); claim fechado; temp removido |
+| `admit` | impossivel | espera `admit` terminar; ticket criado recebe evento `unknown`; `finish(events, False)` 1x depois do `admit`; temp removido |
+| provider (await) | evento `unknown` + `finish` | igual |
+| `finish` | impossivel | o thread de `finish` conclui (1 execucao); `CancelledError` propaga e mascara o `billing`/`SpeechError`; sem execucao dupla |
+
+Cobertura: `test_cancelar_durante_prepare_...`, `test_cancelar_durante_begin_...`,
+`test_cancelar_durante_admit_...`, `test_cancelar_durante_finish_...` (fake com `threading.Event`).
 
 ## Smoke real
 Adiado: depende da SPEC-409 (rate card de STT vencido; staging 503). Não bloqueia (D1).

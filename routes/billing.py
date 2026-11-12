@@ -6,6 +6,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+from starlette.concurrency import run_in_threadpool
 import api_core
 from api_core import QuotaExceeded, _account_reader
 
@@ -227,8 +228,6 @@ async def stripe_webhook(request: Request):
     """External provider route: raw signature replaces user cookie/CSRF auth."""
     import hashlib
 
-    from starlette.concurrency import run_in_threadpool
-
     from infrastructure.payment_log import stripe_webhook as _wh
     from services.stripe_checkout import (
         MAX_WEBHOOK_BYTES,
@@ -327,8 +326,6 @@ async def account_transcription(request: Request):
         raise HTTPException(503, "speech_disabled")
     principal = current_principal()
     runtime = get_runtime()
-    from starlette.concurrency import run_in_threadpool
-
     decision = await run_in_threadpool(
         runtime.rate_limiter.consume,
         f"speech:{principal.user_id}",

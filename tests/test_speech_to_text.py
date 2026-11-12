@@ -587,3 +587,134 @@ def test_cancelar_durante_prepare_nao_vaza_e_finance_finish_nao_roda_sem_begin(
     time.sleep(0.4)  # deixa o thread orfao terminar
     assert finance.calls == []
     assert all(not t.exists() for t in temps)
+
+
+class GatedFinance(FakeFinance):
+    """Fake financeiro que segura uma fase num threading.Event (sem tempo absoluto)."""
+
+    def __init__(self, gate_on):
+        super().__init__()
+        self.gate_on = gate_on
+        self.entered = threading.Event()
+        self.release = threading.Event()
+        self.active = set()
+        self.overlap = False
+        self.reserved = False
+        self.ticket = False
+        self.log = []
+
+    def _phase(self, name):
+        self.active.add(name)
+        self.log.append(name + ":start")
+        if name == self.gate_on:
+            self.entered.set()
+            assert self.release.wait(10)
+
+    def _done(self, name):
+        self.active.discard(name)
+        self.log.append(name + ":end")
+
+    def begin(self, *a):
+        self._phase("begin")
+        self.reserved = True
+        self._done("begin")
+
+    def admit(self, ordinal, candidate):
+        self._phase("admit")
+        self.ticket = True
+        self._done("admit")
+
+    def finish(self, events, success):
+        if self.active:
+            self.overlap = True
+        self._phase("finish")
+        self.events = events
+        self.calls.append(("finish", success))
+        if not events:
+            self.reserved = False
+        self._done("finish")
+        return "settled"
+
+
+def _cancel_in_phase(finance, *, wait_provider=False):
+    async def scenario():
+        provider = FakeProvider()
+
+        async def slow(candidate, audio):
+            await asyncio.sleep(60)
+
+        provider.transcribe = slow
+        task = asyncio.create_task(
+            transcribe_audio(
+                wav_bytes(),
+                "audio/wav",
+                uuid4(),
+                finance,
+                provider=provider,
+                candidates=[GROQ],
+                circuit=SpeechCircuit(),
+            )
+        )
+        while not finance.entered.is_set():
+            await asyncio.sleep(0.005)
+        task.cancel()
+        asyncio.get_running_loop().call_later(0.05, finance.release.set)
+        with pytest.raises(asyncio.CancelledError):
+            await task
+
+    asyncio.run(scenario())
+
+
+def test_cancelar_durante_admit_espera_o_thread_e_registra_evento():
+    finance = GatedFinance("admit")
+    _cancel_in_phase(finance)
+    assert finance.log == [
+        "begin:start",
+        "begin:end",
+        "admit:start",
+        "admit:end",
+        "finish:start",
+        "finish:end",
+    ]
+    assert not finance.overlap
+    assert [c for c in finance.calls if c[0] == "finish"] == [("finish", False)]
+    assert finance.ticket and len(finance.events) == 1  # ticket admitido <-> evento
+
+
+def test_cancelar_durante_begin_roda_finish_e_nao_deixa_reserva():
+    finance = GatedFinance("begin")
+    _cancel_in_phase(finance)
+    assert finance.log == ["begin:start", "begin:end", "finish:start", "finish:end"]
+    assert not finance.overlap and not finance.ticket
+    assert finance.reserved is False
+
+
+def test_cancelar_durante_finish_nao_executa_duas_vezes():
+    finance = GatedFinance("finish")
+
+    async def scenario():
+        async def slow(candidate, audio):
+            return ProviderReading(200, "ok", {})
+
+        provider = FakeProvider()
+        provider.transcribe = slow
+        task = asyncio.create_task(
+            transcribe_audio(
+                wav_bytes(),
+                "audio/wav",
+                uuid4(),
+                finance,
+                provider=provider,
+                candidates=[GROQ],
+                circuit=SpeechCircuit(),
+            )
+        )
+        while not finance.entered.is_set():
+            await asyncio.sleep(0.005)
+        task.cancel()
+        asyncio.get_running_loop().call_later(0.05, finance.release.set)
+        with pytest.raises(asyncio.CancelledError):
+            await task
+
+    asyncio.run(scenario())
+    assert finance.log.count("finish:start") == 1 and finance.log.count("finish:end") == 1
