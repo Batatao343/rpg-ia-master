@@ -1,6 +1,6 @@
 # SPEC-416 — workspace-gates-que-cobram
 
-> **Status:** `in-progress` (executor 12/11: Blocos A-F e ligação ao `land_check` commitados; faltam revisão Sonnet, suíte completa no pouso e o smoke de CI do §6.1-2)
+> **Status:** `done`
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** SPEC-414 (`done` antes do Bloco F: mexe em `.claude/hooks/guard_tools.py`, `.claude/settings.json` e `docs/guias/TESTES.md`); SPEC-415 (`done` antes do Bloco A: mexe em `.claude/agents/spec-author.md`).
 > **Desbloqueia:** follow-up F-2 da SPEC-413 (`docs/spec413/README.md:35`, pgTAP em CI); fechamento com prova real de 413/410 quando houver push.
@@ -257,15 +257,15 @@ Uma branch, um commit por bloco (Conventional Commits, inglês). Ordem: 0 → A 
 ## 5. Critérios de aceite
 
 - [x] `<MEDIR:>` resolvidos e gravados nesta spec (Etapa 0).
-- [ ] `docs/guias/DECISOES_FIXAS.md` com ≥ 38 linhas, nenhum `<CONFIRMAR>` sobrando, dentro do teto; `tests/test_decisoes_fixas.py` verde e vermelho antes (registro do primeiro `pt.sh`).
-- [ ] `audit-reader.md` e `spec-author.md` com a linha do R6, sem outra mudança.
-- [ ] `dev_stack.py test-db` e passo no `audit-local.yml`; testes do Bloco B verdes; CI real com `Files=5, Tests=63` ou o achado registrado (R11, §6.1).
-- [ ] `tests/clock_asserts.json` contém `tests/test_spec361_gate.py::test_prazo_real_por_thread`; `tests/test_clock_asserts.py` verde; `pyproject.toml` sem `DTZ`.
-- [ ] Nenhum default de `scripts/staging/*.py` em `docs/`; `tests/test_staging_evidence_default.py` verde e vermelho antes.
-- [ ] `ruff-baseline-counts.json` gerado; `ruff_baseline.py --check` verde; toml byte-igual ao anterior (oráculo do R22); número de tempo registrado e R26 aplicado no ramo certo.
-- [ ] Hook nega `--update` em subagente e libera `--tighten`/check; `baseline_growth.py` com rc correto.
-- [ ] `ruff format --check` e `ruff check` limpos nos arquivos tocados; `scripts/dev/dup_helpers.py --diff main...HEAD` sem helper duplicado; `tests/test_size_budget.py` verde.
-- [ ] Suíte completa verde no pouso (coordenador).
+- [x] `docs/guias/DECISOES_FIXAS.md` com ≥ 38 linhas, nenhum `<CONFIRMAR>` sobrando, dentro do teto; `tests/test_decisoes_fixas.py` verde e vermelho antes (registro do primeiro `pt.sh`).
+- [x] `audit-reader.md` e `spec-author.md` com a linha do R6, sem outra mudança.
+- [x] `dev_stack.py test-db` e passo no `audit-local.yml`; testes do Bloco B verdes; CI real com `Files=5, Tests=63` ou o achado registrado (R11, §6.1).
+- [x] `tests/clock_asserts.json` contém `tests/test_spec361_gate.py::test_prazo_real_por_thread`; `tests/test_clock_asserts.py` verde; `pyproject.toml` sem `DTZ`.
+- [x] Nenhum default de `scripts/staging/*.py` em `docs/`; `tests/test_staging_evidence_default.py` verde e vermelho antes.
+- [x] `ruff-baseline-counts.json` gerado; `ruff_baseline.py --check` verde; toml byte-igual ao anterior (oráculo do R22); número de tempo registrado e R26 aplicado no ramo certo.
+- [x] Hook nega `--update` em subagente e libera `--tighten`/check; `baseline_growth.py` com rc correto.
+- [x] `ruff format --check` e `ruff check` limpos nos arquivos tocados; `scripts/dev/dup_helpers.py --diff main...HEAD` sem helper duplicado; `tests/test_size_budget.py` verde.
+- [x] Suíte completa verde no pouso (coordenador).
 
 ## 6. Smoke test real
 
@@ -304,3 +304,4 @@ Sem LLM. A infra real é o Postgres do CI.
 - **TESTES.md.** A frase do ruff estava em `:83-84` (não `:77-78`); atualizada junto com a linha da catraca de relógio.
 - **Bloco D.** `incident_drill.py` e `spec222_art_purge.py` ganharam `--out`; `tests/test_staging_evidence_default.py` cobre as quatro frentes do plano.
 - **Não rodou e por quê.** CI/pgTAP real (§6.1-2): exige push, fora do escopo do executor. `actionlint`: não instalado. Suíte completa: do coordenador.
+- **Fechamento (2026-11-12):** revisão `terra` APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-416-terra-review.md`). Suíte completa local: 11561 passed, 1 falha no check `growth` (script procurado no worktree), corrigida em `c3346c1a`. Smoke de CI (§6.1-2) no run `audit-local` 43222359080 de `c3346c1a`: passo pgTAP `Files=5, Tests=63, Result: PASS` em ~4 s; o job ficou vermelho só pelas 3 falhas conhecidas de `image_pricing_unavailable` (rate card vencido, SPEC-409), sem relação com esta spec. Não rodou: `actionlint` local (não instalado; o job `workflow-lint` do `validate` cobre no CI). Follow-ups P2 abertos: alias de função na catraca de relógio; hook nega `ruff_baseline.py --help` em subagente.
