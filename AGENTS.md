@@ -80,12 +80,12 @@ uv run uvicorn api:app --port 8000        # API REST + frontend web (http://loca
 uv run python rag.py                      # re-indexar lore (data/codex/) + regras (data/rules.txt)
 uv run pytest                             # suíte offline (força MockLLM, não precisa de chave)
 bash scripts/smoke_api.sh [porta]         # smoke da API (health, /data/map, /game/new, /game/action)
-uv run python -m playtest run --all --turns 50   # Fase 5: harness — 14 perfis (MockLLM, offline)
+uv run python -m playtest run --all --turns 50   # Fase 5: harness — 16 perfis (MockLLM, offline)
 uv run python -m playtest report <run_id>        # relatório agregado (per-perfil/violações/custo)
 uv run python -m playtest transcript <run_id>    # transcrito ação→narração por turno (julgar prompt)
 ```
 
-**Playtest agêntico (Fase 5):** 14 perfis sobre o mesmo grafo, invariantes por turno, telemetria e
+**Playtest agêntico (Fase 5):** 16 perfis sobre o mesmo grafo, invariantes por turno, telemetria e
 `--real` com teto de custo — detalhe em `docs/guias/ARQUITETURA.md` § Playtest.
 
 **Feature flags (SPEC-340):** toda `RPG_*` é registrada em `config/flags.yaml` (kind/validade); o gate roda na suíte default — ver `docs/guias/TESTES.md` § Flags.
@@ -110,11 +110,11 @@ npm run test:e2e               # Playwright; porta derivada do checkout (RPG_E2E
 ## Arquitetura (resumo — detalhe em `docs/guias/ARQUITETURA.md`)
 
 - **Grafo LangGraph** (`main.py`): `campaign_manager` → `dm_router` → `storyteller` | `combat_agent` |
-  `npc_actor` | `loot_agent` → `archivist` → END. Todo nó novo termina no `archivist`.
+  `npc_actor` | `loot_agent` → `enrich` → `archivist` → `turn_finalizer` → END (12 nós; o resto em `ARQUITETURA.md`). Todo nó novo passa pelo `archivist`.
 - **LLM** (`llm_setup.get_llm(temperature, tier)`, nunca provider direto): tiers `CLASSIFY`/`FAST`/`SMART`,
   cada um com candidatos `ROUTES` (DeepSeek primário; fallback por provider; `RPG_ROUTES` sem deploy).
   Esgotou tudo → `AIMessage` de erro, nunca exceção: o guard de `FallbackLLM` é obrigatório.
-- **RAG** (`rag.query_rag`): índice global do Codex/regras + memória FAISS por sessão (`archivist`).
+- **RAG** (`rag.query_rag`): índice global do Codex/regras + memória vetorial por sessão (`archivist`); hosted usa Postgres + pgvector.
 - **Persistência** (`persistence.py`): `saves/{game_id}.json`; memória vetorial em `data/saves_memory/`.
 - **Estado** (`state.py`, fonte da verdade): `GameState` TypedDict; atributos com chaves curtas.
 - **Pastas**: núcleo na raiz, `agents/` (nós), `services/` (determinístico), `web/` (React),
@@ -168,7 +168,7 @@ Estado das specs: `uv run python scripts/spec_index.py summary`; histórico em `
 
 - **Menor mudança correta.** Toque só o contrato afetado; refatoração fora do escopo vira spec
   própria. Duas tentativas falharam pelo mesmo motivo → pare de editar e investigue a causa.
-- **Tamanho:** função nova ≤ 60 linhas. Arquivo > 1.000 linhas e função > 100 não crescem
+- **Tamanho:** função nova ≤ 60 linhas (regra de revisão, sem gate). Arquivo > 1.000 linhas e função > 100 não crescem
   (gate `tests/test_size_budget.py`): código novo vai em módulo próprio.
 - **Helper:** antes de criar, `Grep "def <nome>"`; na revisão, `scripts/dev/dup_helpers.py --diff main...HEAD`.
 - **Lint:** `ruff format` + `ruff check` rodam a cada edição (hook) e antes do hand-back;

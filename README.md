@@ -81,8 +81,8 @@ START
   → campaign_manager   # planeja arcos (3–5 beats) com RAG de lore; incrementa turn_count
   → dm_router          # classifica intenção: STORY | COMBAT | NPC | LOOT
   → agente especializado (storyteller | combat_agent | npc_actor | loot_agent)
-  → archivist          # atualiza resumo (curto prazo) + persiste fatos no FAISS da sessão
-  → END → save
+  → enrich → archivist # atualiza resumo (curto prazo) + persiste fatos no FAISS da sessão
+  → turn_finalizer → END → save
 ```
 
 Durante um conflito, a LLM só interpreta a intenção/prepara a cena e narra o
@@ -96,7 +96,7 @@ tática são resolvidos em Python.
 ```
 main.py / state.py / llm_setup.py / rag.py / persistence.py
 gamedata.py / combat_mechanics.py / world_utils.py / character_creator.py
-api.py (REST)
+api.py (monta o app) / routes/*.py (REST + SSE)
 agents/   # router, campaign_manager, storyteller, combat, npc, loot, archivist, ...
 data/     # codex/, rules.txt, bestiary.json, classes.json, artifacts.json, ...
 services/conflict_orchestrator.py  # motor tático determinístico

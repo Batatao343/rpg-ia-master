@@ -83,8 +83,7 @@ A baseline fica em `docs/spec379/coverage-baseline.md`.
 
 - `npm run typecheck` (src, bloqueante via build), `npm run typecheck:e2e`
   (e2e/tests) e `npm run lint` (ESLint: typescript-eslint, react-hooks, jsx-a11y).
-  Os dois últimos entram no CI como não bloqueantes até zerar os achados de 19/10
-  (25 erros de tsc, ~90 de ESLint); depois remova o `continue-on-error`.
+  Os dois últimos são bloqueantes no CI (zerados em 19/10, SPEC-284).
 - **e2e novo (SPEC-383):** vai no arquivo da **feature** (tabuleiro, Livro, retrato, loja…), não num
   `specNNN-*.spec.ts`; prints de evidência ficam fora do repo ou num script opt-in em `scripts/`, nunca em
   `web/e2e/`; o título de teste novo não começa por `F01`/`V01`/`M01` (prefixos do

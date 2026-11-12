@@ -18,6 +18,9 @@ npc_actor             → archivist → END
 loot_agent            → archivist → END
 ```
 
+Simplificado: `main.py` tem 12 nós. Além dos acima há `action_guard`, `turn_prepare`, `dispatch`
+e `enrich`; o fim do turno é `enrich → archivist → turn_finalizer → END`.
+
 **archivist** roda em todo fim de turno: atualiza `narrative_summary` (curto prazo) e persiste fatos no FAISS da sessão (longo prazo).
 
 ---
@@ -76,7 +79,7 @@ dep = candidato pulado). Gemini free tier = **20 req/dia por modelo** — ver `E
    `query_rag(..., max_visibility="public")` filtra chunks `hidden`/`secret` do narrador
 2. **Sessão** (`data/saves_memory/{game_id}/`) — dinâmico, criado pelo archivist via `add_memory_to_session()`
 
-Embeddings: `models/text-embedding-004` (Google). Chunks: 500 tokens, overlap 50.
+Embeddings: cadeia `jina → openai → ollama → gemini` (`EMBEDDING_ROUTES`, `rag.py`). Chunks: 500 caracteres, overlap 50.
 
 Para re-indexar lore global: `python rag.py` (ou chamar `ingest_file()` diretamente).
 
@@ -136,7 +139,7 @@ combat_mechanics.py   # ponte de Entropia/Carga e compatibilidade residual das c
 services/conflict_orchestrator.py # NÚCLEO atual: Cartas, 2d10, Reações, Vitalidade/Ferimentos, IA tática
 world_utils.py        # Fase 0: relógio, viagem (fog of war), descanso — determinístico, sem LLM
 character_creator.py  # cria ficha do player (IA + JSON oficial); guard de fallback
-api.py                # FastAPI REST (/game/new, /game/action, /game/state, /data/map) + serve web/dist
+api.py                # monta o app FastAPI + serve web/dist; rotas em routes/*.py (/game/new, /game/action, /game/action/stream SSE, /game/state, /data/map)
 web/                  # FRONTEND PRINCIPAL — React+Vite+TS (src/, build em web/dist; tom Witcher; motion)
 # --- agentes (nós do grafo) ---
 agents/
@@ -186,7 +189,7 @@ supabase/             # migrations + config do Supabase (local e staging)
 observability/        # Prometheus/Grafana/OTel/Tempo opcionais
 evals/                # governança + harness de evals (caminhos protegidos em evals/protected-paths.txt)
 project_index/        # grafo do repo gerado localmente sob demanda, não versionado (curados versionados; source é a verdade)
-playtest/             # harness de campanhas longas (14 perfis, invariantes, telemetria)
+playtest/             # harness de campanhas longas (16 perfis, invariantes, telemetria)
 handoffs/             # revisões/handoffs por spec (template em docs/templates/handoff-review.md)
 docs/guias/           # guias operacionais (TESTES, BRIEF_SUBAGENTE, AUTORIA, ARTE_VISUAL)
 docs/historico/       # ESTADO/ROADMAP/changelog antigos — só sob demanda
@@ -202,7 +205,7 @@ data/saves_memory/    # índices FAISS por sessão (gerado em runtime)
 ## Playtest
 
 **Playtest agêntico (Fase 5):** `playtest/` roda campanhas longas sobre o MESMO
-grafo (`app.invoke`) com 14 perfis determinísticos (`runner.py`/`profiles.py`);
+grafo (`app.invoke`) com 16 perfis determinísticos (`runner.py`/`profiles.py`);
 invariantes de estado por turno (`invariants.py` — HP/ouro/unique/NPC morto/
 fação/relógio/segredo/game_over); telemetria JSONL+summary por campanha
 (`telemetry.py`) + relatório Markdown (`report.py`) + transcrito por turno.

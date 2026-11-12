@@ -33,7 +33,7 @@ Os tipos em `.claude/agents/` já embutem o papel; este arquivo é a regra comum
 
 - Antes de criar helper (fold de texto, leitor de flag, JSON com cache, parse de LLM):
   `Grep "def <nome>"` e reutilize. Criou helper genérico novo? Liste no hand-back.
-- Função nova ≤ 60 linhas. Arquivo > 1.000 linhas não cresce: extraia para módulo novo
+- Função nova ≤ 60 linhas (regra de revisão). Arquivo > 1.000 linhas e função > 100 não crescem: extraia para módulo novo
   (`tests/test_size_budget.py` reprova crescimento).
 - O hook já roda `ruff format` + `ruff check --fix` a cada edição de `.py`; violação que
   sobrar aparece para você — corrija antes do hand-back.

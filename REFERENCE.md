@@ -19,7 +19,7 @@ Uso: **API REST** (`api.py`) — backend para o frontend web/mobile (o CLI `game
 
 LangGraph permite grafos de estados com arestas condicionais e ciclos — essencial para o roteamento STORY/COMBAT/NPC/LOOT. Com LangChain puro (chains lineares), adicionar um novo agente exige reescrever a cadeia inteira. Com LangGraph, é `add_node` + `add_edge`.
 
-O fluxo `campaign_manager → dm_router → (agente) → archivist` é determinístico e auditável — cada nó sabe exatamente de onde veio e para onde vai.
+O fluxo `campaign_manager → dm_router → (agente) → enrich → archivist → turn_finalizer` (mais `action_guard`/`turn_prepare`/`dispatch`) é determinístico e auditável — cada nó sabe exatamente de onde veio e para onde vai.
 
 ### Por que FAISS e não ChromaDB ou Supabase pgvector
 
@@ -27,11 +27,11 @@ FAISS roda 100% local — sem servidor, sem latência de rede, sem custo. Para u
 
 O sistema é híbrido: índices globais (lore/rules) são pré-gerados e imutáveis; índices de sessão são criados em runtime por save, isolando memórias entre partidas.
 
-Se o projeto escalar para múltiplos usuários simultâneos via API, migrar para pgvector (Supabase) é a rota natural — a interface de `query_rag()` não muda.
+No perfil hosted a memória da sessão já usa pgvector (`infrastructure/pgvector_memory.py`) e os saves ficam em Postgres (`app.games`, JSONB); FAISS segue no `legacy`/local.
 
 ### Por que Google Gemini e não OpenAI/Groq/Ollama
 
-Gemini Flash tem latência baixa e custo menor que GPT-4 para o volume de um RPG interativo. O modelo `text-embedding-004` é gratuito dentro do tier padrão da API Google.
+Gemini Flash tem latência baixa e custo menor que GPT-4 para o volume de um RPG interativo. Embeddings seguem a cadeia `jina → openai → ollama → gemini` (`rag.py`).
 
 A abstração `ModelTier.FAST / ModelTier.SMART` em `llm_setup.py` permite trocar de provider sem tocar nos agentes — basta reimplementar `get_llm()`.
 
@@ -84,7 +84,7 @@ O LLM é ótimo para linguagem, péssimo para aritmética consistente e regras. 
 
 - **Combate** (`combat_mechanics.py`): a IA traduz a fala livre → `CombatAction` (qual habilidade/alvo) e narra o log; Python faz iniciativa (d20+dex), DoT/condições, custos (stamina/mana) + cooldowns, saves por atributo real. Testável offline, jogável sem quota, números reproduzíveis.
 - **Mundo / Fase 0** (`world_utils.py`): relógio, viagem (só entre locais conectados no grafo `data/world_map.json`, com fog of war via `visited`) e descanso são 100% determinísticos. O storyteller só narra o resultado.
-- **Economia** (`loot.py`): o sinal do ouro (venda vs compra) é forçado por semântica em Python — não se confia no sinal que o LLM devolve.
+- **Economia** (`services/economy.py`): o sinal do ouro (venda vs compra) é forçado por semântica em Python — não se confia no sinal que o LLM devolve; `agents/loot.py` só valida a prosa (`prose_guard.gold_claims_ok`).
 
 Regra geral: **não confiar em sinal/valor numérico vindo do LLM sem validar.**
 
@@ -154,7 +154,7 @@ END → save_game_state()
 
 ```env
 # Google AI (LLM + Embeddings) — em .env (NUNCA em .env.example, que é versionada)
-GOOGLE_API_KEY=          # opcional — sem ela o jogo roda no MockLLM; Gemini + text-embedding-004
+GOOGLE_API_KEY=          # opcional — sem ela o jogo roda no MockLLM; Gemini como último fallback de LLM e embeddings
 ```
 
 Free tier = **20 req/dia por modelo** (flash e pro têm buckets separados). E2e real de IA é inviável em lote no free tier; ativar billing para testar de verdade.
