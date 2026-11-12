@@ -52,7 +52,7 @@ alter role rpg_admin set search_path = app, extensions, public;
 do $$
 begin
   comment on role rpg_api is
-    'SPEC-410: tenant role. NOLOGIN/NOINHERIT, mas rpg_runtime e rpg_admin (inherit) sao membros e tem as '
+    'SPEC-410: tenant role. NOLOGIN/NOINHERIT. rpg_runtime (inherit) e membro; rpg_runtime e rpg_admin tem as '
     'policies runtime_all/admin_all (using true) em toda tabela com RLS. O isolamento por owner so vale '
     'se o app fizer SET LOCAL ROLE rpg_api + request.jwt.claim.sub (SPEC-224); sem isso a conexao e '
     'privilegiada. Por isso o pool falha fechado (RPG_RLS_STRICT_PRINCIPAL) e chamadores de sistema usam '

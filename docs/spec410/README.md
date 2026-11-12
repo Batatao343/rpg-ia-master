@@ -83,3 +83,26 @@ NÃO testado contra banco local (sem stack nesta rodada): rodar uma vez no banco
 - pgTAP (`supabase/tests/rls_invariants_test.sql`, `rls_behavior_test.sql`) e `tests/test_rls_effective.py`
   (`infra_local`): escritos, **não executados** (sem Docker/`RPG_TEST_DATABASE_URL`). A invariante (i) acusa
   `rate_limit_buckets` antes da migração e passa depois.
+
+## Notas da revisão Sol (11/11, APPROVED_WITH_FOLLOWUPS)
+
+- **P2-1, já vale em `off`:** com a marca `system_caller`, cron, drain, worker, `boot:gamedata` e `pool_promote`
+  SEM principal passam a usar o pool admin (`RPG_ADMIN_DATABASE_URL`) em todos os modos da flag. Permissões
+  equivalentes; mudam a credencial e o pool. No smoke pós-deploy em `off`, observar o pool admin
+  (`verify_cron.py`, `job_survival.py`). Só o caminho SEM marca é idêntico ao de antes.
+- **Pré-checagens antes do `push` (só leitura):** (1) o DSN do `push` tem `rolbypassrls = true`
+  (staging em 11/11: `postgres` = true; `rpg_admin`/`rpg_runtime` = false); (2) o `current_user` de
+  `RPG_ADMIN_DATABASE_URL` é `rpg_admin`/`rpg_runtime` (têm `admin_all`/`runtime_all`) ou papel BYPASSRLS;
+  (3) `migrations.py status` lista `20261111130000` (SPEC-413) e depois `20261111140000`: o `push` aplica as
+  duas em ordem, cada uma em transação própria com o histórico gravado nela; rodar também o smoke da 413.
+- **Pior caso:** o assert de BYPASSRLS aborta e nada muda; ou o DSN admin usa papel sem policy e sem
+  BYPASSRLS e o limite por minuto do turno levanta 42501 (turnos em 500) até o rollback do R6.
+- **Membros de `rpg_api` no staging (11/11):** `rpg_runtime` e `postgres`; `rpg_admin` NÃO é membro (P3-1,
+  comentário corrigido antes de aplicar).
+- **Rollback de banco:** entra como MIGRAÇÃO NOVA (timestamp novo), não como SQL avulso, para o histórico
+  não divergir do banco (P3-4).
+- **pgTAP:** nenhum workflow roda `supabase test db`; rodar pgTAP contra o staging escreve lá dentro de
+  `begin … rollback` (P3-5). Antes do `push`, disparar `audit-local.yml` na branch: aplica as migrações num
+  Postgres real e faz login, exercitando `rate_limit_buckets` com `force` (P3-6).
+- **Follow-ups:** `throws_like '%row-level security%'` em `rls_behavior_test.sql` (P3-2: `42501` não distingue
+  RLS de falta de grant); inventário AST por função, não por arquivo (P3-3).
