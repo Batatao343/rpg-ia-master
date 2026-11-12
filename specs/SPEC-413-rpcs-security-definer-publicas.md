@@ -1,6 +1,6 @@
 # SPEC-413 — rpcs-security-definer-publicas
 
-> **Status:** `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
+> **Status:** `in-review` (11/11: código e SQL entregues; aplicação no staging, advisor e smoke pendentes do coordenador) · antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma (independente da SPEC-410; ordem de timestamps em §3)
 > **Desbloqueia:** nada
@@ -95,3 +95,9 @@ Sem LLM. Smoke de infra no staging (coordenador): (1) aplicar a migração; (2) 
 - **D1 — Opção (a): revogar e dropar as 3 RPCs.** Recomendo sim (nenhum cliente as usa; superfície da Data API vai a zero). Alternativa (c), manter como exceção aceita, só se existir cliente que o repo não mostra.
 - **D2 — Default privileges (R3):** travar `public` para que funções futuras não nasçam executáveis por `anon`/`authenticated`? Recomendo sim, se a Etapa 0 confirmar o padrão do Supabase.
 - **D3 — Desligar a Data API no projeto (`schemas = []`/remover `public`):** fora desta spec; recomendo avaliar depois, junto com o dono do Supabase, já que o app só usa Auth, conexão direta e service role. Não afeta GoTrue.
+
+## 9. Registro da execução (11/11)
+
+- D1 aplicada: migração `20261111130000_drop_public_definer_rpcs.sql` + `docs/spec413/rollback.sql`.
+- **D2/R3 NÃO aplicado (desvio):** `alter default privileges in schema public` é somado ao default global e não remove o EXECUTE implícito de PUBLIC; o efeito real exigiria um revoke global do papel dono, sem como validar e com risco aos pgTAP existentes (`public.spec224_rows`). A salvaguarda é o pgTAP `public_sem_funcoes_do_app_test.sql`. Detalhe em `docs/spec413/README.md`.
+- Não executado (sem Postgres/Supabase local): pgTAP, `*_local`, rollback no local, `pg_depend`. Rodaram: `test_spec191_migrations`, `test_spec191_staging_tools`, `test_spec192_staging_scripts` (verdes), `*_local` coletados e pulados.

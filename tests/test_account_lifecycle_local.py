@@ -253,6 +253,14 @@ def test_stale_jwt_denied_in_backend_direct_wallet_and_storage(deletion_case, mo
     c.lifecycle.begin(c.a.user_id)
     with pytest.raises(Unauthorized):
         provider.verify(token(c.a.user_id, c.sessions[0]))
+    # SPEC-413: the public wallet RPC is gone; the backend gate is app.runtime_session_active.
+    assert (
+        c.db.execute(
+            "select app.runtime_session_active(%s,%s) as ok", (c.sessions[0], c.a.user_id)
+        ).fetchone()["ok"]
+        is False
+    )
+    assert PostgresWallet(c.pool).balance(c.a).available_milli == 0
     with c.db.transaction():
         c.db.execute("select set_config('request.jwt.claim.sub',%s,true)", (str(c.a.user_id),))
         c.db.execute(
@@ -268,7 +276,6 @@ def test_stale_jwt_denied_in_backend_direct_wallet_and_storage(deletion_case, mo
             ),
         )
         c.db.execute("set local role authenticated")
-        assert c.db.execute("select * from public.rpg_wallet_balance()").fetchall() == []
         assert (
             c.db.execute("select 1 from storage.objects where name=%s", (c.keys[0],)).fetchall()
             == []
@@ -280,6 +287,10 @@ def test_stale_jwt_denied_in_backend_direct_wallet_and_storage(deletion_case, mo
         assert c.db.execute("select * from app.games").fetchall() == []
         c.db.execute("reset role")
     c.db.execute("insert into app.wallet_accounts(owner_id) values(%s)", (c.b.user_id,))
+    assert c.db.execute(
+        "select app.runtime_session_active(%s,%s) as ok", (c.sessions[1], c.b.user_id)
+    ).fetchone()["ok"]
+    assert PostgresWallet(c.pool).balance(c.b).available_milli == 0
     with c.db.transaction():
         c.db.execute("select set_config('request.jwt.claim.sub',%s,true)", (str(c.b.user_id),))
         c.db.execute(
@@ -295,7 +306,6 @@ def test_stale_jwt_denied_in_backend_direct_wallet_and_storage(deletion_case, mo
             ),
         )
         c.db.execute("set local role authenticated")
-        assert len(c.db.execute("select * from public.rpg_wallet_balance()").fetchall()) == 1
         # SPEC-224 R7/D-B: o cliente nao le Storage direto (sem policy = deny); so o backend (service role)
         assert (
             c.db.execute("select 1 from storage.objects where name=%s", (c.keys[1],)).fetchone()

@@ -284,8 +284,9 @@ def _seed_wallet_prereqs(dsn: str) -> None:
 
 
 def check_wallet(ctx: Ctx) -> dict:
-    """A gets one real purchase entry through PostgresWallet; B must see nothing. wallet_* facts are
-    append-only (immutable triggers), so the synthetic account + 1 entry of A are RETAINED (documented)."""
+    """SPEC-413: the wallet RPCs are NOT exposed by the Data API (never 200) for A's JWT or anon, and
+    A x B isolation is proven through the backend path (PostgresWallet). wallet_* facts are append-only
+    (immutable triggers), so the synthetic account + 1 entry of A are RETAINED (documented)."""
     from uuid import UUID
 
     from infrastructure.contracts import Principal
@@ -293,56 +294,38 @@ def check_wallet(ctx: Ctx) -> dict:
     from infrastructure.wallet import PostgresWallet
 
     res: dict[str, Any] = {"ok": False}
-    probe = ctx.http.post(
-        f"{ctx.url}/rest/v1/rpc/rpg_wallet_balance", headers=ctx.user_headers("A"), json={}
-    )
-    if probe.status_code == 404 or (
-        probe.status_code >= 400 and "rpg_wallet_balance" in probe.text
-    ):
-        return {"ok": False, "pending_migration": True, "a_status": probe.status_code}
+    for who, headers in (("a", ctx.user_headers("A")), ("anon", {"apikey": ctx.anon})):
+        for fn, body in (
+            ("rpg_wallet_balance", {}),
+            ("rpg_wallet_history", {"p_limit": 5}),
+            ("rpg_current_session_active", {}),
+        ):
+            r = ctx.http.post(f"{ctx.url}/rest/v1/rpc/{fn}", headers=headers, json=body)
+            res[f"{who}_{fn}_status"] = r.status_code
+    rpc_statuses = [v for k, v in res.items() if k.endswith("_status")]
     _seed_wallet_prereqs(ctx.dsn)
-    uid_a = ctx.users["A"]["id"]
+    uid_a, uid_b = ctx.users["A"]["id"], ctx.users["B"]["id"]
+    principal_a = Principal(UUID(uid_a), "supabase", uid_a)
+    principal_b = Principal(UUID(uid_b), "supabase", uid_b)
     pool = PostgresPool(ctx.dsn)
     try:
-        PostgresWallet(pool).credit_verified_purchase(
-            Principal(UUID(uid_a), "supabase", uid_a),
+        wallet = PostgresWallet(pool)
+        wallet.credit_verified_purchase(
+            principal_a,
             channel="web",
             payment_id="spec191-" + uuid4().hex,
             sku_id=SYNTH_SKU,
             verified=True,
         )
+        res["seeded_entries_for_a"] = 1
+        res["a_available_milli_ge_311"] = wallet.balance(principal_a).available_milli >= 311
+        res["b_available_milli"] = wallet.balance(principal_b).available_milli
     finally:
         pool.close()
-    res["seeded_entries_for_a"] = 1
-
-    def call(who: str, fn: str, body: dict) -> list:
-        r = ctx.http.post(f"{ctx.url}/rest/v1/rpc/{fn}", headers=ctx.user_headers(who), json=body)
-        res[f"{who.lower()}_{fn}_status"] = r.status_code
-        data = r.json() if r.status_code == 200 else []
-        return data if isinstance(data, list) else [data]
-
-    a_bal, b_bal = call("A", "rpg_wallet_balance", {}), call("B", "rpg_wallet_balance", {})
-    a_his, b_his = (
-        call("A", "rpg_wallet_history", {"p_limit": 5}),
-        call("B", "rpg_wallet_history", {}),
-    )
-    res["a_balance_rows"], res["b_balance_rows"] = len(a_bal), len(b_bal)
-    res["a_history_rows"], res["b_history_rows"] = len(a_his), len(b_his)
-    res["a_balance_is_own_and_311"] = (
-        len(a_bal) == 1
-        and str(a_bal[0]["owner_id"]) == uid_a
-        and a_bal[0]["available_milli"] == 311
-    )
-    res["a_history_only_own"] = len(a_his) == 1 and all(str(x["owner_id"]) == uid_a for x in a_his)
-    res["anon_rpc_status"] = ctx.http.post(
-        f"{ctx.url}/rest/v1/rpc/rpg_wallet_balance", headers={"apikey": ctx.anon}, json={}
-    ).status_code
     res["ok"] = bool(
-        res["a_balance_is_own_and_311"]
-        and res["a_history_only_own"]
-        and not b_bal
-        and not b_his
-        and res["anon_rpc_status"] >= 400
+        all(status >= 400 for status in rpc_statuses)
+        and res["a_available_milli_ge_311"]
+        and res["b_available_milli"] == 0
     )
     return res
 

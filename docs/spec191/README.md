@@ -141,6 +141,8 @@ execução: 1 conta + 1 entrada (owner = usuário sintético já apagado); `pric
 - 3x WARN `authenticated_security_definer_function_executable` (`rpg_current_session_active`, `rpg_wallet_balance`,
   `rpg_wallet_history`): intencionais; só `authenticated`, filtradas por `auth.uid()` + sessão viva, `search_path=''`,
   revogadas de public/anon/rpg_api.
+  **Removidas pela SPEC-413** (migração `20261111130000_drop_public_definer_rpcs.sql`): as 3 funções foram dropadas;
+  ver `docs/spec413/README.md`.
 - 6x INFO `rls_enabled_no_policy` (`stripe_events`, `wallet_accounts|entries|reservations|settled_usage|attempt_tickets`):
   tabelas só de backend; deny-all por desenho; o backend usa o pool privilegiado.
 

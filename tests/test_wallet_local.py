@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 import random
 from concurrent.futures import ThreadPoolExecutor
@@ -313,7 +312,7 @@ def test_exact_usage_settles_once_after_pricing_expires(wallet_case):
     )
 
 
-def test_client_roles_only_see_own_views_and_cannot_write(wallet_case):
+def test_client_roles_have_no_rpcs_or_writes_and_wallet_isolated(wallet_case):
     import psycopg
     from psycopg.rows import dict_row
 
@@ -344,43 +343,26 @@ def test_client_roles_only_see_own_views_and_cannot_write(wallet_case):
             ).fetchone()["n"]
             == 0
         )
-        for fn in ("public.rpg_wallet_balance()", "public.rpg_wallet_history(int)"):
-            for role in ("authenticated", "anon", "rpg_api"):
-                assert connection.execute(
-                    "select has_function_privilege(%s,%s,'EXECUTE')",
-                    (role, fn),
-                ).fetchone()["has_function_privilege"] is (role == "authenticated")
-        session_id = uuid4()
-        connection.execute(
-            "insert into auth.users(id,email) values(%s,%s)",
-            (principal.user_id, f"{principal.user_id}@example.test"),
-        )
-        connection.execute(
-            "insert into auth.sessions(id,user_id) values(%s,%s)", (session_id, principal.user_id)
-        )
+        # SPEC-413: the public SECURITY DEFINER RPCs were dropped; the Data API exposes no app function.
+        for fn in (
+            "public.rpg_wallet_balance()",
+            "public.rpg_wallet_history(integer)",
+            "public.rpg_current_session_active()",
+        ):
+            row = connection.execute("select to_regprocedure(%s) as p", (fn,)).fetchone()
+            assert row["p"] is None
+        exposed = connection.execute(
+            """select p.oid::regprocedure::text as fn, r.rolname
+            from pg_proc p cross join (values ('authenticated'),('anon'),('rpg_api')) r(rolname)
+            where p.pronamespace = 'public'::regnamespace and p.prosecdef
+              and has_function_privilege(r.rolname, p.oid, 'EXECUTE')"""
+        ).fetchall()
+        assert exposed == []
+        # Owner balance and isolation are proven through the real backend path (PostgresWallet).
+        assert wallet.balance(principal).available_milli == 311
+        assert wallet.balance(other).available_milli == 0
         with connection.transaction():
             connection.execute("set local role authenticated")
-            connection.execute(
-                "select set_config('request.jwt.claim.sub',%s,true)", (str(principal.user_id),)
-            )
-            connection.execute(
-                "select set_config('request.jwt.claims',%s,true)",
-                (
-                    json.dumps(
-                        {
-                            "sub": str(principal.user_id),
-                            "session_id": str(session_id),
-                            "role": "authenticated",
-                        }
-                    ),
-                ),
-            )
-            rows = connection.execute("select * from public.rpg_wallet_balance()").fetchall()
-            assert len(rows) == 1 and rows[0]["available_milli"] == 311
-            connection.execute(
-                "select set_config('request.jwt.claim.sub',%s,true)", (str(other.user_id),)
-            )
-            assert connection.execute("select * from public.rpg_wallet_balance()").fetchall() == []
             with pytest.raises(psycopg.Error):
                 with connection.transaction():
                     connection.execute(
