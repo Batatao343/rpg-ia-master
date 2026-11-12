@@ -1,0 +1,1966 @@
+{
+ "_doc": "Gerado por scripts/dev/ruff_baseline.py (SPEC-416). Só encolhe: --tighten desce, regravação sem flag sobe (coordenador, com motivo no commit). Nunca à mão.",
+ "counts": {
+  ".claude/hooks/context_size.py": {
+   "BLE001": 1,
+   "SIM105": 1
+  },
+  ".claude/hooks/ruff_after_edit.py": {
+   "BLE001": 1,
+   "SIM105": 1
+  },
+  "agents/archivist.py": {
+   "BLE001": 4,
+   "C901": 1,
+   "F401": 1,
+   "UP035": 1
+  },
+  "agents/bestiary.py": {
+   "BLE001": 5,
+   "F401": 4,
+   "UP035": 2
+  },
+  "agents/campaign_manager.py": {
+   "BLE001": 1,
+   "F401": 3,
+   "RET504": 1,
+   "UP035": 1
+  },
+  "agents/combat.py": {
+   "BLE001": 12,
+   "C901": 3,
+   "E741": 1,
+   "F401": 3,
+   "UP035": 2
+  },
+  "agents/enrich.py": {
+   "BLE001": 2,
+   "C416": 1
+  },
+  "agents/librarian.py": {
+   "BLE001": 1,
+   "F401": 2,
+   "UP035": 1
+  },
+  "agents/loot.py": {
+   "BLE001": 5,
+   "C901": 1,
+   "F401": 2,
+   "RET504": 1,
+   "SIM118": 1,
+   "SIM905": 1,
+   "UP035": 1
+  },
+  "agents/npc.py": {
+   "BLE001": 17,
+   "C901": 1,
+   "F401": 7,
+   "UP035": 2
+  },
+  "agents/router.py": {
+   "BLE001": 5,
+   "F401": 2,
+   "UP042": 1
+  },
+  "agents/storyteller.py": {
+   "BLE001": 19,
+   "F401": 5,
+   "PERF401": 1,
+   "PERF403": 1,
+   "SIM118": 1,
+   "UP035": 2
+  },
+  "agents/turn_finalizer.py": {
+   "BLE001": 6,
+   "C901": 1
+  },
+  "agents/world_simulator.py": {
+   "BLE001": 3,
+   "F401": 1,
+   "UP035": 1
+  },
+  "api.py": {
+   "BLE001": 5,
+   "E402": 12,
+   "I001": 1
+  },
+  "api_core.py": {
+   "B904": 1,
+   "BLE001": 10,
+   "I001": 1
+  },
+  "api_models.py": {
+   "B904": 1,
+   "I001": 1
+  },
+  "api_presenters.py": {
+   "BLE001": 3,
+   "C901": 1,
+   "F841": 1,
+   "I001": 2,
+   "RET504": 1,
+   "SIM102": 1
+  },
+  "character_creator.py": {
+   "B904": 1,
+   "BLE001": 1,
+   "E722": 1,
+   "F401": 2,
+   "UP035": 2
+  },
+  "combat_mechanics.py": {
+   "BLE001": 1,
+   "C420": 3,
+   "F401": 4,
+   "SIM105": 4,
+   "UP035": 3
+  },
+  "encounter_budget.py": {
+   "F401": 4,
+   "UP035": 3
+  },
+  "evals/experiments/jev_router_hybrid.py": {
+   "ERA001": 1
+  },
+  "evals/experiments/jev_target_loot.py": {
+   "B023": 1,
+   "C901": 1,
+   "E731": 1
+  },
+  "evals/experiments/spec217_corpus_check.py": {
+   "C901": 1,
+   "PERF401": 2
+  },
+  "evals/experiments/spec217_j1.py": {
+   "E731": 2
+  },
+  "evals/experiments/spec217_j2.py": {
+   "PERF401": 1
+  },
+  "evals/experiments/spec238_loot.py": {
+   "ERA001": 1
+  },
+  "gamedata.py": {
+   "BLE001": 5
+  },
+  "infrastructure/account_lifecycle.py": {
+   "BLE001": 2,
+   "C420": 1
+  },
+  "infrastructure/account_read_model.py": {
+   "C420": 1,
+   "F401": 1,
+   "I001": 1
+  },
+  "infrastructure/audit_source.py": {
+   "BLE001": 5,
+   "F401": 3,
+   "UP035": 2
+  },
+  "infrastructure/contracts.py": {
+   "I001": 1
+  },
+  "infrastructure/db_log.py": {
+   "BLE001": 4,
+   "I001": 1,
+   "SIM105": 2
+  },
+  "infrastructure/db_roles.py": {
+   "I001": 1,
+   "UP035": 1
+  },
+  "infrastructure/finops_reader.py": {
+   "I001": 1
+  },
+  "infrastructure/google_play_payments.py": {
+   "BLE001": 1,
+   "C901": 1,
+   "F401": 1,
+   "I001": 1
+  },
+  "infrastructure/local_adapters.py": {
+   "F401": 1,
+   "I001": 1,
+   "SIM105": 2
+  },
+  "infrastructure/payment_log.py": {
+   "BLE001": 5,
+   "SIM105": 1
+  },
+  "infrastructure/pgvector_memory.py": {
+   "BLE001": 2
+  },
+  "infrastructure/postgres.py": {
+   "BLE001": 1,
+   "F401": 2,
+   "I001": 1
+  },
+  "infrastructure/postgres_catalog.py": {
+   "F401": 1
+  },
+  "infrastructure/postgres_turns.py": {
+   "I001": 1,
+   "SIM102": 1
+  },
+  "infrastructure/reconciliation.py": {
+   "BLE001": 1
+  },
+  "infrastructure/request_context.py": {
+   "I001": 1
+  },
+  "infrastructure/runtime.py": {
+   "BLE001": 1,
+   "C901": 2,
+   "I001": 2,
+   "SIM102": 1
+  },
+  "infrastructure/speech_finance.py": {
+   "BLE001": 1,
+   "F401": 1,
+   "I001": 1
+  },
+  "infrastructure/stripe_payments.py": {
+   "BLE001": 1,
+   "F401": 1,
+   "I001": 1,
+   "SIM105": 1
+  },
+  "infrastructure/wallet.py": {
+   "F401": 1,
+   "I001": 1,
+   "SIM102": 1
+  },
+  "inventory.py": {
+   "C420": 1,
+   "C901": 1,
+   "ERA001": 1,
+   "F401": 5,
+   "UP035": 3
+  },
+  "llm_setup.py": {
+   "BLE001": 20,
+   "C901": 2,
+   "F401": 1,
+   "I001": 1,
+   "SIM105": 1
+  },
+  "main.py": {
+   "BLE001": 1,
+   "E402": 13,
+   "SIM105": 1
+  },
+  "mock_llm.py": {
+   "BLE001": 5
+  },
+  "observability/auth_log.py": {
+   "BLE001": 2
+  },
+  "observability/boot.py": {
+   "BLE001": 2
+  },
+  "observability/latency.py": {
+   "BLE001": 1,
+   "C420": 1,
+   "F401": 3,
+   "I001": 1,
+   "PERF101": 1,
+   "SIM105": 3,
+   "UP035": 2,
+   "UP042": 1
+  },
+  "observability/logging_setup.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "observability/telemetry.py": {
+   "B039": 1,
+   "BLE001": 4,
+   "I001": 1
+  },
+  "party.py": {
+   "F401": 6,
+   "UP035": 3
+  },
+  "persistence.py": {
+   "B904": 1,
+   "BLE001": 14,
+   "F401": 3,
+   "SIM105": 1,
+   "UP035": 2
+  },
+  "playtest/__main__.py": {
+   "BLE001": 2,
+   "SIM105": 1,
+   "SIM117": 1
+  },
+  "playtest/invariants.py": {
+   "BLE001": 8,
+   "C901": 3,
+   "E402": 1,
+   "F401": 2,
+   "I001": 1,
+   "PERF401": 16,
+   "SIM102": 3,
+   "UP035": 1
+  },
+  "playtest/latency_llm.py": {
+   "BLE001": 2,
+   "F401": 3,
+   "I001": 1,
+   "SIM105": 1,
+   "UP035": 2
+  },
+  "playtest/matrix_lock.py": {
+   "B904": 1,
+   "F401": 1,
+   "I001": 1,
+   "SIM105": 3
+  },
+  "playtest/opening_checks.py": {
+   "SIM905": 1
+  },
+  "playtest/pricing.py": {
+   "F401": 1,
+   "UP035": 1
+  },
+  "playtest/profiles.py": {
+   "C901": 1,
+   "F401": 3,
+   "PIE790": 1,
+   "UP035": 2
+  },
+  "playtest/provider_profiles.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "playtest/report.py": {
+   "BLE001": 3,
+   "C901": 1,
+   "E741": 1,
+   "F401": 4,
+   "PERF401": 2,
+   "UP035": 3
+  },
+  "playtest/runner.py": {
+   "B023": 4,
+   "BLE001": 11,
+   "C901": 2,
+   "F401": 3,
+   "I001": 1,
+   "UP035": 2
+  },
+  "playtest/scenarios.py": {
+   "C901": 1,
+   "F401": 1
+  },
+  "playtest/telemetry.py": {
+   "BLE001": 7,
+   "C901": 2,
+   "F401": 4,
+   "PERF401": 2,
+   "UP035": 2
+  },
+  "progression.py": {
+   "C901": 1,
+   "F401": 4,
+   "UP035": 3
+  },
+  "project_index/generator.py": {
+   "C901": 3,
+   "SIM114": 1
+  },
+  "rag.py": {
+   "BLE001": 17,
+   "F401": 3,
+   "I001": 1,
+   "SIM105": 1,
+   "UP035": 2
+  },
+  "routes/art.py": {
+   "I001": 1,
+   "PERF401": 1
+  },
+  "routes/auth.py": {
+   "BLE001": 3,
+   "I001": 1
+  },
+  "routes/billing.py": {
+   "BLE001": 1,
+   "I001": 1
+  },
+  "routes/ops.py": {
+   "BLE001": 2,
+   "I001": 1,
+   "PIE807": 1
+  },
+  "routes/play.py": {
+   "I001": 1
+  },
+  "routes/read.py": {
+   "BLE001": 1,
+   "I001": 1
+  },
+  "routes/turn.py": {
+   "B904": 2,
+   "BLE001": 21,
+   "C901": 2,
+   "F841": 1,
+   "I001": 1,
+   "RET502": 1,
+   "RET503": 1,
+   "SIM105": 1
+  },
+  "scripts/admin_orphan_games.py": {
+   "I001": 1
+  },
+  "scripts/benchmark_turn_pipeline_real.py": {
+   "B023": 3,
+   "BLE001": 1,
+   "I001": 1
+  },
+  "scripts/bestiario/curadoria.py": {
+   "ERA001": 1
+  },
+  "scripts/bestiario/gerar_mecanica.py": {
+   "PERF401": 1
+  },
+  "scripts/bestiario/pool_revisao.py": {
+   "SIM905": 1
+  },
+  "scripts/beta_gameplay_gate.py": {
+   "BLE001": 2,
+   "PERF401": 1
+  },
+  "scripts/build_rumor_seeds.py": {
+   "SIM905": 1
+  },
+  "scripts/cards/sim.py": {
+   "C901": 1
+  },
+  "scripts/chaos_test.py": {
+   "BLE001": 1,
+   "SIM105": 1
+  },
+  "scripts/dev/coverage_summary.py": {
+   "PERF401": 1
+  },
+  "scripts/dev/dup_helpers.py": {
+   "PIE810": 1
+  },
+  "scripts/dev/transcript_stats.py": {
+   "PERF401": 1
+  },
+  "scripts/dev_stack.py": {
+   "I001": 1
+  },
+  "scripts/export_game_audit.py": {
+   "BLE001": 1
+  },
+  "scripts/export_game_data.py": {
+   "F401": 1
+  },
+  "scripts/fauna/arena_saber.py": {
+   "PERF401": 1
+  },
+  "scripts/flag_registry.py": {
+   "C901": 1,
+   "PERF401": 1,
+   "PIE810": 1
+  },
+  "scripts/frontend_eval_report.py": {
+   "I001": 1,
+   "PERF401": 1
+  },
+  "scripts/gen_event_catalog.py": {
+   "PERF403": 1
+  },
+  "scripts/gen_tiers_5_plus.py": {
+   "C901": 1
+  },
+  "scripts/latency_baseline.py": {
+   "BLE001": 1,
+   "F401": 3,
+   "PERF401": 1,
+   "UP035": 2
+  },
+  "scripts/latency_journeys.py": {
+   "F401": 1,
+   "I001": 1,
+   "UP035": 1
+  },
+  "scripts/load_test.py": {
+   "BLE001": 1,
+   "SIM105": 1
+  },
+  "scripts/log_ref.py": {
+   "SIM105": 1
+  },
+  "scripts/migrate_file_saves.py": {
+   "F401": 1
+  },
+  "scripts/migrate_lore_nova.py": {
+   "B007": 1,
+   "BLE001": 2,
+   "C901": 2,
+   "F401": 6,
+   "SIM105": 1,
+   "UP035": 3
+  },
+  "scripts/normalize_specs.py": {
+   "C901": 1,
+   "PERF401": 1
+  },
+  "scripts/pricing_report.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "scripts/project_index_ab_harness.py": {
+   "PIE808": 1
+  },
+  "scripts/recover_account_deletions.py": {
+   "BLE001": 1
+  },
+  "scripts/recover_operations.py": {
+   "F401": 1,
+   "SIM108": 1
+  },
+  "scripts/run_llm_contract_gate.py": {
+   "I001": 1
+  },
+  "scripts/smoke/spec351_opening.py": {
+   "RET504": 1
+  },
+  "scripts/spec_index.py": {
+   "PERF401": 1
+  },
+  "scripts/staging/auth_config.py": {
+   "I001": 1
+  },
+  "scripts/staging/backup_restore.py": {
+   "I001": 1,
+   "PERF102": 1,
+   "SIM105": 1
+  },
+  "scripts/staging/browser_voice_smoke.py": {
+   "BLE001": 1,
+   "C416": 1
+  },
+  "scripts/staging/common.py": {
+   "I001": 1
+  },
+  "scripts/staging/incident_drill.py": {
+   "F401": 1
+  },
+  "scripts/staging/jev_shadow_measure.py": {
+   "B023": 1,
+   "F401": 1,
+   "SIM115": 1
+  },
+  "scripts/staging/job_survival.py": {
+   "C416": 1,
+   "SIM105": 1
+  },
+  "scripts/staging/measure.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "scripts/staging/migrations.py": {
+   "F401": 1
+  },
+  "scripts/staging/runtime_role.py": {
+   "B023": 1
+  },
+  "scripts/staging/s192.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "scripts/staging/schema_diff.py": {
+   "E741": 1,
+   "I001": 1
+  },
+  "scripts/staging/smoke_ab.py": {
+   "I001": 1
+  },
+  "scripts/staging/synthetic_data.py": {
+   "F401": 7,
+   "I001": 1
+  },
+  "scripts/staging/two_user_smoke.py": {
+   "F401": 1
+  },
+  "scripts/staging/vercel_env.py": {
+   "C901": 1
+  },
+  "scripts/staging/vercel_smoke.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "scripts/validate_content.py": {
+   "BLE001": 1,
+   "SIM105": 1
+  },
+  "scripts/vercel_bundle_check.py": {
+   "SIM105": 1
+  },
+  "services/abuse_policy.py": {
+   "BLE001": 3,
+   "F401": 1,
+   "I001": 1
+  },
+  "services/abyss_events.py": {
+   "F401": 3,
+   "SIM103": 1,
+   "UP035": 2
+  },
+  "services/art_brief.py": {
+   "I001": 1
+  },
+  "services/art_triggers.py": {
+   "I001": 1
+  },
+  "services/audit_export.py": {
+   "B008": 1,
+   "C420": 4,
+   "F401": 5,
+   "I001": 1,
+   "PERF401": 4,
+   "PERF403": 1,
+   "UP035": 3
+  },
+  "services/audit_redaction.py": {
+   "F401": 2,
+   "I001": 1,
+   "SIM101": 1,
+   "UP035": 2
+  },
+  "services/audit_trace.py": {
+   "BLE001": 2,
+   "F401": 3,
+   "I001": 1,
+   "PERF401": 1,
+   "UP035": 2
+  },
+  "services/bestiary_knowledge.py": {
+   "ERA001": 1,
+   "F401": 6,
+   "UP035": 2
+  },
+  "services/bestiary_lint.py": {
+   "C901": 3,
+   "ERA001": 2,
+   "PERF401": 4,
+   "SIM102": 1,
+   "SIM905": 7
+  },
+  "services/body_limit.py": {
+   "BLE001": 1,
+   "C901": 1,
+   "RET503": 1
+  },
+  "services/card_deck_round.py": {
+   "C901": 1
+  },
+  "services/card_effects.py": {
+   "BLE001": 1,
+   "C901": 5,
+   "ERA001": 1,
+   "PERF401": 3,
+   "SIM102": 2,
+   "SIM110": 1
+  },
+  "services/card_lint.py": {
+   "PERF401": 3,
+   "SIM905": 1
+  },
+  "services/card_piles.py": {
+   "C901": 1,
+   "SIM105": 1
+  },
+  "services/card_rewards.py": {
+   "ERA001": 1,
+   "SIM103": 1
+  },
+  "services/card_text.py": {
+   "BLE001": 1
+  },
+  "services/cards.py": {
+   "BLE001": 3,
+   "C420": 2,
+   "F401": 3,
+   "SIM103": 1,
+   "UP035": 2
+  },
+  "services/chase.py": {
+   "C420": 1,
+   "F401": 4,
+   "UP035": 2
+  },
+  "services/checkpoints.py": {
+   "F401": 3,
+   "UP035": 1
+  },
+  "services/chronicle.py": {
+   "F401": 2,
+   "UP035": 2
+  },
+  "services/chronicle_compression.py": {
+   "BLE001": 1
+  },
+  "services/chronicle_search.py": {
+   "I001": 1
+  },
+  "services/codex_loader.py": {
+   "F401": 4,
+   "PERF401": 1,
+   "UP035": 3
+  },
+  "services/combat_origin.py": {
+   "F401": 1,
+   "UP035": 1
+  },
+  "services/combat_preview.py": {
+   "C901": 4,
+   "SIM102": 1,
+   "SIM401": 1
+  },
+  "services/combat_targeting.py": {
+   "F401": 3,
+   "PERF401": 1,
+   "SIM102": 1,
+   "UP035": 2
+  },
+  "services/companion_prompt.py": {
+   "C901": 1,
+   "PERF401": 1
+  },
+  "services/companion_soul.py": {
+   "BLE001": 2,
+   "C901": 1,
+   "SIM102": 1
+  },
+  "services/companion_tags.py": {
+   "C901": 1
+  },
+  "services/conflict_damage.py": {
+   "C901": 1,
+   "ERA001": 1,
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/conflict_orchestrator.py": {
+   "C416": 1,
+   "C901": 5,
+   "E741": 2,
+   "F401": 3,
+   "SIM102": 1,
+   "UP035": 2
+  },
+  "services/conflict_resolution.py": {
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/conflict_scene.py": {
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/conflict_summary.py": {
+   "F401": 3,
+   "PERF401": 9,
+   "SIM103": 1,
+   "SIM108": 1,
+   "UP035": 2
+  },
+  "services/conflict_turn.py": {
+   "C901": 1,
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/content_validator.py": {
+   "BLE001": 7,
+   "C901": 4,
+   "F401": 4,
+   "PERF401": 15,
+   "UP035": 3
+  },
+  "services/context_builder.py": {
+   "BLE001": 2,
+   "C901": 3,
+   "ERA001": 1,
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/context_prefetch.py": {
+   "BLE001": 4
+  },
+  "services/context_sources.py": {
+   "BLE001": 1,
+   "I001": 1,
+   "SIM117": 2
+  },
+  "services/continuity.py": {
+   "F401": 1,
+   "UP035": 1
+  },
+  "services/creature_art.py": {
+   "SIM102": 1
+  },
+  "services/creature_gen.py": {
+   "BLE001": 4
+  },
+  "services/creature_gen_jobs.py": {
+   "BLE001": 3
+  },
+  "services/creature_variants.py": {
+   "C901": 1,
+   "ERA001": 1,
+   "PERF401": 3
+  },
+  "services/cron_internal.py": {
+   "BLE001": 5,
+   "I001": 1
+  },
+  "services/daily_spend_cap.py": {
+   "BLE001": 1,
+   "I001": 1
+  },
+  "services/death_flow.py": {
+   "BLE001": 1,
+   "F401": 4,
+   "UP035": 2
+  },
+  "services/discovery.py": {
+   "F401": 4,
+   "UP035": 2
+  },
+  "services/dossier_visibility.py": {
+   "F401": 3,
+   "I001": 1,
+   "PERF401": 1,
+   "UP035": 2
+  },
+  "services/dossiers.py": {
+   "BLE001": 3,
+   "ERA001": 1,
+   "F401": 4,
+   "I001": 1,
+   "UP035": 2
+  },
+  "services/ecology.py": {
+   "F401": 3,
+   "SIM102": 2,
+   "UP035": 2
+  },
+  "services/economy.py": {
+   "BLE001": 3,
+   "C901": 2,
+   "E741": 1,
+   "F401": 2,
+   "I001": 2,
+   "UP006": 2,
+   "UP035": 3
+  },
+  "services/encounter_manifest.py": {
+   "BLE001": 1,
+   "F401": 3,
+   "I001": 1,
+   "UP035": 2
+  },
+  "services/encounter_preparation.py": {
+   "BLE001": 1,
+   "F401": 3,
+   "PERF401": 1,
+   "RET504": 1,
+   "UP035": 2
+  },
+  "services/enemy_intent.py": {
+   "BLE001": 1,
+   "ERA001": 1
+  },
+  "services/entity_identity.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "services/event_processor.py": {
+   "BLE001": 5,
+   "C901": 2,
+   "F401": 1,
+   "PERF402": 1,
+   "UP035": 1
+  },
+  "services/exploration.py": {
+   "C416": 1,
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/faction_display.py": {
+   "PERF401": 2
+  },
+  "services/faction_gate.py": {
+   "BLE001": 3
+  },
+  "services/faction_membership.py": {
+   "BLE001": 2,
+   "C901": 1,
+   "ERA001": 3,
+   "PERF401": 2,
+   "SIM114": 1
+  },
+  "services/faction_membership_lint.py": {
+   "C901": 1,
+   "PERF401": 5
+  },
+  "services/fauna.py": {
+   "BLE001": 3,
+   "ERA001": 4,
+   "SIM108": 1
+  },
+  "services/fauna_lint.py": {
+   "C901": 3,
+   "PERF401": 4
+  },
+  "services/fauna_saber.py": {
+   "BLE001": 2
+  },
+  "services/finops.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "services/finops_alerts.py": {
+   "C416": 1,
+   "F401": 2,
+   "I001": 1
+  },
+  "services/finops_job.py": {
+   "BLE001": 2,
+   "F401": 1,
+   "I001": 1
+  },
+  "services/game_serialization.py": {
+   "I001": 1
+  },
+  "services/game_transfer.py": {
+   "BLE001": 1,
+   "I001": 1
+  },
+  "services/graph_resolver.py": {
+   "BLE001": 1,
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/image_pricing.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "services/image_quotes.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "services/input_normalization.py": {
+   "F401": 1
+  },
+  "services/interlocutor.py": {
+   "C901": 1,
+   "F401": 1,
+   "I001": 1,
+   "PERF401": 1
+  },
+  "services/jev_decision.py": {
+   "BLE001": 3,
+   "C901": 1,
+   "SIM105": 1
+  },
+  "services/jev_rollout.py": {
+   "BLE001": 11,
+   "SIM105": 2
+  },
+  "services/kill_switches.py": {
+   "BLE001": 1,
+   "I001": 1
+  },
+  "services/law.py": {
+   "BLE001": 3,
+   "C416": 1,
+   "C901": 2,
+   "ERA001": 3,
+   "SIM114": 1
+  },
+  "services/law_codes.py": {
+   "C901": 1,
+   "PERF401": 3
+  },
+  "services/lease_heartbeat.py": {
+   "BLE001": 2
+  },
+  "services/local_backup.py": {
+   "I001": 1
+  },
+  "services/lore_query.py": {
+   "BLE001": 1
+  },
+  "services/lore_quests.py": {
+   "BLE001": 1,
+   "C901": 1,
+   "PERF401": 5
+  },
+  "services/map_view.py": {
+   "C901": 1,
+   "F401": 3,
+   "PERF401": 1,
+   "UP035": 2
+  },
+  "services/mechanics_trace.py": {
+   "BLE001": 1,
+   "F401": 3,
+   "I001": 1,
+   "UP035": 2
+  },
+  "services/memory_provenance.py": {
+   "BLE001": 1,
+   "F401": 4,
+   "I001": 1,
+   "UP035": 2
+  },
+  "services/memory_retry.py": {
+   "F401": 2,
+   "I001": 1,
+   "UP035": 2
+  },
+  "services/narrative_evidence.py": {
+   "BLE001": 2,
+   "F841": 1
+  },
+  "services/narrative_sink.py": {
+   "BLE001": 7,
+   "SIM105": 2
+  },
+  "services/npc_knowledge.py": {
+   "BLE001": 2,
+   "C901": 1,
+   "F401": 7,
+   "I001": 1,
+   "PERF401": 5,
+   "UP035": 4
+  },
+  "services/npc_layers.py": {
+   "F401": 4,
+   "UP035": 3
+  },
+  "services/npc_self.py": {
+   "BLE001": 1
+  },
+  "services/npc_world.py": {
+   "C901": 2,
+   "ERA001": 7,
+   "SIM102": 2
+  },
+  "services/objectives.py": {
+   "F401": 1,
+   "I001": 1,
+   "UP035": 1
+  },
+  "services/opening_threads.py": {
+   "C420": 1,
+   "ERA001": 1
+  },
+  "services/partial_narrative.py": {
+   "C901": 1
+  },
+  "services/perceived_world.py": {
+   "BLE001": 2
+  },
+  "services/planner_context.py": {
+   "BLE001": 2
+  },
+  "services/player_knowledge.py": {
+   "BLE001": 4,
+   "C901": 1,
+   "F401": 3,
+   "I001": 1,
+   "PERF401": 1,
+   "UP035": 2
+  },
+  "services/plot_threads.py": {
+   "BLE001": 5,
+   "C420": 1
+  },
+  "services/plot_threads_lint.py": {
+   "C901": 1,
+   "PERF401": 18
+  },
+  "services/projections.py": {
+   "BLE001": 2,
+   "F401": 3,
+   "I001": 1,
+   "UP035": 2
+  },
+  "services/prologue.py": {
+   "C420": 3
+  },
+  "services/prompt_guard.py": {
+   "F401": 1,
+   "I001": 1,
+   "RET504": 1,
+   "UP035": 1
+  },
+  "services/prose_guard.py": {
+   "F401": 1,
+   "UP035": 1
+  },
+  "services/quest_log.py": {
+   "BLE001": 1,
+   "F401": 4,
+   "UP035": 3
+  },
+  "services/reactions.py": {
+   "C901": 1,
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/reputation.py": {
+   "BLE001": 1,
+   "ERA001": 1,
+   "PERF401": 2
+  },
+  "services/round_log.py": {
+   "BLE001": 2,
+   "C901": 2,
+   "ERA001": 1,
+   "PERF401": 4
+  },
+  "services/rule_engine.py": {
+   "BLE001": 1,
+   "C901": 1,
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/rumor_adoption.py": {
+   "SIM103": 1
+  },
+  "services/scene_cards.py": {
+   "BLE001": 1,
+   "C901": 2,
+   "ERA001": 1,
+   "PERF401": 3,
+   "PIE807": 1
+  },
+  "services/secret_signatures.py": {
+   "F401": 4,
+   "PERF401": 1,
+   "UP035": 3
+  },
+  "services/shard_pricing.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "services/shared_pool.py": {
+   "BLE001": 10,
+   "C901": 1,
+   "ERA001": 1,
+   "PERF401": 1,
+   "SIM102": 2
+  },
+  "services/shared_pool_validators.py": {
+   "PERF401": 2,
+   "SIM102": 1
+  },
+  "services/social_direction.py": {
+   "F401": 1,
+   "UP035": 1
+  },
+  "services/speech_pricing.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "services/speech_to_text.py": {
+   "BLE001": 1
+  },
+  "services/state_views.py": {
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/structured_outputs.py": {
+   "BLE001": 2,
+   "F401": 1,
+   "SIM114": 1,
+   "UP035": 1
+  },
+  "services/tactical_profile.py": {
+   "BLE001": 1,
+   "F401": 3,
+   "UP035": 2
+  },
+  "services/turn_delivery.py": {
+   "BLE001": 1
+  },
+  "services/turn_execution.py": {
+   "BLE001": 1,
+   "UP035": 1
+  },
+  "services/turn_pipeline.py": {
+   "I001": 1
+  },
+  "services/usage_metering.py": {
+   "I001": 1
+  },
+  "services/visual_catalog.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "services/wallet_recovery.py": {
+   "BLE001": 2,
+   "F401": 1,
+   "I001": 1
+  },
+  "services/world_calendar.py": {
+   "C901": 1
+  },
+  "services/world_director.py": {
+   "BLE001": 1,
+   "C901": 1,
+   "PERF401": 1,
+   "SIM102": 2,
+   "SIM103": 1
+  },
+  "services/world_distance.py": {
+   "F401": 2,
+   "UP035": 1
+  },
+  "services/world_engine.py": {
+   "BLE001": 1,
+   "C901": 1
+  },
+  "services/world_pressures.py": {
+   "C901": 1
+  },
+  "services/world_quests.py": {
+   "BLE001": 2,
+   "C901": 3,
+   "PERF401": 1,
+   "SIM102": 1,
+   "SIM114": 2
+  },
+  "services/world_validators.py": {
+   "BLE001": 2,
+   "C901": 1
+  },
+  "state.py": {
+   "ERA001": 1,
+   "F401": 3,
+   "PIE794": 1,
+   "UP035": 2
+  },
+  "tests/fakes/local_image_finance.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "tests/fakes/local_pricing.py": {
+   "I001": 1
+  },
+  "tests/fakes/scripted_llm.py": {
+   "C420": 1
+  },
+  "tests/fixtures/spec368_scenarios.py": {
+   "C420": 1
+  },
+  "tests/prompt_capture.py": {
+   "SIM105": 1
+  },
+  "tests/silent_except_scan.py": {
+   "B023": 2
+  },
+  "tests/test_abuse_policy.py": {
+   "F401": 2,
+   "I001": 1
+  },
+  "tests/test_account_lifecycle_financial_local.py": {
+   "F401": 1
+  },
+  "tests/test_account_lifecycle_security.py": {
+   "RET501": 2
+  },
+  "tests/test_account_lifecycle_worker_local.py": {
+   "F401": 1
+  },
+  "tests/test_account_read_model.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "tests/test_account_read_model_local.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "tests/test_ambient_consumers.py": {
+   "SIM105": 1
+  },
+  "tests/test_api_access_log.py": {
+   "E741": 3,
+   "SIM105": 1
+  },
+  "tests/test_api_fuzz_schemathesis.py": {
+   "SIM300": 1
+  },
+  "tests/test_api_jogadas.py": {
+   "ERA001": 1
+  },
+  "tests/test_arena_loaders_keep_logging.py": {
+   "SIM102": 1
+  },
+  "tests/test_art_worker_reconciliation.py": {
+   "C408": 1
+  },
+  "tests/test_auth_logging.py": {
+   "F401": 3
+  },
+  "tests/test_auth_sessions.py": {
+   "C408": 1
+  },
+  "tests/test_balance_classes_v4_runtime.py": {
+   "F401": 1
+  },
+  "tests/test_balance_early.py": {
+   "E741": 1,
+   "F841": 1
+  },
+  "tests/test_beta_gameplay_gate.py": {
+   "F401": 1
+  },
+  "tests/test_bug_contabilidade_recompensas.py": {
+   "SIM115": 1
+  },
+  "tests/test_bug_economia_integridade.py": {
+   "F401": 2
+  },
+  "tests/test_bug_finops_wallet_jobs.py": {
+   "F401": 1,
+   "I001": 1,
+   "SIM117": 1
+  },
+  "tests/test_bug_finops_wallet_jobs_local.py": {
+   "B017": 1,
+   "I001": 1
+  },
+  "tests/test_bug_intencao_parsers.py": {
+   "F401": 1
+  },
+  "tests/test_bug_morte_checkpoint.py": {
+   "SIM115": 5
+  },
+  "tests/test_bug_mundo_perigo_luz_clima.py": {
+   "F401": 1
+  },
+  "tests/test_bug_npc_ciclo_de_vida.py": {
+   "PIE804": 1,
+   "PIE807": 1
+  },
+  "tests/test_card_draft.py": {
+   "SIM115": 1
+  },
+  "tests/test_card_piles.py": {
+   "ERA001": 4
+  },
+  "tests/test_card_rewards.py": {
+   "C420": 1
+  },
+  "tests/test_card_shop.py": {
+   "SIM115": 1
+  },
+  "tests/test_classes_refactor.py": {
+   "F401": 2,
+   "F841": 1
+  },
+  "tests/test_combat_lifecycle.py": {
+   "B007": 1
+  },
+  "tests/test_combat_xp_outside_prose.py": {
+   "E741": 1,
+   "F401": 1
+  },
+  "tests/test_conflict_summary_lifecycle.py": {
+   "C416": 1
+  },
+  "tests/test_conflito_autoria_bestiario.py": {
+   "F401": 1,
+   "SIM115": 1
+  },
+  "tests/test_conflito_autoria_cartas.py": {
+   "F401": 2
+  },
+  "tests/test_conflito_cartas.py": {
+   "F401": 2
+  },
+  "tests/test_conflito_orquestrador.py": {
+   "E741": 2,
+   "F401": 1
+  },
+  "tests/test_conflito_virtudes.py": {
+   "SIM300": 3
+  },
+  "tests/test_context_identity.py": {
+   "C408": 1
+  },
+  "tests/test_context_identity_local.py": {
+   "C408": 1
+  },
+  "tests/test_contracts_llm.py": {
+   "E402": 5,
+   "SIM103": 1
+  },
+  "tests/test_cron_logging.py": {
+   "SIM105": 1
+  },
+  "tests/test_db_logging.py": {
+   "B017": 2,
+   "SIM105": 1,
+   "SIM117": 2
+  },
+  "tests/test_dev_stack.py": {
+   "F401": 1
+  },
+  "tests/test_embeddings_provider.py": {
+   "F401": 2
+  },
+  "tests/test_encounter_identity_repro.py": {
+   "F401": 1
+  },
+  "tests/test_eval_gameplay_gate.py": {
+   "C420": 1
+  },
+  "tests/test_factories.py": {
+   "PIE804": 1
+  },
+  "tests/test_fallback_logging.py": {
+   "SIM105": 1
+  },
+  "tests/test_fase0.py": {
+   "F401": 1
+  },
+  "tests/test_fase10.py": {
+   "SIM115": 1
+  },
+  "tests/test_fase2.py": {
+   "ERA001": 2
+  },
+  "tests/test_fase25.py": {
+   "E402": 2
+  },
+  "tests/test_fase27.py": {
+   "E402": 1
+  },
+  "tests/test_fase28.py": {
+   "C408": 2,
+   "F841": 2
+  },
+  "tests/test_fase32.py": {
+   "F841": 1
+  },
+  "tests/test_fase43.py": {
+   "E741": 3,
+   "F401": 2
+  },
+  "tests/test_fase44.py": {
+   "E741": 2,
+   "F401": 1
+  },
+  "tests/test_fase51.py": {
+   "SIM300": 1
+  },
+  "tests/test_fase52.py": {
+   "F401": 1
+  },
+  "tests/test_fase53.py": {
+   "E741": 2,
+   "F401": 1
+  },
+  "tests/test_fase61.py": {
+   "F401": 1,
+   "F841": 1
+  },
+  "tests/test_fase63.py": {
+   "F401": 2
+  },
+  "tests/test_fase64.py": {
+   "E741": 1,
+   "F401": 2
+  },
+  "tests/test_fase65.py": {
+   "F401": 2
+  },
+  "tests/test_fase71.py": {
+   "F401": 1
+  },
+  "tests/test_fixes_playtest.py": {
+   "E741": 1
+  },
+  "tests/test_forge.py": {
+   "ERA001": 3
+  },
+  "tests/test_fuga_progressiva_persistente.py": {
+   "C408": 1
+  },
+  "tests/test_gameplay_oracles.py": {
+   "C420": 2
+  },
+  "tests/test_http_cookie_flags.py": {
+   "SIM201": 1
+  },
+  "tests/test_image_quotes_local.py": {
+   "I001": 1
+  },
+  "tests/test_import_bestiary_art.py": {
+   "C408": 1
+  },
+  "tests/test_infrastructure_contracts.py": {
+   "B017": 1
+  },
+  "tests/test_input_normalization.py": {
+   "PIE807": 1
+  },
+  "tests/test_jev_router_ab_experiment.py": {
+   "B009": 1
+  },
+  "tests/test_jev_router_port.py": {
+   "F401": 1,
+   "SIM300": 1
+  },
+  "tests/test_jev_target_loot_experiment.py": {
+   "E402": 1
+  },
+  "tests/test_job_logging.py": {
+   "SIM105": 1
+  },
+  "tests/test_latency_metrics_compat.py": {
+   "SIM117": 1
+  },
+  "tests/test_llm_logging.py": {
+   "SIM105": 1
+  },
+  "tests/test_local_pricing_fixture.py": {
+   "I001": 1
+  },
+  "tests/test_log_correlation.py": {
+   "E741": 9,
+   "SIM105": 2
+  },
+  "tests/test_log_event_registry.py": {
+   "SIM300": 1
+  },
+  "tests/test_logging_review_239_245.py": {
+   "SIM105": 1
+  },
+  "tests/test_longrun_remediation_v4.py": {
+   "F401": 1
+  },
+  "tests/test_map_view.py": {
+   "E741": 2
+  },
+  "tests/test_mapa_interiores.py": {
+   "E741": 6
+  },
+  "tests/test_matrix_lock.py": {
+   "SIM117": 2
+  },
+  "tests/test_mecanica_orfa.py": {
+   "E731": 2,
+   "F401": 2,
+   "I001": 1,
+   "UP035": 2
+  },
+  "tests/test_mechanics_trace.py": {
+   "RET504": 1
+  },
+  "tests/test_mvp.py": {
+   "E402": 1,
+   "F401": 1
+  },
+  "tests/test_npc_knowledge.py": {
+   "ERA001": 5,
+   "RET504": 1
+  },
+  "tests/test_objectives.py": {
+   "C408": 1
+  },
+  "tests/test_onboarding.py": {
+   "F401": 1
+  },
+  "tests/test_operation_replay_boundaries.py": {
+   "SIM117": 1
+  },
+  "tests/test_partial_narrative.py": {
+   "SIM905": 1
+  },
+  "tests/test_perfil_normal_invariantes.py": {
+   "F401": 1
+  },
+  "tests/test_persistence_logs.py": {
+   "SIM105": 1
+  },
+  "tests/test_pgvector_memory.py": {
+   "B017": 1
+  },
+  "tests/test_playtest_real.py": {
+   "E402": 1
+  },
+  "tests/test_postgres_jobs_local.py": {
+   "SIM117": 1
+  },
+  "tests/test_prologue.py": {
+   "F401": 1
+  },
+  "tests/test_prompt_guard.py": {
+   "BLE001": 1,
+   "SIM105": 1
+  },
+  "tests/test_prompt_injection_corpus.py": {
+   "C420": 1
+  },
+  "tests/test_prose_guard.py": {
+   "BLE001": 1,
+   "SIM105": 1
+  },
+  "tests/test_provider_logging.py": {
+   "SIM105": 1
+  },
+  "tests/test_rls_effective.py": {
+   "SIM117": 11
+  },
+  "tests/test_rls_local.py": {
+   "SIM117": 1
+  },
+  "tests/test_rls_runtime_config.py": {
+   "SIM117": 4
+  },
+  "tests/test_routing_tiers.py": {
+   "ERA001": 2
+  },
+  "tests/test_ruff_protected_exempt.py": {
+   "SIM300": 1
+  },
+  "tests/test_session_hardening.py": {
+   "SIM105": 1
+  },
+  "tests/test_session_hardening_local.py": {
+   "BLE001": 1
+  },
+  "tests/test_shard_pricing_local.py": {
+   "SIM117": 5
+  },
+  "tests/test_speaker_contract.py": {
+   "SIM115": 3
+  },
+  "tests/test_spec192_staging_scripts.py": {
+   "C420": 1,
+   "RET503": 1
+  },
+  "tests/test_spec192_vercel_env.py": {
+   "C420": 3
+  },
+  "tests/test_spec194_196_postgres_local.py": {
+   "B017": 1,
+   "C408": 1,
+   "F401": 1,
+   "I001": 1,
+   "SIM105": 1,
+   "SIM117": 2
+  },
+  "tests/test_spec194_google_play.py": {
+   "C408": 3
+  },
+  "tests/test_spec195_followups.py": {
+   "F401": 1
+  },
+  "tests/test_spec196_finops.py": {
+   "C408": 2,
+   "F401": 2,
+   "I001": 1
+  },
+  "tests/test_spec197_checklist.py": {
+   "C420": 3
+  },
+  "tests/test_spec197_daily_cap.py": {
+   "F401": 1,
+   "F841": 1,
+   "I001": 1
+  },
+  "tests/test_spec222_privacy_local.py": {
+   "C408": 1,
+   "F401": 1,
+   "I001": 1,
+   "SIM105": 1
+  },
+  "tests/test_spec237_embedding_pricing.py": {
+   "SIM105": 1
+  },
+  "tests/test_spec238_loot.py": {
+   "C408": 1
+  },
+  "tests/test_spec275_stalemate.py": {
+   "F401": 1
+  },
+  "tests/test_spec279_usage_retention_local.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "tests/test_spec297_admin.py": {
+   "C408": 1
+  },
+  "tests/test_spec297_generation.py": {
+   "C408": 2
+  },
+  "tests/test_spec297_items_locations.py": {
+   "SIM300": 1
+  },
+  "tests/test_spec297_pool_store.py": {
+   "C408": 1
+  },
+  "tests/test_spec297_validators.py": {
+   "SIM115": 1
+  },
+  "tests/test_spec298_reputacao_nucleo.py": {
+   "PIE808": 1
+  },
+  "tests/test_spec299_confrontation.py": {
+   "RET504": 1
+  },
+  "tests/test_spec300_approval.py": {
+   "C420": 1
+  },
+  "tests/test_spec300_values.py": {
+   "PIE808": 1
+  },
+  "tests/test_spec301_catalogo.py": {
+   "SIM115": 1
+  },
+  "tests/test_spec301_llm.py": {
+   "C420": 1
+  },
+  "tests/test_spec301_perks.py": {
+   "RET501": 1,
+   "SIM222": 1
+  },
+  "tests/test_spec301_persistencia.py": {
+   "SIM115": 2
+  },
+  "tests/test_spec301_traicao.py": {
+   "ERA001": 1
+  },
+  "tests/test_spec302_pressures.py": {
+   "C420": 4
+  },
+  "tests/test_spec303_calendar.py": {
+   "SIM102": 1
+  },
+  "tests/test_spec303_weather_encounters.py": {
+   "C416": 1
+  },
+  "tests/test_spec304_perils.py": {
+   "C408": 2
+  },
+  "tests/test_spec305_perception.py": {
+   "SIM102": 1
+  },
+  "tests/test_spec305_sources.py": {
+   "ERA001": 1
+  },
+  "tests/test_spec306_npc_seed_expansion.py": {
+   "C420": 1
+  },
+  "tests/test_spec307_calendar.py": {
+   "SIM102": 1
+  },
+  "tests/test_spec309_prompts.py": {
+   "SIM105": 1
+  },
+  "tests/test_spec310_npc_self.py": {
+   "PIE807": 1
+  },
+  "tests/test_spec311_lore_query.py": {
+   "BLE001": 2,
+   "SIM105": 2
+  },
+  "tests/test_spec311_price_reasons.py": {
+   "RET504": 1
+  },
+  "tests/test_spec312_proposed.py": {
+   "RET504": 1
+  },
+  "tests/test_spec312_review.py": {
+   "SIM300": 1
+  },
+  "tests/test_spec313_catalog.py": {
+   "SIM300": 1
+  },
+  "tests/test_spec313_hunt.py": {
+   "RET504": 1
+  },
+  "tests/test_spec313_rumor.py": {
+   "C416": 1
+  },
+  "tests/test_spec314_no_leak.py": {
+   "SIM115": 1
+  },
+  "tests/test_spec314_review_fixes.py": {
+   "SIM115": 1
+  },
+  "tests/test_spec325_abandon.py": {
+   "ERA001": 1
+  },
+  "tests/test_spec325_playtest.py": {
+   "C420": 1
+  },
+  "tests/test_spec339_duracao_condicoes.py": {
+   "ERA001": 1
+  },
+  "tests/test_spec341_balanco.py": {
+   "C416": 1
+  },
+  "tests/test_spec345_combat_view.py": {
+   "RET504": 1
+  },
+  "tests/test_spec348_canon.py": {
+   "ERA001": 5,
+   "SIM114": 1
+  },
+  "tests/test_spec350_catalog.py": {
+   "SIM905": 1
+  },
+  "tests/test_spec350_npc_prompt.py": {
+   "SIM115": 1
+  },
+  "tests/test_spec351_pool.py": {
+   "RET501": 1
+  },
+  "tests/test_spec351_prologue.py": {
+   "C408": 1
+  },
+  "tests/test_spec351_security.py": {
+   "RET501": 1
+  },
+  "tests/test_spec352_creature_portraits.py": {
+   "C408": 1
+  },
+  "tests/test_spec355_exemplos_fora.py": {
+   "SIM300": 1
+  },
+  "tests/test_spec360_eco.py": {
+   "C402": 2
+  },
+  "tests/test_spec360_schema_lint.py": {
+   "C408": 1
+  },
+  "tests/test_spec361_caminho.py": {
+   "C408": 1
+  },
+  "tests/test_spec361_gate.py": {
+   "C408": 1,
+   "RET501": 1
+  },
+  "tests/test_spec361_integracao.py": {
+   "C408": 1
+  },
+  "tests/test_spec361_pool.py": {
+   "C408": 2
+  },
+  "tests/test_spec361_prompt.py": {
+   "C408": 1
+  },
+  "tests/test_spec363_portrait_offer.py": {
+   "C408": 1
+  },
+  "tests/test_spec366_followups.py": {
+   "C408": 1
+  },
+  "tests/test_spec367_fallback_portrait.py": {
+   "RET504": 1
+  },
+  "tests/test_spec368_metricas.py": {
+   "C408": 1,
+   "SIM115": 1
+  },
+  "tests/test_spec368_scenarios.py": {
+   "SIM300": 1
+  },
+  "tests/test_spec370_caps.py": {
+   "ERA001": 1
+  },
+  "tests/test_spec371_eval.py": {
+   "C408": 1
+  },
+  "tests/test_spec374_eixos.py": {
+   "C408": 1,
+   "C416": 1
+  },
+  "tests/test_spec374_job_janela.py": {
+   "PIE804": 1,
+   "SIM117": 2
+  },
+  "tests/test_spec374_migrate.py": {
+   "C408": 1
+  },
+  "tests/test_spec374_u14.py": {
+   "C416": 1
+  },
+  "tests/test_speech_to_text.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "tests/test_stripe_checkout_concurrency_local.py": {
+   "F401": 1,
+   "I001": 1
+  },
+  "tests/test_stripe_checkout_local.py": {
+   "B017": 3,
+   "F401": 1,
+   "I001": 1
+  },
+  "tests/test_turn_effects_atomicity.py": {
+   "SIM117": 1
+  },
+  "tests/test_turn_trace_logs.py": {
+   "F401": 1,
+   "SIM105": 1
+  },
+  "tests/test_usage_metering.py": {
+   "C401": 1
+  },
+  "tests/test_visual_assets.py": {
+   "F401": 2
+  },
+  "tests/test_wallet_local.py": {
+   "I001": 1,
+   "SIM117": 6
+  },
+  "tests/test_wallet_spend_guard.py": {
+   "SIM117": 3
+  },
+  "tests/test_worker_fence_local.py": {
+   "SIM117": 2
+  },
+  "vercel_app.py": {
+   "E402": 1
+  },
+  "workers/blob_purge_jobs.py": {
+   "BLE001": 1
+  },
+  "workers/dynamic_art_jobs.py": {
+   "BLE001": 4,
+   "I001": 1
+  },
+  "workers/job_worker.py": {
+   "BLE001": 1
+  },
+  "workers/projection_jobs.py": {
+   "BLE001": 1,
+   "F401": 1,
+   "I001": 1
+  },
+  "workers/run_worker.py": {
+   "BLE001": 2,
+   "C901": 1
+  },
+  "world_utils.py": {
+   "C901": 2,
+   "F401": 2,
+   "UP035": 1
+  }
+ }
+}

@@ -4,7 +4,6 @@
 
 [lint.per-file-ignores]
 ".claude/hooks/context_size.py" = ["BLE001", "SIM105"]
-".claude/hooks/guard_tools.py" = ["BLE001"]
 ".claude/hooks/ruff_after_edit.py" = ["BLE001", "SIM105"]
 "agents/archivist.py" = ["BLE001", "C901", "F401", "UP035"]
 "agents/bestiary.py" = ["BLE001", "F401", "UP035"]

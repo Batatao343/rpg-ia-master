@@ -80,8 +80,13 @@ A baseline fica em `docs/spec379/coverage-baseline.md`.
   `E501` fora; `B905` depois. `ruff format` é obrigatório (`ruff format --check .` no CI e
   no pre-commit); `evals/core`, `evals/evaluators`, `evals/__main__.py`, `evals/datasets` e
   `web/e2e/contracts` ficam fora do format e de `I`/`UP` (hashes travados da régua).
-- Dívida antiga congelada em `ruff-baseline.toml` (gerado; só encolhe):
-  conserte um arquivo e rode `bash scripts/dev/py.sh scripts/dev/ruff_baseline.py`.
+- Dívida antiga congelada em `ruff-baseline.toml` + `ruff-baseline-counts.json` (gerados; só
+  encolhem, contagem por arquivo × regra, SPEC-416): conserte um arquivo e rode
+  `bash scripts/dev/py.sh scripts/dev/ruff_baseline.py --tighten`; `--check` confere (gate
+  `tests/test_ruff_counts.py`). Regravação sem flag sobe a dívida: é do coordenador.
+- Catraca de relógio real (SPEC-416): `assert` que depende de `time.time`/`perf_counter`/`datetime.now`
+  em `tests/` não cresce (`tests/clock_asserts.json`, gate `tests/test_clock_asserts.py`). Use relógio
+  fixo (`monkeypatch`); encolheu = `clock_asserts.py --tighten`; subir é `--update` do coordenador.
   Arquivo novo recebe todas as regras.
 - Degraus 1–3 concluídos (I, UP, format). Antes de commitar: `ruff check --fix` + `ruff format`.
 
