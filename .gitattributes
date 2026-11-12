@@ -39,3 +39,6 @@ Procfile text eol=lf
 *.woff binary
 *.woff2 binary
 *.ttf binary
+
+# SPEC-415 R13: guia de casos recebe linhas de varias branches sem parar o rebase.
+docs/guias/CASOS_QUE_O_REVISOR_PEDE.md merge=union

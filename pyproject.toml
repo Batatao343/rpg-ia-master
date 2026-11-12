@@ -68,7 +68,7 @@ extend-exclude = ["web", "docs", "saves*", "data/runtime", "data", "lore_nova", 
 [tool.ruff.format]
 # (exclude de format aceita glob; ver também pyproject extend-exclude)
 # Protegidos de eval: não reformatar (hashes travados).
-exclude = ["evals/core/*.py", "evals/evaluators/*.py", "evals/__main__.py", "evals/datasets/**", "evals/experiments/**", "web/e2e/contracts/**"]
+exclude = ["evals/core/*.py", "evals/evaluators/*.py", "evals/__main__.py", "evals/datasets/**", "evals/experiments/**", "web/e2e/contracts/**", "specs/**", "handoffs/**"]
 
 [tool.ruff.lint]
 # Degrau 1: pyflakes (F), bugbear (B) e estrutura (E4/E7/E9). E501 fica fora;

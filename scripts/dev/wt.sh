@@ -5,7 +5,8 @@
 #   scripts/dev/wt.sh sync <NNN|branch>   rebase on main + regenerate specs/index.yaml
 #                                         ON THE BRANCH (one commit). project_index/ artifacts
 #                                         are local and untracked (python -m project_index build)
-#   scripts/dev/wt.sh land <NNN|branch>   sync, then fast-forward main to the branch
+#   scripts/dev/wt.sh land <NNN|branch>   sync, land_check (all), then fast-forward main
+#   scripts/dev/wt.sh ci   <NNN|branch>   push branch + dispatch audit-local (needs RPG_WT_PUSH=1)
 #   scripts/dev/wt.sh drop <NNN|branch>   remove worktree and branch
 #   scripts/dev/wt.sh path <NNN|branch>   print the worktree path
 #
@@ -15,7 +16,7 @@
 set -euo pipefail
 
 cmd="${1:-}"; name="${2:-}"
-[ -n "$cmd" ] && [ -n "$name" ] || { sed -n '2,17p' "$0"; exit 2; }
+[ -n "$cmd" ] && [ -n "$name" ] || { sed -n '2,15p' "$0"; exit 2; }
 case "$name" in [0-9]*) BR="spec-$name";; *) BR="$name";; esac
 
 MAIN="$(git worktree list --porcelain | sed -n '1s/^worktree //p')"
@@ -84,6 +85,16 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
     echo "index already in sync"
   fi
   py "$WT" scripts/spec_index.py check >/dev/null
+  land_check collision
+}
+
+# SPEC-415: pre-landing checks (scripts/dev/land_check.py). Branch spec-NNN only.
+land_check() {
+  case "$BR" in spec-[0-9][0-9][0-9]) ;; *) return 0;; esac
+  (cd "$WT" && bash scripts/dev/land_check.sh "${BR#spec-}" ${1:+--only "$1"}) || {
+    echo "land_check reprovou: corrija e rode de novo (a branch fica rebaseada, nada foi desfeito)" >&2
+    exit 1
+  }
 }
 
 case "$cmd" in
@@ -103,10 +114,20 @@ case "$cmd" in
     sync_branch;;
   land)
     sync_branch
+    land_check
     cd "$MAIN"
     [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ] || { echo "main checkout is not on main" >&2; exit 1; }
     git merge -q --ff-only "$BR"
     git log --oneline -3;;
+  ci)
+    if [ "${RPG_WT_PUSH:-}" != "1" ]; then
+      echo "push de branch desligado: precisa de autorização permanente do dono (ver SPEC-415 §7)" >&2
+      exit 3
+    fi
+    git -C "$WT" push --force-with-lease origin "$BR"
+    gh workflow run audit-local.yml --ref "$BR"
+    sha="$(git -C "$WT" rev-parse "$BR")"
+    echo "disparado para $sha; ci-watcher: gh run list --workflow audit-local.yml --branch $BR --json headSha,conclusion,status,event --limit 10";;
   drop)
     # The web/node_modules junction points at MAIN's node_modules: remove the link itself
     # (never its target) first, otherwise `worktree remove` leaves an empty dir behind and
@@ -119,5 +140,5 @@ case "$cmd" in
     git -C "$MAIN" branch -D "$BR" 2>/dev/null || true;;
   path)
     echo "$WT";;
-  *) sed -n '2,17p' "$0"; exit 2;;
+  *) sed -n '2,15p' "$0"; exit 2;;
 esac

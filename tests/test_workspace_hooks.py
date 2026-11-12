@@ -252,6 +252,17 @@ def test_context_size_warns_once_per_step(tmp_path: Path) -> None:
     assert _run("context_size.py", big) is None  # mesmo patamar: não repete
 
 
+def test_context_size_points_to_handoff_file(tmp_path: Path) -> None:
+    """SPEC-415 R23: o aviso diz onde gravar o handoff."""
+    import datetime
+
+    sid = f"t-{uuid.uuid4().hex}"
+    big = {"transcript_path": str(_transcript(tmp_path, 400_000)), "session_id": sid}
+    msg = _run("context_size.py", big)["systemMessage"]
+    assert "/estado --handoff" in msg
+    assert f".tmp/handoff-{datetime.date.today().isoformat()}.md" in msg
+
+
 def test_context_size_quiet_when_small_or_subagent(tmp_path: Path) -> None:
     t = str(_transcript(tmp_path, 100_000))
     assert _run("context_size.py", {"transcript_path": t, "session_id": uuid.uuid4().hex}) is None

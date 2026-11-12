@@ -7,6 +7,7 @@ crescimento (estado em arquivo temporário por sessão). Subagente: não faz nad
 
 from __future__ import annotations
 
+import datetime
 import json
 import os
 import sys
@@ -62,7 +63,8 @@ def main() -> None:
     k = tokens // 1000
     msg = (
         f"Sessão com ~{k} K tokens de contexto por turno. Regra do CLAUDE.md: /compact <estado> "
-        "no próximo marco (spec pousada, onda fechada) ou handoff em arquivo + /clear."
+        "no próximo marco (spec pousada, onda fechada) ou handoff em arquivo + /clear. "
+        f"Handoff: `/estado --handoff` grava `.tmp/handoff-{datetime.date.today().isoformat()}.md`."
     )
     print(
         json.dumps(
