@@ -1,6 +1,6 @@
 # SPEC-414 — workspace-pytest-confiavel
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** nenhuma (SPEC-386 `done` é a base dos hooks; não é reaberta). Mesma onda de 415–418, sem arquivo em comum (ver Fora de escopo).
 > **Desbloqueia:** SPEC-415 (o `land_check.sh` pode chamar `full.sh`), auditoria W-A fechada.
@@ -185,15 +185,15 @@ Executor: só os testes do escopo via `bash scripts/dev/pt.sh` (`-n 2`); nunca `
 
 ## 5. Critérios de aceite
 
-- [ ] `docs/spec414/medicoes.md` com 0.1–0.5 preenchidos; veredito de 0.1 explícito (R4.1 implementado ou pulado, com motivo).
-- [ ] Cada teste nomeado em §4 foi visto **falhando** antes da implementação (saída colada no hand-back do executor) e passa depois.
-- [ ] `bash scripts/dev/pt.sh tests/test_workspace_hooks.py tests/test_full_plan.py tests/test_basetemp.py tests/test_dev_env.py tests/test_dev_tooling.py` verde.
-- [ ] `git grep -n -- "-n auto" .claude/skills` vazio; `git grep -n "full.sh" .claude/skills` acha `qa`, `wrap-up`, `spec-land`.
-- [ ] `POR_WORKER_GB` em `full_plan.py` é o valor medido em 0.2 (não o placeholder).
-- [ ] Funções novas ≤ 60 linhas; `tests/test_size_budget.py` verde; nenhum helper duplicado (`dup_helpers.py`).
-- [ ] Smoke §6 itens 1–4 feitos pelo coordenador, saídas coladas na spec.
-- [ ] Suíte completa verde **via `bash scripts/dev/full.sh`** no pouso (1×, coordenador).
-- [ ] Revisão Sonnet (risco `médio`) sem `CHANGES_REQUIRED` aberto.
+- [x] `docs/spec414/medicoes.md` com 0.1–0.5 preenchidos; veredito de 0.1 explícito (R4.1 implementado ou pulado, com motivo).
+- [x] Cada teste nomeado em §4 foi visto **falhando** antes da implementação (saída colada no hand-back do executor) e passa depois.
+- [x] `bash scripts/dev/pt.sh tests/test_workspace_hooks.py tests/test_full_plan.py tests/test_basetemp.py tests/test_dev_env.py tests/test_dev_tooling.py` verde.
+- [x] `git grep -n -- "-n auto" .claude/skills` vazio; `git grep -n "full.sh" .claude/skills` acha `qa`, `wrap-up`, `spec-land`.
+- [x] `POR_WORKER_GB` em `full_plan.py` é o valor medido em 0.2 (não o placeholder).
+- [x] Funções novas ≤ 60 linhas; `tests/test_size_budget.py` verde; nenhum helper duplicado (`dup_helpers.py`).
+- [x] Smoke §6 itens 1–4 feitos pelo coordenador, saídas coladas na spec.
+- [x] Suíte completa verde **via `bash scripts/dev/full.sh`** no pouso (1×, coordenador).
+- [x] Revisão Sonnet (risco `médio`) sem `CHANGES_REQUIRED` aberto.
 
 ## 6. Smoke test real (infra; sem LLM)
 
@@ -228,3 +228,4 @@ Decididas pelo autor (veto possível na aprovação):
 - **D7** — Limpeza de `pt-*` por idade (6 h), não por PID vivo (sem forma segura de testar PID no Windows sem dependência). Proposta: idade.
 - **D8** — Risco `médio` (revisor Sonnet) em vez de `baixo`. Motivo no cabeçalho.
 - **Aprovação (2026-11-12):** aprovada pelo coordenador por delegação do dono ("executa as mudanças", 12/11; semana de segurança e qualidade). D1–D8 aceitas como escritas. Medição 0.2 (`POR_WORKER_GB`) fica com o coordenador no pouso; o executor usa 1,0 GB provisório.
+- **Fechamento (2026-11-12):** revisão `terra` APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-414-terra-review.md`), follow-ups `-n=auto` e sinal em stderr aplicados. Smokes do coordenador: (1) `FULL_N=2 full.sh` rc 0, 11471 passed, 765 s, mortos 0 (rodada sem `FULL_N` não feita: RAM livre de 2,6 GB, abaixo do piso; o ramo rc 3 está coberto por teste); (2) dois `pt.sh` simultâneos rc 0 com basetemps de PIDs distintos; (3) `Agent` `general-purpose` sem marcador negado, com `Motivo sem tipo:` sobe; (4) em subagente, `sed -n … | grep pytest` executa e `pt.sh -n 4` é negado; (5) `wt.sh new 415` avisa e `sys.prefix` aponta para o venv do principal. Follow-ups abertos do revisor: `bash -c 'pytest -n auto'` passa; `echo pytest -n auto` em subagente é negado (falso positivo).
