@@ -313,17 +313,17 @@ async def transcribe_audio(
     text = None
     begun = False
     with tempfile.TemporaryDirectory(prefix="rpg-speech-") as temp:
-        audio, duration = prepare_audio(payload, mime, Path(temp))
+        audio, duration = await asyncio.to_thread(prepare_audio, payload, mime, Path(temp))
         if not candidates:
             raise SpeechError("speech_unavailable", 503)
         request_hash = hashlib.sha256(
             (canonical_mime(mime) + ":" + hashlib.sha256(payload).hexdigest()).encode()
         ).hexdigest()
         try:
-            finance.begin(operation_id, request_hash, candidates)
+            await asyncio.to_thread(finance.begin, operation_id, request_hash, candidates)
             begun = True
             for ordinal, candidate in enumerate(candidates):
-                finance.admit(ordinal, candidate)
+                await asyncio.to_thread(finance.admit, ordinal, candidate)
                 # Ticket precedes dispatch. Every ticket receives a usage event,
                 # including cancellation, timeout and internal transport failure.
                 event = speech_event(
@@ -402,5 +402,5 @@ async def transcribe_audio(
                 raise SpeechError("speech_provider_failed")
         finally:
             if begun:
-                billing = finance.finish(events, text is not None)
+                billing = await asyncio.to_thread(finance.finish, events, text is not None)
     return {"operation_id": str(operation_id), "text": text, "billing_status": billing}

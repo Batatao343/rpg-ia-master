@@ -327,7 +327,10 @@ async def account_transcription(request: Request):
         raise HTTPException(503, "speech_disabled")
     principal = current_principal()
     runtime = get_runtime()
-    decision = runtime.rate_limiter.consume(
+    from starlette.concurrency import run_in_threadpool
+
+    decision = await run_in_threadpool(
+        runtime.rate_limiter.consume,
         f"speech:{principal.user_id}",
         limit=5,
         window_seconds=60,
