@@ -174,10 +174,25 @@ def reset(*, confirm_local: bool, runner: Runner = _run) -> None:
     _checked([*command, "db", "reset", "--local"], runner)
 
 
+def test_db(*, runner: Runner = _run) -> str:
+    """Roda o pgTAP de `supabase/tests` na stack local; devolve o TAP inteiro (SPEC-416 R8)."""
+    _assert_unlinked()
+    command = cli_command()
+    help_result = _checked([*command, "test", "db", "--help"], runner)
+    if "--local" not in help_result.stdout:
+        raise StackError("CLI não oferece test db --local; atualização/revisão necessária")
+    result = runner([*command, "test", "db", "--local"])
+    print(result.stdout)
+    if result.returncode:
+        print(result.stderr, file=sys.stderr)
+        raise StackError("pgTAP falhou (ver TAP acima)")
+    return result.stdout
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
-    for name in ("doctor", "start", "status", "stop"):
+    for name in ("doctor", "start", "status", "stop", "test-db"):
         sub.add_parser(name)
     reset_parser = sub.add_parser("reset")
     reset_parser.add_argument("--confirm-local", action="store_true")
@@ -195,6 +210,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(status())
         elif args.command == "stop":
             stop()
+        elif args.command == "test-db":
+            test_db()
         elif args.command == "reset":
             reset(confirm_local=args.confirm_local)
     except StackError as exc:

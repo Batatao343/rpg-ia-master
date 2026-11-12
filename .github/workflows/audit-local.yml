@@ -45,8 +45,12 @@ jobs:
       - run: uv run playwright install --with-deps chromium
       - run: npm ci && npm test && npm run build
         working-directory: web
-      - run: uv run python scripts/dev_stack.py start
+      - id: stack
+        run: uv run python scripts/dev_stack.py start
+      - name: pgTAP (supabase/tests)
+        run: uv run python scripts/dev_stack.py test-db
       - run: uv run python scripts/audit_local_gate.py
+        if: ${{ !cancelled() && steps.stack.outcome == 'success' }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:

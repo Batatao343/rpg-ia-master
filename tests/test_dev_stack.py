@@ -77,3 +77,44 @@ def test_status_remove_segredos_e_credencial_do_dsn(monkeypatch):
     assert "secret" not in value
     assert "KEY" not in value
     assert "postgres@" not in value
+
+
+def test_test_db_forca_local_e_imprime_tap(monkeypatch, tmp_path, capsys):
+    """SPEC-416 R8: pgTAP local com a CLI pinada; o TAP vai ao log e ao retorno."""
+    monkeypatch.setattr(dev_stack, "SUPABASE_DIR", tmp_path / "supabase")
+    monkeypatch.setattr(dev_stack, "cli_command", lambda: ["supabase"])
+    calls = []
+
+    def runner(command):
+        calls.append(list(command))
+        if command[-1] == "--help":
+            return _result(command, "--local --linked")
+        return _result(command, "All tests successful.\nFiles=5, Tests=63")
+
+    out = dev_stack.test_db(runner=runner)
+    assert calls[-1] == ["supabase", "test", "db", "--local"]
+    assert "Files=5, Tests=63" in out
+    assert "Files=5, Tests=63" in capsys.readouterr().out
+
+
+def test_test_db_falha_mostra_tap_e_levanta(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(dev_stack, "SUPABASE_DIR", tmp_path / "supabase")
+    monkeypatch.setattr(dev_stack, "cli_command", lambda: ["supabase"])
+
+    def runner(command):
+        if command[-1] == "--help":
+            return _result(command, "--local")
+        return CompletedProcess(command, 1, stdout="not ok 3", stderr="boom")
+
+    with pytest.raises(dev_stack.StackError, match="pgTAP"):
+        dev_stack.test_db(runner=runner)
+    assert "not ok 3" in capsys.readouterr().out
+
+
+def test_test_db_recusa_stack_linkada(monkeypatch, tmp_path):
+    linked = tmp_path / "supabase" / ".temp" / "project-ref"
+    linked.parent.mkdir(parents=True)
+    linked.write_text("remote", encoding="utf-8")
+    monkeypatch.setattr(dev_stack, "SUPABASE_DIR", tmp_path / "supabase")
+    with pytest.raises(dev_stack.StackError, match="remoto"):
+        dev_stack.test_db(runner=lambda command: _result(command))
