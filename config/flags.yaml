@@ -537,6 +537,16 @@ RPG_KILL_SWITCH_TTL_SECONDS:
   default: "5"
   spec: null
   note: "ajuste operacional (kill switch ttl seconds)"
+RPG_LAND_MIN_RAM_GB:
+  kind: dev
+  default: null
+  spec: SPEC-415
+  note: "piso de RAM livre (GB) do check `ram` do land_check; padrao 3.0"
+RPG_LAND_SKIP:
+  kind: dev
+  default: null
+  spec: SPEC-415
+  note: "pula checks do land_check; so aceita `ram` e `ci`"
 RPG_LATENCY_REAL_AUTHORIZED:
   kind: dev
   default: null
@@ -1148,3 +1158,8 @@ RPG_WORLD_QUESTS:
   spec: SPEC-305
   expires: 2027-01-25
   note: "quests de mundo"
+RPG_WT_PUSH:
+  kind: dev
+  default: null
+  spec: SPEC-415
+  note: "=1 liga o CI pre-pouso (`wt.sh ci` faz push da branch spec-NNN); desligado por padrao"
