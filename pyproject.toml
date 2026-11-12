@@ -51,6 +51,7 @@ dev = [
     "pytest-cov>=7.0",
     "pytest-timeout>=2.4.0",
     "pytest-xdist>=3.8.0",
+    "hypothesis>=6.170,<7",
     "ruff>=0.9",
 ]
 fuzz = [

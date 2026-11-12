@@ -71,6 +71,7 @@ A baseline fica em `docs/spec379/coverage-baseline.md`.
 - Teste que lê código-fonte só entra no caso (c) de `docs/spec379/fonte_inventario.md`
   (proibição de import/chamada, segurança/RLS, CSP, integridade de eval, contrato entre
   linguagens), com a justificativa no docstring. Comportamento se testa por comportamento.
+- Propriedade (Hypothesis, `tests/fakes/property_settings.py`) em vez de exemplo quando o código é writer persistente (round-trip save/load) ou mecânica numérica com faixa ou conservação (dano, ouro, estoque, dados); exemplo fixo continua para regra de negócio pontual. Pouso: `scripts/dev/weak_tests.py` (check `weak-tests` do `land_check`) recusa skip/xfail novo sem motivo e teste sem assert.
 
 ## Ruff (incremental)
 

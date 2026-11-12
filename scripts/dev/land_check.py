@@ -1,7 +1,7 @@
 """SPEC-415 R1-R9: pre-checagens do pouso num lugar so (`scripts/dev/land_check.sh NNN`).
 
 Saida: uma linha por check, `OK|WARN|FAIL <check>: <detalhe>`; rc 0 sem FAIL, 1 com FAIL,
-2 para uso errado. Checks (nessa ordem): collision, format, ram, review, measure, growth, ci.
+2 para uso errado. Checks (nessa ordem): collision, format, ram, review, measure, growth, weak-tests, ci.
 
     land_check.sh NNN [--only collision,ram]
 
@@ -22,7 +22,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CHECKS = ("collision", "format", "ram", "review", "measure", "growth", "ci")
+CHECKS = ("collision", "format", "ram", "review", "measure", "growth", "weak-tests", "ci")
 SKIPPABLE = frozenset({"ram", "ci"})
 Runner = Callable[[list[str], str | None], tuple[int, str]]
 Result = tuple[str, str]  # (OK|WARN|FAIL, detalhe)
@@ -328,6 +328,19 @@ def check_growth(ctx: Ctx) -> Result:
     return "FAIL", f"{len(lines)} baseline(s) subiu: " + "; ".join(lines[:3])
 
 
+def check_weak_tests(ctx: Ctx) -> Result:
+    """SPEC-417 R8: skip/xfail novo sem motivo e teste novo sem asserção reprovam o pouso."""
+    script = str(Path(__file__).with_name("weak_tests.py"))  # irmao deste arquivo, como `growth`
+    cmd = [sys.executable, script, "--repo", ctx.wt, "--base", "main", "--head", ctx.branch]
+    rc, out = ctx.run([*cmd, "--spec", ctx.nnn], ctx.wt)
+    lines = [ln for ln in out.splitlines() if ln.strip()]
+    if rc == 0:
+        ok = [ln for ln in lines if ln.startswith("OK")]
+        return "OK", ok[-1].removeprefix("OK weak-tests: ") if ok else "nenhum teste fraco"
+    fails = [ln.removeprefix("FAIL weak-tests: ") for ln in lines if ln.startswith("FAIL")]
+    return "FAIL", f"{len(fails) or 1} achado(s): " + "; ".join(fails[:3] or lines[:1])
+
+
 def check_ci(ctx: Ctx) -> Result:
     if parse_risk(ctx.spec_text()) != "alto":
         return "OK", "nao exigido"
@@ -361,6 +374,7 @@ _FUNCS: dict[str, Callable[[Ctx], Result]] = {
     "review": check_review,
     "measure": check_measure,
     "growth": check_growth,
+    "weak-tests": check_weak_tests,
     "ci": check_ci,
 }
 

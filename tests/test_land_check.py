@@ -185,3 +185,24 @@ def test_growth_check_reports_rc(tmp_path: Path, capsys) -> None:
 
     assert lc.main(["999", "--only", "growth"], failing, {}) == 1
     assert "FAIL growth" in capsys.readouterr().out
+
+
+def test_weak_tests_check_reports_rc(tmp_path: Path, capsys) -> None:
+    """SPEC-417 R8: `weak-tests` roda o script irmao e reprova se houver FAIL."""
+    run = FakeGit(tmp_path)
+
+    def ok(args: list[str], cwd: str | None = None) -> tuple[int, str]:
+        if "weak_tests.py" in " ".join(args):
+            return 0, "OK weak-tests: 2 arquivos, 3 testes novos, 0 marcas novas\n"
+        return run(args, cwd)
+
+    assert lc.main(["999", "--only", "weak-tests"], ok, {}) == 0
+    assert "OK weak-tests: 2 arquivos" in capsys.readouterr().out
+
+    def failing(args: list[str], cwd: str | None = None) -> tuple[int, str]:
+        if "weak_tests.py" in " ".join(args):
+            return 1, "FAIL weak-tests: tests/test_x.py::test_a sem assert\n"
+        return run(args, cwd)
+
+    assert lc.main(["999", "--only", "weak-tests"], failing, {}) == 1
+    assert "FAIL weak-tests" in capsys.readouterr().out

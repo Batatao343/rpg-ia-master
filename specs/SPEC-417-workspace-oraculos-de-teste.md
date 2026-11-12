@@ -1,6 +1,6 @@
 # SPEC-417 — workspace-oraculos-de-teste
 
-> **Status:** `approved`
+> **Status:** `in-progress`
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** SPEC-338 `done` (perfil Hypothesis R16), SPEC-379 `done` (`tests/factories.py`), SPEC-407 `done` (desenho de catraca). **Ordem com a SPEC-415** (`approved`, cria `land_check`): independente; ver D2 e §7.
 > **Desbloqueia:** check `weak-tests` dentro do `land_check` (uma linha na SPEC-415 ou follow-up, D2).
@@ -44,9 +44,9 @@ Linhas citadas = `main` em `29dba5d5`.
   - chamada a nome da constante `ASSERT_HELPERS` do script (helpers que levantam `AssertionError` sem prefixo; semente: `fuzz_operation`, de `tests/fakes/api_fuzz.py:214`). Crescer essa lista aparece no diff do script, para o revisor.
   Sem nenhum → `FAIL <arquivo>::<qualname> sem assert/pytest.raises/helper de asserção`.
 - **R6 — Remoção de assert não bloqueia: relatório.** Para cada arquivo de teste existente nos dois lados, contagem de asserções (as mesmas regras de R5, somadas no arquivo) antes e depois, e testes removidos (`qualname` que sumiu). Só delta negativo aparece: `INFO weak-tests: assert-delta tests/x.py 42 -> 38 (-4), 1 teste removido`, ordenado do mais negativo, no máximo 10 linhas e uma linha `(+N arquivos)`. Arquivo de teste apagado inteiro entra com `-> 0`.
-- **R7 — Saída e rc.** Uma linha por achado, no formato do `land_check` (SPEC-415 R1): `FAIL weak-tests: …`, `INFO weak-tests: …`; sem `FAIL`, termina com `OK weak-tests: <A> arquivos, <T> testes novos, <M> marcas novas`. rc 0 sem `FAIL`, 1 com, 2 para uso errado (ref inexistente, git falhou). Arquivo que não parseia em qualquer lado → `INFO … não parseia, pulado` (o ruff do hook já reprova). Tempo: meta < 3 s sobre um diff típico; valor real <MEDIR: `time bash scripts/dev/py.sh scripts/dev/weak_tests.py --base 9f21ef4a --head 29dba5d5`>.
+- **R7 — Saída e rc.** Uma linha por achado, no formato do `land_check` (SPEC-415 R1): `FAIL weak-tests: …`, `INFO weak-tests: …`; sem `FAIL`, termina com `OK weak-tests: <A> arquivos, <T> testes novos, <M> marcas novas`. rc 0 sem `FAIL`, 1 com, 2 para uso errado (ref inexistente, git falhou). Arquivo que não parseia em qualquer lado → `INFO … não parseia, pulado` (o ruff do hook já reprova). Tempo: meta < 3 s sobre um diff típico; valor real 5,2 s reais com o arranque do `py.sh` (36 arquivos, 63 testes novos); acima da meta, ver `docs/spec417/medicoes.md`.
 - **R8 — Ponto de integração para a SPEC-415, sem editar `land_check.*`.** O script expõe `check(repo: Path, base: str, head: str, spec_text: str | None, *, worktree: bool = False) -> list[Finding]` (`Finding = NamedTuple(level: Literal["FAIL","INFO","OK"], text: str)`) e `main(argv) -> int`, para o `land_check.py` importar ou chamar via subprocess. Até essa ligação existir, o coordenador roda o comando no `/spec-land` (D2). Esta spec não edita `scripts/dev/land_check.sh`, `land_check.py`, `wt.sh` nem skills.
-- **R9 — Calibração em histórico real.** Antes de pousar, o executor roda o script sobre os diffs das specs pousadas em 11/11 (405–413, com `--base <pai do 1º commit> --head <último commit>` de cada) e registra em §9 quantos `FAIL` saíram e quantos são falso positivo. Falso positivo > 0 → ajuste de R5 (helper legítimo não reconhecido) antes do pouso, nunca afrouxar R3. <MEDIR: tabela spec × FAIL × falso positivo>.
+- **R9 — Calibração em histórico real.** Antes de pousar, o executor roda o script sobre os diffs das specs pousadas em 11/11 (405–413, com `--base <pai do 1º commit> --head <último commit>` de cada) e registra em §9 quantos `FAIL` saíram e quantos são falso positivo. Falso positivo > 0 → ajuste de R5 (helper legítimo não reconhecido) antes do pouso, nunca afrouxar R3. 9 specs, 0 `FAIL`, 0 falso positivo (tabela em `docs/spec417/medicoes.md`).
 
 ### Bloco B — testes de propriedade (Hypothesis)
 
@@ -63,9 +63,9 @@ Linhas citadas = `main` em `29dba5d5`.
   - **RT1 — Preserva.** `s1 = load_game_state(save_path(id))` depois de `save_game_state(s0)`: cada campo mutado é igual em `s1` e `s0`, com as normalizações documentadas e só elas: `processed_action_ids` = os últimos 64 (`persistence.py:674`, `:1024`); no `player`, a chave extra `vitalidade_base_bonus` (`tests/test_factories.py:107-110`); no `world`, `shelter: None` (`:111-115`).
   - **RT2 — Ponto fixo.** `s2 = load(save(s1))` é igual a `s1` como dict inteiro (save/load é idempotente depois da 1ª normalização).
   - **RT3 — Save não muta a entrada.** `copy.deepcopy(s0)` antes do `save_game_state(s0)` é igual a `s0` depois.
-- **R14 — Teto de tempo.** `max_examples` de partida: P1 e P2 = 100, P3/P4/P5 = 30, RT1–RT3 = 20 (cada uma). Meta na suíte default, medida com `--durations=0` em `-n 2`: `tests/test_mechanics_properties.py` ≤ 8 s e `tests/test_persistence_properties.py` ≤ 10 s no total do arquivo. Passou da meta → reduzir `max_examples` (nunca o domínio do gerador) e registrar o valor final em §9. <MEDIR: `bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 --durations=0 tests/test_mechanics_properties.py tests/test_persistence_properties.py | tail -25`>.
+- **R14 — Teto de tempo.** `max_examples` de partida: P1 e P2 = 100, P3/P4/P5 = 30, RT1–RT3 = 20 (cada uma). Meta na suíte default, medida com `--durations=0` em `-n 2`: `tests/test_mechanics_properties.py` ≤ 8 s e `tests/test_persistence_properties.py` ≤ 10 s no total do arquivo. Passou da meta → reduzir `max_examples` (nunca o domínio do gerador) e registrar o valor final em §9. mecânica ~0,7 s, persistência ~1,9 s em `-n 2` (meta 8 s / 10 s).
 - **R15 — Bug achado não se conserta aqui.** Propriedade que falhar no código atual: o executor decide primeiro se a propriedade está errada (ex.: ignora uma regra de jogo escrita em spec) ou se é bug. Propriedade errada → corrige o teste e escreve o porquê em §9 (o revisor confere). Bug → **não** mexe no produto: marca o teste `@pytest.mark.xfail(strict=True, reason="SPEC-417 achado N: <resumo>; exemplo mínimo: <exemplo do Hypothesis>")` (com `@example(...)` fixando o exemplo mínimo), registra em §9 e devolve no hand-back para virar spec própria. `strict=True` faz o teste falhar quando a spec de correção pousar, obrigando a retirar a marca. Cada `xfail` desses é citado em §9 com o nome do teste e a palavra `xfail`, o que também satisfaz R3.
-- **R16 — Sem lixo no repo.** Depois de rodar os dois arquivos, `git status --porcelain` não mostra `.hypothesis/`. Se a versão instalada criar o diretório mesmo com `database=None`, entra `.hypothesis/` no `.gitignore` (uma linha) e isso fica em §9. <MEDIR: `git status --porcelain | grep hypothesis` depois da rodada de R14>.
+- **R16 — Sem lixo no repo.** Depois de rodar os dois arquivos, `git status --porcelain` não mostra `.hypothesis/`. Se a versão instalada criar o diretório mesmo com `database=None`, entra `.hypothesis/` no `.gitignore` (uma linha) e isso fica em §9. vazio (`.hypothesis/` existe mas traz `.gitignore` próprio).
 
 ### Bloco C — guia
 
@@ -142,8 +142,8 @@ Executor roda só os arquivos do escopo, `bash scripts/dev/pt.sh <arquivos>` (`-
 
 ### Etapa 0 — Medições (sem código)
 
-1. Quantas marcas de pulo sem motivo já existem (informativo, mostra o custo de mover teste de arquivo): <MEDIR: contagem com um snippet `py.sh -c` usando `ast` sobre `tests/**/test_*.py` depois da Etapa 2, `marks()` com `has_reason=False`>.
-2. `bash scripts/dev/py.sh -c "import hypothesis; print(hypothesis.__version__)"` com e sem o grupo (`uv sync` sem `--group fuzz`) para provar que hoje a suíte default não tem Hypothesis. <MEDIR: saída>.
+1. Quantas marcas de pulo sem motivo já existem (informativo, mostra o custo de mover teste de arquivo): 175 marcas, 55 sem motivo.
+2. `bash scripts/dev/py.sh -c "import hypothesis; print(hypothesis.__version__)"` com e sem o grupo (`uv sync` sem `--group fuzz`) para provar que hoje a suíte default não tem Hypothesis. 6.170.12 só no grupo `fuzz` antes; agora também em `dev`.
 
 ### Etapa 1 — Testes da catraca primeiro (vermelhos: o módulo não existe)
 
@@ -213,7 +213,7 @@ Executor roda só os arquivos do escopo, `bash scripts/dev/pt.sh <arquivos>` (`-
 
 ## 6. Smoke test com LLM real
 
-Não se aplica: tooling e testes offline, sem LLM, prompt, rota ou staging. O smoke real é (1) o script sobre o histórico verdadeiro (R9) e sobre a própria branch (Etapa 5), e (2) a camada 2 do pouso com os dois arquivos de propriedade dentro do tempo de R14 sob `-n auto`. <MEDIR: duração dos dois arquivos no log da suíte completa do pouso, `--durations=20`>.
+Não se aplica: tooling e testes offline, sem LLM, prompt, rota ou staging. O smoke real é (1) o script sobre o histórico verdadeiro (R9) e sobre a própria branch (Etapa 5), e (2) a camada 2 do pouso com os dois arquivos de propriedade dentro do tempo de R14 sob `-n auto`. o valor do pouso fica com o coordenador (medido aqui: ~2,6 s somando os dois arquivos em `-n 2`).
 
 ## 7. Riscos & compatibilidade
 
@@ -242,3 +242,9 @@ Delegadas ao coordenador; proposta entre parênteses.
 
 (Preenchido pelo executor: R9, R14, R16, mutações de §4.4, achados de R15.)
 - **Aprovação (2026-11-12):** aprovada pelo coordenador por delegação do dono ("executa as mudanças", 12/11). D1: basta `reason=` OU linha na spec. D2: esta spec executa depois da SPEC-415 pousar; o executor então liga `weak_tests.check()` ao `land_check` e reusa a detecção de teste novo do `red_green.py` em vez de duplicar (a restrição "não edite `land_check.sh`" cai nesse ponto). D3 e D4 aceitas. Bug de produto achado por propriedade: `xfail(strict=True)` + hand-back, sem conserto aqui (R15).
+- **Execução (2026-11-12, Terra):**
+  - Bloco A: `scripts/dev/weak_tests.py` + `tests/test_weak_tests.py` (22 testes); `weak_tests.py --spec 417 --worktree` dá `OK`. Reuso de `red_green.added_tests` (sem duplicar a detecção de teste novo). Ligado ao `land_check` como check `weak-tests` (depois de `growth`, script irmão do `land_check.py`), com teste em `tests/test_land_check.py` e cópia dos scripts no fixture de `tests/test_wt_sh.py`.
+  - Bloco B: `hypothesis>=6.170,<7` no grupo `dev` (`uv.lock` +2 linhas); `tests/fakes/property_settings.py`; `tests/test_mechanics_properties.py` (P1-P5) e `tests/test_persistence_properties.py` (RT1-RT3). R17 em `docs/guias/TESTES.md`. Medições e mutações: `docs/spec417/medicoes.md`.
+  - Limites escritos: P5 não monta estado de keeper/patente (varre item x mercador no estado base); P3 controla o clima trocando `world_utils.weather_effects` (os dois ramos); RT1 aceita como normalização de save/load que `conflict_summary` ganhe `conflict_id`/`conflict_turn`.
+  - **Achado 1 (R15, bug de produto, não consertado):** `economy.execute_trade` muta o `state` de entrada quando a loja já foi visitada, pois `world = dict(state["world"])` é cópia rasa e `world["merchant_stocks"][mid][iid] -= qty` (`services/economy.py:812`) escreve no dicionário compartilhado (a venda de item único também, `:876`). Teste `test_p4_trade_does_not_mutate_input`: `xfail` estrito com `@example(location="brekmar", gold=5000, mode="buy", pick=0, qty=1)`.
+  - D4: sem surrogates no gerador (default aceito).
