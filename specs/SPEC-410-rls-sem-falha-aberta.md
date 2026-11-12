@@ -1,6 +1,6 @@
 # SPEC-410 — rls-sem-falha-aberta
 
-> **Status:** `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
+> **Status:** `in-progress` (11/11: código, migração, rollback, testes Python e runbook entregues; **pendentes do coordenador**: aplicar a migração no staging, flag `shadow` -> `on`, smoke §6, rodar pgTAP e `infra_local`, revisão `spec-reviewer`). Antes `approved` (aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível). Evidência e runbook: `docs/spec410/`.
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** SPEC-224 `done` (RLS efetivo por request), SPEC-343 `done` (deixou o follow-up de `rate_limit_buckets`)
 > **Desbloqueia:** nada. Irmã de SPEC-409/411/412 (follow-ups da varredura de segurança de 11/11), sem dependência entre elas.
@@ -205,3 +205,14 @@ Sem LLM real obrigatório além de 1–2 turnos para exercitar a memória e a cr
 - **D4 — As 3 RPCs `SECURITY DEFINER` de `public`** (`rpg_wallet_balance`, `rpg_wallet_history`, `rpg_current_session_active`; `20261015120000:6,14`, `20261013173632:27`): ficam fora desta spec, por decisão registrada. Recomendo spec própria, com inventário de quem as chama (cliente PostgREST vs backend) antes de revogar.
 - **D5 — `app.current_owner_id()` com `execute` para `PUBLIC`** (`20260819002358:13-24`). Recomendo **aceitar**: `anon`/`authenticated` não têm `USAGE` em `app`, então não resolvem o nome, e a função só devolve o claim do próprio request; a invariante R11-iii protege contra mudança futura. Revogar de `PUBLIC` arrisca views/policies que a avaliem com outro dono, sem ganho.
 - **D6 — Quando promover `on` a padrão no código** (e remover a flag): recomendo ao vencer a flag, depois de ≥ 14 dias de `on` no staging sem ocorrência. Fica fora desta spec; vira follow-up.
+
+## 9. Desvios e achados da execução (11/11)
+
+- **Migração:** `20261111140000_rls_hardening_rate_limit_wallet_delete.sql` (o nome de §3.5 era indicativo). R9 mantido: nenhum SQL do produto resolve objeto de `public` sem qualificar. O `comment on role` fica num bloco que só avisa (`notice`) se faltar privilégio.
+- **Achado da Etapa 0 (c):** `gamedata.py` lê o catálogo global (`runtime_catalog.list`) **no import**, sem principal. Em `on` isso levantaria e cairia no `except` (overlay de artefatos perdido em silêncio). Tratamento: marca `boot:gamedata` no ponto do import (entrypoint de boot; entra na lista `SYSTEM_CALLER_ENTRYPOINTS`). `scripts/pool_promote.py` também recebe a marca.
+- **`strict_mode` mora em `infrastructure/pool_scope.py`** (módulo novo, mantém `postgres.py`/`runtime.py` dentro do gate de tamanho); `build_database_runtime` não cresceu (a chamada `boot_rls_mode` substituiu o log antigo de `request_rls_disabled`, que agora é emitido de lá).
+- **Marca de sistema** só roteia ao pool admin quando `request_rls` está ligado; sem `request_rls` o pool é um só e nada muda.
+- **Threads:** nenhuma sem propagação em caminho hosted (ver `docs/spec410/inventario.md`); `speech_to_text._run_to_completion` (SPEC-412) usa `ensure_future(to_thread)`, que copia o contexto, e há teste. `creature_gen_jobs.drenar_em_segundo_plano` não copia, mas só roda com `_database_profile()` falso.
+- **Não executado nesta rodada** (sem Docker): pgTAP (`rls_invariants_test.sql`, `rls_behavior_test.sql`), `tests/test_rls_effective.py` (`infra_local`) e a medição `shadow` real. Escritos por comparação com os existentes.
+- **pgTAP R12:** para `image_quotes`/`shared_pool` o comportamento é provado por insert negado (a policy `WITH CHECK` roda antes de constraints/FKs) e por privilégio, sem semear `pricing_versions`; `operations`/`jobs` usam DML real.
+- **Fora de escopo** (saíram): D2 `pg_net`, D3 `INHERIT FALSE`, D4 RPCs `public` (SPEC-413), D5 `current_owner_id` (aceitos); ligar `shadow`/`on` no staging e promover `on` a padrão (D6) ficam com o coordenador/follow-up.

@@ -155,9 +155,8 @@ def test_embedding_profiles_migration_clauses():
     assert "for select to rpg_api using (true)" in low
 
 
-# rate_limit_buckets: sem RLS desde 20260819001850; so o backend a toca (rpg_api revogado) e nao ha
-# banco local para provar o efeito de habilitar RLS no role rpg_runtime. Follow-up proprio.
-RLS_EXCEPTIONS = {"rate_limit_buckets"}
+# SPEC-410 R6: `rate_limit_buckets` ganhou RLS (20261111140000); nenhuma tabela de `app` fica de fora.
+RLS_EXCEPTIONS: set[str] = set()
 
 
 def test_every_app_table_has_rls():
@@ -173,3 +172,20 @@ def test_every_app_table_has_rls():
             for block in re.findall(r"foreach \w+ in array array\[(.*?)\]", text, re.S):
                 covered |= set(re.findall(r"'([a-z_0-9]+)'", block))
     assert not (created - covered - RLS_EXCEPTIONS), sorted(created - covered)
+
+
+def test_rate_limit_buckets_migration_forca_rls_e_cria_as_policies_de_sistema():
+    sql = (MIGRATIONS / "20261111140000_rls_hardening_rate_limit_wallet_delete.sql").read_text(
+        encoding="utf-8"
+    )
+    low = " ".join(sql.lower().split())
+    enable = low.index("alter table app.rate_limit_buckets enable row level security")
+    force = low.index("alter table app.rate_limit_buckets force row level security")
+    grant = low.index("select app.grant_runtime_access();")
+    assert enable < force < grant  # sem a chamada, FORCE RLS sem policy negaria o rate limit
+    assert "revoke all on app.rate_limit_buckets from public, anon, authenticated" in low
+    assert low.rstrip().endswith("select app.grant_runtime_access();")
+    for table in ("wallet_reservations", "wallet_accounts"):
+        assert f"before delete on app.{table}" in low
+    assert "alter role rpg_runtime set search_path = app, extensions, public" in low
+    assert "alter role rpg_admin set search_path = app, extensions, public" in low

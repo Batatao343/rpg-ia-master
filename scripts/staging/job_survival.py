@@ -57,11 +57,13 @@ def make_owner(env) -> dict:
 def purge_owner(env, owner: dict) -> dict:
     def go(conn):
         n = {}
+        # SPEC-410 R8: wallet_accounts/wallet_reservations barram DELETE (retencao financeira).
         tables = [
             r["table_name"]
             for r in conn.execute(
                 """select table_name from information_schema.columns where table_schema='app'
-               and column_name='owner_id' and table_name <> 'account_deletions'"""
+               and column_name='owner_id' and table_name <> 'account_deletions'
+               and table_name not in ('wallet_accounts','wallet_reservations')"""
             ).fetchall()
         ]
         for _ in range(3):  # FK order is unknown: retry until stable

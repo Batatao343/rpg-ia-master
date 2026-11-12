@@ -21,7 +21,7 @@ select ok(
 );
 select ok(
   exists(select 1 from pg_roles where rolname = 'rpg_api' and not rolinherit and not rolcanlogin),
-  'rpg_api is NOLOGIN NOINHERIT: no tenant privilege without an explicit SET ROLE'
+  'rpg_api itself is NOLOGIN NOINHERIT (the login roles are members and inherit it: isolation needs the app SET LOCAL ROLE)'
 );
 select ok(
   not pg_has_role('authenticated', 'rpg_runtime', 'member') and not pg_has_role('anon', 'rpg_runtime', 'member'),
