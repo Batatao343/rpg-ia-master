@@ -1,6 +1,6 @@
 # SPEC-416 — workspace-gates-que-cobram
 
-> **Status:** `approved`
+> **Status:** `in-progress` (executor 12/11: Blocos A-F e ligação ao `land_check` commitados; faltam revisão Sonnet, suíte completa no pouso e o smoke de CI do §6.1-2)
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** SPEC-414 (`done` antes do Bloco F: mexe em `.claude/hooks/guard_tools.py`, `.claude/settings.json` e `docs/guias/TESTES.md`); SPEC-415 (`done` antes do Bloco A: mexe em `.claude/agents/spec-author.md`).
 > **Desbloqueia:** follow-up F-2 da SPEC-413 (`docs/spec413/README.md:35`, pgTAP em CI); fechamento com prova real de 413/410 quando houver push.
@@ -154,7 +154,7 @@ Confirmado no source em 12/11: `supabase start` (`scripts/dev_stack.py:127-131`)
 
 - `scripts/dev/clock_asserts.py` (≤ 200 linhas): `tracked_tests(root) -> list[str]` (`git ls-files -- tests/*.py tests/**/*.py`), `measure(root, files) -> dict[str, int]`, `problems(current, baseline) -> list[str]`, `tightened(current, baseline)`, `load_baseline`/`write_baseline`, `main(argv)`. Mesmo formato de mensagens do `size_budget` ("novo", "cresceu", "folgada", "órfã"). Antes de criar helper: `Grep "def _functions"`; se valer, reaproveitar a iteração qualificada de `size_budget._functions`.
 - Resolução de nome: dicionário de alias por módulo e por função, montado de `Import`/`ImportFrom`; nome dotted da chamada reconstruído de `Attribute`/`Name` e normalizado pelo alias antes de comparar com o conjunto canônico do R12.
-- `tests/clock_asserts.json` semeado com `--update` na Etapa C. Tamanho esperado: `<MEDIR: bash scripts/dev/py.sh scripts/dev/clock_asserts.py --update && bash scripts/dev/py.sh -c "import json;d=json.load(open('tests/clock_asserts.json'));print(len(d['functions']),sum(d['functions'].values()))">` (a auditoria contou ≥ 9). A semente tem que conter `tests/test_spec361_gate.py::test_prazo_real_por_thread` (oráculo positivo).
+- `tests/clock_asserts.json` semeado com `--update` na Etapa C. Tamanho esperado: 24 funções e 33 asserts (medido 12/11, `docs/spec416/medicoes.md`) (a auditoria contou ≥ 9). A semente tem que conter `tests/test_spec361_gate.py::test_prazo_real_por_thread` (oráculo positivo).
 
 ### 3.4 Inventário de saída default em caminho versionado (R18–R20)
 
@@ -174,11 +174,11 @@ Busca de 12/11 (`default=` / constante `ROOT / "docs"` em `scripts/`). Critério
 | `scripts/bestiario/pool_revisao.py:229` | `handoffs/pool-review/<data>.yaml` | fica: insumo de revisão versionado por data |
 | `scripts/bestiario/arena_todas.sh:10-11` | `docs/spec349/*` explícito na linha de comando | fica (já é explícito) |
 
-`<MEDIR: confirmar o inventário com Grep "ROOT / \"docs\"|default=.*docs|'docs/|\"docs/" em scripts/ antes da Etapa D; script novo achado entra na tabela com ação>`. Runbooks que citam `--out docs/…` explícito (`docs/spec413/README.md`, `docs/spec410/README.md`, `ESTADO_ATUAL.md` § Bloqueios) não mudam.
+Inventário reconfirmado em 12/11: nenhum script de staging novo; geradores determinísticos extras ficam (`docs/spec416/medicoes.md`). Runbooks que citam `--out docs/…` explícito (`docs/spec413/README.md`, `docs/spec410/README.md`, `ESTADO_ATUAL.md` § Bloqueios) não mudam.
 
 ### 3.5 Contagem do ruff (R22–R26)
 
-- Etapa 0 mede três coisas antes de codar: (a) o override limpa só o toml: `<MEDIR: uv run ruff check --exit-zero --output-format json --config "lint.per-file-ignores = {}" . | python -c "import json,sys;d=json.load(sys.stdin);print(len({(x['filename'],x['code']) for x in d}))">` deve igualar o número de pares do `ruff-baseline.toml` `<MEDIR: soma dos códigos por linha do toml>`; (b) tempo: `<MEDIR: time uv run ruff check --exit-zero --output-format json --config "lint.per-file-ignores = {}" . > /dev/null>`; (c) tamanho do JSON gerado `<MEDIR: wc -c ruff-baseline-counts.json>` (se > 40 KB, o hook de leitura exige recorte; aceitável, é arquivo gerado).
+- Etapa 0 mede três coisas antes de codar: (a) o override limpa só o toml: mediu 987 pares, idênticos aos de `current_debt()` antigo (o toml da `main` tinha 988: 1 obsoleto); (b) tempo: 1,3 s (R26: teste na suíte); (c) tamanho do JSON gerado 34 096 bytes (se > 40 KB, o hook de leitura exige recorte; aceitável, é arquivo gerado).
 - O check compara três conjuntos: pares medidos, pares do JSON, pares do toml. Mensagens: "par novo F×R (n)", "cresceu F×R a → b", "folgada F×R a → b; rode --tighten", "órfão F×R; rode --tighten", "toml ≠ contagens; rode --tighten".
 
 ### 3.6 Guarda e relatório (R28–R30)
@@ -228,7 +228,7 @@ Uma branch, um commit por bloco (Conventional Commits, inglês). Ordem: 0 → A 
 
 1. **Testes:** em `tests/test_dev_stack.py`, `test_test_db_forca_local_e_imprime_tap` (runner falso: última chamada = `[cli, "test", "db", "--local"]`; stdout `Files=5, Tests=63` sai no retorno) e `test_test_db_recusa_stack_linkada` (mesmo molde de `:32-38`). Em `tests/test_audit_local_workflow.py`, `test_audit_local_runs_pgtap` (YAML: passo com `dev_stack.py test-db` depois do `id: stack` e antes do `audit_local_gate.py`; o `if` do gate contém `steps.stack.outcome == 'success'` e `!cancelled()`). Falha antes: subcomando e passo ausentes.
 2. **Implementação:** §3.2.
-3. **Verificação:** `pt.sh tests/test_dev_stack.py tests/test_audit_local_workflow.py tests/test_ci_docs_only.py`; `actionlint` limpo no workflow (`<MEDIR: actionlint .github/workflows/audit-local.yml>`). A prova real é o §6.1.
+3. **Verificação:** `pt.sh tests/test_dev_stack.py tests/test_audit_local_workflow.py tests/test_ci_docs_only.py`; `actionlint` limpo no workflow (`actionlint` indisponível nesta máquina: não rodou; o teste de YAML cobre ordem, `id` e `if`). A prova real é o §6.1.
 
 ### Etapa C — catraca de relógio
 
@@ -256,7 +256,7 @@ Uma branch, um commit por bloco (Conventional Commits, inglês). Ordem: 0 → A 
 
 ## 5. Critérios de aceite
 
-- [ ] `<MEDIR:>` resolvidos e gravados nesta spec (Etapa 0).
+- [x] `<MEDIR:>` resolvidos e gravados nesta spec (Etapa 0).
 - [ ] `docs/guias/DECISOES_FIXAS.md` com ≥ 38 linhas, nenhum `<CONFIRMAR>` sobrando, dentro do teto; `tests/test_decisoes_fixas.py` verde e vermelho antes (registro do primeiro `pt.sh`).
 - [ ] `audit-reader.md` e `spec-author.md` com a linha do R6, sem outra mudança.
 - [ ] `dev_stack.py test-db` e passo no `audit-local.yml`; testes do Bloco B verdes; CI real com `Files=5, Tests=63` ou o achado registrado (R11, §6.1).
@@ -279,7 +279,7 @@ Sem LLM. A infra real é o Postgres do CI.
 ## 7. Riscos & compatibilidade
 
 - **Primeiro vermelho do pgTAP.** Os 5 arquivos nunca rodaram; 410 e 413 têm SQL que nunca tocou Postgres (`ESTADO_ATUAL.md`). Um vermelho é o objetivo do gate, mas trava o `audit-local` até alguém decidir (R11, D-416-2).
-- **Imagem do `pg_prove`.** `supabase test db` puxa um container extra no runner; soma tempo ao job de 35 min (`audit-local.yml:33`). `<MEDIR: duração do passo no primeiro run>`.
+- **Imagem do `pg_prove`.** `supabase test db` puxa um container extra no runner; soma tempo ao job de 35 min (`audit-local.yml:33`). Duração do passo: medir no primeiro run (pendente do push, D-416-4)..
 - **Atrito das catracas com folga 0.** Consertar uma violação ou um teste de relógio obriga `--tighten` no mesmo commit, como no `size_budget` desde a SPEC-407. É o custo aceito do "só encolhe".
 - **Runbooks que contam com o default antigo.** Quem rodar um smoke de staging sem `--out` não verá mais o arquivo em `docs/`: o caminho impresso continua, e os runbooks da onda 11/11 já passam `--out` explícito. `measure.py` só acha `e2e_session.json` se `e2e_session.py` rodou no mesmo checkout (antes achava a cópia versionada antiga, que podia estar velha).
 - **Override de config do ruff.** Se o `--config "lint.per-file-ignores = {}"` não limpar o `extend` na versão do ruff do lock, o R22 volta ao desenho atual (Etapa 0 decide).
@@ -294,3 +294,13 @@ Sem LLM. A infra real é o Postgres do CI.
 - **D-416-4 — Push para provar o pgTAP.** O §6.1–6.2 precisa de um run do `audit-local`, que depende do push autorizado pelo dono (`ESTADO_ATUAL.md` § Bloqueios). Sem push, a spec pousa com o Bloco B testado só no YAML e o §6 em "Não rodou e por quê"; vira `done` só depois do run.
 - **D-416-5 — Sem marcador de exceção na catraca de relógio.** Escolha do autor: a única saída é relógio fixo ou `--update` do coordenador (mesmo desenho do `size_budget`). Alternativa rejeitada: `# clock-ok: motivo` em linha, que deixaria o executor abrir exceção sozinho.
 - **Aprovação (2026-11-12):** aprovada pelo coordenador por delegação do dono ("executa as mudanças", 12/11). D-416-1: a semente de `DECISOES_FIXAS.md` só leva linha com fonte versionada citável (spec ou auditoria); item sem fonte (`_state`, `openapi` se não houver) sai da semente e volta no hand-back para o coordenador confirmar. D-416-2: o passo pgTAP nasce bloqueante; falha na primeira execução é triada pelo coordenador antes de qualquer aplicação no staging. D-416-3: executa depois da SPEC-415 pousar e então liga `baseline_growth.py` ao `land_check`. D-416-4: o smoke do pgTAP no CI fica pendente do push, que depende do dono; a spec pode pousar com esse item em "Não rodou e por quê". D-416-5 aceita.
+
+## 9. Notas de execução (12/11)
+
+- **Semente (D-416-1).** D-29 (TypedDicts persistidos) mantém a fonte `SPEC-405:66`; D-31 foi reescrito só com o que a fonte diz (SPEC-385 adiada, `auditoria-qualidade…:318`), sem "openapi-typescript" (sem fonte versionada). O coordenador confirma se esses dois são os itens `_state`/`openapi` dos 8 reabertos em 11/11.
+- **Oráculo do R22.** O `ruff-baseline.toml` regravado não é byte-igual ao anterior: perdeu `.claude/hooks/guard_tools.py = ["BLE001"]`, que já estava obsoleto na `main` (`--check` dava stale; SPEC-414 consertou a violação). Medido: 987 pares idênticos aos de `current_debt()` antigo.
+- **R26.** 1,3 s: gate `test_repo_respeita_contagens` na suíte; `validate.yml` não mudou.
+- **D-416-3 (feito).** `land_check.py` ganhou o check `growth` (entre `measure` e `ci`) que roda `baseline_growth.py --base main --ignore-new-files`; a flag trata baseline ausente na base como criação (senão a própria SPEC-416 reprovaria). Sem a flag o relatório lista as chaves novas (R29, §4 F.3).
+- **TESTES.md.** A frase do ruff estava em `:83-84` (não `:77-78`); atualizada junto com a linha da catraca de relógio.
+- **Bloco D.** `incident_drill.py` e `spec222_art_purge.py` ganharam `--out`; `tests/test_staging_evidence_default.py` cobre as quatro frentes do plano.
+- **Não rodou e por quê.** CI/pgTAP real (§6.1-2): exige push, fora do escopo do executor. `actionlint`: não instalado. Suíte completa: do coordenador.
