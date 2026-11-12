@@ -14,6 +14,7 @@ import importlib.util
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from collections.abc import Callable, Mapping
@@ -34,10 +35,24 @@ _RAM_RE = re.compile(r"RAM livre:\s*(\d+(?:[.,]\d+)?)\s*GB")
 _ORPHAN_RE = re.compile(r"^\s*(\d+)\s+\d+\s*MB\s", re.MULTILINE)
 
 
-def default_run(args: list[str], cwd: str | None = None) -> tuple[int, str]:
-    out = subprocess.run(
-        args, cwd=cwd, capture_output=True, text=True, encoding="utf-8", errors="replace"
-    )
+def default_run(
+    args: list[str], cwd: str | None = None, timeout: float | None = None
+) -> tuple[int, str]:
+    # CreateProcess acha o `bash` do WSL (System32) antes do Git Bash: resolva pelo PATH.
+    exe = shutil.which(args[0]) or args[0]
+    try:
+        out = subprocess.run(
+            [exe, *args[1:]],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            stdin=subprocess.DEVNULL,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired:
+        return 124, f"timeout de {timeout}s"
     return out.returncode, out.stdout + (out.stderr if out.returncode else "")
 
 

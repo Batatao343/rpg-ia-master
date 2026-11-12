@@ -12,7 +12,6 @@ from __future__ import annotations
 import ast
 import os
 import shutil
-import subprocess
 import sys
 import tempfile
 import xml.etree.ElementTree as ET
@@ -124,14 +123,7 @@ def render(rows: list[Row]) -> str:
 
 
 def default_run(args: list[str], cwd: str | None = None) -> tuple[int, str]:
-    try:
-        out = subprocess.run(
-            args, cwd=cwd, capture_output=True, text=True, encoding="utf-8", errors="replace",
-            timeout=TIMEOUT_S,
-        )  # fmt: skip
-    except subprocess.TimeoutExpired:
-        return 124, f"timeout de {TIMEOUT_S}s"
-    return out.returncode, out.stdout + out.stderr
+    return lc.default_run(args, cwd, timeout=TIMEOUT_S)
 
 
 def _parse(argv: list[str]) -> tuple[str, set[str], bool] | None:
