@@ -11,12 +11,13 @@ import os
 from uuid import UUID
 
 from infrastructure.account_lifecycle import PostgresAccountLifecycle
+from infrastructure.db_roles import admin_connection
 from infrastructure.runtime import RuntimeConfig, build_runtime
 
 
 def claim_pending(pool, limit: int) -> list[dict]:
     """Rotate failed tombstones so one unavailable owner cannot starve others (2 min re-claim cooldown)."""
-    with pool.connection() as db, db.transaction():
+    with admin_connection(pool) as db, db.transaction():
         return db.execute(
             """with due as (
             select owner_id from app.account_deletions where status='deleting'
@@ -43,7 +44,7 @@ def run_recovery_batch(runtime, max_items: int, *, rows: list[dict] | None = Non
         rows = claim_pending(pool, max_items)
     lifecycle = PostgresAccountLifecycle(pool, runtime.identity_verifier, runtime.blob_store)
     lifecycle.shared_blobs = getattr(runtime, "shared_blob_store", None)  # SPEC-352
-    with pool.connection() as db, db.transaction():
+    with admin_connection(pool) as db, db.transaction():
         purged = db.execute("""delete from app.rate_limit_buckets
             where bucket_key like 'auth:%' and updated_at < now() - interval '24 hours'""").rowcount
     results = []
@@ -104,7 +105,7 @@ def main() -> int:
         if args.batch:
             rows = claim_pending(runtime.game_store.pool, args.max)
         else:
-            with runtime.game_store.pool.connection() as db:
+            with admin_connection(runtime.game_store.pool) as db:
                 if args.owner:
                     rows = db.execute(
                         """select owner_id,status,requested_at,completed_at

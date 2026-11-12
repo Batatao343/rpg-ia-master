@@ -11,6 +11,8 @@ import json
 import os
 from uuid import UUID
 
+from infrastructure.db_roles import admin_connection
+
 COMMANDS = ("credit", "debit", "forgive-debt")
 
 
@@ -58,7 +60,7 @@ def run(args, runtime) -> dict:
     wallet = PostgresWallet(pool)
     principal = Principal(args.owner, "admin", str(args.owner))
     before = wallet.balance(principal)
-    with pool.connection() as db:
+    with admin_connection(pool) as db:
         debt_before = owner_debt(db, args.owner)
     out = {
         "mode": "apply" if args.apply else "dry-run",
@@ -75,7 +77,7 @@ def run(args, runtime) -> dict:
     if args.command in ("credit", "debit"):
         signed = args.amount_milli if args.command == "credit" else -args.amount_milli
         # credit + debt settlement commit atomically (a crash cannot leave credit unsettled)
-        with pool.connection() as db, db.transaction():
+        with admin_connection(pool) as db, db.transaction():
             from infrastructure.wallet_debt import settle_owner_debt
 
             after = wallet.adjust_admin(
@@ -89,7 +91,7 @@ def run(args, runtime) -> dict:
             settled = settle_owner_debt(db, args.owner) if signed > 0 else 0
         out.update(available_after=after.available_milli - settled, debt_settled=settled)
     else:
-        with pool.connection() as db, db.transaction():
+        with admin_connection(pool) as db, db.transaction():
             PostgresWallet._locked_account(db, args.owner)
             prior = forgive_replay(db, args.owner, args.reference)
             out["forgiven"] = forgive_debt(

@@ -16,6 +16,8 @@ import json
 import os
 from uuid import UUID
 
+from infrastructure.db_roles import admin_connection
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -50,7 +52,7 @@ def run(args, runtime) -> dict:
     pool = runtime.game_store.pool
     wallet = PostgresWallet(pool)
     principal = Principal(args.owner, "admin", str(args.owner))
-    with pool.connection() as db:
+    with admin_connection(pool) as db:
         row = db.execute(
             """select r.status,r.ceiling_milli,r.fence_token,r.usage_operation_id,
                  (select count(*) from app.wallet_attempt_tickets t

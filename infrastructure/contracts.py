@@ -18,6 +18,13 @@ class InfrastructureError(RuntimeError):
     """Erro sanitizável na fronteira de infraestrutura."""
 
 
+class RlsScopeError(RuntimeError):
+    """SPEC-410: checkout request-scoped sem principal nem marca de sistema (modo estrito).
+
+    Deliberadamente NAO e `Unauthorized`/`InfrastructureError`: nao pode virar 401 silencioso;
+    na borda HTTP cai no 500 generico (`internal_error`), sem vazar a mensagem."""
+
+
 class NotFound(InfrastructureError):
     pass
 

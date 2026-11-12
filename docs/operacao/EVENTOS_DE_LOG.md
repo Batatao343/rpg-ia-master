@@ -290,6 +290,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `pool.awaiting_curator` | `entry_id` |
 | `pool.cast_offered` | `count` |
 | `pool.cast_used` | `entry_id` |
+| `pool.checkout_without_principal` | `caller`, `mode` |
 | `pool.curator_ignored` | `entry_id` |
 | `pool.embed_failed` | `error` |
 | `pool.embedder_unavailable` | `error` |
@@ -371,6 +372,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `runtime.config_warning` | `code`, `present` |
 | `runtime.embedding_profile_ensure_failed` | `error` |
 | `runtime.request_rls_disabled` | `profile` |
+| `runtime.rls_strict_principal` | `mode` |
 | `sse.client_disconnected` | `elapsed_ms`, `phase` |
 | `sse.early_narrative_shadow` | `gain_ms`, `identical` |
 | `sse.error` | `code`, `error_type`, `stack`, `status` |

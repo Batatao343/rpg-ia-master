@@ -18,6 +18,7 @@ from infrastructure.contracts import (
     MemoryWriteIntent,
     Principal,
 )
+from infrastructure.db_roles import admin_connection
 from infrastructure.pgvector_memory import PgVectorMemoryStore
 from infrastructure.postgres import PostgresPool
 from services.chronicle import ensure_chronicle_ids
@@ -112,7 +113,8 @@ class ChronicleRepository:
         if chapter_source_hash(chapter) != source_hash:
             raise ValueError("source hash da crônica divergiu")
         status = str(digest.get("status") or "extractive_fallback")
-        with self.pool.connection() as connection, connection.transaction():
+        # SPEC-410: unico chamador e o worker (sem principal) => conexao de sistema.
+        with admin_connection(self.pool) as connection, connection.transaction():
             from services.job_fence import require_job_fence
 
             game = connection.execute(

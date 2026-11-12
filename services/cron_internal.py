@@ -18,6 +18,8 @@ from uuid import uuid4
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
+from infrastructure.request_context import system_caller
+
 from observability.telemetry import (
     correlation,
     correlation_scope,
@@ -142,7 +144,10 @@ def item_failed(task: str, item_kind: str, item_id: object, exc: BaseException) 
 
 
 def _run(task: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
-    with correlation_scope(run_id=uuid4().hex[:12]):
+    # SPEC-410: todo `/internal/cron/*` e chamador de sistema (sem principal): a marca roteia
+    # `pool.connection()` ao pool admin e vence o modo estrito. Um principal por job (projeção)
+    # continua vencendo a marca.
+    with system_caller(f"cron:{task}"), correlation_scope(run_id=uuid4().hex[:12]):
         return _run_scoped(task, fn)
 
 

@@ -24,6 +24,8 @@ LABELS = {
     "rpg_operation_lease_age_seconds": {"kind"},
     "rpg_db_duration_seconds": {"operation", "outcome"},
     "rpg_db_pool": {"state"},
+    # SPEC-410: checkout request-scoped sem principal nem marca de sistema (modo shadow|on).
+    "rpg_pool_checkout_without_principal_total": {"mode"},
     # SPEC-257 R2: verificacao de compra por provider (stripe|google_play); outcome = codigo fechado.
     "rpg_payment_verifications_total": {"provider", "outcome"},
     # SPEC-254 R4: duracao por chamada ao banco; query_name = rotulo ESTATICO (nunca SQL/parametros).

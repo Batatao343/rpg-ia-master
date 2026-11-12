@@ -41,3 +41,28 @@ def set_current_principal(principal: Principal | None):
 
 def reset_current_principal(token) -> None:
     _principal.reset(token)
+
+
+# SPEC-410: marca de chamador de sistema (cron/worker/drain/script). Declarada UMA vez no ponto de
+# entrada; roteia `pool.connection()` ao pool admin (sem trocar de role) e PERDE para um principal.
+_system_caller: contextvars.ContextVar[str | None] = contextvars.ContextVar(
+    "rpg_system_caller",
+    default=None,
+)
+
+
+def active_system_caller() -> str | None:
+    """`reason` da marca de sistema ativa ou None."""
+    return _system_caller.get()
+
+
+@contextmanager
+def system_caller(reason: str) -> Iterator[None]:
+    """Fixa a marca de sistema (ex.: `cron:jobs`, `worker`, `script:admin_wallet_adjust`)."""
+    if not reason or not reason.strip():
+        raise ValueError("system_caller exige um reason")
+    token = _system_caller.set(reason.strip())
+    try:
+        yield
+    finally:
+        _system_caller.reset(token)

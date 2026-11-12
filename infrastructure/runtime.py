@@ -37,6 +37,7 @@ from infrastructure.local_adapters import (
     LegacyRuntimeCatalogStore,
     MemoryRateLimiter,
 )
+from infrastructure.pool_scope import boot_rls_mode
 from observability.telemetry import log_event as _log_event
 
 LOCAL_PRINCIPAL_ID = UUID("00000000-0000-0000-0000-000000000001")
@@ -758,8 +759,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
         except Exception as exc:
             log_build_failed("admin_pool", exc)  # SPEC-249 R3
             raise
-    if not config.request_rls:
-        _log_event("runtime", "request_rls_disabled", level="warning", profile=config.profile)
+    strict_principal = boot_rls_mode(config.profile, config.request_rls)  # SPEC-410
     try:
         pool = PostgresPool(
             config.database_url,
@@ -770,6 +770,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
             connect_timeout=config.db_connect_timeout,
             request_rls=config.request_rls,
             admin_pool=admin_pool,
+            strict_principal=strict_principal,
         )
     except Exception as exc:
         log_build_failed("db_pool", exc)

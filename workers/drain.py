@@ -64,19 +64,22 @@ def drain_jobs(
     processed = 0
     reason = "empty"
     before = dict(getattr(worker, "stats", None) or {})
-    while True:
-        if processed >= max_jobs:
-            reason = "max_jobs"
-            break
-        if stop_at - clock() < min_job_window_s:
-            reason = "deadline"
-            break
-        with job_window_scope(stop_at, clock):
-            ran = worker.run_once(limit=1)
-        if ran == 0:
-            reason = "empty"
-            break
-        processed += 1
+    from infrastructure.request_context import system_caller
+
+    with system_caller("drain"):  # SPEC-410: dreno de jobs e chamador de sistema
+        while True:
+            if processed >= max_jobs:
+                reason = "max_jobs"
+                break
+            if stop_at - clock() < min_job_window_s:
+                reason = "deadline"
+                break
+            with job_window_scope(stop_at, clock):
+                ran = worker.run_once(limit=1)
+            if ran == 0:
+                reason = "empty"
+                break
+            processed += 1
     after = dict(getattr(worker, "stats", None) or {})
 
     def delta(key: str) -> int:  # SPEC-255 R4: o cron deriva o outcome daqui

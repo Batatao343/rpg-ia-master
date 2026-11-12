@@ -20,6 +20,8 @@ import json
 import re
 from collections.abc import Sequence
 
+from infrastructure.db_roles import admin_connection
+
 PRODUCT_RE = re.compile(r"[a-z0-9][a-z0-9_.]{0,127}")
 
 
@@ -59,7 +61,7 @@ def main(argv: Sequence[str] | None = None, *, pool=None) -> int:
         from infrastructure.runtime import get_runtime
 
         pool = get_runtime().game_store.pool
-    with pool.connection() as db:
+    with admin_connection(pool) as db:
         web = [
             dict(r)
             for r in db.execute(

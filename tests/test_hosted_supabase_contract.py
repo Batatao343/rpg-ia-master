@@ -345,6 +345,7 @@ def test_hosted_runtime_wires_supabase_auth_storage_and_single_pool(
         "connect_timeout": 3.0,
     }
     assert request_kwargs.pop("request_rls") is True
+    assert request_kwargs.pop("strict_principal") == "off"  # SPEC-410: padrao
     assert isinstance(request_kwargs.pop("admin_pool"), FakePool)
     assert request_kwargs == admin_kwargs
     assert isinstance(built.identity_verifier, SupabaseIdentityProvider)

@@ -19,7 +19,10 @@ def main() -> int:
     if pool_mode() == "off":
         print(json.dumps({"skipped": "RPG_SHARED_POOL=off"}))
         return 0
-    print(json.dumps(promote_due_job(get_store())))
+    from infrastructure.request_context import system_caller
+
+    with system_caller("script:pool_promote"):  # SPEC-410
+        print(json.dumps(promote_due_job(get_store())))
     return 0
 
 

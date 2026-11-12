@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from infrastructure.openai_images import IMAGE_PROVIDER_TIMEOUT_S, OpenAIImageGenerator
 from infrastructure.pgvector_memory import PgVectorMemoryStore
+from infrastructure.request_context import system_caller
 from infrastructure.runtime import get_runtime
 from services.chronicle_repository import ChronicleRepository
 from services.dynamic_art import DynamicArtRepository
@@ -242,9 +243,14 @@ def main() -> int:
     worker = JobWorker(get_runtime().job_queue, build_handlers(), worker_id=args.worker_id)
     for sig in (signal.SIGINT, signal.SIGTERM):
         signal.signal(sig, lambda *_: worker.request_stop())
+    with system_caller("worker"):  # SPEC-410: processo de sistema, sem principal de request
+        return _serve(worker, once=args.once)
+
+
+def _serve(worker: JobWorker, *, once: bool) -> int:
     while not worker.stop_event.is_set():
         processed = worker.run_once(limit=10)
-        if args.once:
+        if once:
             return 0
         if processed == 0:
             worker.stop_event.wait(0.5)

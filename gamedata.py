@@ -121,13 +121,16 @@ BESTIARY = load_json_data("bestiary.json")
 BASE_ARTIFACTS = load_json_data("artifacts.json")
 # custom = legado (data/, pré-spec) + overlay runtime (overlay vence)
 try:
+    from infrastructure.request_context import system_caller
     from infrastructure.runtime import get_runtime
 
-    _runtime_artifacts = get_runtime().runtime_catalog.list(
-        "custom_artifact",
-        owner_id=None,
-        game_id=None,
-    )
+    # SPEC-410: leitura de boot do catalogo global (import do modulo, sem principal).
+    with system_caller("boot:gamedata"):
+        _runtime_artifacts = get_runtime().runtime_catalog.list(
+            "custom_artifact",
+            owner_id=None,
+            game_id=None,
+        )
 except Exception:
     _runtime_artifacts = _read_json_file(runtime_cache_path("custom_artifacts.json"))
 CUSTOM_ARTIFACTS = {**load_json_data("custom_artifacts.json"), **_runtime_artifacts}

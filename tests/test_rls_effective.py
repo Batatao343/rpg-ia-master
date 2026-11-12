@@ -113,6 +113,7 @@ def test_role_does_not_leak_across_pooled_connections(world):
             with user.connection() as c:
                 c.execute("select 1")
         # same physical connection (max_size=2, reused) outside any principal: no role
+        # (SPEC-410: contrato do modo `off`; o modo `on` esta nos testes `estrito` abaixo)
         with user.connection() as c:
             assert c.execute("select current_user as u").fetchone()["u"] == "rpg_runtime"
         with principal_scope(_principal(world["b"])):
@@ -437,3 +438,40 @@ def test_restore_effects_release_wallet_hold_under_request_role(world, monkeypat
         _cancel_owner_jobs(world, principal)
         user.close()
         admin_pool.close()
+
+
+def test_estrito_sem_principal_levanta(world):
+    """SPEC-410 R13: `strict_principal="on"` + sem principal nem marca => erro tipado."""
+    from infrastructure.contracts import RlsScopeError
+
+    user, admin = _pools(world, strict_principal="on")
+    try:
+        with pytest.raises(RlsScopeError):
+            with user.connection():
+                pass
+        # o erro nao vaza uma conexao nem deixa role: o proximo checkout com principal funciona
+        with principal_scope(_principal(world["a"])), user.connection() as c:
+            assert c.execute("select current_user as u").fetchone()["u"] == "rpg_api"
+    finally:
+        user.close()
+        admin.close()
+
+
+def test_marca_de_sistema_ve_os_dois_owners(world):
+    from infrastructure.request_context import system_caller
+
+    user, admin = _pools(world, strict_principal="on")
+    try:
+        with system_caller("test"), user.connection() as c:
+            assert c.execute("select current_user as u").fetchone()["u"] == "rpg_runtime"
+            ids = {r["id"] for r in c.execute("select id from app.games").fetchall()}
+            assert {world["ga"], world["gb"]} <= ids
+        # o principal vence a marca: continua sob rpg_api e so ve o proprio owner
+        with system_caller("test"), principal_scope(_principal(world["a"])):
+            with user.connection() as c:
+                assert c.execute("select current_user as u").fetchone()["u"] == "rpg_api"
+                ids = {r["id"] for r in c.execute("select id from app.games").fetchall()}
+                assert world["ga"] in ids and world["gb"] not in ids
+    finally:
+        user.close()
+        admin.close()

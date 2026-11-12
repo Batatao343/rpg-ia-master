@@ -60,6 +60,10 @@ def _apply_request_role(connection: Connection, owner_id: UUID) -> None:
 
 
 class PostgresPool:
+    _strict_principal = (
+        "off"  # default de classe: pools montados sem __init__ (fakes) ficam abertos
+    )
+
     def __init__(
         self,
         dsn: str,
@@ -71,6 +75,7 @@ class PostgresPool:
         connect_timeout: float = 5.0,
         request_rls: bool = False,
         admin_pool: PostgresPool | None = None,
+        strict_principal: str = "off",
     ):
         if ConnectionPool is None:
             raise RuntimeError("instale psycopg: uv sync")
@@ -91,6 +96,7 @@ class PostgresPool:
         # admin_pool: credencial separada para worker/cron/sistema; ausente => mesmo pool
         # (R9), sempre sem trocar de role.
         self._request_rls = request_rls
+        self._strict_principal = strict_principal  # SPEC-410: off|shadow|on (so hosted)
         self.admin_pool = admin_pool
         self._pool = ConnectionPool(
             conninfo=dsn,
@@ -144,12 +150,29 @@ class PostgresPool:
     @contextmanager
     def connection(self, *, as_admin: bool = False) -> Iterator[Connection]:
         """Conexao de request (RLS efetivo) ou, com `as_admin`, de sistema."""
-        if as_admin:
+        if as_admin or self._system_routed():
             with self.admin_connection() as connection:
                 yield connection
             return
         with self._checkout(request_scoped=True) as connection:
             yield connection
+
+    def _system_routed(self) -> bool:
+        """SPEC-410: sem principal, a marca de sistema manda ao pool admin; sem marca, o modo
+        (`shadow` conta, `on` levanta). Principal presente (ou RLS desligado) nao passa aqui."""
+        if not self._request_rls:
+            return False
+        from infrastructure.request_context import active_principal, active_system_caller
+
+        if active_principal() is not None:
+            return False
+        if active_system_caller() is not None:
+            return True
+        if self._strict_principal != "off":
+            from infrastructure.pool_scope import on_missing_principal
+
+            on_missing_principal(self._strict_principal)
+        return False
 
     @contextmanager
     def admin_connection(self) -> Iterator[Connection]:

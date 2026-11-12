@@ -102,13 +102,14 @@ class _FakePooled:
         yield Conn()
 
 
-def _pool(request_rls=True, with_admin=True):
+def _pool(request_rls=True, with_admin=True, strict="off"):
     from infrastructure.postgres import PostgresPool
 
     log: list = []
     pool = PostgresPool.__new__(PostgresPool)
     pool._transaction_pooler = False
     pool._request_rls = request_rls
+    pool._strict_principal = strict
     pool._pool = _FakePooled("user", log)
     if with_admin:
         admin = PostgresPool.__new__(PostgresPool)
@@ -145,9 +146,10 @@ def test_request_connection_sets_role_and_owner_only_with_principal():
     from infrastructure.request_context import principal_scope
 
     pool, log = _pool()
-    with pool.connection() as c:  # sem principal: nada escopado (health/boot)
+    with pool.connection() as c:  # SPEC-410: modo `off` (padrao) = contrato atual, sem principal
         c.execute("select 1")
     assert not any("ROLE" in sql.upper() for _, sql in log)
+    assert [label for label, _ in log] == ["user"]
     log.clear()
     with principal_scope(_principal()), pool.connection() as c:
         c.execute("select 2")
@@ -196,6 +198,11 @@ SYSTEM_MODULES = [
     "workers/blob_purge_jobs.py",
     "workers/embedding_jobs.py",
     "workers/projection_jobs.py",
+    # SPEC-410 R3: scripts de operacao migrados de `pool.connection()` para `admin_connection`
+    "scripts/admin_wallet_adjust.py",
+    "scripts/admin_wallet_reconcile.py",
+    "scripts/recover_account_deletions.py",
+    "scripts/seed_google_play_skus.py",
 ]
 # Modulos de request: usam `.connection()` (escopado ao owner); deve ser deliberado.
 REQUEST_MODULES = [
@@ -285,3 +292,443 @@ def test_lease_heartbeat_thread_inherits_the_request_principal():
         with keep_lease_alive(renew, interval_seconds=0.01):
             assert in_thread.wait(2)
     assert seen and seen[0] == principal
+
+
+# --- SPEC-410: falha fechada sem principal (off | shadow | on) e marca de sistema -----------------
+
+
+@pytest.fixture
+def events(monkeypatch):
+    seen: list[tuple[str, str, dict]] = []
+
+    def record(area, event, **fields):
+        seen.append((area, event, fields))
+
+    monkeypatch.setattr("observability.telemetry.log_event", record)
+    return seen
+
+
+def _strict_events(events):
+    return [e for e in events if e[:2] == ("pool", "checkout_without_principal")]
+
+
+def test_checkout_sem_principal_modo_off_inalterado(events):
+    pool, log = _pool(strict="off")
+    with pool.connection() as c:
+        c.execute("select 1")
+    assert [label for label, _ in log] == ["user"]
+    assert _strict_events(events) == []
+
+
+def test_checkout_sem_principal_shadow_loga_e_nao_levanta(events):
+    from observability.metrics import metrics
+
+    key = "rpg_pool_checkout_without_principal_total{'mode': 'shadow'}"
+    before = metrics.snapshot().get(key, 0)
+    pool, log = _pool(strict="shadow")
+    with pool.connection() as c:
+        c.execute("select 1")
+    assert [label for label, _ in log] == ["user"]  # abre como hoje
+    (event,) = _strict_events(events)
+    assert event[2]["mode"] == "shadow"
+    assert event[2]["caller"].endswith("test_checkout_sem_principal_shadow_loga_e_nao_levanta")
+    assert metrics.snapshot().get(key, 0) == before + 1
+
+
+def test_checkout_sem_principal_on_levanta_rls_scope_error(events):
+    from infrastructure.contracts import InfrastructureError, RlsScopeError, Unauthorized
+
+    pool, log = _pool(strict="on")
+    with pytest.raises(RlsScopeError):
+        with pool.connection():
+            pass
+    assert log == []  # falha antes de tocar o pool
+    assert _strict_events(events)[0][2]["mode"] == "on"
+    assert issubclass(RlsScopeError, RuntimeError)
+    assert not issubclass(RlsScopeError, (Unauthorized, InfrastructureError))
+
+
+@pytest.mark.parametrize("strict", ["off", "shadow", "on"])
+def test_marca_de_sistema_usa_pool_admin_sem_role(strict, events):
+    from infrastructure.request_context import system_caller
+
+    pool, log = _pool(strict=strict)
+    with system_caller("cron:teste"), pool.connection() as c:
+        c.execute("select 1")
+    assert [label for label, _ in log] == ["admin"]
+    assert not any("ROLE" in sql.upper() for _, sql in log)
+    assert _strict_events(events) == []
+
+
+def test_marca_de_sistema_sem_pool_admin_usa_o_mesmo_pool_sem_role():
+    from infrastructure.request_context import system_caller
+
+    pool, log = _pool(with_admin=False, strict="on")
+    with system_caller("worker"), pool.connection() as c:
+        c.execute("select 1")
+    assert [label for label, _ in log] == ["user"]
+    assert not any("ROLE" in sql.upper() for _, sql in log)
+
+
+def test_principal_vence_marca_de_sistema():
+    from infrastructure.request_context import principal_scope, system_caller
+
+    pool, log = _pool(strict="on")
+    with system_caller("cron:jobs"), principal_scope(_principal()), pool.connection() as c:
+        c.execute("select 1")
+    assert [label for label, _ in log] == ["user"] * 2  # role+owner e a query, pool de request
+    assert "set_config('role'" in log[0][1]
+
+
+def test_marca_de_sistema_restaura_ao_sair_e_exige_motivo():
+    from infrastructure.request_context import active_system_caller, system_caller
+
+    assert active_system_caller() is None
+    with system_caller("a"):
+        with system_caller("b"):
+            assert active_system_caller() == "b"
+        assert active_system_caller() == "a"
+    assert active_system_caller() is None
+    with pytest.raises(ValueError):
+        with system_caller(" "):
+            pass
+
+
+def test_modo_estrito_so_vale_em_hosted_com_request_rls(monkeypatch):
+    from infrastructure.pool_scope import strict_mode
+
+    on = {"RPG_RLS_STRICT_PRINCIPAL": "on"}
+    assert strict_mode("hosted-supabase", True, on) == "on"
+    assert strict_mode("hosted", True, {"RPG_RLS_STRICT_PRINCIPAL": " Shadow "}) == "shadow"
+    assert strict_mode("hosted-supabase", False, on) == "off"
+    assert strict_mode("local", True, on) == "off"
+    assert strict_mode("legacy", True, on) == "off"
+    assert strict_mode("hosted-supabase", True, {}) == "off"  # padrao
+    assert strict_mode("hosted-supabase", True, {"RPG_RLS_STRICT_PRINCIPAL": "talvez"}) == "off"
+    monkeypatch.setenv("RPG_RLS_STRICT_PRINCIPAL", "shadow")  # sem env explicito: os.environ
+    assert strict_mode("hosted-supabase", True) == "shadow"
+    monkeypatch.delenv("RPG_RLS_STRICT_PRINCIPAL")
+    assert strict_mode("hosted-supabase", True) == "off"
+
+
+def test_request_rls_off_nunca_levanta(events):
+    pool, log = _pool(request_rls=False, with_admin=False, strict="on")
+    with pool.connection() as c:
+        c.execute("select 1")
+    assert [label for label, _ in log] == ["user"]
+    assert _strict_events(events) == []
+
+
+def test_rls_scope_error_vira_500_generico_sem_vazar_mensagem():
+    from fastapi.testclient import TestClient
+
+    import api
+    from infrastructure.contracts import RlsScopeError
+
+    @api.app.get("/__spec410_rls_scope_probe")
+    def _probe():
+        raise RlsScopeError("SEGREDO-INTERNO checkout sem principal")
+
+    try:
+        out = TestClient(api.app, raise_server_exceptions=False).get("/__spec410_rls_scope_probe")
+    finally:
+        api.app.router.routes[:] = [
+            r
+            for r in api.app.router.routes
+            if getattr(r, "path", "") != "/__spec410_rls_scope_probe"
+        ]
+    assert out.status_code == 500
+    assert "SEGREDO-INTERNO" not in out.text
+    assert out.json().get("code") == "internal_error"
+
+
+def test_principal_e_marca_atravessam_threads_do_hosted_em_modo_on():
+    """`to_thread`/`run_in_threadpool` copiam o contexto: em `on` nao levantam.
+
+    Cobre o caminho financeiro/STT da SPEC-412 (finance.begin/admit/finish, rate_limiter.consume)."""
+    import asyncio
+    import threading
+
+    from starlette.concurrency import run_in_threadpool
+
+    from infrastructure.contracts import RlsScopeError
+    from infrastructure.request_context import principal_scope, system_caller
+
+    pool, log = _pool(strict="on")
+
+    def touch():
+        with pool.connection() as c:
+            c.execute("select 1")
+
+    async def go():
+        await asyncio.to_thread(touch)
+        await run_in_threadpool(touch)
+
+    with principal_scope(_principal()):
+        asyncio.run(go())
+    assert [label for label, _ in log] == ["user"] * 4  # (role+owner, query) x 2 threads
+    log.clear()
+    with system_caller("cron:x"):
+        asyncio.run(go())
+    assert [label for label, _ in log] == ["admin"] * 2
+    # Thread crua (threading.Thread) NAO herda: em `on` falha alto em vez de abrir privilegiada.
+    errors: list[BaseException] = []
+
+    def raw():
+        try:
+            touch()
+        except RlsScopeError as exc:
+            errors.append(exc)
+
+    with principal_scope(_principal()):
+        t = threading.Thread(target=raw)
+        t.start()
+        t.join()
+    assert len(errors) == 1
+
+
+# --- SPEC-410 R1: inventario versionado de TODO chamador de `.connection()` (arvore de produto) --
+# Classe: (a) sempre com principal (request); (c) ambiguo: roda sob request E sob worker/cron,
+# coberto pela marca `system_caller` no ponto de entrada; (d) pool proprio sem `request_rls`
+# (script/teste: o modo estrito nunca vale). Chamadores (b) puros usam `admin_connection` e por isso
+# nao aparecem aqui. Detalhe por simbolo: `docs/spec410/inventario.md`.
+CONNECTION_CALLERS: dict[str, str] = {
+    "api_core.py": "a",
+    "infrastructure/postgres.py": "a",
+    "infrastructure/postgres_turns.py": "a",
+    "routes/art.py": "a",
+    "routes/billing.py": "a",
+    "services/game_transfer.py": "a",
+    "services/chronicle_repository.py": "a",  # enqueue_due/overlay; `complete` e sistema (admin)
+    "infrastructure/pgvector_memory.py": "c",
+    "infrastructure/postgres_catalog.py": "c",
+    "infrastructure/postgres_jobs.py": "c",
+    "infrastructure/postgres_shared_pool.py": "c",
+    "scripts/chaos_test.py": "d",
+    "scripts/load_test.py": "d",
+    "scripts/staging/synthetic_data.py": "d",
+    "scripts/verify_restore.py": "d",
+}
+# Unicos lugares que declaram `system_caller` (ponto de entrada, nunca metodo de store).
+SYSTEM_CALLER_ENTRYPOINTS = {
+    "gamedata.py",  # boot: leitura do catalogo global no import
+    "scripts/pool_promote.py",
+    "services/cron_internal.py",  # _run: todo /internal/cron/*
+    "workers/drain.py",  # drain_jobs
+    "workers/run_worker.py",  # main
+}
+_SKIP_DIRS = {"tests", "docs", "web", "evals", "playtest", "node_modules", "__pycache__"}
+
+
+def _product_files():
+    import os
+
+    for folder, dirs, files in os.walk(ROOT):
+        dirs[:] = [d for d in dirs if d not in _SKIP_DIRS and not d.startswith(".")]
+        for name in files:
+            if name.endswith(".py"):
+                yield Path(folder) / name
+
+
+def _calls(path: Path, attr: str) -> list[int]:
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    out = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        func = node.func
+        if (isinstance(func, ast.Attribute) and func.attr == attr) or (
+            isinstance(func, ast.Name) and func.id == attr
+        ):
+            out.append(node.lineno)
+    return out
+
+
+def test_todo_chamador_de_connection_esta_classificado():
+    found = {
+        p.relative_to(ROOT).as_posix()
+        for p in _product_files()
+        if p.relative_to(ROOT).as_posix() != "infrastructure/db_roles.py"
+        and _calls(p, "connection")
+    }
+    assert found - set(CONNECTION_CALLERS) == set(), "chamador novo sem classe (a/c/d)"
+    assert set(CONNECTION_CALLERS) - found == set(), "entrada obsoleta: remova da lista"
+    assert set(CONNECTION_CALLERS.values()) <= {"a", "c", "d"}
+
+
+def test_marca_de_sistema_so_nos_pontos_de_entrada():
+    users = {
+        p.relative_to(ROOT).as_posix()
+        for p in _product_files()
+        if _calls(p, "system_caller")
+        and p.relative_to(ROOT).as_posix() != "infrastructure/request_context.py"
+    }
+    assert users == SYSTEM_CALLER_ENTRYPOINTS
+
+
+def test_chronicle_complete_usa_conexao_de_sistema():
+    tree = ast.parse((ROOT / "services/chronicle_repository.py").read_text(encoding="utf-8"))
+    method = next(
+        n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == "complete"
+    )
+    attrs = {
+        n.func.attr
+        for n in ast.walk(method)
+        if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+    }
+    names = {
+        n.func.id
+        for n in ast.walk(method)
+        if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
+    }
+    assert "connection" not in attrs and "admin_connection" in names
+
+
+class _Rows:
+    def __init__(self, row=None):
+        self.row = row
+
+    def fetchall(self):
+        return []
+
+    def fetchone(self):
+        return self.row
+
+
+@contextmanager
+def _tx():
+    yield
+
+
+def _admin_pool(strict, log, row=None):
+    pool, _ = _pool(strict=strict)
+
+    class Conn:
+        def execute(self, sql, params=None):
+            log.append(("admin", " ".join(str(sql).split())))
+            return _Rows(row)
+
+        def transaction(self):
+            return _tx()
+
+    @contextmanager
+    def admin_connection():
+        yield Conn()
+
+    pool.admin_connection = admin_connection
+    return pool
+
+
+def test_chronicle_complete_funciona_sem_principal_em_modo_estrito(events):
+    """O worker nao tem principal: em `on`, `complete` abre o pool admin e nao levanta."""
+    from services.chronicle import ensure_chronicle_ids
+    from services.chronicle_compression import chapter_source_hash
+    from services.chronicle_repository import ChronicleRepository
+
+    game_id = str(uuid4())
+    chapter = ensure_chronicle_ids([{"chapter_id": "c1"}], game_id=game_id)[0]
+    log: list = []
+    row = {"state": {"continuity": {"timeline_epoch": 9}}, "version": 1}
+    repo = ChronicleRepository(_admin_pool("on", log, row), memory=None)
+    payload = {
+        "owner_id": str(uuid4()),
+        "game_id": game_id,
+        "timeline_epoch": 0,
+        "source_hash": chapter_source_hash(chapter),
+        "chapter": chapter,
+    }
+    with pytest.raises(ValueError, match="superseded"):  # chegou na consulta, via conexao admin
+        repo.complete(payload, {"status": "ready"})
+    assert log and all(label == "admin" for label, _ in log)
+    assert _strict_events(events) == []
+
+
+def test_claim_pending_dos_scripts_usa_pool_admin_em_modo_estrito(events):
+    from scripts import recover_account_deletions
+
+    log: list = []
+    pool = _admin_pool("on", log)
+    assert recover_account_deletions.claim_pending(pool, 1) == []
+    assert log and all(label == "admin" for label, _ in log)
+    assert _strict_events(events) == []
+
+
+def test_cron_run_executa_sob_marca_de_sistema():
+    from infrastructure.request_context import active_system_caller
+    from services import cron_internal
+
+    seen: list = []
+
+    def task():
+        seen.append(active_system_caller())
+        return {"failed": 0}
+
+    cron_internal._run("jobs", task)
+    assert seen == ["cron:jobs"] and active_system_caller() is None
+
+
+def test_drain_jobs_sob_marca_de_sistema():
+    from infrastructure.request_context import active_system_caller
+    from workers.drain import drain_jobs
+
+    seen: list = []
+
+    class Worker:
+        stats: dict = {}
+
+        def run_once(self, *, limit):
+            seen.append(active_system_caller())
+            return 0
+
+    drain_jobs(100.0, 5, "t", worker=Worker())
+    assert seen == ["drain"] and active_system_caller() is None
+
+
+def test_run_worker_main_executa_sob_marca_de_sistema(monkeypatch):
+    from infrastructure.request_context import active_system_caller
+    from workers import run_worker
+
+    seen: list = []
+
+    class Worker:
+        def __init__(self, *a, **k):
+            import threading
+
+            self.stop_event = threading.Event()
+
+        def request_stop(self):
+            self.stop_event.set()
+
+        def run_once(self, *, limit):
+            seen.append(active_system_caller())
+            return 0
+
+    class Rt:
+        job_queue = object()
+
+    monkeypatch.setattr(run_worker, "JobWorker", Worker)
+    monkeypatch.setattr(run_worker, "get_runtime", lambda: Rt())
+    monkeypatch.setattr(run_worker, "build_handlers", dict)
+    monkeypatch.setattr("sys.argv", ["run_worker", "--once"])
+    assert run_worker.main() == 0
+    assert seen == ["worker"] and active_system_caller() is None
+
+
+def test_marca_de_sistema_atravessa_a_thread_do_lease_heartbeat():
+    import threading
+
+    from infrastructure.request_context import active_system_caller, system_caller
+    from services.lease_heartbeat import keep_lease_alive
+
+    seen: list = []
+    in_thread = threading.Event()
+
+    def renew():
+        if threading.current_thread().name == "lease-heartbeat":
+            seen.append(active_system_caller())
+            in_thread.set()
+
+    with system_caller("worker"):
+        with keep_lease_alive(renew, interval_seconds=0.01):
+            assert in_thread.wait(2)
+    assert seen and seen[0] == "worker"

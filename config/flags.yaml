@@ -814,6 +814,12 @@ RPG_REQUEST_RLS:
   default: null
   spec: SPEC-224
   note: "configuração de ambiente (nunca o valor) (request rls)"
+RPG_RLS_STRICT_PRINCIPAL:
+  kind: release
+  default: "off"
+  spec: SPEC-410
+  expires: 2027-02-01
+  note: "pool hosted sem principal nem marca de sistema: off=como antes, shadow=só loga/conta, on=levanta RlsScopeError; remover a flag e deixar 'on' fixo ao vencer"
 RPG_ROOT:
   kind: dev
   default: "."
