@@ -56,7 +56,10 @@ def repo(tmp_path: Path) -> tuple[Path, Path]:
     (main / "specs").mkdir()
     (main / "docs").mkdir()
     for name in ("wt.sh", "land_check.sh", "land_check.py"):
-        shutil.copy(ROOT / "scripts" / "dev" / name, main / "scripts" / "dev" / name)
+        if (
+            ROOT / "scripts" / "dev" / name
+        ).exists():  # na main (sem land_check) o teste fica vermelho de verdade
+            shutil.copy(ROOT / "scripts" / "dev" / name, main / "scripts" / "dev" / name)
     (main / "scripts" / "check_handoff_names.py").write_text(
         (ROOT / "scripts" / "check_handoff_names.py").read_text(encoding="utf-8"), encoding="utf-8"
     )
