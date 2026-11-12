@@ -293,12 +293,13 @@ def prepare_audio(payload: bytes, mime: str, directory: Path) -> tuple[Path, Dec
     return audio, _wav_duration(audio)
 
 
-async def _run_financial(func, *args):
-    """Run a blocking financial step in a thread that cancellation cannot cut short.
+async def _run_to_completion(func, *args):
+    """Run a blocking step in a thread that cancellation cannot cut short.
 
     SPEC-412 R7: the thread keeps running after the coroutine is cancelled, so on
-    cancellation we wait for it to finish (no concurrent ``finish``) and only then
-    propagate ``CancelledError``.
+    cancellation we wait for it to finish and only then propagate ``CancelledError``.
+    Financial steps need it (no concurrent ``finish``); ``prepare_audio`` needs it so
+    the temp directory is not removed while ffmpeg still writes into it.
     """
     future = asyncio.ensure_future(asyncio.to_thread(func, *args))
     try:
@@ -361,16 +362,16 @@ async def transcribe_audio(
     text = None
     gate = _FinanceGate(finance)
     with tempfile.TemporaryDirectory(prefix="rpg-speech-") as temp:
-        audio, duration = await asyncio.to_thread(prepare_audio, payload, mime, Path(temp))
+        audio, duration = await _run_to_completion(prepare_audio, payload, mime, Path(temp))
         if not candidates:
             raise SpeechError("speech_unavailable", 503)
         request_hash = hashlib.sha256(
             (canonical_mime(mime) + ":" + hashlib.sha256(payload).hexdigest()).encode()
         ).hexdigest()
         try:
-            await _run_financial(gate.begin, operation_id, request_hash, candidates)
+            await _run_to_completion(gate.begin, operation_id, request_hash, candidates)
             for ordinal, candidate in enumerate(candidates):
-                await _run_financial(gate.admit, ordinal, candidate)
+                await _run_to_completion(gate.admit, ordinal, candidate)
                 # Ticket precedes dispatch. Every ticket receives a usage event,
                 # including cancellation, timeout and internal transport failure.
                 event = speech_event(
@@ -450,5 +451,5 @@ async def transcribe_audio(
         finally:
             if gate.begun:
                 gate.fill_missing_event(events, operation_id, candidates)
-                billing = await _run_financial(finance.finish, events, text is not None)
+                billing = await _run_to_completion(finance.finish, events, text is not None)
     return {"operation_id": str(operation_id), "text": text, "billing_status": billing}

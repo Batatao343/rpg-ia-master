@@ -29,7 +29,7 @@ Não bloqueia a spec.
 ## Cancelamento (R7)
 `to_thread` nao interrompe o thread quando a corrotina e cancelada: ele roda ate o fim. Desenho:
 `prepare_audio` fica em `to_thread` simples (nao tem efeito financeiro; `TemporaryDirectory` remove o
-arquivo na saida do `with`). `begin`, `admit` e `finish` passam por `_run_financial`
+arquivo na saida do `with`). `begin`, `admit` e `finish` passam por `_run_to_completion`
 (`asyncio.shield` + espera do thread); se a task e cancelada, ela AGUARDA o thread financeiro em
 curso terminar e so entao propaga `CancelledError`. `begun` e o ordinal admitido sao marcados
 dentro do thread, entao o `finally` sabe o que de fato efetivou. Se o cancelamento pegou depois do

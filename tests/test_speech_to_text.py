@@ -557,10 +557,14 @@ def test_cancelar_durante_prepare_nao_vaza_e_finance_finish_nao_roda_sem_begin(
     monkeypatch, tmp_path
 ):
     temps = []
+    wrote = []
 
     def slow_prepare(payload, mime, temp):
         temps.append(temp)
         time.sleep(0.3)
+        # revisão R2 P2: o diretório temporário ainda existe enquanto o thread escreve nele
+        (temp / "late.wav").write_bytes(b"x")
+        wrote.append(temp.exists())
         return tmp_path / "a.wav", Decimal(1)
 
     monkeypatch.setattr("services.speech_to_text.prepare_audio", slow_prepare)
@@ -584,7 +588,8 @@ def test_cancelar_durante_prepare_nao_vaza_e_finance_finish_nao_roda_sem_begin(
             await task
 
     asyncio.run(scenario())
-    time.sleep(0.4)  # deixa o thread orfao terminar
+    # o cancelamento só propaga depois de o thread terminar: nada órfão, nada a esperar
+    assert wrote == [True]
     assert finance.calls == []
     assert all(not t.exists() for t in temps)
 
@@ -655,8 +660,9 @@ def _cancel_in_phase(finance, *, wait_provider=False):
                 circuit=SpeechCircuit(),
             )
         )
-        while not finance.entered.is_set():
-            await asyncio.sleep(0.005)
+        async with asyncio.timeout(5):  # falha em vez de pendurar se o código regredir
+            while not finance.entered.is_set():
+                await asyncio.sleep(0.005)
         task.cancel()
         asyncio.get_running_loop().call_later(0.05, finance.release.set)
         with pytest.raises(asyncio.CancelledError):
@@ -709,8 +715,9 @@ def test_cancelar_durante_finish_nao_executa_duas_vezes():
                 circuit=SpeechCircuit(),
             )
         )
-        while not finance.entered.is_set():
-            await asyncio.sleep(0.005)
+        async with asyncio.timeout(5):  # falha em vez de pendurar se o código regredir
+            while not finance.entered.is_set():
+                await asyncio.sleep(0.005)
         task.cancel()
         asyncio.get_running_loop().call_later(0.05, finance.release.set)
         with pytest.raises(asyncio.CancelledError):

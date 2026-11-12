@@ -1,6 +1,6 @@
 # SPEC-412 — stt-fora-do-event-loop
 
-> **Status:** `in-review` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
+> **Status:** `done` (11/11: STT fora do event loop; rodada 1 CHANGES_REQUIRED (cancelamento durante `admit`/`begin` deixava `finish` concorrente e reserva presa), rodada 2 APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-412-terra-review.md`; P2 da rodada 2 aplicado pelo coordenador (`prepare_audio` também espera o thread: diretório temporário não some com o ffmpeg escrevendo); follow-ups P3: testes de duplo cancel e de exceção do thread durante a espera, `logger.warning` quando a exceção do thread é descartada no cancelamento; smoke real depende da SPEC-409; middlewares `async` de `api.py` viram spec própria depois da 410) · antes `in-review` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma. **Interage com** SPEC-409 (só o smoke real, §6) e SPEC-410 (o principal precisa chegar à conexão de banco dentro do thread, R4).
 > **Desbloqueia:** nada (follow-up possível: SPEC de middlewares `async` com psycopg, §2 "Fora de escopo").
@@ -76,7 +76,7 @@ Verificação: `bash scripts/dev/pt.sh tests/test_speech_to_text.py tests/test_s
 - [x] `transcribe_audio` não chama `prepare_audio`, `finance.begin/admit/finish` diretamente no loop; `routes/billing.py` não chama `rate_limiter.consume` direto em `account_transcription` (`Grep`).
 - [x] Testes existentes de STT/wallet-STT verdes sem mudar nenhum assert (R5).
 - [x] `docs/spec412/README.md` com inventário `async`, conclusão ffmpeg/Vercel e concorrência da Vercel.
-- [x] Cancelamento em begin/admit/finish sem janela nova (rodada 2, `_run_financial`).
+- [x] Cancelamento em begin/admit/finish sem janela nova (rodada 2, `_run_to_completion`).
 - [ ] `ruff format --check`, `ruff check`, `test_size_budget.py` verdes; revisão Sonnet APPROVED.
 - [ ] `uv run pytest` verde (suíte completa, 1× no pouso).
 
@@ -100,7 +100,7 @@ Não há LLM nem mudança de mapeamento de campo, preço ou provider; a mudança
 
 ## Resposta à revisão (rodada 2, status `in-review`)
 
-- P1 (cancelar durante `admit`): `admit` roda via `_run_financial` (shield + espera do thread); o ordinal admitido e marcado no thread e o `finally` registra o evento `unknown` se faltar; `finish` 1x, depois do `admit`. Teste `test_cancelar_durante_admit_...`.
+- P1 (cancelar durante `admit`): `admit` roda via `_run_to_completion` (shield + espera do thread); o ordinal admitido e marcado no thread e o `finally` registra o evento `unknown` se faltar; `finish` 1x, depois do `admit`. Teste `test_cancelar_durante_admit_...`.
 - P2 (cancelar durante `begin`): `begun` marcado dentro do thread; `finish` roda e libera a reserva. Teste `test_cancelar_durante_begin_...`.
 - P2 (cancelar durante `finish`): sem execucao dupla; `CancelledError` mascara a `SpeechError`/`billing` (documentado no README, R7). Teste `test_cancelar_durante_finish_...`.
 - P3: `run_in_threadpool` importado no topo de `routes/billing.py`.
