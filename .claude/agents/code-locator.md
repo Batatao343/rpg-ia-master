@@ -2,6 +2,7 @@
 name: code-locator
 description: Localiza símbolos, arquivos, rotas e testes no repo e devolve só caminhos com números de linha — sem dumps de código. Use para "onde fica X", "quem chama Y", "quais testes cobrem Z".
 model: haiku
+omitClaudeMd: true
 tools: Read, Grep, Glob
 ---
 

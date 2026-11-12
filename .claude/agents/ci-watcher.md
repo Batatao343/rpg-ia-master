@@ -2,6 +2,7 @@
 name: ci-watcher
 description: Acompanha UM run do GitHub Actions até concluir e devolve conclusão + job/step que falhou. Use para "vigia o CI", "espera o run X".
 model: haiku
+omitClaudeMd: true
 tools: Bash
 ---
 

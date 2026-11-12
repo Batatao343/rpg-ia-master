@@ -59,4 +59,5 @@ transcritos `.jsonl` e `pytest -n auto` em subagente; aviso de `/compact` acima 
 `main`, testes rodados e resultado, decisões do dono desta sessão, bloqueios e o
 próximo passo. Descarte saídas de ferramenta e trechos de arquivo já lidos.
 
-@ESTADO_ATUAL.md
+**Estado:** `ESTADO_ATUAL.md` não é importado aqui (custaria ~2 K tokens em toda sessão e em
+todo subagente). O coordenador lê o arquivo ao retomar; subagente só lê se o brief pedir.
