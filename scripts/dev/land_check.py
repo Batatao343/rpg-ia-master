@@ -100,15 +100,23 @@ def parse_risk(spec_text: str) -> str | None:
 def last_verdict(handoff_text: str) -> str | None:
     """Veredito da ultima linha `> **Veredito:** ...`; sem essa linha, None (invalido)."""
     for line in reversed(_VERDICT_LINE_RE.findall(handoff_text)):
-        found = _VERDICT_RE.findall(line)
-        if found:
-            return found[0]
+        found = set(_VERDICT_RE.findall(line))
+        if len(found) == 1:
+            return found.pop()
+        if found:  # template cru lista todos os tokens: nao e veredito
+            return None
     return None
 
 
 def _evidence_filled(text: str) -> bool:
     m = re.search(r"^## Evid[êe]ncia verificada\s*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
     return bool(m and m.group(1).strip())
+
+
+def _handoff_date(text: str) -> str:
+    """Ultima `**Data:** AAAA-MM-DD` do handoff (rodadas acrescentam cabecalho); sem data, ''."""
+    dates = re.findall(r"\*\*Data:\*\*\s*(\d{4}-\d{2}-\d{2})", text)
+    return dates[-1] if dates else ""
 
 
 def _handoff_role(name: str) -> str:
@@ -137,7 +145,7 @@ def review_problems(risk: str | None, handoffs: Mapping[str, str]) -> list[str]:
     if not valid:
         return [f"Risco {risk} exige handoffs/SPEC-NNN-<papel>-review.md aceito pelo lint de nomes"]
     latest: dict[str, tuple[str, str]] = {}
-    for name in sorted(valid):
+    for name in sorted(valid, key=lambda n: (_handoff_date(valid[n]), n)):
         latest[_handoff_role(name)] = (name, valid[name])
     problems: list[str] = []
     approvers: set[str] = set()

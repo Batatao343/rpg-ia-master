@@ -70,6 +70,22 @@ def test_review_problems_any_role_rejecting_blocks() -> None:
     assert lc.review_problems("alto", opus) == []
 
 
+def test_latest_handoff_per_role_is_by_date_then_name() -> None:
+    ok = "> **Data:** 2026-11-10\n> **Veredito:** `APPROVED`\n## Evidência verificada\nx\n"
+    bad = "> **Data:** 2026-11-04\n> **Veredito:** `CHANGES_REQUIRED`\n## Evidência verificada\nx\n"
+    # caso real da SPEC-391: o re-review aprovado tem nome que ordena ANTES do reprovado
+    real = {"SPEC-999-sol-review.md": bad, "SPEC-999-sol-independent-review.md": ok}
+    assert lc.review_problems("alto", real) == []
+
+
+def test_raw_template_verdict_line_is_invalid() -> None:
+    raw = "> **Veredito:** `APPROVED` | `APPROVED_WITH_FOLLOWUPS` | `CHANGES_REQUIRED`\n"
+    assert lc.last_verdict(raw) is None
+    template = Path("docs/templates/handoff-review.md").read_text(encoding="utf-8")
+    assert lc.last_verdict(template) is None
+    assert lc.review_problems("médio", {"SPEC-999-terra-review.md": template})
+
+
 def test_pending_measures() -> None:
     assert len(lc.pending_measures("a\nvalor <MEDIR: wc -l x>\n")) == 1
     assert lc.pending_measures("o marcador `<MEDIR: x>` e so convencao\n") == []

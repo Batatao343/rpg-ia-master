@@ -1,6 +1,6 @@
 # SPEC-415 — workspace-pouso-sem-surpresa
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-11-12 · **Atualizada:** 2026-11-12
 > **Depende de:** SPEC-414 (`done` antes deste pouso: as duas mexem em `.claude/skills/spec-land/SKILL.md` e `scripts/dev/wt.sh`, ver §7.1).
 > **Desbloqueia:** nada direto. É a proposta W-B de `docs/auditorias/auditoria-workspace-2026-11-11.md:42-43`, executada por decisão do dono (12/11, delegada ao coordenador).
@@ -231,14 +231,14 @@ O revisor (`terra`) roda `bash scripts/dev/red_green.sh 415` sobre esta própria
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R24 implementados; os testes da Etapa 1 foram vistos vermelhos (pelo executor) e reproduzidos pelo revisor com `red_green.sh 415`.
-- [ ] `bash scripts/dev/land_check.sh 415` sai 0 no worktree desta spec antes do pouso (inclui `review`: existe `handoffs/SPEC-415-terra-review.md` aprovado com `## Evidência verificada`; e `measure`: nenhum `<MEDIR:` restante).
-- [ ] `ruff format --check .` na `main` depois do pouso: nenhum arquivo em `specs/` ou `handoffs/`.
-- [ ] `wt.sh ci 415` sem `RPG_WT_PUSH` sai 3 e não toca o remoto.
-- [ ] `scripts/check_handoff_names.py` verde; `scripts/spec_index.py check` verde com o template novo.
-- [ ] Nenhuma função nova > 60 linhas; `size_budget.py` limpo.
-- [ ] `uv run pytest` verde (suíte completa offline, rodada pelo coordenador no pouso).
-- [ ] Não se aplicam: guard de FallbackLLM (nenhum structured output novo) e saves antigos (nenhum writer).
+- [x] R1–R24 implementados; os testes da Etapa 1 foram vistos vermelhos (pelo executor) e reproduzidos pelo revisor com `red_green.sh 415`.
+- [x] `bash scripts/dev/land_check.sh 415` sai 0 no worktree desta spec antes do pouso (inclui `review`: existe `handoffs/SPEC-415-terra-review.md` aprovado com `## Evidência verificada`; e `measure`: nenhum `<MEDIR:` restante).
+- [x] `ruff format --check .` na `main` depois do pouso: nenhum arquivo em `specs/` ou `handoffs/`.
+- [x] `wt.sh ci 415` sem `RPG_WT_PUSH` sai 3 e não toca o remoto.
+- [x] `scripts/check_handoff_names.py` verde; `scripts/spec_index.py check` verde com o template novo.
+- [x] Nenhuma função nova > 60 linhas; `size_budget.py` limpo.
+- [x] `uv run pytest` verde (suíte completa offline, rodada pelo coordenador no pouso).
+- [x] Não se aplicam: guard de FallbackLLM (nenhum structured output novo) e saves antigos (nenhum writer).
 
 ## 6. Smoke test (infra real, sem LLM)
 
@@ -295,3 +295,4 @@ O passo de CI pré-pouso (R9, R10) precisa de autorização **permanente** do do
 - Dois testes de regressão já passam na `main` e exigem `--allow-green`: `bash scripts/dev/red_green.sh 415 --allow-green tests/test_wt_sh.py::test_land_clean_fast_forwards --allow-green tests/test_wt_sh.py::test_sync_clean_passes`.
 - Não rodou: `wt.sh ci` com `RPG_WT_PUSH=1` e o `ci` do `land_check` com `gh` (sem push autorizado, §7.3); só o caminho desligado é testado.
 - Pendente para o pouso: handoff `handoffs/SPEC-415-terra-review.md` com `## Evidência verificada` (revisor Sonnet); `Risco` preenchido nas 8 specs listadas em `docs/spec415/medicoes.md`; critérios abaixo ficam desmarcados até a revisão e a suíte completa do coordenador.
+- **Fechamento (2026-11-12):** revisão `terra` em duas rodadas (`handoffs/SPEC-415-terra-review.md`): rodada 1 CHANGES_REQUIRED (P1 em `last_verdict`), rodada 2 APPROVED_WITH_FOLLOWUPS. O coordenador corrigiu os follow-ups P2-4 (handoff mais recente por papel = pela `**Data:**`, depois pelo nome; caso real da SPEC-391) e P2-5 (linha de veredito com mais de um token distinto é inválida; o template cru não passa). Não rodou: ramo ligado de `wt.sh ci` (`RPG_WT_PUSH=1`) e check `ci` contra o `gh` real, porque push de branch depende de autorização do dono.
