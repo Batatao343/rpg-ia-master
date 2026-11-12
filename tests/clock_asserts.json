@@ -1,0 +1,29 @@
+{
+ "_doc": "Gerado por scripts/dev/clock_asserts.py --update (SPEC-416). Só encolhe; --tighten desce, --update sobe (coordenador, com motivo no commit).",
+ "functions": {
+  "tests/test_audit_fixes.py::test_rate_hits_poda_ips_vencidos": 1,
+  "tests/test_bug_combate_modificadores.py::test_prepare_encounter_deadline_falls_back": 1,
+  "tests/test_bug_finops_wallet_jobs.py::test_manual_override_only_same_day": 2,
+  "tests/test_bug_finops_wallet_jobs_local.py::test_code_degrades_safely_without_the_migration": 1,
+  "tests/test_bug_finops_wallet_jobs_local.py::test_cron_settles_exact_usage_and_holds_unknown": 1,
+  "tests/test_jev_client_warm.py::test_client_built_before_deadline_clock": 1,
+  "tests/test_jev_decision_backend.py::test_total_deadline_covers_response_parsing": 1,
+  "tests/test_jev_decision_backend.py::test_total_deadline_rejects_slow_success": 1,
+  "tests/test_jev_router_port.py::test_primary_slow_jev_bounded_by_deadline": 1,
+  "tests/test_jev_router_port.py::test_shadow_late_jev_within_deadline_is_still_observed": 1,
+  "tests/test_jev_router_port.py::test_shadow_slow_jev_never_delays_the_turn": 1,
+  "tests/test_playtest_watchdog.py::test_begin_e_touch_run_gravam_owner_e_heartbeat": 2,
+  "tests/test_playtest_watchdog.py::test_watchdog_interrompe_espera_no_teto_sem_bloquear_saida": 1,
+  "tests/test_projection_db_local.py::test_worker_down_falls_back_to_mode_a": 1,
+  "tests/test_spec194_196_postgres_local.py::test_finops_reader_returns_expected_aggregates_for_seeded_scenario": 4,
+  "tests/test_spec197_daily_cap.py::test_manual_reenable_same_day_not_retripped": 2,
+  "tests/test_spec360_flags_off.py::test_latencia_por_chamada": 1,
+  "tests/test_spec361_gate.py::test_prazo_real_por_thread": 1,
+  "tests/test_spec361_integracao.py::test_drenagem_fora_do_lock_do_jogo": 1,
+  "tests/test_spec361_integracao.py::test_turno_nao_chama_llm_de_geracao": 1,
+  "tests/test_spec372_stage.py::test_plot_stages_latencia": 1,
+  "tests/test_speech_to_text.py::test_quote_accepts_only_registered_exact_speech_card": 1,
+  "tests/test_wallet_local.py::test_exact_usage_settles_once_after_pricing_expires": 4,
+  "tests/test_workspace_hooks.py::test_context_size_points_to_handoff_file": 1
+ }
+}
