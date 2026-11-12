@@ -1,11 +1,14 @@
 # SPEC-225 R3: atualizações semanais de actions (pins por SHA), dependências Python e npm.
 # Workspace C6: minor+patch agrupados em 1 PR por ecossistema; major sai sozinho (revisão própria).
+# SPEC-411 R3: cooldown de 7 dias (versao recem-publicada, inclusive maliciosa, so vira PR depois); nao atrasa security updates.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: "ci"
     groups:
@@ -15,6 +18,8 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: "deps"
     groups:
@@ -24,6 +29,8 @@ updates:
     directory: "/web"
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: "deps"
     groups:
