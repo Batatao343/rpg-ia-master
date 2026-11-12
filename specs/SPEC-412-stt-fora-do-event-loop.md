@@ -1,6 +1,6 @@
 # SPEC-412 — stt-fora-do-event-loop
 
-> **Status:** `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
+> **Status:** `in-review` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma. **Interage com** SPEC-409 (só o smoke real, §6) e SPEC-410 (o principal precisa chegar à conexão de banco dentro do thread, R4).
 > **Desbloqueia:** nada (follow-up possível: SPEC de middlewares `async` com psycopg, §2 "Fora de escopo").
@@ -72,10 +72,10 @@ Verificação: `bash scripts/dev/pt.sh tests/test_speech_to_text.py tests/test_s
 
 ## 5. Critérios de aceite
 
-- [ ] Os testes da Etapa 1 falham antes da Etapa 2 e passam depois (saída anexada ao hand-back).
-- [ ] `transcribe_audio` não chama `prepare_audio`, `finance.begin/admit/finish` diretamente no loop; `routes/billing.py` não chama `rate_limiter.consume` direto em `account_transcription` (`Grep`).
-- [ ] Testes existentes de STT/wallet-STT verdes sem mudar nenhum assert (R5).
-- [ ] `docs/spec412/README.md` com inventário `async`, conclusão ffmpeg/Vercel e concorrência da Vercel.
+- [x] Os testes da Etapa 1 falham antes da Etapa 2 e passam depois (saída anexada ao hand-back).
+- [x] `transcribe_audio` não chama `prepare_audio`, `finance.begin/admit/finish` diretamente no loop; `routes/billing.py` não chama `rate_limiter.consume` direto em `account_transcription` (`Grep`).
+- [x] Testes existentes de STT/wallet-STT verdes sem mudar nenhum assert (R5).
+- [x] `docs/spec412/README.md` com inventário `async`, conclusão ffmpeg/Vercel e concorrência da Vercel.
 - [ ] `ruff format --check`, `ruff check`, `test_size_budget.py` verdes; revisão Sonnet APPROVED.
 - [ ] `uv run pytest` verde (suíte completa, 1× no pouso).
 
