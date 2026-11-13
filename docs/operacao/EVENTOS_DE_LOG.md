@@ -177,6 +177,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `economy.negative_gold_prevented` | `attempted_gold`, `player` |
 | `economy.trade` | `gold_delta`, `item_id`, `mode`, `outcome`, `reason_code` |
 | `economy.unique_claim_conflict` | `item_id`, `source` |
+| `embedding.query_degraded` | `breaker_s`, `budget_ms`, `reason`, `waited_ms` |
 | `enrich.fallback` | — |
 | `enrich.npc_sheet_completed` | — |
 | `enrich.npc_sheet_failed` | — |

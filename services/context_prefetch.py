@@ -20,6 +20,7 @@ from contextvars import copy_context
 from typing import Any
 
 from observability.telemetry import log_event as _log_event
+from services import embedding_guard
 
 _MAX_ENTRIES = 8
 _LOCK = threading.Lock()
@@ -140,7 +141,7 @@ def take(game_id: str | None, turn: int | None, query: str) -> Any | None:
         _log_event("context", "prefetch_miss", level="info", reason="not_started")
         return None
     try:
-        result = future.result(timeout=_wait_seconds())
+        result = future.result(timeout=embedding_guard.prefetch_wait(_wait_seconds()))
     except Exception as exc:  # silent-ok: falha/timeout => caminho inline
         _log_event("context", "prefetch_miss", level="info", reason=type(exc).__name__)
         return None

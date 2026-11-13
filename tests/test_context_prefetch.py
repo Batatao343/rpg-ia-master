@@ -117,3 +117,39 @@ def test_no_prefetch_for_non_story_turns(monkeypatch):
     _fake_embedder(monkeypatch)
     assert not context_prefetch.start_prefetch(_state("Ataco o guarda"), 5)
     assert not context_prefetch.start_prefetch(_state("Compro uma corda"), 5)
+
+
+def _slow_embedder(monkeypatch, delay):
+    calls: list[str] = []
+
+    def slow(text, **_kw):
+        calls.append(text)
+        threading.Event().wait(delay)
+        return EmbeddedContextQuery(text, (1.0,), "fake", "m")
+
+    monkeypatch.setattr(context_sources, "embed_context_query_uncached", slow)
+    return calls
+
+
+def test_consumer_espera_prefetch_lento_ate_o_prazo_sem_embedding_duplo(monkeypatch):
+    """SPEC-419 R4: espera max(WAIT_S, T+0.5); sem 2a chamada ao provedor."""
+    monkeypatch.setenv("RPG_CONTEXT_PREFETCH_WAIT_S", "0.1")
+    monkeypatch.setenv("RPG_EMBEDDING_QUERY_TIMEOUT_S", "1.0")
+    calls = _slow_embedder(monkeypatch, 0.4)
+    state = _state()
+    context_prefetch.start_prefetch(state, 5)
+    query = context_prefetch.story_query(state)
+    out = context_sources.embed_context_query(query, game_id="g-prefetch", turn=5)
+    assert out.vector == (1.0,) and len(calls) == 1
+
+
+def test_prefetch_espera_antiga_com_kill_switch_off(monkeypatch):
+    monkeypatch.setenv("RPG_EMBEDDING_QUERY_DEADLINE", "off")
+    monkeypatch.setenv("RPG_CONTEXT_PREFETCH_WAIT_S", "0.1")
+    monkeypatch.setenv("RPG_EMBEDDING_QUERY_TIMEOUT_S", "1.0")
+    calls = _slow_embedder(monkeypatch, 0.4)
+    state = _state()
+    context_prefetch.start_prefetch(state, 5)
+    query = context_prefetch.story_query(state)
+    context_sources.embed_context_query(query, game_id="g-prefetch", turn=5)
+    assert len(calls) == 2

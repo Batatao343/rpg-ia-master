@@ -69,9 +69,10 @@ def embed_context_query_uncached(
 ) -> EmbeddedContextQuery:
     import rag
     from observability.telemetry import span
+    from services import embedding_guard
 
     with _limit("RPG_EMBEDDING_MAX_CONCURRENCY", 2):
-        with span("context.embed"):
+        with span("context.embed"), embedding_guard.interactive_query():  # SPEC-419
             vector, provider, model = rag.prepare_shared_query_vector(
                 text,
                 rag.context_index_paths(game_id=game_id, npc_id=npc_id),

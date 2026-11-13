@@ -345,6 +345,21 @@ RPG_EMBEDDINGS:
   default: null
   spec: SPEC-039
   note: "configuração de ambiente (nunca o valor) (embeddings)"
+RPG_EMBEDDING_BREAKER_S:
+  kind: ops
+  default: "60"
+  spec: SPEC-419
+  note: "segundos de disjuntor após timeout do embedding da consulta interativa; 0 desliga"
+RPG_EMBEDDING_QUERY_DEADLINE:
+  kind: kill_switch
+  default: "on"
+  spec: SPEC-419
+  note: "prazo curto + disjuntor no embedding da consulta interativa; off volta a 30 s x 2"
+RPG_EMBEDDING_QUERY_TIMEOUT_S:
+  kind: ops
+  default: "6.0"
+  spec: SPEC-419
+  note: "orçamento total (s) do embedding da consulta interativa do turno"
 RPG_EMBEDDING_MAX_CONCURRENCY:
   kind: ops
   default: null

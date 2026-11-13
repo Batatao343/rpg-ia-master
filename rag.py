@@ -27,8 +27,6 @@ from collections import Counter, OrderedDict
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
-from email.utils import parsedate_to_datetime
 from typing import Any, Dict, List, Literal, Optional
 from collections.abc import Callable, Iterator
 
@@ -38,6 +36,9 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
 
 from observability.telemetry import log_event as _log_event
+from services import embedding_guard
+from services.embedding_guard import MAX_BACKOFF_SECONDS as _MAX_BACKOFF_SECONDS
+from services.embedding_guard import parse_retry_after as _parse_retry_after
 from services.env import is_database_profile
 from services.memory_provenance import format_memory_fact, make_memory_fact
 
@@ -312,26 +313,6 @@ def _estimated_embedding_usage(values: list[str]) -> dict[str, int]:
     return {"input_tokens": -(-chars // 2), "units_estimated": 1}
 
 
-_MAX_BACKOFF_SECONDS = 60.0
-
-
-def _parse_retry_after(value: str | None) -> float | None:
-    """Retry-After em segundos ou data HTTP -> segundos (>= 0), ou None se ilegível."""
-    if not value:
-        return None
-    try:
-        return max(0.0, float(value))
-    except ValueError:
-        pass
-    try:
-        when = parsedate_to_datetime(value)
-    except (TypeError, ValueError):
-        return None
-    if when.tzinfo is None:
-        when = when.replace(tzinfo=UTC)
-    return max(0.0, (when - datetime.now(UTC)).total_seconds())
-
-
 class _JinaEmbeddingsHTTPX(Embeddings):
     """Cliente Jina pequeno, síncrono e com limite de rede explícito.
 
@@ -392,13 +373,22 @@ class _JinaEmbeddingsHTTPX(Embeddings):
         time.sleep(min(delay, _MAX_BACKOFF_SECONDS))
 
     def _embed(self, values: list[str]) -> list[list[float]]:
+        embedding_guard.check_breaker(self.model_name)
+        end = embedding_guard.deadline()  # SPEC-419: None fora do escopo interativo
         last_error: Exception | None = None
         for attempt in range(self.max_attempts):
+            extra: dict = {}
+            if end is not None:
+                left = embedding_guard.remaining(end)
+                if left < embedding_guard.min_attempt_s():
+                    raise last_error or embedding_guard.EmbeddingSkipped("embedding budget spent")
+                extra["timeout"] = httpx.Timeout(left)
             started = time.perf_counter()
             try:
                 response = self._client.post(
                     _JINA_API_URL,
                     json={"input": values, "model": self.model_name},
+                    **extra,
                 )
                 if (
                     response.status_code in _TRANSIENT_EMBEDDING_STATUS
@@ -453,6 +443,10 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                     None,
                 )
                 last_error = exc
+                if isinstance(exc, httpx.TimeoutException):
+                    embedding_guard.note_timeout(started)
+                    if end is not None:
+                        raise  # SPEC-419: timeout consome o orçamento; sem 2ª tentativa
                 if attempt + 1 >= self.max_attempts:
                     raise
                 self._sleep_before_retry(attempt, None)
