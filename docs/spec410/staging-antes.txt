@@ -1,0 +1,28 @@
+SPEC-410 / SPEC-413 — estado do staging ANTES das migrações
+Projeto: uzeagzcyvxzrpjgrhaql · consulta somente leitura em 2026-11-13 (coordenador, via MCP Supabase)
+
+Migrações (scripts.staging.migrations status):
+  remote_count=34, local_count=36, version_mismatch=[], remote_only=[]
+  pending = 20261111130000 (413), 20261111140000 (410)
+  últimas aplicadas: 20261028120000, 20261027120000, 20261024100000, 20261019151000
+
+SPEC-413, PC-1 e PC-2:
+  funções próprias em public: rpg_wallet_balance(), rpg_wallet_history(integer), rpg_current_session_active()
+  pg_depend (deptype 'n') apontando para elas: 0
+  prosrc de outros schemas citando os nomes: nenhum
+  pg_policies citando os nomes: nenhum
+  pg_views citando os nomes: nenhum
+  edge_logs das últimas 24 h com /rest/v1/rpc/rpg_*: 0
+
+SPEC-410, etapa 1:
+  tabelas de app sem RLS ou sem force: rate_limit_buckets (rls=false, force=false); nenhuma outra
+  grants em tabelas de app para anon/authenticated/PUBLIC: nenhum
+  USAGE em app: anon=false, authenticated=false
+  rolbypassrls: postgres=true, rpg_admin=false, rpg_runtime=false, rpg_api=false
+  rpg_api: inherit=false, sem rolconfig
+  rpg_runtime: inherit=true, search_path=app, public, extensions; statement_timeout=60s; idle_in_transaction_session_timeout=60s
+  rpg_admin:   inherit=true, search_path=app, public, extensions; statement_timeout=60s; idle_in_transaction_session_timeout=60s
+  membros de rpg_api: postgres, rpg_runtime
+  pg_net: schema public
+  triggers em wallet_accounts/wallet_reservations: wallet_account_reconciles, wallet_account_reserved_reconcile,
+    account_reservation_fence, financial_hold_reservation, wallet_reservations_reconcile (nenhum *_no_delete)

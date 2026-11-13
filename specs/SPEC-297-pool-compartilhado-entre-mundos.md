@@ -3,6 +3,7 @@
 > **Status:** `in-progress` (dono aprovou 2026-10-23; implementação entregue, falta revisão independente + smoke real §6 + revisão D8 das tabelas)
 > **Criada:** 2026-10-20 · **Atualizada:** 2026-10-20
 > **Origem:** `docs/mundo-vivo/VISAO.md` § "C2. NPCs compartilhados entre mundos", "Regra de ouro" e "Restrições permanentes" (decisões do dono, 20/10)
+> **Risco:** `alto` (fronteira entre tenants (RLS) e prompt; classificado em 13/11 pelo coordenador, SPEC-415)
 > **Depende de:** SPEC-223 (`done`, esta spec inverte a R7 dela atrás de flag), SPEC-215 (`done`), SPEC-230 (`done`, guard de fallback e cache sem entradas quebradas), SPEC-192 (`done`, cron interno)
 > **Relacionada:** SPEC-222 (`in-progress`, LGPD: exclusão de conta × conteúdo promovido), SPEC-236 (`in-progress`, FinOps: custo da avaliação)
 > **Desbloqueia:** produtores futuros de itens e locais gerados (pilares A/B do mundo vivo); rumores com a lenda do NPC via SPEC-215 (follow-up)

@@ -2,6 +2,7 @@
 
 > **Status:** `approved`
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
+> **Risco:** `alto` (conteúdo que entra em combate e Cartas; revisão Opus já exigida; classificado em 13/11 pelo coordenador, SPEC-415)
 > **Depende de:** SPEC-349 (processo, gate `services/bestiary_lint.py`, formatos, onda 1; branch base `spec-349`), SPEC-348 (lore, `main` be7212f3)
 > **Desbloqueia:** Etapas 5–9 da onda 2 (mecânica, Cartas, arena, pouso); onda 3 (`pradaria_ruinas`)
 > **EXECUTOR_MODEL:** Opus (prosa, Etapas 3–4); Terra (Etapas 5–7). Fable nunca. **REVIEW_MODEL:** `spec-reviewer` Opus (unicidade) + Sol (técnico). **REVIEW_REQUIRED:** `true`.

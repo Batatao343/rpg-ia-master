@@ -3,6 +3,7 @@
 > **Status:** `in-progress` — só falta a Etapa 8 (baseline de cobertura do 1º `coverage.yml` na `main`, D3). Etapas 0–7 pousadas e revisadas (Sol: `handoffs/SPEC-379-sol-review.md`, `handoffs/SPEC-379-sol-independent-review.md`). **Não segura a W6**: a 377 pode seguir.
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11, [docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md) §4.6 (itens 1–3 e "Cobertura") e §5 letras **H + I**; regras da onda **W1–W8** (§6.2). Fica de fora o que a §6.4 retirou: **não** renomear os 299 `test_specNNN_*`.
+> **Risco:** `alto` (infra de teste e prova de equivalência; revisão `Sol` já exigida (W7); classificado em 13/11 pelo coordenador, SPEC-415)
 > **Depende de:** nada para começar (§6.3 da auditoria: "pode começar já"). Cada etapa passa pela trava **W1** antes de começar. **W6**: é a única spec de refatoração da onda em voo enquanto estiver `in-progress`.
 > **Desbloqueia:** **SPEC-383** (front: hooks e e2e). A 383 depende do **R6** desta: os testes que leem `web/src/App.tsx` precisam estar resolvidos antes de ela fatiar o `App.tsx`. Também deixa pronto o terreno da SPEC-381 (lista dos testes que leem `api.py`, coluna "trava" da §3.6).
 > **EXECUTOR_MODEL:** `Terra` (Sonnet), uma etapa por vez · **REVIEW_MODEL:** `Sol` (Opus, `spec-reviewer` independente) · **REVIEW_REQUIRED:** `true` (W7: o revisor refaz por conta própria a prova de equivalência do R4 em pelo menos 1 arquivo migrado)

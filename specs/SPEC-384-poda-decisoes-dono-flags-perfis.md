@@ -4,6 +4,7 @@
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11 (`docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md`
 > §4.1 itens 2, 4 e 9 · §4.2 item 5 · §4.3 item 1 · §4.4 item 5 · §5 letras K, L, M e N · §6 W1–W8)
+> **Risco:** `alto` (combate, flags de produto e perfis de deploy; classificado em 13/11 pelo coordenador, SPEC-415)
 > **Depende de:** nenhum item depende de outro. Cada D tem a sua própria trava (ver §4, "Pode começar quando").
 > Resumo: D1/D3 esperam a **SPEC-371** pousar (`config/flags.yaml`, `agents/combat.py`); D4 espera o
 > smoke §6 real de **342–357/362** e a decisão de default `on`; D7 está **destravado** (a 368 pousou e a
