@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 _BYTES = (
-    Path(__file__).resolve().parents[1] / "data/pricing/embedding_rate_card_2026-10-17.json"
+    Path(__file__).resolve().parents[1] / "data/pricing/embedding_rate_card_2026-11-13.json"
 ).read_bytes()
 _CARD = json.loads(_BYTES)
 EMBEDDING_PRICING_VERSION: str = _CARD["version"] + "-" + sha256(_BYTES).hexdigest()[:16]

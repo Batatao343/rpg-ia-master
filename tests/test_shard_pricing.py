@@ -177,6 +177,31 @@ def test_estimated_or_wrong_card_usage_cannot_be_debited() -> None:
         )
 
 
+def test_quote_usage_rejects_event_with_previous_card_version() -> None:
+    """SPEC-409 trap 3: image/STT usage priced under an older card is not billable, even for
+    an already authorized snapshot; a card deploy with a reservation in flight strands it."""
+    from services.image_pricing import IMAGE_PRICING_VERSION
+    from services.speech_pricing import SPEECH_PRICING_VERSION
+
+    def event(category: str, provider: str, model: str, pricing_version: str) -> UsageEvent:
+        return UsageEvent(
+            uuid4(), uuid4(), "c", 1, category, provider, model, "success",
+            None, None, None, None, None, Decimal("0.01"), "rate_card", pricing_version, True,
+        )  # fmt: skip
+
+    cases = [
+        ("image", "openai", "gpt-image-2-2026-04-21", IMAGE_PRICING_VERSION),
+        ("speech_to_text", "groq", "whisper-large-v3-turbo", SPEECH_PRICING_VERSION),
+    ]
+    for category, provider, model, current in cases:
+        ok = event(category, provider, model, current)
+        assert quote_usage([ok], version(), at=NOW).shard_milli_debited > 0
+        old = event(category, provider, model, "previous-card-version")
+        for authorized in (False, True):
+            with pytest.raises(PricingUnavailable):
+                quote_usage([old], version(), at=NOW, authorized_snapshot=authorized)
+
+
 def test_financial_property_conservation_and_margin_1000_cases() -> None:
     random = Random(183)
     for _ in range(1000):

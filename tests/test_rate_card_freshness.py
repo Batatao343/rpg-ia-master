@@ -8,6 +8,7 @@ or expires within ``GUARD_DAYS``; the simulated siblings prove the detection wit
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -27,6 +28,11 @@ _WINDOW_ENV = (
     "RPG_RATE_CARD_MAX_AGE_DAYS",
     "RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS",
     "RPG_RATE_CARD_WARN_DAYS",
+)
+
+
+_CLOCK_NEXT_TO_CARD = re.compile(
+    r"installed_freshness\([^)]*\)[^\n]*datetime\.now|datetime\.now[^\n]*installed_freshness"
 )
 
 
@@ -98,13 +104,15 @@ def test_installed_rate_cards_not_near_expiry():
 
 
 def test_real_clock_only_in_freshness_guard():
-    """Source-reading test (inventory case (c)): wall clock vs a card date lives only here."""
+    """Source-reading test (inventory case (c)): the wall clock is never handed to the installed
+    card freshness outside this file (``datetime.now`` next to ``installed_freshness`` in the
+    same statement). Unrelated ``datetime.now`` uses (e.g. the daily cap) are not flagged."""
     tests = Path(__file__).parent
     offenders = []
     for path in sorted(tests.glob("test_*.py")):
         if path.name == Path(__file__).name:
             continue
         text = path.read_text(encoding="utf-8")
-        if "installed_freshness" in text and "datetime.now" in text:
+        if _CLOCK_NEXT_TO_CARD.search(text):
             offenders.append(path.name)
     assert offenders == []

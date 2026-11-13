@@ -1,0 +1,18 @@
+{
+  "version": "openai-image-standard-2026-11-13",
+  "observed_at": "2026-11-13T00:00:00+00:00",
+  "provider": "openai",
+  "model": "gpt-image-2-2026-04-21",
+  "api": "direct_images",
+  "processing": "standard",
+  "text_input_per_million": "5.00",
+  "image_input_per_million": "8.00",
+  "image_output_per_million": "30.00",
+  "cached_input_discount": false,
+  "sources": [
+    "https://developers.openai.com/api/docs/pricing",
+    "https://developers.openai.com/api/docs/models/gpt-image-2",
+    "https://developers.openai.com/api/docs/deprecations"
+  ],
+  "derivation": "Read on 2026-11-13. The Standard tab of the pricing page lists GPT Image 2 directly (Image: input $8.00, output $30.00; Text: input $5.00); the rates are no longer derived from the Batch table. Direct Images API does not receive cached input discounts. The pinned snapshot gpt-image-2-2026-04-21 is marked Deprecated (notice 2026-11-10, shutdown 2027-02-10); it is still served under the same id with the same published price, so this card keeps the same model. Replacing the model is a product decision (new spec before 2027-02-10). These are provider technical rates, not a commercial SKU or activation."
+}

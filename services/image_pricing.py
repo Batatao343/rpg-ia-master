@@ -13,7 +13,7 @@ from services.shard_pricing import PricingUnavailable, rate_card_max_age
 from services.usage_metering import UsageEvent
 
 _BYTES = (
-    Path(__file__).resolve().parents[1] / "data/pricing/image_rate_card_2026-10-12.json"
+    Path(__file__).resolve().parents[1] / "data/pricing/image_rate_card_2026-11-13.json"
 ).read_bytes()
 _CARD = json.loads(_BYTES)
 IMAGE_PRICING_VERSION = _CARD["version"] + "-" + sha256(_BYTES).hexdigest()[:16]
