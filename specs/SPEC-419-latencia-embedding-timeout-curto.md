@@ -1,6 +1,6 @@
 # SPEC-419 — latencia-embedding-timeout-curto
 
-> **Status:** `approved` (dono, 13/11: "pode. e execute elas")
+> **Status:** `in-progress` (aprovada pelo dono em 13/11; código pousado em 13/11; revisão Sonnet APPROVED_WITH_FOLLOWUPS; falta o smoke §6, que depende de deploy no staging)
 > **Criada:** 2026-11-13 · **Atualizada:** 2026-11-13
 > **Depende de:** SPEC-039, SPEC-317 (prefetch, R5) e SPEC-356 (backoff da Jina), todas `done`
 > **Desbloqueia:** nada
@@ -141,15 +141,15 @@ Verificação: `bash scripts/dev/pt.sh tests/test_embedding_guard.py tests/test_
 
 ## 5. Critérios de aceite
 
-- [ ] Testes da Etapa 1 falham antes e passam depois (saída no hand-back)
-- [ ] I1–I5 cobertos pelos testes nomeados
-- [ ] `rag.py` ≤ 1.649 linhas; `tests/test_size_budget.py`, `test_flag_registry.py` e `test_log_event_registry.py` verdes
-- [ ] Nenhum chamador além de `embed_context_query_uncached` entra em `interactive_query()` (`Grep "interactive_query("`)
+- [x] Testes da Etapa 1 falham antes e passam depois: `red_green.sh 419` 12/13 vermelhos na `main` (11 por falta do módulo novo, 1 por comportamento: `test_consumer_espera_prefetch_lento_ate_o_prazo_sem_embedding_duplo`); o 13º guarda o comportamento antigo com o kill switch e passa antes de propósito. Verde depois: 103 passed nos 9 arquivos do escopo
+- [x] I1–I5 cobertos pelos testes nomeados
+- [x] `rag.py` ≤ 1.649 linhas (1.643); `tests/test_size_budget.py`, `test_flag_registry.py` e `test_log_event_registry.py` verdes
+- [x] Nenhum chamador além de `embed_context_query_uncached` entra em `interactive_query()` (`Grep "interactive_query("`)
 - [x] Medição da Jina do §3 registrada (13/11)
 - [ ] Smoke §6 registrado (normal + forçado)
 - [ ] `uv run pytest` verde (suíte completa offline, no pouso)
-- [ ] Guard de FallbackLLM: N/A (sem `with_structured_output` novo)
-- [ ] Saves antigos continuam carregando: N/A (nada persistido)
+- [x] Guard de FallbackLLM: N/A (sem `with_structured_output` novo)
+- [x] Saves antigos continuam carregando: N/A (nada persistido)
 
 ## 6. Smoke test com LLM real
 
@@ -160,7 +160,9 @@ No staging com DeepSeek e Jina (custo estimado ≤ US$ 0,10):
 
 ## Não rodou e por quê
 
-- Preenchido pelo executor e pelo coordenador. Quando escrita, a spec não rodou nada: sem pytest, sem rede (regra do autor).
+- **Smoke §6 (staging):** não rodou. O staging está em `d7aa4beb` (10/11) e o próximo deploy depende de o dono aplicar as migrações das SPEC-413/410 (`ESTADO_ATUAL.md` § Bloqueios). Roda no primeiro deploy depois disso; até lá a spec fica `in-progress`.
+- **Evidência por tempo no código antigo:** o teste `test_contexto_passa_dentro_do_prazo_com_provedor_travado` fica vermelho na `main` por `ImportError`, não por demorar ~6 s (revisão, P2-1). O comportamento antigo está medido na L0 (45,7 s e 19,9 s).
+- **Follow-ups da revisão (não bloqueiam):** P3-1 `_sleep_before_retry` não limita o sleep ao orçamento restante (só alcançável com `EMBEDDING_BACKOFF_SECONDS>0`, que o runtime não usa); P3-3 orçamento esgotado depois de um 5xx rápido levanta o erro sem emitir `embedding.query_degraded`. Handoff: `handoffs/SPEC-419-terra-review.md`.
 
 ## 7. Riscos & compatibilidade
 
