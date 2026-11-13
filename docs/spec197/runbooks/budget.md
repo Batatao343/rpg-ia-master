@@ -43,14 +43,59 @@ beta. Valores sao PROPOSTAS para o usuario confirmar em `external-inputs.md`.
 Diaria no beta: saldo dos provedores, `finops_evaluations`, `cron_health_alerts`, refunds/disputas.
 Semanal: rate cards (`stale_rate_card`); modelo novo em `ROUTES` so apos card publicado.
 
-## Renovacao de rate cards (SPEC-236 R7)
-- Janela de frescor dos cards de imagem/STT: `RPG_RATE_CARD_MAX_AGE_DAYS` (default 30 d, 1..365; valor invalido
-  volta ao default, nunca amplia). O LLM segue `RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS`.
-- Alerta `rate_card_expiring` (NAO bloqueante) a partir de T-`RPG_RATE_CARD_WARN_DAYS` (default 3 d); ao expirar vira
-  `stale_rate_card` (bloqueante) e quotes/STT novos recebem `PricingUnavailable` (503).
-- Renovar: observar os precos publicados, gravar novo `data/pricing/<tipo>_rate_card_<data>.json` com `observed_at`
-  atual, apontar `services/image_pricing.py`/`services/speech_pricing.py` para ele, rodar a suite e fazer deploy ANTES
-  do T-0. Quotes de imagem ja emitidos com a versao antiga exigem novo quote (`image pricing changed`).
+## Renovação de rate cards (SPEC-409)
+Quatro cards versionados em `data/pricing/`; cada renovação é um **arquivo novo** `<tipo>_rate_card_<AAAA-MM-DD>.json`
+(o antigo fica intacto como histórico; `tests/test_pricing_card_files.py` confere o sha256 dos antigos).
+
+| Card | Arquivo atual | Quem lê | Janela |
+|---|---|---|---|
+| Imagem | `image_rate_card_*.json` | `services/image_pricing.py` | `RPG_RATE_CARD_MAX_AGE_DAYS` (30 d, 1..365) |
+| STT | `speech_rate_card_*.json` | `services/speech_pricing.py` | idem |
+| Embedding | `embedding_rate_card_*.json` | `services/embedding_pricing.py` | idem (entra em `installed_freshness()`) |
+| LLM geral | `rate_card_*.json` | **dois** arquivos com o caminho fixo: `services/shard_pricing.py` (`_INSTALLED_CARD_PATH`, hash e data) **e** `services/usage_metering.py` (`RATE_CARD_VERSION`) | `RPG_FINOPS_LLM_CARD_MAX_AGE_DAYS` (30 d) |
+
+**Quando avisa.** O teste `tests/test_rate_card_freshness.py::test_installed_rate_cards_not_near_expiry` usa o relógio
+real e fica **vermelho a T-10 dias** do vencimento de qualquer card (CI em todo push, e o job `rate-cards` do
+`validate.yml` na varredura semanal de segunda 06:23 UTC, que notifica por e-mail o dono do repositório). Vencido de
+verdade: alerta `stale_rate_card` (bloqueante) e cotação de imagem/STT recebem `PricingUnavailable` (503).
+`rate_card_expiring` (T-`RPG_RATE_CARD_WARN_DAYS`, 3 d) é só aviso e não falha o cron.
+
+**Passo a passo (ordem importa).**
+1. Ler a página pública de preço de cada provedor (OpenAI, Groq, DeepSeek, Jina) e gravar URL, data/hora e o trecho
+   literal em `docs/spec409/` (modelo: `fontes.md` e `evidencia-*.md`). Sem evidência não se muda preço nem só a data.
+2. Criar o JSON novo: `version` com a data do arquivo, `observed_at` = dia da leitura, `source(s)` com URL `https://`.
+   No de **imagem** o `observed_at` leva offset (`"AAAA-MM-DDT00:00:00+00:00"`; o leitor subtrai de um datetime com
+   fuso). Fonte secundária (ex.: Jina) deve ser dita no próprio `source`. `max_cost_usd` do STT é recalculado dos
+   tetos (`tests/test_pricing_card_files.py`).
+3. Apontar os leitores (tabela acima; no LLM, **os dois**). Rodar `tests/test_pricing_card_files.py`,
+   `test_rate_card_freshness.py`, `test_image_pricing.py`, `test_speech_to_text.py`, `test_shard_pricing.py`.
+4. Só no **LLM**: publicar no banco **antes do deploy**. `app.pricing_versions` é imutável e pina `rate_card_sha256` +
+   `rate_card_observed_at`; sem linha nova a cotação e a compra falham com "conteúdo do rate card divergiu". Staging:
+   `scripts/staging/publish_rate_card.py` (`--dry-run`, depois `--confirm-staging <ref>`) publica a versão, o SKU e os
+   `image_price_profiles` novos (cópia dos anteriores; conferir `expires_at`, outro relógio) e `vercel_env.py` aponta
+   `RPG_SPEECH_PRICING_VERSION` e `RPG_IMAGE_PRICE_PROFILE_*`. As linhas antigas ficam (histórico de compras).
+   Imagem/STT/embedding **não** tocam `pricing_versions`.
+5. **Pré-condição de deploy (imagem, STT e texto):** nenhuma reserva aberta e nenhum job de imagem em voo.
+   `quote_usage` só aceita evento cuja versão do card é a atual (imagem/STT, mesmo com `authorized_snapshot`) e,
+   no texto, a `rate_card_version` da linha da reserva; reserva `uncertain` com versão antiga trava a liquidação
+   (ver "ATENCAO" abaixo). Conferir `select reference_type, status, count(*) from app.wallet_reservations where status in
+   ('reserved','effect_started','uncertain') group by 1,2` e `art_generations` em `pending/generating`.
+6. Deploy e smoke: cotação de imagem (`POST /game/{id}/art/quote`, sem gerar), uma requisição curta de STT e
+   `POST /internal/cron/finops` com 200 e sem `stale_rate_card` em `app.finops_evaluations`. Cotação de imagem emitida
+   antes do deploy pede nova (`image pricing changed`); é esperado.
+
+**Alívio de emergência.** `RPG_RATE_CARD_MAX_AGE_DAYS` (até 365) destrava imagem/STT/`require_paid_effect`, mas esconde
+o vencimento: só com prazo escrito e decisão do dono, e removido quando o card novo pousar. `RPG_FINOPS_BLOCK_STALE=0`
+**não** basta (só afrouxa `require_paid_effect`, não `require_image_prices`/`require_speech_prices`).
+
+**O que o alerta do cron faz e não faz.** `stale_rate_card` soma 1 em `failed` do `/internal/cron/finops` (HTTP 500,
+chave `stale_rate_cards` com os nomes); só esse tipo (não `rate_card_expiring`, `wallet_mismatch` etc.). Três respostas
+não-2xx seguidas do mesmo job viram uma linha em `app.cron_health_alerts` (~3 h, cron horário) e um `RAISE WARNING` no
+log do Postgres. **Ninguém é notificado ativamente** sem o envio de logs externo (Axiom, bloqueado no dono): o aviso que
+chega a alguém é o CI vermelho/e-mail de T-10; a linha em `cron_health_alerts`/`finops_evaluations` entra na rotina
+diária. Push de verdade é decisão futura (SPEC-409 D5).
+
+`scripts/finops_margin_sim.py` (preços "live" do relatório de margem) **não** lê esses cards e não faz parte da renovação.
 
 ## Falhas de provider e retencoes (SPEC-236)
 - Tentativa que falha SEM `usage` (402/429/timeout/5xx) e gravada com `cost_usd=0`,

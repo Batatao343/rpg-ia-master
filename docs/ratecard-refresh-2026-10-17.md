@@ -1,3 +1,6 @@
+> **Superado por SPEC-409** (2026-11-13): renovação, guarda de vencimento e runbook atual em
+> `docs/spec197/runbooks/budget.md` § Renovação de rate cards (SPEC-409). Este arquivo é histórico.
+
 # Rate card / audit-local incident — 2026-10-17/18
 
 CI `audit-local` (run 39089618980, commit `ebd3cdd`) failed in
