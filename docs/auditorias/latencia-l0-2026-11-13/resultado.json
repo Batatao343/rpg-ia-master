@@ -1,0 +1,7131 @@
+{
+ "at": "2026-11-13T20:12:10.404301+00:00",
+ "base": "https://rpg-ia-master-staging.vercel.app",
+ "started_ms": 1794600730404,
+ "think_s": 6.0,
+ "vercel": {
+  "user_plan": "hobby",
+  "team_plan": "hobby",
+  "resourceConfig": {
+   "fluid": true,
+   "functionDefaultRegions": [
+    "iad1"
+   ],
+   "functionDefaultTimeout": null,
+   "functionDefaultMemoryType": null,
+   "elasticConcurrencyEnabled": null
+  },
+  "defaultResourceConfig": {
+   "fluid": true,
+   "functionDefaultRegions": [
+    "iad1"
+   ],
+   "functionDefaultTimeout": 300,
+   "functionDefaultMemoryType": "standard"
+  },
+  "serverlessFunctionRegion": "iad1",
+  "nodeVersion": "24.x"
+ },
+ "health_first_3_ms": [
+  124.1,
+  53.9,
+  27.6
+ ],
+ "health": {
+  "git_sha": "d7aa4bebed651c2920ba801b5268ba336a12bc35",
+  "status": "online"
+ },
+ "sessions": [
+  {
+   "session": 0,
+   "turns": [
+    {
+     "i": 0,
+     "category": "cena",
+     "start_ms": 1794600788720,
+     "end_ms": 1794600794788,
+     "pre_get_operation_ms": 344.4,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 159.7,
+     "first_chunk": 2585.9,
+     "done": 5827.6,
+     "state": 6065.9,
+     "close": 6066.8,
+     "narration_chars": 1431,
+     "has_error": false,
+     "turn_count": 2,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 71,
+      "ttfmc_server_ms": 2507,
+      "ttlt_server_ms": 5739,
+      "state_server_ms": 5975,
+      "first_token_server_ms": 2506,
+      "early_narrative": true,
+      "early_gain_ms": 236,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 2,
+      "route": "storyteller",
+      "route_source": "interlocutor",
+      "latency_ms": 5605,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 10,
+       "context": 480,
+       "narrator": 4837,
+       "other": 409,
+       "persistence": 235,
+       "router": 2
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002795100",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4758
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.002795100",
+      "cost_usd_est": 0.0027951,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 71,
+      "ttfmc_server_ms": 2507,
+      "ttlt_server_ms": 5739,
+      "state_server_ms": 5975,
+      "first_token_server_ms": 2506,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 25,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 1,
+     "category": "npc_novo",
+     "start_ms": 1794600801043,
+     "end_ms": 1794600807796,
+     "pre_get_operation_ms": 253.8,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 148.2,
+     "first_chunk": 6532.5,
+     "done": 6566.7,
+     "state": 6751.8,
+     "close": 6752.5,
+     "narration_chars": 1309,
+     "has_error": false,
+     "turn_count": 3,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 6445,
+      "ttlt_server_ms": 6483,
+      "state_server_ms": 6672,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 189,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 3,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 6333,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 7,
+       "context": 81,
+       "narrator": 4457,
+       "other": 385,
+       "persistence": 227,
+       "router": 1514
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000642300",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1287
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002348280",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4439
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.002990580",
+      "cost_usd_est": 0.00299058,
+      "cache_hit_ratio": 0.1476,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 6445,
+      "ttlt_server_ms": 6483,
+      "state_server_ms": 6672,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 6,
+      "early_calc_ms": 29,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 1280,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 2,
+     "category": "conversa",
+     "start_ms": 1794600833151,
+     "end_ms": 1794600839669,
+     "pre_get_operation_ms": 19355.0,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 145.2,
+     "first_chunk": 6308.4,
+     "done": 6308.5,
+     "state": 6508.8,
+     "close": 6515.9,
+     "narration_chars": 1164,
+     "has_error": false,
+     "turn_count": 4,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 73,
+      "ttfmc_server_ms": 6225,
+      "ttlt_server_ms": 6240,
+      "state_server_ms": 6433,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 193,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 4,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 6062,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 11,
+       "context": 82,
+       "narrator": 4006,
+       "other": 406,
+       "persistence": 227,
+       "router": 1700
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000420108",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1470
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001474608",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3960
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.001894716",
+      "cost_usd_est": 0.001894716,
+      "cache_hit_ratio": 0.5496,
+      "lock_wait_ms": 99,
+      "ack_server_ms": 73,
+      "ttfmc_server_ms": 6225,
+      "ttlt_server_ms": 6240,
+      "state_server_ms": 6433,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 20,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4736,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 3,
+     "category": "conversa",
+     "start_ms": 1794600845917,
+     "end_ms": 1794600854345,
+     "pre_get_operation_ms": 248.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 152.1,
+     "first_chunk": 8180.7,
+     "done": 8240.0,
+     "state": 8425.7,
+     "close": 8426.6,
+     "narration_chars": 1766,
+     "has_error": false,
+     "turn_count": 5,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 76,
+      "ttfmc_server_ms": 8108,
+      "ttlt_server_ms": 8169,
+      "state_server_ms": 8358,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 189,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 5,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 8010,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 16,
+       "context": 83,
+       "narrator": 5584,
+       "other": 423,
+       "persistence": 225,
+       "router": 2026
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000385908",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1832
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001676076",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 5535
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.002061984",
+      "cost_usd_est": 0.002061984,
+      "cache_hit_ratio": 0.5714,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 76,
+      "ttfmc_server_ms": 8108,
+      "ttlt_server_ms": 8169,
+      "state_server_ms": 8358,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 15,
+      "early_calc_ms": 49,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4864,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 4,
+     "category": "cena",
+     "start_ms": 1794600860678,
+     "end_ms": 1794600866454,
+     "pre_get_operation_ms": 331.7,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 163.4,
+     "first_chunk": 2670.6,
+     "done": 5561.9,
+     "state": 5775.1,
+     "close": 5775.6,
+     "narration_chars": 1347,
+     "has_error": false,
+     "turn_count": 6,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 79,
+      "ttfmc_server_ms": 2596,
+      "ttlt_server_ms": 5477,
+      "state_server_ms": 5699,
+      "first_token_server_ms": 2596,
+      "early_narrative": true,
+      "early_gain_ms": 222,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 6,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 5351,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 7,
+       "context": 208,
+       "narrator": 4652,
+       "other": 401,
+       "persistence": 221,
+       "router": 208
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001517076",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4619
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.001517076",
+      "cost_usd_est": 0.001517076,
+      "cache_hit_ratio": 0.5643,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 79,
+      "ttfmc_server_ms": 2596,
+      "ttlt_server_ms": 5477,
+      "state_server_ms": 5699,
+      "first_token_server_ms": 2596,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 6,
+      "early_calc_ms": 34,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4096,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 5,
+     "category": "npc_novo",
+     "start_ms": 1794600872792,
+     "end_ms": 1794600880243,
+     "pre_get_operation_ms": 337.5,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 194.2,
+     "first_chunk": 7242.5,
+     "done": 7266.6,
+     "state": 7449.5,
+     "close": 7450.3,
+     "narration_chars": 1106,
+     "has_error": false,
+     "turn_count": 7,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 80,
+      "ttfmc_server_ms": 7116,
+      "ttlt_server_ms": 7152,
+      "state_server_ms": 7340,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 188,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 7,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 6898,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 6,
+       "context": 547,
+       "narrator": 3899,
+       "other": 485,
+       "persistence": 224,
+       "router": 2178
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000398508",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1955
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002232780",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3885
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.002631288",
+      "cost_usd_est": 0.002631288,
+      "cache_hit_ratio": 0.2376,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 80,
+      "ttfmc_server_ms": 7116,
+      "ttlt_server_ms": 7152,
+      "state_server_ms": 7340,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 5,
+      "early_calc_ms": 27,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 2048,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 6,
+     "category": "conversa",
+     "start_ms": 1794600886629,
+     "end_ms": 1794600902722,
+     "pre_get_operation_ms": 384.7,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 216.3,
+     "first_chunk": 13567.3,
+     "done": 15707.8,
+     "state": 16092.7,
+     "close": 16093.0,
+     "narration_chars": 906,
+     "has_error": false,
+     "turn_count": 8,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 78,
+      "ttfmc_server_ms": 13445,
+      "ttlt_server_ms": 15581,
+      "state_server_ms": 15967,
+      "first_token_server_ms": 13445,
+      "early_narrative": true,
+      "early_gain_ms": 386,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 8,
+      "route": "npc_actor",
+      "route_source": "classify",
+      "latency_ms": 15581,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 13,
+       "context": 449,
+       "narrator": 12669,
+       "other": 442,
+       "persistence": 382,
+       "router": 2010
+      },
+      "llm_by_phase": {
+       "narrator": 2,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000393708",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1760
+       },
+       "fast": {
+        "attempts": 2,
+        "cost_usd": "0.004205100",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 11683
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.004598808",
+      "cost_usd_est": 0.004598808,
+      "cache_hit_ratio": 0.085,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 78,
+      "ttfmc_server_ms": 13445,
+      "ttlt_server_ms": 15581,
+      "state_server_ms": 15967,
+      "first_token_server_ms": 13445,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 11,
+      "early_calc_ms": 26,
+      "instance_ref": "4c7528da",
+      "route_next": "npc_actor",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 768,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 7,
+     "category": "conversa",
+     "start_ms": 1794600928284,
+     "end_ms": 1794600939249,
+     "pre_get_operation_ms": 19560.9,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 182.4,
+     "first_chunk": 4003.3,
+     "done": 6977.4,
+     "state": 10963.9,
+     "close": 10964.2,
+     "narration_chars": 914,
+     "has_error": false,
+     "turn_count": 9,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 3911,
+      "ttlt_server_ms": 6881,
+      "state_server_ms": 10857,
+      "first_token_server_ms": 3911,
+      "early_narrative": true,
+      "early_gain_ms": 3976,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 9,
+      "route": "npc_actor",
+      "route_source": "classify",
+      "latency_ms": 10391,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3718,
+       "context": 455,
+       "narrator": 4119,
+       "other": 504,
+       "persistence": 270,
+       "router": 1790
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000602400",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1548
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002732772",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4073
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001396800",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3664
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.004731972",
+      "cost_usd_est": 0.004731972,
+      "cache_hit_ratio": 0.0454,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 3911,
+      "ttlt_server_ms": 6881,
+      "state_server_ms": 10857,
+      "first_token_server_ms": 3911,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 16,
+      "early_calc_ms": 23,
+      "instance_ref": "4c7528da",
+      "route_next": "npc_actor",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 512,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 8,
+     "category": "cena",
+     "start_ms": 1794600964693,
+     "end_ms": 1794600975709,
+     "pre_get_operation_ms": 19443.5,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 190.7,
+     "first_chunk": 2892.4,
+     "done": 6025.3,
+     "state": 11014.9,
+     "close": 11015.4,
+     "narration_chars": 1547,
+     "has_error": false,
+     "turn_count": 10,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 84,
+      "ttfmc_server_ms": 2792,
+      "ttlt_server_ms": 5917,
+      "state_server_ms": 10910,
+      "first_token_server_ms": 2792,
+      "early_narrative": true,
+      "early_gain_ms": 4993,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 10,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 10456,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4663,
+       "context": 588,
+       "narrator": 4587,
+       "other": 509,
+       "persistence": 327,
+       "router": 235
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002853000",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4519
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001793100",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4597
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.004646100",
+      "cost_usd_est": 0.0046461,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 84,
+      "ttfmc_server_ms": 2792,
+      "ttlt_server_ms": 5917,
+      "state_server_ms": 10910,
+      "first_token_server_ms": 2792,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 11,
+      "early_calc_ms": 29,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 9,
+     "category": "descanso",
+     "start_ms": 1794600982041,
+     "end_ms": 1794600991791,
+     "pre_get_operation_ms": 330.9,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 188.7,
+     "first_chunk": 5396.0,
+     "done": 5421.9,
+     "state": 9750.1,
+     "close": 9750.4,
+     "narration_chars": 1531,
+     "has_error": false,
+     "turn_count": 11,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 88,
+      "ttfmc_server_ms": 5294,
+      "ttlt_server_ms": 5315,
+      "state_server_ms": 9655,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 4340,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 11,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 9251,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4011,
+       "context": 442,
+       "narrator": 4387,
+       "other": 462,
+       "persistence": 351,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003064200",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4322
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001812600",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3967
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.004876800",
+      "cost_usd_est": 0.0048768,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 88,
+      "ttfmc_server_ms": 5294,
+      "ttlt_server_ms": 5315,
+      "state_server_ms": 9655,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 13,
+      "early_calc_ms": 34,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 10,
+     "category": "cena",
+     "start_ms": 1794600998265,
+     "end_ms": 1794601003839,
+     "pre_get_operation_ms": 473.3,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 208.5,
+     "first_chunk": 3115.4,
+     "done": 5311.1,
+     "state": 5572.7,
+     "close": 5573.2,
+     "narration_chars": 1336,
+     "has_error": false,
+     "turn_count": 12,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 90,
+      "ttfmc_server_ms": 3002,
+      "ttlt_server_ms": 5194,
+      "state_server_ms": 5453,
+      "first_token_server_ms": 3002,
+      "early_narrative": true,
+      "early_gain_ms": 259,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 12,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 4992,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 7,
+       "context": 173,
+       "narrator": 4241,
+       "other": 515,
+       "persistence": 254,
+       "router": 262
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003059100",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4198
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.003059100",
+      "cost_usd_est": 0.0030591,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 90,
+      "ttfmc_server_ms": 3002,
+      "ttlt_server_ms": 5194,
+      "state_server_ms": 5453,
+      "first_token_server_ms": 3002,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 6,
+      "early_calc_ms": 28,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 11,
+     "category": "viagem",
+     "start_ms": 1794601010148,
+     "end_ms": 1794601025621,
+     "pre_get_operation_ms": 309.1,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 201.9,
+     "first_chunk": 2780.3,
+     "done": 6676.1,
+     "state": 15471.5,
+     "close": 15472.4,
+     "narration_chars": 1799,
+     "has_error": false,
+     "turn_count": 13,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 89,
+      "ttfmc_server_ms": 2674,
+      "ttlt_server_ms": 6562,
+      "state_server_ms": 15366,
+      "first_token_server_ms": 2674,
+      "early_narrative": true,
+      "early_gain_ms": 8804,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 13,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 14951,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3072,
+       "context": 789,
+       "narrator": 5701,
+       "other": 5219,
+       "persistence": 582,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "other": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003238500",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 5599
+       },
+       "smart": {
+        "attempts": 2,
+        "cost_usd": "0.003254700",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 7754
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.006493200",
+      "cost_usd_est": 0.0064932,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 101,
+      "ack_server_ms": 89,
+      "ttfmc_server_ms": 2674,
+      "ttlt_server_ms": 6562,
+      "state_server_ms": 15366,
+      "first_token_server_ms": 2674,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 5132,
+      "archivist_validate_ms": 10,
+      "early_calc_ms": 27,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 12,
+     "category": "cena",
+     "start_ms": 1794601032007,
+     "end_ms": 1794601038410,
+     "pre_get_operation_ms": 385.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 215.7,
+     "first_chunk": 2810.9,
+     "done": 6118.2,
+     "state": 6402.3,
+     "close": 6402.5,
+     "narration_chars": 1623,
+     "has_error": false,
+     "turn_count": 14,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 105,
+      "ttfmc_server_ms": 2711,
+      "ttlt_server_ms": 6000,
+      "state_server_ms": 6298,
+      "first_token_server_ms": 2711,
+      "early_narrative": true,
+      "early_gain_ms": 298,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 14,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 5806,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 9,
+       "context": 277,
+       "narrator": 4971,
+       "other": 545,
+       "persistence": 288,
+       "router": 207
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003219000",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4931
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.003219000",
+      "cost_usd_est": 0.003219,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 105,
+      "ttfmc_server_ms": 2711,
+      "ttlt_server_ms": 6000,
+      "state_server_ms": 6298,
+      "first_token_server_ms": 2711,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 8,
+      "early_calc_ms": 31,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 13,
+     "category": "descanso",
+     "start_ms": 1794601044751,
+     "end_ms": 1794601054588,
+     "pre_get_operation_ms": 340.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 212.9,
+     "first_chunk": 2569.1,
+     "done": 5224.9,
+     "state": 9834.6,
+     "close": 9835.6,
+     "narration_chars": 1458,
+     "has_error": false,
+     "turn_count": 15,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 96,
+      "ttfmc_server_ms": 2462,
+      "ttlt_server_ms": 5108,
+      "state_server_ms": 9725,
+      "first_token_server_ms": 2462,
+      "early_narrative": true,
+      "early_gain_ms": 4617,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 15,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 9295,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4248,
+       "context": 412,
+       "narrator": 4208,
+       "other": 488,
+       "persistence": 367,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003152100",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4114
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001599600",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4209
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.004751700",
+      "cost_usd_est": 0.0047517,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 96,
+      "ttfmc_server_ms": 2462,
+      "ttlt_server_ms": 5108,
+      "state_server_ms": 9725,
+      "first_token_server_ms": 2462,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 12,
+      "early_calc_ms": 31,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 14,
+     "category": "combate",
+     "start_ms": 1794601060986,
+     "end_ms": 1794601069420,
+     "pre_get_operation_ms": 398.4,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 216.7,
+     "first_chunk": 6677.3,
+     "done": 7674.4,
+     "state": 8432.7,
+     "close": 8433.0,
+     "narration_chars": 523,
+     "has_error": false,
+     "turn_count": 16,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 106,
+      "ttfmc_server_ms": 6574,
+      "ttlt_server_ms": 7546,
+      "state_server_ms": 8318,
+      "first_token_server_ms": 6574,
+      "early_narrative": true,
+      "early_gain_ms": 772,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 16,
+      "route": null,
+      "route_source": "jev",
+      "latency_ms": 7879,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 8,
+       "context": 146,
+       "narrator": 6730,
+       "other": 470,
+       "persistence": 773,
+       "router": 190
+      },
+      "llm_by_phase": {
+       "narrator": 3
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000192336",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1129
+       },
+       "fast": {
+        "attempts": 2,
+        "cost_usd": "0.001265952",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 5343
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.001458288",
+      "cost_usd_est": 0.001458288,
+      "cache_hit_ratio": 0.5034,
+      "lock_wait_ms": 104,
+      "ack_server_ms": 106,
+      "ttfmc_server_ms": 6574,
+      "ttlt_server_ms": 7546,
+      "state_server_ms": 8318,
+      "first_token_server_ms": 6574,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 7,
+      "early_calc_ms": 18,
+      "instance_ref": "4c7528da",
+      "route_next": "combat_agent",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 2048,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    }
+   ],
+   "opening": {
+    "start_ms": 1794600754898,
+    "end_ms": 1794600788375,
+    "prologue_status": 200,
+    "prologue_ms": 11031.9,
+    "prologue_mock": false,
+    "new_status": 200,
+    "new_ms": 22444.2,
+    "simulated": false,
+    "with_scenario": true
+   },
+   "warm": {
+    "health": {
+     "n": 15,
+     "p50": 17.6,
+     "p95": 72.6,
+     "min": 14.0,
+     "max": 72.6
+    },
+    "game_saves": {
+     "n": 15,
+     "p50": 205.7,
+     "p95": 350.8,
+     "min": 180.3,
+     "max": 350.8
+    },
+    "get_operation_unknown": {
+     "n": 15,
+     "p50": 270.4,
+     "p95": 406.1,
+     "min": 258.1,
+     "max": 406.1
+    },
+    "game_state": {
+     "n": 8,
+     "p50": 816.0,
+     "p95": 895.6,
+     "min": 797.9,
+     "max": 895.6
+    }
+   },
+   "db": {
+    "version": 16,
+    "state_stored_bytes": 90142,
+    "state_text_bytes": 204838,
+    "event_log_len": 0,
+    "game_events_rows": 0,
+    "timing": [
+     {
+      "turn": 2,
+      "phase_ms": {
+       "other": 409,
+       "router": 2,
+       "context": 480,
+       "narrator": 4836,
+       "archivist": 10,
+       "persistence": null
+      },
+      "ack_server_ms": 71,
+      "ttfmc_server_ms": 2507,
+      "ttlt_server_ms": 5739,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 3,
+      "phase_ms": {
+       "other": 385,
+       "router": 1514,
+       "context": 81,
+       "narrator": 4457,
+       "archivist": 7,
+       "persistence": null
+      },
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 6445,
+      "ttlt_server_ms": 6483,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 4,
+      "phase_ms": {
+       "other": 406,
+       "router": 1700,
+       "context": 82,
+       "narrator": 4007,
+       "archivist": 11,
+       "persistence": null
+      },
+      "ack_server_ms": 73,
+      "ttfmc_server_ms": 6225,
+      "ttlt_server_ms": 6240,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 5,
+      "phase_ms": {
+       "other": 423,
+       "router": 2026,
+       "context": 83,
+       "narrator": 5584,
+       "archivist": 16,
+       "persistence": null
+      },
+      "ack_server_ms": 76,
+      "ttfmc_server_ms": 8108,
+      "ttlt_server_ms": 8169,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 6,
+      "phase_ms": {
+       "other": 401,
+       "router": 208,
+       "context": 208,
+       "narrator": 4651,
+       "archivist": 7,
+       "persistence": null
+      },
+      "ack_server_ms": 79,
+      "ttfmc_server_ms": 2596,
+      "ttlt_server_ms": 5477,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 7,
+      "phase_ms": {
+       "other": 485,
+       "router": 2178,
+       "context": 547,
+       "narrator": 3899,
+       "archivist": 6,
+       "persistence": null
+      },
+      "ack_server_ms": 80,
+      "ttfmc_server_ms": 7116,
+      "ttlt_server_ms": 7152,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 8,
+      "phase_ms": {
+       "other": 442,
+       "router": 2010,
+       "context": 449,
+       "narrator": 12671,
+       "archivist": 13,
+       "persistence": null
+      },
+      "ack_server_ms": 78,
+      "ttfmc_server_ms": 13445,
+      "ttlt_server_ms": 15581,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 9,
+      "phase_ms": {
+       "other": 504,
+       "router": 1790,
+       "context": 455,
+       "narrator": 4120,
+       "archivist": 3718,
+       "persistence": null
+      },
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 3911,
+      "ttlt_server_ms": 6881,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 10,
+      "phase_ms": {
+       "other": 509,
+       "router": 235,
+       "context": 588,
+       "narrator": 4587,
+       "archivist": 4664,
+       "persistence": null
+      },
+      "ack_server_ms": 84,
+      "ttfmc_server_ms": 2792,
+      "ttlt_server_ms": 5917,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 11,
+      "phase_ms": {
+       "other": 462,
+       "router": 1,
+       "context": 442,
+       "narrator": 4387,
+       "archivist": 4011,
+       "persistence": null
+      },
+      "ack_server_ms": 88,
+      "ttfmc_server_ms": 5294,
+      "ttlt_server_ms": 5315,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 12,
+      "phase_ms": {
+       "other": 515,
+       "router": 262,
+       "context": 173,
+       "narrator": 4241,
+       "archivist": 7,
+       "persistence": null
+      },
+      "ack_server_ms": 90,
+      "ttfmc_server_ms": 3002,
+      "ttlt_server_ms": 5194,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 13,
+      "phase_ms": {
+       "other": 5219,
+       "router": 1,
+       "context": 789,
+       "narrator": 5702,
+       "archivist": 3072,
+       "persistence": null
+      },
+      "ack_server_ms": 89,
+      "ttfmc_server_ms": 2674,
+      "ttlt_server_ms": 6562,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 14,
+      "phase_ms": {
+       "other": 545,
+       "router": 207,
+       "context": 277,
+       "narrator": 4971,
+       "archivist": 9,
+       "persistence": null
+      },
+      "ack_server_ms": 105,
+      "ttfmc_server_ms": 2711,
+      "ttlt_server_ms": 6000,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 15,
+      "phase_ms": {
+       "other": 488,
+       "router": 1,
+       "context": 412,
+       "narrator": 4208,
+       "archivist": 4247,
+       "persistence": null
+      },
+      "ack_server_ms": 96,
+      "ttfmc_server_ms": 2462,
+      "ttlt_server_ms": 5108,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 16,
+      "phase_ms": {
+       "other": 470,
+       "router": 190,
+       "context": 146,
+       "narrator": 6731,
+       "archivist": 8,
+       "persistence": null
+      },
+      "ack_server_ms": 106,
+      "ttfmc_server_ms": 6574,
+      "ttlt_server_ms": 7546,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     }
+    ]
+   },
+   "cleanup": {
+    "games_deleted": 1,
+    "user_delete_status": 200
+   }
+  },
+  {
+   "session": 1,
+   "turns": [
+    {
+     "i": 0,
+     "category": "cena",
+     "start_ms": 1794601132167,
+     "end_ms": 1794601139134,
+     "pre_get_operation_ms": 355.8,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 191.9,
+     "first_chunk": 3221.1,
+     "done": 5753.7,
+     "state": 6965.6,
+     "close": 6966.0,
+     "narration_chars": 1652,
+     "has_error": false,
+     "turn_count": 2,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 73,
+      "ttfmc_server_ms": 3080,
+      "ttlt_server_ms": 5632,
+      "state_server_ms": 6855,
+      "first_token_server_ms": 3080,
+      "early_narrative": true,
+      "early_gain_ms": 1223,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 2,
+      "route": "storyteller",
+      "route_source": "interlocutor",
+      "latency_ms": 6474,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 13,
+       "context": 515,
+       "narrator": 4692,
+       "other": 418,
+       "persistence": 1214,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002715972",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4605
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.002715972",
+      "cost_usd_est": 0.002715972,
+      "cache_hit_ratio": 0.0688,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 73,
+      "ttfmc_server_ms": 3080,
+      "ttlt_server_ms": 5632,
+      "state_server_ms": 6855,
+      "first_token_server_ms": 3080,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 12,
+      "early_calc_ms": 24,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 512,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 1,
+     "category": "npc_novo",
+     "start_ms": 1794601145430,
+     "end_ms": 1794601153883,
+     "pre_get_operation_ms": 295.1,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 194.2,
+     "first_chunk": 4566.2,
+     "done": 4587.0,
+     "state": 8452.4,
+     "close": 8452.8,
+     "narration_chars": 733,
+     "has_error": false,
+     "turn_count": 3,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 4425,
+      "ttlt_server_ms": 4473,
+      "state_server_ms": 8335,
+      "first_token_server_ms": 4425,
+      "early_narrative": true,
+      "early_gain_ms": 3862,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 3,
+      "route": "npc_actor",
+      "route_source": "jev",
+      "latency_ms": 7899,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3622,
+       "context": 402,
+       "narrator": 3367,
+       "other": 475,
+       "persistence": 255,
+       "router": 212
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002385000",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3340
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001541700",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3606
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.003926700",
+      "cost_usd_est": 0.0039267,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 4425,
+      "ttlt_server_ms": 4473,
+      "state_server_ms": 8335,
+      "first_token_server_ms": 4425,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 8,
+      "early_calc_ms": 27,
+      "instance_ref": "4c7528da",
+      "route_next": "npc_actor",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 2,
+     "category": "conversa",
+     "start_ms": 1794601160346,
+     "end_ms": 1794601170220,
+     "pre_get_operation_ms": 462.5,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 189.9,
+     "first_chunk": 4479.9,
+     "done": 5733.4,
+     "state": 9871.7,
+     "close": 9873.0,
+     "narration_chars": 493,
+     "has_error": false,
+     "turn_count": 4,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 4373,
+      "ttlt_server_ms": 5618,
+      "state_server_ms": 9762,
+      "first_token_server_ms": 4373,
+      "early_narrative": true,
+      "early_gain_ms": 4144,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 4,
+      "route": "npc_actor",
+      "route_source": "classify",
+      "latency_ms": 9387,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3904,
+       "context": 458,
+       "narrator": 2625,
+       "other": 408,
+       "persistence": 246,
+       "router": 2120
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000343608",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1878
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002298168",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 2598
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001547400",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3858
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.004189176",
+      "cost_usd_est": 0.004189176,
+      "cache_hit_ratio": 0.0851,
+      "lock_wait_ms": 96,
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 4373,
+      "ttlt_server_ms": 5618,
+      "state_server_ms": 9762,
+      "first_token_server_ms": 4373,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 10,
+      "early_calc_ms": 18,
+      "instance_ref": "4c7528da",
+      "route_next": "npc_actor",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 896,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 3,
+     "category": "conversa",
+     "start_ms": 1794601176544,
+     "end_ms": 1794601185221,
+     "pre_get_operation_ms": 323.7,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 192.8,
+     "first_chunk": 2490.6,
+     "done": 4272.4,
+     "state": 8676.5,
+     "close": 8677.1,
+     "narration_chars": 690,
+     "has_error": false,
+     "turn_count": 5,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 76,
+      "ttfmc_server_ms": 2381,
+      "ttlt_server_ms": 4160,
+      "state_server_ms": 8566,
+      "first_token_server_ms": 2381,
+      "early_narrative": true,
+      "early_gain_ms": 4406,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 5,
+      "route": "npc_actor",
+      "route_source": "jev",
+      "latency_ms": 8131,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4175,
+       "context": 406,
+       "narrator": 3060,
+       "other": 474,
+       "persistence": 246,
+       "router": 204
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002377536",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3025
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001504800",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4159
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.003882336",
+      "cost_usd_est": 0.003882336,
+      "cache_hit_ratio": 0.0285,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 76,
+      "ttfmc_server_ms": 2381,
+      "ttlt_server_ms": 4160,
+      "state_server_ms": 8566,
+      "first_token_server_ms": 2381,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 25,
+      "instance_ref": "4c7528da",
+      "route_next": "npc_actor",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 256,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 4,
+     "category": "cena",
+     "start_ms": 1794601210800,
+     "end_ms": 1794601216387,
+     "pre_get_operation_ms": 19578.4,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 197.1,
+     "first_chunk": 2710.4,
+     "done": 5376.8,
+     "state": 5586.4,
+     "close": 5586.6,
+     "narration_chars": 1179,
+     "has_error": false,
+     "turn_count": 6,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 79,
+      "ttfmc_server_ms": 2587,
+      "ttlt_server_ms": 5237,
+      "state_server_ms": 5467,
+      "first_token_server_ms": 2587,
+      "early_narrative": true,
+      "early_gain_ms": 230,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 6,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 5022,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 11,
+       "context": 199,
+       "narrator": 4321,
+       "other": 480,
+       "persistence": 220,
+       "router": 235
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002650440",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4277
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.002650440",
+      "cost_usd_est": 0.00265044,
+      "cache_hit_ratio": 0.0825,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 79,
+      "ttfmc_server_ms": 2587,
+      "ttlt_server_ms": 5237,
+      "state_server_ms": 5467,
+      "first_token_server_ms": 2587,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 10,
+      "early_calc_ms": 24,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 640,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 5,
+     "category": "npc_novo",
+     "start_ms": 1794601241736,
+     "end_ms": 1794601252376,
+     "pre_get_operation_ms": 19348.5,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 189.7,
+     "first_chunk": 3981.4,
+     "done": 5783.0,
+     "state": 10638.8,
+     "close": 10639.1,
+     "narration_chars": 722,
+     "has_error": false,
+     "turn_count": 7,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 79,
+      "ttfmc_server_ms": 3878,
+      "ttlt_server_ms": 5672,
+      "state_server_ms": 10534,
+      "first_token_server_ms": 3878,
+      "early_narrative": true,
+      "early_gain_ms": 4862,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 7,
+      "route": "npc_actor",
+      "route_source": "classify",
+      "latency_ms": 10088,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4608,
+       "context": 410,
+       "narrator": 3158,
+       "other": 489,
+       "persistence": 261,
+       "router": 1607
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000400608",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1370
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002546604",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3127
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001765800",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4559
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.004713012",
+      "cost_usd_est": 0.004713012,
+      "cache_hit_ratio": 0.1015,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 79,
+      "ttfmc_server_ms": 3878,
+      "ttlt_server_ms": 5672,
+      "state_server_ms": 10534,
+      "first_token_server_ms": 3878,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 13,
+      "early_calc_ms": 29,
+      "instance_ref": "4c7528da",
+      "route_next": "npc_actor",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 1152,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 6,
+     "category": "conversa",
+     "start_ms": 1794601277729,
+     "end_ms": 1794601282150,
+     "pre_get_operation_ms": 19353.4,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 199.1,
+     "first_chunk": 2275.9,
+     "done": 4205.2,
+     "state": 4418.0,
+     "close": 4419.1,
+     "narration_chars": 994,
+     "has_error": false,
+     "turn_count": 8,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 2169,
+      "ttlt_server_ms": 4088,
+      "state_server_ms": 4309,
+      "first_token_server_ms": 2169,
+      "early_narrative": true,
+      "early_gain_ms": 221,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 8,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 3859,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 9,
+       "context": 202,
+       "narrator": 3140,
+       "other": 484,
+       "persistence": 233,
+       "router": 240
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001839336",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3097
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.001839336",
+      "cost_usd_est": 0.001839336,
+      "cache_hit_ratio": 0.4293,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 2169,
+      "ttlt_server_ms": 4088,
+      "state_server_ms": 4309,
+      "first_token_server_ms": 2169,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 8,
+      "early_calc_ms": 22,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 3456,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 7,
+     "category": "conversa",
+     "start_ms": 1794601307526,
+     "end_ms": 1794601311997,
+     "pre_get_operation_ms": 19375.7,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 198.9,
+     "first_chunk": 2362.3,
+     "done": 4232.2,
+     "state": 4468.0,
+     "close": 4468.5,
+     "narration_chars": 928,
+     "has_error": false,
+     "turn_count": 9,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 2255,
+      "ttlt_server_ms": 4113,
+      "state_server_ms": 4352,
+      "first_token_server_ms": 2255,
+      "early_narrative": true,
+      "early_gain_ms": 239,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 9,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 3961,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4,
+       "context": 178,
+       "narrator": 3274,
+       "other": 438,
+       "persistence": 233,
+       "router": 224
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002524344",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3233
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.002524344",
+      "cost_usd_est": 0.002524344,
+      "cache_hit_ratio": 0.1261,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 2255,
+      "ttlt_server_ms": 4113,
+      "state_server_ms": 4352,
+      "first_token_server_ms": 2255,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 3,
+      "early_calc_ms": 27,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 1024,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 8,
+     "category": "cena",
+     "start_ms": 1794601318316,
+     "end_ms": 1794601324215,
+     "pre_get_operation_ms": 318.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 193.6,
+     "first_chunk": 2761.8,
+     "done": 5656.7,
+     "state": 5897.7,
+     "close": 5898.1,
+     "narration_chars": 1241,
+     "has_error": false,
+     "turn_count": 10,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 84,
+      "ttfmc_server_ms": 2649,
+      "ttlt_server_ms": 5535,
+      "state_server_ms": 5797,
+      "first_token_server_ms": 2649,
+      "early_narrative": true,
+      "early_gain_ms": 262,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 10,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 5342,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 9,
+       "context": 264,
+       "narrator": 4574,
+       "other": 493,
+       "persistence": 259,
+       "router": 197
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001409652",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4509
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.001409652",
+      "cost_usd_est": 0.001409652,
+      "cache_hit_ratio": 0.6288,
+      "lock_wait_ms": 99,
+      "ack_server_ms": 84,
+      "ttfmc_server_ms": 2649,
+      "ttlt_server_ms": 5535,
+      "state_server_ms": 5797,
+      "first_token_server_ms": 2649,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 25,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4992,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 9,
+     "category": "descanso",
+     "start_ms": 1794601351934,
+     "end_ms": 1794601362100,
+     "pre_get_operation_ms": 21719.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 200.2,
+     "first_chunk": 2864.2,
+     "done": 5826.7,
+     "state": 10161.1,
+     "close": 10165.1,
+     "narration_chars": 1388,
+     "has_error": false,
+     "turn_count": 11,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 85,
+      "ttfmc_server_ms": 2763,
+      "ttlt_server_ms": 5716,
+      "state_server_ms": 10058,
+      "first_token_server_ms": 2763,
+      "early_narrative": true,
+      "early_gain_ms": 4342,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 11,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 9597,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4029,
+       "context": 424,
+       "narrator": 4782,
+       "other": 503,
+       "persistence": 318,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002994600",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4687
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001486200",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4004
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.004480800",
+      "cost_usd_est": 0.0044808,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 85,
+      "ttfmc_server_ms": 2763,
+      "ttlt_server_ms": 5716,
+      "state_server_ms": 10058,
+      "first_token_server_ms": 2763,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 12,
+      "early_calc_ms": 29,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 10,
+     "category": "cena",
+     "start_ms": 1794601368408,
+     "end_ms": 1794601373941,
+     "pre_get_operation_ms": 307.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 203.2,
+     "first_chunk": 2814.9,
+     "done": 5300.8,
+     "state": 5530.9,
+     "close": 5531.9,
+     "narration_chars": 1186,
+     "has_error": false,
+     "turn_count": 12,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 86,
+      "ttfmc_server_ms": 2709,
+      "ttlt_server_ms": 5175,
+      "state_server_ms": 5424,
+      "first_token_server_ms": 2709,
+      "early_narrative": true,
+      "early_gain_ms": 249,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 12,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 5025,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 6,
+       "context": 192,
+       "narrator": 4280,
+       "other": 441,
+       "persistence": 250,
+       "router": 254
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003002700",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4212
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.003002700",
+      "cost_usd_est": 0.0030027,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 96,
+      "ack_server_ms": 86,
+      "ttfmc_server_ms": 2709,
+      "ttlt_server_ms": 5175,
+      "state_server_ms": 5424,
+      "first_token_server_ms": 2709,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 5,
+      "early_calc_ms": 24,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 11,
+     "category": "viagem",
+     "start_ms": 1794601380334,
+     "end_ms": 1794601381135,
+     "pre_get_operation_ms": 392.5,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 190.3,
+     "first_chunk": 579.7,
+     "done": 579.7,
+     "state": 800.4,
+     "close": 801.0,
+     "narration_chars": 155,
+     "has_error": false,
+     "turn_count": 13,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 476,
+      "ttlt_server_ms": 478,
+      "state_server_ms": 701,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 223,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 13,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 295,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3,
+       "context": 0,
+       "narrator": 5,
+       "other": 455,
+       "persistence": 236,
+       "router": 1
+      },
+      "llm_by_phase": {},
+      "llm_by_tier": {},
+      "llm_calls": 0,
+      "llm_requests": 0,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {},
+      "llm_providers": {},
+      "fell_back": false,
+      "cost_usd": "0",
+      "cost_usd_est": 0.0,
+      "cache_hit_ratio": null,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 476,
+      "ttlt_server_ms": 478,
+      "state_server_ms": 701,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 2,
+      "early_calc_ms": 39,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 0,
+      "llm_fallbacks": 0,
+      "cached_tokens": null,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 12,
+     "category": "cena",
+     "start_ms": 1794601387467,
+     "end_ms": 1794601392854,
+     "pre_get_operation_ms": 331.3,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 198.4,
+     "first_chunk": 2790.6,
+     "done": 5149.5,
+     "state": 5383.7,
+     "close": 5385.9,
+     "narration_chars": 1058,
+     "has_error": false,
+     "turn_count": 14,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 88,
+      "ttfmc_server_ms": 2685,
+      "ttlt_server_ms": 5035,
+      "state_server_ms": 5281,
+      "first_token_server_ms": 2685,
+      "early_narrative": true,
+      "early_gain_ms": 246,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 14,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 4821,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 6,
+       "context": 129,
+       "narrator": 4034,
+       "other": 507,
+       "persistence": 261,
+       "router": 343
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001809972",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3963
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.001809972",
+      "cost_usd_est": 0.001809972,
+      "cache_hit_ratio": 0.4692,
+      "lock_wait_ms": 101,
+      "ack_server_ms": 88,
+      "ttfmc_server_ms": 2685,
+      "ttlt_server_ms": 5035,
+      "state_server_ms": 5281,
+      "first_token_server_ms": 2685,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 5,
+      "early_calc_ms": 29,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 3712,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 13,
+     "category": "descanso",
+     "start_ms": 1794601399159,
+     "end_ms": 1794601414144,
+     "pre_get_operation_ms": 305.1,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 216.9,
+     "first_chunk": 2805.7,
+     "done": 5400.3,
+     "state": 14983.7,
+     "close": 14984.1,
+     "narration_chars": 1203,
+     "has_error": false,
+     "turn_count": 15,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 98,
+      "ttfmc_server_ms": 2695,
+      "ttlt_server_ms": 5278,
+      "state_server_ms": 14869,
+      "first_token_server_ms": 2695,
+      "early_narrative": true,
+      "early_gain_ms": 9591,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 15,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 14458,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3721,
+       "context": 916,
+       "narrator": 4286,
+       "other": 5056,
+       "persistence": 888,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "other": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003021900",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4193
+       },
+       "smart": {
+        "attempts": 2,
+        "cost_usd": "0.003350100",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 8245
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.006372000",
+      "cost_usd_est": 0.006372,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 98,
+      "ttfmc_server_ms": 2695,
+      "ttlt_server_ms": 5278,
+      "state_server_ms": 14869,
+      "first_token_server_ms": 2695,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 4969,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 32,
+      "instance_ref": "4c7528da",
+      "route_next": "storyteller",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 14,
+     "category": "combate",
+     "start_ms": 1794601421202,
+     "end_ms": 1794601428116,
+     "pre_get_operation_ms": 1057.5,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 210.5,
+     "first_chunk": 4246.2,
+     "done": 5578.0,
+     "state": 6910.5,
+     "close": 6912.9,
+     "narration_chars": 679,
+     "has_error": false,
+     "turn_count": 16,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 94,
+      "ttfmc_server_ms": 4140,
+      "ttlt_server_ms": 5460,
+      "state_server_ms": 6802,
+      "first_token_server_ms": 4140,
+      "early_narrative": true,
+      "early_gain_ms": 1342,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 16,
+      "route": null,
+      "route_source": "jev",
+      "latency_ms": 6213,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3,
+       "context": 55,
+       "narrator": 4557,
+       "other": 631,
+       "persistence": 1343,
+       "router": 212
+      },
+      "llm_by_phase": {
+       "narrator": 2
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000157104",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1455
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.000733500",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 2718
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.000890604",
+      "cost_usd_est": 0.000890604,
+      "cache_hit_ratio": 0.181,
+      "lock_wait_ms": 156,
+      "ack_server_ms": 94,
+      "ttfmc_server_ms": 4140,
+      "ttlt_server_ms": 5460,
+      "state_server_ms": 6802,
+      "first_token_server_ms": 4140,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 2,
+      "early_calc_ms": 21,
+      "instance_ref": "4c7528da",
+      "route_next": "combat_agent",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 384,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    }
+   ],
+   "opening": {
+    "start_ms": 1794601107884,
+    "end_ms": 1794601131811,
+    "prologue_status": 200,
+    "prologue_ms": 8508.1,
+    "prologue_mock": false,
+    "new_status": 200,
+    "new_ms": 15418.4,
+    "simulated": false,
+    "with_scenario": true
+   },
+   "warm": {
+    "health": {
+     "n": 15,
+     "p50": 30.2,
+     "p95": 302.4,
+     "min": 26.6,
+     "max": 302.4
+    },
+    "game_saves": {
+     "n": 15,
+     "p50": 198.8,
+     "p95": 6718.5,
+     "min": 125.6,
+     "max": 6718.5
+    },
+    "get_operation_unknown": {
+     "n": 15,
+     "p50": 268.6,
+     "p95": 279.9,
+     "min": 257.8,
+     "max": 279.9
+    },
+    "game_state": {
+     "n": 8,
+     "p50": 1250.0,
+     "p95": 1518.3,
+     "min": 1217.3,
+     "max": 1518.3
+    }
+   },
+   "db": {
+    "version": 16,
+    "state_stored_bytes": 81923,
+    "state_text_bytes": 177064,
+    "event_log_len": 0,
+    "game_events_rows": 0,
+    "timing": [
+     {
+      "turn": 2,
+      "phase_ms": {
+       "other": 418,
+       "router": 1,
+       "context": 515,
+       "narrator": 4692,
+       "archivist": 13,
+       "persistence": null
+      },
+      "ack_server_ms": 73,
+      "ttfmc_server_ms": 3080,
+      "ttlt_server_ms": 5632,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 3,
+      "phase_ms": {
+       "other": 475,
+       "router": 212,
+       "context": 402,
+       "narrator": 3367,
+       "archivist": 3623,
+       "persistence": null
+      },
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 4425,
+      "ttlt_server_ms": 4473,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 4,
+      "phase_ms": {
+       "other": 408,
+       "router": 2120,
+       "context": 458,
+       "narrator": 2625,
+       "archivist": 3904,
+       "persistence": null
+      },
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 4373,
+      "ttlt_server_ms": 5618,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 5,
+      "phase_ms": {
+       "other": 474,
+       "router": 204,
+       "context": 406,
+       "narrator": 3060,
+       "archivist": 4176,
+       "persistence": null
+      },
+      "ack_server_ms": 76,
+      "ttfmc_server_ms": 2381,
+      "ttlt_server_ms": 4160,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 6,
+      "phase_ms": {
+       "other": 480,
+       "router": 235,
+       "context": 199,
+       "narrator": 4321,
+       "archivist": 11,
+       "persistence": null
+      },
+      "ack_server_ms": 79,
+      "ttfmc_server_ms": 2587,
+      "ttlt_server_ms": 5237,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 7,
+      "phase_ms": {
+       "other": 489,
+       "router": 1607,
+       "context": 410,
+       "narrator": 3158,
+       "archivist": 4608,
+       "persistence": null
+      },
+      "ack_server_ms": 79,
+      "ttfmc_server_ms": 3878,
+      "ttlt_server_ms": 5672,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 8,
+      "phase_ms": {
+       "other": 484,
+       "router": 240,
+       "context": 202,
+       "narrator": 3140,
+       "archivist": 9,
+       "persistence": null
+      },
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 2169,
+      "ttlt_server_ms": 4088,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 9,
+      "phase_ms": {
+       "other": 438,
+       "router": 224,
+       "context": 178,
+       "narrator": 3274,
+       "archivist": 4,
+       "persistence": null
+      },
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 2255,
+      "ttlt_server_ms": 4113,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 10,
+      "phase_ms": {
+       "other": 493,
+       "router": 197,
+       "context": 264,
+       "narrator": 4574,
+       "archivist": 9,
+       "persistence": null
+      },
+      "ack_server_ms": 84,
+      "ttfmc_server_ms": 2649,
+      "ttlt_server_ms": 5535,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 11,
+      "phase_ms": {
+       "other": 503,
+       "router": 1,
+       "context": 424,
+       "narrator": 4781,
+       "archivist": 4029,
+       "persistence": null
+      },
+      "ack_server_ms": 85,
+      "ttfmc_server_ms": 2763,
+      "ttlt_server_ms": 5716,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 12,
+      "phase_ms": {
+       "other": 441,
+       "router": 254,
+       "context": 192,
+       "narrator": 4280,
+       "archivist": 6,
+       "persistence": null
+      },
+      "ack_server_ms": 86,
+      "ttfmc_server_ms": 2709,
+      "ttlt_server_ms": 5175,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 13,
+      "phase_ms": {
+       "other": 456,
+       "router": 1,
+       "context": 0,
+       "narrator": 5,
+       "archivist": 3,
+       "persistence": null
+      },
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 476,
+      "ttlt_server_ms": 478,
+      "llm_attempts": 0,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": []
+     },
+     {
+      "turn": 14,
+      "phase_ms": {
+       "other": 507,
+       "router": 343,
+       "context": 129,
+       "narrator": 4033,
+       "archivist": 6,
+       "persistence": null
+      },
+      "ack_server_ms": 88,
+      "ttfmc_server_ms": 2685,
+      "ttlt_server_ms": 5035,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 15,
+      "phase_ms": {
+       "other": 5055,
+       "router": 1,
+       "context": 916,
+       "narrator": 4286,
+       "archivist": 3721,
+       "persistence": null
+      },
+      "ack_server_ms": 98,
+      "ttfmc_server_ms": 2695,
+      "ttlt_server_ms": 5278,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 16,
+      "phase_ms": {
+       "other": 631,
+       "router": 212,
+       "context": 55,
+       "narrator": 4556,
+       "archivist": 3,
+       "persistence": null
+      },
+      "ack_server_ms": 94,
+      "ttfmc_server_ms": 4140,
+      "ttlt_server_ms": 5460,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     }
+    ]
+   },
+   "cleanup": {
+    "games_deleted": 1,
+    "user_delete_status": 200
+   }
+  },
+  {
+   "session": 2,
+   "turns": [
+    {
+     "i": 0,
+     "category": "cena",
+     "start_ms": 1794601494413,
+     "end_ms": 1794601500854,
+     "pre_get_operation_ms": 459.6,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 195.0,
+     "first_chunk": 2265.5,
+     "done": 6196.5,
+     "state": 6440.6,
+     "close": 6441.0,
+     "narration_chars": 1849,
+     "has_error": false,
+     "turn_count": 2,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 2153,
+      "ttlt_server_ms": 6076,
+      "state_server_ms": 6322,
+      "first_token_server_ms": 2153,
+      "early_narrative": true,
+      "early_gain_ms": 246,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 2,
+      "route": "storyteller",
+      "route_source": "interlocutor",
+      "latency_ms": 5839,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 8,
+       "context": 464,
+       "narrator": 5083,
+       "other": 541,
+       "persistence": 223,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002884800",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 5025
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.002884800",
+      "cost_usd_est": 0.0028848,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 101,
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 2153,
+      "ttlt_server_ms": 6076,
+      "state_server_ms": 6322,
+      "first_token_server_ms": 2153,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 7,
+      "early_calc_ms": 30,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 1,
+     "category": "npc_novo",
+     "start_ms": 1794601507161,
+     "end_ms": 1794601514350,
+     "pre_get_operation_ms": 306.3,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 178.3,
+     "first_chunk": 6957.9,
+     "done": 6989.3,
+     "state": 7188.5,
+     "close": 7188.9,
+     "narration_chars": 1363,
+     "has_error": false,
+     "turn_count": 3,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 6853,
+      "ttlt_server_ms": 6888,
+      "state_server_ms": 7089,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 201,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 3,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 6702,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 13,
+       "context": 86,
+       "narrator": 4291,
+       "other": 429,
+       "persistence": 235,
+       "router": 2034
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000702000",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1808
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002446476",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4276
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.003148476",
+      "cost_usd_est": 0.003148476,
+      "cache_hit_ratio": 0.1025,
+      "lock_wait_ms": 99,
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 6853,
+      "ttlt_server_ms": 6888,
+      "state_server_ms": 7089,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 12,
+      "early_calc_ms": 29,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 896,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 2,
+     "category": "conversa",
+     "start_ms": 1794601520745,
+     "end_ms": 1794601527960,
+     "pre_get_operation_ms": 393.9,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 199.1,
+     "first_chunk": 6984.2,
+     "done": 7025.0,
+     "state": 7214.7,
+     "close": 7215.2,
+     "narration_chars": 1377,
+     "has_error": false,
+     "turn_count": 4,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 77,
+      "ttfmc_server_ms": 6862,
+      "ttlt_server_ms": 6904,
+      "state_server_ms": 7099,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 195,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 4,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 6715,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 7,
+       "context": 84,
+       "narrator": 4538,
+       "other": 430,
+       "persistence": 234,
+       "router": 1805
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000433608",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1576
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001559040",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4489
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.001992648",
+      "cost_usd_est": 0.001992648,
+      "cache_hit_ratio": 0.5425,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 77,
+      "ttfmc_server_ms": 6862,
+      "ttlt_server_ms": 6904,
+      "state_server_ms": 7099,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 6,
+      "early_calc_ms": 25,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4608,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 3,
+     "category": "conversa",
+     "start_ms": 1794601534264,
+     "end_ms": 1794601541803,
+     "pre_get_operation_ms": 303.0,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 192.2,
+     "first_chunk": 7313.3,
+     "done": 7344.6,
+     "state": 7538.5,
+     "close": 7539.0,
+     "narration_chars": 1439,
+     "has_error": false,
+     "turn_count": 5,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 77,
+      "ttfmc_server_ms": 7188,
+      "ttlt_server_ms": 7233,
+      "state_server_ms": 7429,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 196,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 5,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 6983,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 15,
+       "context": 84,
+       "narrator": 4649,
+       "other": 494,
+       "persistence": 229,
+       "router": 1957
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000434208",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1696
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001519308",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4600
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.001953516",
+      "cost_usd_est": 0.001953516,
+      "cache_hit_ratio": 0.559,
+      "lock_wait_ms": 99,
+      "ack_server_ms": 77,
+      "ttfmc_server_ms": 7188,
+      "ttlt_server_ms": 7233,
+      "state_server_ms": 7429,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 32,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4736,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 4,
+     "category": "cena",
+     "start_ms": 1794601548182,
+     "end_ms": 1794601554103,
+     "pre_get_operation_ms": 378.1,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 182.7,
+     "first_chunk": 2318.1,
+     "done": 5728.0,
+     "state": 5919.5,
+     "close": 5920.0,
+     "narration_chars": 1524,
+     "has_error": false,
+     "turn_count": 6,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 78,
+      "ttfmc_server_ms": 2223,
+      "ttlt_server_ms": 5613,
+      "state_server_ms": 5820,
+      "first_token_server_ms": 2223,
+      "early_narrative": true,
+      "early_gain_ms": 207,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 6,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 5434,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 16,
+       "context": 326,
+       "narrator": 4616,
+       "other": 430,
+       "persistence": 224,
+       "router": 207
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001640940",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4548
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.001640940",
+      "cost_usd_est": 0.00164094,
+      "cache_hit_ratio": 0.5501,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 78,
+      "ttfmc_server_ms": 2223,
+      "ttlt_server_ms": 5613,
+      "state_server_ms": 5820,
+      "first_token_server_ms": 2223,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 15,
+      "early_calc_ms": 26,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 3840,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {
+       "item": 1
+      }
+     }
+    },
+    {
+     "i": 5,
+     "category": "npc_novo",
+     "start_ms": 1794601560413,
+     "end_ms": 1794601567287,
+     "pre_get_operation_ms": 309.9,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 195.6,
+     "first_chunk": 6643.9,
+     "done": 6675.4,
+     "state": 6872.4,
+     "close": 6873.6,
+     "narration_chars": 1286,
+     "has_error": false,
+     "turn_count": 7,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 80,
+      "ttfmc_server_ms": 6527,
+      "ttlt_server_ms": 6564,
+      "state_server_ms": 6763,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 199,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 7,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 6372,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 10,
+       "context": 370,
+       "narrator": 3861,
+       "other": 426,
+       "persistence": 235,
+       "router": 1859
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000407508",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1655
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002372676",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3848
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.002780184",
+      "cost_usd_est": 0.002780184,
+      "cache_hit_ratio": 0.1943,
+      "lock_wait_ms": 97,
+      "ack_server_ms": 80,
+      "ttfmc_server_ms": 6527,
+      "ttlt_server_ms": 6564,
+      "state_server_ms": 6763,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 23,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 1664,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 6,
+     "category": "conversa",
+     "start_ms": 1794601573658,
+     "end_ms": 1794601580659,
+     "pre_get_operation_ms": 370.4,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 223.7,
+     "first_chunk": 4305.4,
+     "done": 6760.0,
+     "state": 7000.1,
+     "close": 7000.4,
+     "narration_chars": 1199,
+     "has_error": false,
+     "turn_count": 8,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 4173,
+      "ttlt_server_ms": 6614,
+      "state_server_ms": 6864,
+      "first_token_server_ms": 4173,
+      "early_narrative": true,
+      "early_gain_ms": 250,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 8,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 6411,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 6,
+       "context": 83,
+       "narrator": 4080,
+       "other": 498,
+       "persistence": 243,
+       "router": 1953
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000381108",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1755
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001542540",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4017
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.001923648",
+      "cost_usd_est": 0.001923648,
+      "cache_hit_ratio": 0.5439,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 4173,
+      "ttlt_server_ms": 6614,
+      "state_server_ms": 6864,
+      "first_token_server_ms": 4173,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 4,
+      "early_calc_ms": 32,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4608,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 7,
+     "category": "conversa",
+     "start_ms": 1794601586981,
+     "end_ms": 1794601593686,
+     "pre_get_operation_ms": 321.1,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 186.4,
+     "first_chunk": 3626.7,
+     "done": 6468.0,
+     "state": 6704.2,
+     "close": 6704.6,
+     "narration_chars": 1320,
+     "has_error": false,
+     "turn_count": 9,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 81,
+      "ttfmc_server_ms": 3533,
+      "ttlt_server_ms": 6365,
+      "state_server_ms": 6608,
+      "first_token_server_ms": 3533,
+      "early_narrative": true,
+      "early_gain_ms": 243,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 9,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 6211,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 12,
+       "context": 85,
+       "narrator": 4206,
+       "other": 450,
+       "persistence": 240,
+       "router": 1614
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000397608",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1408
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001532340",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4134
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.001929948",
+      "cost_usd_est": 0.001929948,
+      "cache_hit_ratio": 0.5469,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 81,
+      "ttfmc_server_ms": 3533,
+      "ttlt_server_ms": 6365,
+      "state_server_ms": 6608,
+      "first_token_server_ms": 3533,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 11,
+      "early_calc_ms": 29,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4608,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 8,
+     "category": "cena",
+     "start_ms": 1794601600055,
+     "end_ms": 1794601609376,
+     "pre_get_operation_ms": 368.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 203.8,
+     "first_chunk": 3002.9,
+     "done": 5487.7,
+     "state": 9319.3,
+     "close": 9319.8,
+     "narration_chars": 1314,
+     "has_error": false,
+     "turn_count": 10,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 83,
+      "ttfmc_server_ms": 2885,
+      "ttlt_server_ms": 5376,
+      "state_server_ms": 9204,
+      "first_token_server_ms": 2885,
+      "early_narrative": true,
+      "early_gain_ms": 3828,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 10,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 8804,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3533,
+       "context": 147,
+       "narrator": 4545,
+       "other": 448,
+       "persistence": 308,
+       "router": 221
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001507140",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4479
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001354500",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3504
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.002861640",
+      "cost_usd_est": 0.00286164,
+      "cache_hit_ratio": 0.3968,
+      "lock_wait_ms": 99,
+      "ack_server_ms": 83,
+      "ttfmc_server_ms": 2885,
+      "ttlt_server_ms": 5376,
+      "state_server_ms": 9204,
+      "first_token_server_ms": 2885,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 15,
+      "early_calc_ms": 26,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 3840,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 9,
+     "category": "descanso",
+     "start_ms": 1794601615683,
+     "end_ms": 1794601626328,
+     "pre_get_operation_ms": 307.1,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 192.1,
+     "first_chunk": 2377.9,
+     "done": 6192.1,
+     "state": 10641.0,
+     "close": 10644.3,
+     "narration_chars": 1786,
+     "has_error": false,
+     "turn_count": 11,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 85,
+      "ttfmc_server_ms": 2280,
+      "ttlt_server_ms": 6084,
+      "state_server_ms": 10541,
+      "first_token_server_ms": 2280,
+      "early_narrative": true,
+      "early_gain_ms": 4457,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 11,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 10074,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4133,
+       "context": 321,
+       "narrator": 5242,
+       "other": 520,
+       "persistence": 322,
+       "router": 2
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002940000",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 5114
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001654200",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4066
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.004594200",
+      "cost_usd_est": 0.0045942,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 99,
+      "ack_server_ms": 85,
+      "ttfmc_server_ms": 2280,
+      "ttlt_server_ms": 6084,
+      "state_server_ms": 10541,
+      "first_token_server_ms": 2280,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 21,
+      "early_calc_ms": 29,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 10,
+     "category": "cena",
+     "start_ms": 1794601632740,
+     "end_ms": 1794601638574,
+     "pre_get_operation_ms": 410.7,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 205.2,
+     "first_chunk": 2281.9,
+     "done": 5604.2,
+     "state": 5831.5,
+     "close": 5833.4,
+     "narration_chars": 1515,
+     "has_error": false,
+     "turn_count": 12,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 2158,
+      "ttlt_server_ms": 5455,
+      "state_server_ms": 5721,
+      "first_token_server_ms": 2158,
+      "early_narrative": true,
+      "early_gain_ms": 266,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 12,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 5314,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 16,
+       "context": 284,
+       "narrator": 4490,
+       "other": 454,
+       "persistence": 255,
+       "router": 220
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003005700",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4420
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.003005700",
+      "cost_usd_est": 0.0030057,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 2158,
+      "ttlt_server_ms": 5455,
+      "state_server_ms": 5721,
+      "first_token_server_ms": 2158,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 15,
+      "early_calc_ms": 31,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 11,
+     "category": "viagem",
+     "start_ms": 1794601644922,
+     "end_ms": 1794601645744,
+     "pre_get_operation_ms": 347.6,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 208.4,
+     "first_chunk": 591.1,
+     "done": 591.1,
+     "state": 821.3,
+     "close": 821.5,
+     "narration_chars": 96,
+     "has_error": false,
+     "turn_count": 13,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 473,
+      "ttlt_server_ms": 474,
+      "state_server_ms": 704,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 230,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 13,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 291,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 11,
+       "context": 0,
+       "narrator": 4,
+       "other": 455,
+       "persistence": 231,
+       "router": 1
+      },
+      "llm_by_phase": {},
+      "llm_by_tier": {},
+      "llm_calls": 0,
+      "llm_requests": 0,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {},
+      "llm_providers": {},
+      "fell_back": false,
+      "cost_usd": "0",
+      "cost_usd_est": 0.0,
+      "cache_hit_ratio": null,
+      "lock_wait_ms": 99,
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 473,
+      "ttlt_server_ms": 474,
+      "state_server_ms": 704,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 2,
+      "early_calc_ms": 32,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 0,
+      "llm_fallbacks": 0,
+      "cached_tokens": null,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 12,
+     "category": "cena",
+     "start_ms": 1794601652054,
+     "end_ms": 1794601657509,
+     "pre_get_operation_ms": 309.8,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 209.5,
+     "first_chunk": 2659.8,
+     "done": 5184.4,
+     "state": 5454.4,
+     "close": 5454.6,
+     "narration_chars": 1208,
+     "has_error": false,
+     "turn_count": 14,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 2546,
+      "ttlt_server_ms": 5060,
+      "state_server_ms": 5336,
+      "first_token_server_ms": 2546,
+      "early_narrative": true,
+      "early_gain_ms": 276,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 14,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 4875,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 8,
+       "context": 354,
+       "narrator": 3962,
+       "other": 515,
+       "persistence": 258,
+       "router": 238
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001344216",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3898
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.001344216",
+      "cost_usd_est": 0.001344216,
+      "cache_hit_ratio": 0.6409,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 2546,
+      "ttlt_server_ms": 5060,
+      "state_server_ms": 5336,
+      "first_token_server_ms": 2546,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 7,
+      "early_calc_ms": 32,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4736,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 13,
+     "category": "descanso",
+     "start_ms": 1794601663916,
+     "end_ms": 1794601678817,
+     "pre_get_operation_ms": 406.5,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 198.1,
+     "first_chunk": 5983.5,
+     "done": 5993.8,
+     "state": 14899.7,
+     "close": 14900.3,
+     "narration_chars": 1452,
+     "has_error": false,
+     "turn_count": 15,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 96,
+      "ttfmc_server_ms": 5880,
+      "ttlt_server_ms": 5897,
+      "state_server_ms": 14804,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 8907,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 15,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 14382,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4116,
+       "context": 748,
+       "narrator": 5034,
+       "other": 4555,
+       "persistence": 348,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "other": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003012600",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4939
+       },
+       "smart": {
+        "attempts": 2,
+        "cost_usd": "0.003502500",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 8117
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.006515100",
+      "cost_usd_est": 0.0065151,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 101,
+      "ack_server_ms": 96,
+      "ttfmc_server_ms": 5880,
+      "ttlt_server_ms": 5897,
+      "state_server_ms": 14804,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 4445,
+      "archivist_validate_ms": 15,
+      "early_calc_ms": 26,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 14,
+     "category": "combate",
+     "start_ms": 1794601685197,
+     "end_ms": 1794601693723,
+     "pre_get_operation_ms": 379.3,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 200.0,
+     "first_chunk": 6921.8,
+     "done": 7779.1,
+     "state": 8523.9,
+     "close": 8524.7,
+     "narration_chars": 543,
+     "has_error": false,
+     "turn_count": 16,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 92,
+      "ttfmc_server_ms": 6822,
+      "ttlt_server_ms": 7664,
+      "state_server_ms": 8422,
+      "first_token_server_ms": 6822,
+      "early_narrative": true,
+      "early_gain_ms": 758,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 16,
+      "route": null,
+      "route_source": "jev",
+      "latency_ms": 7939,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4,
+       "context": 83,
+       "narrator": 6847,
+       "other": 525,
+       "persistence": 751,
+       "router": 210
+      },
+      "llm_by_phase": {
+       "narrator": 3
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000157104",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1544
+       },
+       "fast": {
+        "attempts": 2,
+        "cost_usd": "0.001464012",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4778
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.001621116",
+      "cost_usd_est": 0.001621116,
+      "cache_hit_ratio": 0.3862,
+      "lock_wait_ms": 101,
+      "ack_server_ms": 92,
+      "ttfmc_server_ms": 6822,
+      "ttlt_server_ms": 7664,
+      "state_server_ms": 8422,
+      "first_token_server_ms": 6822,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 3,
+      "early_calc_ms": 17,
+      "instance_ref": "18cb4bc5",
+      "route_next": "combat_agent",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 1536,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    }
+   ],
+   "opening": {
+    "start_ms": 1794601460793,
+    "end_ms": 1794601493953,
+    "prologue_status": 200,
+    "prologue_ms": 11299.1,
+    "prologue_mock": false,
+    "new_status": 200,
+    "new_ms": 21860.1,
+    "simulated": false,
+    "with_scenario": true
+   },
+   "warm": {
+    "health": {
+     "n": 15,
+     "p50": 33.5,
+     "p95": 85.7,
+     "min": 28.3,
+     "max": 85.7
+    },
+    "game_saves": {
+     "n": 15,
+     "p50": 200.4,
+     "p95": 218.3,
+     "min": 194.1,
+     "max": 218.3
+    },
+    "get_operation_unknown": {
+     "n": 15,
+     "p50": 268.1,
+     "p95": 324.6,
+     "min": 261.1,
+     "max": 324.6
+    },
+    "game_state": {
+     "n": 8,
+     "p50": 808.1,
+     "p95": 842.8,
+     "min": 781.8,
+     "max": 842.8
+    }
+   },
+   "db": {
+    "version": 16,
+    "state_stored_bytes": 80685,
+    "state_text_bytes": 178169,
+    "event_log_len": 0,
+    "game_events_rows": 0,
+    "timing": [
+     {
+      "turn": 2,
+      "phase_ms": {
+       "other": 541,
+       "router": 1,
+       "context": 464,
+       "narrator": 5083,
+       "archivist": 8,
+       "persistence": null
+      },
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 2153,
+      "ttlt_server_ms": 6076,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 3,
+      "phase_ms": {
+       "other": 429,
+       "router": 2034,
+       "context": 86,
+       "narrator": 4290,
+       "archivist": 13,
+       "persistence": null
+      },
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 6853,
+      "ttlt_server_ms": 6888,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 4,
+      "phase_ms": {
+       "other": 430,
+       "router": 1805,
+       "context": 84,
+       "narrator": 4537,
+       "archivist": 7,
+       "persistence": null
+      },
+      "ack_server_ms": 77,
+      "ttfmc_server_ms": 6862,
+      "ttlt_server_ms": 6904,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 5,
+      "phase_ms": {
+       "other": 494,
+       "router": 1957,
+       "context": 84,
+       "narrator": 4648,
+       "archivist": 15,
+       "persistence": null
+      },
+      "ack_server_ms": 77,
+      "ttfmc_server_ms": 7188,
+      "ttlt_server_ms": 7233,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 6,
+      "phase_ms": {
+       "other": 430,
+       "router": 207,
+       "context": 326,
+       "narrator": 4616,
+       "archivist": 16,
+       "persistence": null
+      },
+      "ack_server_ms": 78,
+      "ttfmc_server_ms": 2223,
+      "ttlt_server_ms": 5613,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 7,
+      "phase_ms": {
+       "other": 426,
+       "router": 1859,
+       "context": 370,
+       "narrator": 3861,
+       "archivist": 10,
+       "persistence": null
+      },
+      "ack_server_ms": 80,
+      "ttfmc_server_ms": 6527,
+      "ttlt_server_ms": 6564,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 8,
+      "phase_ms": {
+       "other": 498,
+       "router": 1953,
+       "context": 83,
+       "narrator": 4080,
+       "archivist": 6,
+       "persistence": null
+      },
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 4173,
+      "ttlt_server_ms": 6614,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 9,
+      "phase_ms": {
+       "other": 450,
+       "router": 1614,
+       "context": 85,
+       "narrator": 4206,
+       "archivist": 12,
+       "persistence": null
+      },
+      "ack_server_ms": 81,
+      "ttfmc_server_ms": 3533,
+      "ttlt_server_ms": 6365,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 10,
+      "phase_ms": {
+       "other": 448,
+       "router": 221,
+       "context": 147,
+       "narrator": 4546,
+       "archivist": 3533,
+       "persistence": null
+      },
+      "ack_server_ms": 83,
+      "ttfmc_server_ms": 2885,
+      "ttlt_server_ms": 5376,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 11,
+      "phase_ms": {
+       "other": 520,
+       "router": 2,
+       "context": 321,
+       "narrator": 5242,
+       "archivist": 4133,
+       "persistence": null
+      },
+      "ack_server_ms": 85,
+      "ttfmc_server_ms": 2280,
+      "ttlt_server_ms": 6084,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 12,
+      "phase_ms": {
+       "other": 454,
+       "router": 220,
+       "context": 284,
+       "narrator": 4489,
+       "archivist": 16,
+       "persistence": null
+      },
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 2158,
+      "ttlt_server_ms": 5455,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 13,
+      "phase_ms": {
+       "other": 455,
+       "router": 1,
+       "context": 0,
+       "narrator": 4,
+       "archivist": 11,
+       "persistence": null
+      },
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 473,
+      "ttlt_server_ms": 474,
+      "llm_attempts": 0,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": []
+     },
+     {
+      "turn": 14,
+      "phase_ms": {
+       "other": 515,
+       "router": 238,
+       "context": 354,
+       "narrator": 3962,
+       "archivist": 8,
+       "persistence": null
+      },
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 2546,
+      "ttlt_server_ms": 5060,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 15,
+      "phase_ms": {
+       "other": 4555,
+       "router": 1,
+       "context": 748,
+       "narrator": 5034,
+       "archivist": 4116,
+       "persistence": null
+      },
+      "ack_server_ms": 96,
+      "ttfmc_server_ms": 5880,
+      "ttlt_server_ms": 5897,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 16,
+      "phase_ms": {
+       "other": 525,
+       "router": 210,
+       "context": 83,
+       "narrator": 6847,
+       "archivist": 4,
+       "persistence": null
+      },
+      "ack_server_ms": 92,
+      "ttfmc_server_ms": 6822,
+      "ttlt_server_ms": 7664,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     }
+    ]
+   },
+   "cleanup": {
+    "games_deleted": 1,
+    "user_delete_status": 200
+   }
+  },
+  {
+   "session": 3,
+   "turns": [
+    {
+     "i": 0,
+     "category": "cena",
+     "start_ms": 1794601743405,
+     "end_ms": 1794601747769,
+     "pre_get_operation_ms": 345.0,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 188.8,
+     "first_chunk": 2458.4,
+     "done": 4182.9,
+     "state": 4363.7,
+     "close": 4363.9,
+     "narration_chars": 830,
+     "has_error": false,
+     "turn_count": 2,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 2357,
+      "ttlt_server_ms": 4077,
+      "state_server_ms": 4262,
+      "first_token_server_ms": 2357,
+      "early_narrative": true,
+      "early_gain_ms": 185,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 2,
+      "route": "storyteller",
+      "route_source": "interlocutor",
+      "latency_ms": 3881,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 7,
+       "context": 368,
+       "narrator": 3255,
+       "other": 424,
+       "persistence": 203,
+       "router": 3
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002549400",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3195
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.002549400",
+      "cost_usd_est": 0.0025494,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 2357,
+      "ttlt_server_ms": 4077,
+      "state_server_ms": 4262,
+      "first_token_server_ms": 2357,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 5,
+      "early_calc_ms": 25,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 1,
+     "category": "npc_novo",
+     "start_ms": 1794601754082,
+     "end_ms": 1794601764067,
+     "pre_get_operation_ms": 312.4,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 180.0,
+     "first_chunk": 4592.9,
+     "done": 6128.0,
+     "state": 9984.2,
+     "close": 9984.4,
+     "narration_chars": 652,
+     "has_error": false,
+     "turn_count": 3,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 4497,
+      "ttlt_server_ms": 6024,
+      "state_server_ms": 9859,
+      "first_token_server_ms": 4497,
+      "early_narrative": true,
+      "early_gain_ms": 3835,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 3,
+      "route": "npc_actor",
+      "route_source": "classify",
+      "latency_ms": 9420,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3603,
+       "context": 398,
+       "narrator": 3116,
+       "other": 482,
+       "persistence": 237,
+       "router": 2022
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000603300",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1831
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002563200",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3088
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001395600",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3555
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.004562100",
+      "cost_usd_est": 0.0045621,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 98,
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 4497,
+      "ttlt_server_ms": 6024,
+      "state_server_ms": 9859,
+      "first_token_server_ms": 4497,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 12,
+      "early_calc_ms": 29,
+      "instance_ref": "18cb4bc5",
+      "route_next": "npc_actor",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 2,
+     "category": "conversa",
+     "start_ms": 1794601770455,
+     "end_ms": 1794601780617,
+     "pre_get_operation_ms": 387.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 197.2,
+     "first_chunk": 4036.4,
+     "done": 6136.0,
+     "state": 10160.6,
+     "close": 10161.0,
+     "narration_chars": 852,
+     "has_error": false,
+     "turn_count": 4,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 3927,
+      "ttlt_server_ms": 5997,
+      "state_server_ms": 10047,
+      "first_token_server_ms": 3926,
+      "early_narrative": true,
+      "early_gain_ms": 4050,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 4,
+      "route": "npc_actor",
+      "route_source": "classify",
+      "latency_ms": 9659,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3811,
+       "context": 442,
+       "narrator": 3407,
+       "other": 430,
+       "persistence": 244,
+       "router": 1711
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000328308",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1460
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002477940",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3376
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001530600",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3761
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.004336848",
+      "cost_usd_est": 0.004336848,
+      "cache_hit_ratio": 0.1302,
+      "lock_wait_ms": 101,
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 3927,
+      "ttlt_server_ms": 5997,
+      "state_server_ms": 10047,
+      "first_token_server_ms": 3926,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 10,
+      "early_calc_ms": 26,
+      "instance_ref": "18cb4bc5",
+      "route_next": "npc_actor",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 1408,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 3,
+     "category": "conversa",
+     "start_ms": 1794601786915,
+     "end_ms": 1794601797528,
+     "pre_get_operation_ms": 298.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 186.4,
+     "first_chunk": 4231.1,
+     "done": 6238.2,
+     "state": 10611.5,
+     "close": 10612.0,
+     "narration_chars": 820,
+     "has_error": false,
+     "turn_count": 5,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 78,
+      "ttfmc_server_ms": 4129,
+      "ttlt_server_ms": 6125,
+      "state_server_ms": 10508,
+      "first_token_server_ms": 4129,
+      "early_narrative": true,
+      "early_gain_ms": 4383,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 5,
+      "route": "npc_actor",
+      "route_source": "classify",
+      "latency_ms": 10059,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4129,
+       "context": 419,
+       "narrator": 3646,
+       "other": 491,
+       "persistence": 261,
+       "router": 1561
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000405708",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1346
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002760936",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3611
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001612800",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4076
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.004779444",
+      "cost_usd_est": 0.004779444,
+      "cache_hit_ratio": 0.0882,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 78,
+      "ttfmc_server_ms": 4129,
+      "ttlt_server_ms": 6125,
+      "state_server_ms": 10508,
+      "first_token_server_ms": 4129,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 10,
+      "early_calc_ms": 26,
+      "instance_ref": "18cb4bc5",
+      "route_next": "npc_actor",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 1024,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 4,
+     "category": "cena",
+     "start_ms": 1794601803917,
+     "end_ms": 1794601814050,
+     "pre_get_operation_ms": 388.8,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 187.3,
+     "first_chunk": 2745.2,
+     "done": 5516.4,
+     "state": 10129.7,
+     "close": 10130.5,
+     "narration_chars": 1250,
+     "has_error": false,
+     "turn_count": 6,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 81,
+      "ttfmc_server_ms": 2647,
+      "ttlt_server_ms": 5407,
+      "state_server_ms": 10001,
+      "first_token_server_ms": 2647,
+      "early_narrative": true,
+      "early_gain_ms": 4594,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 6,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 9600,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4360,
+       "context": 163,
+       "narrator": 4569,
+       "other": 457,
+       "persistence": 233,
+       "router": 218
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001856136",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4503
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001713900",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4334
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.003570036",
+      "cost_usd_est": 0.003570036,
+      "cache_hit_ratio": 0.3362,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 81,
+      "ttfmc_server_ms": 2647,
+      "ttlt_server_ms": 5407,
+      "state_server_ms": 10001,
+      "first_token_server_ms": 2647,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 16,
+      "early_calc_ms": 33,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 3456,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {
+       "item": 3
+      }
+     }
+    },
+    {
+     "i": 5,
+     "category": "npc_novo",
+     "start_ms": 1794601820371,
+     "end_ms": 1794601871781,
+     "pre_get_operation_ms": 319.8,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 197.3,
+     "first_chunk": 49334.4,
+     "done": 51161.2,
+     "state": 51408.3,
+     "close": 51409.1,
+     "narration_chars": 735,
+     "has_error": false,
+     "turn_count": 7,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 49230,
+      "ttlt_server_ms": 51047,
+      "state_server_ms": 51299,
+      "first_token_server_ms": 49230,
+      "early_narrative": true,
+      "early_gain_ms": 252,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 7,
+      "route": "npc_actor",
+      "route_source": "classify",
+      "latency_ms": 50846,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 11,
+       "context": 45737,
+       "narrator": 3009,
+       "other": 490,
+       "persistence": 283,
+       "router": 1768
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000411408",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1559
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002788272",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 2951
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.003199680",
+      "cost_usd_est": 0.00319968,
+      "cache_hit_ratio": 0.1328,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 49230,
+      "ttlt_server_ms": 51047,
+      "state_server_ms": 51299,
+      "first_token_server_ms": 49230,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 23,
+      "instance_ref": "18cb4bc5",
+      "route_next": "npc_actor",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 1280,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 6,
+     "category": "conversa",
+     "start_ms": 1794601878494,
+     "end_ms": 1794601904587,
+     "pre_get_operation_ms": 711.3,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 267.8,
+     "first_chunk": 23652.1,
+     "done": 25854.0,
+     "state": 26090.8,
+     "close": 26091.7,
+     "narration_chars": 1130,
+     "has_error": false,
+     "turn_count": 8,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 23475,
+      "ttlt_server_ms": 25668,
+      "state_server_ms": 25912,
+      "first_token_server_ms": 23475,
+      "early_narrative": true,
+      "early_gain_ms": 244,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 8,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 25458,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 11,
+       "context": 19938,
+       "narrator": 3375,
+       "other": 497,
+       "persistence": 252,
+       "router": 1838
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000364908",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1637
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002859000",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3309
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.003223908",
+      "cost_usd_est": 0.003223908,
+      "cache_hit_ratio": 0.0843,
+      "lock_wait_ms": 100,
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 23475,
+      "ttlt_server_ms": 25668,
+      "state_server_ms": 25912,
+      "first_token_server_ms": 23475,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 29,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 768,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 7,
+     "category": "conversa",
+     "start_ms": 1794601949730,
+     "end_ms": 1794601957684,
+     "pre_get_operation_ms": 39141.7,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 206.4,
+     "first_chunk": 4471.1,
+     "done": 7706.7,
+     "state": 7951.2,
+     "close": 7952.0,
+     "narration_chars": 1569,
+     "has_error": false,
+     "turn_count": 9,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 85,
+      "ttfmc_server_ms": 4359,
+      "ttlt_server_ms": 7585,
+      "state_server_ms": 7834,
+      "first_token_server_ms": 4359,
+      "early_narrative": true,
+      "early_gain_ms": 249,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 9,
+      "route": "storyteller",
+      "route_source": "classify",
+      "latency_ms": 7366,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 14,
+       "context": 108,
+       "narrator": 4645,
+       "other": 513,
+       "persistence": 248,
+       "router": 2304
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "router": 1
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000651300",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 2064
+       },
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.002744976",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4577
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.003396276",
+      "cost_usd_est": 0.003396276,
+      "cache_hit_ratio": 0.0974,
+      "lock_wait_ms": 102,
+      "ack_server_ms": 85,
+      "ttfmc_server_ms": 4359,
+      "ttlt_server_ms": 7585,
+      "state_server_ms": 7834,
+      "first_token_server_ms": 4359,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 6,
+      "early_calc_ms": 30,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 896,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 8,
+     "category": "cena",
+     "start_ms": 1794601964105,
+     "end_ms": 1794602000696,
+     "pre_get_operation_ms": 419.9,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 203.3,
+     "first_chunk": 7115.4,
+     "done": 10231.1,
+     "state": 36588.2,
+     "close": 36589.6,
+     "narration_chars": 1530,
+     "has_error": false,
+     "turn_count": 10,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 7008,
+      "ttlt_server_ms": 10114,
+      "state_server_ms": 36480,
+      "first_token_server_ms": 7008,
+      "early_narrative": true,
+      "early_gain_ms": 26366,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 10,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 36071,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 10,
+       "context": 4764,
+       "narrator": 4656,
+       "other": 26364,
+       "persistence": 443,
+       "router": 241
+      },
+      "llm_by_phase": {
+       "narrator": 1,
+       "other": 2
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 3,
+        "cost_usd": "0.004532916",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 18531
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.004532916",
+      "cost_usd_est": 0.004532916,
+      "cache_hit_ratio": 0.4982,
+      "lock_wait_ms": 103,
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 7008,
+      "ttlt_server_ms": 10114,
+      "state_server_ms": 36480,
+      "first_token_server_ms": 7008,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 25900,
+      "archivist_validate_ms": 9,
+      "early_calc_ms": 37,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 4736,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 9,
+     "category": "descanso",
+     "start_ms": 1794602007533,
+     "end_ms": 1794602018084,
+     "pre_get_operation_ms": 836.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 203.5,
+     "first_chunk": 2864.1,
+     "done": 6563.6,
+     "state": 10548.0,
+     "close": 10548.9,
+     "narration_chars": 1883,
+     "has_error": false,
+     "turn_count": 11,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 91,
+      "ttfmc_server_ms": 2761,
+      "ttlt_server_ms": 6442,
+      "state_server_ms": 10444,
+      "first_token_server_ms": 2761,
+      "early_narrative": true,
+      "early_gain_ms": 4002,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 11,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 9925,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3658,
+       "context": 469,
+       "narrator": 5394,
+       "other": 589,
+       "persistence": 331,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003231000",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 5317
+       },
+       "smart": {
+        "attempts": 1,
+        "cost_usd": "0.001138848",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 3587
+       }
+      },
+      "llm_calls": 2,
+      "llm_requests": 2,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 2
+      },
+      "llm_providers": {
+       "deepseek": 2
+      },
+      "fell_back": false,
+      "cost_usd": "0.004369848",
+      "cost_usd_est": 0.004369848,
+      "cache_hit_ratio": 0.1241,
+      "lock_wait_ms": 102,
+      "ack_server_ms": 91,
+      "ttfmc_server_ms": 2761,
+      "ttlt_server_ms": 6442,
+      "state_server_ms": 10444,
+      "first_token_server_ms": 2761,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 23,
+      "early_calc_ms": 39,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "cached_tokens": 1408,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 10,
+     "category": "cena",
+     "start_ms": 1794602024449,
+     "end_ms": 1794602030530,
+     "pre_get_operation_ms": 363.8,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 206.4,
+     "first_chunk": 2680.4,
+     "done": 5805.1,
+     "state": 6077.2,
+     "close": 6078.0,
+     "narration_chars": 1541,
+     "has_error": false,
+     "turn_count": 12,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 93,
+      "ttfmc_server_ms": 2565,
+      "ttlt_server_ms": 5691,
+      "state_server_ms": 5963,
+      "first_token_server_ms": 2565,
+      "early_narrative": true,
+      "early_gain_ms": 272,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 12,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 5528,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 14,
+       "context": 332,
+       "narrator": 4632,
+       "other": 492,
+       "persistence": 268,
+       "router": 224
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003133800",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4588
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.003133800",
+      "cost_usd_est": 0.0031338,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 107,
+      "ack_server_ms": 93,
+      "ttfmc_server_ms": 2565,
+      "ttlt_server_ms": 5691,
+      "state_server_ms": 5963,
+      "first_token_server_ms": 2565,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 13,
+      "early_calc_ms": 29,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 11,
+     "category": "viagem",
+     "start_ms": 1794602036979,
+     "end_ms": 1794602037987,
+     "pre_get_operation_ms": 448.5,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 254.9,
+     "first_chunk": 758.4,
+     "done": 769.0,
+     "state": 1005.8,
+     "close": 1006.9,
+     "narration_chars": 139,
+     "has_error": false,
+     "turn_count": 13,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 98,
+      "ttfmc_server_ms": 602,
+      "ttlt_server_ms": 612,
+      "state_server_ms": 858,
+      "first_token_server_ms": null,
+      "early_narrative": true,
+      "early_gain_ms": 246,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": true
+     },
+     "server": {
+      "turn": 13,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 319,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 4,
+       "context": 0,
+       "narrator": 1,
+       "other": 601,
+       "persistence": 248,
+       "router": 1
+      },
+      "llm_by_phase": {},
+      "llm_by_tier": {},
+      "llm_calls": 0,
+      "llm_requests": 0,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {},
+      "llm_providers": {},
+      "fell_back": false,
+      "cost_usd": "0",
+      "cost_usd_est": 0.0,
+      "cache_hit_ratio": null,
+      "lock_wait_ms": 105,
+      "ack_server_ms": 98,
+      "ttfmc_server_ms": 602,
+      "ttlt_server_ms": 612,
+      "state_server_ms": 858,
+      "first_token_server_ms": null,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 3,
+      "early_calc_ms": 49,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 0,
+      "llm_fallbacks": 0,
+      "cached_tokens": null,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 12,
+     "category": "cena",
+     "start_ms": 1794602044306,
+     "end_ms": 1794602050300,
+     "pre_get_operation_ms": 318.8,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 221.3,
+     "first_chunk": 2738.6,
+     "done": 5721.3,
+     "state": 5990.8,
+     "close": 5991.8,
+     "narration_chars": 1411,
+     "has_error": false,
+     "turn_count": 14,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 102,
+      "ttfmc_server_ms": 2642,
+      "ttlt_server_ms": 5614,
+      "state_server_ms": 5890,
+      "first_token_server_ms": 2642,
+      "early_narrative": true,
+      "early_gain_ms": 276,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 14,
+      "route": "storyteller",
+      "route_source": "jev",
+      "latency_ms": 5403,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 13,
+       "context": 189,
+       "narrator": 4652,
+       "other": 535,
+       "persistence": 283,
+       "router": 216
+      },
+      "llm_by_phase": {
+       "narrator": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.001895772",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4584
+       }
+      },
+      "llm_calls": 1,
+      "llm_requests": 1,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 1
+      },
+      "llm_providers": {
+       "deepseek": 1
+      },
+      "fell_back": false,
+      "cost_usd": "0.001895772",
+      "cost_usd_est": 0.001895772,
+      "cache_hit_ratio": 0.4712,
+      "lock_wait_ms": 103,
+      "ack_server_ms": 102,
+      "ttfmc_server_ms": 2642,
+      "ttlt_server_ms": 5614,
+      "state_server_ms": 5890,
+      "first_token_server_ms": 2642,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 12,
+      "early_calc_ms": 31,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "cached_tokens": 3712,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 13,
+     "category": "descanso",
+     "start_ms": 1794602056648,
+     "end_ms": 1794602071691,
+     "pre_get_operation_ms": 347.2,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 226.4,
+     "first_chunk": 2534.7,
+     "done": 5870.3,
+     "state": 15040.8,
+     "close": 15041.8,
+     "narration_chars": 1524,
+     "has_error": false,
+     "turn_count": 15,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 101,
+      "ttfmc_server_ms": 2415,
+      "ttlt_server_ms": 5743,
+      "state_server_ms": 14920,
+      "first_token_server_ms": 2415,
+      "early_narrative": true,
+      "early_gain_ms": 9177,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 15,
+      "route": "storyteller",
+      "route_source": "story_regex",
+      "latency_ms": 14491,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 3896,
+       "context": 1446,
+       "narrator": 4703,
+       "other": 4510,
+       "persistence": 363,
+       "router": 1
+      },
+      "llm_by_phase": {
+       "archivist": 1,
+       "narrator": 1,
+       "other": 1
+      },
+      "llm_by_tier": {
+       "fast": {
+        "attempts": 1,
+        "cost_usd": "0.003196800",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4632
+       },
+       "smart": {
+        "attempts": 2,
+        "cost_usd": "0.003322800",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 7820
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.006519600",
+      "cost_usd_est": 0.0065196,
+      "cache_hit_ratio": 0.0,
+      "lock_wait_ms": 101,
+      "ack_server_ms": 101,
+      "ttfmc_server_ms": 2415,
+      "ttlt_server_ms": 5743,
+      "state_server_ms": 14920,
+      "first_token_server_ms": 2415,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 4901,
+      "archivist_validate_ms": 19,
+      "early_calc_ms": 35,
+      "instance_ref": "18cb4bc5",
+      "route_next": "storyteller",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 0,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    },
+    {
+     "i": 14,
+     "category": "combate",
+     "start_ms": 1794602078411,
+     "end_ms": 1794602086809,
+     "pre_get_operation_ms": 719.4,
+     "pre_get_operation_status": 200,
+     "status": 200,
+     "ack": 233.5,
+     "first_chunk": 6714.9,
+     "done": 7603.5,
+     "state": 8395.3,
+     "close": 8396.5,
+     "narration_chars": 553,
+     "has_error": false,
+     "turn_count": 16,
+     "other_log_events": [],
+     "delivery": {
+      "ack_server_ms": 96,
+      "ttfmc_server_ms": 6602,
+      "ttlt_server_ms": 7487,
+      "state_server_ms": 8284,
+      "first_token_server_ms": 6602,
+      "early_narrative": true,
+      "early_gain_ms": 797,
+      "token_replace": false,
+      "outcome": "ok",
+      "pseudo_streaming": false
+     },
+     "server": {
+      "turn": 16,
+      "route": null,
+      "route_source": "jev",
+      "latency_ms": 7795,
+      "events_applied": 0,
+      "phase_ms": {
+       "archivist": 9,
+       "context": 169,
+       "narrator": 6570,
+       "other": 530,
+       "persistence": 797,
+       "router": 207
+      },
+      "llm_by_phase": {
+       "narrator": 3
+      },
+      "llm_by_tier": {
+       "classify": {
+        "attempts": 1,
+        "cost_usd": "0.000161904",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 1524
+       },
+       "fast": {
+        "attempts": 2,
+        "cost_usd": "0.001311252",
+        "failed": 0,
+        "fallbacks": 0,
+        "latency_ms": 4845
+       }
+      },
+      "llm_calls": 3,
+      "llm_requests": 3,
+      "llm_failures": 0,
+      "llm_attempt_outcomes": {
+       "success": 3
+      },
+      "llm_providers": {
+       "deepseek": 3
+      },
+      "fell_back": false,
+      "cost_usd": "0.001473156",
+      "cost_usd_est": 0.001473156,
+      "cache_hit_ratio": 0.5404,
+      "lock_wait_ms": 104,
+      "ack_server_ms": 96,
+      "ttfmc_server_ms": 6602,
+      "ttlt_server_ms": 7487,
+      "state_server_ms": 8284,
+      "first_token_server_ms": 6602,
+      "fallbacks": {},
+      "error": null,
+      "enrich_ms": 0,
+      "archivist_validate_ms": 4,
+      "early_calc_ms": 28,
+      "instance_ref": "18cb4bc5",
+      "route_next": "combat_agent",
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "cached_tokens": 2176,
+      "llm_errors": {},
+      "llm_http_statuses": {},
+      "narrative_rejected": {}
+     }
+    }
+   ],
+   "opening": {
+    "start_ms": 1794601715747,
+    "end_ms": 1794601743060,
+    "prologue_status": 200,
+    "prologue_ms": 9070.2,
+    "prologue_mock": false,
+    "new_status": 200,
+    "new_ms": 18242.5,
+    "simulated": false,
+    "with_scenario": true
+   },
+   "warm": {
+    "health": {
+     "n": 15,
+     "p50": 33.2,
+     "p95": 118.9,
+     "min": 26.9,
+     "max": 118.9
+    },
+    "game_saves": {
+     "n": 15,
+     "p50": 207.0,
+     "p95": 6882.8,
+     "min": 192.6,
+     "max": 6882.8
+    },
+    "get_operation_unknown": {
+     "n": 15,
+     "p50": 257.8,
+     "p95": 378.6,
+     "min": 246.5,
+     "max": 378.6
+    },
+    "game_state": {
+     "n": 8,
+     "p50": 734.7,
+     "p95": 1009.4,
+     "min": 713.1,
+     "max": 1009.4
+    }
+   },
+   "db": {
+    "version": 16,
+    "state_stored_bytes": 94419,
+    "state_text_bytes": 201080,
+    "event_log_len": 0,
+    "game_events_rows": 0,
+    "timing": [
+     {
+      "turn": 2,
+      "phase_ms": {
+       "other": 424,
+       "router": 3,
+       "context": 368,
+       "narrator": 3255,
+       "archivist": 7,
+       "persistence": null
+      },
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 2357,
+      "ttlt_server_ms": 4077,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 3,
+      "phase_ms": {
+       "other": 482,
+       "router": 2022,
+       "context": 398,
+       "narrator": 3116,
+       "archivist": 3602,
+       "persistence": null
+      },
+      "ack_server_ms": 74,
+      "ttfmc_server_ms": 4497,
+      "ttlt_server_ms": 6024,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 4,
+      "phase_ms": {
+       "other": 430,
+       "router": 1711,
+       "context": 442,
+       "narrator": 3407,
+       "archivist": 3812,
+       "persistence": null
+      },
+      "ack_server_ms": 75,
+      "ttfmc_server_ms": 3927,
+      "ttlt_server_ms": 5997,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 5,
+      "phase_ms": {
+       "other": 491,
+       "router": 1561,
+       "context": 419,
+       "narrator": 3646,
+       "archivist": 4129,
+       "persistence": null
+      },
+      "ack_server_ms": 78,
+      "ttfmc_server_ms": 4129,
+      "ttlt_server_ms": 6125,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 6,
+      "phase_ms": {
+       "other": 457,
+       "router": 218,
+       "context": 163,
+       "narrator": 4569,
+       "archivist": 4360,
+       "persistence": null
+      },
+      "ack_server_ms": 81,
+      "ttfmc_server_ms": 2647,
+      "ttlt_server_ms": 5407,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 7,
+      "phase_ms": {
+       "other": 490,
+       "router": 1768,
+       "context": 45737,
+       "narrator": 3009,
+       "archivist": 11,
+       "persistence": null
+      },
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 49230,
+      "ttlt_server_ms": 51047,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 8,
+      "phase_ms": {
+       "other": 497,
+       "router": 1838,
+       "context": 19938,
+       "narrator": 3375,
+       "archivist": 11,
+       "persistence": null
+      },
+      "ack_server_ms": 82,
+      "ttfmc_server_ms": 23475,
+      "ttlt_server_ms": 25668,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 9,
+      "phase_ms": {
+       "other": 513,
+       "router": 2304,
+       "context": 108,
+       "narrator": 4646,
+       "archivist": 14,
+       "persistence": null
+      },
+      "ack_server_ms": 85,
+      "ttfmc_server_ms": 4359,
+      "ttlt_server_ms": 7585,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 10,
+      "phase_ms": {
+       "other": 26365,
+       "router": 241,
+       "context": 4764,
+       "narrator": 4656,
+       "archivist": 10,
+       "persistence": null
+      },
+      "ack_server_ms": 87,
+      "ttfmc_server_ms": 7008,
+      "ttlt_server_ms": 10114,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 11,
+      "phase_ms": {
+       "other": 589,
+       "router": 1,
+       "context": 469,
+       "narrator": 5394,
+       "archivist": 3658,
+       "persistence": null
+      },
+      "ack_server_ms": 91,
+      "ttfmc_server_ms": 2761,
+      "ttlt_server_ms": 6442,
+      "llm_attempts": 2,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 12,
+      "phase_ms": {
+       "other": 492,
+       "router": 224,
+       "context": 332,
+       "narrator": 4631,
+       "archivist": 14,
+       "persistence": null
+      },
+      "ack_server_ms": 93,
+      "ttfmc_server_ms": 2565,
+      "ttlt_server_ms": 5691,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 13,
+      "phase_ms": {
+       "other": 600,
+       "router": 1,
+       "context": 0,
+       "narrator": 1,
+       "archivist": 4,
+       "persistence": null
+      },
+      "ack_server_ms": 98,
+      "ttfmc_server_ms": 602,
+      "ttlt_server_ms": 612,
+      "llm_attempts": 0,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": []
+     },
+     {
+      "turn": 14,
+      "phase_ms": {
+       "other": 535,
+       "router": 216,
+       "context": 189,
+       "narrator": 4652,
+       "archivist": 13,
+       "persistence": null
+      },
+      "ack_server_ms": 102,
+      "ttfmc_server_ms": 2642,
+      "ttlt_server_ms": 5614,
+      "llm_attempts": 1,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 15,
+      "phase_ms": {
+       "other": 4509,
+       "router": 1,
+       "context": 1446,
+       "narrator": 4703,
+       "archivist": 3896,
+       "persistence": null
+      },
+      "ack_server_ms": 101,
+      "ttfmc_server_ms": 2415,
+      "ttlt_server_ms": 5743,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     },
+     {
+      "turn": 16,
+      "phase_ms": {
+       "other": 530,
+       "router": 207,
+       "context": 169,
+       "narrator": 6570,
+       "archivist": 9,
+       "persistence": null
+      },
+      "ack_server_ms": 96,
+      "ttfmc_server_ms": 6602,
+      "ttlt_server_ms": 7487,
+      "llm_attempts": 3,
+      "llm_fallbacks": 0,
+      "llm_failed_attempts": 0,
+      "providers_used": [
+       "deepseek"
+      ]
+     }
+    ]
+   },
+   "cleanup": {
+    "games_deleted": 1,
+    "user_delete_status": 200
+   }
+  }
+ ],
+ "logs": {
+  "log_lines": 120,
+  "joined": "by_order",
+  "n": 60
+ },
+ "clock_note": "relogio local ~4,9 s atras do servidor (offset constante 4871-4903 ms); juncao por ordem"
+}
