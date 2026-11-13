@@ -24,6 +24,7 @@ OLD_CARD_SHA256 = {
     "embedding_rate_card_2026-10-17.json": "8e04a9bb33e8be9b0c8a0c068c527c217ee8af1b73f9d9baa643b83fd68a55a7",
 }
 NEW_CARDS = {
+    "llm": "rate_card_2026-11-13.json",
     "image": "image_rate_card_2026-11-13.json",
     "speech": "speech_rate_card_2026-11-13.json",
     "embedding": "embedding_rate_card_2026-11-13.json",
@@ -53,7 +54,12 @@ def test_new_card_version_observed_at_and_source(kind):
     card = _load(name)
     stamp = name.rsplit("_", 1)[1].removesuffix(".json")
     assert card["version"].startswith(
-        {"image": "openai-image-standard-", "speech": "speech-", "embedding": "embedding-"}[kind]
+        {
+            "llm": "",
+            "image": "openai-image-standard-",
+            "speech": "speech-",
+            "embedding": "embedding-",
+        }[kind]
         + stamp
     )
     observed = datetime.fromisoformat(card["observed_at"])
@@ -109,3 +115,29 @@ def test_readers_point_at_the_new_cards():
     assert image_pricing._CARD["version"] == _load(NEW_CARDS["image"])["version"]
     assert speech_pricing._CARD["version"] == _load(NEW_CARDS["speech"])["version"]
     assert embedding_pricing._CARD["version"] == _load(NEW_CARDS["embedding"])["version"]
+
+
+def test_llm_card_keeps_prices_and_cites_both_groq_pages():
+    card, old = _load(NEW_CARDS["llm"]), _load("rate_card_2026-10-08.json")
+    assert card["models"].keys() == old["models"].keys()
+    for name, model in card["models"].items():
+        for key in ("input_per_million", "cached_input_per_million", "output_per_million"):
+            assert _positive(model[key]) == Decimal(old["models"][name][key])  # no price moved
+        for key in ("max_input_units", "max_output_units", "pricing_mode"):
+            assert model[key] == old["models"][name][key]
+        if name.startswith("groq:"):
+            assert "https://console.groq.com/docs/models " in model["source"] + " "
+            assert "https://console.groq.com/docs/model/" in model["source"]
+
+
+def test_both_llm_card_readers_resolve_the_same_file():
+    from services import shard_pricing, usage_metering
+
+    card = PRICING / NEW_CARDS["llm"]
+    assert card == shard_pricing._INSTALLED_CARD_PATH
+    assert _load(NEW_CARDS["llm"])["version"] == usage_metering.RATE_CARD_VERSION
+    assert sha256(card.read_bytes()).hexdigest() == shard_pricing.INSTALLED_RATE_CARD_SHA256
+    assert (
+        shard_pricing.INSTALLED_RATE_CARD_OBSERVED_AT.date().isoformat()
+        == (_load(NEW_CARDS["llm"])["observed_at"])
+    )

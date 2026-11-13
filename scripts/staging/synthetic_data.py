@@ -44,15 +44,20 @@ def build_manifest(users: list[dict]) -> dict:
     }
 
 
-WALLET_PRICING = "spec197-restore-b"
-WALLET_SKU = "spec197-restore-b-sku"
+# SPEC-409: the LLM rate card was renewed on 2026-11-13, so the immutable pricing row is a new one
+# (the old spec197-restore-b rows stay as history; publish with scripts/staging/publish_rate_card.py).
+WALLET_PRICING = "spec409-staging-2026-11-13"
+WALLET_SKU = "spec409-staging-2026-11-13-sku"
 WALLET_SHARDS = 311
 SPENT_MILLI = 200
 DEBT_MILLI = 75
 
 
-def seed_wallet_prereqs(dsn: str) -> None:
+def seed_wallet_prereqs(
+    dsn: str, *, pricing_id: str = WALLET_PRICING, sku_id: str | None = None
+) -> None:
     """Idempotent synthetic pricing version + web SKU (append-only rows, staging only)."""
+    sku_id = sku_id or (WALLET_SKU if pricing_id == WALLET_PRICING else f"{pricing_id}-sku")
     import psycopg
     from psycopg.types.json import Jsonb
 
@@ -68,7 +73,7 @@ def seed_wallet_prereqs(dsn: str) -> None:
             values (%s,0.03,5,'spec197 synthetic',now() - interval '10 minutes',31536000,0.10,%s,%s,'spec197 synthetic',%s,31536000,%s)
             on conflict (version_id) do nothing""",
             (
-                WALLET_PRICING,
+                pricing_id,
                 RATE_CARD_VERSION,
                 INSTALLED_RATE_CARD_SHA256,
                 INSTALLED_RATE_CARD_OBSERVED_AT,
@@ -78,7 +83,7 @@ def seed_wallet_prereqs(dsn: str) -> None:
         c.execute(
             """insert into app.purchase_skus (sku_id,pricing_version_id,channel,store_product_id,gross_brl,shard_milli)
             values (%s,%s,'web',%s,10.50,%s) on conflict (sku_id) do nothing""",
-            (WALLET_SKU, WALLET_PRICING, WALLET_SKU, WALLET_SHARDS),
+            (sku_id, pricing_id, sku_id, WALLET_SHARDS),
         )
 
 

@@ -62,3 +62,72 @@ Fica para quem tiver (coordenador). Nada foi inventado.
   (`require_paid_effect("image", now=+400 d)`), `test_shard_pricing::test_missing_or_stale_fx_rate_card_fails_closed`,
   e o novo `test_local_pricing_fixture::test_pinned_card_clock_does_not_disable_the_window`
   (imagem e STT, epoch + 31 d).
+
+## Pouso B — cards renovados em 13/11/2026 (Etapas 2–6)
+
+Preços e datas: `fontes.md` (lidas pelo coordenador) e `evidencia-{imagem,speech,embedding,llm}.md`. Nenhum
+preço mudou; mudaram `version`, `observed_at` (2026-11-13), `source(s)` e, no de imagem, `derivation`.
+
+| Card | Arquivo novo | sha256 |
+|---|---|---|
+| LLM | `data/pricing/rate_card_2026-11-13.json` | `bd1d2942c1cb4ca248481f6854f4d857e0f9dd727dff4ea8f8646dfa28dc2fe7` |
+| Imagem | `data/pricing/image_rate_card_2026-11-13.json` | `d25f1a5dcd7442e99538b94c201dd221e753506aa751b328559b2d5f8b0926ae` |
+| STT | `data/pricing/speech_rate_card_2026-11-13.json` | `8a931b35f05455bc5a9003a96bf5d22e27ff04de2483da5d6a9e788791af0798` |
+| Embedding | `data/pricing/embedding_rate_card_2026-11-13.json` | `b49eb940cb0821e857a2e78f8d878074667a82df4d0d4538dd8f566725fbb93e` |
+
+Os quatro antigos continuam byte a byte iguais (`tests/test_pricing_card_files.py`).
+
+- **Imagem:** mesmo `model` (`gpt-image-2-2026-04-21`), marcado "Deprecated" em 10/11/2026, desligamento em
+  10/02/2027. Trocar de modelo é decisão de produto: **spec própria antes de 10/02/2027**.
+- **Embedding:** o valor (0.05/1M) vem de **fonte secundária** (usagepricing.com); a página oficial da Jina não
+  mostrou os valores. O JSON e `evidencia-embedding.md` dizem isso. Conferir no painel oficial quando houver acesso.
+- **Achado extra (muda a pré-condição de deploy):** `quote_usage` também recusa evento de **texto** (`token_priced`)
+  cuja `pricing_version` (= `RATE_CARD_VERSION`) difere da `rate_card_version` da linha de `pricing_versions` da
+  reserva (`shard_pricing.py`, `rate card de usage diverge da versão`). Uma reserva de texto aberta com a linha
+  antiga (`2026-10-08-v1`) que liquidar depois do deploy trava igual à de imagem/STT. Pré-condição: **nenhuma
+  reserva aberta de nenhum tipo** (abaixo).
+- **`expires_at` dos profiles:** `spec197-staging-portrait` vence 2026-12-14; `staging-326-*` vencem 2027-01-24.
+  Os profiles novos nascem com `now() + 90 days` (mesmo prazo da SPEC-326) e copiam `model`/`size`/
+  `max_provider_usd` dos `staging-326-*`; nada de preço comercial é inventado.
+
+### Etapa 4 — passo a passo para o coordenador (staging; NADA disso foi rodado pelo executor)
+
+Ids: pricing version `spec409-staging-2026-11-13`; SKU `spec409-staging-2026-11-13-sku`; profiles
+`spec409-staging-2026-11-13-portrait` e `…-scene`. Estão nas constantes `synthetic_data.WALLET_PRICING/WALLET_SKU`
+e `vercel_env.NON_SECRET_LITERALS["RPG_SPEECH_PRICING_VERSION"]`/`DYNAMIC_ART_PRICE_PROFILES`, e um teste
+(`tests/test_publish_rate_card.py`) garante que os três lugares concordam. Linhas antigas (`spec197-*`,
+`staging-326-*`) ficam como histórico. Ordem importa: **publicar no banco antes do deploy do código novo**, e
+`vercel_env.py` só depois de publicar (ele aponta para ids que ainda não existem no banco).
+
+1. **Pré-condição (somente leitura, `psql`/MCP no staging).** Tem de dar zero linhas; se não, reconciliar antes
+   (`docs/spec197/runbooks/budget.md` § Falhas de provider; nunca editar reserva à mão):
+   ```sql
+   select reference_type, status, count(*) from app.wallet_reservations
+    where status in ('reserved','effect_started','uncertain') group by 1,2;
+   select status, count(*) from app.art_generations
+    where status in ('pending','generating','failed_retryable') group by 1;
+   select kind, blocking, message from app.finops_evaluations order by evaluated_at desc limit 20;
+   select profile_id, pricing_version_id, model, expires_at from app.image_price_profiles order by 1;
+   ```
+   Quotes de imagem em voo (`app.image_quotes` não expirados) vão pedir cotação nova depois do deploy; é esperado.
+2. **Plano (sem tocar em nada):** `bash scripts/dev/py.sh -m scripts.staging.publish_rate_card --dry-run`.
+   Conferir `rate_card_sha256` = `bd1d2942…2dc2fe7` e `rate_card_version` = `2026-11-13-v1`.
+3. **Publicar** (usa `RPG_STAGING_DB_URL` e `SUPABASE_PROJECT_REF` do `.env.staging`; recusa se o DSN não for do
+   ref): `bash scripts/dev/py.sh -m scripts.staging.publish_rate_card --confirm-staging "$SUPABASE_PROJECT_REF"`.
+   Insere `pricing_versions` + `purchase_skus` (via `seed_wallet_prereqs`, `on conflict do nothing`) e os dois
+   `image_price_profiles`. Evidência em `.tmp/evidence/publish_rate_card.json`.
+4. **Conferir no banco:**
+   ```sql
+   select version_id, rate_card_version, left(rate_card_sha256,8), rate_card_observed_at
+     from app.pricing_versions where version_id = 'spec409-staging-2026-11-13';
+   select profile_id, pricing_version_id, model, size, max_provider_usd, expires_at
+     from app.image_price_profiles where pricing_version_id = 'spec409-staging-2026-11-13';
+   ```
+   Esperado: `2026-11-13-v1`, `bd1d2942`, `2026-11-13`; dois profiles com `gpt-image-2-2026-04-21` e `expires_at`
+   ~ +90 dias.
+5. **Env vars:** `bash scripts/dev/py.sh scripts/staging/vercel_env.py --dry-run` (confere `RPG_SPEECH_PRICING_VERSION`
+   e os dois `RPG_IMAGE_PRICE_PROFILE_*` nos nomes enviados) e depois sem `--dry-run`.
+6. **Deploy do staging** com o código do pouso B (leitores nos cards novos) e **smoke §6** da spec; rodar o cron
+   `finops` e conferir que não há `stale_rate_card`. Registrar o resultado aqui (sem tokens nem ids de owner).
+7. **Rollback:** reverter o commit dos leitores e reaplicar `vercel_env.py` com os ids antigos (as linhas novas são
+   append-only e inofensivas).

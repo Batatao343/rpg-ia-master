@@ -17,7 +17,7 @@ from uuid import UUID, uuid5
 from services.embedding_pricing import EMBEDDING_PRICING_VERSION, embedding_cost
 
 _CARD = json.loads(
-    (Path(__file__).resolve().parents[1] / "data/pricing/rate_card_2026-10-08.json").read_text(
+    (Path(__file__).resolve().parents[1] / "data/pricing/rate_card_2026-11-13.json").read_text(
         encoding="utf-8"
     )
 )

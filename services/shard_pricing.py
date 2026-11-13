@@ -21,7 +21,7 @@ TARGET_MARGIN_RATE = Decimal("0.05")
 BRL_CENT = Decimal("0.01")
 MAX_SHARD_MILLI = 2**63 - 1
 _INSTALLED_CARD_PATH = (
-    Path(__file__).resolve().parents[1] / "data/pricing/rate_card_2026-10-08.json"
+    Path(__file__).resolve().parents[1] / "data/pricing/rate_card_2026-11-13.json"
 )
 _INSTALLED_CARD_BYTES = _INSTALLED_CARD_PATH.read_bytes()
 INSTALLED_RATE_CARD_SHA256 = sha256(_INSTALLED_CARD_BYTES).hexdigest()

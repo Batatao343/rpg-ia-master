@@ -323,8 +323,8 @@ def test_spec325_combat_flags_are_allowlisted():
 
 def test_dynamic_art_envia_price_profiles_da_326():
     env, _ = ve.build_env(FILES, dynamic_art=True)
-    assert env["RPG_IMAGE_PRICE_PROFILE_PORTRAIT"] == "staging-326-portrait"
-    assert env["RPG_IMAGE_PRICE_PROFILE_SCENE"] == "staging-326-scene"
+    assert env["RPG_IMAGE_PRICE_PROFILE_PORTRAIT"] == "spec409-staging-2026-11-13-portrait"
+    assert env["RPG_IMAGE_PRICE_PROFILE_SCENE"] == "spec409-staging-2026-11-13-scene"
     off, _ = ve.build_env(FILES)
     assert "RPG_IMAGE_PRICE_PROFILE_SCENE" not in off
     assert "RPG_IMAGE_PRICE_PROFILE_SCENE" in ve.stale_names(off)

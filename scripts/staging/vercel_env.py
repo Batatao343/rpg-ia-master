@@ -53,7 +53,7 @@ NON_SECRET_LITERALS = {
     "RPG_DAILY_SPEND_CAP_TEXT": "1",
     # STT (SPEC-186): synthetic pricing version seeded by synthetic_data.seed_wallet_prereqs; WAV only (no ffmpeg).
     "RPG_SPEECH_ENABLED": "1",
-    "RPG_SPEECH_PRICING_VERSION": "spec197-restore-b",
+    "RPG_SPEECH_PRICING_VERSION": "spec409-staging-2026-11-13",  # SPEC-409: after rate-card renewal
 }
 # Preview: só flags inertes. Sem DATABASE_URL/SUPABASE_*/RPG_*_SECRET.
 PREVIEW_LITERALS = {"RPG_RUNTIME_PROFILE": "hosted-supabase", "RPG_BIND_HOST": "0.0.0.0"}
@@ -117,8 +117,8 @@ OPTIONAL_FLAGS = (
 )
 # SPEC-326 R17: price profiles de imagem (linhas imutáveis em app.image_price_profiles).
 DYNAMIC_ART_PRICE_PROFILES = {
-    "RPG_IMAGE_PRICE_PROFILE_PORTRAIT": "staging-326-portrait",
-    "RPG_IMAGE_PRICE_PROFILE_SCENE": "staging-326-scene",
+    "RPG_IMAGE_PRICE_PROFILE_PORTRAIT": "spec409-staging-2026-11-13-portrait",
+    "RPG_IMAGE_PRICE_PROFILE_SCENE": "spec409-staging-2026-11-13-scene",
 }
 # Estado aprovado do staging (25/10): carregado por padrao para que rodar o script sem flags
 # reproduza o que o dono aprovou, em vez de apagar o mundo vivo e o Jev primary.

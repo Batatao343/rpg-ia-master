@@ -202,6 +202,23 @@ def test_quote_usage_rejects_event_with_previous_card_version() -> None:
                 quote_usage([old], version(), at=NOW, authorized_snapshot=authorized)
 
 
+def test_version_row_pinned_to_old_card_is_rejected_after_renewal() -> None:
+    """SPEC-409 trap 1: a pricing_versions row written for the 2026-10-08 card (immutable) stops
+    working once the installed card is renewed, until a new row is published."""
+    old_sha = "3f62239b04748a6a11a1dc938670a3e9874f718ba84af85d7e07ef1db5f53e99"
+    old_observed = INSTALLED_RATE_CARD_OBSERVED_AT.replace(year=2026, month=10, day=8)
+    assert old_sha != INSTALLED_RATE_CARD_SHA256 and old_observed != INSTALLED_RATE_CARD_OBSERVED_AT
+    stale_row = version(
+        rate_card_version="2026-10-08-v1",
+        rate_card_sha256=old_sha,
+        rate_card_observed_at=old_observed,
+        rate_card_max_age=timedelta(days=365),
+    )
+    with pytest.raises(PricingUnavailable):
+        quote_purchase(sku("web", "10.50", 311), stale_row, at=NOW)
+    assert quote_purchase(sku("web", "10.50", 311), version(), at=NOW).shard_milli_granted == 311
+
+
 def test_financial_property_conservation_and_margin_1000_cases() -> None:
     random = Random(183)
     for _ in range(1000):
