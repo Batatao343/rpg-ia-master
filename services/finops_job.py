@@ -21,8 +21,15 @@ from services.finops_alerts import (
     publish_margin_metrics,
     publish_switch_metrics,
     spend_groups,
+    stale_card_failures,
 )
 from services.kill_switches import get_switches
+
+
+def _stale_card_summary(alerts: list[Alert], cap_failed: int) -> dict:
+    """``failed`` also counts a stale installed rate card (SPEC-409 R4), naming the cards."""
+    stale, names = stale_card_failures(alerts)
+    return {"failed": cap_failed + stale, "stale_rate_cards": names}
 
 
 def run_finops(
@@ -136,7 +143,7 @@ def run_finops(
     publish_switch_metrics(off)
     publish_evaluation_age(evaluated=True)
     summary = {
-        "failed": cap_failed,
+        **_stale_card_summary(alerts, cap_failed),
         "alerts": len(alerts),
         "blocking_alerts": sum(a.blocking for a in alerts),
         "alert_kinds": ",".join(sorted({a.kind for a in alerts})),

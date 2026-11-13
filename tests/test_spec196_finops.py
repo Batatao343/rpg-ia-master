@@ -30,9 +30,18 @@ from services import kill_switches as ks
 from services.finops_job import run_finops
 from services.google_play import GooglePlayError, obfuscated_account_id
 from services.shard_pricing import PricingUnavailable
+from tests.fakes.local_pricing import pin_fresh_installed_cards
 
 D = Decimal
 T0 = datetime(2026, 10, 14, 12, tzinfo=UTC)
+
+
+@pytest.fixture(autouse=True)
+def _fresh_installed_cards(monkeypatch):
+    """SPEC-409 R4: a stale installed card fails the cron; pin them fresh at this file's clock."""
+    pin_fresh_installed_cards(monkeypatch, T0)
+
+
 PRICING = {
     "v1": finops.PricingRef(
         "v1",
@@ -501,6 +510,7 @@ def test_cron_finops_auth_and_owner_free_response(monkeypatch):
         purchase_facts=[purchase(owner=owner, at=datetime.now(UTC) - timedelta(days=1))],
     )
     monkeypatch.setattr(cron_internal, "_finops_reader", lambda: reader)
+    pin_fresh_installed_cards(monkeypatch, datetime.now(UTC))  # real clock in this cron call
     res = client.post("/internal/cron/finops", headers={"Authorization": f"Bearer {secret}"})
     assert res.status_code == 200 and res.json()["ok"] and owner not in res.text
     assert res.json()["purchases"] == 1

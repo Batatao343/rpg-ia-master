@@ -17,6 +17,7 @@ from services import finops_alerts as fa
 from services.daily_spend_cap import ACTOR, evaluate_daily_cap
 from services.finops_job import run_finops
 from services.kill_switches import IMAGE, STT_FALLBACK, KillSwitches, MemorySwitchStore
+from tests.fakes.local_pricing import pin_fresh_installed_cards
 from services.usage_metering import exact_billable_cost, normalize_attempts, operation_cost
 
 OPERATION = UUID("22222222-2222-4222-8222-222222222222")
@@ -26,6 +27,7 @@ PRICING = {"v1": finops.PricingRef("v1", D("5"), {})}
 
 @pytest.fixture(autouse=True)
 def _env(monkeypatch):
+    pin_fresh_installed_cards(monkeypatch, NOW)  # SPEC-409 R4: stale cards would fail the cron
     for name in (
         "RPG_DAILY_SPEND_CAP_BRL",
         "RPG_KILL_SWITCHES_OFF",

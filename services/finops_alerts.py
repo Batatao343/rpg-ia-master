@@ -197,6 +197,15 @@ def stale_rate_cards(items: Iterable[Freshness], now: datetime) -> list[Alert]:
     return out
 
 
+def stale_card_failures(alerts: Iterable[Alert]) -> tuple[int, str]:
+    """SPEC-409 R4: (1, names) when any ``stale_rate_card`` alert is present, else (0, "").
+
+    Only this kind fails the cron (D4); ``rate_card_expiring`` and other blocking alerts do not.
+    """
+    names = sorted({a.provider for a in alerts if a.kind == "stale_rate_card"})
+    return (1 if names else 0), ",".join(names)
+
+
 def expiring_rate_cards(
     items: Iterable[Freshness], now: datetime, warn: timedelta | None = None
 ) -> list[Alert]:

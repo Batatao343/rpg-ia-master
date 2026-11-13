@@ -14,6 +14,7 @@ from services import finops_alerts as fa
 from services.daily_spend_cap import ACTOR, CAP_SWITCHES, day_start, evaluate_daily_cap
 from services.finops_job import run_finops
 from services.kill_switches import IMAGE, NEW_PURCHASES, STT_FALLBACK, MemorySwitchStore
+from tests.fakes.local_pricing import pin_fresh_installed_cards
 
 NOW = datetime(2026, 10, 15, 15, tzinfo=UTC)
 PRICING = {"v1": finops.PricingRef("v1", D("5"), {})}
@@ -26,6 +27,7 @@ def reader(usd: str) -> FakeFinopsReader:
 
 @pytest.fixture(autouse=True)
 def _env(monkeypatch):
+    pin_fresh_installed_cards(monkeypatch, NOW)  # SPEC-409 R4: stale cards would fail the cron
     monkeypatch.delenv("RPG_DAILY_SPEND_CAP_BRL", raising=False)
     monkeypatch.delenv("RPG_KILL_SWITCHES_OFF", raising=False)
 

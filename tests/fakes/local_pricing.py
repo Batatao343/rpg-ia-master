@@ -67,3 +67,21 @@ def pin_card_clock(monkeypatch) -> datetime:
         functools.partial(finops_alerts.require_paid_effect, now=card_epoch()),
     )
     return card_epoch()
+
+
+def pin_fresh_installed_cards(monkeypatch, at: datetime | None = None) -> None:
+    """``run_finops`` with every installed card observed at ``at`` (default: ``card_epoch()``).
+
+    SPEC-409 R4: a stale card now fails the cron, so tests that assert ``failed == 0`` with a
+    simulated clock must not depend on the real card dates. The 30-day window is the default one.
+    """
+    from services import finops_job
+    from services.finops_alerts import Freshness
+
+    moment = at or card_epoch()
+    names = ("llm", "image", "speech", "embedding")
+    monkeypatch.setattr(
+        finops_job,
+        "installed_freshness",
+        lambda: [Freshness(n, moment, timedelta(days=30)) for n in names],
+    )
