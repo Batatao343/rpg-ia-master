@@ -42,7 +42,7 @@ ALERT_KINDS = (
     "wallet_spend_anomaly",
 )
 # Installed provider rate cards that need an early renewal warning (fx has its own cadence).
-EXPIRING_CARD_NAMES = frozenset({"llm", "image", "speech", "rate_card"})
+EXPIRING_CARD_NAMES = frozenset({"llm", "image", "speech", "rate_card", "embedding"})
 
 
 def safe_label(value: object) -> str:
@@ -102,7 +102,7 @@ def failed_no_usage_by_provider(groups: Iterable[UsageGroup]) -> dict[str, int]:
 
 @dataclass(frozen=True)
 class Freshness:
-    name: str  # 'fx', 'llm', 'image', 'speech' (low-cardinality)
+    name: str  # 'fx', 'llm', 'image', 'speech', 'embedding' (low-cardinality)
     observed_at: datetime
     max_age: timedelta
 
@@ -397,7 +397,8 @@ def evaluate_alerts(
 
 # --- installed card freshness + paid-effect guard (R5) -----------------------------------
 def installed_freshness() -> list[Freshness]:
-    """Freshness of the three rate cards shipped in data/pricing (observed_at based)."""
+    """Freshness of the four rate cards shipped in data/pricing (observed_at based)."""
+    from services.embedding_pricing import _CARD as embedding_card
     from services.image_pricing import _CARD as image_card
     from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT
     from services.speech_pricing import _CARD as speech_card
@@ -417,6 +418,7 @@ def installed_freshness() -> list[Freshness]:
         Freshness("llm", INSTALLED_RATE_CARD_OBSERVED_AT, timedelta(days=llm_days)),
         Freshness("image", seen(image_card), window),
         Freshness("speech", seen(speech_card), window),
+        Freshness("embedding", seen(embedding_card), window),  # SPEC-409 R3
     ]
 
 

@@ -94,6 +94,20 @@ jobs:
       - run: npm run build
         working-directory: web
 
+  rate-cards:
+    # SPEC-409 R3: o job `test` pula o schedule; este roda só o guarda de vencimento dos rate
+    # cards na varredura semanal, para o aviso (T-10 d) chegar em semana sem push.
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv sync --extra anthropic
+      - run: uv run pytest -q tests/test_rate_card_freshness.py
+
   api-fuzz:
     # SPEC-338: fuzz da API (Schemathesis in-process, legacy + DB offline); bloqueante.
     needs: scope
