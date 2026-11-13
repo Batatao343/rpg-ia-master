@@ -12,6 +12,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
+from datetime import UTC, datetime
 
 from scripts.staging import common
 from scripts.staging.synthetic_data import WALLET_PRICING, WALLET_SKU, seed_wallet_prereqs
@@ -53,6 +55,38 @@ def describe_plan(pricing_id: str) -> dict:
     }
 
 
+def _utc(value: datetime) -> datetime:
+    return value.replace(tzinfo=UTC) if value.tzinfo is None else value.astimezone(UTC)
+
+
+def published_problems(
+    pricing_id: str, version_row: tuple | None, profile_rows: list[tuple]
+) -> list[str]:
+    """What is wrong with the rows left in the database (empty list = published as planned).
+
+    Every insert is ``on conflict do nothing``: a ``spec409-*`` row created earlier with another
+    hash, or a missing source profile, would otherwise pass silently (review Sol P2-1).
+    """
+    from services.shard_pricing import INSTALLED_RATE_CARD_OBSERVED_AT, INSTALLED_RATE_CARD_SHA256
+    from services.usage_metering import RATE_CARD_VERSION
+
+    if version_row is None:
+        return [f"pricing_versions row {pricing_id} is missing"]
+    version, sha256, observed_at = version_row
+    problems = []
+    if version != RATE_CARD_VERSION:
+        problems.append(f"rate_card_version is {version}, installed card is {RATE_CARD_VERSION}")
+    if sha256 != INSTALLED_RATE_CARD_SHA256:
+        problems.append("rate_card_sha256 differs from the installed card")
+    if _utc(observed_at) != _utc(INSTALLED_RATE_CARD_OBSERVED_AT):
+        problems.append(f"rate_card_observed_at is {observed_at}, not the installed card date")
+    found = {str(row[0]) for row in profile_rows}
+    missing = sorted(set(profile_ids(pricing_id).values()) - found)
+    if missing:
+        problems.append(f"image_price_profiles missing: {', '.join(missing)}")
+    return problems
+
+
 def publish(dsn: str, pricing_id: str) -> dict:
     import psycopg
 
@@ -60,12 +94,21 @@ def publish(dsn: str, pricing_id: str) -> dict:
     with psycopg.connect(dsn, autocommit=True, prepare_threshold=None) as conn:
         for sql, params in profile_statements(pricing_id):
             conn.execute(sql, params)
+        version_row = conn.execute(
+            "select rate_card_version, rate_card_sha256, rate_card_observed_at"
+            " from app.pricing_versions where version_id = %s",
+            (pricing_id,),
+        ).fetchone()
         rows = conn.execute(
             "select profile_id, pricing_version_id, model, expires_at"
             " from app.image_price_profiles where pricing_version_id = %s order by 1",
             (pricing_id,),
         ).fetchall()
-    return {**describe_plan(pricing_id), "profiles_in_db": [list(map(str, r)) for r in rows]}
+    return {
+        **describe_plan(pricing_id),
+        "profiles_in_db": [list(map(str, r)) for r in rows],
+        "problems": published_problems(pricing_id, version_row, rows),
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -83,7 +126,9 @@ def main(argv: list[str] | None = None) -> int:
     common.assert_ref_in(ref, RPG_STAGING_DB_URL=common.env_required("RPG_STAGING_DB_URL"))
     result = publish(os.environ["RPG_STAGING_DB_URL"], a.pricing_id)
     print(common.write_evidence("publish_rate_card", {"project_ref": ref, **result}, a.out))
-    return 0
+    for problem in result["problems"]:
+        print(f"FAIL: {problem}", file=sys.stderr)
+    return 1 if result["problems"] else 0
 
 
 if __name__ == "__main__":

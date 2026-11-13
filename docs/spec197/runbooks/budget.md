@@ -89,7 +89,9 @@ o vencimento: só com prazo escrito e decisão do dono, e removido quando o card
 **não** basta (só afrouxa `require_paid_effect`, não `require_image_prices`/`require_speech_prices`).
 
 **O que o alerta do cron faz e não faz.** `stale_rate_card` soma 1 em `failed` do `/internal/cron/finops` (HTTP 500,
-chave `stale_rate_cards` com os nomes); só esse tipo (não `rate_card_expiring`, `wallet_mismatch` etc.). Três respostas
+chave `stale_rate_cards` com os nomes); só esse tipo (não `rate_card_expiring`, `wallet_mismatch` etc.). O mesmo
+`kind` cobre a cotação `fx` e a linha `rate_card` mais nova de `app.pricing_versions`: FX vencida também deixa o cron
+em 500 a cada hora (em produção, com janela de FX curta, decidir a tolerância no go da SPEC-197). Três respostas
 não-2xx seguidas do mesmo job viram uma linha em `app.cron_health_alerts` (~3 h, cron horário) e um `RAISE WARNING` no
 log do Postgres. **Ninguém é notificado ativamente** sem o envio de logs externo (Axiom, bloqueado no dono): o aviso que
 chega a alguém é o CI vermelho/e-mail de T-10; a linha em `cron_health_alerts`/`finops_evaluations` entra na rotina

@@ -115,7 +115,10 @@ e `vercel_env.NON_SECRET_LITERALS["RPG_SPEECH_PRICING_VERSION"]`/`DYNAMIC_ART_PR
 3. **Publicar** (usa `RPG_STAGING_DB_URL` e `SUPABASE_PROJECT_REF` do `.env.staging`; recusa se o DSN não for do
    ref): `bash scripts/dev/py.sh -m scripts.staging.publish_rate_card --confirm-staging "$SUPABASE_PROJECT_REF"`.
    Insere `pricing_versions` + `purchase_skus` (via `seed_wallet_prereqs`, `on conflict do nothing`) e os dois
-   `image_price_profiles`. Evidência em `.tmp/evidence/publish_rate_card.json`.
+   `image_price_profiles`. Evidência em `.tmp/evidence/publish_rate_card.json`. Depois dos inserts o script relê as
+   linhas e sai com código 1 (`FAIL: …`) se a `pricing_versions` que ficou no banco não tiver versão, hash e data do
+   card instalado, ou se faltar um dos dois profiles (revisão Sol P2-1: `on conflict do nothing` deixava passar em
+   silêncio uma linha `spec409-*` criada antes com outro hash). Saiu 1 ⇒ não seguir para o passo 5.
 4. **Conferir no banco:**
    ```sql
    select version_id, rate_card_version, left(rate_card_sha256,8), rate_card_observed_at
@@ -130,4 +133,17 @@ e `vercel_env.NON_SECRET_LITERALS["RPG_SPEECH_PRICING_VERSION"]`/`DYNAMIC_ART_PR
 6. **Deploy do staging** com o código do pouso B (leitores nos cards novos) e **smoke §6** da spec; rodar o cron
    `finops` e conferir que não há `stale_rate_card`. Registrar o resultado aqui (sem tokens nem ids de owner).
 7. **Rollback:** reverter o commit dos leitores e reaplicar `vercel_env.py` com os ids antigos (as linhas novas são
-   append-only e inofensivas).
+   append-only e inofensivas). **Limite (revisão Sol P2-5):** isso volta para os cards de outubro, que já venceram;
+   imagem, STT e compra voltam a 503 (falha fechada), não a um estado que funciona. Rollback só serve para tirar um
+   card novo errado; o conserto de verdade é publicar o card certo.
+
+## Notas da revisão Sol (13/11, APPROVED_WITH_FOLLOWUPS)
+
+- **Ordem de deploy:** depois do pouso, `vercel_env.py` e os smokes apontam para os ids `spec409-staging-2026-11-13*`.
+  Deploy antes de publicar falha fechada (imagem, STT e compra em 503, como já estão desde 11/11); o turno de texto
+  não lê `pricing_versions` e o cron segue 200. Ordem certa: publicar → conferir → `vercel_env.py` → deploy → smoke.
+- **P2-2 (follow-up):** o guarda "relógio real só no teste do R3" olha `datetime.now` na mesma linha de
+  `installed_freshness`. Não pega o `now` em duas linhas, `require_paid_effect` sem `now` nem
+  `require_image_prices(..., datetime.now(UTC))`. A catraca de relógio da SPEC-416 (`clock_asserts.py`) cobre parte.
+- **P2-4:** `tests/test_pricing_card_files.py` compara `observed_at <= hoje` com o relógio real; só falha com card
+  datado no futuro (aceito).
