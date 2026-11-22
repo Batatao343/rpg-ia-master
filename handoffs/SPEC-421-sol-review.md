@@ -1,8 +1,31 @@
 # SPEC-421 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Rodadas:** 3ª conferência em `f50204a5` (abaixo); a re-revisão de `60ae3418` aprovou; a 1ª rodada, em `1e72a00b`, pediu mudanças.
-> **Revisor:** Opus 5.5 / Sol (`spec-reviewer`) · **Data:** 2026-11-22 · **Commit revisado:** `f50204a5`
+> **Veredito:** `APPROVED`
+> **Rodadas:** 4ª conferência em `f3b33848` (abaixo); a 3ª, em `f50204a5`, pediu mudanças (P1-2, P2-2); a re-revisão de `60ae3418` aprovou; a 1ª rodada, em `1e72a00b`, pediu mudanças.
+> **Revisor:** Opus 5.5 / Sol (`spec-reviewer`) · **Data:** 2026-11-22 · **Commit revisado:** `f3b33848`
+
+## Conferência de `f3b33848` (`git diff da7cd8d5..f3b33848`)
+
+| Achado | Estado | Evidência |
+|---|---|---|
+| P1-2 | corrigido | `tests/test_mediated_stream.py:389-413`: os três testes novos rodaram um por vez (`-n 0`, sem `-x`). Todos passam sem mutante e todos **reprovam** com `mut_compose_open`, em que o `except` do `composed` devolve `""`. |
+| P2-2 | corrigido | `services/mediated_stream.py:153-179`: `swallow` e `composed` usam `log_fallback` com import tardio, e `logging`/`_log` saíram (o `grep` vem vazio). Na sonda com `RuntimeError("pacto com valerius")`, o log ficou só em `{"error_type": "RuntimeError", "event": "sse.fallback", "reason": "stream_risk_compose_failed"}` e no `stream_observer_failed`, com 0 ocorrências de "valerius" na saída inteira. `test_exception_message_not_logged` prova de verdade: reprova com `mut_log_message`, que passa `message=str(exc)` ao `log_fallback`. |
+
+Mais nada mudou no comportamento. A falha fechada segue igual (`check_error`). `services/narrative_sink.py`
+não tem diff neste commit: tem 7 ocorrências de `except Exception`/BLE001/SIM105, o mesmo número da `main`. O
+ruff está limpo e `test_ruff_counts.py` está verde.
+
+### Evidência verificada (`f3b33848`)
+
+```text
+cada teste novo sozinho (-n 0): sem mutante rc=0 · mut_compose_open rc=1 (os 4, contando o do log) · mut_log_message rc=1 só em test_exception_message_not_logged
+log_probe.py (RuntimeError("pacto com valerius")) → 2 linhas sse.fallback só com error_type/reason; "valerius" 0x
+mutantes em tests/test_mediated_stream.py (FAILED): post_veil 1 · gate_off 50 · no_gate 36 · find_never 55 · no_clear 1 · no_except_reset 1 · compose_open 4 · log_message 1
+  (gate_off 50 e find_never 55 são os mesmos conjuntos da rodada anterior; o 51/56 que escrevi lá foi erro de soma)
+fuzz421.py (6000 casos) → 0 vazamentos
+pt.sh -n 0 tests/test_mediated_stream.py tests/test_ruff_counts.py → 102 passed
+ruff check services/ tests/test_mediated_stream.py → limpo · git status: nenhum arquivo de produto modificado
+```
 
 ## Conferência de `f50204a5` (`git diff 356ca5a0..f50204a5 -- services/ tests/`)
 
