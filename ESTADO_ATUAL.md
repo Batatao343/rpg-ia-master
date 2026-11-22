@@ -1,4 +1,4 @@
-# ESTADO_ATUAL — 2026-11-12
+# ESTADO_ATUAL — 2026-11-22
 
 > **Regra deste arquivo: substituir, nunca anexar.** Teto de 8 KB
 > (`uv run python scripts/spec_index.py estado-size` falha acima disso).
@@ -8,22 +8,22 @@
 
 ## Estado em 10 linhas
 
-- staging = `d7aa4beb` (10/11), SEM nenhuma mudança de 11/11 nem de 12/11. `main` = `origin/main` (push em 12/11; ver `git log -1`).
-- **Onda 12/11, workspace, todas `done`** (detalhe no `CHANGELOG.md`): **414** (`full.sh`, hook nega `Agent` sem tipo), **415** (`land_check` no `wt.sh land`, `red_green.sh`, template novo), **416** (pgTAP no CI, catraca de relógio, `DECISOES_FIXAS.md`), **417** (`weak-tests`, Hypothesis), **418** (gate de tipos).
-- Onda 11/11: `done` 405–408 e 412; código na `main` com fechamento pendente: **409** (falta renovar rate cards), **410**, **411** (falta R5 de eval), **413**.
-- **SQL da 413 e da 410 já rodou em Postgres real no CI** (`audit-local`: migrações do zero + pgTAP `Files=5, Tests=63, PASS`). No staging segue não aplicado (ver Bloqueios).
-- CI de `46fed109`: `eval-gates` verde; `validate` com job `types` verde; `audit-local` vermelho só por 3 testes `image_pricing_unavailable`.
-- **Rate cards vencidos:** imagem e STT (12/10) desde 11/11, LLM (08/10) desde 07/11; embedding vence 16/11. Cotação de imagem e STT recusam (falha fechada) até a renovação (409).
-- Suíte: última completa verde em 12/11, 11631 passed (`FULL_N=2 bash scripts/dev/full.sh`). Flakes: `test_spec361_gate::test_prazo_real_por_thread` (tempo); `test_spec382_node_golden[campaign_secret_rusher_off]` (ordem entre testes, 1 em 6 suítes); e2e "F17 workspace_modes" (tempo, 1 run no CI).
-- **Bug de produto aberto:** `economy.execute_trade` muta o `state` de entrada (`services/economy.py:812`); teste em `xfail(strict=True)`.
-- Gate de tipos é estreito: 4 dos ~19 arquivos com `with_structured_output`, nenhum de `agents/`.
+- staging = `d7aa4beb` (10/11), sem nada de 11/11 em diante: migrações 413/410 não aplicadas e `pricing_versions` só com o card de 08/10. `main` = `origin/main` (push em 22/11).
+- **409, pouso B na `main` (22/11):** 4 rate cards renovados com leitura de 13/11, nenhum preço mudou; guarda de CI a T-10 d; cron `finops` devolve 500 com card vencido; `scripts/staging/publish_rate_card.py`. Revisão Sol APPROVED_WITH_FOLLOWUPS. Falta só o staging (Bloqueios).
+- **Os cards novos vencem em 13/12; a `main` fica vermelha de propósito a partir de 03/12** (`test_rate_card_freshness`) até renovar: `docs/spec197/runbooks/budget.md` § Renovação.
+- **Ordem obrigatória no staging:** `publish_rate_card` → `vercel_env.py` → deploy. `vercel_env.py` e os smokes já apontam para os ids `spec409-staging-2026-11-13*`, que ainda não existem no banco. Deploy antes disso falha fechada (imagem, STT e compra em 503, como hoje); turno de texto não é afetado.
+- **`gpt-image-2-2026-04-21` foi descontinuado** (aviso 10/11, desliga 10/02/2027). Trocar para `gpt-image-2.6-*` pede spec própria antes dessa data.
+- Onda 12/11 (414–418) `done`. Onda 11/11: `done` 405–408 e 412; fechamento pendente 409, 410, 413 (staging) e 411 (R5 de eval).
+- Latência (outra sessão): 419 pousada, falta smoke no staging; 420–423 em curso lá. **424** reservada: `economy.execute_trade` muta o `state` de entrada (`services/economy.py:812`), teste em `xfail(strict=True)`.
+- Suíte: última completa verde em 22/11, 11687 passed (`FULL_N=2 bash scripts/dev/full.sh`). Flakes: `test_spec361_gate::test_prazo_real_por_thread` (tempo); `test_spec382_node_golden[campaign_secret_rusher_off]` (ordem, 1 em 8 suítes); e2e "F17 workspace_modes".
+- Gate de tipos é estreito: 4 dos ~19 arquivos com `with_structured_output`, nenhum de `agents/`. `.venv` velho dentro de worktree engana o basedpyright (acusa import faltando): apagar.
 - Cartas, bestiário e balanço: sem mudança desde 10/11.
 
 ## Próximos 3 passos
 
-1. **Staging (depende do dono, ver Bloqueios):** `migrations push --apply` aplica 413 e 410 em ordem → pgTAP + advisor + smoke → deploy com `RPG_RLS_STRICT_PRINCIPAL=shadow` → janela sem `pool.checkout_without_principal` → `on`. Runbooks: `docs/spec413/README.md`, `docs/spec410/README.md`.
-2. **409, resto:** ler preços reais (URL + data), renovar 4 cards, `pricing_versions` e `image_price_profiles.expires_at` no staging, deploy, smoke. Risco `alto` só tem handoff `terra`: o `land_check` exige revisão Opus (`sol`) com `## Evidência verificada` antes do pouso. Fecha o vermelho do `audit-local`.
-3. **Follow-ups da onda 12/11:** spec do bug de `execute_trade`; degrau 2 do gate de tipos (tipar `llm`, `agents/` e resto de `services/`); achar o teste que polui o golden da 382; tirar `continue-on-error` do job `types` após 3 runs verdes; campo `Risco` nas specs abertas antigas (197, 198, 222, 297, 359, 379, 380, 384). Antigos: 411 R5, middlewares `async` de `api.py`, `public` fora da Data API, SPEC-404, 383/384/392.
+1. **Staging (o dono roda 2 comandos, ver Bloqueios):** migrações 413 e 410 → conferência (`docs/spec413/README.md` PC-4, `docs/spec410/README.md` etapa 2) → `publish_rate_card` → `vercel_env.py` → deploy com `RPG_RLS_STRICT_PRINCIPAL=shadow` → smokes (409 §6, 419 §6) → janela sem `pool.checkout_without_principal` → `on`. Fecha 409, 410 e 413. O "antes" está em `docs/spec410/staging-antes.txt`.
+2. **Até 03/12:** renovar os 4 rate cards (ler as páginas de novo, runbook `budget.md`) e escrever a spec da troca do modelo de imagem.
+3. **Follow-ups:** 424 (`execute_trade`); 411 R5 (autoria de eval + clique do dono); degrau 2 do gate de tipos (tipar `llm`, `agents/`); `type_gate.py` fixar o interpretador; achar o teste que polui o golden da 382; tirar `continue-on-error` do job `types` (falta 1 run verde); guarda de relógio do R3 mais forte (409 P2-2). Antigos: middlewares `async` de `api.py`, `public` fora da Data API, SPEC-404, 383/384/392.
 
 ## Bloqueios no dono
 
@@ -31,8 +31,7 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 
 | Item | Ação do dono | Quando ele disser… |
 |---|---|---|
-| **Staging 11/11 (413, 410, 409)** | rodar `bash scripts/dev/py.sh -m scripts.staging.migrations push --apply --confirm-staging uzeagzcyvxzrpjgrhaql --out docs/spec413/evidence/migrations_push.json`, ou liberar a permissão (o classificador nega escrita no staging) | "rodei"/"liberei" → verificação, deploy `shadow`, fechar 413/410 |
-| Push de branch `spec-NNN` (CI pré-pouso, 415) | autorizar push de branch de spec | "pode" → `RPG_WT_PUSH=1` no pouso de risco alto |
+| **Staging (413, 410, 409)** | rodar, nesta ordem: (1) `bash scripts/dev/py.sh -m scripts.staging.migrations push --apply --confirm-staging uzeagzcyvxzrpjgrhaql --out docs/spec413/evidence/migrations_push.json`; (2) `bash scripts/dev/py.sh -m scripts.staging.publish_rate_card --confirm-staging uzeagzcyvxzrpjgrhaql`. Ou criar regra de permissão para o Bash (o classificador nega escrita no staging) | "rodei" → conferência, `vercel_env.py`, deploy `shadow`, smokes, fechar 409/410/413 |
 | SPEC-411 R5 | aprovar no environment `eval-governance` quando publicado | "aprovei" → fechar 411 |
 | Supabase Auth | ligar proteção contra senha vazada no painel | — |
 | Conta no staging (R-01) | entrar no staging e confirmar o e-mail | "confirmei" → fechar R-01 |
@@ -53,31 +52,16 @@ Decididas em 09/11 pelo coordenador, com delegação ("confio em vc nas decisoes
 Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
-- 2026-11-12 · SPEC-418 `done` — workspace-gate-de-tipos
-- 2026-11-12 · SPEC-417 `done` — workspace-oraculos-de-teste
-- 2026-11-12 · SPEC-416 `done` — workspace-gates-que-cobram
-- 2026-11-12 · SPEC-415 `done` — workspace-pouso-sem-surpresa
-- 2026-11-12 · SPEC-414 `done` — workspace-pytest-confiavel
-- 2026-11-11 · SPEC-413 `in-progress` — rpcs-security-definer-publicas
-- 2026-11-11 · SPEC-412 `done` — stt-fora-do-event-loop
-- 2026-11-11 · SPEC-411 `in-progress` — seguranca-higiene-boot-ci
-- 2026-11-11 · SPEC-410 `in-progress` — rls-sem-falha-aberta
-- 2026-11-11 · SPEC-409 `in-progress` — rate-cards-renovacao-e-alerta
-- 2026-11-11 · SPEC-408 `done` — llm-modo-resolvedor-unico
-- 2026-11-11 · SPEC-407 `done` — size-budget-catraca
-- 2026-11-11 · SPEC-406 `done` — api-imports-mortos
-- 2026-11-11 · SPEC-405 `done` — poda-simbolos-sem-chamador
-- 2026-11-11 · SPEC-404 `approved` — Rotas de entrega ampliadas
-- 2026-11-11 · SPEC-313 `done` — Quests ancoradas em lore (caça, entrega, escolta, rumor, mortos)
-- 2026-11-11 · SPEC-312 `done` — Rumores com semente (lore → motor sorteia → LLM costura; boato falso nunca vira fato)
+- 2026-11-22 · SPEC-419 `in-progress` — latencia-embedding-timeout-curto
+- 2026-11-22 · SPEC-409 `in-progress` — rate-cards-renovacao-e-alerta
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
 
 Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover para `CHANGELOG.md`.
 
-- Notas até 11/11 → `CHANGELOG.md`.
-- 12/11: 414 → 418 em série, cada uma com revisor Sonnet e suíte completa. A revisão pegou 1 P1 (415: veredito lido por palavra solta liberava pouso reprovado). Pouso passa por `land_check` (RAM < 3 GB reprova; `RPG_LAND_SKIP=ram` só com a suíte já rodada). `ESTADO_ATUAL.md` saiu do import do `CLAUDE.md`. Dono autorizou push da `main` nesta onda.
+- Notas até 12/11 → `CHANGELOG.md`.
+- 13–22/11: dono disse "autorizo tudo" (13/11) para os bloqueios que não pedem ação externa dele. Mesmo assim o classificador de permissão negou `migrations push --apply`: escrita no staging só anda com o dono rodando o comando ou criando regra de permissão. Push de branch `spec-NNN` ficou autorizado (`RPG_WT_PUSH=1` em pouso de risco alto). 409 pousou depois de 2 suítes completas (a 1ª pegou 2 testes presos ao card antigo). Campo `Risco` preenchido nas 8 specs abertas antigas.
 
 ## Como rodar
 

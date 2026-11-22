@@ -5,6 +5,17 @@
 
 ---
 
+## 2026-11-22 — SPEC-409 pouso B (rate cards) e pendências de 13/11
+
+- **409 pouso B na `main`** (`a653bae1`): cards `*_2026-11-13.json` de imagem, STT, embedding e LLM, com fonte e data em `docs/spec409/fontes.md` e `evidencia-*.md`. Nenhum preço mudou. O de embedding declara fonte secundária (a página oficial da Jina não entregou os valores). O de imagem registra a descontinuação do `gpt-image-2-2026-04-21` (aviso 10/11/2026, desligamento 10/02/2027).
+- **Guarda de vencimento:** `tests/test_rate_card_freshness.py` falha a 10 dias do vencimento (único teste com relógio real contra card) e job semanal `rate-cards` no `validate.yml`. Embedding passou a ser vigiado.
+- **Cron:** `finops` soma `failed` e devolve 500 quando há `stale_rate_card` (vale também para FX vencida).
+- **Staging:** `scripts/staging/publish_rate_card.py` publica `pricing_versions`, SKU e 2 profiles novos, relê o banco e sai 1 se a linha não bater com o card instalado. Não rodou: escrita no staging negada pelo classificador de permissão.
+- **Revisão:** Sol (Opus) APPROVED_WITH_FOLLOWUPS, sem P0/P1; P2-1, P2-3, P2-4 e P2-5 fechados antes do pouso, P2-2 (guarda de relógio só olha a mesma linha) fica de follow-up.
+- **Suíte completa:** 1ª rodada 2 falhas (versão do card literal em `test_usage_metering`; assert com relógio real barrado pela catraca da 416); 2ª rodada, já sobre a 419, 11687 passed.
+- **Pouso:** `land_check` acusou erro de tipo falso (`boto3` não encontrado) porque o basedpyright usou o `.venv` velho do worktree; apagado. Handoff `terra` de 11/11 ganhou o título `## Evidência verificada` (mesmo conteúdo).
+- **13/11:** campo `Risco` nas specs 197, 198, 222, 297, 359, 379, 380 e 384; estado do staging antes das migrações em `docs/spec410/staging-antes.txt`; SPEC-424 reservada.
+
 ## 2026-11-12 — onda de workspace (specs 414–418)
 
 - **Origem:** varredura do workspace + 3 pesquisas Sonnet de práticas de mercado + revisão Fable em contexto vazio, que cortou duplicatas e um fato errado (o `audit-local` já subia Postgres real; faltava só pgTAP).

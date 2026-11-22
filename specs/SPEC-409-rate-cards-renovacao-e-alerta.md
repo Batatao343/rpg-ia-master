@@ -1,7 +1,7 @@
 # SPEC-409 — rate-cards-renovacao-e-alerta
 
-> **Status:** `in-progress` (Pouso A entregue 11/11: Etapas 0 e 1; Pouso B código pronto 13/11: Etapas 2–6 no worktree, falta suíte completa, revisão, publicação no staging e smoke §6; desvios: `publish_rate_card.py` novo e ids staging `spec409-*` nas constantes de `synthetic_data.py`/`vercel_env.py`; pré-condição de deploy cobre também reserva de texto; `stale_card_failures` alimenta `_stale_card_summary` em `finops_job.py`, sem crescer `run_finops`) · antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
-> **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
+> **Status:** `in-progress` (Pouso A entregue 11/11: Etapas 0 e 1; Pouso B na `main` em 22/11: Etapas 2–6, revisão Sol APPROVED_WITH_FOLLOWUPS, suíte completa 11687 passed; falta publicação no staging e smoke §6, bloqueados em escrita no staging; desvios: `publish_rate_card.py` novo e ids staging `spec409-*` nas constantes de `synthetic_data.py`/`vercel_env.py`; pré-condição de deploy cobre também reserva de texto; `stale_card_failures` alimenta `_stale_card_summary` em `finops_job.py`, sem crescer `run_finops`) · antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
+> **Criada:** 2026-11-11 · **Atualizada:** 2026-11-22
 > **Depende de:** nenhuma (SPEC-236 R7, SPEC-237 e SPEC-405 já `done`). **R1 depende de acesso à web** (ver §8 e Etapa 3).
 > **Desbloqueia:** cotação de imagem (retrato pago) e STT no staging; fecha o follow-up "relógio real nos testes de pricing" achado no pouso da SPEC-405.
 > **Risco:** `alto` (pagamento/pricing: o card entra na cotação de imagem, no débito de STT e, via hash, em `app.pricing_versions`) → `spec-reviewer` obrigatório (AGENTS.md § Qualidade, revisão e evidência).
