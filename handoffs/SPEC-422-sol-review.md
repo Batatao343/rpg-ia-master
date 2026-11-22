@@ -1,8 +1,35 @@
 # SPEC-422 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
-> Rodada 1 (única). Pouso com `RPG_ARCHIVE_RECORD=off` liberado; P2-1 antes de promover a `on`.
-> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-11-22 · **Commit revisado:** `59dcdeca`
+> **Veredito:** `APPROVED`
+> Histórico: rodada 1 em `59dcdeca` (com follow-ups P2-1, P3-1..P3-4); rodada 2 (conferência) em `f1caa481`, follow-ups tratados.
+> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-11-22 · **Commit revisado:** `f1caa481`
+
+## Conferência da rodada 2 (`c991efa6..f1caa481`)
+
+Decisão do coordenador (22/11): `archivist.trigger` só sai com `shadow`/`on`. Conferido com evidência:
+
+1. **Golden SPEC-382 intocado.** `git diff --stat main -- tests/fixtures/spec382_node_golden.json` vazio;
+   `SPEC382_REGEN` ausente do ambiente; `tests/test_spec382_node_golden.py` isolado (`-n 0`) = 66 passed.
+2. **`archive_record.log_trigger`** (`services/archive_record.py:166-172`): retorna cedo com `off`; com
+   `shadow`/`on` loga `reasons=trigger_reasons(...)` (só nomes de `TRIGGER_REASONS`). `_should_archive`
+   sem diff: a única mudança em `archivist.py` é trocar o `_log_event` inline pela chamada ao helper
+   (`:662`). Mutação por plugin `-p` (re-exec do fonte mutado em memória, nenhum arquivo do worktree
+   editado), "logar sempre": `test_off_nao_emite_eventos_de_registro` reprova. `record`/`record_shadow`
+   com `off` já eram impossíveis (`decide` retorna `None` antes de logar) e o teste confere os três.
+   O teste de `shadow` afirma só a presença de `archive_due`; a pertinência à lista fixa vem de
+   `test_trigger_reasons_lista_fixa`. Suficiente.
+3. **P2-1 fechado.** `test_marca_ausente_com_rumor_aceito_no_descanso` roda o `storyteller_node` com
+   `RPG_RUMORS_PROPOSED=on` e rumor aceito (controle sem rumor emite a marca). Mutação M3j
+   (`rumor_new=False`) por plugin: reprova esse teste. Sem mutação: verde.
+4. **Spec.** R9 (só `shadow`/`on`), desvio (4), Riscos (T0 e exceção, P3-3), R12(b) (fixtures de fatos do
+   dia/tick e `clock_label` legado, P3-4), I1 (prova = golden SPEC-382) e I4 (sem "save antigo") batem com
+   o código. P3-1..P3-4 fechados.
+5. **Regressão.** Mutações anteriores rodadas de novo por plugin (resultado em Evidência verificada).
+
+Observação sem severidade: no worktree, `agents/archivist.py`, `services/archive_record.py` e
+`tests/test_archive_record.py` estão com CRLF na cópia de trabalho (`git ls-files --eol`: `i/lf w/crlf`).
+O índice e o commit estão em LF (`.gitattributes eol=lf`), então nada chega à `main`; só não estranhe
+diff de EOL local.
 
 ## Escopo
 
@@ -81,6 +108,8 @@ Fora: smoke com chave real e staging (§6, pendentes por desenho), playtest offl
 
 ## Achados
 
+Rodada 1 (`59dcdeca`). Todos fechados em `f1caa481`; ver "Conferência da rodada 2" e "Correções aplicadas".
+
 | ID | Sev. | Arquivo:linha | Problema | Correção |
 |---|---|---|---|---|
 | P2-1 | P2 | `agents/storyteller.py:2941-2948`; `tests/test_archive_record.py:319-338` | A ligação `rumor_new = updates["world_sim"] is not _sim_before` não tem teste. Trocá-la por `rumor_new=False` (M3j) deixa a suíte verde. O código está certo pela leitura (`_apply_proposed_rumors` só reatribui `world_sim` quando aceita, `storyteller.py:967-968`). Mas a §4 Etapa 2 pedia as variantes no nível do narrador, e as de fauna, morte, beat, missão, evento e rumor ficaram só no `SimpleNamespace`. Os nomes de atributo existem em `_StoryTurn` (conferido), então o único fio não provado é o do rumor. | Teste no `storyteller_node` com `RPG_RUMORS_PROPOSED=on` e um `proposed_rumors` aceito num descanso, afirmando a marca ausente. Pode entrar junto com a spec R12(b); é obrigatório antes de promover a `on`. Com `off` não há efeito. |
@@ -123,10 +152,27 @@ Fora: smoke com chave real e staging (§6, pendentes por desenho), playtest offl
 | tests/test_archive_record.py::test_story_marks_archive_low_igual | vermelho | verde | OK |
 | tests/test_archive_record.py::test_summary_rejection_rows_igual_ao_bloco_antigo | vermelho | verde | OK |
 | tests/test_archive_record.py::test_trigger_reasons_lista_fixa | vermelho | verde | OK |
-red_green: 20/29 OK
+| tests/test_archive_record.py::test_marca_ausente_com_rumor_aceito_no_descanso | vermelho | verde | OK |
+| tests/test_archive_record.py::test_off_nao_emite_eventos_de_registro | verde | verde | FAIL: nao prova a mudanca |
+| tests/test_archive_record.py::test_shadow_emite_trigger_com_motivos | vermelho | verde | OK |
+red_green: 22/32 OK
 ```
 
-Os 9 verde/verde são guardas de "não muda": equivalência de extração, `off`, cadência, conflito,
+As três últimas linhas vêm da rodada 2 (`f1caa481`); as outras 29 ficaram iguais à rodada 1.
+`test_off_nao_emite_eventos_de_registro` é a décima guarda verde/verde: com `off`, nada de log
+novo, o que vale também na `main`. Foi validada por mutação ("logar sempre" a reprova).
+
+Mutações da rodada 2 (plugin `-p mutplug` em scratchpad: re-exec do fonte mutado em memória, nenhum
+arquivo do worktree editado; controles `NOOP_AR/AV/ST` verdes; todos os kills com rc=1, ou seja,
+teste que falha, não erro de configuração):
+
+```text
+LOGALWAYS (log_trigger loga com off) ... KILLED (test_off_nao_emite_eventos_de_registro)
+M3j rumor_new=False no narrador ........ KILLED (test_marca_ausente_com_rumor_aceito_no_descanso)
+M1 M2a M2b M2c M3a-M3h M4a M4b M5 M6 M7 M8 M9 M10 M11 M13 ... 22/22 KILLED (M3g agora também pelo teste de rumor)
+```
+
+Os 9 verde/verde (rodada 1) são guardas de "não muda": equivalência de extração, `off`, cadência, conflito,
 projeção adiada, FallbackLLM e marca ausente. Têm de passar na `main` por definição. Todos foram
 validados por mutação: M5, M6, M7, M9, M11, M12 e M4b os derrubam.
 
@@ -150,13 +196,18 @@ golden SPEC-382 sem o log `archivist.trigger` + fixture da main: 8 passed (-k ca
 
 ## Correções aplicadas
 
-Nenhuma nesta rodada (revisão só leitura).
+Todas em `f1caa481` (executor), conferidas na rodada 2:
+
+- P2-1: `test_marca_ausente_com_rumor_aceito_no_descanso` (nível `storyteller_node`, rumor aceito + controle).
+- P3-1: desvio (4) reescrito; o golden da SPEC-382 voltou ao da `main` (decisão do coordenador: trigger só em `shadow`/`on`).
+- P3-2: I1 aponta o golden da SPEC-382 como prova; comentário de I4 corrigido.
+- P3-3: linha em §7 Riscos (T0 e exceção do LLM).
+- P3-4: R12(b) pede fixtures com fatos do dia/tick e `clock_label` legado.
 
 ## Pendências
 
-- P2-1: teste do fio `rumor_new` no narrador, antes da promoção a `on` (executor da SPEC-422 ou spec R12(b)).
-- P3-1..P3-4: texto da spec e nota de risco; fixtures de R12(b) com fatos do dia e evento de tick num descanso.
-- Fora desta revisão por desenho: smoke §6 com chave, `shadow` em staging e A/B (D1, `EVAL_AUTHORING_REQUIRED`).
+- Nenhuma de código para o pouso com `off`.
+- Promoção a `on` continua dependendo de R12(b) (`EVAL_AUTHORING_REQUIRED`), `shadow` em staging, A/B e smoke §6 com chave (D1).
 
 ## Comandos rodados
 
@@ -170,4 +221,11 @@ mut422.py (23 mutações, test_archive_record.py, -n 0) → 21 killed, 2 survive
 git diff --stat main...HEAD -- evals/ → vazio
 dup_helpers.py --diff main...HEAD → só colisões de nome (classify, decide)
 ruff check / format --check nos arquivos tocados → limpos
+--- rodada 2 (f1caa481) ---
+git diff --stat main -- tests/fixtures/spec382_node_golden.json → vazio; SPEC382_REGEN ausente
+pt.sh -n 0 tests/test_spec382_node_golden.py → 66 passed
+runmut.sh NOOP_AR NOOP_AV NOOP_ST LOGALWAYS M3j → controles verdes; LOGALWAYS e M3j KILLED
+runmut.sh M1..M13 (22 mutações anteriores, por plugin) → 22/22 KILLED
+pt.sh -n 0 test_archive_record test_archivist_policy test_archivist_facts test_npc_memory test_memory_provenance test_archived_state_persistence test_size_budget test_clock_asserts test_flag_registry test_log_event_registry test_telemetry_redaction → 163 passed
+bash scripts/dev/red_green.sh 422 → 22/32 OK (10 guardas verde/verde, todas validadas por mutação)
 ```
