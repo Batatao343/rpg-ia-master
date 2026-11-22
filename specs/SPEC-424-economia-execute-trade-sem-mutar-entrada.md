@@ -1,6 +1,6 @@
 # SPEC-424 — economia-execute-trade-sem-mutar-entrada
 
-> **Status:** `in-progress` (aprovada (22/11, pelo coordenador, com a delegação de 13/11 "autorizo tudo"; veto do dono continua possível)
+> **Status:** `in-progress` (aprovada em 22/11, pelo coordenador, com a delegação de 13/11 "autorizo tudo"; veto do dono continua possível)
 > **Criada:** 2026-11-13 · **Atualizada:** 2026-11-22
 > **Depende de:** SPEC-417 (`done`; o teste de propriedade P4 (c) nasceu lá em `xfail(strict=True)`)
 > **Desbloqueia:** nada; fecha o achado 1 da SPEC-417 (`handoffs/SPEC-417-terra-review.md:24,62`)
