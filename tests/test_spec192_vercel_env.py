@@ -383,6 +383,17 @@ def test_archive_record_is_sent_from_the_preset_in_shadow():
     assert preset["flags"][name] == "shadow"
 
 
+def test_action_queue_is_sent_from_the_staging_preset_only():
+    """SPEC-427: RPG_ACTION_QUEUE=on so no preset do staging; ausente = off (a variavel e apagada)."""
+    name = "RPG_ACTION_QUEUE"
+    assert name in ve.OPTIONAL_FLAGS and name in ve.WORLD_FLAGS
+    assert ve.build_env(FILES, world_flags={name: "on"})[0][name] == "on"
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_flags={name: "yes"})
+    assert name in ve.stale_names(ve.build_env(FILES)[0])
+    assert json.loads(ve.STAGING_PRESET_PATH.read_text(encoding="utf-8"))["flags"][name] == "on"
+
+
 def test_staging_marker_sent_to_staging_and_never_to_preview():
     """SPEC-411 R1.4: RPG_DEPLOY_ENV=staging so no projeto de staging (nunca no preview)."""
     prod, prev = ve.build_env(FILES)

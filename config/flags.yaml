@@ -51,6 +51,12 @@ RPG_ARCHIVE_POLICY_SHADOW:
   default: "0"
   spec: SPEC-318
   note: "modo sombra da política do arquivista (medição)"
+RPG_ACTION_QUEUE:
+  kind: release
+  default: "off"
+  spec: SPEC-427
+  expires: 2027-02-28
+  note: "fila de uma ação no cliente (Enter em 'registrando…' envia depois do state): off|on"
 RPG_ARCHIVE_RECORD:
   kind: release
   default: "off"

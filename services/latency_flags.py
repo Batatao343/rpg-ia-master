@@ -6,6 +6,7 @@
   RPG_ARCHIVE_POLICY=legacy|lean  gate do arquivista (default legacy)
   RPG_ARCHIVE_POLICY_SHADOW=0|1   mede o que `lean` pularia sem mudar nada (default 0)
   RPG_ARCHIVE_RECORD=off|shadow|on  registro deterministico do arquivista (SPEC-422, default off)
+  RPG_ACTION_QUEUE=off|on         fila de uma acao no cliente (SPEC-427, default off)
 
 Valor invalido cai no default do codigo.
 """
@@ -53,3 +54,8 @@ def archive_record_mode() -> str:
 def archive_record_marks_wanted() -> bool:
     """O narrador so carimba `archive_record` com `shadow`/`on`: com `off` o estado nao muda."""
     return archive_record_mode() != "off"
+
+
+def action_queue_on() -> bool:
+    """SPEC-427: so `on` (strip + lower) liga; qualquer outro valor fica `off`."""
+    return _choice("RPG_ACTION_QUEUE", ("off", "on"), "off") == "on"

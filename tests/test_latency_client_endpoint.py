@@ -52,6 +52,24 @@ def test_enabled_flag_in_auth_config(enabled):
     assert enabled.get("/auth/config").json()["client_latency_report"] is True
 
 
+def test_auth_config_action_queue_absent_by_default(monkeypatch):
+    """SPEC-427 R2: sem a flag a chave nao aparece."""
+    monkeypatch.delenv("RPG_ACTION_QUEUE", raising=False)
+    assert "action_queue" not in TestClient(api.app).get("/auth/config").json()
+
+
+@pytest.mark.parametrize("value", ["on", " ON "])
+def test_auth_config_action_queue_on(monkeypatch, value):
+    monkeypatch.setenv("RPG_ACTION_QUEUE", value)
+    assert TestClient(api.app).get("/auth/config").json()["action_queue"] is True
+
+
+@pytest.mark.parametrize("value", ["1", "true", "yes", ""])
+def test_auth_config_action_queue_near_valid_values_stay_off(monkeypatch, value):
+    monkeypatch.setenv("RPG_ACTION_QUEUE", value)
+    assert "action_queue" not in TestClient(api.app).get("/auth/config").json()
+
+
 def test_accepts_valid_report_and_logs(enabled, caplog):
     caplog.set_level(logging.INFO, logger="rpg.turn")
     key = "rpg_turn_first_content_seconds{'route': '/game/action/stream', 'source': 'client'}.count"

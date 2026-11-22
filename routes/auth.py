@@ -45,6 +45,7 @@ def auth_config(request: Request):
         except Exception:
             authenticated = False
     from services.account_security import captcha_config
+    from services.latency_flags import action_queue_on as _action_queue_on
 
     lifecycle = False
     if required:
@@ -60,6 +61,7 @@ def auth_config(request: Request):
         "captcha": captcha_config(),
         # SPEC-200 R10: so aparece quando LIGADO (default: ausente => cliente nao envia).
         **({"client_latency_report": True} if _client_latency_enabled() else {}),
+        **({"action_queue": True} if _action_queue_on() else {}),
         **({"user_id": str(principal.user_id)} if principal else {}),
     }
 
