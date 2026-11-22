@@ -35,7 +35,7 @@
   "services/npc_world.py": 1572,
   "services/reputation.py": 1349,
   "services/world_quests.py": 1134,
-  "state.py": 1083,
+  "state.py": 1082,
   "web/src/types.ts": 1272,
   "world_utils.py": 1962
  },

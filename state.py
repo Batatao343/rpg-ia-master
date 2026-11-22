@@ -5,6 +5,8 @@ from typing import Annotated, Any, Dict, List, Literal, Optional, TypedDict
 
 from langchain_core.messages import BaseMessage
 
+from state_archive import ArchiveMarks
+
 
 class Attributes(TypedDict):
     strength: int
@@ -919,7 +921,7 @@ class WorldProjection(TypedDict, total=False):
     location_states: dict[str, dict]
 
 
-class GameState(TypedDict):
+class GameState(ArchiveMarks):
     # --- Identificação e Memória (NOVO) ---
     game_id: str  # ID único da sessão para isolar o RAG
     processed_action_ids: list[str]  # ledger limitado de idempotência SSE/POST
@@ -928,9 +930,6 @@ class GameState(TypedDict):
     visual_cue_ledger: list[dict]  # Fase 8A: action_key -> cue|null (64)
     narrative_summary: str  # Resumo de curto prazo (contexto comprimido)
     archivist_last_run: int  # Controle de frequência do arquivista
-    archive_due: bool  # flag transitória: evento relevante pede arquivamento (cadência)
-    archive_low: int | None  # SPEC-318: turno cujo archive_due é de baixo valor (política lean)
-    archive_record: dict | None  # SPEC-422: marca do turno (não persistida)
     archived: bool  # Arquivamento é persistente, inclusive após passar pelo grafo.
     archived_reason: str
     game_over: bool  # Fase 4.6: player morreu — save vira memorial (sem chave no

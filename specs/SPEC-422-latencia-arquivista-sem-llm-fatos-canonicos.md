@@ -175,8 +175,9 @@ caminho de gravação de hoje, então nenhum writer novo de estado aparece.
   - a marca `archive_low` da viagem (`storyteller.py:2940-2951`) e a marca nova saem juntas numa
     função do módulo novo.
 
-  Se `state.py` não comportar o campo novo sem crescer, use `size_budget.py --update` com o motivo no
-  commit (regra de `tests/test_size_budget.py`).
+  `state.py` não cresce (gate de crescimento de baseline, sem exceção): as marcas transitórias
+  `archive_due`/`archive_low`/`archive_record` moram em `state_archive.ArchiveMarks` (módulo raiz sem
+  imports do projeto) e `GameState` herda dela; `state.py` fica em 1081 linhas, teto 1082 intacto.
 - **R12 — Gate de qualidade (condição do dono).** A promoção a `on` exige duas coisas:
   - **(a)** `evals compare` de `memory_context` (`evals/datasets/regression/memory_context.jsonl`,
     suítes `memory_write`, `memory_retrieval`, `context_grounding`, `generation_boundary`) sem piora em
@@ -272,8 +273,8 @@ caminho de gravação de hoje, então nenhum writer novo de estado aparece.
   decisão.
 - **`agents/storyteller.py`:** `_story_assemble_quests` troca o bloco `archive_low`
   (`:2940-2951`) por `t.updates.update(archive_record.story_marks(t))`.
-- **`state.py`:** `GameState` ganha `archive_record: dict | None  # SPEC-422: marca do turno (não persistida)`,
-  ao lado de `archive_low` (`state.py:932`). `persistence.py` **não** muda.
+- **`state.py`:** `archive_due`/`archive_low`/`archive_record` (este novo, não persistido) vão para `state_archive.ArchiveMarks`,
+  da qual `GameState` herda. `persistence.py` **não** muda.
 - **`services/latency_flags.py`:** `archive_record_mode()` e `archive_record_marks_wanted()`.
 - **`config/flags.yaml`:** entrada `RPG_ARCHIVE_RECORD` (R7).
 - **Formato da marca:** `{"kind": "rest", "turn": 11}`. O arquivista ignora a marca se `turn` ≠
@@ -284,7 +285,7 @@ caminho de gravação de hoje, então nenhum writer novo de estado aparece.
   é logado em `_archive_node` quando o gate mantém (não dentro de `_should_archive`, que também roda no
   caminho adiado); a decisão não muda. (3) Com T0/T1 o `get_llm` do arquivista nem é construído. (4) `archivist.trigger`
   só sai com `shadow`/`on` (decisão do coordenador, 22/11), então com `off` os logs também ficam
-  iguais a hoje e `tests/fixtures/spec382_node_golden.json` não é alterado. (5) `state.py` +1 linha (campo da marca): `size_budget.json` sobe 1 só ali;
+  iguais a hoje e `tests/fixtures/spec382_node_golden.json` não é alterado. (5) `state.py` não cresce (campo da marca em `state_archive.ArchiveMarks`, herdada por `GameState`);
   `archivist.py` (−33) e `storyteller.py` (−1) encolhem.
 
 Exemplo de resumo T1 (local canônico de `data/`; o executor escolhe um id real ao escrever o
