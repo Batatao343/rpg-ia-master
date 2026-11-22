@@ -378,6 +378,55 @@ def test_gate_exception_holds_rest(monkeypatch):
     assert out == ""  # nada sai depois da excecao: o final entrega
 
 
+def _boom(_sentence: str) -> str:
+    raise RuntimeError("segredo: a espada do rei")
+
+
+def _ok(_sentence: str) -> str:
+    return ""
+
+
+def test_compose_risk_base_raises_fails_closed():
+    import services.mediated_stream as ms
+
+    assert ms.compose_risk(_ok, _boom)("Uma frase.") == "check_error"
+
+
+def test_compose_risk_extra_raises_fails_closed():
+    import services.mediated_stream as ms
+
+    assert ms.compose_risk(_boom, _ok)("Uma frase.") == "check_error"
+
+
+def test_compose_risk_without_extra_returns_base():
+    import services.mediated_stream as ms
+
+    assert ms.compose_risk(None, _boom) is _boom
+    assert ms.compose_risk(None, None) is None
+
+
+def test_stream_guard_with_raising_base_shows_nothing():
+    import services.mediated_stream as ms
+
+    guard = sink.StreamGuard(risk=ms.compose_risk(_ok, _boom))
+    assert guard.feed(CLEAN) + guard.finish() == ""
+
+
+def test_exception_message_not_logged(monkeypatch, caplog):
+    import observability.telemetry as tel
+    import services.mediated_stream as ms
+
+    calls: list = []
+    monkeypatch.setattr(tel, "log_event", lambda *a, **k: calls.append((a, k)))
+    caplog.set_level("DEBUG")
+    ms.compose_risk(_ok, _boom)("Uma frase.")
+    ms.swallow(_boom, "x")
+    reasons = {c[1]["reason"] for c in calls}
+    assert reasons == {"stream_risk_compose_failed", "stream_observer_failed"}
+    assert all(c[1]["error_type"] == "RuntimeError" for c in calls)
+    assert "espada do rei" not in repr(calls) + caplog.text
+
+
 def test_mediated_without_scene_state_does_not_stream():
     from services import mediated_stream
 

@@ -11,7 +11,6 @@ local (a API nao recebe nada) e mede; `on` entrega ao vivo.
 
 from __future__ import annotations
 
-import logging
 import os
 import time
 from collections.abc import Callable, Mapping
@@ -151,16 +150,15 @@ def after_final(final_text: str, scene_state: Mapping, state: Mapping) -> None:
         log_fallback("sse", "mediated_stream_log_failed", exc)
 
 
-_log = logging.getLogger(__name__)
-
-
 def swallow(fn: Callable[..., Any], *args: Any) -> None:
     """Chama `fn(*args)` e engole qualquer excecao: observador/canal de exibicao nunca derruba
     o turno nem libera texto (SPEC-421). Vive aqui para o `except` largo ficar fora do baseline."""
     try:
         fn(*args)
-    except Exception:  # noqa: BLE001 - observador nunca derruba o turno; logado
-        _log.exception("mediated_stream.swallow")
+    except Exception as exc:  # noqa: BLE001 - observador nunca derruba o turno; log_fallback
+        from observability.telemetry import log_fallback
+
+        log_fallback("sse", "stream_observer_failed", exc)  # so a classe, 1x por turno
 
 
 def compose_risk(
@@ -174,8 +172,10 @@ def compose_risk(
     def composed(sentence: str) -> str:
         try:
             return str(extra(sentence) or "") or (str(base(sentence) or "") if base else "")
-        except Exception:  # noqa: BLE001 - fail-closed: a frase fica para o texto final; logado
-            _log.exception("mediated_stream.check_error")
+        except Exception as exc:  # noqa: BLE001 - fail-closed: a frase fica para o texto final
+            from observability.telemetry import log_fallback
+
+            log_fallback("sse", "stream_risk_compose_failed", exc)
             return "check_error"
 
     return composed
