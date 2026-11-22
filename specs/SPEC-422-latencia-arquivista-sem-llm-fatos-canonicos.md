@@ -401,7 +401,8 @@ Staging (`Requer: staging`):
   de o dono aplicar as migrações das SPEC-413/410 (`ESTADO_ATUAL.md` § Bloqueios).
 - **CI pré-pouso de risco `alto`:** não rodou, por erro do coordenador: o push de branch `spec-NNN` estava autorizado
   desde 13/11 e eu trabalhei com um `ESTADO_ATUAL.md` antigo que dizia o contrário. O que rodou antes do pouso foi a
-  suíte completa local e a revisão Sol com mutações; o CI roda no push da `main` de 22/11.
+  suíte completa local e a revisão Sol com mutações. CI depois do pouso, no push da `main` `e71b08c3` (22/11), os três
+  verdes: `validate` `45068189797` (test, types, api-fuzz), `audit-local` `45068189766` e `eval-gates` `45068189737`.
 - **Revisão Sol (22/11):** rodada 1 `APPROVED_WITH_FOLLOWUPS` (P2-1 e P3-1..4), tratados em `f1caa481`; rodada 2 `APPROVED`
   (`handoffs/SPEC-422-sol-review.md`). O playtest da Etapa 5 e o `evals run` de R12(a) foram rodados só pelo executor.
 - **Pouso recusado e corrigido (22/11):** o `land_check` reprovou `growth` (`state.py` 1082 → 1083 em `tests/size_budget.json`).
