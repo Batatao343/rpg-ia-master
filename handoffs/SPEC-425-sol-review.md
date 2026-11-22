@@ -1,7 +1,7 @@
 # SPEC-425 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (final, após a checagem de delta; a rodada de `9d438086` deu `APPROVED_WITH_FOLLOWUPS`)
-> **Revisor:** Claude Opus 5.5 / sol (spec-reviewer, independente do executor) · **Data:** 2026-11-22 · **Commit revisado:** `9d438086`, delta `7ac7798e` + `49b00e0a`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (final, após `d43765c4`; a checagem de delta deu `CHANGES_REQUIRED` por P2-3, agora fechado)
+> **Revisor:** Claude Opus 5.5 / sol (spec-reviewer, independente do executor) · **Data:** 2026-11-22 · **Commit revisado:** `9d438086`, delta `7ac7798e` + `49b00e0a` (shas de antes do rebase) e `d43765c4`
 
 ## Escopo
 
@@ -150,3 +150,5 @@ Testes do delta: `py.sh -m pytest tests/test_image_model_measure.py tests/test_i
 Para fechar: corrigir o P2-3 (só teste). Os P3-5 e P3-6 podem entrar no mesmo commit ou ficar como follow-up.
 Com o P2-3 corrigido e o arquivo verde, o veredito passa a `APPROVED_WITH_FOLLOWUPS` sem nova revisão completa: basta
 o coordenador conferir o diff do teste.
+
+**Checagem de d43765c4:** P2-3 fechado. A fixture autouse `no_paid_calls` remove `OPENAI_API_KEY`, troca `_build_generator` por `pytest.fail` e põe `_PROJECT_OUT` num tmp. `Failed` é `BaseException`, então o `except Exception` de `measure` não o engole, e os testes que trocam o gerador por um fake continuam valendo, porque o monkeypatch do teste roda depois da fixture. P3-5 fechado (`isinstance(value, str)`, casos de lista e dict no teste). P3-6 fechado (` http <status>` só quando há status; a mensagem continua fora). Revisão só do diff, sem rodar testes neste worktree a pedido do coordenador. Veredito final: `APPROVED_WITH_FOLLOWUPS`. Ficam P3-1 (canário no CLI, Etapa 1), P3-3 (tipo e conjunto exato de `extra_models` no teste do card renovado de dezembro) e P3-2 (opcional).
