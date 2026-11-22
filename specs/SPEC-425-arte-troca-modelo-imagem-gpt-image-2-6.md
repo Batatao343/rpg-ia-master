@@ -1,6 +1,6 @@
 # SPEC-425 — arte-troca-modelo-imagem-gpt-image-2-6
 
-> **Status:** `in-progress` (22/11: Etapa 0 entregue, sem card novo; Etapas 1–3 esperam o dono. Aprovada em 22/11, pelo coordenador, por delegação: vale para a **Etapa 0** e para D2, D4, D5, D6, D7 e D9 como recomendado. As Etapas 1–3 esperam o dono: D8 (chave e gasto de até US$ 2,00), D1 (variante, olhando a ficha de contato) e D3 se o teto passar de US$ 0,12. Veto do dono continua possível)
+> **Status:** `in-progress` (22/11: Etapa 0 entregue, sem card novo, revisão Sol APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-425-sol-review.md`, suíte completa 11892 passed; Etapas 1–3 esperam o dono. Aprovada em 22/11, pelo coordenador, por delegação: vale para a **Etapa 0** e para D2, D4, D5, D6, D7 e D9 como recomendado. As Etapas 1–3 esperam o dono: D8 (chave e gasto de até US$ 2,00), D1 (variante, olhando a ficha de contato) e D3 se o teto passar de US$ 0,12. Veto do dono continua possível)
 > **Criada:** 2026-11-22 · **Atualizada:** 2026-11-22
 > **Depende de:** SPEC-125, SPEC-326 e SPEC-352 (`done`); SPEC-409 (`in-progress`: o card de imagem renovado em dezembro segue o runbook dela)
 > **Desbloqueia:** arte dinâmica no staging depois de 10/02/2027 (o modelo atual desliga nessa data)
