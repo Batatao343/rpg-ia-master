@@ -1,6 +1,6 @@
 # SPEC-420 — latencia-cliente-sem-getoperation
 
-> **Status:** `approved` (dono, 13/11: "pode. e execute elas")
+> **Status:** `in-progress` (aprovada pelo dono em 13/11; código pousado em 22/11; revisão Sonnet APPROVED; falta o smoke §6, que depende de deploy no staging)
 > **Criada:** 2026-11-13 · **Atualizada:** 2026-11-13
 > **Depende de:** nenhuma (SPEC-316, SPEC-320 e SPEC-383 já `done`; o contrato de retomada delas fica intacto)
 > **Desbloqueia:** nada diretamente; item L1a de `docs/auditorias/latencia-turno-2026-11-12.md` (linha 241 da fila)
@@ -123,16 +123,16 @@ Itens de `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md` § concorrência: todos tratam
 
 ## 5. Critérios de aceite
 
-- [ ] Envio de texto e jogada de carta sem pending: 0 requisições a `/game/{game}/operations/{op}` (e2e).
-- [ ] Com a consulta pendurada, o eco do envio novo aparece (e2e).
-- [ ] Pending existente ("Consultar / retomar", "Tentar de novo", reload F14): a mesma consulta de hoje (e2e).
-- [ ] Mesmo `action_id` em todo reenvio de um pending (e2e existentes + novos).
-- [ ] Falha sem narração: 0 ecos; retomada: 1 eco e 1 narração (e2e).
-- [ ] `web/tests/pending.test.mjs` existente sem edição e verde; casos novos verdes.
-- [ ] `npm run typecheck`, `npm run lint`, `npm test`, e2e do escopo e `size_budget.py` verdes; `App.tsx` ≤ 965 linhas.
+- [x] Envio de texto e jogada de carta sem pending: 0 requisições a `/game/{game}/operations/{op}` (e2e).
+- [x] Com a consulta pendurada, o eco do envio novo aparece (e2e).
+- [x] Pending existente ("Consultar / retomar", "Tentar de novo", reload F14): a mesma consulta de hoje (e2e).
+- [x] Mesmo `action_id` em todo reenvio de um pending (e2e existentes + novos).
+- [x] Falha sem narração: 0 ecos; retomada: 1 eco e 1 narração (e2e).
+- [x] `web/tests/pending.test.mjs` existente sem edição e verde; casos novos verdes.
+- [x] `npm run typecheck`, `npm run lint`, `npm test`, e2e do escopo e `size_budget.py` verdes; `App.tsx` ≤ 965 linhas.
 - [ ] `uv run pytest` verde (suíte completa offline, no pouso).
-- [ ] Guard de FallbackLLM: não se aplica (sem `with_structured_output` novo).
-- [ ] Saves antigos continuam carregando: não há mudança de save; pending `version: 1` antigo no `localStorage` continua lido (formato inalterado, R1).
+- [x] Guard de FallbackLLM: não se aplica (sem `with_structured_output` novo).
+- [x] Saves antigos continuam carregando: não há mudança de save; pending `version: 1` antigo no `localStorage` continua lido (formato inalterado, R1).
 - [ ] Smoke §6 registrado.
 
 ## 6. Smoke test real
@@ -149,7 +149,9 @@ Registrar o resultado (prints do Network dos itens 1, 3 e 4) no handoff da revis
 
 ## Não rodou e por quê
 
-- Esta spec é rascunho: nada foi executado. As contagens "antes" da Etapa 0 vêm de leitura do source (`App.tsx:487,502-510`, `fixtures.ts:351-355,372-374`); o executor as confirma rodando os testes novos contra o código atual.
+- **Smoke §6 (staging):** não rodou. O staging está em `d7aa4beb` (10/11) e o próximo deploy depende de o dono aplicar as migrações das SPEC-413/410 (`ESTADO_ATUAL.md` § Bloqueios). Até lá a spec fica `in-progress`.
+- **Vermelho → verde (22/11):** na `main`, 4 unit e 3 dos 4 e2e novos falham (1 consulta no envio novo; eco ausente com a consulta pendurada; 1 eco logo após a falha); na branch, todos passam. O 4º e2e (pending existente consulta 1 vez) é controle e passa antes e depois. Handoff: `handoffs/SPEC-420-terra-review.md`.
+- Escrita da spec (13/11): nada foi executado pelo autor. As contagens "antes" da Etapa 0 vêm de leitura do source (`App.tsx:487,502-510`, `fixtures.ts:351-355,372-374`); o executor as confirma rodando os testes novos contra o código atual.
 - O 0,35 s não é remedido aqui: vem de `docs/auditorias/latencia-turno-medicao-2026-11-13.md:48` (n=120). O item 5 do smoke é opcional.
 
 ## 7. Riscos & compatibilidade
