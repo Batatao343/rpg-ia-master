@@ -10,6 +10,8 @@ import { Pressable } from "../design/primitives";
 import { TurnStatus } from "./TurnStatus";
 import { useTurnClock } from "../hooks/useTurnClock";
 import { IDLE_TURN, type TurnWait } from "../turnWait";
+import { queueBase, queueButtonActive } from "../queuedAction";
+import { useQueuedAction } from "../hooks/useQueuedAction";
 import { useComposerHeight } from "../hooks/useComposerHeight";
 import { composerHeight, shouldSubmitOnKey } from "./composerKeys";
 import { Icon } from "../design/icons";
@@ -126,6 +128,8 @@ export function focusComposerTarget(deckLocked: boolean, focusInput: () => void,
  *  O rascunho vive em memória por game_id (R7/R8, §8 P3 — nunca em disco). */
 export const Composer = forwardRef<HTMLTextAreaElement, {
   data: GameResponse | null;
+  /** SPEC-427: dono da sessão (a fila confere se há ação pendente gravada antes de enviar). */
+  owner?: string;
   busy: boolean;
   blocked: boolean;
   reactionCardId?: string;
@@ -139,7 +143,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
   deckLocked?: boolean;
   /** SPEC-347 R18.3: com o tabuleiro aberto, o atalho de foco do composer leva ao painel de Combate. */
   onFocusCombat?: () => void;
-}>(function Composer({ data, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry, deckLocked = false, onFocusCombat }, inputRef) {
+}>(function Composer({ data, owner, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry, deckLocked = false, onFocusCombat }, inputRef) {
   const gameId = data?.game_id;
   const formRef = useRef<HTMLFormElement>(null);
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -154,6 +158,9 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
       return next;
     });
   };
+  const base = queueBase(data, turn, busy, blocked, deckLocked);
+  const queue = useQueuedAction({ base, owner, onAction, reactionCardId, setInput, focusInput: () => areaRef.current?.focus() });
+  const queueBtn = queueButtonActive(base);
   const voice = useVoiceInput(text => setInput(current => current ? `${current}${/\s$/.test(current) ? "" : " "}${text}` : text), gameId);
   const voiceActive = voice.requesting || ["recording", "uploading", "transcribing"].includes(voice.phase);
   // R5: trocar de superficie com a voz ativa libera o microfone e nao envia nada.
@@ -184,8 +191,10 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
 
   function submit(e?: React.FormEvent) {
     e?.preventDefault();
-    if (busy || blocked) return;
+    if (blocked) return;
     const text = input.trim();
+    if (busy) { if (queue.enqueue(text)) setInput(""); return; } // SPEC-427: com a flag desligada, `enqueue` é falso
+    queue.clearNote();
     if (!text) return;
     // Explicit text submission cancels any outstanding capture/transcript.
     if (voiceActive) voice.cancel();
@@ -197,13 +206,20 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
     <form ref={formRef} className={"actionbar ws-composer" + (offSurface ? " is-offsurface" : "")} onSubmit={submit}>
       <TurnStatus key={turn.seq} phases={turn.ledger.phases} current={turn.ledger.current}
         elapsedMs={turn.gotChunk ? 0 : elapsed} stage={turn.stage} lastError={turn.error}
-        onRetry={() => onRetry?.()}
+        onRetry={() => onRetry?.()} queueNote={queue.liveNote ?? undefined}
         onFocusInput={() => focusComposerTarget(deckLocked, () => { if (inputRef && typeof inputRef !== "function") inputRef.current?.focus(); }, onFocusCombat)()} />
       <ContextSuggestions data={data} disabled={blocked || busy || offSurface || fighting || gameOver || deathPending || simulation}
         onPick={(text) => { setInput(text); areaRef.current?.focus(); }} />
       {deckLocked ? (
         <p className="composer-locked" role="note">Na luta, você age pelas cartas do tabuleiro.</p>
       ) : (
+      <>
+      {queue.queued !== null && (
+        <div className="queued-action" role="group" aria-label={`Ação na fila: ${queue.queued}`}>
+          <span className="queued-action__text"><span className="queued-action__label">Na fila:</span> {queue.queued}</span>
+          <button type="button" className="btn btn--ghost queued-action__remove" onClick={queue.remove}>Tirar da fila</button>
+        </div>
+      )}
       <div className="actionbar__composer">
       <textarea
         ref={setAreaRef}
@@ -233,7 +249,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
               : "O que você faz?"
         }
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => { queue.clearNote(); setInput(e.target.value); }}
       />
       <button className="btn voice-button" type="button"
         disabled={blocked || (voice.phase !== "recording" && (busy || voiceActive))}
@@ -243,11 +259,13 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
         {voice.phase === "recording" ? "Parar" : "Voz"}
       </button>
       {/* SPEC-201 A13 / SPEC-320 R4: nome acessível = texto visível; depois do ack, "Aguardando o narrador". */}
-      <Pressable variant="primary" type="submit" effect="chat.pending" disabled={busy || blocked}
-        pending={busy} pendingLabel={turn.acked ? "Aguardando o narrador" : undefined}>
-        {fighting ? "Lutar" : "Agir"}
+      <Pressable variant="primary" type="submit" effect="chat.pending" disabled={(busy && !queueBtn) || blocked}
+        pending={busy && !queueBtn} pendingLabel={turn.acked ? "Aguardando o narrador" : undefined}>
+        {queueBtn ? "Pôr na fila" : fighting ? "Lutar" : "Agir"}
       </Pressable>
       </div>
+      {queue.note && <p className="composer-hint" aria-hidden="true">{queue.note}</p>}
+      </>
       )}
       {simulation && fighting && !blocked && (
         <p className="composer-hint">Texto livre executa um ataque básico; use os controles para ações precisas.</p>

@@ -515,7 +515,7 @@ export function App() {
       const clearOwnPending = () => { clearPendingIfOwn(user, gid, operation.operation_id); };
       echoId = pushLog(operation.payload.input_text, "player", "STORY");
       setTurn(t => ({ ...t, ledger: addPhase(t.ledger, PHASE_TEXTS.campaign_manager) }));
-      let hadChunks = false;
+      let hadChunks = false, replaced = false;
       const latency = new TurnLatencyTracker(operation.operation_id, "stream");
       const reportLatency = () => void reportClientLatency(latency.summary(), api.sendClientLatency);
       try {
@@ -536,13 +536,14 @@ export function App() {
               appendChunk(chunk, done, live);
             }
           },
-          onReset: () => { if (active()) resetStreamText(); },
-          onReplace: text => { if (active()) replaceStreamText(text); },
+          onReset: () => { if (active()) { replaced = true; resetStreamText(); } },
+          onReplace: text => { if (active()) { replaced = true; replaceStreamText(text); } },
         }, requestOptions);
         clearOwnPending();
         reportLatency();
         if (!active()) return;
         setPending(null);
+        setTurn(t => ({ ...t, delivered: hadChunks && !replaced })); // SPEC-427 R9
         const entryId = hadChunks ? finishStreamEntry(r) : onTurn(r);
         if (hadChunks) setData(r);
         void refreshTurnCost(gid, operation.operation_id, entryId, generation, user);
@@ -604,7 +605,7 @@ export function App() {
       if (active()) {
         setThinking(false); setBusy(false);
         // state (ou erro sem narração) destrava; só "falhou depois da narração" permanece para o retry.
-        setTurn(t => (t.stage === "failed-after-narration" ? t : { ...IDLE_TURN, seq: t.seq, error: t.error }));
+        setTurn(t => (t.stage === "failed-after-narration" ? t : { ...IDLE_TURN, seq: t.seq, error: t.error, delivered: t.delivered }));
       }
     }
   }

@@ -70,9 +70,11 @@ export interface TurnWait {
   gotChunk: boolean;
   /** Último erro do turno; some no próximo envio. */
   error: { msg: string; kind: "error" | "warn" | "info"; requestId?: string } | null;
+  /** SPEC-427 R9: o turno fechou pelo caminho de sucesso do stream, com a narração mostrada e NÃO substituída. */
+  delivered: boolean;
 }
 
-export const IDLE_TURN: TurnWait = { seq: 0, ledger: EMPTY_LEDGER, stage: "idle", acked: false, gotChunk: false, error: null };
+export const IDLE_TURN: TurnWait = { seq: 0, ledger: EMPTY_LEDGER, stage: "idle", acked: false, gotChunk: false, error: null, delivered: false };
 
 /** Capitular (R11): só em abertura (1ª narração da sessão ou 1ª após trocar de local) e nunca sobre pontuação. */
 export function openingAllowed(text: string, opening: boolean): boolean {

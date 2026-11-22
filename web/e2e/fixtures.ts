@@ -104,6 +104,8 @@ export class DeterministicBackend {
   expectedConsole: RegExp[] = [];
   operations = new Map<string, { signature: string; response: GameResponse; gameId: string; ownerId: string }>();
   failNextTurn = false;
+  /** SPEC-427: `/auth/config` anuncia `action_queue: true` (RPG_ACTION_QUEUE=on no servidor). */
+  actionQueue = false;
   /** SPEC-205: ações estruturadas de combate ferem o alvo (-4 Vitalidade) em vez de encerrar o combate. */
   combatHits = false;
   /** SPEC-205 R9: alvos que o servidor já considera inválidos (cliente com estado velho) → `invalid_target`. */
@@ -296,7 +298,8 @@ export class DeterministicBackend {
     const body = this.parseBody(route);
     this.requests.push({ path, method: request.method(), body });
 
-    if (path === "/auth/config") return this.json(route, { required: this.authRequired, authenticated: this.authenticated, user_id: this.authenticated ? this.userId : undefined });
+    if (path === "/auth/config") return this.json(route, { required: this.authRequired, authenticated: this.authenticated, user_id: this.authenticated ? this.userId : undefined,
+      ...(this.actionQueue ? { action_queue: true } : {}) });
     if (path === "/auth/signup" || path === "/auth/login") { this.authenticated = true; return this.json(route, { authenticated: true, csrf_token: "fixture" }); }
     if (path === "/auth/logout" || path === "/auth/refresh/logout") { this.authenticated = false; return this.json(route, null); }
     if (path === "/auth/refresh") {

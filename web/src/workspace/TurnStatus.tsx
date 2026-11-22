@@ -17,13 +17,15 @@ export interface TurnStatusProps {
   onRetry: () => void;
   /** Devolve o foco ao input quando um botão de espera some (P2-5). */
   onFocusInput?: () => void;
+  /** SPEC-427 R14: anúncio da fila, concatenado ao texto da região viva única. */
+  queueNote?: string;
 }
 
 const REASSURE_TEXT = "A noite é longa; o narrador pondera…";
 
 /** SPEC-320 R1–R3/R13. A ÚNICA região viva é o `<span role="status">` (só fase atual/aviso, sem reler o
  *  livro-razão); o livro-razão e os botões ficam fora dela e o erro é anunciado só pelo banner (`aria-hidden` aqui). */
-export function TurnStatus({ phases, current, elapsedMs, stage, lastError, onKeepWaiting, onRetry, onFocusInput }: TurnStatusProps) {
+export function TurnStatus({ phases, current, elapsedMs, stage, lastError, onKeepWaiting, onRetry, onFocusInput, queueNote }: TurnStatusProps) {
   const [kept, setKept] = useState(false);
   const waiting = stage === "waiting";
   const tier = waiting ? waitTier(elapsedMs) : "none";
@@ -35,12 +37,13 @@ export function TurnStatus({ phases, current, elapsedMs, stage, lastError, onKee
     : stage === "failed-after-narration" ? "Não salvo. A narração acima ainda não foi registrada."
     : waiting ? [tier !== "none" ? REASSURE_TEXT : "", current ?? ""].filter(Boolean).join(" ") : "";
 
+  const liveText = [live, queueNote].filter(Boolean).join(" ");
   const act = (fn?: () => void) => () => { fn?.(); onFocusInput?.(); };
   const visible = showLedger || waiting || stage === "failed-after-narration" || showError;
 
   return (
     <>
-      <span className="sr-only" aria-live="polite" aria-atomic="true">{live}</span>
+      <span className="sr-only" aria-live="polite" aria-atomic="true">{liveText}</span>
       {visible && (
         <div className="turn-status" data-stage={stage}>
           {showLedger && (

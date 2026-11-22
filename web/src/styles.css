@@ -658,6 +658,11 @@ select {
 /* SPEC-321 R10: compositor multilinha — cresce até 4 linhas (altura calculada no Composer), depois rola. */
 .actionbar textarea { resize: none; min-height: 2.6rem; line-height: 1.4; overflow-y: auto; align-self: flex-end; }
 .composer-hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+/* SPEC-427 R5: a ação na fila — uma linha com reticências e o botão de tirar (alvo >= 44 px). */
+.queued-action { display: flex; align-items: center; gap: 0.5rem; min-width: 0; border: 1px solid var(--line-soft); border-radius: var(--r-sharp); padding: 0 0.4rem 0 0.7rem; }
+.queued-action__text { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.queued-action__label { color: var(--muted); }
+.queued-action__remove { flex: none; min-width: 44px; min-height: 44px; }
 .actionbar .btn { flex: none; }
 /* Follow-up staging: rótulo ocupado ("Aguardando o narrador") não pode espremer o textarea nem vazar à direita. */
 .actionbar textarea { min-width: 7rem; }

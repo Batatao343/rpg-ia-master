@@ -5,6 +5,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, type DeterministicBackend } from "./fixtures";
 import type { Page } from "@playwright/test";
+import { installControlledSse, ev, push, closeSse, sseReqs, waitSseReqs, finalState } from "./sseControl";
 
 test.beforeEach(async ({ backend }) => {
   backend.allowFailure(/fonts\.(googleapis|gstatic)\.com/);
@@ -29,40 +30,6 @@ async function a11y(page: Page, label: string) {
   const result = await new AxeBuilder({ page }).analyze();
   const blocking = result.violations.filter((v) => v.impact === "critical" || v.impact === "serious");
   expect(blocking, `${label}: ` + blocking.map((v) => `${v.id}: ${v.help}`).join("\n")).toEqual([]);
-}
-
-// ---- SSE controlado (SPEC-316 §3.1) ---------------------------------------------------------------
-type SseWindow = Window & { __sseReqs: Array<Record<string, unknown>>; __sse: { push(t: string): void; close(): void } };
-
-/** Chamar ANTES do `goto`: troca o fetch de `/game/action/stream` por um stream que o teste empurra. */
-async function installControlledSse(page: Page) {
-  await page.addInitScript(() => {
-    const w = window as unknown as SseWindow;
-    w.__sseReqs = [];
-    const orig = window.fetch.bind(window);
-    window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = typeof input === "string" ? input : input instanceof Request ? input.url : String(input);
-      if (!url.includes("/game/action/stream")) return orig(input, init);
-      w.__sseReqs.push(JSON.parse(String(init?.body ?? "{}")));
-      const enc = new TextEncoder();
-      let ctrl!: ReadableStreamDefaultController<Uint8Array>;
-      const body = new ReadableStream<Uint8Array>({ start(c) { ctrl = c; } });
-      w.__sse = { push: (t: string) => ctrl.enqueue(enc.encode(t)), close: () => ctrl.close() };
-      return Promise.resolve(new Response(body, { status: 200, headers: { "Content-Type": "text/event-stream" } }));
-    };
-  });
-}
-const ev = (name: string, data: unknown) => `event: ${name}\ndata: ${JSON.stringify(data)}\n\n`;
-const push = (page: Page, text: string) => page.evaluate((t) => (window as unknown as SseWindow).__sse.push(t), text);
-const closeSse = (page: Page) => page.evaluate(() => (window as unknown as SseWindow).__sse.close());
-const sseReqs = (page: Page) => page.evaluate(() => (window as unknown as SseWindow).__sseReqs);
-async function waitSseReqs(page: Page, n: number) {
-  await expect.poll(async () => (await sseReqs(page)).length).toBe(n);
-}
-/** `state` final: o estado atual do jogo com a narração final (como o api.py). */
-async function finalState(page: Page, message: string) {
-  const state = await page.evaluate(async () => (await fetch("/game/state?game_id=game-a")).json());
-  return { ...state, message, message_type: "STORY" };
 }
 
 for (const [width, height] of [[1440, 900], [390, 844]] as const) {

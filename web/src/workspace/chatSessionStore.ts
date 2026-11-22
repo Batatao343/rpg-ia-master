@@ -4,6 +4,8 @@ export interface ChatSession {
   scrollTop: number | null;
   atBottom: boolean;
   reactionCardId?: string;
+  /** SPEC-427 R11: ação na fila (só memória; nunca disco). */
+  queued?: string;
 }
 
 const sessions = new Map<string, ChatSession>();

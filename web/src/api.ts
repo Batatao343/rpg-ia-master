@@ -21,6 +21,7 @@ import type {
 
 import { formatDetail, http, HttpError, playInfo, rateLimitNotice, uploadAudio } from "./http";
 import { setClientLatencyReport } from "./lib/turnLatency";
+import { setActionQueueEnabled } from "./queuedAction";
 import { messageFor } from "./lib/errorMessages";
 import { reportClientError } from "./lib/clientErrors";
 export { HttpError } from "./http";
@@ -42,12 +43,14 @@ export interface AuthConfig {
   user_id?: string;
   lifecycle_available?: boolean;
   client_latency_report?: boolean;
+  action_queue?: boolean;
   email_confirmation_required?: boolean;
   captcha?: { required: boolean; site_key: string | null; provider: "turnstile"; mode?: "app" | "gotrue" };
 }
 export interface AuthResponse { authenticated: boolean; csrf_token?: string; message?: string }
 export const getAuthConfig = () => req<AuthConfig>("/auth/config").then((config) => {
   setClientLatencyReport(config.client_latency_report === true);   // SPEC-200 R10
+  setActionQueueEnabled(config.action_queue === true);             // SPEC-427 R3
   return config;
 });
 export const login = (email: string, password: string, captchaToken?: string) =>
