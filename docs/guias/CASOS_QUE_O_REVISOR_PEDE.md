@@ -34,6 +34,7 @@ Regras:
 - Guard de boot/config de produção: o checklist de release recusa o marcador de staging também, não só a flag perigosa (defesa em duas camadas) (SPEC-411 P2-1)
 - Guard mais largo que o uso documentado: um caso parametrizado com os valores "quase válidos" (`"true"`, `" 1 "`) (SPEC-411 P3-3)
 - Rota nova num arquivo já inventariado pelo teste AST: o inventário chaveia por `arquivo::símbolo`, senão passa sem revisão (SPEC-410 P3-3)
+- Teste de CLI com `--confirm-spend` (provider pago) sempre troca o gerador por um fake que falha se chamado e redireciona a saída: guard que regride não pode virar chamada real com a chave do ambiente (SPEC-425 delta P2-3, `tests/test_image_model_measure.py:149`)
 
 ## persistência
 
