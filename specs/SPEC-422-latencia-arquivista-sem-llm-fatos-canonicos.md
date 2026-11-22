@@ -368,7 +368,7 @@ Antes do 1º teste: ler as seções `persistência` e `llm-structured` de
 - [x] `tests/test_size_budget.py` verde sem `--update` em `archivist.py`/`storyteller.py`
 - [x] `RPG_ARCHIVE_RECORD` em `config/flags.yaml`, default `off`
 - [x] `memory_context` `compare` `off`×`on` sem piora de hard gate (R12a)
-- [ ] `uv run pytest` verde (suíte completa offline, coordenador no pouso)
+- [x] Suíte completa no pouso (22/11, `FULL_N=2 full.sh`, rebaseada sobre a SPEC-421): 11855 passed, 330 skipped, 2 xfailed, rc=0
 - [x] Guard de FallbackLLM intacto no caminho do LLM (R10); nenhum `with_structured_output` novo
 - [x] Saves antigos continuam carregando (I4)
 - [ ] Promoção a `on` em staging **só** depois de: R12(b) pousado e sem piora; `shadow` com ≥ 20 descansos e 0 exceção; A/B de §6 com mediana de "pode agir" do descanso ≥ 3 s menor; leitura do dono de 5 pares (resumo do LLM × registro) do mesmo save
