@@ -35,12 +35,13 @@ def token_stream_mode() -> TokenStreamMode:
 
 
 class _Binding:
-    __slots__ = ("sink", "emitted", "state_getter")
+    __slots__ = ("sink", "emitted", "state_getter", "observer")
 
     def __init__(self, sink: Sink, state_getter: Callable[[], Any] | None = None) -> None:
         self.sink = sink
         self.emitted = False
         self.state_getter = state_getter
+        self.observer: Callable[[str, str], None] | None = None  # SPEC-421: "delta"|"reset"|"hold"
 
 
 _SINK: ContextVar[_Binding | None] = ContextVar("rpg_narrative_sink", default=None)
@@ -59,8 +60,41 @@ def unbind(token: Token) -> None:
         _SINK.set(None)
 
 
+def bind_tap(observer: Callable[[str, str], None], *, forward: bool) -> Token:
+    """SPEC-421: sink aninhado que OBSERVA o que o narrador emite (e a regra do 1o hold).
+    `forward=True` repassa ao sink externo (a API segue vendo o mesmo); `False` (shadow) o
+    isola: o externo nao recebe delta nem reset. `unbind(token)` restaura o externo."""
+    outer = _SINK.get()
+
+    def tap(kind: str, text: str) -> None:
+        if not forward or outer is None:
+            return
+        if kind == "delta":
+            outer.emitted = True
+        elif kind == "reset":
+            if not outer.emitted:
+                return
+            outer.emitted = False
+        try:
+            outer.sink(kind, text)
+        except Exception:  # silent-ok: o canal de exibicao nunca derruba o turno
+            pass
+
+    binding = _Binding(tap, outer.state_getter if outer is not None else None)
+    binding.observer = observer
+    return _SINK.set(binding)
+
+
 def active() -> bool:
     return _SINK.get() is not None
+
+
+def _observe(binding: _Binding, kind: str, text: str) -> None:
+    if binding.observer is not None:
+        try:
+            binding.observer(kind, text)
+        except Exception:  # silent-ok: observador de telemetria nunca derruba o turno
+            pass
 
 
 def emit(text: str) -> None:
@@ -68,6 +102,7 @@ def emit(text: str) -> None:
     if binding is None or not text:
         return
     binding.emitted = True
+    _observe(binding, "delta", text)
     try:
         binding.sink("delta", text)
     except Exception:  # silent-ok: o canal de exibicao nunca derruba o turno
@@ -80,6 +115,7 @@ def reset() -> None:
     if binding is None or not binding.emitted:
         return
     binding.emitted = False
+    _observe(binding, "reset", "")
     try:
         binding.sink("reset", "")
     except Exception:  # silent-ok: o canal de exibicao nunca derruba o turno
@@ -186,6 +222,9 @@ class StreamGuard:
         if self._hold_logged:
             return
         self._hold_logged = True
+        binding = _SINK.get()
+        if binding is not None:
+            _observe(binding, "hold", rule)
         try:
             from observability.telemetry import log_event
 
@@ -318,6 +357,21 @@ def _risk_checker(state: Any, acquisition: bool = False):
     return lazy
 
 
+def _compose_risk(extra: Callable[[str], str] | None, base: Callable[[str], str] | None):
+    """SPEC-421: risco extra (gate de segredo da mediacao) primeiro, depois o de evidencia; o
+    1o nao-vazio vence. Excecao em qualquer um segura a frase (`check_error`)."""
+    if extra is None:
+        return base
+
+    def composed(sentence: str) -> str:
+        try:
+            return str(extra(sentence) or "") or (str(base(sentence) or "") if base else "")
+        except Exception:  # silent-ok: fail-closed, a frase fica para o texto final
+            return "check_error"
+
+    return composed
+
+
 def narrate_structured(
     llm: Any,
     schema: type,
@@ -333,6 +387,7 @@ def narrate_structured(
     min_words: int = 0,
     evidence_state: Any = None,
     hold_acquisition: bool = False,
+    extra_risk: Callable[[str], str] | None = None,
 ):
     """`with_structured_output(schema).invoke(messages)`, com tokens ao vivo quando ha sink.
 
@@ -348,7 +403,7 @@ def narrate_structured(
         finalize=finalize,
         hold_extra=hold_extra,
         min_words=min_words,
-        risk=_risk_checker(evidence_state or state, hold_acquisition),
+        risk=_compose_risk(extra_risk, _risk_checker(evidence_state or state, hold_acquisition)),
     )
     reset()  # outro no narrador no mesmo turno: recomeca limpo
 

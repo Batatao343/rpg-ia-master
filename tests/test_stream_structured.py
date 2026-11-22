@@ -233,11 +233,12 @@ def _loaded_state(client):
     return persistence.load_game_state(persistence.save_path(gid))
 
 
-def test_mediated_narration_is_never_streamed(client):
-    """P1-1: o guard de segredo (SPEC-202 R11) so roda no texto final => nada ao vivo."""
+def test_mediated_narration_is_never_streamed(client, monkeypatch):
+    """P1-1: com `RPG_MEDIATED_STREAM=off` (SPEC-421) o guard de segredo so roda no final."""
     from agents.storyteller import storyteller_node
     from services import interlocutor
 
+    monkeypatch.setenv("RPG_MEDIATED_STREAM", "off")
     state = _loaded_state(client)
     state["interlocutor_reason"] = sorted(interlocutor.MEDIATION_REASONS)[0]
     events, token = _collect()

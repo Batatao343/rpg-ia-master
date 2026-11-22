@@ -341,6 +341,16 @@ capturando o SSE bruto.
   atribuição dos 8 turnos à mediação vem do código (`first_token_server_ms: null` + rota storyteller), não do
   log. O evento R8 confirma no `shadow` quantos turnos são de fato mediados.
 
+## Diário de implementação (executor, 22/11)
+
+- Teste da Etapa 1.1 (`test_mediated_turn_streams_before_end`) falhou antes da mudança (`stream_calls == 0`) e passa depois.
+- Desvios de assinatura (comportamento igual ao da §3): `narrate(plan, fn, *args, **kwargs)` repassa `stream`/`extra_risk` a
+  `fn` (o storyteller não precisa de lambda; saldo de linhas ≤ 0); `after_final(final_text, scene_state, state)` recebe o
+  `state` (calcula o `conceal_map` do mesmo jeito que o guard); `stream_plan` em `on` também exige sink ativo (o sink
+  aninhado do tap ligaria o stream sozinho sem API); `narrative_sink` ganhou `bind_tap(observer, forward=)` e
+  `_Binding.observer` (registra mostrado/1º delta/regra do 1º hold sem tocar o sink da API; `shadow` isola).
+- Telemetria R8 reutiliza `narrative_sink.replace_reason`.
+
 ## 7. Riscos & compatibilidade
 
 - **Vazamento ao vivo:** o risco central. Mitigação: mesma função e mesmo estado do filtro final (R3, I6), frase

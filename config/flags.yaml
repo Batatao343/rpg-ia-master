@@ -643,6 +643,12 @@ RPG_LORE_QUESTS:
   spec: SPEC-313
   expires: 2027-01-25
   note: "quests de lore"
+RPG_MEDIATED_STREAM:
+  kind: release
+  default: "off"
+  spec: SPEC-421
+  expires: 2027-02-13
+  note: "texto ao vivo na narração mediada, frase a frase com o filtro de segredo (off|shadow|on)"
 RPG_MEMORY_STORE:
   kind: config
   default: null

@@ -378,6 +378,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `sse.early_narrative_shadow` | `gain_ms`, `identical` |
 | `sse.error` | `code`, `error_type`, `stack`, `status` |
 | `sse.fallback` | — |
+| `sse.mediated_stream` | `final_len`, `first_delta_ms`, `held_rule`, `leak`, `mode`, `reason`, `replace_reason`, `shown_len`, `would_replace` |
 | `sse.started` | `transport` |
 | `sse.stream_risk_hold` | `chars_shown`, `rule`, `sentence_index` |
 | `sse.token_replace` | `common_prefix_len`, `final_len`, `reason`, `shown_len` |

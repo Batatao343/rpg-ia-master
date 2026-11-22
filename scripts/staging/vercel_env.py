@@ -89,6 +89,7 @@ OPTIONAL_FLAGS = (
     "RPG_PROMPT_STATIC_FIRST",
     "RPG_EARLY_NARRATIVE",
     "RPG_TOKEN_STREAM",
+    "RPG_MEDIATED_STREAM",
     "RPG_LLM_HEDGE_MS",
     "RPG_NPC_TWO_PHASE",
     "RPG_REPLAN_AFTER",
@@ -155,6 +156,7 @@ WORLD_FLAGS = (
     "RPG_ROUTER_DETERMINISTIC_NPC",  # SPEC-317 R2: off|shadow|on (ausente = shadow)
     "RPG_EARLY_NARRATIVE",  # SPEC-316: off|shadow|on (ausente = shadow)
     "RPG_TOKEN_STREAM",  # SPEC-319 R8: off|shadow|on (ausente = shadow)
+    "RPG_MEDIATED_STREAM",  # SPEC-421 R1: off|shadow|on (ausente = off)
     "RPG_LLM_HEDGE_MS",  # SPEC-319 R5: ms ate o 2o candidato (ausente = 0 = sem hedge)
     "RPG_PROMPT_STATIC_FIRST",  # SPEC-317 R9: on|off (ausente = off)
     "RPG_NPC_TWO_PHASE",  # SPEC-318 R1: off|on (ausente = on)

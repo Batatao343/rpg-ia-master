@@ -2287,17 +2287,12 @@ def _story_prompt_scene_blocks(t: _StoryTurn) -> None:
 
 def _story_narrate(t: _StoryTurn) -> None:
     """Chamada estruturada do narrador (stream) com o guard de FallbackLLM."""
-    from services import interlocutor as _interlocutor
-    from services import prose_guard
+    from services import mediated_stream, prose_guard
     from services import rumors as _rumors_mod
     from services.narrative_sink import narrate_structured
 
-    # SPEC-319 (revisao P1-1/P2-1): o guard de segredo da narracao mediada (SPEC-202 R11) e o
-    # de achado falso de boato (SPEC-315) so rodam no texto FINAL; nesses turnos nada vai
-    # ao vivo (a 316 entrega o texto ja guardado).
-    _stream_ok = not t.rumor_nothing and (
-        t.state.get("interlocutor_reason") not in _interlocutor.MEDIATION_REASONS
-    )
+    # SPEC-421: mediada so streama com o gate de segredo por frase; boato sem achado, nunca.
+    plan = mediated_stream.stream_plan(t.state, t.scene_state, rumor_nothing=t.rumor_nothing)
 
     # SPEC-223 R5: entrada do jogador delimitada como dado.
     # SPEC-319: com sink ligado (so no stream SSE) `narrative` sai token a token;
@@ -2316,12 +2311,13 @@ def _story_narrate(t: _StoryTurn) -> None:
             salt=t._open_salt,
         )
 
-    t.update = narrate_structured(
+    t.update = mediated_stream.narrate(
+        plan,
+        narrate_structured,
         t.llm,
         _story_schema_for_rumors(_rumors_mod),
         [t.sys] + guard_messages(t.messages[-3:]),
         state=t.state,
-        stream=_stream_ok,
         finalize=_stream_view,
         hold_extra=72,  # o maior padrao de saldo de ouro fecha em ~60 caracteres
         min_words=8 if t._aberturas else 0,
@@ -2351,7 +2347,7 @@ def _story_narrate(t: _StoryTurn) -> None:
 
 def _story_guard_narrative(t: _StoryTurn) -> None:
     """Pré-validação de eventos, quarentena, sanitização e mediação da narrativa."""
-    from services import prose_guard
+    from services import mediated_stream, prose_guard
 
     t.narrative_text = t.update.narrative
     _story_prevalidate_events(t)
@@ -2396,6 +2392,7 @@ def _story_guard_narrative(t: _StoryTurn) -> None:
     t.narrative_text, t.mediation_rejections = _guard_mediation_secret(
         str(t.narrative_text), t.scene_state
     )
+    mediated_stream.after_final(str(t.narrative_text), t.scene_state, t.state)
 
     # spec polish-prosa (R4): telemetria de abertura repetida (não re-tenta).
     prose_guard.log_if_repeats(
