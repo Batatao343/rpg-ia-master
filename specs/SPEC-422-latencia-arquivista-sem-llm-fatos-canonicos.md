@@ -1,6 +1,6 @@
 # SPEC-422 — latencia-arquivista-sem-llm-fatos-canonicos
 
-> **Status:** `approved` (dono, 13/11: "pode. e execute elas")
+> **Status:** `in-progress` (aprovada pelo dono em 13/11; código pousado em 22/11 com a flag `off`; revisão Sol APPROVED na rodada 2; a promoção a `on` depende de R12(b), `shadow` no staging e smoke §6)
 > **Criada:** 2026-11-13 · **Atualizada:** 2026-11-22
 > **Depende de:** SPEC-318 (`done`, política `lean` e marca `archive_low`), SPEC-234 (`done`, ledger de memória e retry), SPEC-309 (`done`, fatos do dia percebido). Para **pousar com `off`/`shadow`**: nada além disso. Para **promover a `on`**: a spec de autoria de eval de §2 R12 (`EVAL_AUTHORING_REQUIRED`).
 > **Desbloqueia:** follow-up opcional "resumo de conversa de NPC sem IA" (só se o dono quiser; ver §8 D2)
@@ -362,15 +362,15 @@ Antes do 1º teste: ler as seções `persistência` e `llm-structured` de
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R11 cobertos pelos testes nomeados em §4; I1–I8 verdes
-- [ ] `test_descanso_nao_chama_llm_do_arquivista` falhou antes da Etapa 3 (registrar no hand-back) e passa depois
-- [ ] `off` byte a byte igual ao HEAD (I1)
-- [ ] `tests/test_size_budget.py` verde sem `--update` em `archivist.py`/`storyteller.py`
-- [ ] `RPG_ARCHIVE_RECORD` em `config/flags.yaml`, default `off`
-- [ ] `memory_context` `compare` `off`×`on` sem piora de hard gate (R12a)
+- [x] R1–R11 cobertos pelos testes nomeados em §4; I1–I8 verdes
+- [x] `test_descanso_nao_chama_llm_do_arquivista` falhou antes da Etapa 3 (registrar no hand-back) e passa depois
+- [x] `off` byte a byte igual ao HEAD (I1)
+- [x] `tests/test_size_budget.py` verde sem `--update` em `archivist.py`/`storyteller.py`
+- [x] `RPG_ARCHIVE_RECORD` em `config/flags.yaml`, default `off`
+- [x] `memory_context` `compare` `off`×`on` sem piora de hard gate (R12a)
 - [ ] `uv run pytest` verde (suíte completa offline, coordenador no pouso)
-- [ ] Guard de FallbackLLM intacto no caminho do LLM (R10); nenhum `with_structured_output` novo
-- [ ] Saves antigos continuam carregando (I4)
+- [x] Guard de FallbackLLM intacto no caminho do LLM (R10); nenhum `with_structured_output` novo
+- [x] Saves antigos continuam carregando (I4)
 - [ ] Promoção a `on` em staging **só** depois de: R12(b) pousado e sem piora; `shadow` com ≥ 20 descansos e 0 exceção; A/B de §6 com mediana de "pode agir" do descanso ≥ 3 s menor; leitura do dono de 5 pares (resumo do LLM × registro) do mesmo save
 
 ## 6. Smoke test com LLM real
@@ -396,7 +396,13 @@ Staging (`Requer: staging`):
 
 ## Não rodou e por quê
 
-- Spec em `draft`: nada foi executado além de leitura de código e da contagem em `resultado.json` (Grep).
+- **Smoke §6, fase `shadow` e A/B (staging):** não rodaram. O staging está em `d7aa4beb` (10/11) e o próximo deploy depende
+  de o dono aplicar as migrações das SPEC-413/410 (`ESTADO_ATUAL.md` § Bloqueios).
+- **CI pré-pouso de risco `alto`:** não rodou. Push de branch `spec-NNN` não está autorizado pelo dono; a suíte completa
+  local e a revisão Sol com 23 mutações substituem.
+- **Revisão Sol (22/11):** rodada 1 `APPROVED_WITH_FOLLOWUPS` (P2-1 e P3-1..4), tratados em `f1caa481`; rodada 2 `APPROVED`
+  (`handoffs/SPEC-422-sol-review.md`). O playtest da Etapa 5 e o `evals run` de R12(a) foram rodados só pelo executor.
+- Da escrita da spec: nada foi executado além de leitura de código e da contagem em `resultado.json` (Grep).
 - O caminho hospedado (Postgres + pgvector) não roda nesta máquina (D-36). O registro
   determinístico não muda a gravação vetorial, que é a mesma `persist_records`. O smoke §6 itens 5–6
   em staging cobre.
