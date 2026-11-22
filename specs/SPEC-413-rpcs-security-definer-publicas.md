@@ -1,6 +1,6 @@
 # SPEC-413 — rpcs-security-definer-publicas
 
-> **Status:** `in-progress` (11/11: migração, rollback, pgTAP e consumidores na `main`; revisão Sol APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-413-sol-review.md`, P2-1 aplicado (smoke exige 404 `PGRST202`); SQL novo ainda NÃO executado em Postgres: falta aplicar no staging com as pré-checagens PC-1..PC-4 e registrar a evidência R6) · antes `in-review` (11/11: código e SQL entregues; aplicação no staging, advisor e smoke pendentes do coordenador) · antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
+> **Status:** `in-progress` (22/11: migração aplicada no staging, `to_regprocedure` nulo, `anon` 3× `404 PGRST202`, advisor sem o lint, pgTAP verde no `audit-local` do CI (run 45069467628); **faltam dois critérios sem como rodar nesta máquina**: as 3 RPCs com JWT de usuário (`smoke_ab.py` não loga com Turnstile real) e `rollback.sql` num Postgres local; evidência em `docs/spec413/README.md`) · antes (11/11: migração, rollback, pgTAP e consumidores na `main`; revisão Sol APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-413-sol-review.md`, P2-1 aplicado (smoke exige 404 `PGRST202`); SQL novo ainda NÃO executado em Postgres: falta aplicar no staging com as pré-checagens PC-1..PC-4 e registrar a evidência R6) · antes `in-review` (11/11: código e SQL entregues; aplicação no staging, advisor e smoke pendentes do coordenador) · antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma (independente da SPEC-410; ordem de timestamps em §3)
 > **Desbloqueia:** nada
@@ -70,12 +70,12 @@ Aplicar no staging, rodar `smoke_ab.py` atualizado e `get_advisors` (R6). Revis�
 
 ## 5. Critérios de aceite
 
-- [ ] R0 registrado: nenhum chamador de produto, nenhum dependente em `pg_depend`/`pg_policies`.
+- [x] R0 registrado: nenhum chamador de produto, nenhum dependente em `pg_depend`/`pg_policies`.
 - [ ] `npx supabase test db`: o pgTAP novo falha antes e passa depois; os pgTAP existentes continuam verdes.
-- [ ] Migração nova aplicada sem editar nenhuma antiga; `to_regprocedure` das 3 nulo no local e no staging.
+- [x] Migração nova aplicada sem editar nenhuma antiga; `to_regprocedure` das 3 nulo no local e no staging. (staging 22/11; "local" = Postgres do `audit-local`)
 - [ ] Testes locais reescritos verdes; `test_spec191_migrations.py` verde sem mudança.
 - [ ] `smoke_ab.py` atualizado: RPC antiga responde ≥ 400 para A e anon; A×B da carteira provado pelo backend.
-- [ ] `get_advisors(security)` no staging sem `authenticated_security_definer_function_executable` (evidência em `docs/spec413/README.md`).
+- [x] `get_advisors(security)` no staging sem `authenticated_security_definer_function_executable` (evidência em `docs/spec413/README.md`).
 - [ ] `docs/spec413/rollback.sql` testado no local.
 - [ ] `uv run pytest` verde (suíte completa, 1× no pouso); revisão `spec-reviewer` APPROVED.
 

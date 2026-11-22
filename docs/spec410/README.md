@@ -53,7 +53,11 @@ remoto** (migração, flag em `shadow`/`on` e smoke do staging são do coordenad
   `spec219_owner_turn_minute` (21 turnos levaram 176 s, então nunca houve 20 no mesmo minuto), `spec220_lockout`
   (11× 403: o script manda o token de teste do captcha e o staging usa Turnstile real) e `spec222_export`
   (reauth 401, mesma causa provável).
-- **Etapas 3 a 5 (`shadow` → janela → `on`):** ver o registro do deploy abaixo, quando houver.
+- **pgTAP:** não rodou contra o staging (extensão `pgtap` não instalada lá). Os cinco arquivos de `supabase/tests`
+  passam no `audit-local` do CI (run 45069467628, Postgres com todas as migrações).
+- **Etapa 3 (`shadow`):** `RPG_RLS_STRICT_PRINCIPAL=shadow` entrou no preset (`45d569cb`) e no deploy `6a1f483b`
+  de 22/11, ~21:33 UTC. Gates: `post_deploy_smoke`, `vercel_smoke` e `e2e_session` verdes.
+- **Etapas 4 e 5 (janela → `on`):** ver abaixo.
 
 ## Rollback
 

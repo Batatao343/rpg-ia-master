@@ -146,7 +146,17 @@ e `vercel_env.NON_SECRET_LITERALS["RPG_SPEECH_PRICING_VERSION"]`/`DYNAMIC_ART_PR
 - Passo 4: `pricing_versions` `spec409-staging-2026-11-13` = `2026-11-13-v1`, `bd1d2942`, `2026-11-13`; profiles
   `…-portrait` (1024x1536) e `…-scene` (1536x1024), `gpt-image-2-2026-04-21`, teto 0,08, `expires_at` 2027-02-20;
   SKU `spec409-staging-2026-11-13-sku`.
-- Passos 5 e 6 (`vercel_env.py`, deploy e smoke §6): ver abaixo, quando houver.
+- Passo 5: `vercel_env.py` falhou com `403 forbidden`: o `VERCEL_TOKEN` do `.env.staging` perdeu o escopo do time
+  em 14/11 (trocar o token é ação do dono). As 46 variáveis não secretas que o script calcula foram enviadas pela
+  CLI logada (`vercel env add NOME production --force`, valor no stdin); as 15 de segredo não foram tocadas.
+- Passo 6: deploy `6a1f483b` (`/health` com o sha, `hardened: true`); `post_deploy_smoke`, `vercel_smoke` e
+  `e2e_session` verdes. Smoke §6:
+  1. `POST /game/{id}/art/quote` (retrato) = 200 com `pricing_version` `spec409-staging-2026-11-13`. O kill switch
+     `image_generation` fica desligado no staging; foi ligado só para a cotação e desligado em seguida (auditoria
+     `coordenador-claude`, 21:47 UTC). Nenhuma imagem gerada. Oferta de retrato no combate: não conferida.
+  2. STT (`voice_smoke.py`): 200, provider `groq`, reserva `settled`, cobrança exata.
+  3. `POST /internal/cron/finops` = 200, `ok: true`, `stale_rate_cards` vazio, 0 alertas bloqueantes (a avaliação
+     das 21:00 UTC, antes do deploy, ainda tinha 3 `stale_rate_card`).
 
 ## Notas da revisão Sol (13/11, APPROVED_WITH_FOLLOWUPS)
 
