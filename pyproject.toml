@@ -163,6 +163,7 @@ precision = 1
 include = [
     "infrastructure",
     "state.py",
+    "state_archive.py",
     "persistence.py",
     "services/chronicle_compression.py",
     "services/creature_gen.py",

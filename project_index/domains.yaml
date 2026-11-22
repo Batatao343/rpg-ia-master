@@ -54,6 +54,7 @@ domains:
     responsibility: canonical state, events, projections, rules and persistence
     entrypoints:
       - state.py
+      - state_archive.py
       - persistence.py
     core:
       - services/event_processor.py

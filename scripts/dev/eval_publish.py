@@ -34,6 +34,7 @@ PRODUCT_FILES = {
     "api_presenters.py",
     "main.py",
     "state.py",
+    "state_archive.py",
     "persistence.py",
     "llm_setup.py",
 }

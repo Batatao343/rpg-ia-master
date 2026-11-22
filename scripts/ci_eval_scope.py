@@ -14,7 +14,7 @@ from evals.core.governance import load_protected_paths, protected_changes
 
 ZERO_SHA = "0" * 40
 AI_PREFIXES = ("agents/", "evals/", "playtest/")
-AI_FILES = {"rag.py", "llm_setup.py", "state.py", "persistence.py"}
+AI_FILES = {"rag.py", "llm_setup.py", "state.py", "state_archive.py", "persistence.py"}
 AI_SERVICE_PREFIXES = (
     "services/context_",
     "services/memory_",
