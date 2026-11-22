@@ -147,7 +147,7 @@ Verificação: `bash scripts/dev/pt.sh tests/test_embedding_guard.py tests/test_
 - [x] Nenhum chamador além de `embed_context_query_uncached` entra em `interactive_query()` (`Grep "interactive_query("`)
 - [x] Medição da Jina do §3 registrada (13/11)
 - [ ] Smoke §6 registrado (normal + forçado)
-- [ ] `uv run pytest` verde (suíte completa offline, no pouso)
+- [x] Suíte completa no pouso (22/11, `full.sh`, n=3): 11648 passed, 1 failed. A falha era `test_clock_asserts::test_repo_respeita_baseline` (dois testes novos com assert de relógio real). Corrigida só em teste (`09c78a08`, relógio falso); depois da correção rodaram os arquivos afetados e os gates (78 passed), não a suíte inteira de novo
 - [x] Guard de FallbackLLM: N/A (sem `with_structured_output` novo)
 - [x] Saves antigos continuam carregando: N/A (nada persistido)
 
