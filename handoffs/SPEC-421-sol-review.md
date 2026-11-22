@@ -1,8 +1,60 @@
 # SPEC-421 — revisão sol (review)
 
-> **Veredito:** `APPROVED`
-> **Rodadas:** re-revisão de `60ae3418`; a 1ª rodada, em `1e72a00b`, pediu mudanças (seção própria abaixo).
-> **Revisor:** Opus 5.5 / Sol (`spec-reviewer`) · **Data:** 2026-11-22 · **Commit revisado:** `60ae3418`
+> **Veredito:** `CHANGES_REQUIRED`
+> **Rodadas:** 3ª conferência em `f50204a5` (abaixo); a re-revisão de `60ae3418` aprovou; a 1ª rodada, em `1e72a00b`, pediu mudanças.
+> **Revisor:** Opus 5.5 / Sol (`spec-reviewer`) · **Data:** 2026-11-22 · **Commit revisado:** `f50204a5`
+
+## Conferência de `f50204a5` (`git diff 356ca5a0..f50204a5 -- services/ tests/`)
+
+O commit move `_compose_risk` para `services/mediated_stream.py` como `compose_risk` e troca dois
+`try/except: pass` por `swallow(...)`, para devolver as contagens de ruff do baseline.
+
+1. **Falha fechada no produto: preservada.** `compose_risk` (`services/mediated_stream.py:166-181`) tem a mesma
+   lógica de antes, e `narrate_structured` o chama no mesmo ponto (`services/narrative_sink.py:389`). Sondei com
+   `compose_risk`: `extra` que lança dá `check_error`, `base` que lança dá `check_error`, e `compose_risk(None, b)`
+   é o próprio `b`. Um `StreamGuard` cujo `base` lança mostrou `''`.
+   - **Mas nenhum teste trava isso (P1-2).** Com o mutante `mut_compose_open` (a exceção dentro de `composed`
+     vira `""`, falha aberta), `tests/test_mediated_stream.py` fica **0 falhas**. `test_gate_exception_holds_rest`
+     (`tests/test_mediated_stream.py:366-378`) só exercita o gate, que engole a própria exceção
+     (`services/mediated_stream.py:52-56`). Por isso o `except` do `composed` nunca roda em teste. A lacuna já
+     existia em `1e72a00b` e eu não a peguei na 1ª rodada.
+2. **`swallow`: não derruba o turno nem libera texto.**
+   - Não libera texto: o `StreamGuard` decide o que sai antes do `emit`. Uma exceção no sink externo só deixa de
+     entregar aquele delta, e uma no observer só deixa de medir.
+   - Não derruba o turno: `test_tap_observer_e_sink_externo_que_lancam_nao_derrubam_o_stream` está verde.
+   - **Mas pode logar conteúdo (P2-2).** `_log.exception` grava a mensagem da exceção e o traceback, a cada
+     chamada. Na sonda, `RuntimeError("pacto com valerius")` vindo do `base` apareceu inteiro na saída do log.
+   - Isso fere a convenção do projeto. `log_fallback` (`observability/telemetry.py:242-256`) existe para isso:
+     "só a classe, nunca a mensagem", 1× por (nó, motivo) no turno, e já conta em `rpg.turn.fallbacks`.
+   - Há ainda o volume: `swallow` roda por delta. Um sink externo que lança em todo delta (cliente que caiu)
+     gera um traceback por token.
+   - Não é aceitável como está. Deve logar só o tipo.
+3. **Import no topo de `narrative_sink`: sem ciclo e sem efeito.**
+   - `services/mediated_stream.py` só importa stdlib no topo (`:12-20`). O resto é import tardio dentro das
+     funções.
+   - Importar os dois módulos nas duas ordens, em processo limpo, funciona.
+   - No turno não mediado, `compose_risk(None, base)` devolve `base` e `_observe` não faz nada com
+     `observer=None`, então o caminho fica idêntico ao de antes.
+4. **Mutantes e fuzz.** Os seis mutantes anteriores dão os mesmos resultados da re-revisão: I1 cai 32/32 nos três
+   do gate, `post_veil` derruba o teste do véu e os dois do `_RUN` derrubam o teste de P3-4. O fuzz de 6.000
+   casos deu 0 vazamentos. `pt.sh -n 0 tests/test_mediated_stream.py tests/test_ruff_counts.py` deu 97 passed.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P1-2 | P1 | `tests/test_mediated_stream.py:366-378` | A falha fechada de `compose_risk` (R5/I7) não tem trava: o mutante de falha aberta passa 100 % verde. | Teste novo: `compose_risk(lambda s: "", boom)` e `compose_risk(boom, lambda s: "")` devolvem `"check_error"`, e um `StreamGuard(risk=compose_risk(lambda s: "", boom))` com `feed(CLEAN) + finish() == ""`. Conferir que reprova com `mut_compose_open`. |
+| P2-2 | P2 | `services/mediated_stream.py:163,178` | `_log.exception` grava a mensagem da exceção (pode conter frase da narração ou assinatura) e o traceback, sem dedup, por delta no `swallow`. | Trocar por `log_fallback("sse", "stream_observer_failed", exc)` no `swallow` e `log_fallback("sse", "stream_risk_compose_failed", exc)` no `composed` (import tardio, como no resto do módulo). Isso grava só a classe, 1× por turno, e mantém o `noqa: BLE001` justificado. |
+
+Evidência desta conferência:
+
+```text
+compose_probe.py → extra lança: check_error · base lança: check_error · extra None é base: True · guard com base que lança mostra: ''
+compose_probe.py → o log de _log.exception trouxe "RuntimeError: pacto com valerius" (mensagem inteira)
+mut_compose_open → 0 FAILED em tests/test_mediated_stream.py (P1-2)
+mut_post_veil 1 · mut_gate_off 51 · mut_no_gate 36 · mut_find_never 56 · mut_no_clear 1 · mut_no_except_reset 1 (iguais à re-revisão)
+fuzz421.py (6000 casos) → 0 vazamentos
+pt.sh -n 0 tests/test_mediated_stream.py tests/test_ruff_counts.py → 97 passed
+import nas duas ordens (processo limpo) → ok
+```
 
 ## Re-revisão (`git diff fb7ccb4f..60ae3418`)
 
