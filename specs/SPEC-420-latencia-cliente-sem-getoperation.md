@@ -130,7 +130,7 @@ Itens de `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md` § concorrência: todos tratam
 - [x] Falha sem narração: 0 ecos; retomada: 1 eco e 1 narração (e2e).
 - [x] `web/tests/pending.test.mjs` existente sem edição e verde; casos novos verdes.
 - [x] `npm run typecheck`, `npm run lint`, `npm test`, e2e do escopo e `size_budget.py` verdes; `App.tsx` ≤ 965 linhas.
-- [ ] `uv run pytest` verde (suíte completa offline, no pouso).
+- [x] Suíte completa no pouso (22/11, `FULL_N=2 full.sh`): 11687 passed, 330 skipped, 2 xfailed, rc=0.
 - [x] Guard de FallbackLLM: não se aplica (sem `with_structured_output` novo).
 - [x] Saves antigos continuam carregando: não há mudança de save; pending `version: 1` antigo no `localStorage` continua lido (formato inalterado, R1).
 - [ ] Smoke §6 registrado.
