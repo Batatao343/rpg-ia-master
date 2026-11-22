@@ -1,6 +1,7 @@
 # SPEC-421 — revisão sol (review)
 
-> **Veredito:** `APPROVED` (re-revisão de `60ae3418`; a 1ª rodada em `1e72a00b` foi `CHANGES_REQUIRED`)
+> **Veredito:** `APPROVED`
+> **Rodadas:** re-revisão de `60ae3418`; a 1ª rodada, em `1e72a00b`, pediu mudanças (seção própria abaixo).
 > **Revisor:** Opus 5.5 / Sol (`spec-reviewer`) · **Data:** 2026-11-22 · **Commit revisado:** `60ae3418`
 
 ## Re-revisão (`git diff fb7ccb4f..60ae3418`)
