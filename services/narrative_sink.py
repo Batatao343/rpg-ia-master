@@ -16,6 +16,7 @@ from collections.abc import Callable
 from contextvars import ContextVar, Token
 from typing import Any, Literal
 
+from services.mediated_stream import compose_risk, swallow
 from services.turn_outcome import (
     _SYSTEM_PREFIX,
     remove_receipts,  # SPEC-345 R5: mesmos padrões do texto final
@@ -75,10 +76,7 @@ def bind_tap(observer: Callable[[str, str], None], *, forward: bool) -> Token:
             if not outer.emitted:
                 return
             outer.emitted = False
-        try:
-            outer.sink(kind, text)
-        except Exception:  # silent-ok: o canal de exibicao nunca derruba o turno
-            pass
+        swallow(outer.sink, kind, text)
 
     binding = _Binding(tap, outer.state_getter if outer is not None else None)
     binding.observer = observer
@@ -91,10 +89,7 @@ def active() -> bool:
 
 def _observe(binding: _Binding, kind: str, text: str) -> None:
     if binding.observer is not None:
-        try:
-            binding.observer(kind, text)
-        except Exception:  # silent-ok: observador de telemetria nunca derruba o turno
-            pass
+        swallow(binding.observer, kind, text)
 
 
 def emit(text: str) -> None:
@@ -357,19 +352,7 @@ def _risk_checker(state: Any, acquisition: bool = False):
     return lazy
 
 
-def _compose_risk(extra: Callable[[str], str] | None, base: Callable[[str], str] | None):
-    """SPEC-421: risco extra (gate de segredo da mediacao) primeiro, depois o de evidencia; o
-    1o nao-vazio vence. Excecao em qualquer um segura a frase (`check_error`)."""
-    if extra is None:
-        return base
-
-    def composed(sentence: str) -> str:
-        try:
-            return str(extra(sentence) or "") or (str(base(sentence) or "") if base else "")
-        except Exception:  # silent-ok: fail-closed, a frase fica para o texto final
-            return "check_error"
-
-    return composed
+_compose_risk = compose_risk  # SPEC-421: vive em mediated_stream (falha fechada)
 
 
 def narrate_structured(
@@ -403,7 +386,7 @@ def narrate_structured(
         finalize=finalize,
         hold_extra=hold_extra,
         min_words=min_words,
-        risk=_compose_risk(extra_risk, _risk_checker(evidence_state or state, hold_acquisition)),
+        risk=compose_risk(extra_risk, _risk_checker(evidence_state or state, hold_acquisition)),
     )
     reset()  # outro no narrador no mesmo turno: recomeca limpo
 

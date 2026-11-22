@@ -605,3 +605,24 @@ def test_failed_turn_does_not_leak_run_into_next_after_final(monkeypatch, seen):
     seen.clear()
     _run(monkeypatch, CLEAN, mode="off")
     assert not any(ev == "mediated_stream" for _a, ev, _f in seen)
+
+
+def test_tap_observer_e_sink_externo_que_lancam_nao_derrubam_o_stream():
+    got: list[tuple[str, str]] = []
+
+    def boom_sink(kind: str, text: str) -> None:
+        got.append((kind, text))
+        raise RuntimeError("sink")
+
+    def boom_observer(kind: str, text: str) -> None:
+        raise RuntimeError("observer")
+
+    outer = sink.bind(boom_sink)
+    tap = sink.bind_tap(boom_observer, forward=True)
+    try:
+        sink.emit("oi")
+        sink.reset()
+    finally:
+        sink.unbind(tap)
+        sink.unbind(outer)
+    assert got == [("delta", "oi"), ("reset", "")]
