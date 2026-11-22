@@ -1,7 +1,7 @@
 # SPEC-425 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
-> **Revisor:** Claude Opus 5.5 / sol (spec-reviewer, independente do executor) · **Data:** 2026-11-22 · **Commit revisado:** `9d438086`
+> **Veredito:** `CHANGES_REQUIRED` (final, após a checagem de delta; a rodada de `9d438086` deu `APPROVED_WITH_FOLLOWUPS`)
+> **Revisor:** Claude Opus 5.5 / sol (spec-reviewer, independente do executor) · **Data:** 2026-11-22 · **Commit revisado:** `9d438086`, delta `7ac7798e` + `49b00e0a`
 
 ## Escopo
 
@@ -111,3 +111,42 @@ red_green.sh 425 --allow-green ×6 → 21/21 OK
 py.sh scripts/dev/dup_helpers.py --diff 9d438086~1..9d438086 → só nomes privados genéricos, sem duplicação real
 git show 9d438086 | grep noqa/except/type: ignore → nada novo
 ```
+
+## Checagem de delta (7ac7798e, 49b00e0a)
+
+Escopo: só os dois commits posteriores a `de40cbf0`. Veredito do delta: **`CHANGES_REQUIRED`**. O código de produção
+está correto; falta um P2 num teste, que hoje pode virar chamada paga.
+
+**(a) P2-1 e P2-2.** Os dois foram corrigidos como pedi. O laço de `measure` captura a exceção do provider, grava
+`stopped = "provider_error: <tipo>"` sem a mensagem e devolve o JSON parcial (`measure_image_model.py:198-206`).
+`main` recusa `--out-dir` dentro de `ROOT` antes do plano e antes de qualquer gerador (`:249-250`, `:275-276`), e no
+Windows `is_relative_to` não diferencia maiúsculas. `test_falha_na_segunda_chamada_grava_json_parcial` falharia sem
+a correção, porque o `RuntimeError` propagaria. `test_recusa_out_dir_dentro_do_repo` também falharia, mas pelo motivo
+errado (P2-3).
+
+**(b) `price_image_event`.** Não levanta em nenhum caminho novo: `PricingUnavailable` de `priced_models()` vira
+retorno do evento não exato (`image_pricing.py:41-44`). O conjunto precificado só encolheu: um card malformado
+(string, dict, `[1]`, `[""]`) agora fecha cotação e preço, até para o modelo fixado, onde antes uma string seria
+desempacotada letra a letra. Com o card atual (sem `extra_models`) nada muda. O parametrizado cobre os três caminhos
+(`priced_models`, `require_image_prices` e o evento não exato com o modelo fixado).
+
+**(c) `complexity_for`.** `"ultra"`, `""`, `"High"`, `3` e `None` devolvem `None`; `"medium"` passa. Ressalva em P3-5.
+
+**(d) Budget e lint.** `test_size_budget.py` passou. BLE está no `select` (`pyproject.toml:79`), então o
+`# noqa: BLE001` é de regra ativa. O motivo do `silent-ok` serve: a falha não é silenciosa, porque o tipo vai para
+`stopped` no JSON e para a linha final do `main`, e a mensagem é descartada de propósito, para não vazar texto do
+provider. O `try` só envolve `generator.generate`. Não há outro `noqa` nem `except` novo.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-3 | P2 | `tests/test_image_model_measure.py:149-152` | `test_recusa_out_dir_dentro_do_repo` chama `main(... --confirm-spend)` sem trocar `_build_generator` nem `_PROJECT_OUT`. Se o guard de `--out-dir` regredir, o teste cria um `OpenAIImageGenerator` real com `OPENAI_API_KEY` do ambiente (o `tests/conftest.py` não a remove), gera um retrato 1024x1536 pago, grava PNG em `docs/x/` e sobrescreve `docs/spec425/medicao.json`. E ainda passaria a falhar só por não haver `SystemExit`. O "vermelho reconstruído" do executor pode ter sido exatamente isso, com chave vazia (401). | Trocar o gerador por um fake que levanta se chamado (`monkeypatch.setattr(mim, "_build_generator", lambda: pytest.fail("generator built"))`) e apontar `_PROJECT_OUT` para `tmp_path`. Opcional: `monkeypatch.delenv("OPENAI_API_KEY", raising=False)` nos testes do script. |
+| P3-5 | P3 | `services/art_brief.py:135` | `value in _COMPLEXITIES` levanta `TypeError: unhashable type: 'list'` se o brief persistido trouxer lista/dict (confirmado com `complexity_for({"complexity": ["high"]})`). Os builders só gravam string, então hoje não acontece. | `return value if isinstance(value, str) and value in _COMPLEXITIES else None`, e `["high"]` no loop do teste. |
+| P3-6 | P3 | `scripts/art/measure_image_model.py:204-206` | `stopped` guarda só o tipo: um `ImageProviderError` perde o `http_status` (401 x 429 x 5xx), que é o dado útil para decidir se repete. | Opcional: acrescentar `getattr(exc, "http_status", None)` ao `stopped`; continua sem a mensagem. |
+
+Guia: acrescentei uma linha em `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md` § api (P2-3), num commit separado.
+
+Testes do delta: `py.sh -m pytest tests/test_image_model_measure.py tests/test_image_pricing.py tests/test_dynamic_art_brief.py tests/test_size_budget.py -n 2 -p no:cacheprovider -q --tb=short -W ignore` → 81 passaram.
+
+Para fechar: corrigir o P2-3 (só teste). Os P3-5 e P3-6 podem entrar no mesmo commit ou ficar como follow-up.
+Com o P2-3 corrigido e o arquivo verde, o veredito passa a `APPROVED_WITH_FOLLOWUPS` sem nova revisão completa: basta
+o coordenador conferir o diff do teste.
