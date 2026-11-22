@@ -369,7 +369,7 @@ Antes do 1º teste: ler as seções `persistência` e `llm-structured` de
 - [x] `tests/test_size_budget.py` verde sem `--update` em `archivist.py`/`storyteller.py`
 - [x] `RPG_ARCHIVE_RECORD` em `config/flags.yaml`, default `off`
 - [x] `memory_context` `compare` `off`×`on` sem piora de hard gate (R12a)
-- [x] Suíte completa no pouso (22/11, `FULL_N=2 full.sh`, rebaseada sobre a SPEC-421): 11855 passed, 330 skipped, 2 xfailed, rc=0
+- [x] Suíte completa no pouso (22/11, `FULL_N=2 full.sh`, em `3d7b0f99`, já com a extração para `state_archive.py`): 11858 passed, 330 skipped, 2 xfailed, rc=0. Uma rodada anterior (11855 passed) foi no código de antes da extração e não conta. Depois da suíte entrou só o commit de configuração do P3-5; para ele rodaram os testes que cobrem as quatro listas e os gates de tipos, crescimento e formato (76 passed), não a suíte inteira
 - [x] Guard de FallbackLLM intacto no caminho do LLM (R10); nenhum `with_structured_output` novo
 - [x] Saves antigos continuam carregando (I4)
 - [ ] Promoção a `on` em staging **só** depois de: R12(b) pousado e sem piora; `shadow` com ≥ 20 descansos e 0 exceção; A/B de §6 com mediana de "pode agir" do descanso ≥ 3 s menor; leitura do dono de 5 pares (resumo do LLM × registro) do mesmo save
@@ -403,6 +403,13 @@ Staging (`Requer: staging`):
   local e a revisão Sol com 23 mutações substituem.
 - **Revisão Sol (22/11):** rodada 1 `APPROVED_WITH_FOLLOWUPS` (P2-1 e P3-1..4), tratados em `f1caa481`; rodada 2 `APPROVED`
   (`handoffs/SPEC-422-sol-review.md`). O playtest da Etapa 5 e o `evals run` de R12(a) foram rodados só pelo executor.
+- **Pouso recusado e corrigido (22/11):** o `land_check` reprovou `growth` (`state.py` 1082 → 1083 em `tests/size_budget.json`).
+  As marcas `archive_due`, `archive_low` e `archive_record` foram para `state_archive.ArchiveMarks` e `GameState` herda dele
+  (`436197b8`); `state.py` voltou a 1082 linhas e nenhum teto subiu. Rodada 3 da revisão Sol: `APPROVED_WITH_FOLLOWUPS`, com as
+  mesmas chaves e a mesma totalidade do estado e a marca chegando do narrador ao arquivista no grafo real.
+- **P3-5 da rodada 3, feito no pouso:** `state_archive.py` registrado no `include` do basedpyright (`pyproject.toml`), em
+  `AI_FILES` (`scripts/ci_eval_scope.py`), em `PRODUCT_FILES` (`scripts/dev/eval_publish.py`) e nos `entrypoints` de
+  `state_rules` (`project_index/domains.yaml`). Nenhum dos quatro é caminho protegido (`evals/protected-paths.txt`).
 - Da escrita da spec: nada foi executado além de leitura de código e da contagem em `resultado.json` (Grep).
 - O caminho hospedado (Postgres + pgvector) não roda nesta máquina (D-36). O registro
   determinístico não muda a gravação vetorial, que é a mesma `persist_records`. O smoke §6 itens 5–6
