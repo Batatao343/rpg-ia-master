@@ -309,7 +309,7 @@ por acaso e é válido como trava.
 - [x] Teste da Etapa 1.1 falhava antes da mudança (registrar o sha/saída no diário da spec).
 - [x] `tests/test_size_budget.py` verde sem `--update`; `routes/turn.py` sem diff.
 - [x] Diff vazio em `_guard_mediation_secret`, `find_unrevealed`, `SECRET_SIGNATURES`, `revealed_corpus` (R9).
-- [ ] `uv run pytest` verde (suíte completa offline, coordenador no pouso).
+- [x] Suíte completa no pouso (22/11, `FULL_N=2 full.sh`, em `f3b33848`): 11782 passed, 330 skipped, 2 xfailed, rc=0. A 1ª rodada (em `60ae3418`) deu 1 falha em `test_ruff_counts` (BLE001/SIM105 novos em `narrative_sink.py`), corrigida em `f50204a5`.
 - [x] Guard de FallbackLLM: `narrate_structured` devolvendo `AIMessage` em turno mediado `on` cai no
       `isinstance` de `agents/storyteller.py:2339-2349` (teste com `ScriptedLLM.failing(streaming=True)`).
 - [x] Saves antigos continuam carregando (nenhum campo persistido novo; o mostrado nunca entra em state/save).
@@ -346,7 +346,9 @@ capturando o SSE bruto.
   (`ESTADO_ATUAL.md` § Bloqueios); a suíte completa local e a revisão Sol com mutações substituem.
 - **Revisão Sol (22/11):** 1ª passada `CHANGES_REQUIRED` (P1-1: teste do véu não travava a avaliação pré-véu; P2-1; P3-1..4),
   corrigidos em `60ae3418`; re-revisão `APPROVED` com 5 mutações reprovando e fuzz de 6.000 casos sem vazamento
-  (`handoffs/SPEC-421-sol-review.md`).
+  (`handoffs/SPEC-421-sol-review.md`). Depois da correção de lint (`f50204a5`) a conferência Sol pediu mais duas mudanças
+  (P1-2: nenhum teste travava a falha fechada de `compose_risk`; P2-2: `_log.exception` gravava a mensagem da exceção,
+  que pode conter texto de narração), corrigidas em `f3b33848`; conferência final `APPROVED` com 8 mutações reprovando.
 - Da escrita da spec: §6 e os critérios de promoção dependem do staging e rodam pelo
   coordenador depois da revisão; a medição de 13/11 não registra `interlocutor_reason` por turno, então a
   atribuição dos 8 turnos à mediação vem do código (`first_token_server_ms: null` + rota storyteller), não do
