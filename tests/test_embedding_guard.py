@@ -72,14 +72,16 @@ def _wire(monkeypatch, emb):
 
 def test_contexto_passa_dentro_do_prazo_com_provedor_travado(monkeypatch):
     monkeypatch.setenv("RPG_EMBEDDING_QUERY_TIMEOUT_S", "0.3")
-    prov = Provider("hang")
+    prov = Provider("hang", real_sleep=False)  # relógio falso: nada dorme de verdade
+    monkeypatch.setattr(embedding_guard.time, "monotonic", lambda: 1000.0)
     _wire(monkeypatch, prov.embeddings())
-    start = time.monotonic()
     query = context_sources.embed_context_query_uncached("a estrada", game_id="g1")
     results = context_sources.acquire_context_sources(
         query, game_id="g1", npc_id=None, readers=None
     )
-    assert time.monotonic() - start < 1.0
+    # prazo respeitado de forma estrutural: 1 só tentativa, com read timeout <= 0.3 s
+    # (no código antigo era 30 s e havia retry), e o contexto segue sem vetor.
+    assert prov.reads and max(prov.reads) <= 0.3
     assert query.vector is None and query.embedding_provider == "jina"
     assert all(r.text == "" for r in results)
     assert prov.calls == 1
@@ -125,7 +127,11 @@ def test_disjuntor_pula_sem_rede_depois_de_timeout(monkeypatch, caplog):
 
 def test_dois_timeouts_simultaneos_abrem_uma_janela(monkeypatch):
     monkeypatch.setenv("RPG_EMBEDDING_QUERY_TIMEOUT_S", "0.3")
-    prov = Provider("hang")
+    prov = Provider(
+        "hang"
+    )  # dorme de verdade p/ as duas threads se sobreporem (sem assert de tempo)
+    fixed_now = 1000.0
+    monkeypatch.setattr(embedding_guard.time, "monotonic", lambda: fixed_now)
     emb = prov.embeddings()
     errors: list[BaseException] = []
 
@@ -143,7 +149,9 @@ def test_dois_timeouts_simultaneos_abrem_uma_janela(monkeypatch):
         t.start()
     for t in threads:
         t.join(5)
-    assert errors == [] and embedding_guard._open_until > time.monotonic()
+    # uma única janela (não acumula): relógio fixo => abre exatamente em now + B
+    assert errors == []
+    assert embedding_guard._open_until == fixed_now + embedding_guard.breaker_s()
 
 
 def test_disjuntor_nao_afeta_job_nem_escrita(monkeypatch):
