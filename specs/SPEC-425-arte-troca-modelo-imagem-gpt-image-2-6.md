@@ -174,6 +174,10 @@ N/A: sem thread, async, cancelamento, retry ou lock novos. Timeout e lease segue
    caminho em `image_pricing.py:16`: o card com `extra_models` nasce na renovação de dezembro (D7). Fica para a
    renovação: R3 e o teste "card novo tem as mesmas taxas, `extra_models` exato e `derivation` com as datas". O gate
    de R2 já vale (`tests/test_pricing_card_files.py`) para qualquer card presente. `--canary` (R15) entrou no
+   **Follow-up aceito (revisão Sol, P3-2):** a `Idempotency-Key` com `complexity` concatena por `
+` sem prefixar o campo; colisão só
+   com prompt iniciado por `high
+` no mesmo modelo, risco prático nulo; fica como está.
    script; a comparação com `medicao.json` só roda de fato depois da Etapa 1.
 3. **Verificação:** os arquivos de teste acima, mais `tests/test_rate_card_freshness.py` e
    `tests/test_bug_finops_wallet_jobs.py`, todos com `-n 2`.

@@ -21,7 +21,10 @@ IMAGE_PRICING_VERSION = _CARD["version"] + "-" + sha256(_BYTES).hexdigest()[:16]
 
 def priced_models() -> frozenset[str]:
     """Modelos cobrados pelas taxas do card: ``model`` + ``extra_models`` (ausente = nenhum)."""
-    return frozenset({_CARD["model"], *(_CARD.get("extra_models") or [])})
+    extra = _CARD.get("extra_models") or []
+    if not isinstance(extra, list) or not all(isinstance(m, str) and m for m in extra):
+        raise PricingUnavailable("image rate card has malformed extra_models")
+    return frozenset({_CARD["model"], *extra})
 
 
 def require_image_prices(model: str, at: datetime) -> None:

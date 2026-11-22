@@ -124,12 +124,15 @@ def quality_for(brief: Mapping[str, Any]) -> str | None:
     return None
 
 
+_COMPLEXITIES = frozenset({"low", "medium", "high"})
+
+
 def complexity_for(brief: Mapping[str, Any]) -> str | None:
     """Complexidade gravada no brief (R5); sem cair para o profile, ao contrário de ``quality_for``.
 
     Um brief cotado antes da troca de modelo nunca manda ``complexity`` ao modelo antigo."""
     value = brief.get("complexity")
-    return str(value) if value else None
+    return value if value in _COMPLEXITIES else None
 
 
 def _complexity(profile: Mapping[str, Any], fmt: str) -> dict[str, str]:
@@ -137,7 +140,6 @@ def _complexity(profile: Mapping[str, Any], fmt: str) -> dict[str, str]:
     return {"complexity": str(value)} if value else {}
 
 
-_COMPLEXITIES = frozenset({"low", "medium", "high"})
 _COMPLEXITY_MODEL_PREFIX = "gpt-image-2.6-"
 
 

@@ -340,3 +340,9 @@ def test_profile_complexity_so_em_2_6():
     assert problems(new) == []
     bad = {**new, "formats": {"portrait": {"size": "1x1", "complexity": "ultra"}}}
     assert problems(bad)
+
+
+def test_complexity_for_so_aceita_low_medium_high():
+    for value in ("ultra", "", "High", 3, None):
+        assert art_brief.complexity_for({"complexity": value}) is None
+    assert art_brief.complexity_for({"complexity": "medium"}) == "medium"

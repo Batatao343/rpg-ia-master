@@ -195,11 +195,15 @@ def measure(
         if case.portrait_from in outputs:
             refs = (outputs[case.portrait_from], *refs)
         started = time.perf_counter()
-        generated = generator.generate(
-            ImageGenerationInput(
-                case.prompt, case.model, case.size, refs, case.quality, case.complexity
+        try:
+            generated = generator.generate(
+                ImageGenerationInput(
+                    case.prompt, case.model, case.size, refs, case.quality, case.complexity
+                )
             )
-        )
+        except Exception as exc:  # noqa: BLE001  # silent-ok: recorded as stopped (type only)
+            stopped = f"provider_error: {type(exc).__name__}"
+            break
         latency_ms = int((time.perf_counter() - started) * 1000)
         record = _record(case, generated, latency_ms, len(refs))
         calls.append(record)
@@ -242,6 +246,10 @@ def canary_verdict(call: dict, baseline: list[dict], *, hamming_min: int) -> lis
 # --------------------------------------------------------------------------- #
 # CLI
 # --------------------------------------------------------------------------- #
+def _inside_repo(path: Path) -> bool:
+    return path.resolve().is_relative_to(ROOT)
+
+
 def _build_generator() -> ImageGenerator:
     from infrastructure.openai_images import OpenAIImageGenerator
 
@@ -264,6 +272,8 @@ def main(argv: list[str] | None = None) -> int:
     ceiling = PER_CALL_CEILING if args.canary else MAX_USD_CEILING
     if not Decimal(0) < args.max_usd <= ceiling:
         parser.error(f"--max-usd must be in (0, {ceiling}]")
+    if _inside_repo(args.out_dir):
+        parser.error("--out-dir must be outside the repository (R8: image bytes stay out)")
     plan = canary_plan(args.variant) if args.canary else default_plan()
     if not args.confirm_spend:
         print(f"plan: {len(plan)} calls, max {args.max_usd} USD (add --confirm-spend to run)")

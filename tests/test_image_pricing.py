@@ -130,3 +130,14 @@ def test_modelo_desconhecido_segue_indisponivel(monkeypatch):
     with pytest.raises(PricingUnavailable):
         require_image_prices("gpt-image-2.6-flare", at)
     assert not reading(USAGE, model="gpt-image-2.6-flare").billing_exact
+
+
+@pytest.mark.parametrize("bad", ["gpt-image-2.6-sunburst", {"a": 1}, [1], [""]])
+def test_extra_models_malformado_falha_fechado(monkeypatch, bad):
+    from services.image_pricing import priced_models
+
+    _with_extra(monkeypatch, bad)
+    with pytest.raises(PricingUnavailable):
+        priced_models()
+    with pytest.raises(PricingUnavailable):
+        require_image_prices(MODEL, card_observed_at()["image"] + timedelta(hours=1))

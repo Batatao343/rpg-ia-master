@@ -123,3 +123,30 @@ def test_canary_verdict_faixa_de_tokens_e_hamming():
     assert mim.canary_verdict(ok, base, hamming_min=14) == []
     far = {**ok, "usage": {"output_tokens": 1400}, "canon_min_hamming": 3}
     assert len(mim.canary_verdict(far, base, hamming_min=14)) == 2
+
+
+# --- review follow-ups (P2-1, P2-2) -------------------------------------------- #
+class Flaky(Fake):
+    def generate(self, request):
+        if len(self.calls) == 1:
+            raise RuntimeError("secret provider message")
+        return super().generate(request)
+
+
+def test_falha_na_segunda_chamada_grava_json_parcial(tmp_path, monkeypatch):
+    monkeypatch.setattr(mim, "_build_generator", Flaky)
+    monkeypatch.setattr(mim, "_PROJECT_OUT", tmp_path / "medicao.json")
+    monkeypatch.setattr(mim, "default_plan", lambda: [_case(0), _case(1)])
+    out = tmp_path / "out"
+    assert mim.main(["--max-usd", "1", "--out-dir", str(out), "--confirm-spend"]) == 0
+    data = json.loads((tmp_path / "medicao.json").read_text(encoding="utf-8"))
+    assert len(data["calls"]) == 1
+    assert data["stopped"] == "provider_error: RuntimeError"
+    assert Decimal(data["spent_usd"]) == Decimal(data["calls"][0]["cost_usd"]) > 0
+    assert "secret provider message" not in json.dumps(data)
+
+
+def test_recusa_out_dir_dentro_do_repo(monkeypatch):
+    monkeypatch.setattr(mim, "default_plan", lambda: [_case(0)])
+    with pytest.raises(SystemExit):
+        mim.main(["--max-usd", "1", "--out-dir", str(mim.ROOT / "docs" / "x"), "--confirm-spend"])
