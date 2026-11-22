@@ -1,6 +1,6 @@
 # SPEC-411 — seguranca-higiene-boot-ci
 
-> **Status:** `in-progress` (11/11: R1–R4 e R6 entregues; R5 pendente de autor de eval + clique do dono no `eval-governance`). Antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
+> **Status:** `done` (22/11: R5 publicado em `3aae9333`; run `eval-gates` 45069068165 com o environment `eval-governance` aprovado pelo dono, `protected-evaluator-review` e `evals compare` verdes). Antes `in-progress` (11/11: R1–R4 e R6 entregues). Antes `approved` (11/11: aprovada pelo coordenador por delegação do dono, "o resto é nois"; decisões do §8 = recomendações do autor; veto do dono segue possível) · antes `draft`
 > **Criada:** 2026-11-11 · **Atualizada:** 2026-11-11
 > **Depende de:** nenhuma (R4b/zizmor limpo depende do R2 da própria spec)
 > **Desbloqueia:** nada (follow-up da varredura de segurança de 11/11; irmã de SPEC-409/410)
@@ -175,11 +175,11 @@ Uma etapa por item, independentes (exceto R4a depois de R2). Um commit por etapa
 - [x] R2: `Grep persist-credentials` = 19/19 checkouts; `zizmor` sem `artipacked`; nenhum job do CI quebrou (CI verde).
 - [x] R3: `cooldown.default-days: 7` nos 3 ecossistemas; item de doc do R3.2 confirmado e registrado.
 - [x] R4a: job `workflow-lint` com `zizmor` de versão fixada, verde. R4b: regras `S324,S602,S604,S605,S105,S106,S107` no `select`, `S` ignorada em `tests/scripts/evals/playtest/.claude`, 0 hit no produto, `ruff-baseline.toml` sem entrada nova, `S608` conforme D4 (teste de allowlist se aceita a recomendação).
-- [ ] R5: as 3 linhas em `evals/protected-paths.txt`, teste verde, `test_ruff_protected_exempt.py` verde, publicado com aprovação do dono no `eval-governance` e `compare` exit 0. (Único item que pode manter a spec `in-progress`.)
+- [x] R5: as 3 linhas em `evals/protected-paths.txt` (4 com o desvio de R5.1), teste verde, `test_ruff_protected_exempt.py` verde, publicado com aprovação do dono no `eval-governance` e `compare` exit 0. (Único item que pode manter a spec `in-progress`.)
 - [x] R6: limite de `/metrics` por `_client_ip`; testes (a)–(d) verdes; scraper autenticado continua isento.
-- [ ] `uv run pytest` verde (suíte completa offline, 1× pelo coordenador no pouso)
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo)
-- [ ] Saves antigos continuam carregando (nenhum formato muda)
+- [x] `uv run pytest` verde (suíte completa offline, 1× pelo coordenador no pouso): R5 em 22/11, 11788 passed na branch empilhada com a SPEC-424 (base anterior ao pouso da SPEC-422)
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo)
+- [x] Saves antigos continuam carregando (nenhum formato muda)
 
 ## 6. Smoke test com LLM real
 
