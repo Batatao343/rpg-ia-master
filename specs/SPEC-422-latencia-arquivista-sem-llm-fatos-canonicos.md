@@ -154,7 +154,9 @@ caminho de gravação de hoje, então nenhum writer novo de estado aparece.
   `observability.latency.bump("archive_deterministic")` e registra
   `archivist.record {kind}`. O `turn` log já leva `phase_ms.archivist` e `llm_by_phase`, e a L0
   (`docs/auditorias/latencia-l0-2026-11-13/l0_analyze.py`) mede o efeito sem mudança.
-- **R9 — Gatilho registrado.** Quando o gate mantém, o arquivista registra
+- **R9 — Gatilho registrado.** Quando o gate mantém **e a flag está em `shadow` ou `on`**
+  (decisão do coordenador, 22/11: com `off` o log fica idêntico ao de hoje e o golden da SPEC-382 não
+  muda; a medição de R9 acontece em `shadow`), o arquivista registra
   `archivist.trigger {reasons: [...]}`. Os valores vêm de uma lista fixa: `conflict`,
   `canonical_facts`, `archive_due`, `archive_due_low`, `canonical_only`, `pending_npc_memory`,
   `vector_retry`, `cadence`. Isso responde, na próxima medição, qual gatilho faz a fala com NPC pagar
@@ -186,7 +188,9 @@ caminho de gravação de hoje, então nenhum writer novo de estado aparece.
     que roda o arquivista em fixtures de descanso: com e sem fatos do dia, bloqueado, com gancho e com
     rejeição. Ela mede (i) todos os fatos canônicos do turno no ledger, (ii) local e relógio
     corretos no resumo, (iii) nenhuma contradição de local, inventário ou identidade e (iv) a
-    continuidade do contexto do turno seguinte frente ao caminho com LLM.
+    continuidade do contexto do turno seguinte frente ao caminho com LLM. As fixtures devem incluir
+    descanso com fatos do dia e eventos do tick (que ficam só no ledger; o resumo T1 não os cita) e o
+    caso de `clock_label` legado "Dia N · Período", que contradiz o "sem número na superfície" de R4.
 
   Esta spec **não** edita evaluator, expected, dataset, baseline nem exclusões
   (`docs/evals-plan-v4/08_CONTRATO_CODING_AGENT.md`, `evals/protected-paths.txt`).
@@ -217,8 +221,9 @@ caminho de gravação de hoje, então nenhum writer novo de estado aparece.
 ### Invariantes
 
 - **I1** — Com `RPG_ARCHIVE_RECORD=off`, o estado final e as chamadas ao LLM ficam byte a byte iguais
-  ao HEAD no mesmo seed/MockLLM, inclusive sem a chave `archive_record` (teste:
-  `test_off_identico_ao_head`, roteiro de 4 turnos: cena, descanso, fala, descanso).
+  ao HEAD no mesmo seed/MockLLM, inclusive sem a chave `archive_record` e sem eventos de log novos. A
+  prova é o golden da SPEC-382 (66 casos, state/result/trace/events) sem alteração;
+  `test_off_identico_ao_head` só mostra que, com `off`, a marca no estado é inerte.
 - **I2** — Nenhum fato canônico deixa de ser registrado. Num descanso T1 com fatos do dia e um evento
   do motor percebido, todos os `memory_id` que o caminho com LLM grava como `canonical_event` estão em
   `memory_facts` com `on` (mesmo conjunto) (teste: `test_descanso_registra_todos_os_fatos_canonicos`).
@@ -227,7 +232,7 @@ caminho de gravação de hoje, então nenhum writer novo de estado aparece.
   crônica "lixo". A única diferença é zero chamadas (teste: `test_rejeicao_sem_conflito_igual_ao_llm`).
 - **I4** — Round-trip: `save_game` → `load_game` depois de um descanso T1 preserva `narrative_summary`,
   `memory_facts`, `pending_memory_facts`, `chronicle`, `archivist_last_run`. `archive_record` não
-  aparece no save, e um save antigo sem o campo carrega (teste:
+  aparece no save (`persistence.py` sem diff; o campo nunca é salvo) (teste:
   `test_round_trip_depois_do_registro_deterministico`).
 - **I5** — A fila de NPC não fica órfã. Com `pending_npc_memory` não vazio num descanso T1 (fala no
   turno anterior com escrita que falhou), a fila é drenada ou mantida exatamente como no caminho com
@@ -277,9 +282,9 @@ caminho de gravação de hoje, então nenhum writer novo de estado aparece.
   `"blocked": "<clima>"` na marca (`_StoryTurn.rest_blocked`), para a frase de R4 não depender de
   recomputar o clima depois do tick; o descanso normal mantém `{"kind","turn"}` exato. (2) `archivist.trigger`
   é logado em `_archive_node` quando o gate mantém (não dentro de `_should_archive`, que também roda no
-  caminho adiado); a decisão não muda. (3) Com T0/T1 o `get_llm` do arquivista nem é construído. (4) O log
-  novo muda só o digest `events` de `campaign_combate_off` em `tests/fixtures/spec382_node_golden.json`
-  (state/result/trace idênticos). (5) `state.py` +1 linha (campo da marca): `size_budget.json` sobe 1 só ali;
+  caminho adiado); a decisão não muda. (3) Com T0/T1 o `get_llm` do arquivista nem é construído. (4) `archivist.trigger`
+  só sai com `shadow`/`on` (decisão do coordenador, 22/11), então com `off` os logs também ficam
+  iguais a hoje e `tests/fixtures/spec382_node_golden.json` não é alterado. (5) `state.py` +1 linha (campo da marca): `size_budget.json` sobe 1 só ali;
   `archivist.py` (−33) e `storyteller.py` (−1) encolhem.
 
 Exemplo de resumo T1 (local canônico de `data/`; o executor escolhe um id real ao escrever o
@@ -401,6 +406,9 @@ Staging (`Requer: staging`):
 
 - **Saves antigos:** nenhum campo persistido novo. A marca é transitória. Save sem `archive_record`
   carrega (I4).
+- **T0 e exceção do LLM:** com `on`, T0 não passa mais pelo `except` quando o LLM levantaria. Hoje o
+  nó devolve só `event_updates` nesse caso; com `on` grava como no caminho de sucesso (direção segura;
+  I3 cobre só o sucesso).
 - **MockLLM / FallbackLLM:** `off`/`shadow` iguais a hoje. Com `on`, T0 e T1 não tocam o LLM, então o
   FallbackLLM não tem como produzir resumo de erro nesses turnos (já protegido em `archivist.py:106-110`).
 - **Qualidade:** o risco real é perder no resumo um detalhe que o narrador inventou no despertar.

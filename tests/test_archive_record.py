@@ -290,6 +290,27 @@ def test_marca_ausente_quando_ha_gancho_ou_encontro(monkeypatch, record_on, case
     assert "archive_record" not in out
 
 
+def test_marca_ausente_com_rumor_aceito_no_descanso(monkeypatch, record_on):
+    """P2-1: rumor aceito (SPEC-312) abre gancho; o fio `rumor_new` tira a marca do descanso."""
+    from agents.storyteller import ProposedRumor, StoryUpdateWithRumors
+    from services import rumors
+
+    monkeypatch.setenv("RPG_RUMORS_PROPOSED", "on")
+    proposal = ProposedRumor(text="Dizem nas docas que alguem compra o silencio", entity_ids=[])
+    update = StoryUpdateWithRumors(narrative="A cena segue calma.", proposed_rumors=[proposal])
+    accepted = {"rumors": [{"id": "r1"}]}
+    monkeypatch.setattr(
+        rumors,
+        "accept_proposed",
+        lambda st, props, **kw: (accepted, {**(st.get("world") or {})}, []),
+    )
+    out = _run_story(monkeypatch, "Descanso até o amanhecer.", update)
+    assert out["world_sim"] is accepted  # o rumor foi aceito de fato
+    assert "archive_record" not in out
+    plain = _run_story(monkeypatch, "Descanso até o amanhecer.", _upd())
+    assert plain["archive_record"] == {"kind": "rest", "turn": 4}  # controle: sem rumor, marca
+
+
 def test_marca_ausente_com_off(monkeypatch):
     monkeypatch.delenv("RPG_ARCHIVE_RECORD", raising=False)
     out = _run_story(monkeypatch, "Descanso até o amanhecer.", _upd())
@@ -689,7 +710,8 @@ def test_flag_registrada_default_off(monkeypatch):
 
 
 def test_off_identico_ao_head(monkeypatch):
-    """I1: com `off` a marca no estado e inerte: mesmas chamadas e mesmo estado final."""
+    """Com `off` a marca no estado e inerte (mesmas chamadas, mesmo estado). A prova de I1
+    (`off` = hoje, estado/result/trace) e o golden da SPEC-382, sem alteracao."""
     marked, llm_a, _ = _run_archive(monkeypatch, _rest_state(), "off")
     plain, llm_b, _ = _run_archive(monkeypatch, _rest_state(archive_record=None), "off")
     assert marked == plain
@@ -710,5 +732,25 @@ def test_round_trip_depois_do_registro_deterministico(monkeypatch):
     for key in ("narrative_summary", "memory_facts", "pending_memory_facts", "chronicle"):
         assert loaded[key] == state.get(key, loaded[key]), key
     assert loaded["archivist_last_run"] == 3
-    raw.pop("archivist_last_run", None)  # save antigo sem o campo carrega
+    raw.pop("archivist_last_run", None)  # persistence.py sem diff; `archive_record` nunca e salvo
     assert persistence._raw_to_state(raw) is not None
+
+
+def test_off_nao_emite_eventos_de_registro(monkeypatch, caplog):
+    """R9 (22/11): com `off`, nenhum evento trigger/record/record_shadow (igual a hoje)."""
+    import logging
+
+    with caplog.at_level(logging.INFO):
+        _run_archive(monkeypatch, _rest_state(), "off")
+    text = " ".join(r.getMessage() for r in caplog.records)
+    for name in ("trigger", "record_shadow", '"record"'):
+        assert name not in text, name
+
+
+def test_shadow_emite_trigger_com_motivos(monkeypatch, caplog):
+    import logging
+
+    with caplog.at_level(logging.INFO):
+        _run_archive(monkeypatch, _rest_state(), "shadow")
+    lines = [r.getMessage() for r in caplog.records if "trigger" in r.getMessage()]
+    assert lines and "archive_due" in lines[0]

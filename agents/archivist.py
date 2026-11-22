@@ -659,12 +659,7 @@ def _archive_node(
             **skip_extra,
         }  # turno trivial: pula o LLM do arquivista
 
-    _log_event(  # SPEC-422 R9: qual gatilho manteve o gate (so nomes)
-        "archivist",
-        "trigger",
-        level="info",
-        reasons=archive_record.trigger_reasons(effective_state, turn),
-    )
+    archive_record.log_trigger(effective_state, turn)  # SPEC-422 R9
     # Retry global ocorre antes de produzir candidatos novos. O ledger só muda
     # depois do write físico; uma falha deixa exatamente os mesmos IDs pendentes.
     memory_facts = normalize_memory_facts(state.get("memory_facts"))

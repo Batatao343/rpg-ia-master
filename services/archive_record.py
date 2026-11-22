@@ -163,6 +163,15 @@ def decide(
     return kind
 
 
+def log_trigger(state: dict, turn: int) -> None:
+    """R9: loga os motivos que mantiveram o gate, so com `shadow`/`on` (`off` = hoje)."""
+    if record_mode() == "off":
+        return
+    from observability.telemetry import log_event
+
+    log_event("archivist", "trigger", level="info", reasons=trigger_reasons(state, turn))
+
+
 # --- registro (R4) -----------------------------------------------------------------------------
 
 
