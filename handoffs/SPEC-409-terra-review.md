@@ -32,7 +32,7 @@ Nenhuma (revisor não edita código).
 
 P2-1/P2-2/P3-1 podem ir no commit do Pouso A ou na Etapa 2.
 
-## Comandos rodados
+## Evidência verificada
 
 ```text
 pt.sh (5 arquivos sem Postgres) -n 2, sem env → rc=0
