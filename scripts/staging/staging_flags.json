@@ -21,6 +21,7 @@
     "RPG_COMBAT_OBJECTS": "on",
     "RPG_COMPANION_ORDERS": "on",
     "RPG_TOKEN_STREAM": "on",
+    "RPG_MEDIATED_STREAM": "shadow",
     "RPG_LLM_HEDGE_MS": "0",
     "RPG_ARCHIVE_POLICY": "lean",
     "RPG_CARD_DECK": "on",

@@ -107,8 +107,11 @@ Follow-ups (não entram aqui):
 - Fila de ação (L1b) e narração mais curta (L5).
 - `rumor_nothing` com stream (o `_neutralize_false_find` por frase): fica como está (R10).
 - **Lacuna pré-existente do filtro final** (F-1): `find_unrevealed` compara `lower()` sem tirar acento nem
-  normalizar espaço, então "consumiu a familia", "pacto  com valerius" e "pacto com\nvalerius" passam **no texto
-  final hoje**. Esta spec garante paridade (o stream nunca mostra o que o final reprova), não corrige o final.
+  normalizar espaço, então "consumiu a familia" e "pacto com\nvalerius" passam **no texto final hoje**. (Espaço duplo NÃO passa:
+  `sanitize_player_facing` colapsa `[ \t]+` em
+  `services/prose_guard.py:106` antes do guard.) Outras lacunas reais, que passam nos dois e aparecem iguais na
+  tela, para a spec de D2: NBSP/zero-width entre as palavras e ênfase markdown partindo a assinatura
+  (`*pacto* com Valerius`). Esta spec garante paridade (o stream nunca mostra o que o final reprova), não corrige o final.
   Endurecer o filtro mexe em 4 chamadores (`agents/storyteller.py:503`, `playtest/opening_checks.py:271`,
   `services/prologue.py:225`, `sanitize_beat`) e merece spec própria (decisão do dono, §8 D2).
 - Segredo "semântico" sem frase-assinatura (paráfrase): o filtro R11 é de assinatura; nenhum dos dois detecta.
@@ -258,7 +261,7 @@ como modelo do turno mediado (Velha Magda, `meta_to_narrator`).
    - duas assinaturas de segredos diferentes em frases diferentes → para na 1ª;
    - assinatura dentro de aspas/travessão ("— O pacto com Daruun…") → segura (aspas não lavam segredo);
    - nome oculto da SPEC-293 na mesma frase (`_conceal_map` monkeypatch) → o gate vê o `pre`; segura.
-3. `test_mediated_stream_parity_known_gaps` (documenta F-1): acento ausente ("consumiu a familia"), espaço duplo,
+3. `test_mediated_stream_parity_known_gaps` (documenta F-1): acento ausente ("consumiu a familia"),
    quebra de linha no meio, assinatura partida por ponto → o filtro final **não** reprova e o gate também não;
    asserção: stream e final concordam frase a frase (nenhuma frase mostrada que o final remove por segredo).
 4. `test_gate_holds_every_sentence_final_rejects` (I5): varre `SECRET_SIGNATURES` × caixa × posição.

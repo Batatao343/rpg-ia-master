@@ -103,14 +103,15 @@ def narrate(plan: StreamPlan, fn: Callable[..., Any], *args: Any, **kwargs: Any)
     from services import narrative_sink
 
     if plan.extra_risk is None:
+        _RUN.set(None)  # um turno anterior que falhou nao contamina o `after_final` deste
         return fn(*args, stream=plan.stream, **kwargs)
     run = _Run("shadow" if plan.shadow else "on")
-    _RUN.set(run)
+    run_token = _RUN.set(run)
     tap = narrative_sink.bind_tap(run.observe, forward=not plan.shadow)
     try:
         return fn(*args, stream=plan.stream, extra_risk=plan.extra_risk, **kwargs)
     except BaseException:
-        _RUN.set(None)
+        _RUN.reset(run_token)
         raise
     finally:
         narrative_sink.unbind(tap)

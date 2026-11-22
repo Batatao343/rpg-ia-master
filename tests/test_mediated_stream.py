@@ -225,15 +225,23 @@ def test_secret_last_sentence_of_paragraph_needs_replace(monkeypatch):
     assert replace_reason(shown, out["messages"][-1].content) in {"tail", "shorter", "start"}
 
 
-def test_concealed_name_gate_sees_pre_veil(monkeypatch):
-    monkeypatch.setattr(sink, "_conceal_map", lambda state: {"Corvo Negro": "uma ordem sombria"})
+def test_concealed_name_gate_sees_pre_veil(monkeypatch, seen):
+    # O nome oculto esta DENTRO da assinatura: so o texto pre-veu casa "pacto com valerius".
+    monkeypatch.setattr(sink, "_conceal_map", lambda state: {"Valerius": "o Regente"})
     raw = (
-        "A Ordem do Corvo Negro vigia a praca e ninguem ousa falar alto perto dela hoje. "
-        "Magda diz que o Corvo Negro tem pacto com Valerius em troca de ouro."
+        "A Ordem vigia a praca e ninguem ousa falar alto perto dela hoje. "
+        "Magda diz que o velho fez um pacto com Valerius em troca de ouro."
     )
-    out, order, _ = _run(monkeypatch, raw, mode="on", size=2)
-    shown = _shown(order)
-    assert _no_signature(shown) and "Corvo" not in shown
+    for size in (1, 7, 100000):
+        seen.clear()
+        _out, order, _ = _run(monkeypatch, raw, mode="on", size=size)
+        deltas = [t for k, t in order if k == "delta"]
+        assert any(
+            ev == "stream_risk_hold" and f.get("rule") == "mediation_secret" for _a, ev, f in seen
+        )
+        shown = "".join(deltas)
+        assert "Regente" not in shown and "Valerius" not in shown and "pacto com" not in shown
+        assert "A Ordem vigia" in shown
 
 
 # --- F-1: lacunas conhecidas do filtro final (paridade, nao correcao) ---------------------------
@@ -243,7 +251,7 @@ def test_concealed_name_gate_sees_pre_veil(monkeypatch):
     "gap",
     [
         "consumiu a familia",  # sem acento
-        "pacto  com valerius",  # espaco duplo
+        "pacto  com valerius",  # espaco duplo: o final colapsa e reprova (ramo "final reprovou")
         "pacto com\nvalerius",  # quebra de linha no meio
         "o pacto com. Valerius",  # partida por ponto
     ],
@@ -295,6 +303,14 @@ def test_gate_holds_every_sentence_final_rejects(sig):
 # --- I2 / I3 / I8 -------------------------------------------------------------------------
 
 
+def _comparable(out: dict) -> dict:
+    """Retorno do no inteiro, com mensagens por conteudo (objetos de mensagem tem id proprio)."""
+    return {
+        k: [(type(m).__name__, m.content) for m in v] if k == "messages" else v
+        for k, v in out.items()
+    }
+
+
 @pytest.mark.parametrize("case", ["segundo_paragrafo", "ultima_do_paragrafo", "primeira_frase"])
 def test_mediated_final_identical_across_modes(monkeypatch, case):
     raw, _ = SECRET_CASES[case]
@@ -302,7 +318,7 @@ def test_mediated_final_identical_across_modes(monkeypatch, case):
     for mode in ("off", "shadow", "on"):
         out, _order, _ = _run(monkeypatch, raw, mode=mode, size=9)
         msgs = [m.content for m in out["messages"]]
-        results[mode] = (msgs, out.get("narrative_rejections"), sorted(out))
+        results[mode] = (msgs, out.get("narrative_rejections"), _comparable(out))
     assert results["off"] == results["shadow"] == results["on"]
 
 
@@ -511,6 +527,7 @@ def test_mediated_aimessage_result_falls_into_isinstance_guard(monkeypatch):
     finally:
         sink.unbind(token)
     assert out["messages"][-1].content.strip()
+    assert llm.stream_calls == 1 and llm.invokes == 0
 
 
 def test_stream_guard_risk_none_is_unchanged():
@@ -563,3 +580,28 @@ def test_sse_mediated_secret_mid_paragraph_one_replace_no_live_leak(client, monk
     assert len([d for d in narr if d.get("replace")]) == 1
     live_text = "".join(d["chunk"] for d in narr if d.get("live"))
     assert live_text and _no_signature(live_text)
+
+
+# --- P3-4: turno que falha no meio nao contamina a telemetria do seguinte ----------------------
+
+
+def test_failed_turn_does_not_leak_run_into_next_after_final(monkeypatch, seen):
+    from services import mediated_stream
+
+    class _Boom(_StreamLLM):
+        def stream_structured(self, *a, **k):
+            raise RuntimeError("boom")
+
+    monkeypatch.setenv("RPG_MEDIATED_STREAM", "on")
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: _Boom(CLEAN))
+    token = sink.bind(lambda kind, text: None)
+    try:
+        stt.storyteller_node(_state())  # o no engole a falha; o `_Run` nao pode sobrar
+    finally:
+        sink.unbind(token)
+    assert mediated_stream._RUN.get() is None
+    # um `_Run` velho (turno que lancou fora do except) e descartado pelo turno seguinte
+    mediated_stream._RUN.set(mediated_stream._Run("on"))
+    seen.clear()
+    _run(monkeypatch, CLEAN, mode="off")
+    assert not any(ev == "mediated_stream" for _a, ev, _f in seen)
