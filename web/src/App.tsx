@@ -7,7 +7,7 @@ import { installNativeLifecycle } from "./native/lifecycle";
 import { decideBack } from "./native/backPolicy";
 import { isMobileViewport, offChatSurface, returnToChat } from "./workspace/mobileSurface";
 import { safeStorage } from "./safeStorage";
-import { preparePending, loadPending, clearPending, clearPendingIfOwn, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
+import { preparePendingWithOrigin, loadPending, clearPending, clearPendingIfOwn, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
 import { clearWorkspaceOwner } from "./workspace/workspaceStorage";
 import { forgetAllChatSessions } from "./workspace/chatSessionStore";
 import { looksDegraded } from "./lib";
@@ -304,8 +304,10 @@ export function App() {
     }
   }
 
-  function pushLog(text: string, role: "player" | "narrator", type: LogEntry["type"]) {
-    setLog((prev) => [...prev, { id: logSeq.current++, text, role, type }]);
+  function pushLog(text: string, role: "player" | "narrator", type: LogEntry["type"]): number {
+    const id = logSeq.current++;
+    setLog((prev) => [...prev, { id, text, role, type }]);
+    return id;
   }
 
   async function refreshBalance(expectedOwner: string, generation: number) {
@@ -474,29 +476,33 @@ export function App() {
     const active = () => session.current === generation && gameId.current === gid && turnToken.current === token;
     setBusy(true); setThinking(true);
     setTurn(t => ({ ...IDLE_TURN, seq: t.seq + 1, stage: nextStage("idle", "submit") }));
+    let opId: string | null = null, echoId: number | null = null;
     try {
       const old = loadPending(user, gid);
       if (old && old.payload.input_text !== text) throw new Error("Resolva a ação pendente antes de enviar outra.");
-      const operation = await preparePending(user, gid, text, { ...options });
+      const { operation, created } = await preparePendingWithOrigin(user, gid, text, { ...options });
+      opId = operation.operation_id;
       setPending(operation);
       if (operation.volatile && !volatileWarned.current) {
         volatileWarned.current = true;
         setBanner({ msg: "O armazenamento do navegador está bloqueado: sua retomada não sobrevive a recarga.", kind: "warn" });
       }
       const requestOptions = { ...operation.payload, action_id: operation.operation_id } as ActionOptions;
-      const status = await api.getOperation(gid, operation.operation_id);
-      if (status.status === "completed") {
-        clearPending(user, gid);
-        if (active()) {
-          setPending(null);
-          const restored = await api.getState(gid);
-          if (!active()) return;
-          setData(restored);
-          await loadHistory(gid, generation);
+      if (!created) { // SPEC-420: operação recém-criada o servidor não conhece; só pending existente consulta.
+        const status = await api.getOperation(gid, operation.operation_id);
+        if (status.status === "completed") {
+          clearPending(user, gid);
+          if (active()) {
+            setPending(null);
+            const restored = await api.getState(gid);
+            if (!active()) return;
+            setData(restored);
+            await loadHistory(gid, generation);
+          }
+          return;
         }
-        return;
+        if (status.status === "running") throw new Error("Esta ação ainda está sendo processada. Consulte novamente em instantes.");
       }
-      if (status.status === "running") throw new Error("Esta ação ainda está sendo processada. Consulte novamente em instantes.");
       pendingVisual.current = null;
       // Retry depois de "não salvo": remove a narração órfã e o eco da ação (o mesmo action_id volta a rodar).
       setLog(prev => {
@@ -507,7 +513,7 @@ export function App() {
       });
       // P1-1: um fluxo antigo (já invalidado) nunca apaga o pending de um turno mais novo.
       const clearOwnPending = () => { clearPendingIfOwn(user, gid, operation.operation_id); };
-      pushLog(operation.payload.input_text, "player", "STORY");
+      echoId = pushLog(operation.payload.input_text, "player", "STORY");
       setTurn(t => ({ ...t, ledger: addPhase(t.ledger, PHASE_TEXTS.campaign_manager) }));
       let hadChunks = false;
       const latency = new TurnLatencyTracker(operation.operation_id, "stream");
@@ -579,6 +585,11 @@ export function App() {
           void refreshTurnCost(gid, operation.operation_id, entryId, generation, user); }
       }
     } catch (error) {
+      // SPEC-420 R5: erro sem narração com o pending ainda gravado → tira o eco que este fluxo empurrou (a retomada o refaz).
+      const shown = error instanceof api.HttpError && error.narrativeShown;
+      if (active() && echoId !== null && !shown && opId !== null && loadPending(user, gid)?.operation_id === opId) {
+        const mine = echoId; setLog(prev => prev.filter(e => e.id !== mine));
+      }
       if (active()) {
         const failure: BannerState = { msg: "Ação não confirmada: " + errMsg(error), kind: "error", requestId: errRequestId(error) };
         setBanner(failure);

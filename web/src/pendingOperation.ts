@@ -24,8 +24,14 @@ export function loadPending(owner: string, game: string): PendingOperation | nul
 
 export async function preparePending(owner: string, game: string, input: string,
   options: Record<string, unknown>): Promise<PendingOperation> {
+  return (await preparePendingWithOrigin(owner, game, input, options)).operation;
+}
+
+/** SPEC-420 R1: `created` = this call generated the operation_id (the server cannot know it yet). Never persisted. */
+export async function preparePendingWithOrigin(owner: string, game: string, input: string,
+  options: Record<string, unknown>): Promise<{ operation: PendingOperation; created: boolean }> {
   const existing = loadPending(owner, game);
-  if (existing) return existing; // user must resolve this operation before any new one
+  if (existing) return { operation: existing, created: false }; // user must resolve this operation before any new one
   const payload = { card_id: null, target_id: null, ruptura: false,
     reaction_card_id: null, action_kind: null, maneuver: null,
     ...options, input_text: input, game_id: game };
@@ -36,7 +42,7 @@ export async function preparePending(owner: string, game: string, input: string,
     payload, request_hash: Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join(''), created_at: Date.now() };
   // Storage blocked: keep going in memory (identity survives retries, not a reload).
   if (!safeStorage.set(key(owner, game), JSON.stringify(row))) row.volatile = true;
-  return row;
+  return { operation: row, created: true };
 }
 
 /** SPEC-235 R2: a definitive API refusal means the pending command can never be retried as-is. */

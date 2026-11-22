@@ -84,3 +84,48 @@ test('clearPendingIfOwn keeps a newer operation when an old flow finishes late',
   assert.equal(pending.clearPendingIfOwn('a', 'game', old.operation_id), false);
   assert.equal(pending.loadPending('a', 'game')?.operation_id, newer.operation_id);
 });
+
+// SPEC-420 R1: a origem do operation_id vem de quem o gerou, não do localStorage.
+test('preparePendingWithOrigin creates once then reuses', async () => {
+  storage();
+  const pending = await load();
+  const first = await pending.preparePendingWithOrigin('a', 'game', 'Observo', {});
+  const second = await pending.preparePendingWithOrigin('a', 'game', 'Outro pedido', {});
+  assert.equal(first.created, true);
+  assert.equal(second.created, false);
+  assert.equal(second.operation.operation_id, first.operation.operation_id);
+  assert.equal(second.operation.payload.input_text, 'Observo');
+});
+
+test('created again after clearPending', async () => {
+  storage();
+  const pending = await load();
+  const first = await pending.preparePendingWithOrigin('a', 'game', 'Observo', {});
+  pending.clearPending('a', 'game');
+  const again = await pending.preparePendingWithOrigin('a', 'game', 'Observo', {});
+  assert.equal(again.created, true);
+  assert.notEqual(again.operation.operation_id, first.operation.operation_id);
+});
+
+test('blocked storage still reports origin', async () => {
+  const boom = () => { throw new DOMException('denied', 'SecurityError'); };
+  globalThis.localStorage = { getItem: boom, setItem: boom, removeItem: boom, key: boom, get length() { return boom(); } };
+  const pending = await load();
+  const first = await pending.preparePendingWithOrigin('a', 'game', 'Observo', {});
+  const second = await pending.preparePendingWithOrigin('a', 'game', 'Observo', {});
+  assert.equal(first.created, true);
+  assert.equal(first.operation.volatile, true);
+  assert.equal(second.created, false);
+  assert.equal(second.operation.operation_id, first.operation.operation_id);
+});
+
+test('created is not persisted', async () => {
+  storage();
+  const pending = await load();
+  await pending.preparePendingWithOrigin('a', 'game', 'Observo', {});
+  const raw = Object.values(Object.fromEntries(
+    Array.from({ length: globalThis.localStorage.length }, (_, i) => {
+      const k = globalThis.localStorage.key(i); return [k, globalThis.localStorage.getItem(k)]; })));
+  assert.ok(raw.length > 0);
+  for (const row of raw) assert.equal('created' in JSON.parse(row), false);
+});

@@ -629,6 +629,8 @@ test("F20 combat_gesture_target", async ({ page, backend }) => {
   backend.delayStream();
   await targetChip(page, "Bandoleiro").dblclick();
   await expect.poll(() => combatActions(backend).length).toBe(1);
+  // SPEC-420 R9: jogada de carta sem pending prévio não consulta /operations/{op}.
+  expect(backend.requests.filter((r) => /^\/game\/[^/]+\/operations\/[^/]+$/.test(r.path))).toHaveLength(0);
   test.info().annotations.push({ type: "gesture", description: `clicks_to_action=2 failed_clicks=0 ms=${Date.now() - started}` });
   const body = combatActions(backend)[0].body!;
   expect(body).toMatchObject({ card_id: "golpe", target_id: "e2", input_text: "Uso Golpe do Véu em Bandoleiro." });

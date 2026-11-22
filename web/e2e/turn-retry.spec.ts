@@ -101,6 +101,7 @@ test.describe("turno em voo: guarda de corrida e retry", () => {
     backend.releaseStream();
     await expect(page.getByText("O mundo responde a: olho ao redor").first()).toBeVisible();
     await expect(page.getByText("O mundo responde a: olho ao redor")).toHaveCount(1);
+    await expect(page.locator("article.msg--player", { hasText: "olho ao redor" })).toHaveCount(1); // SPEC-420 I3
     expect(posts(backend)).toHaveLength(0);
     expect(await hasPending(page)).toBe(false);
   });
