@@ -27,3 +27,8 @@ scripts/bestiario/arena.py
 tests/test_spec373_artefatos.py
 docs/spec373/base/eval
 docs/bestiario/recalibracoes_posteriores.json
+scripts/ci_eval_scope.py
+scripts/verify_protected_eval_change.py
+.github/workflows/eval-gates.yml
+# governance.protected_changes strips the leading dot before matching; keep both spellings.
+github/workflows/eval-gates.yml

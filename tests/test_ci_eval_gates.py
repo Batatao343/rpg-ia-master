@@ -6,6 +6,7 @@ import httpx
 import pytest
 import yaml
 
+from evals.core.governance import load_protected_paths, protected_changes
 from scripts.ci_eval_scope import classify
 from scripts.post_deploy_smoke import run as run_post_deploy
 from scripts.run_llm_contract_gate import ContractBudget, ContractBudgetExceeded
@@ -27,6 +28,23 @@ def test_change_scope_selects_backend_frontend_and_protected_jobs():
     assert ruler["backend"] is True and ruler["protected"] is True
     assert docs["backend"] is False and docs["frontend"] is False
     assert all(row["long_run"] is False for row in (backend, frontend, ruler, docs))
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "scripts/ci_eval_scope.py",
+        "scripts/verify_protected_eval_change.py",
+        ".github/workflows/eval-gates.yml",
+    ],
+)
+def test_scope_scripts_and_workflow_are_protected(path: str):
+    # SPEC-411 R5: quem decide `protected` e quem exige a aprovação não pode mudar sem ela.
+    protected_file = ROOT / "evals/protected-paths.txt"
+    # `protected_changes` normaliza com `lstrip("./")`: o workflow volta sem o ponto inicial.
+    hits = protected_changes([path], load_protected_paths(protected_file))
+    assert hits == [path.removeprefix(".")]
+    assert classify([path], protected_file)["protected"] is True
 
 
 def test_protected_change_requires_explicit_guarded_approval():
