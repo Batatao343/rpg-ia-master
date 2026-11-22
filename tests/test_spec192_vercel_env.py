@@ -1,5 +1,7 @@
 """SPEC-192: montagem de env Vercel (offline, sem rede)."""
 
+import json
+
 import pytest
 
 from scripts.staging import vercel_env as ve
@@ -349,6 +351,19 @@ def test_card_flags_are_allowlisted_off_on_only():
             ve.build_env(FILES, world_flags={name: "shadow"})
     plain, _ = ve.build_env(FILES)
     assert set(CARD_FLAGS) <= set(ve.stale_names(plain))  # ausente => o script apaga a antiga
+
+
+def test_rls_strict_principal_is_sent_from_the_preset():
+    """SPEC-410 etapa 3: a flag chega ao staging pelo preset (shadow antes de on) e sai se ausente."""
+    name = "RPG_RLS_STRICT_PRINCIPAL"
+    assert name in ve.OPTIONAL_FLAGS and name in ve.WORLD_FLAGS
+    for mode in ("off", "shadow", "on"):
+        assert ve.build_env(FILES, world_flags={name: mode})[0][name] == mode
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_flags={name: "strict"})
+    assert name in ve.stale_names(ve.build_env(FILES)[0])
+    preset = json.loads(ve.STAGING_PRESET_PATH.read_text(encoding="utf-8"))
+    assert preset["flags"][name] in ("shadow", "on")
 
 
 def test_staging_marker_sent_to_staging_and_never_to_preview():

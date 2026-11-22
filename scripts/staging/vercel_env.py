@@ -115,6 +115,7 @@ OPTIONAL_FLAGS = (
     "RPG_PLOT_THREADS",
     "RPG_FAUNA",
     "RPG_CREATURE_GEN",
+    "RPG_RLS_STRICT_PRINCIPAL",
 )
 # SPEC-326 R17: price profiles de imagem (linhas imutáveis em app.image_price_profiles).
 DYNAMIC_ART_PRICE_PROFILES = {
@@ -184,6 +185,7 @@ WORLD_FLAGS = (
     "RPG_PLOT_THREADS",
     "RPG_FAUNA",
     "RPG_CREATURE_GEN",
+    "RPG_RLS_STRICT_PRINCIPAL",  # SPEC-410: off|shadow|on (ausente = off)
 )
 # Valores aceitos por flag que fogem de off|shadow|on.
 WORLD_FLAG_VALUES: dict[str, tuple[str, ...]] = {
