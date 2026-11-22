@@ -145,5 +145,5 @@ e `vercel_env.NON_SECRET_LITERALS["RPG_SPEECH_PRICING_VERSION"]`/`DYNAMIC_ART_PR
 - **P2-2 (follow-up):** o guarda "relógio real só no teste do R3" olha `datetime.now` na mesma linha de
   `installed_freshness`. Não pega o `now` em duas linhas, `require_paid_effect` sem `now` nem
   `require_image_prices(..., datetime.now(UTC))`. A catraca de relógio da SPEC-416 (`clock_asserts.py`) cobre parte.
-- **P2-4:** `tests/test_pricing_card_files.py` compara `observed_at <= hoje` com o relógio real; só falha com card
-  datado no futuro (aceito).
+- **P2-4 (fechado no pouso):** `tests/test_pricing_card_files.py` comparava `observed_at <= hoje` com o relógio real; a
+  catraca da SPEC-416 reprovou na suíte completa e a linha saiu (card no futuro já cai no guarda do R3).

@@ -6,6 +6,7 @@ from decimal import Decimal
 from uuid import UUID
 
 from services.usage_metering import (
+    RATE_CARD_VERSION,
     decision_attempt,
     exact_billable_cost,
     normalize_attempts,
@@ -139,7 +140,7 @@ def test_versioned_rate_card_and_cached_units_are_retained() -> None:
         operation_id=OPERATION,
     )
     assert events[0].cached_units == 800
-    assert events[0].pricing_version.startswith("2026-10-08")
+    assert events[0].pricing_version == RATE_CARD_VERSION  # installed card, survives renewals
     assert events[0].cost_usd == Decimal("0.00007460")
 
 

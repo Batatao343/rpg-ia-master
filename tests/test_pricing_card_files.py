@@ -68,8 +68,9 @@ def test_new_card_version_observed_at_and_source(kind):
     else:
         assert "T" not in card["observed_at"]
         observed = observed.replace(tzinfo=UTC)
+    # A card dated in the future has a negative age and counts as stale: the real-clock guard
+    # of tests/test_rate_card_freshness.py catches it, so no wall clock is read here (SPEC-416).
     assert observed.date() == date.fromisoformat(stamp)
-    assert observed <= datetime.now(UTC)
     sources = card.get("sources") or [
         m["source"] for m in card.get("models", {}).values() if m.get("source")
     ]
