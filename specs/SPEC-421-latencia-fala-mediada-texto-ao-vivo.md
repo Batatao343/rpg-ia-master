@@ -342,8 +342,9 @@ capturando o SSE bruto.
 - **Smoke §6 e fase `shadow` (staging):** não rodaram. O staging está em `d7aa4beb` (10/11) e o próximo deploy depende de o
   dono aplicar as migrações das SPEC-413/410 (`ESTADO_ATUAL.md` § Bloqueios). O preset do staging já leva
   `RPG_MEDIATED_STREAM=shadow` (`scripts/staging/staging_flags.json`). A promoção a `on` fica aberta até lá.
-- **CI pré-pouso de risco `alto`:** não rodou. Push de branch `spec-NNN` não está autorizado pelo dono
-  (`ESTADO_ATUAL.md` § Bloqueios); a suíte completa local e a revisão Sol com mutações substituem.
+- **CI pré-pouso de risco `alto`:** não rodou, por erro do coordenador: o push de branch `spec-NNN` estava autorizado
+  desde 13/11 e eu trabalhei com um `ESTADO_ATUAL.md` antigo que dizia o contrário. O que rodou antes do pouso foi a
+  suíte completa local e a revisão Sol com mutações; o CI roda no push da `main` de 22/11.
 - **Revisão Sol (22/11):** 1ª passada `CHANGES_REQUIRED` (P1-1: teste do véu não travava a avaliação pré-véu; P2-1; P3-1..4),
   corrigidos em `60ae3418`; re-revisão `APPROVED` com 5 mutações reprovando e fuzz de 6.000 casos sem vazamento
   (`handoffs/SPEC-421-sol-review.md`). Depois da correção de lint (`f50204a5`) a conferência Sol pediu mais duas mudanças

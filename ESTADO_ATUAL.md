@@ -14,8 +14,8 @@
 - **Ordem obrigatória no staging:** `publish_rate_card` → `vercel_env.py` → deploy. `vercel_env.py` e os smokes já apontam para os ids `spec409-staging-2026-11-13*`, que ainda não existem no banco. Deploy antes disso falha fechada (imagem, STT e compra em 503, como hoje); turno de texto não é afetado.
 - **`gpt-image-2-2026-04-21` foi descontinuado** (aviso 10/11, desliga 10/02/2027). Trocar para `gpt-image-2.6-*` pede spec própria antes dessa data.
 - Onda 12/11 (414–418) `done`. Onda 11/11: `done` 405–408 e 412; fechamento pendente 409, 410, 413 (staging) e 411 (R5 de eval).
-- Latência (outra sessão): 419 pousada, falta smoke no staging; 420–423 em curso lá. **424** reservada: `economy.execute_trade` muta o `state` de entrada (`services/economy.py:812`), teste em `xfail(strict=True)`.
-- Suíte: última completa verde em 22/11, 11687 passed (`FULL_N=2 bash scripts/dev/full.sh`). Flakes: `test_spec361_gate::test_prazo_real_por_thread` (tempo); `test_spec382_node_golden[campaign_secret_rusher_off]` (ordem, 1 em 8 suítes); e2e "F17 workspace_modes".
+- **Latência (419–423, sessão `fb`):** 419–422 na `main`, `in-progress` até o staging; 421 e 422 pousaram com a flag `off`. 423 (abertura, 3 pousos): Etapa 0 + Fase A na branch, em revisão Sol. Detalhe: `CHANGELOG.md` 22/11. **424** reservada: `economy.execute_trade` muta o `state` de entrada (`services/economy.py:812`), teste em `xfail(strict=True)`.
+- Suíte: última completa verde em 22/11, 11858 passed (`FULL_N=2 bash scripts/dev/full.sh`). Flakes: `test_spec361_gate::test_prazo_real_por_thread` (tempo); `test_spec382_node_golden[campaign_secret_rusher_off]` (ordem, 1 em 8 suítes); e2e "F17 workspace_modes".
 - Gate de tipos é estreito: 4 dos ~19 arquivos com `with_structured_output`, nenhum de `agents/`. `.venv` velho dentro de worktree engana o basedpyright (acusa import faltando): apagar.
 - Cartas, bestiário e balanço: sem mudança desde 10/11.
 
@@ -52,7 +52,14 @@ Decididas em 09/11 pelo coordenador, com delegação ("confio em vc nas decisoes
 Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
+- 2026-11-22 · SPEC-426 `approved` — workspace-gate-de-tipos-degrau-2
+- 2026-11-22 · SPEC-425 `approved` — arte-troca-modelo-imagem-gpt-image-2-6
+- 2026-11-22 · SPEC-424 `approved` — economia-execute-trade-sem-mutar-entrada
+- 2026-11-22 · SPEC-422 `in-progress` — latencia-arquivista-sem-llm-fatos-canonicos
+- 2026-11-22 · SPEC-421 `in-progress` — latencia-fala-mediada-texto-ao-vivo
+- 2026-11-22 · SPEC-420 `in-progress` — latencia-cliente-sem-getoperation
 - 2026-11-22 · SPEC-419 `in-progress` — latencia-embedding-timeout-curto
+- 2026-11-22 · SPEC-418 `done` — workspace-gate-de-tipos
 - 2026-11-22 · SPEC-409 `in-progress` — rate-cards-renovacao-e-alerta
 <!-- recent:end -->
 
