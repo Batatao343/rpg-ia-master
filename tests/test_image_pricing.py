@@ -141,3 +141,5 @@ def test_extra_models_malformado_falha_fechado(monkeypatch, bad):
         priced_models()
     with pytest.raises(PricingUnavailable):
         require_image_prices(MODEL, card_observed_at()["image"] + timedelta(hours=1))
+    # depois da geração o preço nunca levanta: o evento só fica não exato
+    assert reading(USAGE).cost_basis != "rate_card"

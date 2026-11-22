@@ -38,11 +38,11 @@ def price_image_event(event: UsageEvent, usage: dict) -> UsageEvent:
     """Price observed tokens only; incomplete/malformed counters remain non-exact."""
     if event.cost_basis == "provider_reported":
         return event
-    if (
-        event.provider != "openai"
-        or event.model not in priced_models()
-        or usage.get("image_counter_error")
-    ):
+    try:
+        models = priced_models()
+    except PricingUnavailable:  # card malformado: depois da geração nada levanta, fica não exato
+        return event
+    if event.provider != "openai" or event.model not in models or usage.get("image_counter_error"):
         return event
     keys = ("input_tokens", "output_tokens", "text_input_tokens", "image_input_tokens")
     if any(
