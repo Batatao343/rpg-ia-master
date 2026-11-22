@@ -46,3 +46,4 @@ Regras:
 - `with_structured_output(X).invoke()` pode devolver `AIMessage`: `isinstance` ou `try/except` antes de ler campo (AGENTS.md, guard de FallbackLLM)
 - MockLLM devolve instância válida e esconde erro de nome/tipo de campo: o caminho novo tem smoke com chave real (AGENTS.md)
 - Número vindo do LLM (ouro, dano, sinal) é validado em Python antes de mudar estado (AGENTS.md, mecânica é Python)
+- Filtro de texto que roda antes de um véu/troca de nomes: o teste de "avalia o texto pré-véu" põe o nome oculto DENTRO da assinatura, senão passa com o filtro no texto pós-véu (SPEC-421 P1-1)
