@@ -1,8 +1,63 @@
 # SPEC-422 — revisão sol (review)
 
-> **Veredito:** `APPROVED`
-> Histórico: rodada 1 em `59dcdeca` (com follow-ups P2-1, P3-1..P3-4); rodada 2 (conferência) em `f1caa481`, follow-ups tratados.
-> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-11-22 · **Commit revisado:** `f1caa481`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> Histórico: rodada 1 em `59dcdeca` (follow-ups P2-1, P3-1..P3-4); rodada 2 em `f1caa481` (follow-ups tratados, aprovada); rodada 3 em `436197b8` (extração `state_archive.py`; só o follow-up P3-5, de registro do arquivo novo, que não bloqueia o pouso).
+> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-11-22 · **Commit revisado:** `436197b8`
+
+## Conferência da rodada 3 (`436197b8`, `ArchiveMarks` em `state_archive.py`)
+
+Motivo: o `land_check` recusou `state.py` 1082 → 1083. As três marcas (`archive_due`, `archive_low`,
+`archive_record`) saíram para `state_archive.ArchiveMarks(TypedDict)` e `GameState` passou a herdar dele.
+Conferido com evidência; nenhum arquivo do worktree foi editado (scripts e plugin em scratchpad).
+
+1. **Chaves e grafo real.**
+   - `typing.get_type_hints(GameState)` com o `state.py` da `main` × o da branch: mesmo conjunto (99 → 100;
+     só entra `archive_record`, `dict | None`) e mesmos tipos (a diferença é só o nome do módulo carregado).
+   - `__total__` `True`/`True`; `__required_keys__` só ganha `archive_record`; `__optional_keys__` idêntico.
+   - No Python 3.13, `GameState.__annotations__` inclui as chaves herdadas.
+   - Grafo real (`main.app`, MockLLM, `RPG_ARCHIVE_RECORD=on`): `app.channels` contém as três chaves.
+   - Num descanso, a marca emitida pelo `storyteller` chega ao `archivist` por
+     `storyteller → enrich → archivist` e vale T1 de ponta a ponta. Ela foi forçada via spy em
+     `story_marks`, porque a ação do primeiro turno do mock traz `quests` e corretamente não marca.
+   - O spy em `decide` viu `archive_record={'kind':'rest','turn':1}` e `archive_due=True`, e o resumo final
+     termina com "O herói descansou em Nova Arcádia; …".
+2. **Introspecção e consumidores.**
+   - `Grep` de `__annotations__`/`get_type_hints`/`__required_keys__`/`__optional_keys__` no repo inteiro:
+     só testes. Os quatro que leem `GameState.__annotations__` (`test_archived_state_persistence`,
+     `test_art_state_persistence`, `test_spec300_persistence_api`, `test_spec304_roster`) estão verdes.
+   - `project_index/generator.py` não extrai campos de `GameState` (o `ClassDef` só vira símbolo e
+     escopo), e `state_ownership.yaml` é curado e não cita as três marcas. O índice não perde nada e nenhum
+     gate depende disso.
+   - Mas quatro listas de texto que nomeiam `state.py` não conhecem o arquivo novo (P3-5).
+3. **Persistência.** `git diff main -- persistence.py` vazio. `archive_due` continua salvo e carregado
+   (`persistence.py:680`, `:1030`); `archive_low`/`archive_record` continuam fora da lista explícita; save
+   antigo carrega (testes de persistência verdes).
+4. **Tipos.**
+   - `type_gate.py --files state.py state_archive.py` rc 0; `basedpyright state.py state_archive.py`
+     = 0 errors.
+   - A herança não cria erro nem relaxa nada: a totalidade e as chaves obrigatórias são idênticas.
+   - **Não rodei** o gate cheio (`land_check --only types`): ele pede ≥ 3 GB livres e não pode rodar em
+     paralelo com pytest, e havia 1,9–2,0 GB com a suíte completa rodando neste worktree. Fica com o
+     coordenador no pouso.
+5. **Import.** `state_archive.py` só importa `typing` (o teste AST confere), e o único importador é
+   `state.py:8`. Não há ciclo, e quem faz `from state import GameState` não muda.
+6. **Regressão.**
+   - `git diff main -- tests/fixtures/spec382_node_golden.json` vazio; golden SPEC-382 isolado: 66 passed.
+   - `baseline_growth.py --base main`: "nenhum baseline cresceu".
+   - 25 mutações por plugin (controle NOOP verde): 24/24 mortas.
+   - Escopo pedido + `test_state_archive_marks` + os 3 leitores de `__annotations__`: 123 passed.
+7. **Desenho: aceito.** Não é maquiagem.
+   - É a rota que a regra de tamanho prescreve ("código novo vai em módulo próprio"), e a fronteira tem
+     sentido: as três são marcas transitórias de grafo, escritas pelos emissores e lidas pelo arquivista.
+     Só `archive_due` é persistida, e a herança mantém o contrato idêntico.
+   - As alternativas são piores: subir o teto não é permitido, e cortar uma linha qualquer de `state.py`
+     seria maquiagem.
+   - O custo real é a dispersão do esquema em dois arquivos, que as listas de tooling ainda não conhecem
+     (P3-5).
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-5 | P3 | `scripts/ci_eval_scope.py:16`, `scripts/dev/eval_publish.py:30-38`, `project_index/domains.yaml:53-57`, `pyproject.toml:163-172` | `state.py` está nomeado nessas listas (escopo de eval do CI, `PRODUCT_FILES` do publish, domínio `state_rules`, `include` do basedpyright) e `state_archive.py` não. Uma mudança futura só nele não dispara o escopo de eval de IA nem o gate de tipos. | Acrescentar `state_archive.py` às quatro listas, no próximo toque ou numa spec de tooling (o `ci_eval_scope` pode pedir o papel de governança de eval). Não bloqueia o pouso. |
 
 ## Conferência da rodada 2 (`c991efa6..f1caa481`)
 
@@ -158,6 +213,16 @@ Rodada 1 (`59dcdeca`). Todos fechados em `f1caa481`; ver "Conferência da rodada
 red_green: 22/32 OK
 ```
 
+A tabela continua válida na rodada 3 (`436197b8`): o commit só move três anotações de `state.py` e não
+mexe em `test_archive_record.py`. Mutações rodadas de novo por plugin sobre `436197b8`:
+
+```text
+NOOP_AR (controle) ...................................... SURVIVED (esperado)
+LOGALWAYS M3j M1 M2a M2b M2c M3a-M3h M4a M4b M5-M11 M13 ... 24/24 KILLED (todas rc=1)
+grafo real main.app: canais archive_due/archive_low/archive_record presentes; marca do storyteller chega ao archivist (T1 de ponta a ponta)
+get_type_hints(GameState) main x branch: só + archive_record; __total__ igual; __optional_keys__ igual
+```
+
 As três últimas linhas vêm da rodada 2 (`f1caa481`); as outras 29 ficaram iguais à rodada 1.
 `test_off_nao_emite_eventos_de_registro` é a décima guarda verde/verde: com `off`, nada de log
 novo, o que vale também na `main`. Foi validada por mutação ("logar sempre" a reprova).
@@ -207,6 +272,8 @@ Todas em `f1caa481` (executor), conferidas na rodada 2:
 ## Pendências
 
 - Nenhuma de código para o pouso com `off`.
+- P3-5 (rodada 3): registrar `state_archive.py` em `ci_eval_scope.py`, `eval_publish.py`, `domains.yaml` e `[tool.basedpyright].include`.
+- Gate de tipos cheio (`land_check --only types`): com o coordenador no pouso (não rodado aqui por RAM).
 - Promoção a `on` continua dependendo de R12(b) (`EVAL_AUTHORING_REQUIRED`), `shadow` em staging, A/B e smoke §6 com chave (D1).
 
 ## Comandos rodados
@@ -228,4 +295,14 @@ runmut.sh NOOP_AR NOOP_AV NOOP_ST LOGALWAYS M3j → controles verdes; LOGALWAYS 
 runmut.sh M1..M13 (22 mutações anteriores, por plugin) → 22/22 KILLED
 pt.sh -n 0 test_archive_record test_archivist_policy test_archivist_facts test_npc_memory test_memory_provenance test_archived_state_persistence test_size_budget test_clock_asserts test_flag_registry test_log_event_registry test_telemetry_redaction → 163 passed
 bash scripts/dev/red_green.sh 422 → 22/32 OK (10 guardas verde/verde, todas validadas por mutação)
+--- rodada 3 (436197b8) ---
+cmpkeys.py (state.py da main × branch) → hints: só + archive_record; total/optional iguais
+pytest scratch test_realgraph_marks.py (main.app, MockLLM, on) → 1 passed (canais + marca chega ao archivist)
+type_gate.py --files state.py state_archive.py → rc 0; basedpyright state.py state_archive.py → 0 errors
+land_check --only types → NÃO rodado (RAM 1,9 GB, suíte completa em paralelo; gate pede ≥ 3 GB)
+git diff main -- persistence.py tests/fixtures/spec382_node_golden.json → vazio
+baseline_growth.py --base main → nenhum baseline cresceu
+pt.sh -n 0 tests/test_spec382_node_golden.py → 66 passed
+pt.sh -n 0 test_archive_record test_archivist_policy test_archived_state_persistence test_state_archive_marks test_size_budget test_art_state_persistence test_spec300_persistence_api test_spec304_roster → 123 passed
+runmut.sh (25 mutações por plugin) → controle verde, 24/24 KILLED
 ```
