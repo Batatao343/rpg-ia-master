@@ -273,6 +273,14 @@ caminho de gravação de hoje, então nenhum writer novo de estado aparece.
 - **`config/flags.yaml`:** entrada `RPG_ARCHIVE_RECORD` (R7).
 - **Formato da marca:** `{"kind": "rest", "turn": 11}`. O arquivista ignora a marca se `turn` ≠
   `world.turn_count`.
+- **Desvios da execução (22/11):** (1) descanso bloqueado pelo clima carrega a chave extra
+  `"blocked": "<clima>"` na marca (`_StoryTurn.rest_blocked`), para a frase de R4 não depender de
+  recomputar o clima depois do tick; o descanso normal mantém `{"kind","turn"}` exato. (2) `archivist.trigger`
+  é logado em `_archive_node` quando o gate mantém (não dentro de `_should_archive`, que também roda no
+  caminho adiado); a decisão não muda. (3) Com T0/T1 o `get_llm` do arquivista nem é construído. (4) O log
+  novo muda só o digest `events` de `campaign_combate_off` em `tests/fixtures/spec382_node_golden.json`
+  (state/result/trace idênticos). (5) `state.py` +1 linha (campo da marca): `size_budget.json` sobe 1 só ali;
+  `archivist.py` (−33) e `storyteller.py` (−1) encolhem.
 
 Exemplo de resumo T1 (local canônico de `data/`; o executor escolhe um id real ao escrever o
 fixture): `"… Ela seguiu pela estrada do norte. O herói descansou em {nome do local}; agora é
