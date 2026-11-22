@@ -930,6 +930,7 @@ class GameState(TypedDict):
     archivist_last_run: int  # Controle de frequência do arquivista
     archive_due: bool  # flag transitória: evento relevante pede arquivamento (cadência)
     archive_low: int | None  # SPEC-318: turno cujo archive_due é de baixo valor (política lean)
+    archive_record: dict | None  # SPEC-422: marca do turno (não persistida)
     archived: bool  # Arquivamento é persistente, inclusive após passar pelo grafo.
     archived_reason: str
     game_over: bool  # Fase 4.6: player morreu — save vira memorial (sem chave no

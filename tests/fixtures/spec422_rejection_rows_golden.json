@@ -1,0 +1,110 @@
+{
+ "initial": {
+  "archivist_last_run": 49,
+  "memory_facts": [],
+  "memory_rejections": [
+   {
+    "claimed_region": "Brekmar",
+    "expected_region": "Nova Arcádia",
+    "location_id": "na_anel_dourado",
+    "location_name": "Anel Dourado",
+    "provenance": "narrative_summary",
+    "reason": "location_region_contradiction",
+    "text_preview": "O Anel Dourado é um bairro alto de Brekmar.",
+    "turn": 49
+   },
+   {
+    "claim_kind": "rejected_item",
+    "item_name": "Diário da Casa Vesper",
+    "provenance": "narrative_summary",
+    "reason": "inventory_possession_contradiction",
+    "text_preview": "O viajante carrega o Diário da Casa Vesper.",
+    "turn": 49
+   },
+   {
+    "claimed": "humano",
+    "expected": "goblin",
+    "field": "species",
+    "npc_key": "Skriit Mil-olhos",
+    "npc_name": "Skriit Mil-olhos",
+    "provenance": "narrative_summary",
+    "reason": "npc_identity_contradiction",
+    "text_preview": "Skriit Mil-olhos é um homem alto de cabelo grisalho.",
+    "turn": 49
+   }
+  ],
+  "narrative_summary": "Ceslo descansa."
+ },
+ "plain": {
+  "archivist_last_run": 49,
+  "memory_facts": [],
+  "memory_rejections": [
+   {
+    "claimed_region": "Brekmar",
+    "expected_region": "Nova Arcádia",
+    "location_id": "na_anel_dourado",
+    "location_name": "Anel Dourado",
+    "provenance": "narrative_summary",
+    "reason": "location_region_contradiction",
+    "text_preview": "O Anel Dourado é um bairro alto de Brekmar.",
+    "turn": 49
+   },
+   {
+    "claim_kind": "rejected_item",
+    "item_name": "Diário da Casa Vesper",
+    "provenance": "narrative_summary",
+    "reason": "inventory_possession_contradiction",
+    "text_preview": "O viajante carrega o Diário da Casa Vesper.",
+    "turn": 49
+   },
+   {
+    "claimed": "humano",
+    "expected": "goblin",
+    "field": "species",
+    "npc_key": "Skriit Mil-olhos",
+    "npc_name": "Skriit Mil-olhos",
+    "provenance": "narrative_summary",
+    "reason": "npc_identity_contradiction",
+    "text_preview": "Skriit Mil-olhos é um homem alto de cabelo grisalho.",
+    "turn": 49
+   }
+  ],
+  "narrative_summary": "Ceslo segue viagem."
+ },
+ "success": {
+  "archivist_last_run": 49,
+  "memory_facts": [],
+  "memory_rejections": [
+   {
+    "claimed_region": "Brekmar",
+    "expected_region": "Nova Arcádia",
+    "location_id": "na_anel_dourado",
+    "location_name": "Anel Dourado",
+    "provenance": "narrative_summary",
+    "reason": "location_region_contradiction",
+    "text_preview": "O Anel Dourado é um bairro alto de Brekmar.",
+    "turn": 49
+   },
+   {
+    "claim_kind": "rejected_item",
+    "item_name": "Diário da Casa Vesper",
+    "provenance": "narrative_summary",
+    "reason": "inventory_possession_contradiction",
+    "text_preview": "O viajante carrega o Diário da Casa Vesper.",
+    "turn": 49
+   },
+   {
+    "claimed": "humano",
+    "expected": "goblin",
+    "field": "species",
+    "npc_key": "Skriit Mil-olhos",
+    "npc_name": "Skriit Mil-olhos",
+    "provenance": "narrative_summary",
+    "reason": "npc_identity_contradiction",
+    "text_preview": "Skriit Mil-olhos é um homem alto de cabelo grisalho.",
+    "turn": 49
+   }
+  ],
+  "narrative_summary": "Ceslo segue viagem."
+ }
+}

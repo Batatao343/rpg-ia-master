@@ -13,8 +13,8 @@ from pydantic import BaseModel, Field, field_validator
 from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
 from rag import add_memory_to_session, add_npc_memory
+from services import archive_record, latency_flags
 from services import conflict_summary as conflict_summary_service
-from services import latency_flags
 from services.chronicle import append_entry
 from services.context_builder import render_event
 from services.event_processor import process_pending_events
@@ -569,6 +569,13 @@ def _lean_skip_updates(state: GameState, game_id, turn) -> dict:
     return out
 
 
+def _record_telemetry(kind: str) -> None:
+    from observability import latency as _lat
+
+    _lat.bump("archive_deterministic")
+    _log_event("archivist", "record", level="info", kind=kind)
+
+
 def _archive_node(
     state: GameState, *, event_updates: dict | None = None, baseline: dict | None = None
 ):
@@ -652,6 +659,12 @@ def _archive_node(
             **skip_extra,
         }  # turno trivial: pula o LLM do arquivista
 
+    _log_event(  # SPEC-422 R9: qual gatilho manteve o gate (so nomes)
+        "archivist",
+        "trigger",
+        level="info",
+        reasons=archive_record.trigger_reasons(effective_state, turn),
+    )
     # Retry global ocorre antes de produzir candidatos novos. O ledger só muda
     # depois do write físico; uma falha deixa exatamente os mesmos IDs pendentes.
     memory_facts = normalize_memory_facts(state.get("memory_facts"))
@@ -751,33 +764,12 @@ def _archive_node(
         memory_rejections = bounded_audit_rows(
             [
                 *memory_rejections,
-                *[
-                    {
-                        "turn": int((state.get("world") or {}).get("turn_count", 0) or 0),
-                        "provenance": "narrative_summary",
-                        "reason": "location_region_contradiction",
-                        **row,
-                    }
-                    for row in initial_location_rejections
-                ],
-                *[
-                    {
-                        "turn": int((state.get("world") or {}).get("turn_count", 0) or 0),
-                        "provenance": "narrative_summary",
-                        "reason": "inventory_possession_contradiction",
-                        **row,
-                    }
-                    for row in initial_inventory_rejections
-                ],
-                *[
-                    {
-                        "turn": int((state.get("world") or {}).get("turn_count", 0) or 0),
-                        "provenance": "narrative_summary",
-                        "reason": "npc_identity_contradiction",
-                        **row,
-                    }
-                    for row in initial_npc_rejections
-                ],
+                *archive_record.summary_rejection_rows(
+                    int((state.get("world") or {}).get("turn_count", 0) or 0),
+                    initial_location_rejections,
+                    initial_inventory_rejections,
+                    initial_npc_rejections,
+                ),
             ],
             limit=MAX_MEMORY_REJECTIONS,
         )
@@ -935,7 +927,14 @@ def _archive_node(
             )
         return True
 
-    llm = get_llm(temperature=0.3, tier=ModelTier.SMART)
+    record_kind = archive_record.decide(
+        effective_state,
+        turn,
+        conflict_summary=conflict_summary,
+        suppress_free_facts=suppress_free_facts,
+        deferred=baseline is not None,
+    )
+    llm = None if record_kind else get_llm(temperature=0.3, tier=ModelTier.SMART)
 
     from gamedata import get_location
     from inventory import item_display
@@ -1001,9 +1000,18 @@ def _archive_node(
     )
 
     try:
-        archivist_llm = llm.with_structured_output(MemoryUpdate)
-        # SPEC-223 R5: falas do jogador entram delimitadas como dado.
-        result = archivist_llm.invoke([sys_msg] + guard_messages(context_msgs))
+        if record_kind:  # SPEC-422: registro em Python; nunca passa por with_structured_output
+            result = archive_record.memory_update(
+                record_kind,
+                current_summary=current_summary,
+                state=effective_state,
+                mark=effective_state.get("archive_record"),
+            )
+            _record_telemetry(record_kind)
+        else:
+            archivist_llm = llm.with_structured_output(MemoryUpdate)
+            # SPEC-223 R5: falas do jogador entram delimitadas como dado.
+            result = archivist_llm.invoke([sys_msg] + guard_messages(context_msgs))
 
         if not isinstance(result, MemoryUpdate):
             # Structured output falhou (Gemini retornou None ou tipo inesperado).
@@ -1040,33 +1048,12 @@ def _archive_node(
                 memory_rejections = bounded_audit_rows(
                     [
                         *memory_rejections,
-                        *[
-                            {
-                                "turn": int(turn),
-                                "provenance": "narrative_summary",
-                                "reason": "location_region_contradiction",
-                                **row,
-                            }
-                            for row in summary_rejections
-                        ],
-                        *[
-                            {
-                                "turn": int(turn),
-                                "provenance": "narrative_summary",
-                                "reason": "inventory_possession_contradiction",
-                                **row,
-                            }
-                            for row in inventory_rejections
-                        ],
-                        *[
-                            {
-                                "turn": int(turn),
-                                "provenance": "narrative_summary",
-                                "reason": "npc_identity_contradiction",
-                                **row,
-                            }
-                            for row in npc_rejections
-                        ],
+                        *archive_record.summary_rejection_rows(
+                            turn,
+                            summary_rejections,
+                            inventory_rejections,
+                            npc_rejections,
+                        ),
                     ],
                     limit=MAX_MEMORY_REJECTIONS,
                 )
@@ -1165,33 +1152,12 @@ def _archive_node(
             memory_rejections = bounded_audit_rows(
                 [
                     *memory_rejections,
-                    *[
-                        {
-                            "turn": int(turn),
-                            "provenance": "narrative_summary",
-                            "reason": "location_region_contradiction",
-                            **row,
-                        }
-                        for row in summary_rejections
-                    ],
-                    *[
-                        {
-                            "turn": int(turn),
-                            "provenance": "narrative_summary",
-                            "reason": "inventory_possession_contradiction",
-                            **row,
-                        }
-                        for row in inventory_rejections
-                    ],
-                    *[
-                        {
-                            "turn": int(turn),
-                            "provenance": "narrative_summary",
-                            "reason": "npc_identity_contradiction",
-                            **row,
-                        }
-                        for row in npc_rejections
-                    ],
+                    *archive_record.summary_rejection_rows(
+                        turn,
+                        summary_rejections,
+                        inventory_rejections,
+                        npc_rejections,
+                    ),
                 ],
                 limit=MAX_MEMORY_REJECTIONS,
             )
@@ -1227,7 +1193,8 @@ def _archive_node(
         if base_chron != (event_updates.get("chronicle", state.get("chronicle") or [])):
             updates["chronicle"] = base_chron
 
-        updates["archivist_last_run"] = turn
+        if record_kind != "rest":  # R5: o registro de descanso nao avanca o ultimo resumo do LLM
+            updates["archivist_last_run"] = turn
         updates["archive_due"] = bool(pending_memory_facts or remaining_npc_memory)
 
         return {**event_updates, **updates}

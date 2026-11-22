@@ -5,7 +5,7 @@
   "function": 100
  },
  "files": {
-  "agents/archivist.py": 1237,
+  "agents/archivist.py": 1204,
   "agents/combat.py": 3946,
   "agents/npc.py": 1604,
   "agents/storyteller.py": 3017,
@@ -35,12 +35,12 @@
   "services/npc_world.py": 1572,
   "services/reputation.py": 1349,
   "services/world_quests.py": 1134,
-  "state.py": 1082,
+  "state.py": 1083,
   "web/src/types.ts": 1272,
   "world_utils.py": 1962
  },
  "functions": {
-  "agents/archivist.py::_archive_node": 666,
+  "agents/archivist.py::_archive_node": 626,
   "agents/archivist.py::_drain_npc_memory": 130,
   "agents/bestiary.py::generate_new_enemy": 108,
   "agents/campaign_manager.py::_build_plan": 166,

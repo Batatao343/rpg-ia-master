@@ -23,8 +23,11 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `archivist.node_failed` | `error` |
 | `archivist.npc_memory_retry_failed` | `error` |
 | `archivist.rag_persist_failed` | `error` |
+| `archivist.record` | `kind` |
+| `archivist.record_shadow` | `kind`, `reason`, `would_skip` |
 | `archivist.structured_output_unexpected` | `result_type` |
 | `archivist.summary_saved_text_fallback` | — |
+| `archivist.trigger` | `reasons` |
 | `archivist.vector_index_unavailable` | — |
 | `art.canon_similarity` | `min_hamming`, `threshold` |
 | `art.canon_similarity_failed` | `error_type` |

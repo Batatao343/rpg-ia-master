@@ -15,9 +15,9 @@ from agents.world_simulator import simulate_world
 from llm_setup import get_llm
 from observability.telemetry import log_event as _log_event
 from rag import query_rag
+from services import archive_record, latency_flags, quest_log
 from services import discovery as disc
 from services import graph_resolver as gr
-from services import latency_flags, quest_log
 from services import law as _law_mod
 from services.context_builder import build_context_pack
 from services.lore_query import compose_lore_query
@@ -1252,6 +1252,7 @@ class _StoryTurn:
     quarantine_llm_payload: Any = None
     quests_ativas: Any = None
     rep_events: Any = None
+    rest_blocked: Any = None
     rest_note: Any = None
     rested_player: Any = None
     reward_player_before: Any = None
@@ -1562,6 +1563,7 @@ def _story_rest_passage(t: _StoryTurn) -> None:
             t.factions, t.world, t.faction_events, t.intel
         )
     if rest_blocked:
+        t.rest_blocked = str(t.world.get("weather", "o miasma"))
         t.rest_note = (
             f"O jogador TENTOU descansar, mas o clima ({t.world.get('weather', 'o miasma')}) "
             f"NÃO permite descanso seguro ao relento — NADA foi recuperado e o tempo passou "
@@ -2933,19 +2935,16 @@ def _story_assemble_quests(t: _StoryTurn) -> None:
             *list(t.updates.get("narrative_rejections") or []),
             *t.mediation_rejections,
         ]
+    _sim_before = t.updates.get("world_sim")
     _apply_proposed_rumors(t.state, t.updates, t.update, t.turn, bool(t.quarantine_llm_payload))
-    # SPEC-318 R5: viagem dentro da mesma regiao, sem descanso/beat/evento/missao, e baixo valor.
-    if (
-        latency_flags.archive_low_wanted()
-        and t.dest
-        and t.rested_player is None
-        and not t.beat_done
-        and not t.updates.get("pending_world_events")
-        and "quests" not in t.updates
-        and "memory_canonical_facts" not in t.updates
-        and _same_region_travel(t.state, t.world)
-    ):
-        t.updates["archive_low"] = t.turn
+    # SPEC-318 R5 (`archive_low`) e SPEC-422 R3 (`archive_record`): marcas transitorias.
+    t.updates.update(
+        archive_record.story_marks(
+            t,
+            same_region=lambda: _same_region_travel(t.state, t.world),
+            rumor_new=t.updates.get("world_sim") is not _sim_before,
+        )
+    )
 
 
 def _story_exception_fallback(t: _StoryTurn) -> dict:

@@ -51,6 +51,12 @@ RPG_ARCHIVE_POLICY_SHADOW:
   default: "0"
   spec: SPEC-318
   note: "modo sombra da política do arquivista (medição)"
+RPG_ARCHIVE_RECORD:
+  kind: release
+  default: "off"
+  spec: SPEC-422
+  expires: 2027-02-28
+  note: "registro deterministico do arquivista (descanso sem gancho, resposta descartada): off|shadow|on"
 RPG_AUDIT_ARTIFACTS:
   kind: dev
   default: null

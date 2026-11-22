@@ -5,6 +5,7 @@
   RPG_DAY_DIGEST=llm|inline       digest do dia: chamada `narrate_day` ou bloco factual (default inline)
   RPG_ARCHIVE_POLICY=legacy|lean  gate do arquivista (default legacy)
   RPG_ARCHIVE_POLICY_SHADOW=0|1   mede o que `lean` pularia sem mudar nada (default 0)
+  RPG_ARCHIVE_RECORD=off|shadow|on  registro deterministico do arquivista (SPEC-422, default off)
 
 Valor invalido cai no default do codigo.
 """
@@ -42,3 +43,13 @@ def archive_low_wanted() -> bool:
 
 def archive_policy_shadow() -> bool:
     return os.getenv("RPG_ARCHIVE_POLICY_SHADOW", "").strip().lower() in ("1", "true", "on")
+
+
+def archive_record_mode() -> str:
+    """SPEC-422 R7: `off` (default), `shadow` (marca + mede, LLM como hoje) ou `on`."""
+    return _choice("RPG_ARCHIVE_RECORD", ("off", "shadow", "on"), "off")
+
+
+def archive_record_marks_wanted() -> bool:
+    """O narrador so carimba `archive_record` com `shadow`/`on`: com `off` o estado nao muda."""
+    return archive_record_mode() != "off"
