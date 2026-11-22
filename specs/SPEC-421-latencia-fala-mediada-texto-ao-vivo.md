@@ -1,6 +1,6 @@
 # SPEC-421 — latencia-fala-mediada-texto-ao-vivo
 
-> **Status:** `approved` (dono, 13/11: "pode. e execute elas")
+> **Status:** `in-progress` (aprovada pelo dono em 13/11; código pousado em 22/11 com a flag `off`; revisão Sol APPROVED na re-revisão; faltam o smoke §6 e a fase `shadow` no staging, que dependem de deploy)
 > **Criada:** 2026-11-13 · **Atualizada:** 2026-11-13
 > **Depende de:** SPEC-319 (`done`: stream de tokens, `StreamGuard`, `risk` por frase), SPEC-202 (`done`: mediação do narrador, R11 guard de segredo), SPEC-316 (`done`: `replace` silencioso, D4)
 > **Desbloqueia:** —
@@ -305,14 +305,14 @@ por acaso e é válido como trava.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R11 cobertos por teste; I1–I10 verdes.
-- [ ] Teste da Etapa 1.1 falhava antes da mudança (registrar o sha/saída no diário da spec).
-- [ ] `tests/test_size_budget.py` verde sem `--update`; `routes/turn.py` sem diff.
-- [ ] Diff vazio em `_guard_mediation_secret`, `find_unrevealed`, `SECRET_SIGNATURES`, `revealed_corpus` (R9).
+- [x] R1–R11 cobertos por teste; I1–I10 verdes.
+- [x] Teste da Etapa 1.1 falhava antes da mudança (registrar o sha/saída no diário da spec).
+- [x] `tests/test_size_budget.py` verde sem `--update`; `routes/turn.py` sem diff.
+- [x] Diff vazio em `_guard_mediation_secret`, `find_unrevealed`, `SECRET_SIGNATURES`, `revealed_corpus` (R9).
 - [ ] `uv run pytest` verde (suíte completa offline, coordenador no pouso).
-- [ ] Guard de FallbackLLM: `narrate_structured` devolvendo `AIMessage` em turno mediado `on` cai no
+- [x] Guard de FallbackLLM: `narrate_structured` devolvendo `AIMessage` em turno mediado `on` cai no
       `isinstance` de `agents/storyteller.py:2339-2349` (teste com `ScriptedLLM.failing(streaming=True)`).
-- [ ] Saves antigos continuam carregando (nenhum campo persistido novo; o mostrado nunca entra em state/save).
+- [x] Saves antigos continuam carregando (nenhum campo persistido novo; o mostrado nunca entra em state/save).
 - [ ] **Promoção para `on` no staging** (todos, em `shadow`, n ≥ 30 turnos mediados):
   - `leak = true`: **0** (critério duro; um caso → volta a `off` e reabre a spec);
   - `would_replace` ≤ 5 % dos turnos mediados (D1 da SPEC-319, `specs/SPEC-319-latencia-streaming-tokens-e-cauda.md:156`);
@@ -339,7 +339,15 @@ capturando o SSE bruto.
 
 ## Não rodou e por quê
 
-- Nada ainda (spec em `draft`). Previsto: §6 e os critérios de promoção dependem do staging e rodam pelo
+- **Smoke §6 e fase `shadow` (staging):** não rodaram. O staging está em `d7aa4beb` (10/11) e o próximo deploy depende de o
+  dono aplicar as migrações das SPEC-413/410 (`ESTADO_ATUAL.md` § Bloqueios). O preset do staging já leva
+  `RPG_MEDIATED_STREAM=shadow` (`scripts/staging/staging_flags.json`). A promoção a `on` fica aberta até lá.
+- **CI pré-pouso de risco `alto`:** não rodou. Push de branch `spec-NNN` não está autorizado pelo dono
+  (`ESTADO_ATUAL.md` § Bloqueios); a suíte completa local e a revisão Sol com mutações substituem.
+- **Revisão Sol (22/11):** 1ª passada `CHANGES_REQUIRED` (P1-1: teste do véu não travava a avaliação pré-véu; P2-1; P3-1..4),
+  corrigidos em `60ae3418`; re-revisão `APPROVED` com 5 mutações reprovando e fuzz de 6.000 casos sem vazamento
+  (`handoffs/SPEC-421-sol-review.md`).
+- Da escrita da spec: §6 e os critérios de promoção dependem do staging e rodam pelo
   coordenador depois da revisão; a medição de 13/11 não registra `interlocutor_reason` por turno, então a
   atribuição dos 8 turnos à mediação vem do código (`first_token_server_ms: null` + rota storyteller), não do
   log. O evento R8 confirma no `shadow` quantos turnos são de fato mediados.
