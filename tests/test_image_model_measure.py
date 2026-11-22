@@ -19,6 +19,14 @@ def card_with_new_model(monkeypatch):
     monkeypatch.setattr(image_pricing, "_CARD", {**image_pricing._CARD, "extra_models": [NEW]})
 
 
+@pytest.fixture(autouse=True)
+def no_paid_calls(monkeypatch, tmp_path_factory):
+    """Safety net: no test here can build a real generator, read a key or write under docs/."""
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr(mim, "_build_generator", lambda: pytest.fail("generator built"))
+    monkeypatch.setattr(mim, "_PROJECT_OUT", tmp_path_factory.mktemp("proj") / "medicao.json")
+
+
 class Fake:
     def __init__(self, out_tokens=1000, *, usage=None):
         self.calls = []

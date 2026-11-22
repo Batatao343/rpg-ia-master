@@ -202,7 +202,10 @@ def measure(
                 )
             )
         except Exception as exc:  # noqa: BLE001  # silent-ok: recorded as stopped (type only)
-            stopped = f"provider_error: {type(exc).__name__}"
+            status = getattr(exc, "http_status", None)
+            stopped = f"provider_error: {type(exc).__name__}" + (
+                f" http {status}" if status else ""
+            )
             break
         latency_ms = int((time.perf_counter() - started) * 1000)
         record = _record(case, generated, latency_ms, len(refs))

@@ -132,7 +132,7 @@ def complexity_for(brief: Mapping[str, Any]) -> str | None:
 
     Um brief cotado antes da troca de modelo nunca manda ``complexity`` ao modelo antigo."""
     value = brief.get("complexity")
-    return value if value in _COMPLEXITIES else None
+    return value if isinstance(value, str) and value in _COMPLEXITIES else None
 
 
 def _complexity(profile: Mapping[str, Any], fmt: str) -> dict[str, str]:

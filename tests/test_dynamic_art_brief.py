@@ -343,6 +343,6 @@ def test_profile_complexity_so_em_2_6():
 
 
 def test_complexity_for_so_aceita_low_medium_high():
-    for value in ("ultra", "", "High", 3, None):
+    for value in ("ultra", "", "High", 3, None, ["high"], {"a": 1}):
         assert art_brief.complexity_for({"complexity": value}) is None
     assert art_brief.complexity_for({"complexity": "medium"}) == "medium"
