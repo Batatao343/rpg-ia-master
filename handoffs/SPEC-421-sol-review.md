@@ -1,7 +1,42 @@
 # SPEC-421 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus 5.5 / Sol (`spec-reviewer`) · **Data:** 2026-11-22 · **Commit revisado:** `1e72a00b`
+> **Veredito:** `APPROVED` (re-revisão de `60ae3418`; a 1ª rodada em `1e72a00b` foi `CHANGES_REQUIRED`)
+> **Revisor:** Opus 5.5 / Sol (`spec-reviewer`) · **Data:** 2026-11-22 · **Commit revisado:** `60ae3418`
+
+## Re-revisão (`git diff fb7ccb4f..60ae3418`)
+
+| Achado | Estado | Evidência |
+|---|---|---|
+| P1-1 | corrigido | `tests/test_mediated_stream.py:228-244`: o mapa `{"Valerius": "o Regente"}` põe o nome oculto dentro da assinatura. As fatias são 1, 7 e 100000. Asserções: houve hold com `rule == "mediation_secret"`, nenhum delta contém "Regente", "Valerius" nem "pacto com", e a 1ª frase saiu. Sem mutação: verde. Com `mut_post_veil`: **reprova**. |
+| P2-1 | corrigido | `:306-322`: `_comparable(out)` compara o retorno inteiro do nó; as mensagens entram como (tipo, conteúdo). |
+| P3-1 | corrigido | `git diff main -- tests/size_budget.json` mostra uma única linha, `agents/storyteller.py` 3020 → 3017. `size_budget.py` passa (rc 0). |
+| P3-2 | corrigido | Spec F-1: o espaço duplo saiu da lista de lacunas, com a razão (`prose_guard.py:106`). NBSP/zero-width e markdown foram levados para D2. |
+| P3-3 | corrigido | `:530`: `assert llm.stream_calls == 1 and llm.invokes == 0`. |
+| P3-4 | corrigido | `services/mediated_stream.py:106,109,114`: o caminho sem gate começa limpando o `_Run` (`_RUN.set(None)`). O caminho com gate guarda o token e dá `reset(run_token)` no `except`. O código está certo: o `reset` só restaura o valor anterior num turno que já está lançando, e o próximo `narrate` limpa ou substitui. |
+
+**P3-4, o teste.** O executor alegou que o teste não prova a limpeza no início de `narrate`. A alegação está
+errada. Rodei duas mutações em `test_failed_turn_does_not_leak_run_into_next_after_final`:
+
+- `mut_no_clear` tira o `_RUN.set(None)` do caminho sem gate. O teste reprova em `:607`: o `_Run` plantado gera
+  um `sse.mediated_stream` falso.
+- `mut_no_except_reset` tira a limpeza no `except`. O teste reprova em `:602`: o `_Run` sobra depois do nó que
+  falhou, porque a exceção atravessa `narrate` antes de o nó engoli-la.
+
+O teste cobre as duas metades e é aceitável como está. Não falta caso.
+
+**`staging_flags.json`.** Ganhou `"RPG_MEDIATED_STREAM": "shadow"`, o que bate com D1. O default da `main`
+continua `off`: `config/flags.yaml` tem `default: "off"` e `mediated_stream_mode()` lê `off` quando a variável
+falta. O preset só vale para `vercel_env.py` no staging. Os testes `test_spec192_vercel_env.py` e
+`test_spec325_flags.py` passaram.
+
+**Regressão.** Nenhuma. Os mutantes `mut_gate_off`, `mut_no_gate` e `mut_find_never` continuam derrubando os 32
+casos de I1, agora também com o teste do véu. O fuzz de 6.000 casos no HEAD novo deu 0 vazamentos.
+
+Achados restantes: nenhum. `APPROVED`.
+
+---
+
+## 1ª rodada (`1e72a00b`): `CHANGES_REQUIRED`
 
 ## Escopo
 
@@ -82,6 +117,29 @@ no código como está. O P1 é de trava: o teste que deveria segurar uma regress
 sensível (véu × assinatura) passa com o produto quebrado.
 
 ## Evidência verificada
+
+### Re-revisão (`60ae3418`)
+
+Mutações com `pytest -n 0 -rf tests/test_mediated_stream.py`, contagem de FAILED por teste:
+
+```text
+sem mutação          → 0 falhas
+mut_post_veil        → test_concealed_name_gate_sees_pre_veil (1)
+mut_gate_off         → concealed_name (1), gate_exception (1), gate_holds_every_sentence (15), shadow_logs (1), never_shows_secret (32)
+mut_no_gate          → concealed_name (1), first_delta_ms (1), on_logs_replace (1), shadow_logs (1), never_shows_secret (32)
+mut_find_never       → concealed_name (1), gate_exception (1), gate_holds (15), on_logs (1), shadow_logs (1), never_shows_secret (32), parity_gaps (1), first_sentence (1), second_paragraph (1), sse_no_live_leak (1)
+mut_no_clear         → test_failed_turn_does_not_leak_run_into_next_after_final (:607)
+mut_no_except_reset  → test_failed_turn_does_not_leak_run_into_next_after_final (:602)
+fuzz421.py (6000 casos, só o gate) → 0 vazamentos
+pt.sh -n 0 test_mediated_stream test_stream_structured test_size_budget test_flag_registry test_spec192_vercel_env test_spec325_flags → 179 passed
+size_budget.py → rc 0 · ruff check → limpo
+```
+
+O `red_green` da 1ª rodada segue válido para os testes que não mudaram. O teste do véu continua verde também
+na `main`: lá o turno mediado não streama e passa sem nada para mostrar. Por isso a prova que vale para ele é
+a mutação acima, não a tabela.
+
+### 1ª rodada
 
 `bash scripts/dev/red_green.sh 421` (worktree, `1e72a00b`):
 
