@@ -138,12 +138,11 @@ jobs:
           retention-days: 7
 
   types:
-    # SPEC-418: gate de tipos (basedpyright); calibração: continue-on-error até 3 runs limpos (R17).
+    # SPEC-418: gate de tipos (basedpyright); bloqueante desde 22/11 (R17: 4 runs limpos em docs/spec418/medicao.md).
     needs: scope
     if: github.event_name != 'schedule' && needs.scope.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
     timeout-minutes: 10
-    continue-on-error: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

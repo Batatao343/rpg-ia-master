@@ -73,4 +73,9 @@ Classificação dos 66 diagnósticos do escopo final (todos listados, amostra < 
 
 | Run | Commit | Duração | rc | Motivo de vermelho |
 |---|---|---|---|---|
-| (aguarda push autorizado pelo dono) | | | | |
+| `validate` 43240617142 (push) | `46fed109` | 29 s | 0 | — |
+| `validate` 43241884125 (push) | `ee2edbf4` | 28 s | 0 | — |
+| `validate` 45043577875 (push) | `a653bae1` | 33 s | 0 | — |
+| `validate` 45043962833 (push) | `84a3266a` | 31 s | 0 | — |
+
+R17 cumprida em 22/11: (a) 4 commits distintos; (b) nenhum vermelho; (c) ≤ 33 s contra `timeout-minutes: 10`. `continue-on-error` removido do job `types` (`ci(types): make type gate blocking`).

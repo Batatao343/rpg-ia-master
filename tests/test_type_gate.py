@@ -198,7 +198,7 @@ def test_ci_has_types_job() -> None:
     job = wf["jobs"]["types"]
     assert "docs_only" in job["if"]
     assert job["needs"] == "scope"
-    assert job["continue-on-error"] is True  # calibracao (R17): o coordenador remove depois
+    assert "continue-on-error" not in job  # R17: calibracao encerrada, gate bloqueante
     runs = " ".join(s.get("run", "") for s in job["steps"])
     assert "type_gate.py --check" in runs
     assert "uv sync --all-extras" in runs
