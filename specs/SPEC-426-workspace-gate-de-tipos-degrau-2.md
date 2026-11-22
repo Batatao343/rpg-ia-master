@@ -1,6 +1,6 @@
 # SPEC-426 — workspace-gate-de-tipos-degrau-2
 
-> **Status:** `draft`
+> **Status:** `approved` (22/11, pelo coordenador, por delegação do dono; D-426-1 a D-426-5 como recomendado; veto do dono continua possível)
 > **Criada:** 2026-11-22 · **Atualizada:** 2026-11-22
 > **Depende de:** SPEC-418 (`done`; gate bloqueante desde 22/11, `docs/spec418/medicao.md:81`).
 > **Desbloqueia:** degraus 4-5 da SPEC-418 (`routes/` + `api.py`, `reportUnnecessaryTypeIgnoreComment`); follow-up do `storyteller` (§2 Fora de escopo).
