@@ -1,6 +1,6 @@
 # SPEC-425 — arte-troca-modelo-imagem-gpt-image-2-6
 
-> **Status:** `approved` (22/11, pelo coordenador, por delegação: vale para a **Etapa 0** e para D2, D4, D5, D6, D7 e D9 como recomendado. As Etapas 1–3 esperam o dono: D8 (chave e gasto de até US$ 2,00), D1 (variante, olhando a ficha de contato) e D3 se o teto passar de US$ 0,12. Veto do dono continua possível)
+> **Status:** `in-progress` (22/11: Etapa 0 entregue, sem card novo; Etapas 1–3 esperam o dono. Aprovada em 22/11, pelo coordenador, por delegação: vale para a **Etapa 0** e para D2, D4, D5, D6, D7 e D9 como recomendado. As Etapas 1–3 esperam o dono: D8 (chave e gasto de até US$ 2,00), D1 (variante, olhando a ficha de contato) e D3 se o teto passar de US$ 0,12. Veto do dono continua possível)
 > **Criada:** 2026-11-22 · **Atualizada:** 2026-11-22
 > **Depende de:** SPEC-125, SPEC-326 e SPEC-352 (`done`); SPEC-409 (`in-progress`: o card de imagem renovado em dezembro segue o runbook dela)
 > **Desbloqueia:** arte dinâmica no staging depois de 10/02/2027 (o modelo atual desliga nessa data)
@@ -168,6 +168,13 @@ N/A: sem thread, async, cancelamento, retry ou lock novos. Timeout e lease segue
 2. **Implementação:** R1, R3–R9. O card novo só existe na renovação (`observed_at` = dia da leitura da página, que o
    coordenador relê). Se a Etapa 0 não estiver pronta antes de 03/12, a renovação de dezembro sai sozinha, com o
    mesmo modelo, e `extra_models` entra no card seguinte. A Etapa 0 nunca segura a renovação (D7).
+**Desvio registrado (22/11, coordenador):** a Etapa 0 entrega só o **suporte de código** a `extra_models`
+   (R1: `priced_models()`, `require_image_prices`, `price_image_event`), provado com card de teste por monkeypatch;
+   o card atual segue sem `extra_models` (ausente = lista vazia). **Não** há arquivo de card novo nem mudança do
+   caminho em `image_pricing.py:16`: o card com `extra_models` nasce na renovação de dezembro (D7). Fica para a
+   renovação: R3 e o teste "card novo tem as mesmas taxas, `extra_models` exato e `derivation` com as datas". O gate
+   de R2 já vale (`tests/test_pricing_card_files.py`) para qualquer card presente. `--canary` (R15) entrou no
+   script; a comparação com `medicao.json` só roda de fato depois da Etapa 1.
 3. **Verificação:** os arquivos de teste acima, mais `tests/test_rate_card_freshness.py` e
    `tests/test_bug_finops_wallet_jobs.py`, todos com `-n 2`.
 

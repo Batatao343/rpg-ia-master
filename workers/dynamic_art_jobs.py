@@ -16,6 +16,7 @@ from observability.telemetry import log_event
 from services.art_brief import (
     MAX_REFERENCES,
     load_art_profile,
+    complexity_for,
     quality_for,
     reference_kind,
     render_image_prompt,
@@ -128,6 +129,19 @@ def resolve_reference_payloads(
     return tuple(used), tuple(payloads)
 
 
+def _image_request(
+    brief: Mapping, model: str, used: tuple[str, ...], payloads: tuple[bytes, ...]
+) -> ImageGenerationInput:
+    return ImageGenerationInput(
+        render_image_prompt(brief, used),
+        model,
+        brief["size"],
+        payloads,
+        quality_for(brief),
+        complexity_for(brief),
+    )
+
+
 def canon_similarity(
     output: bytes, used: tuple[str, ...], payloads: tuple[bytes, ...], *, threshold: int
 ) -> dict:
@@ -212,15 +226,7 @@ def generate_dynamic_art_job(
         generation=generation,
         approved_portrait_key=approved_portrait_key,
     )
-    generated = generator.generate(
-        ImageGenerationInput(
-            render_image_prompt(brief, used),
-            generation["model"],
-            brief["size"],
-            payloads,
-            quality_for(brief),
-        )
-    )
+    generated = generator.generate(_image_request(brief, generation["model"], used, payloads))
     safe_usage = safe_provider_usage(generated.usage, image_generated=True)
     if usage_sink is not None:
         usage_sink(generated.model, safe_usage)

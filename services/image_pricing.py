@@ -19,10 +19,15 @@ _CARD = json.loads(_BYTES)
 IMAGE_PRICING_VERSION = _CARD["version"] + "-" + sha256(_BYTES).hexdigest()[:16]
 
 
+def priced_models() -> frozenset[str]:
+    """Modelos cobrados pelas taxas do card: ``model`` + ``extra_models`` (ausente = nenhum)."""
+    return frozenset({_CARD["model"], *(_CARD.get("extra_models") or [])})
+
+
 def require_image_prices(model: str, at: datetime) -> None:
     observed = datetime.fromisoformat(_CARD["observed_at"])
     age = at.astimezone(UTC) - observed
-    if model != _CARD["model"] or not timedelta(0) <= age <= rate_card_max_age():
+    if model not in priced_models() or not timedelta(0) <= age <= rate_card_max_age():
         raise PricingUnavailable("image model/rate card unavailable or stale")
 
 
@@ -32,7 +37,7 @@ def price_image_event(event: UsageEvent, usage: dict) -> UsageEvent:
         return event
     if (
         event.provider != "openai"
-        or event.model != _CARD["model"]
+        or event.model not in priced_models()
         or usage.get("image_counter_error")
     ):
         return event

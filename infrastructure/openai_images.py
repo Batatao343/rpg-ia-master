@@ -79,6 +79,11 @@ class OpenAIImageGenerator:
 
     def _generate(self, request: ImageGenerationInput) -> tuple[GeneratedImage, int]:
         key_material = f"{request.model}\n{request.size}\n{request.quality or ''}\n{request.prompt}"
+        if request.complexity:  # SPEC-425 R4; absent keeps the legacy key byte for byte (I1)
+            key_material = (
+                f"{request.model}\n{request.size}\n{request.quality or ''}\n"
+                f"{request.complexity}\n{request.prompt}"
+            )
         digest = hashlib.sha256(key_material.encode())
         for payload in request.reference_payloads:
             digest.update(hashlib.sha256(payload).digest())
@@ -89,6 +94,8 @@ class OpenAIImageGenerator:
         fields = {"model": request.model, "prompt": request.prompt, "size": request.size}
         if request.quality:  # SPEC-326 R15: fixa o detalhe/custo nas duas rotas
             fields["quality"] = request.quality
+        if request.complexity:  # SPEC-425 R4: só com o campo no brief (I1)
+            fields["complexity"] = request.complexity
         if request.reference_payloads:
             files = [
                 ("image[]", (f"reference-{index}.png", payload, "image/png"))

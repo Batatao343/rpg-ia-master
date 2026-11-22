@@ -299,3 +299,44 @@ def test_escopo_heroi_cobre_todo_negativo_de_raca_nas_cenas():
 def test_anao_respirador_nao_conflita_com_rosto_visivel():
     dwarf = art_brief.load_art_profile()["race_descriptors"]["race_anoes_fuligem"]["positive"]
     assert "face fully visible" in dwarf and "worn over the mouth" not in dwarf
+
+
+# --- SPEC-425 R5 / R6: complexity ---------------------------------------------- #
+def _profile_with_complexity(monkeypatch, value="high"):
+    profile = art_brief.load_art_profile()
+    for fmt in profile["formats"].values():
+        fmt["complexity"] = value
+    monkeypatch.setattr(art_brief, "load_art_profile", lambda: profile)
+    return profile
+
+
+def test_builders_gravam_complexity_do_formato(monkeypatch):
+    _profile_with_complexity(monkeypatch, "medium")
+    assert build_player_art_brief(_player("Elfo"))["complexity"] == "medium"
+    assert build_epic_art_brief(_epic_state(), {})["complexity"] == "medium"
+    creature = art_brief.build_creature_art_brief({"name": "Goblin"}, important=False)
+    assert creature["complexity"] == "medium"
+    assert art_brief.build_npc_art_brief(_npc_state(), "kahen")["complexity"] == "medium"
+
+
+def test_sem_complexity_no_profile_o_brief_nao_tem_a_chave():
+    assert "complexity" not in build_player_art_brief(_player("Elfo"))
+
+
+def test_complexity_for_ignora_profile(monkeypatch):
+    _profile_with_complexity(monkeypatch, "high")
+    assert art_brief.complexity_for({"size": "1536x1024"}) is None
+    assert art_brief.complexity_for({"complexity": "low"}) == "low"
+
+
+def test_profile_complexity_so_em_2_6():
+    problems = art_brief.profile_complexity_problems
+    base = {"model": "gpt-image-2-2026-04-21", "formats": {"portrait": {"size": "1x1"}}}
+    assert problems(base) == []
+    assert problems(art_brief.load_art_profile()) == []
+    old = {**base, "formats": {"portrait": {"size": "1x1", "complexity": "low"}}}
+    assert problems(old)
+    new = {**old, "model": "gpt-image-2.6-sunburst"}
+    assert problems(new) == []
+    bad = {**new, "formats": {"portrait": {"size": "1x1", "complexity": "ultra"}}}
+    assert problems(bad)

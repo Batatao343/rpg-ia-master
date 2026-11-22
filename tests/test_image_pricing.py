@@ -96,3 +96,37 @@ def test_gpt_image_json_and_form_omit_unsupported_response_format(monkeypatch, r
         ImageGenerationInput("private", MODEL, "1024x1536", references)
     )
     assert calls and result.payload == b"x" and result.usage == USAGE
+
+
+# --- SPEC-425 R1: extra_models ------------------------------------------------- #
+def _with_extra(monkeypatch, extra):
+    from services import image_pricing
+
+    monkeypatch.setattr(image_pricing, "_CARD", {**image_pricing._CARD, "extra_models": extra})
+
+
+def test_card_sem_extra_models_so_cobre_o_modelo_do_card():
+    from services.image_pricing import priced_models
+
+    assert priced_models() == frozenset({MODEL})
+
+
+def test_card_prices_extra_models(monkeypatch):
+    from services.image_pricing import priced_models
+
+    new = "gpt-image-2.6-sunburst"
+    _with_extra(monkeypatch, [new, "gpt-image-2.6-flare"])
+    assert priced_models() == frozenset({MODEL, new, "gpt-image-2.6-flare"})
+    require_image_prices(new, card_observed_at()["image"] + timedelta(hours=1))
+    event = reading(USAGE, model=new)
+    # same standard rates as the pinned model: 100*5 + 50*8 + 100*30 per million
+    assert event.billing_exact and event.cost_usd == Decimal("0.003900000")
+    assert event.cost_basis == "rate_card"
+
+
+def test_modelo_desconhecido_segue_indisponivel(monkeypatch):
+    _with_extra(monkeypatch, ["gpt-image-2.6-sunburst"])
+    at = card_observed_at()["image"] + timedelta(hours=1)
+    with pytest.raises(PricingUnavailable):
+        require_image_prices("gpt-image-2.6-flare", at)
+    assert not reading(USAGE, model="gpt-image-2.6-flare").billing_exact

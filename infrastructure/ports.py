@@ -13,6 +13,7 @@ class ImageGenerationInput:
     size: str
     reference_payloads: tuple[bytes, ...] = ()
     quality: str | None = None
+    complexity: str | None = None  # SPEC-425 R4: gpt-image-2.6-* only; None = not sent
 
 
 @dataclass(frozen=True)

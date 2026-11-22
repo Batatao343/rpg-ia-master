@@ -50,6 +50,7 @@ class ArtBrief(TypedDict):
     boss_line: NotRequired[str]
     is_npc: NotRequired[bool]
     quality: NotRequired[str]
+    complexity: NotRequired[str]  # SPEC-425 R5: only from the brief, never the profile
 
 
 def load_art_profile() -> dict[str, Any]:
@@ -123,6 +124,37 @@ def quality_for(brief: Mapping[str, Any]) -> str | None:
     return None
 
 
+def complexity_for(brief: Mapping[str, Any]) -> str | None:
+    """Complexidade gravada no brief (R5); sem cair para o profile, ao contrário de ``quality_for``.
+
+    Um brief cotado antes da troca de modelo nunca manda ``complexity`` ao modelo antigo."""
+    value = brief.get("complexity")
+    return str(value) if value else None
+
+
+def _complexity(profile: Mapping[str, Any], fmt: str) -> dict[str, str]:
+    value = profile["formats"][fmt].get("complexity")
+    return {"complexity": str(value)} if value else {}
+
+
+_COMPLEXITIES = frozenset({"low", "medium", "high"})
+_COMPLEXITY_MODEL_PREFIX = "gpt-image-2.6-"
+
+
+def profile_complexity_problems(profile: Mapping[str, Any]) -> list[str]:
+    """R6: ``complexity`` só em ``low|medium|high`` e só com modelo ``gpt-image-2.6-*``."""
+    problems: list[str] = []
+    new_model = str(profile.get("model", "")).startswith(_COMPLEXITY_MODEL_PREFIX)
+    for name, fmt in profile.get("formats", {}).items():
+        if "complexity" not in fmt:
+            continue
+        if not new_model:
+            problems.append(f"{name}: complexity requires a {_COMPLEXITY_MODEL_PREFIX}* model")
+        if fmt["complexity"] not in _COMPLEXITIES:
+            problems.append(f"{name}: complexity must be one of low/medium/high")
+    return problems
+
+
 def _exclusions(profile: Mapping[str, Any], *extra: str) -> list[str]:
     return [item for item in (*extra, *profile["global_exclusions"]) if item]
 
@@ -179,6 +211,7 @@ def build_player_art_brief(
         "class_line": class_line,
         "scene": "",
         "quality": _quality(profile, "portrait"),
+        **_complexity(profile, "portrait"),
     }
 
 
@@ -235,6 +268,7 @@ def build_npc_art_brief(state: Mapping[str, Any], npc_id: str) -> ArtBrief:
         "class_line": "",
         "scene": "",
         "quality": _quality(profile, "portrait"),
+        **_complexity(profile, "portrait"),
         "is_npc": True,
     }
 
@@ -300,6 +334,7 @@ def build_creature_art_brief(
         "class_line": "",
         "scene": "",
         "quality": _quality(profile, "creature_portrait"),
+        **_complexity(profile, "creature_portrait"),
         "is_npc": True,
     }
 
@@ -362,6 +397,8 @@ def build_epic_art_brief(
     )
     brief["size"] = profile["formats"]["epic_scene"]["size"]
     brief["quality"] = _quality(profile, "epic_scene")
+    brief.pop("complexity", None)  # the epic reuses the portrait brief: its own format decides
+    brief.update(_complexity(profile, "epic_scene"))
     return brief
 
 

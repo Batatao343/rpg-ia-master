@@ -71,3 +71,43 @@ def test_timeout_worker_300():
     import workers.run_worker as run_worker
 
     assert run_worker.IMAGE_PROVIDER_TIMEOUT_S == images.IMAGE_PROVIDER_TIMEOUT_S
+
+
+# --- SPEC-425 R4 / I1: complexity ---------------------------------------------- #
+def _with_complexity(refs=(), value="high"):
+    return ImageGenerationInput("p", "gpt-image-2.6-sunburst", "1x1", refs, "medium", value)
+
+
+def test_envia_complexity_quando_brief_tem(posts):
+    _generator().generate(_with_complexity())
+    assert posts[0][1]["json"]["complexity"] == "high"
+    _generator().generate(_with_complexity((b"a",), "low"))
+    url, kwargs = posts[1]
+    assert url.endswith("/images/edits") and kwargs["data"]["complexity"] == "low"
+
+
+def test_sem_complexity_nao_envia_campo(posts):
+    _generator().generate(ImageGenerationInput("p", "gpt-image-2", "1x1", (), "medium"))
+    _generator().generate(ImageGenerationInput("p", "gpt-image-2", "1x1", (b"a",), "medium"))
+    assert posts[0][1]["json"] == {
+        "model": "gpt-image-2",
+        "prompt": "p",
+        "size": "1x1",
+        "quality": "medium",
+    }
+    assert posts[1][1]["data"] == posts[0][1]["json"]
+
+
+def test_idempotency_key_sem_complexity_e_igual_a_de_hoje(posts):
+    import hashlib
+
+    _generator().generate(ImageGenerationInput("p", "m", "1x1", (), "low"))
+    legacy = hashlib.sha256(b"m\n1x1\nlow\np").hexdigest()
+    assert posts[0][1]["headers"]["Idempotency-Key"] == legacy
+
+
+def test_idempotency_key_muda_com_complexity(posts):
+    for value in (None, "low", "high"):
+        _generator().generate(ImageGenerationInput("p", "m", "1x1", (), "low", value))
+    keys = {call[1]["headers"]["Idempotency-Key"] for call in posts}
+    assert len(keys) == 3

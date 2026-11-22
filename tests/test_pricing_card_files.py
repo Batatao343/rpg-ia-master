@@ -142,3 +142,33 @@ def test_both_llm_card_readers_resolve_the_same_file():
         shard_pricing.INSTALLED_RATE_CARD_OBSERVED_AT.date().isoformat()
         == (_load(NEW_CARDS["llm"])["observed_at"])
     )
+
+
+# --- SPEC-425 R2: the retiring snapshot leaves renewed cards ---------------------- #
+RETIRED_IMAGE_MODEL = "gpt-image-2-2026-04-21"
+RETIREMENT_DATE = date(2027, 2, 10)
+
+
+def retired_model_problems(card: dict) -> list[str]:
+    observed = datetime.fromisoformat(card["observed_at"]).date()
+    if observed < RETIREMENT_DATE:
+        return []
+    listed = [card.get("model"), *(card.get("extra_models") or [])]
+    return (
+        [f"{RETIRED_IMAGE_MODEL} listed after its shutdown"]
+        if RETIRED_IMAGE_MODEL in listed
+        else []
+    )
+
+
+def test_retired_model_rule_flags_a_late_card():
+    late = {"observed_at": "2027-02-10T00:00:00+00:00", "model": RETIRED_IMAGE_MODEL}
+    assert retired_model_problems(late)
+    assert retired_model_problems({**late, "model": "x", "extra_models": [RETIRED_IMAGE_MODEL]})
+    assert not retired_model_problems({**late, "model": "gpt-image-2.6-sunburst"})
+    assert not retired_model_problems({**late, "observed_at": "2027-02-09T00:00:00+00:00"})
+
+
+def test_no_image_card_lists_the_retired_model_after_shutdown():
+    for path in sorted(PRICING.glob("image_rate_card_*.json")):
+        assert not retired_model_problems(json.loads(path.read_bytes())), path.name
