@@ -134,7 +134,6 @@
   "services/context_builder.py::_build_context_pack": 206,
   "services/context_builder.py::collect_dynamic_facts": 162,
   "services/creature_gen.py::gerar": 121,
-  "services/economy.py::execute_trade": 101,
   "services/event_processor.py::apply_event": 148,
   "services/event_processor.py::process_pending_events": 419,
   "services/fauna.py::day_hook": 101,

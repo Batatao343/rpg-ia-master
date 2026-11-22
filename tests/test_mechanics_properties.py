@@ -12,7 +12,6 @@ import copy
 import random
 from unittest.mock import patch
 
-import pytest
 from hypothesis import example, given
 from hypothesis import strategies as st
 
@@ -192,14 +191,6 @@ def test_p4_trade_conserves_gold_and_stock(
         assert all(v >= 0 for v in stocks.values())
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "SPEC-417 achado 1: execute_trade muta o estado de entrada (world['merchant_stocks'] "
-        "e compartilhado pela copia rasa em services/economy.py:812); exemplo minimo: "
-        "location='brekmar', gold=5000, mode='buy', pick=0, qty=1 com a loja ja visitada"
-    ),
-)
 @example(location="brekmar", gold=5000, mode="buy", pick=0, qty=1)
 @deterministic_settings(max_examples=30)
 @given(**TRADE_ARGS)

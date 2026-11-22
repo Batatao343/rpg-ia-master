@@ -26,6 +26,7 @@ from inventory import (
     add_item,
     find_entry_in_inventory,
     get_qty,
+    is_unique,
     item_display,
     make_entry,
     reconcile_equipment,
@@ -784,6 +785,9 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
     player = dict(state.get("player") or {})
     player["inventory"] = list(player.get("inventory") or [])
     world = dict(state.get("world") or {})
+    for key in ("merchant_stocks", "merchant_restock_day"):  # SPEC-424: não muta a entrada
+        if key in world:
+            world[key] = copy.deepcopy(world[key])
     location_id = world.get("current_location_id", "")
     qty = max(1, int(qty or 1))
 
@@ -791,7 +795,7 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         mid, stock = merchant_stock({**state, "world": world}, location_id)
         if not mid:
             return {"ok": False, "reason": "Não há mercador neste local."}
-        _, merchant = mid, MERCHANTS.get(mid, {})
+        merchant = MERCHANTS.get(mid, {})
         refusal = _keeper_refusal(state, mid, merchant)
         if refusal:
             return refusal
@@ -824,8 +828,6 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
         if keeper_npcs is not None:
             out["npcs"] = keeper_npcs
         # Fase 6.2: comprar um único registra a posse (inclusive recompra do mercador)
-        from inventory import is_unique
-
         if is_unique(iid):
             out["pending_events"] = [claim_event(iid, "player")]
         return out
@@ -870,8 +872,6 @@ def execute_trade(state: dict, mode: str, item_ref: str, qty: int = 1) -> dict:
             out["npcs"] = keeper_npcs
         # Fase 6.2: vender um único → mercador SEGURA o item (recomprável,
         # nunca volta ao pool de drop) e a perda entra no event_log.
-        from inventory import is_unique
-
         if is_unique(iid) and mid:
             stocks = world.setdefault("merchant_stocks", {}).setdefault(mid, {})
             stocks[iid] = stocks.get(iid, 0) + qty

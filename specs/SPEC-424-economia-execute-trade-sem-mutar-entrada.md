@@ -1,6 +1,6 @@
 # SPEC-424 — economia-execute-trade-sem-mutar-entrada
 
-> **Status:** `approved` (22/11, pelo coordenador, com a delegação de 13/11 "autorizo tudo"; veto do dono continua possível)
+> **Status:** `in-progress` (aprovada (22/11, pelo coordenador, com a delegação de 13/11 "autorizo tudo"; veto do dono continua possível)
 > **Criada:** 2026-11-13 · **Atualizada:** 2026-11-22
 > **Depende de:** SPEC-417 (`done`; o teste de propriedade P4 (c) nasceu lá em `xfail(strict=True)`)
 > **Desbloqueia:** nada; fecha o achado 1 da SPEC-417 (`handoffs/SPEC-417-terra-review.md:24,62`)
@@ -117,13 +117,13 @@ N/A — sem thread/async/cancelamento.
 
 ## 5. Critérios de aceite
 
-- [ ] `test_p4_trade_does_not_mutate_input` verde sem `xfail` (R1)
-- [ ] Testes de R2 e R3 falham antes e passam depois
-- [ ] Nenhum teste existente de `execute_trade` editado (R4)
-- [ ] `tests/test_size_budget.py` verde sem `--update` (R5)
+- [x] `test_p4_trade_does_not_mutate_input` verde sem `xfail` (R1)
+- [x] Testes de R2 e R3 falham antes e passam depois
+- [x] Nenhum teste existente de `execute_trade` editado (R4)
+- [x] `tests/test_size_budget.py` verde sem `--update` (R5)
 - [ ] `uv run pytest` verde (suíte completa offline, pelo coordenador no pouso)
 - [ ] Guard de FallbackLLM: N/A (sem `with_structured_output`)
-- [ ] Saves antigos continuam carregando (nada de formato muda)
+- [x] Saves antigos continuam carregando (nada de formato muda)
 
 ## 6. Smoke test com LLM real
 
@@ -131,7 +131,8 @@ N/A: função determinística sem LLM; o caminho de narração do `loot_node` n�
 
 ## Não rodou e por quê
 
-- (preencher no hand-back)
+- Suíte completa (`uv run pytest`): é do coordenador no pouso. Só rodei o escopo de §4 (`-n 2`), verde.
+- `size_budget.py --tighten` removeu a entrada de `execute_trade` (ficou <= 100 linhas) e baixou rag.py/combat.py por deriva alheia.
 
 ## 7. Riscos & compatibilidade
 

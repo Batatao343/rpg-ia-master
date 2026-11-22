@@ -297,3 +297,27 @@ def test_restock_preserved_unique_can_be_rebought():
     out = eco.execute_trade(rebuy, "buy", UNIQ, 1)
     assert out["ok"], out
     assert inv.get_qty(out["player"]["inventory"], UNIQ) == 1
+
+
+def test_buy_does_not_touch_input_stock():
+    """SPEC-424 R2: compra com loja já visitada não escreve no estado de entrada."""
+    st = _state(gold=99999)
+    mid, stock = eco.merchant_stock(st, LOC)  # visita a loja (grava no world de entrada)
+    iid = next(k for k, v in stock.items() if v >= 1 and not inv.is_unique(k))
+    before = st["world"]["merchant_stocks"][mid][iid]
+    out = eco.execute_trade(st, "buy", iid, 1)
+    assert out["ok"], out
+    assert out["world"]["merchant_stocks"][mid][iid] == before - 1
+    assert st["world"]["merchant_stocks"][mid][iid] == before
+    assert out["world"]["merchant_stocks"] is not st["world"]["merchant_stocks"]
+
+
+def test_sell_unique_does_not_touch_input_stock():
+    """SPEC-424 R3: vender único não grava o item no estoque da entrada."""
+    st = _state(inventory=[{"id": UNIQ, "qty": 1}])
+    st["world"]["merchant_stocks"] = {"mercado_anel_dourado": {}}
+    snapshot = copy.deepcopy(st)
+    out = eco.execute_trade(st, "sell", UNIQ, 1)
+    assert out["ok"], out
+    assert out["world"]["merchant_stocks"]["mercado_anel_dourado"].get(UNIQ) == 1
+    assert st == snapshot
