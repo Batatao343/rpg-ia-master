@@ -7,49 +7,49 @@
   "trace": "ffb04127e74564d0"
  },
  "campaign_combate_on": {
-  "events": "68474c074ea0607d",
+  "events": "6655facb8f719441",
   "files": "4b64440a1eaf7f75",
   "result": "ad928a84a9dc711f",
   "state": "4f53cda18c2baa0c",
   "trace": "86a1a191146f3247"
  },
  "campaign_diplomatico_off": {
-  "events": "4d2ce2da16b794cd",
+  "events": "a59f0721d2a8ee7b",
   "files": "5f0bbf8acc827db5",
   "result": "fae7f472ce486c7c",
   "state": "4f53cda18c2baa0c",
   "trace": "4f53cda18c2baa0c"
  },
  "campaign_diplomatico_on": {
-  "events": "4d2ce2da16b794cd",
+  "events": "a59f0721d2a8ee7b",
   "files": "5f0bbf8acc827db5",
   "result": "fae7f472ce486c7c",
   "state": "4f53cda18c2baa0c",
   "trace": "4f53cda18c2baa0c"
  },
  "campaign_explorador_off": {
-  "events": "71b38d8b69eb7fbd",
+  "events": "aed5f54895ee6aca",
   "files": "a932a397575c6cfb",
   "result": "27d6ced2e93f7241",
   "state": "4f53cda18c2baa0c",
   "trace": "91ab8bf06cc0b6ae"
  },
  "campaign_explorador_on": {
-  "events": "a57149146404473b",
+  "events": "385851ee14ae2d38",
   "files": "7534764e22175fee",
   "result": "a64ab887c22528c3",
   "state": "4f53cda18c2baa0c",
   "trace": "4f53cda18c2baa0c"
  },
  "campaign_secret_rusher_off": {
-  "events": "f9804a49f5ad3613",
+  "events": "2e51f6fbd34744cf",
   "files": "7ca9bcafbb2e7923",
   "result": "e0c1a25f9cf8f3bd",
   "state": "4f53cda18c2baa0c",
   "trace": "4f53cda18c2baa0c"
  },
  "campaign_secret_rusher_on": {
-  "events": "f9804a49f5ad3613",
+  "events": "2e51f6fbd34744cf",
   "files": "7ca9bcafbb2e7923",
   "result": "e0c1a25f9cf8f3bd",
   "state": "4f53cda18c2baa0c",
