@@ -1,6 +1,7 @@
 # SPEC-425 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (final, após `d43765c4`; a checagem de delta deu `CHANGES_REQUIRED` por P2-3, agora fechado)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Nota do veredito:** final, após `d43765c4`; a checagem de delta pediu mudança por P2-3, agora fechado.
 > **Revisor:** Claude Opus 5.5 / sol (spec-reviewer, independente do executor) · **Data:** 2026-11-22 · **Commit revisado:** `9d438086`, delta `7ac7798e` + `49b00e0a` (shas de antes do rebase) e `d43765c4`
 
 ## Escopo
