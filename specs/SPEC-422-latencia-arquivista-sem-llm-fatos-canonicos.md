@@ -410,7 +410,9 @@ Staging (`Requer: staging`):
   mesmas chaves e a mesma totalidade do estado e a marca chegando do narrador ao arquivista no grafo real.
 - **P3-5 da rodada 3, feito no pouso:** `state_archive.py` registrado no `include` do basedpyright (`pyproject.toml`), em
   `AI_FILES` (`scripts/ci_eval_scope.py`), em `PRODUCT_FILES` (`scripts/dev/eval_publish.py`) e nos `entrypoints` de
-  `state_rules` (`project_index/domains.yaml`). Nenhum dos quatro é caminho protegido (`evals/protected-paths.txt`).
+  `state_rules` (`project_index/domains.yaml`). Nenhum dos quatro era caminho protegido quando a mudança pousou (`evals/protected-paths.txt` em `4fe7ca34`);
+  `scripts/ci_eval_scope.py` passou a ser protegido depois, em `3aae9333` (SPEC-411 R5), e não pode mais ser editado
+  por tarefa de produto.
 - Da escrita da spec: nada foi executado além de leitura de código e da contagem em `resultado.json` (Grep).
 - O caminho hospedado (Postgres + pgvector) não roda nesta máquina (D-36). O registro
   determinístico não muda a gravação vetorial, que é a mesma `persist_records`. O smoke §6 itens 5–6
