@@ -366,6 +366,23 @@ def test_rls_strict_principal_is_sent_from_the_preset():
     assert preset["flags"][name] in ("shadow", "on")
 
 
+def test_archive_record_is_sent_from_the_preset_in_shadow():
+    """SPEC-422 §6 item 5: a flag chega ao staging pelo preset e sai se ausente.
+
+    O preset fica preso em ``shadow``: ``on`` depende da suíte de eval R12(b) e do A/B, e o A/B
+    liga a flag pela CLI, não pelo preset.
+    """
+    name = "RPG_ARCHIVE_RECORD"
+    assert name in ve.OPTIONAL_FLAGS and name in ve.WORLD_FLAGS
+    for mode in ("off", "shadow", "on"):
+        assert ve.build_env(FILES, world_flags={name: mode})[0][name] == mode
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_flags={name: "lean"})
+    assert name in ve.stale_names(ve.build_env(FILES)[0])
+    preset = json.loads(ve.STAGING_PRESET_PATH.read_text(encoding="utf-8"))
+    assert preset["flags"][name] == "shadow"
+
+
 def test_staging_marker_sent_to_staging_and_never_to_preview():
     """SPEC-411 R1.4: RPG_DEPLOY_ENV=staging so no projeto de staging (nunca no preview)."""
     prod, prev = ve.build_env(FILES)
