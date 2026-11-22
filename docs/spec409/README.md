@@ -137,6 +137,17 @@ e `vercel_env.NON_SECRET_LITERALS["RPG_SPEECH_PRICING_VERSION"]`/`DYNAMIC_ART_PR
    imagem, STT e compra voltam a 503 (falha fechada), não a um estado que funciona. Rollback só serve para tirar um
    card novo errado; o conserto de verdade é publicar o card certo.
 
+### Etapa 4 — registro (staging, 2026-11-22)
+
+- Passo 1: zero reservas abertas e zero gerações de arte pendentes. Profiles antes: `spec197-staging-portrait`,
+  `staging-326-portrait` e `staging-326-scene`, todos em `spec197-restore-b`.
+- Passo 2: `--dry-run` com `rate_card_version` `2026-11-13-v1` e sha `bd1d2942…2dc2fe7`.
+- Passo 3: `publish_rate_card --confirm-staging` saiu com rc 0.
+- Passo 4: `pricing_versions` `spec409-staging-2026-11-13` = `2026-11-13-v1`, `bd1d2942`, `2026-11-13`; profiles
+  `…-portrait` (1024x1536) e `…-scene` (1536x1024), `gpt-image-2-2026-04-21`, teto 0,08, `expires_at` 2027-02-20;
+  SKU `spec409-staging-2026-11-13-sku`.
+- Passos 5 e 6 (`vercel_env.py`, deploy e smoke §6): ver abaixo, quando houver.
+
 ## Notas da revisão Sol (13/11, APPROVED_WITH_FOLLOWUPS)
 
 - **Ordem de deploy:** depois do pouso, `vercel_env.py` e os smokes apontam para os ids `spec409-staging-2026-11-13*`.

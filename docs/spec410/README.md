@@ -39,6 +39,22 @@ remoto** (migração, flag em `shadow`/`on` e smoke do staging são do coordenad
 5. **`on`** no staging; repetir 3 e 4: 0 erros `RlsScopeError`, mesmos gates verdes.
 6. **Não ligar `on` por padrão no código** nesta spec (D6: follow-up ao vencer a flag, ≥ 14 dias de `on` sem ocorrência).
 
+## Evidência no staging (2026-11-22)
+
+- **Etapa 2 (migração):** `20261111140000` aplicada junto da 413 (`docs/spec413/evidence/migrations_push.json`).
+  Conferido por consulta só leitura: nenhuma tabela de `app` sem RLS ou sem `force`; `rate_limit_buckets` com as
+  policies `admin_all` e `runtime_all`; triggers `wallet_accounts_no_delete` e `wallet_reservations_no_delete`;
+  `search_path` de `rpg_runtime` e `rpg_admin` = `app, extensions, public`; zero grants de `app` para
+  `anon`/`authenticated`/PUBLIC e sem `USAGE`.
+- **`security_wave_smoke.py`** (código antigo `d7aa4beb`, `docs/spec410/evidence/security_wave_smoke.json`): logins
+  A e B 200; busca na crônica 10× 200 e 429 na 11ª; contador diário com 21 turnos; token inválido 401; logout revoga
+  o refresh. Ou seja, o limite de taxa grava e nega com RLS forçado. Três checks saíram `ok: false` e, pela leitura
+  do script, nenhum toca na migração (não há execução anterior guardada para comparar):
+  `spec219_owner_turn_minute` (21 turnos levaram 176 s, então nunca houve 20 no mesmo minuto), `spec220_lockout`
+  (11× 403: o script manda o token de teste do captcha e o staging usa Turnstile real) e `spec222_export`
+  (reauth 401, mesma causa provável).
+- **Etapas 3 a 5 (`shadow` → janela → `on`):** ver o registro do deploy abaixo, quando houver.
+
 ## Rollback
 
 - Código: `RPG_RLS_STRICT_PRINCIPAL=shadow` ou `off` no `staging_flags.json` + redeploy, ou revert do commit.

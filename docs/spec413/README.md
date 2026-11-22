@@ -22,9 +22,21 @@ Rollback: `docs/spec413/rollback.sql` (recria as 3 com os mesmos grants). Invari
 4. Verificar: `to_regprocedure` das 3 nulo; `npx supabase test db` (local) verde; `scripts/staging/smoke_ab.py`: `rpc/*` com JWT de A e anon = 404 com `PGRST202` (401/5xx não contam); fluxo de carteira do app segue 200; `get_advisors(security)` sem `authenticated_security_definer_function_executable`. Registrar abaixo (data, projeto, saída).
 5. Rollback: aplicar `docs/spec413/rollback.sql` como MIGRAÇÃO NOVA (timestamp novo), nunca editando nem apagando a aplicada; um rollback manual fora de migração deixa `20261111130000` registrada como aplicada e exige `supabase migration repair` (revisão Sol P3-4).
 
-## Evidência R6 (preencher no staging)
+## Evidência R6 (staging `uzeagzcyvxzrpjgrhaql`, 2026-11-22)
 
-Pendente.
+- **Aplicação:** `scripts.staging.migrations push --apply` aplicou `20261111130000` e `20261111140000`, nessa
+  ordem; depois `status` = `in_sync`, 36 locais e 36 remotas (`docs/spec413/evidence/migrations_push.json`).
+  Pré-checagens PC-1 e PC-2 de 13/11 em `docs/spec410/staging-antes.txt`; `audit-local` verde na `main`
+  `84a3266a` (aplica as migrações num Postgres real).
+- **PC-4, banco (MCP, só leitura):** `to_regprocedure` nulo para as 3 funções; nenhuma função própria em `public`.
+- **PC-4, Data API:** `POST /rest/v1/rpc/{rpg_wallet_balance,rpg_wallet_history,rpg_current_session_active}`
+  como `anon` = 3× `404 PGRST202`.
+- **Advisor de segurança:** sem `authenticated_security_definer_function_executable`. Restam `pg_net` em `public`
+  (aceito, D2 da 410) e proteção contra senha vazada desligada (ação do dono no painel).
+- **Não rodou:** as 3 chamadas com JWT de usuário e o resto do `smoke_ab` (`rls`, `storage`, `pgvector`, `wallet`).
+  O `setup_users` do script falha com 400 no `grant_type=password`: o staging usa Turnstile real desde `014a0c29`
+  e o script não tem token de captcha (`docs/spec413/evidence/smoke_ab.json`). Nenhum usuário sintético ficou no
+  Auth. pgTAP contra o staging também não rodou (sem `supabase test db` nesta máquina).
 
 ## Pré-checagens da revisão Sol (antes e depois de aplicar)
 

@@ -1,0 +1,129 @@
+{
+  "checks": {
+    "auth_captcha": {
+      "ok": true,
+      "recover": {
+        "captcha_error": true,
+        "status": 400
+      },
+      "resend": {
+        "captcha_error": true,
+        "status": 400
+      },
+      "signup": {
+        "captcha_error": true,
+        "status": 400
+      }
+    },
+    "pooler": {
+      "concurrent": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 125.84,
+          "n": 10,
+          "p50_ms": 125.97,
+          "p95_ms": 140.18
+        },
+        "errors": 0,
+        "failovers": 0,
+        "max_total_ms": 159.46,
+        "mean_ms": 145.89,
+        "n": 10,
+        "p50_ms": 143.27,
+        "p95_ms": 159.46,
+        "peers": {
+          "54.232.77.43": 10
+        },
+        "query": {
+          "errors": 0,
+          "mean_ms": 20.05,
+          "n": 10,
+          "p50_ms": 18.3,
+          "p95_ms": 30.78
+        },
+        "slow_connects": 0
+      },
+      "connect_timeout_s": 3,
+      "n_concurrent": 10,
+      "n_sequential": 50,
+      "ok": false,
+      "overall": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 584.71,
+          "n": 60,
+          "p50_ms": 121.2,
+          "p95_ms": 3124.16
+        },
+        "errors": 0,
+        "failovers": 9,
+        "max_total_ms": 3262.55,
+        "mean_ms": 600.35,
+        "n": 60,
+        "p50_ms": 138.69,
+        "p95_ms": 3140.74,
+        "peers": {
+          "18.228.163.245": 9,
+          "52.67.188.92": 15,
+          "54.232.77.43": 36
+        },
+        "query": {
+          "errors": 0,
+          "mean_ms": 15.64,
+          "n": 60,
+          "p50_ms": 15.94,
+          "p95_ms": 24.37
+        },
+        "slow_connects": 10
+      },
+      "sequential": {
+        "connect": {
+          "errors": 0,
+          "mean_ms": 676.49,
+          "n": 50,
+          "p50_ms": 118.18,
+          "p95_ms": 3124.96
+        },
+        "errors": 0,
+        "failovers": 9,
+        "max_total_ms": 3262.55,
+        "mean_ms": 691.24,
+        "n": 50,
+        "p50_ms": 129.35,
+        "p95_ms": 3141.05,
+        "peers": {
+          "18.228.163.245": 9,
+          "52.67.188.92": 15,
+          "54.232.77.43": 26
+        },
+        "query": {
+          "errors": 0,
+          "mean_ms": 14.76,
+          "n": 50,
+          "p50_ms": 15.7,
+          "p95_ms": 18.88
+        },
+        "slow_connects": 10
+      },
+      "ssl_in_use_all": true
+    },
+    "setup_users": {
+      "error": "HTTPStatusError: Client error '400 Bad Request' for url 'https://uzeagzcyvxzrpjgrhaql.supabase.co/auth/v1/token?grant_type=password'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status",
+      "ok": false
+    }
+  },
+  "cleanup": {
+    "users_delete_status": {
+      "A": 200
+    }
+  },
+  "project_ref": "uzeagzcyvxzrpjgrhaql",
+  "summary": {
+    "failed": [
+      "pooler",
+      "setup_users"
+    ],
+    "ok": false,
+    "pending_migration": []
+  }
+}
