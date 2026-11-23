@@ -260,8 +260,9 @@ depois do `DYNAMIC_LABEL` (`services/prompt_layout.py:23,40`): "abaixo" vale nas
   para cada caso roda `storyteller_node` (via `get_llm`, rota de hoje) com `RPG_NARRATION_SIZE=off` e depois
   `=on`, e grava `pares-<data>.md` (por par: classe, ação, texto `off`, texto `on`, caracteres, parágrafos,
   número de linhas de opção) e `pares-<data>.json` (só contagens, `git_sha`, modelo/provedor de cada chamada).
-  Recusa rodar com `RPG_FORCE_MOCK=1` ou sem chave, salvo `--mock` (usado só no teste). Aborta se passar de 30
-  chamadas de LLM. Custo: 20 chamadas do narrador ≈ US$ 0,06 (US$ 0,0028 por chamada no L0,
+  Recusa rodar com `RPG_FORCE_MOCK=1` ou sem chave, salvo `--mock` (usado só no teste). Conta TODA chamada de LLM (narrador e qualquer
+  outro `get_llm`, proibido no par) e recusa antes da 1ª se `2 × casos × samples` passar de 30; o pulso do mundo
+  é neutralizado nos dois braços e cada par grava o hash do prompt sem as linhas de tamanho (falha se divergir). Custo: 20 chamadas do narrador ≈ US$ 0,06 (US$ 0,0028 por chamada no L0,
   `resultado.json`, `llm_by_tier.fast.cost_usd` do 1º turno).
 - Reprodutível = mesmos casos, mesmo comando, mesmo sha; o texto varia entre execuções (temperatura 0,7, sem
   seed no provedor). `--samples N` (default 1) repete só para contagem de tamanho, sem entrar no `.md`.
@@ -375,7 +376,9 @@ O MockLLM devolve texto fixo e não encurta por instrução: só estes passos pr
      (`descanso`) — o ganho "teto" da §3.1.
    - P3: `log_fallback("storyteller", "structured_invalid")` (`agents/storyteller.py:2341`) e `token_replace`
      do `turn_delivery` sem alta (≤ base + 1 ocorrência em 60 turnos e ≤ base + 5 pp, respectivamente);
-     `narrative.rejected` por turno sem alta.
+     `narrative.rejected` por turno sem alta, medido
+     separado por `kind` (ouro rejeitado, SPEC-091 R6; segredo mediado, SPEC-202 R11): com 1–2 parágrafos os dois
+     guards que apagam parágrafo inteiro pesam mais (P3-2 da revisão).
    - P4: fração de narrações com ≥ 2 linhas de opção ≥ a da base − 5 pp.
    - Falhou P1 ou P4: voltar o preset para `shadow`, recalibrar palavras (Etapa 6.2) e medir de novo.
      Falhou P2 com P1 ok: registrar (a velocidade não é a que a §1.1 estimou) e levar ao dono; não ligar fora do staging.
@@ -383,9 +386,13 @@ O MockLLM devolve texto fixo e não encurta por instrução: só estes passos pr
 
 ## Não rodou e por quê
 
-Esta é a spec (`draft`); nada de código nem de smoke rodou. Antecipado para a execução:
+Atualizado após a execução e a revisão sol (`handoffs/SPEC-428-sol-review.md`):
 
-- §6 passos 2–3 dependem de deploy no staging (coordenador).
+- `evals compare` `off` × `on` (R11 / Etapa 6.1) **não rodou**. Nenhum adapter de `evals/` chama o narrador
+  (conferido pelo revisor: `evals/core/adapters.py` não importa `main` nem `agents.storyteller`), então o compare
+  seria vazio para esta mudança; a prova de equivalência de `off` é o golden de `tests/fixtures/narration_size_off/`.
+- O smoke §6 (passo 1, pacote com chave real) é do coordenador; o pacote não foi rodado com chave.
+- §6 passos 2–3 (e o 1) dependem de deploy no staging (coordenador).
 - Ligar fora do staging depende da leitura do dono (§8 D2); não é passo da execução.
 
 ## 7. Riscos & compatibilidade
@@ -421,3 +428,20 @@ Esta é a spec (`draft`); nada de código nem de smoke rodou. Antecipado para a 
 - Nenhuma linha de `docs/guias/DECISOES_FIXAS.md` é contrariada (D-09 respeitado: nenhum eval é editado).
 
 - **22/11, coordenador:** spec aprovada para execução. O dono ouviu a explicação e a recomendação ("2 parágrafos curtos para cena") em 13/11, não respondeu item a item e em 22/11 delegou. A tabela de alvos (D1) fica como o autor propôs, com veto e ajuste do dono. Correção ao que foi dito ao dono em 13/11: o ganho estimado é de ~0,66 s por turno no mix da L0 (0,48 s na conta conservadora), não ~1 s; cerca de 0,4 s da escrita é cauda do JSON, que texto menor não encurta. Os gates automáticos não julgam a qualidade da prosa curta (nenhum adapter de `evals/` chama o narrador): quem decide ligar fora do staging é o dono, lendo o pacote de 10 pares (D2). Risco `alto`, `spec-reviewer`.
+
+## Diário de execução e desvios (22–23/11)
+
+- **Controle `revelacao`:** o pacote usa a armadilha `ENCONTRO NA ESTRADA` (números já resolvidos), não
+  `<GANCHO_NOVO>`. Motivo: é o subtipo de `revelacao` mais comum em jogo e não depende de tick de quest de mundo;
+  `<GANCHO_NOVO>` é coberto por `test_classify_priority`. (§3.4 e o golden refletem a armadilha.)
+- **Estados do pacote:** vêm de `_base_state()` de `scripts/dev/narration_pairs.py` (estado mínimo fixo,
+  serializado em `pares_casos.json`), não de `tests/factories.make_state` (o script de `scripts/` não importa
+  `tests/`). Após a revisão (P3-1) `fala-mediada-1/2` e `cena-2` ganharam 1 NPC já criado e presente (Velha Magda)
+  e 1 facção conhecida (`legiao_ferro`), para mostrar o risco real de cortar fala com informação.
+- **Etapa 0, nota:** o golden de `off` foi capturado em `91c3e11e`, antes do código de produto (`62e53c17`);
+  o revisor reproduziu os 12 casos na `main` (12 passed). `closing_clause(t)` vê os campos finais na ordem de
+  `_story_prompt_blocks`; nenhuma chamada precisou ser movida.
+- **Leitura da flag:** `RPG_NARRATION_SIZE` usa `env_choice` (`strip` + `lower`): `" ON "` vale `on`, como nas
+  flags irmãs; qualquer valor fora de `off|shadow|on` vale `off`.
+- **P2-1 da revisão (pacote):** `_run_one` troca `_story_world_pulse` por no-op nos dois braços; todo `get_llm`
+  fora do narrador é contado e levanta; o teto é checado antes da 1ª chamada; `input_hash` por par.
