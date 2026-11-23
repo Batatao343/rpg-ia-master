@@ -1,9 +1,45 @@
 # SPEC-428 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus 5.5 / sol (spec-reviewer) · **Data:** 2026-11-23 · **Commit revisado:** `6d556c5e`
+> **Veredito:** `APPROVED`
+> **Revisor:** Opus 5.5 / sol (spec-reviewer) · **Data:** 2026-11-23 · **Commit revisado:** `c224cc1c`
 
-## Follow-up de ferramenta (23/11, `main 5b8283d1..6d556c5e`)
+## Follow-up de ferramenta (23/11) — confirmação da correção (`6230cdd5..c224cc1c`)
+
+Commits `e0f6db7c` (script e testes) e `c224cc1c` (spec). O diff toca só `scripts/dev/narration_pairs.py`, `tests/test_narration_pairs_script.py` e a spec. P1-2, P2-3 e P3-8 estão fechados; o P3-7 continua sendo só a marcação `--allow-green` no pouso.
+
+1. **Sonda do P1-2, repetida** (rascunho `chk428d.py`, via `main(... --mock)` com o narrador trocado, 2 casos). Nos três casos o resultado é o mesmo: rc 3, `comparavel` `[False, False]`, `summary.classes` `{}`, `excluded_pairs` `['cena-1','cena-2']` e o aviso "NÃO comparável" no topo do `.md`, antes do 1º par. O texto de fallback fica fora de toda mediana.
+   - `invoke_error` com índice 0 e `AIMessage`: motivo "braco off amostra 1: outcome invoke_error (texto pode ser o fallback do nó)".
+   - `invalid_structured` sem nova tentativa: motivo "outcome invalid_structured".
+   - Amostra sem tentativa registrada: motivo "nenhuma tentativa de LLM registrada".
+2. **Mutantes (plugin `mutfu2_428`): 8/8 mortos.** Os dois que sobreviviam (`fell_back` e `attempt_index`) agora morrem pelos parâmetros isolados.
+
+   | mutante | morto por |
+   |---|---|
+   | sem "nenhuma tentativa" | `[no_attempt]` |
+   | sem `fell_back` | `[fell_back]` |
+   | sem `attempt_index` | `[attempt_index]` |
+   | sem `outcome` | `[invoke_error]`, `[invalid_structured]` |
+   | sem provedor | `[provider]` |
+   | sem modelo | `[model]` |
+   | `summary` com par não comparável | `[fell_back]`, `[attempt_index]` e outros |
+   | sem a linha "previstas" | `test_budget_line_printed_before_any_call` |
+
+   Os parâmetros citados são de `test_non_comparable_pair_marked_warned_and_rc_nonzero`.
+3. **Run limpo e pacote real.**
+   - `--mock` sobre `docs/spec428/pares_casos.json`: rc 0, 10/10 comparáveis.
+   - O juiz novo aplicado ao pacote real `pares-2026-11-23-n3.json` (tentativas regrupadas por `sample`) dá 10/10 comparáveis. O pacote do dono continua válido.
+4. **Nada vaza.**
+   - Com o plugin de sessão, nas ordens pares→enrich e enrich→pares com `-n 0`: rc 0, 0 FAILED, nenhum `get_llm` falso, hook `None`, `RPG_NARRATION_SIZE` `None`.
+   - O estado do `random` continua coberto por `test_run_restores_global_random_state`.
+5. **Gates verdes.**
+   - pytest das 5 suítes: 136 passed.
+   - `baseline_growth --base main`: rc 0.
+   - `type_gate --check`: "nenhum erro novo".
+   - `red_green.sh 428`: 7/8 sem marcação. **Só** `tests/test_narration_pairs_script.py::test_attempt_hook_restored_on_exit_and_on_error` precisa de `--allow-green` no pouso (P3-7: teste de guarda, verde na `main`; o mutante "hook não restaurado" o reprova).
+
+Resto, sem severidade: o `_FakeNarrator` define `TEXT` mas o `invoke` repete o literal, uma duplicação inócua.
+
+### Revisão do follow-up (`6d556c5e`, resolvida acima)
 
 Commits revisados: `f21433d9` (script e teste), `93a79896` (spec) e `6d556c5e` (pacote real em `docs/`).
 
@@ -186,6 +222,33 @@ Nenhum P0/P1.
     o dono (D2), como a spec diz.
 
 ## Evidência verificada
+
+### Follow-up de ferramenta, correção (`c224cc1c`)
+
+`bash scripts/dev/red_green.sh 428 --allow-green tests/test_narration_pairs_script.py::test_attempt_hook_restored_on_exit_and_on_error`:
+
+| teste | main | branch | veredito |
+|---|---|---|---|
+| tests/test_narration_pairs_script.py::test_attempt_hook_restored_on_exit_and_on_error | verde | verde | OK (allow-green) |
+| tests/test_narration_pairs_script.py::test_budget_line_printed_before_any_call | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_budget_refusals_before_any_call | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_fallback_text_never_counts_in_summary | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_llm_attempts_recorded_per_arm | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_non_comparable_pair_marked_warned_and_rc_nonzero | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_samples_three_with_max_calls_sixty_runs | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_summary_hand_checked | vermelho | verde | OK |
+
+red_green: 8/8 OK. Sem `--allow-green` o resultado é 7/8, só por causa do teste de guarda do hook.
+
+```text
+git diff --stat 6230cdd5..HEAD → só scripts/dev/narration_pairs.py, tests/test_narration_pairs_script.py, spec
+chk428d.py: invoke_error | invalid_structured | sem tentativa → rc 3, [False, False], classes {}, aviso no topo do .md
+chk428d.py: --mock limpo nos 10 casos → rc 0, 10/10 comparáveis; juiz novo no pacote real n3 → 10/10
+MUTG=<8 mutantes> -p mutfu2_428 → 8/8 mortos
+pytest -n 0 -p leak428: pares→enrich, enrich→pares → rc 0; falsos [], hook None, env None
+pt.sh 5 suítes -n 2 → 136 passed
+baseline_growth --base main → rc 0 · type_gate --check → OK
+```
 
 ### Follow-up de ferramenta (`6d556c5e`)
 
