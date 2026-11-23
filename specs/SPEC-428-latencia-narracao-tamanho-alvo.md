@@ -1,6 +1,6 @@
 # SPEC-428 — latencia-narracao-tamanho-alvo
 
-> **Status:** `approved` (coordenador, 22/11, por delegação do dono: "faz tudo ai… eu autorizo a fazer tudo que vc pode fazer, deixa de pendente só o q vc nao pode mesmo"; flag `off` por padrão; fora do staging só depois de o dono ler as amostras)
+> **Status:** `in-progress` (aprovada em 22/11 pelo coordenador, por delegação do dono; código pousado em 23/11 com a flag `off`; revisão Sol APPROVED_WITH_FOLLOWUPS; faltam o pacote de 10 pares com chave real, o `evals compare` off × on, a medição no staging e a leitura do dono antes de ligar)
 > **Criada:** 2026-11-22 · **Atualizada:** 2026-11-22
 > **Depende de:** nenhuma spec pendente. Contratos que esta spec preserva: SPEC-043 R3 (`done`: fecho com 2 a 3 opções), SPEC-317 R9 (`done`: ordem estático/dinâmico do prompt, `services/prompt_layout.py`), SPEC-202 R11 (`done`: guard de segredo da mediação)
 > **Desbloqueia:** — (follow-ups em "Fora de escopo")
@@ -343,15 +343,15 @@ Antes do 1º teste, o executor lê `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md` § l
 ## 5. Critérios de aceite
 
 - [ ] R1–R12 com teste ou passo de smoke que os prova; I1–I7 com os testes nomeados.
-- [ ] `off`/ausente: golden da Etapa 1 verde nas duas ordens de prompt.
-- [ ] `agents/storyteller.py` com saldo ≤ 0 linhas; `tests/test_size_budget.py` verde.
-- [ ] Nenhum diff em `llm_setup.py`, `agents/npc.py`, `routes/turn.py`, `StoryUpdate*`, `evals/`.
+- [x] `off`/ausente: golden da Etapa 1 verde nas duas ordens de prompt. O revisor rodou o golden contra a `main` (12 passed): ele veio do código antigo (`91c3e11e`).
+- [x] `agents/storyteller.py` com saldo ≤ 0 linhas; `tests/test_size_budget.py` verde. 3016 → 3012 linhas.
+- [x] Nenhum diff em `llm_setup.py`, `agents/npc.py`, `routes/turn.py`, `StoryUpdate*`, `evals/`.
 - [ ] `evals compare` off × on sai 0 (R11).
-- [ ] Guard de FallbackLLM coberto com `on` (I4); nenhum `with_structured_output` novo.
+- [x] Guard de FallbackLLM coberto com `on` (I4); nenhum `with_structured_output` novo.
 - [ ] Pacote de 10 pares gerado com chave real e commitado em `docs/spec428/`.
 - [ ] Testes do escopo verdes (subagente); `uv run pytest` completo verde no pouso (coordenador).
-- [ ] Saves antigos continuam carregando (nada persistido muda: a classe não vai para o estado).
-- [ ] Revisão `spec-reviewer` (Opus) APPROVED.
+- [x] Saves antigos continuam carregando (nada persistido muda: a classe não vai para o estado).
+- [x] Revisão `spec-reviewer` (Opus) APPROVED. Veredito final `APPROVED_WITH_FOLLOWUPS` em `928e04e7`, depois de duas rodadas com `CHANGES_REQUIRED` no script de pares (entradas diferentes entre os braços; `get_llm` falso vazando para outros testes). Os P3-4 e P3-5 foram aplicados depois.
 - [ ] `done` só depois do §6 passo 3 (promoção no staging) e da leitura do dono (§8 D2); até lá, `in-progress`
       com a flag `off` no código e `on` só no preset do staging.
 
@@ -385,6 +385,8 @@ O MockLLM devolve texto fixo e não encurta por instrução: só estes passos pr
 4. Resultado (tabelas por classe, sem texto) em `docs/spec428/medicao-AAAA-MM-DD.md`.
 
 ## Não rodou e por quê
+
+- **Pouso (23/11, coordenador):** os critérios R11 (`evals compare` off × on) e R12 (pacote de 10 pares com chave real) ficam abertos; nenhum dos dois é necessário para o pouso com a flag `off` e os dois são exigidos antes de ligar. O smoke de turno no staging está parado desde 23/11 13:11 UTC (DeepSeek devolvendo 402 e teto diário estourado).
 
 Atualizado após a execução e a revisão sol (`handoffs/SPEC-428-sol-review.md`):
 
