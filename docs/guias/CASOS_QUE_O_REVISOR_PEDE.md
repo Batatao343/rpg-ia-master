@@ -50,3 +50,4 @@ Regras:
 - Filtro de texto que roda antes de um véu/troca de nomes: o teste de "avalia o texto pré-véu" põe o nome oculto DENTRO da assinatura, senão passa com o filtro no texto pós-véu (SPEC-421 P1-1)
 - Composição fail-closed de vários checkers (`try` em volta de todos): o teste faz lançar o checker que NÃO se protege sozinho, senão o mutante de falha aberta passa verde (SPEC-421 P1-2)
 - Guard que troca `get_llm` em `sys.modules` restaura também o módulo importado DURANTE o guard (`from llm_setup import get_llm` prende o falso); o teste apaga o módulo de `sys.modules` antes e confere que nenhum `get_llm` falso sobrou, senão polui os testes seguintes (SPEC-428 P1-1)
+- Juiz de "texto veio do LLM" (comparável, A/B, smoke) exige tentativa com `outcome == "success"` por amostra; só `fell_back`/`attempt_index` deixa passar o fallback determinístico de candidato único e a amostra sem tentativa registrada, e cada gatilho tem teste isolado (SPEC-428 P1-2)

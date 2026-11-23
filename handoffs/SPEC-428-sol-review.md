@@ -1,7 +1,53 @@
 # SPEC-428 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
-> **Revisor:** Opus 5.5 / sol (spec-reviewer) · **Data:** 2026-11-23 · **Commit revisado:** `928e04e7`
+> **Veredito:** `CHANGES_REQUIRED`
+> **Revisor:** Opus 5.5 / sol (spec-reviewer) · **Data:** 2026-11-23 · **Commit revisado:** `6d556c5e`
+
+## Follow-up de ferramenta (23/11, `main 5b8283d1..6d556c5e`)
+
+Commits revisados: `f21433d9` (script e teste), `93a79896` (spec) e `6d556c5e` (pacote real em `docs/`).
+
+- O produto não mudou: `git diff main...HEAD -- agents services tests/fixtures evals` vazio.
+- A branch tem a `main` como ancestral (rc 0).
+- Os veredictos das seções de baixo (confirmação 3 e anteriores) valem para os commits de antes; o cabeçalho acima vale para este follow-up.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P1-2 | P1 | `scripts/dev/narration_pairs.py` `judge_comparable` | **Narração que não veio do LLM sai `comparavel: true`.** O juiz olha só `fell_back`, `attempt_index > 0` e o conjunto provedor/modelo; não olha `outcome` nem exige uma tentativa bem-sucedida por amostra. Medido (rascunho `chk428c.py`): o narrador emite uma tentativa `attempt_index=0`, `fell_back=False`, `outcome="invoke_error"` e devolve `AIMessage` (FallbackLLM esgotado, rota de um candidato). O nó usa o texto determinístico ("O momento passa em silêncio; o mundo aguarda seu próximo passo.") e o par sai `comparavel: True`, `motivo: ''`, rc 0. O mesmo vale para `invalid_structured` sem retry e para amostra **sem nenhuma** tentativa registrada (o hook não disparou): os conjuntos vazios são iguais e o par passa. É exatamente o caso que a §6 passo 1 exclui ("nenhuma resposta caiu em `structured_invalid`"), e o dono leria texto de fallback como prosa `on`. O pacote commitado não é afetado: 60/60 tentativas `success`, índice 0. | Em `judge_comparable`, por amostra (`pair[mode]["samples"][i]["llm_attempts"]`), exigir pelo menos uma tentativa, a última com `outcome == "success"`, e nenhuma com outcome diferente de `success`. Sem nenhuma tentativa, o par também sai não comparável. No `--mock`, o `_FakeNarrator` passa a emitir uma tentativa `success` pelo hook, para os testes de `--mock` continuarem verdes. Testes: `outcome="invoke_error"` + `AIMessage` → `comparavel: false` e rc 3; amostra sem tentativa → `comparavel: false`. |
+| P2-3 | P2 | `tests/test_narration_pairs_script.py` (`test_non_comparable_pair_marked_warned_and_rc_nonzero`) | Os três gatilhos não são testados um a um. O caso `fell_back` emite `attempt_index=1` **e** `fell_back=True` juntos, então os mutantes `judge_no_fellback` (sem o teste de `fell_back`) e `judge_no_index` (sem o de `attempt_index > 0`) **passam a suíte inteira** (rc 0). | Parametrizar com `fell_back=True, attempt_index=0`; `fell_back=False, attempt_index=1`; provedores diferentes; e o `outcome` do P1-2. |
+| P3-7 | P3 | `tests/test_narration_pairs_script.py` (`test_attempt_hook_restored_on_exit_and_on_error`) | Na `main` o teste já é verde, porque o script de lá nem tocava no hook; `red_green.sh 428` dá 5/6 sem marcação. É teste de guarda legítimo: o mutante `hook_not_restored` o reprova. | No pouso: `red_green.sh 428 --allow-green tests/test_narration_pairs_script.py::test_attempt_hook_restored_on_exit_and_on_error` (6/6, abaixo). |
+| P3-8 | P3 | `scripts/dev/narration_pairs.py` `check_budget` | "Previsto impresso antes de qualquer chamada" está no código (`print` para stderr antes de `_resolve_llm` em `main`), mas nenhum teste afirma o texto. | Opcional: `capsys` em `test_budget_refusals_before_any_call`. |
+
+**Conferido e certo:**
+1. **Hook e estado global.**
+   - O hook anterior é salvo e devolvido no `finally` do `run()`, inclusive quando o corpo levanta (`SystemExit` "divergem").
+   - Com o plugin de sessão (falsos de `get_llm`, `_ATTEMPT_TELEMETRY_HOOK`, `RPG_NARRATION_SIZE`) sobram `[]`, `None` e `None` nas 3 sessões, todas com `-n 0` e rc 0: só pares, pares→enrich, enrich→pares.
+   - `_SCOPED_ATTEMPT_HOOK` (contextvar) não é tocado.
+2. **Mutantes por plugin `mutfu428`.** Mortos:
+   - `judge_true`;
+   - `hook_not_restored`;
+   - `budget_ignores_max` (morto por `test_samples_three_with_max_calls_sixty_runs`);
+   - `no_abs_cap`;
+   - `judge_no_provider`.
+
+   Vivos: `judge_no_fellback` e `judge_no_index` (P2-3). Um run limpo não marca nada (`test_llm_attempts_recorded_per_arm`: `comparavel True`, `motivo ""`).
+3. **Sem chamada real e com recusas certas.**
+   - Os testes novos usam `_FakeNarrator`/`_scripted` (sem rede) ou `--mock`, e o guard de `get_llm` continua ativo.
+   - `--max-calls 500` recusa antes de qualquer chamada (via `run` e via `main`), e `check_budget` roda em `main` antes de `_resolve_llm`.
+   - A recusa sem chave e com `RPG_FORCE_MOCK=1` continua coberta.
+4. **`summary` confere com o pacote real**, à mão, sobre as `samples` de `pares-2026-11-23-n3.json`:
+   - `cena`/`on`: 12 amostras `[615, 625, 626, 627, 656, 680, 733, 739, 766, 775, 949, 1048]`, mediana 706,5 = summary 706,5.
+   - `fala_mediada`/`off`: 4/6 com opções = 0,667 = summary.
+   - Chamadas e tentativas: 60 chamadas, 60 tentativas, todas `deepseek/deepseek-v4-flash`, `success`, índice 0, `fell_back` falso.
+   - Opções nas classes encurtadas: 8/24 em `off` e 5/24 em `on`, igual ao que o coordenador contou.
+5. **Sem segredo.** O `.json` e o `.md` não trazem chave, token, `bearer` nem e-mail (grep). O único nome é o "Ari" sintético do gerador.
+6. **Gates verdes.**
+   - pytest das 5 suítes: 129 passed.
+   - `baseline_growth --base main`: rc 0.
+   - `type_gate.py --check`: "nenhum erro novo, baseline justa".
+   - `red_green`: 6/6 com o `--allow-green` do P3-7.
+
+**Para o coordenador (produto, fora do escopo da ferramenta):** no pacote real, `cena`/`on` tem mediana 706,5, **abaixo** da faixa de 750 a 1.000 (25 % na faixa); `descanso`/`on` tem 753,5 para a faixa de 800 a 1.100 (33 %). Isso pede a recalibração de palavras da Etapa 6.2. A fração com opções já é baixa em `off` (8/24) e cai em `on` (5/24): conferir o critério P4 da §6 antes do `on` no staging.
 
 ## Confirmação 3 (23/11, `faa9805a..928e04e7`)
 
@@ -140,6 +186,43 @@ Nenhum P0/P1.
     o dono (D2), como a spec diz.
 
 ## Evidência verificada
+
+### Follow-up de ferramenta (`6d556c5e`)
+
+`bash scripts/dev/red_green.sh 428 --allow-green tests/test_narration_pairs_script.py::test_attempt_hook_restored_on_exit_and_on_error`:
+
+| teste | main | branch | veredito |
+|---|---|---|---|
+| tests/test_narration_pairs_script.py::test_attempt_hook_restored_on_exit_and_on_error | verde | verde | OK (allow-green) |
+| tests/test_narration_pairs_script.py::test_budget_refusals_before_any_call | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_llm_attempts_recorded_per_arm | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_non_comparable_pair_marked_warned_and_rc_nonzero | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_samples_three_with_max_calls_sixty_runs | vermelho | verde | OK |
+| tests/test_narration_pairs_script.py::test_summary_hand_checked | vermelho | verde | OK |
+
+red_green: 6/6 OK. Sem `--allow-green`, o resultado é 5/6, por causa do teste de guarda do P3-7.
+
+Mutantes (`MUTF=<nome>`, plugin `mutfu428`, `tests/test_narration_pairs_script.py -n 0`):
+
+| mutante | resultado |
+|---|---|
+| `judge_true` | morto (`test_non_comparable_pair_marked_warned_and_rc_nonzero[fell_back]`) |
+| `hook_not_restored` | morto (`test_attempt_hook_restored_on_exit_and_on_error`) |
+| `budget_ignores_max` | morto (`test_samples_three_with_max_calls_sixty_runs`) |
+| `no_abs_cap` | morto (`test_budget_refusals_before_any_call`) |
+| `judge_no_provider` | morto (`[providers_differ]`) |
+| `judge_no_fellback` | **vivo**, rc 0 (P2-3) |
+| `judge_no_index` | **vivo**, rc 0 (P2-3) |
+
+```text
+git diff main...HEAD -- agents services tests/fixtures evals → vazio
+pt.sh test_narration_pairs_script test_narration_size test_ruff_counts test_clock_asserts test_size_budget -n 2 → 129 passed
+baseline_growth.py --base main → rc 0
+type_gate.py --check → OK types: nenhum erro novo, baseline justa
+pytest -n 0 -p leak428: pares | pares→enrich | enrich→pares → rc 0; falsos [], hook None, RPG_NARRATION_SIZE None
+rascunho chk428c.py (invoke_error, índice 0 + AIMessage) → comparavel: True, motivo '' (P1-2)
+conferência à mão de pares-2026-11-23-n3.json → summary bate (cena/on 706,5; fala_mediada/off 0,667)
+```
 
 ### Confirmação 3 (`928e04e7`)
 
