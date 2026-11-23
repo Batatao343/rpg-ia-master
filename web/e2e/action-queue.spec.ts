@@ -601,6 +601,48 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       expect(await sentQueued(page, backend)).toBe(0);
     });
 
+    // O texto devolvido sobrevive ao ramo `deckLocked` (campo desmontado) e volta ao campo quando o combate acaba.
+    test("devolve a com o Baralho: o texto (fila + digitado depois) volta ao campo quando o combate termina", async ({ page, backend }) => {
+      backend.actionQueue = true;
+      backend.combatHits = true;
+      await installControlledSse(page);
+      await openGame(page);
+      await toQueued(page);
+      await composer(page).fill("e depois a ponte"); // digitado depois da fila: D5 põe o da fila antes
+      armDeck(backend, { enemies: [["e1", "Saqueador"]] });
+      const enemy = backend.states.get("game-a")!.combat.enemies[0];
+      enemy.vitalidade = 4; enemy.hp = 4; // um Ataque básico encerra a luta
+      await closeTurn(page);
+      await expect(page.locator(".composer-locked")).toHaveCount(1);
+      await expect(page.locator("#composer")).toHaveCount(0); // campo desmontado durante a luta
+      expect(await sentQueued(page, backend)).toBe(0);
+      if (width < 600) { // celular: na aba Chat durante a luta o campo continua desmontado, com o aviso do tabuleiro e a nota
+        await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Crônica" }).click();
+        await expect(page.locator(".composer-locked")).toBeVisible();
+        await expect(hint(page)).toBeVisible();
+        await expect(page.locator("#composer")).toHaveCount(0);
+        await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Combate" }).click();
+      }
+      await page.getByText("Manobras e ações", { exact: true }).click();
+      await page.getByRole("group", { name: "Manobras táticas" }).getByRole("button", { name: "Ataque básico" }).click();
+      await waitSseReqs(page, 2); // o ataque sai pelo stream controlado: o servidor "encerra" a luta e o teste entrega o state
+      expect((await sseReqs(page))[1].action_kind).toBe("attack");
+      const fought = backend.states.get("game-a")!;
+      fought.combat.active = false; fought.combat.enemies = [];
+      await push(page, NARRATION);
+      await closeTurn(page, "O último saqueador cai; o combate termina.");
+      await expect(page.locator("#composer")).toHaveValue(`${QUEUED}
+e depois a ponte`);
+      if (width < 600) { // o painel Combate fica aberto depois da luta: o jogador volta à Crônica e o texto está lá
+        await expect(page.locator("#composer")).toBeHidden();
+        await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Crônica" }).click();
+      }
+      await expect(page.locator("#composer")).toBeVisible();
+      await expect(page.locator("#composer")).toHaveValue(`${QUEUED}
+e depois a ponte`);
+      expect(await sentQueued(page, backend)).toBe(0);
+    });
+
     test("devolve d: uma escolha de nível anexada atrás de outra já pendente também devolve", async ({ page, backend }) => {
       backend.actionQueue = true;
       const state = backend.states.get("game-a")!;
