@@ -399,6 +399,9 @@ O MockLLM devolve texto fixo e não encurta por instrução: só estes passos pr
 
 ## Não rodou e por quê
 
+- **Pacote de pares com chave real (23/11, coordenador):** `docs/spec428/pares-2026-11-23-n3.md` e `.json`: 10 casos × 2 braços × 3 amostras = 60 chamadas, todas `deepseek/deepseek-v4-flash`, `success`, índice 0; todos os pares comparáveis. Mediana de caracteres `off` → `on`: cena 1196,5 → 706,5; fala mediada 1450 → 770; descanso 1141 → 753,5; controles local novo 1440 → 1591 e revelação 1598 → 1363 (n=3 cada, dentro do ruído). Na faixa-alvo com `on`: cena 25 %, fala mediada 83 %, descanso 33 %: cena e descanso saem abaixo da faixa e pedem a recalibração da Etapa 6.2 antes de ligar. Bloco de opções presente nas classes encurtadas: 8/24 com `off` e 5/24 com `on` (já é raro com o prompt de hoje). Um primeiro pacote com 1 amostra foi descartado: não registrava qual LLM escreveu e o ruído era alto. O dono ainda não leu.
+- **Follow-up do script de pares, pousado em 23/11 (`71fe43bb`):** registra o LLM por amostra, exige uma tentativa `success` de primeira por amostra (senão `comparavel: false`, rc 3 e fora do resumo), `--samples`, `--max-calls`, `summary`. Revisão Sol em três rodadas, final `APPROVED`. Suíte completa 12011 passed, rc 0; CI pré-pouso `audit-local` `45253259496` verde no mesmo commit.
+
 - **Pouso (23/11, coordenador):** os critérios R11 (`evals compare` off × on) e R12 (pacote de 10 pares com chave real) ficam abertos; nenhum dos dois é necessário para o pouso com a flag `off` e os dois são exigidos antes de ligar. O smoke de turno no staging está parado desde 23/11 13:11 UTC (DeepSeek devolvendo 402 e teto diário estourado).
 
 Atualizado após a execução e a revisão sol (`handoffs/SPEC-428-sol-review.md`):
