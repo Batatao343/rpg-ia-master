@@ -20,6 +20,7 @@ Regras:
 - Duplo cancelamento e exceção do thread durante a espera: um teste cada (SPEC-412 rodada 2 P3)
 - Exceção do thread engolida no cancelamento: `logger.warning`, nunca silêncio (SPEC-412 rodada 2 P3)
 - Envio automático do cliente (efeito React) contra envio manual no mesmo commit: o guarda `busy` do closure não basta; e2e com `MutationObserver` + `requestSubmit` no commit do `state` e trava síncrona (ref) no `handleAction` (SPEC-427 P1-1, `web/src/App.tsx:473`)
+- Trava com liberação em vários ramos (retry `completed` × `unknown`): um teste por ramo com o fluxo antigo pendurado; fixture que responde `missing` só exercita um deles e a mutação do outro sobrevive (SPEC-427 R2-P1-1, `web/src/App.tsx:641`)
 
 ## sql-rls
 
