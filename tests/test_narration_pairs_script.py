@@ -151,3 +151,63 @@ def test_fingerprint_ignores_only_size_lines():
     ]
     assert np_.prompt_fingerprint(a) == np_.prompt_fingerprint(b)
     assert np_.prompt_fingerprint(a) != np_.prompt_fingerprint(["y\nfim"])
+
+
+def _fake_leftovers() -> list[str]:
+    return [
+        name
+        for name, mod in list(sys.modules.items())
+        if mod is not None
+        and getattr(getattr(mod, "get_llm", None), "__qualname__", "").startswith("_llm_guard")
+    ]
+
+
+def test_run_leaves_no_fake_get_llm_in_any_module(monkeypatch):
+    """P1-1: modulo importado DURANTE o guard nao pode ficar com o `get_llm` falso."""
+    monkeypatch.delitem(sys.modules, "agents.campaign_manager", raising=False)
+    np_.run(_cases()[:1], np_._FakeNarrator())
+    assert _fake_leftovers() == []
+
+
+def test_guard_restores_imported_during_body_and_on_exception():
+    import llm_setup
+
+    original = llm_setup.get_llm
+    mod = type(sys)("fake_mod_in_guard")
+    budget = {"calls": 0, "foreign": 0}
+    with pytest.raises(ValueError), np_._llm_guard(np_._FakeNarrator(), budget):
+        mod.get_llm = llm_setup.get_llm  # `from llm_setup import get_llm` durante o guard
+        sys.modules["fake_mod_in_guard"] = mod
+        sys.modules["fake_none_mod"] = None
+        raise ValueError("corpo falhou")
+    try:
+        assert llm_setup.get_llm is original
+        assert mod.get_llm is original
+    finally:
+        sys.modules.pop("fake_mod_in_guard", None)
+        sys.modules.pop("fake_none_mod", None)
+
+
+def test_guard_keeps_get_llm_replaced_on_purpose():
+    sentinel = lambda *a, **k: "meu"  # noqa: E731
+    mod = type(sys)("fake_mod_sentinel")
+    budget = {"calls": 0, "foreign": 0}
+    with np_._llm_guard(np_._FakeNarrator(), budget):
+        mod.get_llm = sentinel
+        sys.modules["fake_mod_sentinel"] = mod
+    try:
+        assert mod.get_llm is sentinel
+    finally:
+        sys.modules.pop("fake_mod_sentinel", None)
+
+
+def test_run_restores_env_and_world_pulse(monkeypatch):
+    from agents import storyteller as st
+
+    monkeypatch.setenv("RPG_NARRATION_SIZE", "orig")
+    pulse, enc = st._story_world_pulse, st.check_encounter
+    np_.run(_cases()[:1], np_._FakeNarrator())
+    import os
+
+    assert os.environ["RPG_NARRATION_SIZE"] == "orig"
+    assert st._story_world_pulse is pulse and st.check_encounter is enc

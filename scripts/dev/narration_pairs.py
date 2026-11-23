@@ -196,6 +196,26 @@ def check_budget(n_cases: int, samples: int) -> int:
     return planned
 
 
+def _sweep_fakes(fakes: list[Any], saved: list[tuple[Any, Any]]) -> None:
+    """Modulo importado DURANTE o guard prende o falso: devolve o original a todo `get_llm`
+    que seja (por identidade) um dos falsos deste guard; o resto nao e tocado."""
+    real = next((fn for m, fn in saved if getattr(m, "__name__", "") == "llm_setup"), None)
+    if real is None:  # llm_setup so foi carregado dentro do guard: ja foi restaurado/inalterado
+        import llm_setup
+
+        real = llm_setup.get_llm
+    if any(real is f for f in fakes):
+        return
+    for mod in list(sys.modules.values()):
+        if mod is None:
+            continue
+        try:
+            if any(getattr(mod, "get_llm", None) is f for f in fakes):
+                mod.get_llm = real
+        except (AttributeError, ImportError):  # modulo lazy/exotico: ignora
+            continue
+
+
 @contextlib.contextmanager
 def _llm_guard(narrator: Any, budget: dict):
     """Ponto unico de LLM: o `get_llm` do narrador devolve o proxy; todo outro `get_llm` (em
@@ -206,18 +226,21 @@ def _llm_guard(narrator: Any, budget: dict):
         budget["foreign"] = budget.get("foreign", 0) + 1
         raise RuntimeError("chamada de LLM fora do narrador no pacote de pares")
 
+    fakes: list[Any] = [foreign]
     saved: list[tuple[Any, Any]] = []
     for mod in list(sys.modules.values()):
         if mod is not None and mod is not st and callable(getattr(mod, "get_llm", None)):
             saved.append((mod, mod.get_llm))
             mod.get_llm = foreign
     saved.append((st, st.get_llm))
-    st.get_llm = lambda *a, **k: narrator
+    st.get_llm = narrator_fn = lambda *a, **k: narrator
+    fakes.append(narrator_fn)
     try:
         yield
     finally:
         for mod, fn in saved:
             mod.get_llm = fn
+        _sweep_fakes(fakes, saved)
 
 
 class _ProviderLog(logging.Handler):
@@ -335,6 +358,7 @@ def run(cases: list[dict], llm: Any, samples: int = 1) -> dict:
     old_level = plog.level
     plog.setLevel(logging.DEBUG)
     pairs: list[dict] = []
+    old_size = os.environ.get("RPG_NARRATION_SIZE")
     try:
         for case in cases:
             row: dict[str, Any] = {"id": case["id"], "expected_class": case["expected_class"]}
@@ -352,7 +376,10 @@ def run(cases: list[dict], llm: Any, samples: int = 1) -> dict:
     finally:
         plog.removeHandler(handler)
         plog.setLevel(old_level)
-        os.environ.pop("RPG_NARRATION_SIZE", None)
+        if old_size is None:
+            os.environ.pop("RPG_NARRATION_SIZE", None)
+        else:
+            os.environ["RPG_NARRATION_SIZE"] = old_size
     calls = budget["calls"] + budget["foreign"]
     return {"git_sha": _git_sha(), "calls": calls, "pairs": pairs}
 
