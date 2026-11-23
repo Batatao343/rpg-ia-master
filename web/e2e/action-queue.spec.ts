@@ -59,7 +59,7 @@ const sentQueued = async (page: Page, backend: DeterministicBackend) =>
 /** Devolução ao rascunho (R10): chip fora, texto no campo, nota visível, anúncio, 0 eco e 0 envio da fila. */
 async function expectReturned(page: Page, backend: DeterministicBackend, reason: string, sseCount = 1) {
   await expect(chip(page)).toHaveCount(0);
-  await expect(composer(page)).toHaveValue(QUEUED);
+  await expect(page.locator("#composer")).toHaveValue(QUEUED); // no celular o combate esconde o compositor; o texto está lá
   await expect(hint(page)).toContainText(reason);
   await expect(live(page)).toContainText(`A ação na fila não foi enviada: ${reason}`);
   await expect(echoes(page, QUEUED)).toHaveCount(0);
