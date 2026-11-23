@@ -32,6 +32,7 @@ test('decideQueued só envia com delivered e busy falso', async () => {
   assert.deepEqual(decideQueued(queued, closed()), { kind: 'send' });
   assert.deepEqual(decideQueued(queued, closed({ busy: true, stage: 'narrated' })), { kind: 'wait' });
   assert.deepEqual(decideQueued(queued, closed({ delivered: false })), { kind: 'return', reason: 'narration-changed' });
+  assert.deepEqual(decideQueued(queued, closed({ busy: true })), { kind: 'wait' }); // busy com stage idle: ainda espera
   // fechado mas ainda fora de idle: espera, nunca envia
   assert.deepEqual(decideQueued(queued, closed({ stage: 'narrated' })), { kind: 'wait' });
   assert.deepEqual(decideQueued(queued, closed({ stage: 'waiting' })), { kind: 'wait' });

@@ -38,7 +38,7 @@ export interface QueueSnapshot extends QueueBase { pendingStored: boolean; onlin
 
 export type ReturnReason =
   | "resumed" | "unsaved" | "turn-error" | "narration-changed" | "combat-started" | "combat-result"
-  | "death" | "level-choice" | "pending" | "offline" | "left";
+  | "death" | "level-choice" | "pending" | "offline" | "left" | "sent-elsewhere";
 
 export type QueueDecision = { kind: "wait" } | { kind: "send" } | { kind: "return"; reason: ReturnReason };
 
@@ -47,7 +47,7 @@ export function queueBase(data: GameResponse | null, turn: TurnWait, busy: boole
   return {
     enabled: actionQueueEnabled(), busy, stage: turn.stage, seq: turn.seq, delivered: turn.delivered, error: !!turn.error,
     gid: data?.game_id ?? null, blocked, fighting: !!data?.combat?.active, simulation: !!data?.combat_simulation?.enabled,
-    deckLocked, combatResultId: result?.result_event_id ?? null, choiceId: data?.player_stats?.pending_choices?.[0]?.id ?? null,
+    deckLocked, combatResultId: result?.result_event_id ?? null, choiceId: (data?.player_stats?.pending_choices ?? []).map((c) => c.id).join(",") || null, // lista inteira (P3-2)
     deathOrOver: !!data?.death_pending || !!data?.game_over,
   };
 }
@@ -99,6 +99,7 @@ const REASONS: Record<ReturnReason, string> = {
   pending: "há uma ação pendente",
   offline: "sem conexão",
   left: "você saiu da partida",
+  "sent-elsewhere": "outro envio saiu antes",
 };
 
 export function returnNote(reason: ReturnReason): string {

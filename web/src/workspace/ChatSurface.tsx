@@ -12,6 +12,7 @@ import { useTurnClock } from "../hooks/useTurnClock";
 import { IDLE_TURN, type TurnWait } from "../turnWait";
 import { queueBase, queueButtonActive } from "../queuedAction";
 import { useQueuedAction } from "../hooks/useQueuedAction";
+import { turnLocked } from "../turnLock";
 import { useComposerHeight } from "../hooks/useComposerHeight";
 import { composerHeight, shouldSubmitOnKey } from "./composerKeys";
 import { Icon } from "../design/icons";
@@ -194,6 +195,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
     if (blocked) return;
     const text = input.trim();
     if (busy) { if (queue.enqueue(text)) setInput(""); return; } // SPEC-427: com a flag desligada, `enqueue` é falso
+    if (turnLocked()) return; // I2: o turno já assumiu a trava mas o `busy` do DOM ainda não subiu; o texto fica no campo
     queue.clearNote();
     if (!text) return;
     // Explicit text submission cancels any outstanding capture/transcript.
@@ -211,7 +213,10 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
       <ContextSuggestions data={data} disabled={blocked || busy || offSurface || fighting || gameOver || deathPending || simulation}
         onPick={(text) => { setInput(text); areaRef.current?.focus(); }} />
       {deckLocked ? (
+        <>
         <p className="composer-locked" role="note">Na luta, você age pelas cartas do tabuleiro.</p>
+        {queue.note && <p className="composer-hint" aria-hidden="true">{queue.note}</p>}
+        </>
       ) : (
       <>
       {queue.queued !== null && (

@@ -3,6 +3,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, type DeterministicBackend } from "./fixtures";
 import type { Page } from "@playwright/test";
+import { armDeck } from "./deck-342-helpers";
 import { installControlledSse, ev, push, closeSse, sseReqs, waitSseReqs, finalState } from "./sseControl";
 
 test.beforeEach(async ({ backend }) => {
@@ -82,6 +83,18 @@ async function relogin(page: Page, backend: DeterministicBackend, name = "Ayla")
   await page.getByRole("button", { name: "Entrar" }).click();
   await page.getByRole("button", { name: new RegExp(`^${name}`) }).click();
   await expect(page.getByText(name, { exact: true }).first()).toBeVisible();
+}
+
+/** Dispara `n` submits do formulário no commit em que o botão volta a "Agir" (a janela do `state`). */
+async function submitAtStateCommit(page: Page, n: number) {
+  await page.evaluate((times) => {
+    const btn = document.querySelector('[data-effect="chat.pending"]')!; let fired = false;
+    new MutationObserver(() => {
+      if (fired || btn.textContent?.trim() !== "Agir") return;
+      fired = true;
+      for (let i = 0; i < times; i++) (document.querySelector("form.ws-composer") as HTMLFormElement).requestSubmit();
+    }).observe(btn, { subtree: true, childList: true, characterData: true, attributes: true });
+  }, n);
 }
 
 for (const [width, height] of [[1440, 900], [390, 844]] as const) {
@@ -421,6 +434,154 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       await expect(chip(page)).toHaveCount(0);
       expect(await sentQueued(page, backend)).toBe(0);
       await expect(echoes(page, QUEUED)).toHaveCount(0);
+    });
+    // ---------------- I2: no máximo um turno em voo (trava síncrona, `turnLock.ts`) ----------------
+    test("I2 corrida: Enter manual no commit do state com a fila cheia = 1 turno só; o texto da fila volta ao campo", async ({ page, backend }) => {
+      backend.actionQueue = true;
+      await installControlledSse(page);
+      await openGame(page);
+      await toQueued(page);
+      await composer(page).fill("sigo pela rua");
+      await submitAtStateCommit(page, 1);
+      await closeTurn(page);
+      await waitSseReqs(page, 2);
+      await expect(hint(page)).toContainText("outro envio saiu antes");
+      await expect(composer(page)).toHaveValue(QUEUED);
+      expect((await sseReqs(page)).map((r) => r.input_text)).toEqual(["olho ao redor", "sigo pela rua"]);
+      expect(await sentQueued(page, backend)).toBe(0);
+      await push(page, NARRATION);
+      await closeTurn(page);
+      await expect(pendingBtn(page)).toHaveText("Agir");
+      expect(await sseReqs(page)).toHaveLength(2);
+      expect(posts(backend)).toHaveLength(0);
+    });
+
+    test("I2 corrida com a fila desligada: dois Enters no commit do state geram 1 stream só", async ({ page, backend }) => {
+      backend.actionQueue = false;
+      await installControlledSse(page);
+      await openGame(page);
+      await toNarrated(page);
+      await composer(page).fill("sigo pela rua");
+      await submitAtStateCommit(page, 2);
+      await closeTurn(page);
+      await waitSseReqs(page, 2);
+      await push(page, NARRATION);
+      await closeTurn(page);
+      await expect(pendingBtn(page)).toHaveText("Agir");
+      expect(await sseReqs(page)).toHaveLength(2);
+      expect(posts(backend)).toHaveLength(0);
+    });
+
+    // ---------------- a trava sempre solta: depois de cada saída, um envio novo funciona ----------------
+    test("trava solta: erro de rede (stream e POST) e depois um envio novo", async ({ page, backend }) => {
+      backend.allowFailure(/\/game\/action/); backend.allowConsole(/.*/);
+      backend.failNextTurn = true;
+      await installControlledSse(page);
+      await openGame(page);
+      await composer(page).fill("olho ao redor");
+      await composer(page).press("Enter");
+      await waitSseReqs(page, 1);
+      await push(page, ev("error", { detail: "falhou", code: 500, error_code: "internal_error", request_id: "e2e-req-0010" }));
+      await closeSse(page);
+      await expect(pendingBtn(page)).toBeEnabled();
+      await composer(page).fill("olho o céu");
+      await composer(page).press("Enter");
+      await expect.poll(async () => (await sseReqs(page)).length + posts(backend).length).toBeGreaterThanOrEqual(3);
+    });
+
+    test("trava solta: erro HTTP 422 sem narração e depois um envio novo", async ({ page }) => {
+      await installControlledSse(page);
+      await openGame(page);
+      await composer(page).fill("olho ao redor");
+      await composer(page).press("Enter");
+      await waitSseReqs(page, 1);
+      await push(page, ev("error", { detail: "recusado", code: 422, error_code: "invalid_input", request_id: "e2e-req-0011" }));
+      await closeSse(page);
+      await expect(pendingBtn(page)).toBeEnabled();
+      await composer(page).fill("olho o céu");
+      await composer(page).press("Enter");
+      await waitSseReqs(page, 2);
+      expect((await sseReqs(page))[1].input_text).toBe("olho o céu");
+    });
+
+    test("trava solta: auth-expired no meio do turno e depois um envio novo", async ({ page, backend }) => {
+      backend.allowFailure(/.*/); backend.allowConsole(/.*/);
+      await installControlledSse(page);
+      await openGame(page);
+      await composer(page).fill("olho ao redor");
+      await composer(page).press("Enter");
+      await waitSseReqs(page, 1);
+      await relogin(page, backend);
+      await composer(page).fill("olho o céu");
+      await composer(page).press("Enter");
+      await expect.poll(async () => (await sseReqs(page)).some((r) => r.input_text === "olho o céu")).toBe(true);
+    });
+
+    test("trava solta: 'Tentar de novo' (stream pendurado) e depois um envio novo", async ({ page }) => {
+      await installControlledSse(page);
+      await openGame(page);
+      await page.clock.install();
+      await composer(page).fill("olho ao redor");
+      await composer(page).press("Enter");
+      await waitSseReqs(page, 1);
+      await push(page, ": ack\n\n" + ev("phase", { node: "campaign_manager", status: "done" }));
+      await page.clock.fastForward(25_000);
+      await page.locator(".ws-composer .turn-status").getByRole("button", { name: "Tentar de novo" }).click();
+      await waitSseReqs(page, 2);
+      await push(page, NARRATION);
+      await closeTurn(page);
+      await expect(pendingBtn(page)).toBeEnabled();
+      await composer(page).fill("olho o céu");
+      await composer(page).press("Enter");
+      await waitSseReqs(page, 3);
+      expect((await sseReqs(page))[2].input_text).toBe("olho o céu");
+    });
+
+    // ---------------- P2-1: o anúncio de devolução não fica preso na região viva ----------------
+    test("devolução: a região viva do turno seguinte não repete a mensagem antiga", async ({ page, backend }) => {
+      backend.actionQueue = true;
+      await installControlledSse(page);
+      await openGame(page);
+      await toQueued(page);
+      await push(page, ev("narrative", { chunk: "Outro texto final.", done: true, replace: true }));
+      await closeTurn(page);
+      await expectReturned(page, backend, "a narração mudou");
+      await composer(page).press("Enter"); // reenvia o texto devolvido como turno novo
+      await waitSseReqs(page, 2);
+      await expect(live(page)).not.toContainText("não foi enviada");
+      await push(page, NARRATION);
+      await expect(live(page)).toContainText("registrando…");
+      await expect(live(page)).not.toContainText("não foi enviada");
+    });
+
+    // ---------------- P2-2: caso a com o Baralho (pilhas) mostra a nota no compositor travado ----------------
+    test("devolve a com o Baralho: a nota aparece no compositor travado", async ({ page, backend }) => {
+      backend.actionQueue = true;
+      await installControlledSse(page);
+      await openGame(page);
+      await toQueued(page);
+      armDeck(backend); // combate com `pilhas` (o Baralho `on` do staging)
+      await closeTurn(page);
+      await expect(chip(page)).toHaveCount(0);
+      await expect(page.locator(".composer-locked")).toBeVisible();
+      await expect(hint(page)).toContainText("começou um combate");
+      await expect(live(page)).toContainText("A ação na fila não foi enviada: começou um combate");
+      expect(await sseReqs(page)).toHaveLength(1);
+      expect(await sentQueued(page, backend)).toBe(0);
+    });
+
+    test("devolve d: uma escolha de nível anexada atrás de outra já pendente também devolve", async ({ page, backend }) => {
+      backend.actionQueue = true;
+      const state = backend.states.get("game-a")!;
+      state.player_stats.pending_choices = [{ id: "level-2", level: 2, kind: "attribute" }];
+      await installControlledSse(page);
+      await openGame(page);
+      await toQueued(page);
+      await closeTurn(page, undefined, (st) => {
+        const choices = [{ id: "level-2", level: 2, kind: "attribute" }, { id: "level-3", level: 3, kind: "virtude" }];
+        return { ...st, player_stats: { ...st.player_stats, pending_choices: choices, level_up: { pending: choices } } };
+      });
+      await expectReturned(page, backend, "há uma escolha de nível");
     });
   });
 }

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ActionOptions } from "../types";
 import { loadPending } from "../pendingOperation";
+import { turnLocked } from "../turnLock";
 import { getChatSession, setChatSession } from "../workspace/chatSessionStore";
 import {
   QUEUE_REMOVED, QUEUED_ANNOUNCE, QUEUED_REPLACED, canEnqueue, decideQueued, mergeDraft, returnNote,
@@ -60,6 +61,12 @@ export function useQueuedAction({ base, owner, onAction, reactionCardId, setInpu
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Novo turno: o anúncio de devolução do turno anterior sai da região viva (SPEC-320 R1/R14). Declarado ANTES da
+  // decisão: uma devolução do mesmo commit grava depois e vence.
+  useEffect(() => {
+    if (!queuedRef.current) setLiveNote(null);
+  }, [base.seq]);
+
   // R8: decide no render em que o turno fecha. Limpa a fila ANTES de chamar `onAction` (2ª execução não acha nada).
   useEffect(() => {
     const q = queuedRef.current;
@@ -71,6 +78,11 @@ export function useQueuedAction({ base, owner, onAction, reactionCardId, setInpu
     const wasFocusLost = !document.activeElement || document.activeElement === document.body
       || !!document.activeElement.closest(".queued-action");
     drop(q.gid);
+    if (decision.kind === "send" && turnLocked()) { // I2: um envio manual saiu primeiro (janela do commit do `state`)
+      const text = returnNote("sent-elsewhere");
+      giveBack(q, text, text);
+      return;
+    }
     if (decision.kind === "send") {
       if (sentSeq.current === q.seq) return;
       sentSeq.current = q.seq;
@@ -104,7 +116,7 @@ export function useQueuedAction({ base, owner, onAction, reactionCardId, setInpu
     live.current.focusInput();
   }, [drop, giveBack]);
 
-  const clearNote = useCallback(() => { setNote(null); }, []);
+  const clearNote = useCallback(() => { setNote(null); setLiveNote(null); }, []);
 
   return { queued: queued?.text ?? null, enqueue, remove, note, liveNote, clearNote };
 }

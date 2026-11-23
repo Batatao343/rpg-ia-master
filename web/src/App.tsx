@@ -10,6 +10,7 @@ import { safeStorage } from "./safeStorage";
 import { preparePendingWithOrigin, loadPending, clearPending, clearPendingIfOwn, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
 import { clearWorkspaceOwner } from "./workspace/workspaceStorage";
 import { forgetAllChatSessions } from "./workspace/chatSessionStore";
+import { lockTurn, turnLocked, unlockTurn } from "./turnLock";
 import { looksDegraded } from "./lib";
 import type { ActionOptions, GameResponse, LogEntry, SaveSummary } from "./types";
 import { Banner, type BannerState } from "./components/Banner";
@@ -102,7 +103,7 @@ export function App() {
       if (deletionInProgress.current) return;
       session.current++;
       resetImageQuote();
-      setBusy(false); setThinking(false); setData(null); setLog([]);
+      setBusy(false); setThinking(false); setData(null); setLog([]); unlockTurn();
       setAccountBalance(null);
       setScreen("auth");
     };
@@ -470,12 +471,13 @@ export function App() {
 
   async function handleAction(text: string, options: ActionOptions = {}) {
     const bypass = retryBypass.current; retryBypass.current = false; // retry de stream pendurado: `busy` do closure é velho
-    if ((busy && !bypass) || !text.trim() || !gameId.current) return;
+    if (((busy || turnLocked()) && !bypass) || !text.trim() || !gameId.current) return; // I2: trava síncrona
     const gid = gameId.current, generation = session.current, user = owner.current;
     const token = ++turnToken.current; // "Tentar de novo" que recupera o turno invalida este fluxo (sem duplicar)
     const active = () => session.current === generation && gameId.current === gid && turnToken.current === token;
     setBusy(true); setThinking(true);
     setTurn(t => ({ ...IDLE_TURN, seq: t.seq + 1, stage: nextStage("idle", "submit") }));
+    lockTurn(token); // solta no `finally` (toda saída passa por ele) e nos pontos que fazem `setBusy(false)` do turno
     let opId: string | null = null, echoId: number | null = null;
     try {
       const old = loadPending(user, gid);
@@ -602,6 +604,7 @@ export function App() {
         try { const fresh = await api.getState(gid); if (active()) setData(fresh); } catch { /* o banner já explica */ }
       }
     } finally {
+      unlockTurn(token);
       if (active()) {
         setThinking(false); setBusy(false);
         // state (ou erro sem narração) destrava; só "falhou depois da narração" permanece para o retry.
@@ -635,7 +638,7 @@ export function App() {
         if (session.current !== generation || gameId.current !== gid) return;
         setData(restored);
         await loadHistory(gid, generation); // só destrava depois do histórico (o setLog dele não pisa em ação nova)
-        if (session.current === generation) { resetTurn(); setThinking(false); setBusy(false); }
+        if (session.current === generation) { resetTurn(); setThinking(false); setBusy(false); unlockTurn(); }
       } else if (status.status === "running") {
         setBanner({ msg: "O turno ainda está em andamento no servidor; continue esperando.", kind: "info" });
       } else {
