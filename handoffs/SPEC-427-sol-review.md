@@ -1,7 +1,106 @@
 # SPEC-427 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Claude Opus (spec-reviewer, papel sol) · **Data:** 2026-11-23 · **Commit revisado:** `80d33758`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Claude Opus (spec-reviewer, papel sol) · **Data:** 2026-11-23 · **Commit revisado:** `b9833298`
+
+## Rodada 3 (2026-11-23, `4bcffb19..b9833298`)
+
+Commits revisados: `93b355d3` (e2e do unlock no retry `completed`, flag off e on), `f15a6ebc` (spec I2),
+`9577d157` (nota de devolução no cabeçalho do painel ativo no celular) e `b9833298` (o texto devolvido sobrevive ao
+compositor travado). Não rebaseei; a `main` está à frente (`25562940`, SPEC-428), e o rebase fica com o coordenador.
+
+R2-P1-1 está fechado, e o P2-2 agora está fechado de verdade nas duas viewports. Não há achado P1 nem P2 em aberto;
+sobram dois P3 de follow-up.
+
+### O 72/72 da rodada 2: o que aconteceu
+
+- **O arquivo inteiro rodou de fato em `80d33758`.** Comando exato:
+  `npx playwright test e2e/action-queue.spec.ts --workers=1 --project=chromium --reporter=line`, sem `-g`, em ordem.
+  O log tem `[71/72] [chromium] › … @390x844 › devolve a com o Baralho: a nota aparece no compositor travado` e
+  `72 passed (2.9m)`. O teste a 390 existia, rodou e passou nesta máquina.
+- **Por que passou aqui e falhou para o coordenador:** o teste passava num estado TRANSITÓRIO.
+  - No celular, a troca para a aba Combate espera 2 `requestAnimationFrame` (`Workspace.tsx:170-177`).
+  - Durante esses quadros o compositor travado ainda está visível, e o `toBeVisible()` de `.composer-locked` acertava a janela.
+  - Numa máquina mais rápida, a troca acontece antes da primeira checagem e o teste falha sempre.
+- **Reprodução:** com o `web/src` e o teste de `80d33758` deu 6/6 verde aqui (`--repeat-each=6`). Com
+  `waitForTimeout(300)` antes da asserção deu vermelho (`Received: hidden`). Os dois restaurados.
+- **Erro meu:** dei P2-2 como fechado "nas duas viewports" com base num teste que não provava isso. Não foi cache
+  do Vite nem filtro.
+- **Quanto confiar nas outras contagens:** as contagens são de execuções reais, de arquivo inteiro. O ponto fraco é
+  outro: um `toBeVisible()` logo depois de uma transição pode passar por um quadro intermediário.
+  - Nos testes da fila, as outras asserções de devolução usam `toHaveValue`/`toContainText`, que não dependem de visibilidade.
+  - O teste novo a 390 espera primeiro `.ws-mhead__note` com o motivo, que só existe depois da troca de superfície, e
+    só então checa a visibilidade. Com isso ele não passa mais por estado transitório.
+
+### Achados restantes (follow-up)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R3-P3-1 | P3 | `web/src/turnLock.ts:10` | A mutação L5 (unlock ignorando o token) continua sendo pega só pelo unit. **Concordo com o executor:** com a trava sobrescrita pelo reenvio do retry `unknown`, o `busy` do DOM já é `true` quando o fluxo antigo termina, então o e2e não consegue abrir a janela sem um gatilho artificial. O unit testa o próprio contrato. | Nenhuma obrigatória. |
+| R3-P3-2 | P3 | `web/src/hooks/useQueuedAction.ts:119`, `web/src/workspace/Workspace.tsx:317` | No combate de cartas, a nota visível ("…começou um combate. O texto voltou ao campo.") só sai com `clearNote`, chamado no submit ou na edição do compositor. As rodadas de carta vão por `onAction` e não a limpam, então ela fica no cabeçalho do Combate (celular) ou sob o aviso do tabuleiro (desktop) durante a luta inteira. O texto é verdadeiro (o rascunho está guardado), mas fica velho. | Opcional: limpar `note` também quando `base.seq` muda, como já se faz com `liveNote`, ou aceitar e registrar na spec. |
+
+### Respostas aos pontos
+
+1. **R2-P1-1 fechado.** Com a mutação L4 (sem o `unlockTurn()` de `App.tsx:641`), os 4 casos novos ("trava solta:
+   'Tentar de novo' com a operação concluída", flag off e on, duas viewports) reprovam 4/4. Sem a mutação, passam
+   (entram nos 78). Sobre o e2e do R2-P3-1, concordo com o executor (R3-P3-1).
+2. **Fix do celular (`9577d157`).**
+   - (a) Com a flag `off`, `queue.note` é sempre `null`; o `setQueueNote(null)` não muda o estado e nada é renderizado. Os e2e existentes continuam verdes (lista abaixo).
+   - (b) `aria-hidden` está correto. O anúncio sai uma vez pela região viva do `TurnStatus` (e2e afirma o texto), a nota do compositor também é `aria-hidden`, e não há leitura dupla nem informação escondida do leitor de tela.
+   - (c) A nota some com `clearNote` (envio ou edição), não aparece na superfície do chat (lá vale a do compositor) e não passa para outra partida, porque o `Workspace` tem `key={game_id}`. Ver R3-P3-2 para a duração dentro do combate.
+   - (d) Sem loop: `onQueueNote` é o `setQueueNote` estável e o efeito depende de `[queue.note, onQueueNote]`. Também não usa closure velho.
+   - (e) Visível em 320×568 e em 768×1024 (o layout mobile vale abaixo de 900 px, `mobileSurface.ts:8`). Rodei uma cópia temporária do arquivo com essas viewports: 4/4 verdes.
+   - (f) O teste a 390 espera pelo estado (`toContainText` em `.ws-mhead__note`), não por tempo, e afirma a nota com o motivo, o anúncio na região viva e 0 envios: não é mais fraco que o de 1440. A mutação N1 (`surface !== "chat" && queueNote` → `false`) reprova exatamente o caso 390 (1 failed, 3 passed).
+3. **Texto preservado (`b9833298`).** A fila e o texto digitado depois voltam na ordem do D5 (`olho o céu\ne depois a ponte`). A mutação N2 (devolução que descarta o texto da fila) reprova nas duas viewports (2/2).
+   - O `input` vive no estado do `Composer`, que continua montado com o `<textarea>` desmontado, e também no `chatSessionStore`.
+   - Caminhos que procurei, por leitura de código: a troca de aba Combate↔Crônica está coberta por e2e. Fuga e fim do combate por evento do servidor passam pela mesma volta de `deckLocked` para `false`. Na morte, o texto continua no estado e o compositor fica `blocked`.
+   - Reload no meio da luta perde o rascunho, como já acontece hoje (R11). Com sessão expirada, o texto volta para o mesmo dono e é apagado para outro (`clearOwner` → `forgetAllChatSessions`).
+   - Não achei caminho em que o rascunho se perca fora do reload.
+4. **Regressão geral no topo `b9833298`.** Todos verdes e nenhum precisou ser repetido (comandos na Evidência). As mutações L1–L5 e M1–M7 dão o mesmo resultado de antes. O `git diff main...HEAD -- web/e2e`, nos arquivos que já existiam na `main`, só mostra o `fixtures.ts` (campo `actionQueue`) e o `turn-wait.spec.ts` (helpers movidos para `sseControl.ts`); nenhuma asserção foi editada.
+5. **Spec.** O R10 (celular), o I2 (os dois ramos do retry: `completed` solta, `unknown` reescreve) e a tabela de devolução descrevem o código.
+
+## Evidência verificada
+
+Topo `b9833298`. Cada comando foi rodado uma vez, um arquivo por vez, com `--workers=1` e `--reporter=line`:
+
+| comando | resultado |
+|---|---|
+| `npx playwright test e2e/action-queue.spec.ts --project=chromium` | 78 passed |
+| cópia temporária com viewports 320×568 e 768×1024, `-g "devolve a com o Baralho"` | 4 passed |
+| `npx playwright test e2e/turn-wait.spec.ts --project=chromium` | 20 passed |
+| `npx playwright test e2e/turn-retry.spec.ts --project=chromium` | 7 passed |
+| `npx playwright test e2e/turn-preflight.spec.ts --project=chromium` | 4 passed |
+| `npx playwright test e2e/pending-discard.spec.ts --project=chromium` | 5 passed |
+| `npx playwright test e2e/mobile-single-pane.spec.ts --project=mobile-320 --project=mobile-390` | 16 passed |
+| `npx playwright test e2e/voice-input.spec.ts --project=chromium` | 11 passed |
+| `npx playwright test e2e/a11y-label-in-name.spec.ts --project=chromium` | 5 passed |
+| `npx playwright test e2e/touch-targets.spec.ts --project=chromium` | 1 passed |
+| `npx playwright test e2e/deck-combat-342.spec.ts --project=chromium` | 37 passed |
+| `npx playwright test e2e/critical-journeys.spec.ts --project=chromium -g "F14\|F15\|F20"` | 3 passed |
+| `npm test` / `typecheck` / `typecheck:e2e` / `lint` | 328/328 · 0 · 0 · 0 |
+| `py.sh scripts/dev/size_budget.py` | rc 0 (`App.tsx` 965, `Workspace.tsx` 374, `ChatSurface.tsx` 294) |
+| `py.sh scripts/dev/baseline_growth.py --base main` | rc 0, nenhum baseline cresceu |
+
+Mutações (script do revisor; cada uma restaurada com `git checkout -- <arquivo>`, `git status` limpo no fim):
+
+| mutação | `-g` | resultado |
+|---|---|---|
+| L4 retry `completed` sem `unlockTurn()` | `com a operação concluída` | 4 failed |
+| N1 nota mobile → `false` | `devolve a com o Baralho` | 1 failed (390), 3 passed |
+| N2 devolução descarta o texto da fila | `devolve a com o Baralho: o texto` | 2 failed |
+| L1 sem `lockTurn` | `(I2 corrida\|trava solta)` | 4 failed |
+| L2 `finally` sem unlock | idem | 10 failed |
+| L3 `auth-expired` sem unlock | idem | 2 failed |
+| L5 unlock ignorando o token | idem | e2e 16 passed; unit 1 fail (R3-P3-1) |
+| M1 sem `delivered` | `1440x900 devolve [gh]` | 3 failed, unit 3 fail |
+| M3b sem `drop` antes do envio | `1440x900 fila: (nada sai antes\|segundo Enter)` | 1 failed |
+| M4 combate envia | `1440x900 devolve a` | 3 failed, unit 2 fail |
+| M5 `replace` envia | `1440x900 devolve g: replace` | 1 failed |
+| M6 fila em `waiting` | `1440x900 fila: Enter em waiting` | 1 failed, unit 1 fail |
+| M7 `Boolean(...)` | `1440x900 fila: action_queue=` | 4 failed |
+
+Explicação do 72/72: `git checkout 80d33758 -- web/src` + teste de `80d33758` com `--repeat-each=6` a 390 → 6 passed;
+o mesmo com `waitForTimeout(300)` antes do `toBeVisible` → failed (`Received: hidden`); `git checkout HEAD -- web/src`.
 
 ## Re-revisão (2026-11-23, `422f92cf..80d33758`)
 
@@ -79,7 +178,7 @@ flag `off` (produção), e a suíte continua verde. Pela regra do pedido ("teste
    - `baseline_growth --base main`: nenhum baseline cresceu.
    - `action-queue.spec.ts` inteiro: 72/72 verdes, sem repetição.
 
-## Evidência verificada
+## Evidência da rodada 2 (commit `80d33758`)
 
 Re-revisão em `80d33758`. Web, feito à mão (o `red_green.sh` só cobre Python; a tabela Python da rodada 1 continua valendo, porque o servidor não mudou nesta rodada):
 
