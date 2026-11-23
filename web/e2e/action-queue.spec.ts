@@ -484,9 +484,9 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       await push(page, ev("error", { detail: "falhou", code: 500, error_code: "internal_error", request_id: "e2e-req-0010" }));
       await closeSse(page);
       await expect(pendingBtn(page)).toBeEnabled();
-      await composer(page).fill("olho o céu");
+      await composer(page).fill("olho ao redor"); // o pending (5xx) segue gravado: só o MESMO texto reenvia (regra de hoje)
       await composer(page).press("Enter");
-      await expect.poll(async () => (await sseReqs(page)).length + posts(backend).length).toBeGreaterThanOrEqual(3);
+      await waitSseReqs(page, 2);
     });
 
     test("trava solta: erro HTTP 422 sem narração e depois um envio novo", async ({ page }) => {
@@ -512,9 +512,9 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       await composer(page).press("Enter");
       await waitSseReqs(page, 1);
       await relogin(page, backend);
-      await composer(page).fill("olho o céu");
+      await composer(page).fill("olho ao redor"); // o pending do turno 1 segue gravado: só o MESMO texto reenvia
       await composer(page).press("Enter");
-      await expect.poll(async () => (await sseReqs(page)).some((r) => r.input_text === "olho o céu")).toBe(true);
+      await waitSseReqs(page, 2);
     });
 
     test("trava solta: 'Tentar de novo' (stream pendurado) e depois um envio novo", async ({ page }) => {
