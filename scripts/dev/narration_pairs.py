@@ -4,7 +4,10 @@ Roda `storyteller_node` com o mesmo estado e a mesma acao, uma vez com `off` e u
 e grava `<out>.md` (texto dos dois lados + contagens) e `<out>.json` (so contagens, `git_sha` e
 modelo/provedor de cada chamada; nenhum texto). Recusa rodar com `RPG_FORCE_MOCK=1` ou sem chave,
 salvo `--mock` (usado so no teste). Conta TODA chamada de LLM (narrador + qualquer `get_llm`
-fora dele, que e proibida) e recusa ANTES da primeira se `2 x casos x samples` passar do teto (30).
+fora dele, que e proibida) e recusa ANTES da primeira se `2 x casos x samples` passar do teto
+(`--max-calls`, default 30, maximo absoluto 120). Cada tentativa de LLM (hook de telemetria do
+projeto) entra em `llm_attempts` por braco; se algum texto nao veio do primeiro candidato, ou os
+bracos divergem de provedor/modelo, o par fica `comparavel: false` e o rc e 3 (arquivos gravados).
 O pulso do mundo e neutralizado nos dois bracos; cada par grava o hash do prompt sem as linhas de
 tamanho e falha se `off` e `on` divergirem.
 
@@ -13,7 +16,8 @@ tamanho e falha se `off` e `on` divergirem.
     bash scripts/dev/py.sh scripts/dev/narration_pairs.py --write-cases docs/spec428/pares_casos.json
 
 O texto varia entre execucoes (temperatura 0,7, sem seed no provedor): reprodutivel = mesmos
-casos, mesmo comando, mesmo sha. `--samples N` repete so para contagem de tamanho.
+casos, mesmo comando, mesmo sha. `--samples N` repete cada braco N vezes (contagens e textos de
+todas as amostras ficam no pacote); `--samples 3 --max-calls 60` pede 60 chamadas de proposito.
 """
 
 from __future__ import annotations
@@ -25,6 +29,7 @@ import json
 import logging
 import os
 import random
+import statistics
 import subprocess
 import sys
 from pathlib import Path
@@ -34,7 +39,8 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-MAX_CALLS = 30
+MAX_CALLS = 30  # teto padrao; `--max-calls` o muda de proposito
+ABS_MAX_CALLS = 120  # teto absoluto: nem `--max-calls` passa daqui
 OUTRA_ACAO = "— Ou outra ação."
 
 
@@ -176,8 +182,9 @@ class _CountingLLM:
 
             def invoke(self, *a: Any, **k: Any) -> Any:
                 budget["calls"] += 1
-                if budget["calls"] + budget.get("foreign", 0) > MAX_CALLS:
-                    raise SystemExit(f"teto de {MAX_CALLS} chamadas de LLM excedido")
+                cap = budget.get("max", MAX_CALLS)
+                if budget["calls"] + budget.get("foreign", 0) > cap:
+                    raise SystemExit(f"teto de {cap} chamadas de LLM excedido")
                 if a:
                     budget.setdefault("prints", []).append(prompt_fingerprint(a[0]))
                 return bound.invoke(*a, **k)
@@ -185,13 +192,16 @@ class _CountingLLM:
         return _Bound()
 
 
-def check_budget(n_cases: int, samples: int) -> int:
+def check_budget(n_cases: int, samples: int, max_calls: int = MAX_CALLS) -> int:
     """Recusa ANTES de qualquer chamada: previsto = 2 bracos x casos x samples."""
+    if not 1 <= max_calls <= ABS_MAX_CALLS:
+        raise SystemExit(f"--max-calls {max_calls} fora de 1..{ABS_MAX_CALLS}; nada foi chamado")
     planned = 2 * n_cases * samples
-    if planned > MAX_CALLS:
+    print(f"chamadas de LLM previstas: {planned} (teto {max_calls})", file=sys.stderr)
+    if planned > max_calls:
         raise SystemExit(
             f"previsto {planned} chamadas de LLM (2 x {n_cases} casos x {samples} samples) "
-            f"> teto {MAX_CALLS}: reduza --samples/casos; nada foi chamado"
+            f"> teto {max_calls}: reduza --samples/casos ou use --max-calls; nada foi chamado"
         )
     return planned
 
@@ -249,6 +259,20 @@ class _ProviderLog(logging.Handler):
     def __init__(self) -> None:
         super().__init__(logging.DEBUG)
         self.rows: list[dict] = []
+        self.llm: list[dict] = []  # tentativas de LLM (hook do projeto); sem texto, sem chave
+
+    def on_attempt(self, event: Any) -> None:
+        """Hook `llm_setup.set_llm_attempt_telemetry_hook`: uma linha por candidato tentado."""
+        self.llm.append(
+            {
+                "provider": event.provider,
+                "model": event.model,
+                "outcome": event.outcome,
+                "http_status": event.http_status,
+                "attempt_index": event.attempt_index,
+                "fell_back": bool(event.fell_back),
+            }
+        )
 
     def emit(self, record: logging.LogRecord) -> None:
         try:
@@ -269,8 +293,8 @@ def _count(text: str) -> dict:
 
 def _run_one(
     case: dict, mode: str, llm: _CountingLLM, harvest: _ProviderLog
-) -> tuple[str, list[dict], str]:
-    """Uma chamada do narrador no caso com a flag `mode`; devolve (texto, tentativas, hash)."""
+) -> tuple[str, list[dict], str, list[dict]]:
+    """Uma chamada do narrador com a flag `mode`; devolve (texto, tentativas, hash, llm)."""
     from langchain_core.messages import HumanMessage
 
     import world_utils
@@ -291,6 +315,7 @@ def _run_one(
     world_utils.roll_encounter_type = lambda danger: "trap"
     st._story_world_pulse = lambda t: None  # P2-1: sem LLM do mundo, igual nos dois bracos
     harvest.rows.clear()
+    harvest.llm.clear()
     random.seed(1)
     try:
         with _llm_guard(llm, budget):
@@ -302,7 +327,7 @@ def _run_one(
     prints = budget.get("prints", [])[n_prints:]
     msgs = out.get("messages") or []
     text = str(getattr(msgs[-1], "content", "")) if msgs else ""
-    return text, list(harvest.rows), (prints[0] if prints else "")
+    return text, list(harvest.rows), (prints[0] if prints else ""), list(harvest.llm)
 
 
 def _git_sha() -> str:
@@ -348,15 +373,58 @@ def _resolve_llm(use_mock: bool) -> Any:
     return llm
 
 
-def run(cases: list[dict], llm: Any, samples: int = 1) -> dict:
-    check_budget(len(cases), samples)
-    budget: dict[str, Any] = {"calls": 0, "foreign": 0}
+def _run_arm(case: dict, mode: str, counted: _CountingLLM, handler: _ProviderLog, n: int) -> dict:
+    """`n` amostras do braco `mode`; `text`/`counts` sao os da primeira (compat)."""
+    samples: list[dict] = []
+    arm_llm: list[dict] = []
+    first: dict[str, Any] = {}
+    for i in range(n):
+        text, attempts, fp, llm_rows = _run_one(case, mode, counted, handler)
+        samples.append({"text": text, **_count(text), "llm_attempts": llm_rows})
+        arm_llm += [{**r, "sample": i} for r in llm_rows]
+        if i == 0:
+            first = {"text": text, "attempts": attempts, "input_hash": fp}
+    return {
+        **first,
+        "counts": _count(first["text"]),
+        "sample_chars": [x["chars"] for x in samples],
+        "samples": samples,
+        "llm_attempts": arm_llm,
+    }
+
+
+def _provider_set(arm: dict) -> set[str]:
+    return {f"{r['provider']}/{r['model']}" for r in arm["llm_attempts"]}
+
+
+def judge_comparable(pair: dict) -> tuple[bool, str]:
+    """Par so serve se TODA narracao veio do primeiro candidato e os bracos usam o mesmo modelo."""
+    why: list[str] = []
+    for mode in ("off", "on"):
+        rows = pair[mode]["llm_attempts"]
+        if any(r["fell_back"] for r in rows):
+            why.append(f"braco {mode}: narracao de candidato reserva (fell_back)")
+        if any(r["attempt_index"] > 0 for r in rows):
+            why.append(f"braco {mode}: tentativa com attempt_index > 0")
+    off, on = _provider_set(pair["off"]), _provider_set(pair["on"])
+    if off != on or len(off) > 1:
+        why.append(f"provedor/modelo diferem: off={sorted(off)} on={sorted(on)}")
+    return (not why), "; ".join(why)
+
+
+def run(cases: list[dict], llm: Any, samples: int = 1, max_calls: int = MAX_CALLS) -> dict:
+    import llm_setup
+
+    check_budget(len(cases), samples, max_calls)
+    budget: dict[str, Any] = {"calls": 0, "foreign": 0, "max": max_calls}
     counted = _CountingLLM(llm, budget)
     handler = _ProviderLog()
     plog = logging.getLogger("rpg.provider")
     plog.addHandler(handler)
     old_level = plog.level
     plog.setLevel(logging.DEBUG)
+    old_hook = llm_setup._ATTEMPT_TELEMETRY_HOOK  # global: o script nao pode deixa-lo trocado
+    llm_setup.set_llm_attempt_telemetry_hook(handler.on_attempt)
     pairs: list[dict] = []
     old_size = os.environ.get("RPG_NARRATION_SIZE")
     old_random = random.getstate()  # `_run_one` faz random.seed(1) no global
@@ -365,16 +433,14 @@ def run(cases: list[dict], llm: Any, samples: int = 1) -> dict:
             row: dict[str, Any] = {"id": case["id"], "expected_class": case["expected_class"]}
             row["action"] = case["action"]
             for mode in ("off", "on"):
-                text, attempts, fp = _run_one(case, mode, counted, handler)
-                extra = [_run_one(case, mode, counted, handler)[0] for _ in range(samples - 1)]
-                row[mode] = {"text": text, "counts": _count(text), "attempts": attempts}
-                row[mode]["sample_chars"] = [len(text)] + [len(x) for x in extra]
-                row[mode]["input_hash"] = fp
+                row[mode] = _run_arm(case, mode, counted, handler, samples)
             if row["off"]["input_hash"] != row["on"]["input_hash"]:
                 raise SystemExit(f"caso {case['id']}: entradas de off e on divergem (par invalido)")
             row["input_hash"] = row["off"]["input_hash"]
+            row["comparavel"], row["motivo"] = judge_comparable(row)
             pairs.append(row)
     finally:
+        llm_setup.set_llm_attempt_telemetry_hook(old_hook)
         plog.removeHandler(handler)
         plog.setLevel(old_level)
         random.setstate(old_random)
@@ -383,22 +449,98 @@ def run(cases: list[dict], llm: Any, samples: int = 1) -> dict:
         else:
             os.environ["RPG_NARRATION_SIZE"] = old_size
     calls = budget["calls"] + budget["foreign"]
-    return {"git_sha": _git_sha(), "calls": calls, "pairs": pairs}
+    return {
+        "git_sha": _git_sha(),
+        "calls": calls,
+        "summary": summarize(pairs),
+        "pairs": pairs,
+    }
 
 
 # --------------------------------------------------------------------------- saida
+def _arm_stats(counts: list[dict], size_class: str) -> dict:
+    from services.narration_size import TARGETS
+
+    target = TARGETS.get(size_class)  # type: ignore[call-overload]
+    n = len(counts)
+    in_range = None
+    if target is not None and target.chars_max:
+        ok = sum(1 for c in counts if target.chars_min <= c["chars"] <= target.chars_max)
+        in_range = ok / n
+    return {
+        "n": n,
+        "median_chars": statistics.median(c["chars"] for c in counts),
+        "option_fraction": sum(1 for c in counts if c["option_lines"] > 0) / n,
+        "in_range_fraction": in_range,
+    }
+
+
+def summarize(pairs: list[dict]) -> dict:
+    """Por classe e braco: mediana de caracteres, fracao com opcoes, fracao na faixa-alvo."""
+    classes: dict[str, dict] = {}
+    for cls in dict.fromkeys(p["expected_class"] for p in pairs):
+        mine = [p for p in pairs if p["expected_class"] == cls]
+        entry: dict[str, Any] = {"control": all(p["id"].startswith("controle-") for p in mine)}
+        for mode in ("off", "on"):
+            entry[mode] = _arm_stats([x for p in mine for x in p[mode]["samples"]], cls)
+        entry["median_diff_on_minus_off"] = (
+            entry["on"]["median_chars"] - entry["off"]["median_chars"]
+        )
+        classes[cls] = entry
+    providers = {
+        mode: sorted({x for p in pairs for x in _provider_set(p[mode])}) for mode in ("off", "on")
+    }
+    return {"classes": classes, "providers": providers}
+
+
+def _pct(v: float | None) -> str:
+    return "n/a" if v is None else f"{v:.0%}"
+
+
+def _render_summary(result: dict) -> list[str]:
+    summ = result["summary"]
+    out = ["## Resumo\n"]
+    for mode in ("off", "on"):
+        prov = ", ".join(summ["providers"][mode]) or "(sem tentativas registradas)"
+        out.append(f"- LLM do braço `{mode}`: {prov}")
+    out.append("")
+    out.append("| classe | braço | n | mediana de caracteres | com opções | na faixa-alvo |")
+    out.append("|---|---|---|---|---|---|")
+    for cls, e in summ["classes"].items():
+        for mode in ("off", "on"):
+            s = e[mode]
+            out.append(
+                f"| {cls}{' (controle)' if e['control'] else ''} | {mode} | {s['n']} | "
+                f"{s['median_chars']:g} | {_pct(s['option_fraction'])} | "
+                f"{_pct(s['in_range_fraction'])} |"
+            )
+        diff = e["median_diff_on_minus_off"]
+        out.append(f"| {cls} | on − off | | {diff:+g} | | |")
+    out.append("")
+    return out
+
+
 def render_md(result: dict) -> str:
     out = [f"# Pares de narração (SPEC-428) · sha {result['git_sha']}\n"]
+    bad = [p for p in result["pairs"] if not p.get("comparavel", True)]
+    if bad:
+        out.append("> **AVISO: pacote NÃO comparável; não use para a leitura do dono.**\n")
+        out += [f"> - `{p['id']}`: {p['motivo']}" for p in bad]
+        out.append("")
+    out += _render_summary(result)
     for pair in result["pairs"]:
-        off, on = pair["off"]["counts"], pair["on"]["counts"]
         out.append(f"## {pair['id']} · classe `{pair['expected_class']}`\n")
         out.append(f"Ação: {pair['action']}\n")
-        for label, key, counts in (("off", "off", off), ("on", "on", on)):
-            out.append(
-                f"### {label} · {counts['chars']} caracteres · {counts['paragraphs']} parágrafos"
-                f" · {counts['option_lines']} linhas de opção\n"
-            )
-            out.append(pair[key]["text"] + "\n")
+        for mode in ("off", "on"):
+            arm = pair[mode]
+            prov = ", ".join(sorted(_provider_set(arm))) or "?"
+            for i, smp in enumerate(arm["samples"], 1):
+                tag = f" · amostra {i}" if len(arm["samples"]) > 1 else ""
+                out.append(
+                    f"### {mode}{tag} · {smp['chars']} caracteres · {smp['paragraphs']} parágrafos"
+                    f" · {smp['option_lines']} linhas de opção · {prov}\n"
+                )
+                out.append(smp["text"] + "\n")
     return "\n".join(out)
 
 
@@ -409,15 +551,27 @@ def counts_only(result: dict) -> dict:
             "id": pair["id"],
             "expected_class": pair["expected_class"],
             "input_hash": pair["input_hash"],
+            "comparavel": pair["comparavel"],
+            "motivo": pair["motivo"],
         }
         for mode in ("off", "on"):
             row[mode] = {
                 "counts": pair[mode]["counts"],
                 "sample_chars": pair[mode]["sample_chars"],
+                "samples": [
+                    {k: v for k, v in smp.items() if k not in ("text", "llm_attempts")}
+                    for smp in pair[mode]["samples"]
+                ],
                 "attempts": pair[mode]["attempts"],
+                "llm_attempts": pair[mode]["llm_attempts"],
             }
         pairs.append(row)
-    return {"git_sha": result["git_sha"], "calls": result["calls"], "pairs": pairs}
+    return {
+        "git_sha": result["git_sha"],
+        "calls": result["calls"],
+        "summary": result["summary"],
+        "pairs": pairs,
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -425,6 +579,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--cases", type=Path)
     ap.add_argument("--out", type=Path)
     ap.add_argument("--samples", type=int, default=1)
+    ap.add_argument(
+        "--max-calls",
+        type=int,
+        default=MAX_CALLS,
+        help=f"teto de chamadas de LLM (default {MAX_CALLS}, maximo {ABS_MAX_CALLS})",
+    )
     ap.add_argument("--mock", action="store_true", help="LLM roteirizado (so em teste)")
     ap.add_argument("--write-cases", type=Path, help="grava os 10 casos fixos e sai")
     args = ap.parse_args(argv)
@@ -436,14 +596,20 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if not args.cases or not args.out:
         ap.error("--cases e --out são obrigatórios")
-    llm = _resolve_llm(args.mock)
     cases = json.loads(args.cases.read_text(encoding="utf-8"))
-    result = run(cases, llm, max(1, args.samples))
+    samples = max(1, args.samples)
+    check_budget(len(cases), samples, args.max_calls)  # recusa antes de resolver o LLM
+    llm = _resolve_llm(args.mock)
+    result = run(cases, llm, samples, args.max_calls)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.with_suffix(".md").write_text(render_md(result), encoding="utf-8")
     args.out.with_suffix(".json").write_text(
         json.dumps(counts_only(result), ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    bad = [p["id"] for p in result["pairs"] if not p["comparavel"]]
+    if bad:
+        print(f"PACOTE NAO COMPARAVEL ({len(bad)} pares): {', '.join(bad)}", file=sys.stderr)
+        return 3
     return 0
 
 

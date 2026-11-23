@@ -224,3 +224,167 @@ def test_run_restores_global_random_state():
     control.setstate(random.getstate())
     np_.run(_cases()[:1], np_._FakeNarrator())
     assert [random.random() for _ in range(3)] == [control.random() for _ in range(3)]
+
+
+# ----------------------------------------------------------------- tentativas de LLM, teto, resumo
+def _scripted(plan, texts=None):
+    """Narrador roteirizado: emite um `LLMAttemptEvent` por chamada pelo hook global do projeto.
+
+    `plan(i)` -> (provider, model, fell_back); `texts(i)` -> texto (default: o do `_FakeNarrator`).
+    """
+    import llm_setup
+
+    class _S(np_._FakeNarrator):
+        n = 0
+
+        def invoke(self, *a, **k):
+            i = _S.n
+            _S.n += 1
+            prov, model, fell = plan(i)
+            llm_setup._emit_attempt_telemetry(
+                llm_setup.LLMAttemptEvent(
+                    provider=prov,
+                    model=model,
+                    tier=llm_setup.ModelTier.SMART,
+                    attempt_index=1 if fell else 0,
+                    latency_ms=1,
+                    fell_back=fell,
+                    outcome="success",
+                    error=None,
+                    structured=True,
+                )
+            )
+            if texts is None:
+                return super().invoke(*a, **k)
+            from agents.storyteller import StoryUpdate
+
+            return StoryUpdate(narrative=texts(i))
+
+    return _S()
+
+
+def _ok_plan(_i):
+    return ("deepseek", "deepseek-chat", False)
+
+
+def test_llm_attempts_recorded_per_arm():
+    result = np_.run(_cases()[:2], _scripted(_ok_plan))
+    for pair in result["pairs"]:
+        for mode in ("off", "on"):
+            rows = pair[mode]["llm_attempts"]
+            assert [(r["provider"], r["model"], r["fell_back"]) for r in rows] == [
+                ("deepseek", "deepseek-chat", False)
+            ]
+            assert set(rows[0]) >= {"outcome", "http_status", "attempt_index", "provider", "model"}
+        assert pair["comparavel"] is True and pair["motivo"] == ""
+    assert result["summary"]["providers"] == {
+        "off": ["deepseek/deepseek-chat"],
+        "on": ["deepseek/deepseek-chat"],
+    }
+
+
+@pytest.mark.parametrize("kind", ["fell_back", "providers_differ"])
+def test_non_comparable_pair_marked_warned_and_rc_nonzero(tmp_path, monkeypatch, kind):
+    def plan(i):
+        if kind == "fell_back":
+            return ("deepseek", "deepseek-chat", i == 1)  # so a 2a chamada (braco `on` do caso 1)
+        return ("deepseek", "deepseek-chat", False) if i % 2 == 0 else ("groq", "llama", False)
+
+    cases = tmp_path / "c.json"
+    cases.write_text(json.dumps(_cases()[:2]), encoding="utf-8")
+    out = tmp_path / "pares"
+    argv = ["--cases", str(cases), "--out", str(out), "--mock"]
+    monkeypatch.setattr(np_, "_resolve_llm", lambda _m: _scripted(plan))
+    rc = np_.main(argv)
+    assert rc != 0
+    data = json.loads(out.with_suffix(".json").read_text(encoding="utf-8"))
+    assert data["pairs"][0]["comparavel"] is False and data["pairs"][0]["motivo"]
+    md = out.with_suffix(".md").read_text(encoding="utf-8")
+    assert md.index("NÃO comparável") < md.index("## cena-1")
+    assert "text" not in json.dumps(data["pairs"][0]["off"]["llm_attempts"])
+
+
+def test_attempt_hook_restored_on_exit_and_on_error(monkeypatch):
+    import llm_setup
+
+    def sentinel(_e):
+        return None
+
+    llm_setup.set_llm_attempt_telemetry_hook(sentinel)
+    try:
+        np_.run(_cases()[:1], _scripted(_ok_plan))
+        assert llm_setup._ATTEMPT_TELEMETRY_HOOK is sentinel
+
+        seq = iter(range(1000))
+        monkeypatch.setattr(np_, "prompt_fingerprint", lambda _m: str(next(seq)))
+        with pytest.raises(SystemExit, match="divergem"):  # corpo do run falha no meio
+            np_.run(_cases()[:1], _scripted(_ok_plan))
+        assert llm_setup._ATTEMPT_TELEMETRY_HOOK is sentinel
+    finally:
+        llm_setup.set_llm_attempt_telemetry_hook(None)
+
+
+def test_samples_three_with_max_calls_sixty_runs(tmp_path):
+    scripted = _scripted(_ok_plan)
+    result = np_.run(_cases(), scripted, samples=3, max_calls=60)
+    assert result["calls"] == 60 and type(scripted).n == 60
+    pair = result["pairs"][0]
+    assert len(pair["off"]["samples"]) == 3 and len(pair["on"]["samples"]) == 3
+    data = np_.counts_only(result)["pairs"][0]["on"]["samples"]
+    assert [set(s) for s in data] == [{"chars", "paragraphs", "option_lines"}] * 3
+    md = np_.render_md(result)
+    assert md.count("### off · amostra") == 30 and md.count("### on · amostra") == 30
+
+
+def test_budget_refusals_before_any_call(tmp_path):
+    scripted = _scripted(_ok_plan)
+    with pytest.raises(SystemExit, match="previsto 60"):
+        np_.run(_cases(), scripted, samples=3)  # teto default 30
+    with pytest.raises(SystemExit, match="max-calls 500"):
+        np_.run(_cases(), scripted, samples=1, max_calls=500)
+    base = ["--cases", str(CASES), "--out", str(tmp_path / "x"), "--mock"]
+    with pytest.raises(SystemExit, match="previsto 60"):
+        np_.main([*base, "--samples", "3"])
+    with pytest.raises(SystemExit, match="max-calls 500"):
+        np_.main([*base, "--max-calls", "500"])
+    assert type(scripted).n == 0 and not (tmp_path / "x.md").exists()
+
+
+def test_summary_hand_checked():
+    """2 casos `cena` (faixa 750..1000): off 800/900 e 1200/1300; on 700/800 e 900/950.
+
+    Textos de `n` caracteres: o corpo `a`*n sem linha de opcao; opcoes so no `on` do caso 1.
+    """
+    from services.narration_size import TARGETS
+
+    assert (TARGETS["cena"].chars_min, TARGETS["cena"].chars_max) == (750, 1000)
+    plan = {
+        ("cena-1", "off"): [800, 1200],
+        ("cena-1", "on"): [700, 900],
+        ("cena-2", "off"): [900, 1300],
+        ("cena-2", "on"): [800, 950],
+    }
+
+    def arm(cid, mode, opts=False):
+        smp = []
+        for n in plan[(cid, mode)]:
+            text = "a" * (n - 5) + "\n— Ir" if opts else "a" * n
+            smp.append({"text": text, **np_._count(text), "llm_attempts": []})
+        return {"samples": smp, "llm_attempts": []}
+
+    pairs = [
+        {"id": "cena-1", "expected_class": "cena", "off": arm("cena-1", "off"),
+         "on": arm("cena-1", "on", opts=True)},
+        {"id": "cena-2", "expected_class": "cena", "off": arm("cena-2", "off"),
+         "on": arm("cena-2", "on")},
+    ]  # fmt: skip
+    cls = np_.summarize(pairs)["classes"]["cena"]
+    # off: 800, 1200, 900, 1300 -> mediana 1050; na faixa: 800 e 900 -> 2/4; sem opcoes
+    assert cls["off"] == {
+        "n": 4, "median_chars": 1050.0, "option_fraction": 0.0, "in_range_fraction": 0.5
+    }  # fmt: skip
+    # on: 700, 900, 800, 950 -> mediana 850; na faixa: 900, 800, 950 -> 3/4; opcoes em 2/4
+    assert cls["on"] == {
+        "n": 4, "median_chars": 850.0, "option_fraction": 0.5, "in_range_fraction": 0.75
+    }  # fmt: skip
+    assert cls["median_diff_on_minus_off"] == -200.0 and cls["control"] is False
