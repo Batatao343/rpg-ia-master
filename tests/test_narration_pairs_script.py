@@ -165,7 +165,10 @@ def _fake_leftovers() -> list[str]:
 def test_run_leaves_no_fake_get_llm_in_any_module(monkeypatch):
     """P1-1: modulo importado DURANTE o guard nao pode ficar com o `get_llm` falso."""
     monkeypatch.delitem(sys.modules, "agents.campaign_manager", raising=False)
-    np_.run(_cases()[:1], np_._FakeNarrator())
+    # `local-visitado` (viagem) e o caso que chega ao import preguicoso de campaign_manager
+    case = [c for c in _cases() if c["id"] == "local-visitado"]
+    assert case
+    np_.run(case, np_._FakeNarrator())
     assert _fake_leftovers() == []
 
 
