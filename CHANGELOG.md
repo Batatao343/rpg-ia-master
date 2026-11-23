@@ -5,6 +5,16 @@
 
 ---
 
+## 2026-11-23 — Latência: 428 pousada, staging sem LLM, SPEC-427 e 429
+
+- **428** (narração com tamanho-alvo, risco alto) pousou na `main` em `9b4ed007`, flag `RPG_NARRATION_SIZE` `off`, preset do staging `shadow`. Suíte completa 11997 passed; CI pré-pouso `audit-local` `45239542171` verde no mesmo commit. Revisão Sol em três rodadas: o código do narrador estava certo desde a primeira; os defeitos estavam no script do pacote de pares (`scripts/dev/narration_pairs.py`): braços `off` e `on` partindo de entradas diferentes, e um `get_llm` falso que vazava para outros testes (7 falhas dependentes de ordem em `tests/test_enrich_node.py`). Antes de ligar: pacote de 10 pares com chave real para o dono ler, `evals compare` off × on e medição no staging.
+- **427** (fila de uma ação, risco alto), na branch: a revisão Sol reproduziu dois turnos em voo (envio manual no mesmo commit do `state` junto com o autoenvio da fila). Corrigido com trava síncrona de turno (`web/src/turnLock.ts`), que vale também com a flag `off`; em re-revisão.
+- **423** Etapa 0 + Fase A (prólogo ao vivo): revisão Sol `APPROVED_WITH_FOLLOWUPS`, follow-ups aplicados, escopo 177 passed. Não pousa enquanto os 7 marcadores de medição da §2.1 não forem preenchidos com dados do staging.
+- **Staging sem LLM desde 13:11 UTC:** o DeepSeek passou a devolver HTTP 402 (saldo) e, no fallback, um stream interrompido do Groq foi registrado como US$ 1,00 de gasto estimado (`services/usage_metering._UNKNOWN_MIN_USD`), o que estourou o teto diário de R$ 5 (R$ 5,08). O evento saiu de um smoke da SPEC-419 desta sessão; gasto real do dia ~US$ 0,016. O bloqueio de partida nova (`api_core` → `text_cap_exceeded`) ignora religar manual: só sobe com o teto ou com a virada do dia (03:00 UTC).
+- **429** (finops, risco alto, `draft`): trocar o piso fixo de US$ 1 do `stream_interrupted` sem uso por estimativa pelo rate card, limitada pelo teto de reserva da tentativa. Medido no staging: 1 evento desse tipo na história; 46 eventos antigos de embedding no piso (US$ 46 de gasto que não houve). A SPEC-236 decidiu que o outcome conta como gasto, mas não o valor. Espera a escolha do dono entre estimativa por tokens (A) e teto de reserva (B).
+- **Smoke da 419 no staging (parcial):** `embedding.query_degraded` 0 registros; `phase_ms.context` p50 53 ms em 4 turnos; `sse.mediated_stream` 3 registros em `shadow`, `leak: false`. Falta repetir com LLM disponível.
+- **Operação:** a máquina suspendeu ~14 h (22→23/11) e dois agentes perderam trabalho não commitado; a conta bateu o limite de uso de 5 h uma vez. `vercel logs --json` no plano Hobby guarda ~30 min e imprime uma linha de resumo no fim: ler `recordsReturned` e o rc.
+
 ## 2026-11-22 — Leva de latência (SPEC-419 a 423)
 
 - **Origem:** auditoria `docs/auditorias/latencia-turno-2026-11-12.md` e medição L0 no staging em 13/11 (`docs/auditorias/latencia-turno-medicao-2026-11-13.md`: 60 turnos, 1º texto p50 2,9 s, "pode agir" p50 7,2 s, abertura 24–33 s sem texto). O dono aprovou as cinco specs em 13/11 e mandou não reabrir a rota NPC determinística da SPEC-317.
