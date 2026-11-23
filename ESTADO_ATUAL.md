@@ -8,7 +8,7 @@
 
 ## Estado em 10 linhas
 
-- **staging = `6f10f34e` (23/11)**: migrações 413 e 410 aplicadas, rate card `2026-11-13-v1` publicado, `RPG_RLS_STRICT_PRINCIPAL=on`, `RPG_ARCHIVE_RECORD=shadow`. `post_deploy` e `vercel_smoke` verdes. **Turnos e novo jogo falham desde 23/11 13:11 UTC:** DeepSeek responde 402 e o fallback sem preço estourou o teto diário (503 `daily_spend_cap`). Kill switch `image_generation` fica desligado lá.
+- **staging = `6f10f34e` (23/11)**: migrações 413 e 410 aplicadas, rate card `2026-11-13-v1` publicado, `RPG_RLS_STRICT_PRINCIPAL=on`, `RPG_ARCHIVE_RECORD=shadow`. `post_deploy` e `vercel_smoke` verdes. **Turnos e novo jogo falham desde 23/11 13:11 UTC:** DeepSeek responde 402 e um `stream_interrupted` do fallback virou US$ 1 de gasto estimado (503 `daily_spend_cap` até 03:00 UTC; spec com a `fb`). Kill switch `image_generation` fica desligado lá.
 - **`VERCEL_TOKEN` do `.env.staging` perdeu o escopo do time em 14/11:** `vercel_env.py` dá 403. Variáveis não secretas vão pela CLI logada (`npx vercel@64.2.0 env add NOME production --force`); segredos intocados desde 10/11.
 - **Fechadas em 22/11:** 409, 411 (R5 aprovado no `eval-governance`), 424. **413** `in-progress` só por 2 critérios que não rodam nesta máquina (RPCs com JWT de usuário; `rollback.sql` num Postgres local). **410** `in-progress`: `on` ligado; faltam `e2e_session`, `job_survival` e `account_deletion_recovery` no `on` (`docs/spec410/README.md`).
 - **Os rate cards vencem em 13/12; a `main` fica vermelha de propósito a partir de 03/12** (`test_rate_card_freshness`) até renovar: `docs/spec197/runbooks/budget.md` § Renovação. O card de imagem renovado ganha `extra_models` (425 R1/R3).
@@ -20,8 +20,8 @@
 ## Próximos 3 passos
 
 1. **Staging, quando o DeepSeek tiver saldo e o teto diário zerar:** rodar `e2e_session`, `job_survival --skip-redeploy` e `account_deletion_recovery` no `on` e fechar a 410. Rollback: `shadow` + redeploy. A sessão `fb` usa o staging para 419 §6 itens 2–3 e 423.
-2. **Até 03/12:** renovar os 4 rate cards (reler as páginas; runbook `budget.md`), com `extra_models` no de imagem.
-3. **Follow-ups:** flake da 382: na suíte que falhou cada log chegou 2× ao root (só a parte `events` diverge); falta achar o teste que deixa o handler duplicado. Suíte no checkout principal chama o Jina de verdade (`.env` com `JINA_API_KEY` + `load_dotenv(override=True)` em `rag.py`): o golden de campanha sozinho falha ali e passa em worktree. `smoke_ab.py` não loga com Turnstile real (usar o caminho de `s192.app_login`). Guarda de relógio do R3 (409 P2-2).
+2. **Até 03/12:** renovar os 4 rate cards, com `extra_models` no de imagem.
+3. **Follow-ups:** flake da 382: na suíte que falhou cada log chegou 2× ao root (só a parte `events` diverge); falta achar o teste que deixa o handler duplicado. Suíte no checkout principal chama o Jina de verdade (`.env` com `JINA_API_KEY` + `load_dotenv(override=True)` em `rag.py`): o golden de campanha sozinho falha ali e passa em worktree. `smoke_ab.py` não loga com Turnstile real (usar o caminho de `s192.app_login`).
 
 ## Bloqueios no dono
 

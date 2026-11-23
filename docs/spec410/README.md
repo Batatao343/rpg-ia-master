@@ -70,7 +70,8 @@ remoto** (migração, flag em `shadow`/`on` e smoke do staging são do coordenad
   `vercel_smoke` verdes (crons `jobs`, `account-deletions`, `operations` = 200); cron `finops` = 200; 15 min de
   log com 0 `RlsScopeError`. **Pendente:** `e2e_session`, `job_survival` e `account_deletion_recovery` no `on`.
   Os três criam jogo e o staging devolve 503 `daily_spend_cap` desde 23/11 13:2x UTC (gasto 5,08 de R$ 5,00: o
-  DeepSeek passou a responder 402 às 13:11 UTC e o fallback sem preço estourou o teto). Voltam a rodar quando o
+  DeepSeek passou a responder 402 às 13:11 UTC e um único `stream_interrupted` do fallback Groq foi registrado
+  com o piso de US$ 1,00 de `services/usage_metering.py`; gasto real do dia ~US$ 0,016). Voltam a rodar quando o
   teto zerar e o DeepSeek tiver saldo.
 
 ## Rollback
