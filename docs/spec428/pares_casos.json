@@ -1,0 +1,416 @@
+[
+  {
+    "id": "cena-1",
+    "expected_class": "cena",
+    "action": "Observo a rua.",
+    "encounter": "none",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0
+    }
+  },
+  {
+    "id": "cena-2",
+    "expected_class": "cena",
+    "action": "Examino a praça com calma, atento aos rostos.",
+    "encounter": "none",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0
+    }
+  },
+  {
+    "id": "cena-3",
+    "expected_class": "cena",
+    "action": "Sigo pela rua em direção ao mercado.",
+    "encounter": "none",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0
+    }
+  },
+  {
+    "id": "fala-mediada-1",
+    "expected_class": "fala_mediada",
+    "action": "Narrador, o que a cidade sabe sobre isto?",
+    "encounter": "none",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0,
+      "interlocutor_reason": "meta_to_narrator"
+    }
+  },
+  {
+    "id": "fala-mediada-2",
+    "expected_class": "fala_mediada",
+    "action": "Narrador, quem manda por aqui?",
+    "encounter": "none",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0,
+      "interlocutor_reason": "meta_to_narrator"
+    }
+  },
+  {
+    "id": "descanso-1",
+    "expected_class": "descanso",
+    "action": "Descanso até o amanhecer.",
+    "encounter": "none",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0
+    }
+  },
+  {
+    "id": "descanso-2",
+    "expected_class": "descanso",
+    "action": "Descanso um pouco antes de seguir.",
+    "encounter": "none",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0
+    }
+  },
+  {
+    "id": "local-visitado",
+    "expected_class": "cena",
+    "action": "Viajo para Brekmar.",
+    "encounter": "none",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia",
+          "brekmar"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0
+    }
+  },
+  {
+    "id": "controle-local-novo",
+    "expected_class": "local_novo",
+    "action": "Viajo para Brekmar.",
+    "encounter": "none",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0
+    }
+  },
+  {
+    "id": "controle-revelacao",
+    "expected_class": "revelacao",
+    "action": "Viajo para Brekmar.",
+    "encounter": "trap",
+    "state": {
+      "game_id": "pares428",
+      "player": {
+        "name": "Ari",
+        "class_name": "Guerreiro",
+        "level": 1,
+        "xp": 0,
+        "gold": 10,
+        "inventory": [],
+        "vitalidade": 5,
+        "max_vitalidade": 8
+      },
+      "world": {
+        "current_location_id": "nova_arcadia",
+        "current_location": "Nova Arcádia",
+        "turn_count": 4,
+        "danger_level": 1,
+        "world_clock": {
+          "day": 1,
+          "period": "Manhã"
+        },
+        "visited": [
+          "nova_arcadia",
+          "brekmar"
+        ]
+      },
+      "npcs": {},
+      "factions": [],
+      "faction_intel": {},
+      "quests": [],
+      "campaign_plan": {},
+      "event_log": [],
+      "world_projection": {},
+      "narrative_summary": "",
+      "archivist_last_run": 0
+    }
+  }
+]
