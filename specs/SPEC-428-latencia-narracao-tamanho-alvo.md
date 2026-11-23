@@ -133,7 +133,16 @@ ganho; a parte fixa não muda. n = 20, estimativa, não medição causal: o crit
   as 6 primeiras palavras, não o tamanho). Quem implementa não edita evaluator, expected, dataset, baseline nem
   exclusões (`docs/evals-plan-v4/08_CONTRATO_CODING_AGENT.md`).
 - **R12 — Pacote de pares.** `scripts/dev/narration_pairs.py` gera, de forma reprodutível, 10 pares de narração
-  (mesmo estado e mesma ação, `off` × `on`) para o dono ler, com contagens por par (§3.4).
+  (mesmo estado e mesma ação, `off` × `on`) para o dono ler, com contagens por par (§3.4). Cada tentativa de LLM
+  do narrador (hook `llm_setup.set_llm_attempt_telemetry_hook`, salvo e restaurado) vai em `llm_attempts` por braço
+  (`provider`, `model`, `outcome`, `http_status`, `attempt_index`, `fell_back`; sem texto, sem chave). Se qualquer
+  narração do par veio de candidato reserva (`fell_back`/`attempt_index > 0`) ou os braços diferem de
+  provedor/modelo, o par sai `comparavel: false` com `motivo`, o `.md` avisa no topo e o rc é 3 (arquivos gravados
+  para diagnóstico; o pacote não serve ao dono). `--samples N` guarda `chars`/`paragraphs`/`option_lines` e o texto
+  de cada amostra; o `.md` mostra todas. `--max-calls N` (default 30, absoluto 120) é o teto de chamadas; o script
+  imprime o total previsto e recusa antes da primeira se passar. O `summary` (`.json` e topo do `.md`) traz, por
+  classe e braço, mediana de caracteres, fração com bloco de opções e fração na faixa de `TARGETS`, e a diferença
+  de mediana `on − off` (controles incluídos).
 
 ### Fora de escopo
 
@@ -364,6 +373,9 @@ O MockLLM devolve texto fixo e não encurta por instrução: só estes passos pr
    Passa se: nas 7 narrações `on` encurtadas, ≥ 5 dentro da faixa de caracteres da classe e nenhuma acima de
    `chars_max × 1,2`; as 10 `on` com ≥ 2 linhas de opção `— ` e o fecho `— Ou outra ação.`; os 2 controles `on`
    com tamanho a ±20 % do seu par `off`; nenhuma resposta caiu em `structured_invalid`. O `.md` é o que o dono lê.
+   Uma amostra por braço é ruído (mesmo `input_hash` deu 1393 e 1625 caracteres em 23/11): para a leitura do dono
+   use `--samples 3 --max-calls 60` (60 chamadas, ≈ US$ 0,18) e confira no topo do `.md` o provedor/modelo de cada
+   braço e a ausência do aviso de pacote não comparável (rc 3).
 2. **Base no staging (`shadow`).** Deploy com o preset `RPG_NARRATION_SIZE=shadow`. Medição com o protocolo do
    L0 (`docs/auditorias/latencia-l0-2026-11-13/l0_measure.py`; cópia em `docs/spec428/medir.py`, sem editar o
    original, acrescentando por turno `paragraphs`, `options_lines` e o `size_class` lido do log
