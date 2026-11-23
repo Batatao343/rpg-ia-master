@@ -670,6 +670,12 @@ RPG_METRICS_TOKEN:
   default: null
   spec: SPEC-219
   note: "configuração de ambiente (nunca o valor) (metrics token)"
+RPG_NARRATION_SIZE:
+  kind: release
+  default: "off"
+  spec: SPEC-428
+  expires: 2027-02-22
+  note: "tamanho-alvo da narração por tipo de turno (off|shadow|on)"
 RPG_NO_MOCK:
   kind: dev
   default: null

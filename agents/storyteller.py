@@ -15,7 +15,7 @@ from agents.world_simulator import simulate_world
 from llm_setup import get_llm
 from observability.telemetry import log_event as _log_event
 from rag import query_rag
-from services import archive_record, latency_flags, quest_log
+from services import archive_record, latency_flags, narration_size, quest_log
 from services import discovery as disc
 from services import graph_resolver as gr
 from services import law as _law_mod
@@ -2210,11 +2210,7 @@ def _story_prompt_blocks(t: _StoryTurn) -> None:
 
     t._aberturas = prose_guard.ultimas_aberturas(t.messages)
     t.varie_clause = prose_guard.openings_clause(t._aberturas)
-    t.opcoes_clause = (
-        "\n    - FECHE com 2 a 3 OPÇÕES concretas de ação, cada uma numa "
-        "linha iniciada por '— ', e termine com '— Ou outra ação.' "
-        "(dê rumo ao jogador; as opções mecânicas de combate vêm à parte)."
-    )
+    t.opcoes_clause = narration_size.closing_clause(t)
     _hero = t.state.get("player", {}) or {}
     t.hero_state_block = (
         "<ESTADO_DO_HEROI>\n"
@@ -2587,7 +2583,7 @@ def _story_system_message(t: _StoryTurn) -> None:
 
     """
     _rules_a = f"""<INSTRUÇÕES>
-    - Responda em 2 a 3 parágrafos.
+    {narration_size.paragraph_rule()}
     - JULGUE a ação: se for implausível para a classe/ficha do personagem ({t.state.get("player", {}).get("class_name", "")})
       ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
     - Não afirme como cânone nome, item, facção, local ou evento ausente do ESTADO,

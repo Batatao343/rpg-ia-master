@@ -242,6 +242,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `loot.trade_prose_rejected` | `reason` |
 | `lore_query.fallback` | — |
 | `lore_quests.fallback` | — |
+| `narration.size_class` | `chars_max`, `mode`, `shortened`, `size_class` |
 | `narrative.rejected` | `count`, `kind`, `reason_code` |
 | `npc.actor_failed` | `error` |
 | `npc.cache_hit` | — |
