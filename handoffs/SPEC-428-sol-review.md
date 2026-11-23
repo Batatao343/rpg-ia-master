@@ -1,7 +1,34 @@
 # SPEC-428 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus 5.5 / sol (spec-reviewer) · **Data:** 2026-11-23 · **Commit revisado:** `eecda1b7`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Opus 5.5 / sol (spec-reviewer) · **Data:** 2026-11-23 · **Commit revisado:** `928e04e7`
+
+## Confirmação 3 (23/11, `faa9805a..928e04e7`)
+
+O P1-1 está corrigido. O diff toca só `scripts/dev/narration_pairs.py`, `tests/test_narration_pairs_script.py` e a spec. A branch **não** foi rebaseada: a `main` andou (SPEC-426, `e2e9e254`, include do basedpyright) e o rebase fica para o pouso.
+
+1. **`_sweep_fakes`.**
+   - Restaura por identidade só os falsos deste guard: o `foreign` e a lambda do narrador.
+   - Ignora entradas `None` de `sys.modules`.
+   - Roda no `finally`, então também quando o corpo levanta.
+   - Um `get_llm` trocado de propósito fica intocado (`test_guard_keeps_get_llm_replaced_on_purpose`).
+   - Com o plugin de sessão, já ampliado para qualquer falso com `__qualname__` começando por `_llm_guard`, nenhum módulo fica com `get_llm` falso depois de `tests/test_narration_pairs_script.py`.
+   - As 4 ordens rodaram com rc 0 e sem sobra: pares→enrich, enrich→pares, enrich→pares→archive_record, pares→archive_record→enrich.
+2. **Mutante `_sweep_fakes` no-op.**
+   - É morto por `test_guard_restores_imported_during_body_and_on_exception`, que **trava** o defeito com um módulo sintético que liga o falso durante o guard.
+   - `test_run_leaves_no_fake_get_llm_in_any_module` **passa com o mutante**. A confirmação do executor é real: o teste usa `_cases()[:1]` (`cena-1`), que não chega ao import preguiçoso de `agents.campaign_manager` (`agents/storyteller.py:1720`, caminho de viagem).
+   - Medi num teste de rascunho: com o caso `local-visitado`, o mesmo teste falha com o mutante (`['agents.campaign_manager'] == []`) e passa sem ele. Ver P3-4.
+3. **Outro estado global.**
+   - O script restaura `check_encounter`, `roll_encounter_type`, `_story_world_pulse`, `RPG_NARRATION_SIZE` (agora com o valor anterior) e o nível do logger `rpg.provider`.
+   - Não há cache de flag: `narration_size.mode()` e `latency_flags` leem o env a cada chamada (`env_choice`), e `RPG_NARRATION_SIZE` só é lida em `services/narration_size.py`.
+   - Sobra `random.seed(1)` no `random` global, sem restaurar. O `run_node` dos testes faz o mesmo; não vaza flag. Ver P3-5.
+4. **P3-3.** Os três trechos batem com o código: §3.4 com a armadilha, "seria idêntico", e o passo 1 local com chave. Resta o status `approved` no cabeçalho, que o coordenador ajusta no pouso.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-4 | P3 | `tests/test_narration_pairs_script.py` (`test_run_leaves_no_fake_get_llm_in_any_module`) | `_cases()[:1]` não exercita o import preguiçoso; o teste passa com `_sweep_fakes` no-op. | Usar o caso `local-visitado` (`[c for c in _cases() if c["id"] == "local-visitado"]`), que reprovou o mutante na medição. |
+| P3-5 | P3 | `scripts/dev/narration_pairs.py:286` (`random.seed(1)`) | Estado do `random` global não é devolvido depois do run. | Opcional: `state = random.getstate()` antes e `random.setstate(state)` no `finally` do `run`. |
+| P3-6 | P3 | `specs/SPEC-428-latencia-narracao-tamanho-alvo.md:3` | Status `approved`; o §5 pede `in-progress` até a promoção. | Coordenador, no pouso. |
 
 ## Reconferência 2 (23/11, `9c8e40ec..eecda1b7`)
 
@@ -113,6 +140,25 @@ Nenhum P0/P1.
     o dono (D2), como a spec diz.
 
 ## Evidência verificada
+
+### Confirmação 3 (`928e04e7`)
+
+`bash scripts/dev/red_green.sh 428` → **red_green: 34/34 OK** (os 30 da reconferência 2 mais estes 4):
+
+| teste | main | branch | veredito |
+|---|---|---|---|
+| tests/test_narration_pairs_script.py::test_guard_keeps_get_llm_replaced_on_purpose | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_guard_restores_imported_during_body_and_on_exception | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_run_leaves_no_fake_get_llm_in_any_module | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_run_restores_env_and_world_pulse | vermelho (import) | verde | OK |
+
+```text
+pytest -n 0 -p leak428 tests/test_narration_pairs_script.py → 15 passed; falsos após a sessão: []
+pytest -n 0 -p leak428 pares→enrich | enrich→pares | enrich→pares→archive_record | pares→archive_record→enrich → rc 0 nas 4; falsos: [] nas 4
+MUTS=1 (_sweep_fakes no-op) -k test_guard_restores_imported_during_body_and_on_exception → FAILED (morto)
+MUTS=1 -k test_run_leaves_no_fake_get_llm_in_any_module → 1 passed (não trava; P3-4)
+rascunho test_a_full com o caso local-visitado: MUTS=0 → 1 passed; MUTS=1 → FAILED ['agents.campaign_manager'] == []
+```
 
 ### Reconferência 2 (`eecda1b7`)
 
