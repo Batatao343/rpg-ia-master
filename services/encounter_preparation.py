@@ -18,7 +18,7 @@ ADITIVO: a mudança de GRAFO (mover `_spawn_enemies_integrated` pra fora do
 import json
 import os
 from copy import deepcopy
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -26,6 +26,9 @@ import gamedata
 from observability.telemetry import log_event as _log_event
 from services import abyss_events
 from services import conflict_scene as cs
+
+if TYPE_CHECKING:
+    from services.llm_protocol import LLMClient
 
 # R6: teto do Nível do Encontro (perigo ABSOLUTO — nunca depende da party).
 ENCOUNTER_LEVEL_MAX = 10
@@ -442,7 +445,7 @@ def fallback_safe_scene(context: dict | None = None) -> dict:
     return scene
 
 
-def prepare_encounter(narrative_context: dict, llm) -> dict:
+def prepare_encounter(narrative_context: dict, llm: "LLMClient") -> dict:
     """R1/R2/R9: pede à LLM a cena jogável (structured output) e VALIDA (R4/R7/R8);
     resultado inválido, `FallbackLLM` ou erro → cena simplificada de segurança
     (R9). GUARD obrigatório. O fallback ENTRE providers é do `RoutedLLM`/`ROUTES`

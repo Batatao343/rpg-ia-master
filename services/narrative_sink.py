@@ -14,13 +14,16 @@ import os
 import re
 from collections.abc import Callable
 from contextvars import ContextVar, Token
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from services.mediated_stream import compose_risk, swallow
 from services.turn_outcome import (
     _SYSTEM_PREFIX,
     remove_receipts,  # SPEC-345 R5: mesmos padrões do texto final
 )
+
+if TYPE_CHECKING:
+    from services.llm_protocol import LLMClient
 
 TokenStreamMode = Literal["off", "shadow", "on"]
 
@@ -356,7 +359,7 @@ _compose_risk = compose_risk  # SPEC-421: vive em mediated_stream (falha fechada
 
 
 def narrate_structured(
-    llm: Any,
+    llm: LLMClient,
     schema: type,
     messages: list,
     *,
@@ -371,7 +374,7 @@ def narrate_structured(
     evidence_state: Any = None,
     hold_acquisition: bool = False,
     extra_risk: Callable[[str], str] | None = None,
-):
+) -> object:
     """`with_structured_output(schema).invoke(messages)`, com tokens ao vivo quando ha sink.
 
     Sem sink, ou LLM sem `stream_structured` (FallbackLLM), e exatamente o invoke de antes.
@@ -409,7 +412,7 @@ def narrate_structured(
     return result
 
 
-def narrate_text(llm: Any, messages: list, *, state: Any = None, stream: bool = True):
+def narrate_text(llm: LLMClient, messages: list, *, state: Any = None, stream: bool = True):
     """`llm.invoke(messages)` com tokens ao vivo quando ha sink (narracao plain de combate/loot).
 
     `stream=False`: o chamador sabe que o texto final sera substituido por um guard de

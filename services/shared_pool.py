@@ -20,7 +20,7 @@ import os
 import re
 from collections.abc import Callable, Iterable, Sequence
 from datetime import UTC, datetime, timedelta
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 from uuid import UUID, uuid4
 
 from observability.telemetry import log_event
@@ -34,6 +34,9 @@ from services.shared_pool_models import (
     fold_name,
 )
 from services.shared_pool_validators import input_shingles, run_validators
+
+if TYPE_CHECKING:
+    from services.llm_protocol import LLMClient
 
 MODES = ("off", "shadow", "on")
 _NS_SHORT = {
@@ -427,7 +430,7 @@ def _region_summary(region_id: str) -> str:
 def evaluate(
     entry: SharedPoolEntry,
     *,
-    llm=None,
+    llm: LLMClient | None = None,
     similar_names: Sequence[str] = (),
     usage_sink: Callable[[SharedPoolEntry, list[dict]], None] | None = None,
     attempts_out: list[dict] | None = None,

@@ -13,9 +13,12 @@ fixos de `combat_mechanics.py` e a fiação em `agents/bestiary.py` vão no cuto
 
 import unicodedata
 from copy import deepcopy
-from typing import Dict, List, Literal, Optional
+from typing import TYPE_CHECKING, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
+
+if TYPE_CHECKING:
+    from services.llm_protocol import LLMClient
 
 TACTICAL_ACTION_KEYS = frozenset(
     {
@@ -602,7 +605,9 @@ def resolve_action_key(decision: dict) -> str:
     return key
 
 
-def generate_tactical_profile(archetype: str, llm, *, context: dict | None = None) -> dict:
+def generate_tactical_profile(
+    archetype: str, llm: "LLMClient", *, context: dict | None = None
+) -> dict:
     """R5: gera o perfil tático via LLM robusta (tier SMART), com o GUARD de
     resiliência obrigatório — `FallbackLLM`/erro cai num perfil default
     determinístico. Chamado UMA vez na criação, nunca em combate."""
@@ -624,7 +629,7 @@ def generate_tactical_profile(archetype: str, llm, *, context: dict | None = Non
 
 
 def get_or_generate_profile(
-    entry: dict, archetype: str, llm, *, context: dict | None = None
+    entry: dict, archetype: str, llm: "LLMClient", *, context: dict | None = None
 ) -> dict:
     """Cacheia agressivamente (risco §7): se a ficha JÁ tem `tactical_profile`,
     reusa sem tocar no LLM; senão gera 1× e grava na ficha."""

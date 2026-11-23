@@ -414,7 +414,7 @@ def create_player_character(
 
         try:
             stats = llm.with_structured_output(PlayerFlavorSchema).invoke([system_msg, human_msg])
-            if stats:
+            if isinstance(stats, PlayerFlavorSchema):
                 dumped = stats.model_dump()
                 # Sem chave, o FallbackLLM devolve AIMessage cujo dump não tem 'inventory'.
                 if isinstance(dumped, dict) and "inventory" in dumped:

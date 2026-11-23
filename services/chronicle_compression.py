@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
 from llm_setup import ModelTier, get_llm
 from services.chronicle import ensure_chronicle_ids
+
+if TYPE_CHECKING:
+    from services.llm_protocol import LLMClient
 
 PROFILE_VERSION = "chronicle-digest-v1"
 
@@ -74,7 +77,7 @@ def extractive_digest(
     }
 
 
-def compress_chapter(chapter: dict[str, Any], *, llm=None) -> dict[str, Any]:
+def compress_chapter(chapter: dict[str, Any], *, llm: LLMClient | None = None) -> dict[str, Any]:
     chapter = ensure_chronicle_ids([chapter])[0]
     entries = chapter.get("entries") or []
     public_payload = [

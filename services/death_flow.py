@@ -14,12 +14,15 @@ dano ao vivo acontecem no cutover (conflito-13) — os pontos estão marcados.
 
 import re
 import unicodedata
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
 from services import text as _text
 from services.conflict_resolution import roll_kept, virtude_value
+
+if TYPE_CHECKING:
+    from services.llm_protocol import LLMClient
 
 # --- Categorias de inimigo (R7) — conteúdo real é conflito-15 ----------------
 FULL_FLOW_CATEGORIES = frozenset({"elite", "chefe", "nomeado", "companheiro"})
@@ -345,7 +348,9 @@ def _fallback_scar(participant: dict) -> dict:
     }
 
 
-def generate_scar(participant: dict, llm, *, context: dict | None = None) -> dict:
+def generate_scar(
+    participant: dict, llm: "LLMClient | None", *, context: dict | None = None
+) -> dict:
     """R6: gera a Cicatriz pós-combate via LLM (structured output) com o GUARD de
     resiliência obrigatório — `FallbackLLM`/erro cai num template determinístico.
     Anexa em `participant['scars']`, limpa `scar_pending`. Jogador não pode recusar."""
