@@ -3,7 +3,10 @@
 Roda `storyteller_node` com o mesmo estado e a mesma acao, uma vez com `off` e uma com `on`,
 e grava `<out>.md` (texto dos dois lados + contagens) e `<out>.json` (so contagens, `git_sha` e
 modelo/provedor de cada chamada; nenhum texto). Recusa rodar com `RPG_FORCE_MOCK=1` ou sem chave,
-salvo `--mock` (usado so no teste). Aborta se passar do teto de chamadas de LLM (30).
+salvo `--mock` (usado so no teste). Conta TODA chamada de LLM (narrador + qualquer `get_llm`
+fora dele, que e proibida) e recusa ANTES da primeira se `2 x casos x samples` passar do teto (30).
+O pulso do mundo e neutralizado nos dois bracos; cada par grava o hash do prompt sem as linhas de
+tamanho e falha se `off` e `on` divergirem.
 
     bash scripts/dev/py.sh scripts/dev/narration_pairs.py \
         --cases docs/spec428/pares_casos.json --out docs/spec428/pares-2026-11-22
@@ -16,6 +19,8 @@ casos, mesmo comando, mesmo sha. `--samples N` repete so para contagem de tamanh
 from __future__ import annotations
 
 import argparse
+import contextlib
+import hashlib
 import json
 import logging
 import os
@@ -105,8 +110,19 @@ def build_cases() -> list[dict]:
 
 
 # --------------------------------------------------------------------------- execucao
+SIZE_LINE_MARKS = ("TAMANHO DA RESPOSTA", "- Responda em 2 a 3 parágrafos")
+
+
+def prompt_fingerprint(messages: Any) -> str:
+    """Hash do prompt sem as linhas de tamanho (as unicas que `on` pode mudar); nunca o texto."""
+    items = messages if isinstance(messages, list | tuple) else [messages]
+    joined = "\n".join(str(getattr(m, "content", m)) for m in items)
+    kept = [ln for ln in joined.split("\n") if not any(mark in ln for mark in SIZE_LINE_MARKS)]
+    return hashlib.sha256("\n".join(kept).encode("utf-8")).hexdigest()[:16]
+
+
 class _CountingLLM:
-    """Proxy: conta as chamadas do narrador e aborta ao passar do teto."""
+    """Proxy do narrador: conta as chamadas, guarda o hash do prompt e aborta ao passar do teto."""
 
     def __init__(self, inner: Any, budget: dict) -> None:
         self._inner, self._budget = inner, budget
@@ -124,11 +140,48 @@ class _CountingLLM:
 
             def invoke(self, *a: Any, **k: Any) -> Any:
                 budget["calls"] += 1
-                if budget["calls"] > MAX_CALLS:
+                if budget["calls"] + budget.get("foreign", 0) > MAX_CALLS:
                     raise SystemExit(f"teto de {MAX_CALLS} chamadas de LLM excedido")
+                if a:
+                    budget.setdefault("prints", []).append(prompt_fingerprint(a[0]))
                 return bound.invoke(*a, **k)
 
         return _Bound()
+
+
+def check_budget(n_cases: int, samples: int) -> int:
+    """Recusa ANTES de qualquer chamada: previsto = 2 bracos x casos x samples."""
+    planned = 2 * n_cases * samples
+    if planned > MAX_CALLS:
+        raise SystemExit(
+            f"previsto {planned} chamadas de LLM (2 x {n_cases} casos x {samples} samples) "
+            f"> teto {MAX_CALLS}: reduza --samples/casos; nada foi chamado"
+        )
+    return planned
+
+
+@contextlib.contextmanager
+def _llm_guard(narrator: Any, budget: dict):
+    """Ponto unico de LLM: o `get_llm` do narrador devolve o proxy; todo outro `get_llm` (em
+    qualquer modulo carregado, inclusive `llm_setup`) e contado e levanta."""
+    from agents import storyteller as st
+
+    def foreign(*_a: Any, **_k: Any) -> Any:
+        budget["foreign"] = budget.get("foreign", 0) + 1
+        raise RuntimeError("chamada de LLM fora do narrador no pacote de pares")
+
+    saved: list[tuple[Any, Any]] = []
+    for mod in list(sys.modules.values()):
+        if mod is not None and mod is not st and callable(getattr(mod, "get_llm", None)):
+            saved.append((mod, mod.get_llm))
+            mod.get_llm = foreign
+    saved.append((st, st.get_llm))
+    st.get_llm = lambda *a, **k: narrator
+    try:
+        yield
+    finally:
+        for mod, fn in saved:
+            mod.get_llm = fn
 
 
 class _ProviderLog(logging.Handler):
@@ -155,8 +208,10 @@ def _count(text: str) -> dict:
     return {"chars": len(text), "paragraphs": len(paragraphs), "option_lines": len(options)}
 
 
-def _run_one(case: dict, mode: str, llm: Any, harvest: _ProviderLog) -> tuple[str, list[dict]]:
-    """Uma chamada do narrador no caso com a flag `mode`; devolve (texto, tentativas)."""
+def _run_one(
+    case: dict, mode: str, llm: _CountingLLM, harvest: _ProviderLog
+) -> tuple[str, list[dict], str]:
+    """Uma chamada do narrador no caso com a flag `mode`; devolve (texto, tentativas, hash)."""
     from langchain_core.messages import HumanMessage
 
     import world_utils
@@ -165,8 +220,9 @@ def _run_one(case: dict, mode: str, llm: Any, harvest: _ProviderLog) -> tuple[st
     os.environ["RPG_NARRATION_SIZE"] = mode
     state = json.loads(json.dumps(case["state"]))
     state["messages"] = [HumanMessage(content=case["action"])]
-    saved = (st.get_llm, st.check_encounter, world_utils.roll_encounter_type)
-    st.get_llm = lambda *a, **k: llm
+    budget = llm._budget
+    n_prints, n_foreign = len(budget.get("prints", [])), budget.get("foreign", 0)
+    saved = (st.check_encounter, world_utils.roll_encounter_type, st._story_world_pulse)
     trap = case.get("encounter") == "trap"
     st.check_encounter = (
         (lambda *a, **k: {"reason": "x", "flavor": "Uma armadilha na estrada.", "hint": "x"})
@@ -174,14 +230,20 @@ def _run_one(case: dict, mode: str, llm: Any, harvest: _ProviderLog) -> tuple[st
         else (lambda *a, **k: None)
     )
     world_utils.roll_encounter_type = lambda danger: "trap"
+    st._story_world_pulse = lambda t: None  # P2-1: sem LLM do mundo, igual nos dois bracos
     harvest.rows.clear()
     random.seed(1)
     try:
-        out = st.storyteller_node(state)
+        with _llm_guard(llm, budget):
+            out = st.storyteller_node(state)
     finally:
-        st.get_llm, st.check_encounter, world_utils.roll_encounter_type = saved
+        st.check_encounter, world_utils.roll_encounter_type, st._story_world_pulse = saved
+    if budget.get("foreign", 0) > n_foreign:
+        raise SystemExit(f"caso {case['id']}: chamada de LLM fora do narrador (par invalido)")
+    prints = budget.get("prints", [])[n_prints:]
     msgs = out.get("messages") or []
-    return str(getattr(msgs[-1], "content", "")) if msgs else "", list(harvest.rows)
+    text = str(getattr(msgs[-1], "content", "")) if msgs else ""
+    return text, list(harvest.rows), (prints[0] if prints else "")
 
 
 def _git_sha() -> str:
@@ -228,7 +290,8 @@ def _resolve_llm(use_mock: bool) -> Any:
 
 
 def run(cases: list[dict], llm: Any, samples: int = 1) -> dict:
-    budget = {"calls": 0}
+    check_budget(len(cases), samples)
+    budget: dict[str, Any] = {"calls": 0, "foreign": 0}
     counted = _CountingLLM(llm, budget)
     handler = _ProviderLog()
     plog = logging.getLogger("rpg.provider")
@@ -241,16 +304,21 @@ def run(cases: list[dict], llm: Any, samples: int = 1) -> dict:
             row: dict[str, Any] = {"id": case["id"], "expected_class": case["expected_class"]}
             row["action"] = case["action"]
             for mode in ("off", "on"):
-                text, attempts = _run_one(case, mode, counted, handler)
+                text, attempts, fp = _run_one(case, mode, counted, handler)
                 extra = [_run_one(case, mode, counted, handler)[0] for _ in range(samples - 1)]
                 row[mode] = {"text": text, "counts": _count(text), "attempts": attempts}
                 row[mode]["sample_chars"] = [len(text)] + [len(x) for x in extra]
+                row[mode]["input_hash"] = fp
+            if row["off"]["input_hash"] != row["on"]["input_hash"]:
+                raise SystemExit(f"caso {case['id']}: entradas de off e on divergem (par invalido)")
+            row["input_hash"] = row["off"]["input_hash"]
             pairs.append(row)
     finally:
         plog.removeHandler(handler)
         plog.setLevel(old_level)
         os.environ.pop("RPG_NARRATION_SIZE", None)
-    return {"git_sha": _git_sha(), "calls": budget["calls"], "pairs": pairs}
+    calls = budget["calls"] + budget["foreign"]
+    return {"git_sha": _git_sha(), "calls": calls, "pairs": pairs}
 
 
 # --------------------------------------------------------------------------- saida
@@ -272,7 +340,11 @@ def render_md(result: dict) -> str:
 def counts_only(result: dict) -> dict:
     pairs = []
     for pair in result["pairs"]:
-        row = {"id": pair["id"], "expected_class": pair["expected_class"]}
+        row = {
+            "id": pair["id"],
+            "expected_class": pair["expected_class"],
+            "input_hash": pair["input_hash"],
+        }
         for mode in ("off", "on"):
             row[mode] = {
                 "counts": pair[mode]["counts"],

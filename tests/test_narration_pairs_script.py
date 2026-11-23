@@ -76,3 +76,78 @@ def test_call_budget_aborts():
     counted = np_._CountingLLM(_L(), {"calls": np_.MAX_CALLS})
     with pytest.raises(SystemExit):
         counted.with_structured_output(None).invoke([])
+
+
+def _cases() -> list[dict]:
+    return json.loads(CASES.read_text(encoding="utf-8"))
+
+
+def _boom(*_a, **_k):
+    raise AssertionError("chamada real de LLM no teste do pacote de pares")
+
+
+def test_world_pulse_llm_is_neutralised(monkeypatch):
+    """P2-1: com o LLM do mundo explodindo, o run --mock ainda gera os 10 pares (sem chamar)."""
+    import llm_setup
+    from agents import world_simulator
+
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "off")  # caminho `simulate_world`, que chamaria LLM
+    monkeypatch.setattr(world_simulator, "get_llm", _boom)
+    monkeypatch.setattr(llm_setup, "get_llm", _boom)
+    result = np_.run(_cases(), np_._FakeNarrator())
+    assert len(result["pairs"]) == 10
+    assert result["calls"] == 20  # 10 casos x 2 bracos, so o narrador
+
+
+def test_zero_llm_calls_outside_narrator(monkeypatch):
+    import llm_setup
+    from agents import storyteller as st
+
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "off")  # caminho `simulate_world`, que chamaria LLM
+    monkeypatch.setattr(llm_setup, "get_llm", _boom)
+    budget = {"calls": 0, "foreign": 0}
+    counted = np_._CountingLLM(np_._FakeNarrator(), budget)
+    with np_._llm_guard(counted, budget):
+        assert st.get_llm() is counted  # o narrador recebe o proxy contado
+        with pytest.raises(RuntimeError):
+            llm_setup.get_llm()  # qualquer outro ponto de LLM levanta e e contado
+    assert budget["foreign"] == 1
+    result = np_.run(_cases(), np_._FakeNarrator())
+    assert result["calls"] == 20
+
+
+def test_budget_refuses_before_any_call(tmp_path):
+    class _Spy(np_._FakeNarrator):
+        n = 0
+
+        def invoke(self, *a, **k):
+            _Spy.n += 1
+            return super().invoke(*a, **k)
+
+    with pytest.raises(SystemExit, match="previsto 40"):
+        np_.run(_cases(), _Spy(), samples=2)
+    assert _Spy.n == 0
+    with pytest.raises(SystemExit, match="previsto"):
+        np_.main(["--cases", str(CASES), "--out", str(tmp_path / "x"), "--mock", "--samples", "2"])
+    assert not (tmp_path / "x.md").exists()
+
+
+def test_pairs_carry_input_hash_and_fail_on_divergence(tmp_path, monkeypatch):
+    out = tmp_path / "pares"
+    assert np_.main(["--cases", str(CASES), "--out", str(out), "--mock"]) == 0
+    data = json.loads(out.with_suffix(".json").read_text(encoding="utf-8"))
+    assert all(len(p["input_hash"]) == 16 for p in data["pairs"])
+    seq = iter(range(1000))
+    monkeypatch.setattr(np_, "prompt_fingerprint", lambda _m: str(next(seq)))
+    with pytest.raises(SystemExit, match="divergem"):
+        np_.run(_cases(), np_._FakeNarrator())
+
+
+def test_fingerprint_ignores_only_size_lines():
+    a = ["x\n- Responda em 2 a 3 parágrafos.\nfim"]
+    b = [
+        "x\n- Responda em 2 a 3 parágrafos, salvo quando TAMANHO DA RESPOSTA, abaixo\n"
+        "    - TAMANHO DA RESPOSTA: 1\nfim"
+    ]
+    assert np_.prompt_fingerprint(a) == np_.prompt_fingerprint(b)
+    assert np_.prompt_fingerprint(a) != np_.prompt_fingerprint(["y\nfim"])
