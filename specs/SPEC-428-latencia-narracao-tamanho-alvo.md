@@ -349,7 +349,7 @@ Antes do 1º teste, o executor lê `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md` § l
 - [ ] `evals compare` off × on sai 0 (R11).
 - [x] Guard de FallbackLLM coberto com `on` (I4); nenhum `with_structured_output` novo.
 - [ ] Pacote de 10 pares gerado com chave real e commitado em `docs/spec428/`.
-- [ ] Testes do escopo verdes (subagente); `uv run pytest` completo verde no pouso (coordenador).
+- [x] Testes do escopo verdes (subagente); `uv run pytest` completo verde no pouso (coordenador). Pouso em 23/11 no commit `9b4ed007`: suíte completa `FULL_N=2 full.sh` com 11997 passed, 330 skipped, 1 xfailed, rc 0; CI pré-pouso `audit-local` `45239542171` verde no mesmo commit (branch `spec-428`); escopo + gates 289 passed.
 - [x] Saves antigos continuam carregando (nada persistido muda: a classe não vai para o estado).
 - [x] Revisão `spec-reviewer` (Opus) APPROVED. Veredito final `APPROVED_WITH_FOLLOWUPS` em `928e04e7`, depois de duas rodadas com `CHANGES_REQUIRED` no script de pares (entradas diferentes entre os braços; `get_llm` falso vazando para outros testes). Os P3-4 e P3-5 foram aplicados depois.
 - [ ] `done` só depois do §6 passo 3 (promoção no staging) e da leitura do dono (§8 D2); até lá, `in-progress`
