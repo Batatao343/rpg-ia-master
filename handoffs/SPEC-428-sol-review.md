@@ -1,0 +1,174 @@
+# SPEC-428 — revisão sol (review)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Opus 5.5 / sol (spec-reviewer) · **Data:** 2026-11-23 · **Commit revisado:** `ba4bc3ff`
+
+## Escopo
+
+Branch `spec-428`, merge-base `acb4fd56` .. `ba4bc3ff` (`91c3e11e` golden, `62e53c17` produto,
+`ba4bc3ff` script de pares; `b413a707` só aprova a spec). **A `main` andou** para `e87d0769`
+(`git merge-base --is-ancestor main HEAD` = 1): 12 commits da SPEC-425 (`services/art_brief.py`,
+`services/image_pricing.py`) e docs/handoffs, sem arquivo em comum com esta branch. Revisado assim
+mesmo; o `wt.sh sync` do pouso resolve.
+
+Lido: diff inteiro de `agents/storyteller.py`, `services/narration_size.py`, `config/flags.yaml`,
+`scripts/staging/*`, `observability/events.py`, `docs/operacao/EVENTOS_DE_LOG.md`,
+`scripts/dev/narration_pairs.py`, `docs/spec428/pares_casos.json`, os dois testes novos e a spec.
+Fora: smoke com chave, staging, `evals run/compare` (não pedidos neste brief).
+
+## Achados
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-1 | P2 | `scripts/dev/narration_pairs.py:117-131`, `:168-182`, `:245` | O teto de 30 conta só as chamadas do narrador (`st.get_llm` trocado). O turno de descanso/viagem roda `_story_world_pulse` (`agents/storyteller.py:1405`, `:2062-2067`), que chama `agents/world_simulator.get_llm` (`:130`, `:298`) por fora do contador e **sem fixar o resultado entre `off` e `on`**. Com `RPG_WORLD_ENGINE=off` no `.env` (ou dia virado com algo percebido em `on`), os casos `descanso-1/2`, `local-visitado`, `controle-local-novo` e `controle-revelacao` recebem `[ECOS DO MUNDO]` diferentes em `off` e `on`: o par deixa de ser "mesmo estado, mesma ação" e o dono compara prosa de entradas distintas. Além disso `--samples N≥2` dá 10×2×N ≥ 40 > 30: aborta no meio depois de gastar, sem gravar nada. O teste não pega nada disso: só roda com `RPG_FORCE_MOCK=1` do `conftest` e nada afirma "nenhuma outra chamada de LLM". | Em `_run_one`, fixar o pulso: trocar `st._story_world_pulse` por no-op (ou `st.simulate_world`/`st._narrate_world` por stub determinístico) durante o par; contar no `llm_setup.get_llm` (todo LLM, não só o do narrador). Recusar antes da 1ª chamada quando `20 × samples > MAX_CALLS`. Teste novo: com `--mock`, `world_simulator.get_llm` trocado por um que levanta, o run conclui 10 pares. |
+| P2-2 | P2 | `specs/SPEC-428-latencia-narracao-tamanho-alvo.md:3`, `:257`, `:384-389`, §5 | A spec não foi tocada depois da aprovação (`git diff b413a707 HEAD -- specs/` vazio). Desvios sem registro: o controle `revelacao` é a armadilha `ENCONTRO NA ESTRADA` e não `<GANCHO_NOVO>` (§3.4 `:257`; o golden também); os estados vêm de `_base_state()` do script, não de `tests/factories.make_state` (§3.4); a confirmação da Etapa 0 (ordem de `closing_clause` em `_story_prompt_blocks`) não foi escrita; "Não rodou" ainda diz "Esta é a spec (`draft`)"; status `approved` em vez de `in-progress`; R11/Etapa 6.1 (`evals compare` off × on = 0) sem evidência registrada. | Atualizar a spec: status `in-progress`; registrar os dois desvios (a troca do controle é aceitável: armadilha com números já resolvidos é o subtipo de `revelacao` mais comum em jogo e não depende de quest de mundo; `<GANCHO_NOVO>` exige tick de quest e é coberto por `test_classify_priority`); nota da Etapa 0; marcar critérios; rodar e registrar o compare off × on (ou mover para "Não rodou" com motivo). |
+| P3-1 | P3 | `scripts/dev/narration_pairs.py:37-68`, `:92-98` | Estados magros: sem NPC presente, sem facção conhecida. As duas `fala_mediada` perguntam ao narrador numa cena vazia, o que tende a texto curto também em `off` e não mostra o risco real (fala com informação sendo cortada). | Pôr 1 NPC já criado e presente (sem ficha a gerar) e 1 facção conhecida em `fala-mediada-1` e `cena-2`; regenerar `pares_casos.json` com `--write-cases`. |
+| P3-2 | P3 | `services/prose_guard.py:258-264`; `agents/storyteller.py:499-527` | Com 1–2 parágrafos, os dois guards que apagam parágrafo inteiro (ouro rejeitado, SPEC-091 R6; segredo mediado, SPEC-202 R11) pesam mais; a spec §7 cita só o da mediação. Comportamento existente, não regressão. | Na medição de staging (§6 P3), separar `narrative.rejected` por `kind` (incluindo o monetário). Sem mudança de código. |
+
+Nenhum P0/P1.
+
+## Conferência dos 11 pontos do coordenador
+
+1. **Golden veio do código antigo: sim.** `91c3e11e` não muda nenhum arquivo de produto em relação
+   à merge-base (`git diff --stat acb4fd56 91c3e11e` só lista a spec e o teste/fixtures). Worktree
+   descartável na `main` `e87d0769` + `tests/test_narration_size.py` de `91c3e11e` + as 12
+   fixtures da HEAD: **12 passed** (6 classes × `RPG_PROMPT_STATIC_FIRST` off/on). As fixtures não
+   mudaram depois de `91c3e11e` (`git diff --stat 91c3e11e HEAD -- tests/fixtures/` vazio).
+   Estáveis com `PYTHONHASHSEED=7` e `4242`. Nota: `abertura-*` = `cena-*` byte a byte (o
+   turno 1 não muda o SystemMessage hoje); a classe do caso é garantida por
+   `test_golden_cases_hit_their_class`.
+2. **`off`/`shadow` = hoje: sim.** Ausente/`off`/inválido: golden verde. `shadow`:
+   `test_shadow_prompt_equals_off` nas 12 combinações; `test_near_valid_values_keep_todays_prompt`.
+   A linha estática fica byte a byte (`PARAGRAPH_RULE_OFF` com o mesmo recuo de 4 espaços do f-string).
+   `git diff --stat main...HEAD -- tests/fixtures` só mostra `narration_size_off/`;
+   `spec382_node_golden.json` sem diff e `tests/test_spec382_node_golden.py` -n 0 verde. Em
+   `shadow` só sai `narration.size_class` com `mode`, `size_class`, `shortened`, `chars_max`
+   (`services/narration_size.py:125-132`); nenhum texto; `off` retorna antes do log (`:121-123`;
+   `test_off_logs_nothing` em DEBUG).
+3. **Leitura da flag: coerente, não é achado.** `services.env.env_choice` (strip + lower,
+   inválido = default) é o mesmo helper de `services/latency_flags.py` (`_choice = env_choice`) e
+   das irmãs `RPG_ARCHIVE_RECORD`/`RPG_MEDIATED_STREAM`, que também são `off|shadow|on`, default
+   `off`, `kind: release` com `expires`. `"true"`/`"1"`/`"yes"`/`"onn"`/`""` → `off` (testado).
+4. **Classificação.** Procurado ativamente: turno 1 → `abertura` (`campaign_manager` incrementa
+   antes, `agents/storyteller.py:2626`); local novo e interior novo → `local_novo` (regra de
+   `first_visit`; `apply_travel` copia `visited`, `world_utils.py:216-219`); local visitado com
+   tesouro → `discovery_events` → `revelacao`; quest nova de mundo → `<GANCHO_NOVO>`; desfecho de
+   lore quest → `<DESFECHO_DE_QUEST>`; armadilha/rastro/social/sinal de fauna → `ENCONTRO NA
+   ESTRADA` (`:1848`, `:2005`, `:2034`, `:2047`). `<BOATOS>` sempre presente com rumores `on` não
+   contém a tag de gancho (`:355`). Fora do nó (sem alvo, sem LLM do narrador): início de combate
+   (`return _story_combat_start`, `:1402`), `npc_actor`, resumo de fim de combate, oferta de lore
+   quest (`<GANCHOS_POSSIVEIS>` só em `agents/npc.py:1189`). `rumor_nothing` → `cena` por decisão
+   da spec (R4.6), com `NOTHING_FOUND_FACT` em `EVENTOS_DESTE_TURNO`, protegido pela linha de
+   tamanho. NPC ausente (`ABSENT_REASONS`) → `cena`: aceitável (ninguém responde). Prioridade:
+   descanso em local novo → `local_novo`; mediação com revelação → `revelacao`; mediação + descanso
+   → `fala_mediada`: bate com R4 e está em `test_classify_priority`. Não achei turno de informação
+   que caia em classe encurtada fora das decisões da spec.
+5. **Texto da instrução.** Só tamanho (parágrafos + faixa de palavras) e a regra "nunca corte"
+   (eventos, fato novo, fala com informação, oferta de missão, consequência); não mexe em pessoa,
+   tempo verbal, estilo nem opções. Única outra regra de tamanho no prompt é a linha estática, que
+   em `on` vira "salvo quando TAMANHO DA RESPOSTA, abaixo, pedir menos": sem contradição. "abaixo"
+   vale nas duas ordens (`test_on_mode_prompt_has_class_target` confere a posição). Specs 043, 091,
+   309, 346: nenhuma regra de prompt de tamanho (só os guards de parágrafo, P3-2). `<GANCHO_NOVO>`
+   diz "de forma breve", só em `revelacao`, que não é encurtada.
+6. **Motor intacto.** Nenhum diff em `llm_setup.py`, `agents/npc.py`, `routes/turn.py`, `StoryUpdate*`;
+   nenhum `max_tokens`; `with_structured_output` e guard intactos (I3, I4 cobertos).
+   `agents/storyteller.py` 3016 → 3012; `baseline_growth.py --base main` rc 0 ("nenhum baseline cresceu").
+7. **Preset e env: ok.** `staging_flags.json:26` `"RPG_NARRATION_SIZE": "shadow"`; o novo `_updated`
+   começa exatamente com o antigo (inclui as notas de `RPG_RLS_STRICT_PRINCIPAL` e
+   `RPG_ARCHIVE_RECORD`) e só acrescenta a linha de 22/11. `vercel_env.py` nas duas listas com o
+   comentário de R1. `flags.yaml:673-678` default `"off"`, `expires: 2027-02-22`.
+8. **Script de pares.** Sem chave/`RPG_FORCE_MOCK=1` sem `--mock` recusa antes de chamar
+   (testado). Saída `.json` só contagens + `provider/model/outcome`; nenhum segredo. Casos
+   reprodutíveis (`test_committed_cases_match_generator`). Problemas em P2-1 (teto e A/B) e P3-1.
+   Troca do caso `revelacao`: aceitável no mérito, mas precisa constar na spec (P2-2).
+9. **Mutantes (plugin `-p`, sem editar o worktree): 10/10 mortos** — tabela abaixo.
+10. **Gates: verdes** (comandos abaixo). `git diff --stat main...HEAD -- evals/` vazio; nenhum
+    caminho de `evals/protected-paths.txt` (lista atual relida) está no diff.
+11. **"Nenhum adapter de `evals/` chama o narrador": confirmado.** `grep storyteller evals/**/*.py`
+    só acha nomes de rota em `evals/experiments/jev_router_*.py`/`spec217_corpus_check.py` (strings
+    de rota, não import). `evals/core/adapters.py` importa `agents.router`, `services.*`,
+    `persistence`, `rag`, `playtest.invariants` e `api.format_response` (só formatação); nenhum
+    importa `main`, `agents.storyteller` nem roda o grafo. Logo quem decide ligar fora do staging é
+    o dono (D2), como a spec diz.
+
+## Evidência verificada
+
+`bash scripts/dev/red_green.sh 428`:
+
+| teste | main | branch | veredito |
+|---|---|---|---|
+| tests/test_narration_pairs_script.py::test_call_budget_aborts | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_committed_cases_match_generator | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_json_has_only_counts | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_mock_run_makes_ten_pairs_with_expected_classes | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_refuses_with_force_mock | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_refuses_without_key_and_without_mock | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_classify_priority | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_golden_cases_hit_their_class | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_log_for_unshortened_class_has_zero_chars_max | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_log_never_carries_narration_text | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_mode_parsing | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_narrator_prompt_off_matches_golden | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_near_valid_values_keep_todays_prompt | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_off_logs_nothing | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_on_mode_prompt_has_class_target | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_on_mode_unshortened_classes_have_no_size_line | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_opcoes_clause_is_todays_literal | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_options_clause_unchanged_every_class | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_shadow_and_on_log_size_class | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_shadow_prompt_equals_off | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_size_mode_does_not_change_engine_output | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_size_mode_keeps_story_schema | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_size_on_does_not_touch_npc_or_combat_prompt | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_size_on_fallback_llm_aimessage_guard | vermelho (import) | verde | OK |
+| tests/test_narration_size.py::test_targets_table | vermelho (import) | verde | OK |
+
+red_green: 25/25 OK
+
+O "vermelho (import)" do golden na `main` é do arquivo da HEAD (importa `services.narration_size`);
+a prova de que o golden reproduz a `main` é a execução separada do item 1 (12 passed na `main`).
+
+Mutantes (plugin `mut428`, `MUT428=<nome>`, `tests/test_narration_size.py`):
+
+| mutante | morto por |
+|---|---|
+| `off_injects` (alvo com `off`) | `test_narrator_prompt_off_matches_golden[cena-off]` |
+| `newloc_gets_cena` (local novo recebe alvo) | `test_classify_priority[...local_novo]`, `test_on_mode_unshortened_classes_have_no_size_line[local_novo]` |
+| `mediated_absent` (fala mediada sem alvo em `on`) | `test_classify_priority[...fala_mediada]` |
+| `rest_cena_swap` (descanso ↔ cena) | `test_classify_priority[...cena]` |
+| `true_is_on` (`"true"`/`"1"` = on) | `test_mode_parsing[true-off]` |
+| `shadow_injects` (`shadow` lido como `on`) | `test_mode_parsing[shadow-shadow]` |
+| `shadow_closing` (linha de tamanho em `shadow`) | `test_shadow_prompt_equals_off[cena-off]` |
+| `shadow_no_log` (sem evento em `shadow`) | `test_shadow_and_on_log_size_class[shadow]` |
+| `newloc_short` (`local_novo` encurtada) | `test_targets_table` |
+| `paragraph_rule_off_changed` (linha estática de `off` muda) | `test_narrator_prompt_off_matches_golden[abertura-off]`, `[revelacao-on]` |
+
+## Correções aplicadas
+
+Nenhuma ainda (revisão sem edição de código).
+
+## Pendências
+
+- P2-1 e P2-2: corrigir **antes de rodar o pacote de pares com chave** e antes do pouso (executor ou
+  coordenador; mesma SPEC-428). Não bloqueiam o código de produto, que entra com a flag `off`.
+- P3-1, P3-2: opcionais; P3-2 vira item da medição de staging (§6 P3).
+- Ligar fora do staging: dono (D2), lendo o pacote de pares.
+
+## Comandos rodados
+
+```text
+git merge-base --is-ancestor main HEAD → 1 (main andou para e87d0769; sem arquivo em comum)
+git diff --stat acb4fd56 91c3e11e (sem spec/teste/fixtures) → vazio (golden capturado sem produto alterado)
+worktree descartável em main e87d0769 + teste de 91c3e11e + fixtures: pt.sh tests/test_narration_size.py -n 0 → 12 passed
+PYTHONHASHSEED=7 e 4242: pt.sh tests/test_narration_size.py -k "golden or shadow_prompt" -n 0 → 25 passed (2x)
+bash scripts/dev/red_green.sh 428 → 25/25 OK
+10 mutantes via -p mut428 → 10/10 mortos
+pt.sh tests/test_ruff_counts.py tests/test_clock_asserts.py tests/test_size_budget.py tests/test_flag_registry.py tests/test_log_event_registry.py tests/test_spec192_vercel_env.py -n 0 → 72 passed
+pt.sh tests/test_spec382_node_golden.py -n 0 → 66 passed
+pt.sh tests/test_mediated_stream.py tests/test_spec309_prompts.py tests/test_ambient_consumers.py -n 2 → 111 passed
+scripts/dev/baseline_growth.py --base main → "nenhum baseline cresceu", rc 0
+scripts/dev/dup_helpers.py --diff main...HEAD → só homônimos (_count, _git_sha, classify, mode), sem duplicação real
+ruff check / format --check nos 5 arquivos .py tocados → limpo
+git diff --stat main...HEAD -- evals/ → vazio; nenhum caminho de evals/protected-paths.txt no diff
+worktree descartável removido (git worktree list sem goldchk)
+```
