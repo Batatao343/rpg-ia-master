@@ -1,6 +1,6 @@
 # SPEC-427 — latencia-fila-de-uma-acao
 
-> **Status:** `approved` (coordenador, 22/11, por delegação do dono: "faz tudo ai… eu autorizo a fazer tudo que vc pode fazer, deixa de pendente só o q vc nao pode mesmo"; flag `off` por padrão, `on` só no staging; veto do dono possível)
+> **Status:** `in-progress` (aprovada em 22/11 pelo coordenador, por delegação do dono; código pousado em 23/11 com a flag `off`, `on` só no preset do staging; revisão Sol APPROVED_WITH_FOLLOWUPS; faltam o smoke §6 no staging e o dono experimentar antes de ligar para todos)
 > **Criada:** 2026-11-22 · **Atualizada:** 2026-11-22
 > **Depende de:** SPEC-420 (código na `main` desde 22/11; o fluxo "envio novo sem consulta" é a base do autoenvio). SPEC-316 e SPEC-320 `done`.
 > **Desbloqueia:** item L1b de `docs/auditorias/latencia-turno-2026-11-12.md:135-138`; a promoção da flag para todos os jogadores (spec curta de seguimento, depois do §6).
@@ -229,16 +229,16 @@ Itens de `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md` § concorrência (`:16-21`): t
 
 ## 5. Critérios de aceite
 
-- [ ] Com o `state` segurado, Enter em `narrated` enfileira; 0 envios até o `state`; exatamente 1 envio depois, com o texto da fila e `action_id` novo (e2e, 2 viewports).
-- [ ] Um e2e verde por caso a–l de R10, mais I7 e reload; em todos, 0 envios da fila e o texto volta ao campo.
-- [ ] "Não salvo" + "Tentar de novo" com a fila ligada: mesmo `action_id`, e a fila não dispara depois.
-- [ ] Flag desligada: e2e existentes (`turn-wait`, `turn-retry`, `turn-preflight`, `pending-discard`, `latency`) sem edição de asserção e verdes; `fila desligada` verde.
-- [ ] `/auth/config`: chave ausente por padrão e com valores quase válidos; `true` com `on` (pytest).
-- [ ] Região viva única; axe sem `serious`/`critical`; alvos ≥ 44 px; label-in-name.
-- [ ] `npm run typecheck`, `npm run lint`, `npm test`, e2e do escopo, `size_budget.py` verdes; `App.tsx` ≤ 969 linhas.
+- [x] Com o `state` segurado, Enter em `narrated` enfileira; 0 envios até o `state`; exatamente 1 envio depois, com o texto da fila e `action_id` novo (e2e, 2 viewports).
+- [x] Um e2e verde por caso a–l de R10, mais I7 e reload; em todos, 0 envios da fila e o texto volta ao campo. Exceção registrada: o caso j é inalcançável pela UI (a fila só existe em `narrated`; o retry só aparece em `waiting`/`failed-after-narration`) e fica coberto por unit; a revisão aceitou.
+- [x] "Não salvo" + "Tentar de novo" com a fila ligada: mesmo `action_id`, e a fila não dispara depois.
+- [x] Flag desligada: e2e existentes (`turn-wait`, `turn-retry`, `turn-preflight`, `pending-discard`, `latency`) sem edição de asserção e verdes; `fila desligada` verde. No topo `b9833298`/rebase: 20, 7, 4, 5 e 2 passed.
+- [x] `/auth/config`: chave ausente por padrão e com valores quase válidos; `true` com `on` (pytest).
+- [x] Região viva única; axe sem `serious`/`critical`; alvos ≥ 44 px; label-in-name.
+- [x] `npm run typecheck`, `npm run lint`, `npm test`, e2e do escopo, `size_budget.py` verdes; `App.tsx` ≤ 969 linhas. `App.tsx` com 965 linhas.
 - [ ] Suíte completa no pouso (coordenador).
-- [ ] Guard de FallbackLLM: não se aplica (sem `with_structured_output` novo).
-- [ ] Saves antigos continuam carregando: não há mudança de save nem de `localStorage`.
+- [x] Guard de FallbackLLM: não se aplica (sem `with_structured_output` novo).
+- [x] Saves antigos continuam carregando: não há mudança de save nem de `localStorage`.
 - [ ] Smoke §6 registrado no staging com a flag `on`.
 
 ## 6. Smoke test real
@@ -257,6 +257,10 @@ Staging depois do deploy, com `RPG_ACTION_QUEUE=on` (preset `staging_flags.json`
 Registrar o resultado (prints do Network dos itens 1 e 4 e as respostas do dono) no handoff da revisão ou em `docs/spec427/smoke.md`.
 
 ## Não rodou e por quê
+
+- **Revisão Sol (23/11), três rodadas** (`handoffs/SPEC-427-sol-review.md`): rodada 1 `CHANGES_REQUIRED`, com corrida reproduzida (envio manual no mesmo commit do `state` + autoenvio da fila = dois turnos em voo), corrigida com a trava síncrona de turno (`web/src/turnLock.ts`), que vale também com a flag `off`; rodada 2 pediu o teste da liberação da trava no retry `completed` (`App.tsx:641`); rodada 3 `APPROVED_WITH_FOLLOWUPS`. No meio, o coordenador reproduziu que a nota de devolução ficava escondida no celular no combate de cartas (o compositor sai da tela); corrigido em `9577d157` (nota no cabeçalho do painel ativo). O teste antigo desse caso passava por um estado transitório (dois `requestAnimationFrame` da troca de aba), e por isso a rodada 2 o viu verde.
+- **Follow-ups abertos (P3, não bloqueiam):** R3-P3-2: no combate de cartas a nota de devolução fica visível a luta inteira (só `clearNote` limpa, e jogada de carta não chama); limpar a `note` quando `base.seq` muda. R3-P3-1: a mutação "unlock ignorando o token" só é pega pelo unit `turnLock.test.mjs`.
+- **Comportamento existente no celular, não alterado:** quando a luta termina o painel Combate continua aberto; o jogador volta pela aba da crônica e o texto devolvido está no campo (fila antes do digitado depois, D5).
 
 - **Escrita da spec (22/11):** o autor não executou nada além de leitura (`git`, `wc`, `spec_index.py show`). O comportamento "antes" (Enter ignorado em `narrated`) vem do source: `ChatSurface.tsx:187`, `App.tsx:473,603-608`, e do e2e existente `turn-wait.spec.ts:163-193`, que afirma o botão desabilitado nesse estágio. O executor confirma na Etapa 0.
 - **Smoke §6:** depende de deploy no staging. Em 22/11 as migrações 413/410 já estão aplicadas e os rate cards publicados (`88a5373f`); o deploy está com a sessão `rpg-ia-master-82`. Até lá a spec fica `in-progress` depois do pouso, como a SPEC-420.
