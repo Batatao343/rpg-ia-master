@@ -14,7 +14,7 @@
 - **Os rate cards vencem em 13/12; a `main` fica vermelha de propósito a partir de 03/12** (`test_rate_card_freshness`) até renovar: `docs/spec197/runbooks/budget.md` § Renovação. O card de imagem renovado ganha `extra_models` (425 R1/R3).
 - **425 (troca do modelo de imagem; `gpt-image-2` desliga em 10/02/2027):** Etapa 0 (suporte inerte ao 2.6 + script de medição com teto de US$ 2) na `main`. Etapas 1–3 esperam o dono (Bloqueios).
 - **426 `done` (23/11):** gate de tipos cobre `character_creator.py`, os 10 `agents/` com LLM estruturado e os `services/` que chamam LLM (baseline 247 entradas; job `types` bloqueante, 38 s). Parâmetro `llm` novo usa `LLMClient`. Ainda cego: `agents/storyteller.py`.
-- **Latência (419–423, 427–429, sessão `fb`):** 419–422 e 428 na `main` com flags `off`, `in-progress` até o staging; 423 parte 1 e 427 revisadas na branch; 429 `draft` espera o dono. Detalhe: `CHANGELOG.md` 22–23/11.
+- **Latência (419–423, 427–429, sessão `fb`):** 419–422, 427 e 428 na `main` com flags `off`, `in-progress` até o staging; 423 parte 1 revisada na branch; 429 `draft` espera o dono. Detalhe: `CHANGELOG.md` 22–23/11.
 - Suíte: última completa verde em 22/11, 11892 passed (`FULL_N=3 bash scripts/dev/full.sh`). Flakes: `test_spec361_gate::test_prazo_real_por_thread` (tempo); `test_spec382_node_golden[campaign_secret_rusher_off]`; e2e "F17 workspace_modes".
 
 ## Próximos 3 passos

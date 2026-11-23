@@ -236,7 +236,7 @@ Itens de `docs/guias/CASOS_QUE_O_REVISOR_PEDE.md` § concorrência (`:16-21`): t
 - [x] `/auth/config`: chave ausente por padrão e com valores quase válidos; `true` com `on` (pytest).
 - [x] Região viva única; axe sem `serious`/`critical`; alvos ≥ 44 px; label-in-name.
 - [x] `npm run typecheck`, `npm run lint`, `npm test`, e2e do escopo, `size_budget.py` verdes; `App.tsx` ≤ 969 linhas. `App.tsx` com 965 linhas.
-- [ ] Suíte completa no pouso (coordenador).
+- [x] Suíte completa no pouso (coordenador). Pouso em 23/11 no commit `8443ff38`: `FULL_N=2 full.sh` com 12019 passed, 330 skipped, 1 xfailed, rc 0; CI pré-pouso `audit-local` `45262595159` verde no mesmo commit (branch `spec-427`).
 - [x] Guard de FallbackLLM: não se aplica (sem `with_structured_output` novo).
 - [x] Saves antigos continuam carregando: não há mudança de save nem de `localStorage`.
 - [ ] Smoke §6 registrado no staging com a flag `on`.
