@@ -1,7 +1,15 @@
 # SPEC-428 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
-> **Revisor:** Opus 5.5 / sol (spec-reviewer) · **Data:** 2026-11-23 · **Commit revisado:** `ba4bc3ff`
+> **Veredito:** `CHANGES_REQUIRED`
+> **Revisor:** Opus 5.5 / sol (spec-reviewer) · **Data:** 2026-11-23 · **Commit revisado:** `eecda1b7`
+
+## Reconferência 2 (23/11, `9c8e40ec..eecda1b7`)
+
+(em andamento: P1-1 confirmado; gates rodando)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P1-1 | P1 | `scripts/dev/narration_pairs.py:199-221` (`_llm_guard`) | O guard troca `get_llm` só nos módulos carregados na entrada e restaura só esses. Módulo importado **durante** o guard (import preguiçoso dentro do nó) faz `from llm_setup import get_llm` e prende o `foreign`; o `finally` não o restaura. Medido: depois de `tests/test_narration_pairs_script.py`, `agents.campaign_manager.get_llm` fica `foreign` no processo; `pytest -n 0 tests/test_narration_pairs_script.py tests/test_enrich_node.py` → 7 falhas `RuntimeError: chamada de LLM fora do narrador no pacote de pares` em `test_enrich_node.py`, que passa sozinho (9 passed). Poluição dependente de ordem na suíte. | No `finally`, além de `saved`, varrer `sys.modules` e devolver `llm_setup.get_llm` original a todo módulo com `get_llm is foreign`. Teste: `monkeypatch.delitem(sys.modules, "agents.campaign_manager")` antes de `np_.run(...)` e, depois, nenhum módulo com `get_llm.__name__ == "foreign"`. |
 
 ## Escopo
 
