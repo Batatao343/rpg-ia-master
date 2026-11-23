@@ -254,7 +254,7 @@ depois do `DYNAMIC_LABEL` (`services/prompt_layout.py:23,40`): "abaixo" vale nas
 - `docs/spec428/pares_casos.json`: 10 casos fixos, cada um com `id`, `expected_class`, `state` (estado completo
   serializado, gerado uma vez com `tests/factories.make_state` + patch e commitado) e `action`. Distribuição:
   3 `cena`, 2 `fala_mediada`, 2 `descanso`, 1 chegada a local já visitado (`cena`), e 2 controles não encurtados
-  (1 `local_novo`, 1 `revelacao` com `<GANCHO_NOVO>`). Casos escolhidos sem NPC novo a gerar (sem chamada extra
+  (1 `local_novo`, 1 `revelacao`, a armadilha "ENCONTRO NA ESTRADA"). Casos escolhidos sem NPC novo a gerar (sem chamada extra
   de ficha).
 - `scripts/dev/narration_pairs.py --cases docs/spec428/pares_casos.json --out docs/spec428/pares-<data>`:
   para cada caso roda `storyteller_node` (via `get_llm`, rota de hoje) com `RPG_NARRATION_SIZE=off` e depois
@@ -390,9 +390,9 @@ Atualizado após a execução e a revisão sol (`handoffs/SPEC-428-sol-review.md
 
 - `evals compare` `off` × `on` (R11 / Etapa 6.1) **não rodou**. Nenhum adapter de `evals/` chama o narrador
   (conferido pelo revisor: `evals/core/adapters.py` não importa `main` nem `agents.storyteller`), então o compare
-  seria vazio para esta mudança; a prova de equivalência de `off` é o golden de `tests/fixtures/narration_size_off/`.
+  seria idêntico para esta mudança; a prova de equivalência de `off` é o golden de `tests/fixtures/narration_size_off/`.
 - O smoke §6 (passo 1, pacote com chave real) é do coordenador; o pacote não foi rodado com chave.
-- §6 passos 2–3 (e o 1) dependem de deploy no staging (coordenador).
+- §6 passos 2–3 dependem de deploy no staging (coordenador); o passo 1 é local com chave real, do coordenador, sem depender do staging.
 - Ligar fora do staging depende da leitura do dono (§8 D2); não é passo da execução.
 
 ## 7. Riscos & compatibilidade
