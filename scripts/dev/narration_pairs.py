@@ -346,12 +346,34 @@ def _git_sha() -> str:
 class _FakeNarrator:
     """LLM fixo para `--mock` (teste): uma `StoryUpdate` valida, sem rede."""
 
+    TEXT = "A cena segue.\n\n— Ir adiante\n— Esperar\n— Ou outra ação."
+
     def with_structured_output(self, *_a: Any, **_k: Any) -> _FakeNarrator:
         return self
+
+    @staticmethod
+    def _emit_success() -> None:
+        """Uma tentativa `success` pelo hook do projeto, como o `FallbackLLM` real faria."""
+        import llm_setup
+
+        llm_setup._emit_attempt_telemetry(
+            llm_setup.LLMAttemptEvent(
+                provider="mock",
+                model="fake-narrator",
+                tier=llm_setup.ModelTier.FAST,
+                attempt_index=0,
+                latency_ms=0,
+                fell_back=False,
+                outcome="success",
+                error=None,
+                structured=True,
+            )
+        )
 
     def invoke(self, *_a: Any, **_k: Any) -> Any:
         from agents.storyteller import StoryUpdate
 
+        self._emit_success()
         text = "A cena segue.\n\n— Ir adiante\n— Esperar\n— Ou outra ação."
         return StoryUpdate(narrative=text)
 
@@ -397,18 +419,34 @@ def _provider_set(arm: dict) -> set[str]:
     return {f"{r['provider']}/{r['model']}" for r in arm["llm_attempts"]}
 
 
-def judge_comparable(pair: dict) -> tuple[bool, str]:
-    """Par so serve se TODA narracao veio do primeiro candidato e os bracos usam o mesmo modelo."""
+def _judge_arm(mode: str, arm: dict) -> list[str]:
+    """Motivos de uma amostra nao vir do LLM do jogo: cada checagem e independente."""
     why: list[str] = []
-    for mode in ("off", "on"):
-        rows = pair[mode]["llm_attempts"]
+    for i, smp in enumerate(arm["samples"], 1):
+        rows = smp["llm_attempts"]
+        where = f"braco {mode} amostra {i}"
+        if not rows:
+            why.append(f"{where}: nenhuma tentativa de LLM registrada")
+            continue
         if any(r["fell_back"] for r in rows):
-            why.append(f"braco {mode}: narracao de candidato reserva (fell_back)")
+            why.append(f"{where}: candidato reserva (fell_back)")
         if any(r["attempt_index"] > 0 for r in rows):
-            why.append(f"braco {mode}: tentativa com attempt_index > 0")
-    off, on = _provider_set(pair["off"]), _provider_set(pair["on"])
-    if off != on or len(off) > 1:
-        why.append(f"provedor/modelo diferem: off={sorted(off)} on={sorted(on)}")
+            why.append(f"{where}: tentativa com attempt_index > 0")
+        bad = sorted({r["outcome"] for r in rows if r["outcome"] != "success"})
+        if bad:
+            why.append(f"{where}: outcome {', '.join(bad)} (texto pode ser o fallback do nó)")
+    return why
+
+
+def judge_comparable(pair: dict) -> tuple[bool, str]:
+    """Par so serve se TODA amostra veio de uma tentativa `success` do primeiro candidato e os
+    bracos usam o mesmo provedor e o mesmo modelo."""
+    why = _judge_arm("off", pair["off"]) + _judge_arm("on", pair["on"])
+    rows = {m: pair[m]["llm_attempts"] for m in ("off", "on")}
+    for field in ("provider", "model"):
+        sets = {m: {r[field] for r in rows[m]} for m in rows}
+        if sets["off"] != sets["on"] or len(sets["off"]) > 1:
+            why.append(f"{field} difere/varia: off={sorted(sets['off'])} on={sorted(sets['on'])}")
     return (not why), "; ".join(why)
 
 
@@ -478,8 +516,9 @@ def _arm_stats(counts: list[dict], size_class: str) -> dict:
 def summarize(pairs: list[dict]) -> dict:
     """Por classe e braco: mediana de caracteres, fracao com opcoes, fracao na faixa-alvo."""
     classes: dict[str, dict] = {}
-    for cls in dict.fromkeys(p["expected_class"] for p in pairs):
-        mine = [p for p in pairs if p["expected_class"] == cls]
+    valid = [p for p in pairs if p["comparavel"]]  # texto de fallback nunca entra na mediana
+    for cls in dict.fromkeys(p["expected_class"] for p in valid):
+        mine = [p for p in valid if p["expected_class"] == cls]
         entry: dict[str, Any] = {"control": all(p["id"].startswith("controle-") for p in mine)}
         for mode in ("off", "on"):
             entry[mode] = _arm_stats([x for p in mine for x in p[mode]["samples"]], cls)
@@ -490,7 +529,8 @@ def summarize(pairs: list[dict]) -> dict:
     providers = {
         mode: sorted({x for p in pairs for x in _provider_set(p[mode])}) for mode in ("off", "on")
     }
-    return {"classes": classes, "providers": providers}
+    excluded = [p["id"] for p in pairs if not p["comparavel"]]
+    return {"classes": classes, "providers": providers, "excluded_pairs": excluded}
 
 
 def _pct(v: float | None) -> str:
@@ -503,6 +543,10 @@ def _render_summary(result: dict) -> list[str]:
     for mode in ("off", "on"):
         prov = ", ".join(summ["providers"][mode]) or "(sem tentativas registradas)"
         out.append(f"- LLM do braço `{mode}`: {prov}")
+    if summ.get("excluded_pairs"):
+        out.append(
+            f"- Pares NÃO comparáveis, fora das medianas: {', '.join(summ['excluded_pairs'])}"
+        )
     out.append("")
     out.append("| classe | braço | n | mediana de caracteres | com opções | na faixa-alvo |")
     out.append("|---|---|---|---|---|---|")

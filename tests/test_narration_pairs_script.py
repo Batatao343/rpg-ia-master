@@ -227,12 +227,16 @@ def test_run_restores_global_random_state():
 
 
 # ----------------------------------------------------------------- tentativas de LLM, teto, resumo
-def _scripted(plan, texts=None):
+def _scripted(plan):
     """Narrador roteirizado: emite um `LLMAttemptEvent` por chamada pelo hook global do projeto.
 
-    `plan(i)` -> (provider, model, fell_back); `texts(i)` -> texto (default: o do `_FakeNarrator`).
+    `plan(i)` -> (provider, model, fell_back[, outcome[, attempt_index]]) ou None (sem tentativa).
+    Com outcome diferente de `success` devolve um `AIMessage` (como o `FallbackLLM` esgotado).
     """
+    from langchain_core.messages import AIMessage
+
     import llm_setup
+    from agents.storyteller import StoryUpdate
 
     class _S(np_._FakeNarrator):
         n = 0
@@ -240,25 +244,28 @@ def _scripted(plan, texts=None):
         def invoke(self, *a, **k):
             i = _S.n
             _S.n += 1
-            prov, model, fell = plan(i)
+            step = plan(i)
+            if step is None:
+                return StoryUpdate(narrative=self.TEXT)
+            prov, model, fell, *rest = step
+            outcome = rest[0] if rest else "success"
+            index = rest[1] if len(rest) > 1 else (1 if fell else 0)
             llm_setup._emit_attempt_telemetry(
                 llm_setup.LLMAttemptEvent(
                     provider=prov,
                     model=model,
                     tier=llm_setup.ModelTier.SMART,
-                    attempt_index=1 if fell else 0,
+                    attempt_index=index,
                     latency_ms=1,
                     fell_back=fell,
-                    outcome="success",
+                    outcome=outcome,
                     error=None,
                     structured=True,
                 )
             )
-            if texts is None:
-                return super().invoke(*a, **k)
-            from agents.storyteller import StoryUpdate
-
-            return StoryUpdate(narrative=texts(i))
+            if outcome != "success":
+                return AIMessage(content="erro do provedor")
+            return StoryUpdate(narrative=self.TEXT)
 
     return _S()
 
@@ -283,25 +290,78 @@ def test_llm_attempts_recorded_per_arm():
     }
 
 
-@pytest.mark.parametrize("kind", ["fell_back", "providers_differ"])
-def test_non_comparable_pair_marked_warned_and_rc_nonzero(tmp_path, monkeypatch, kind):
-    def plan(i):
-        if kind == "fell_back":
-            return ("deepseek", "deepseek-chat", i == 1)  # so a 2a chamada (braco `on` do caso 1)
-        return ("deepseek", "deepseek-chat", False) if i % 2 == 0 else ("groq", "llama", False)
+def _trigger(kind):
+    """Plano que liga SO o gatilho `kind` (a 2a chamada e o braco `on` do caso 1)."""
+    base = ("deepseek", "deepseek-chat", False)
+    return {
+        "fell_back": lambda i: (
+            ("deepseek", "deepseek-chat", True, "success", 0) if i == 1 else base
+        ),
+        "attempt_index": lambda i: (
+            ("deepseek", "deepseek-chat", False, "success", 1) if i == 1 else base
+        ),
+        "provider": lambda i: ("groq", "deepseek-chat", False) if i == 1 else base,
+        "model": lambda i: ("deepseek", "outro-modelo", False) if i == 1 else base,
+        "invoke_error": lambda i: (*base, "invoke_error") if i == 1 else base,
+        "invalid_structured": lambda i: (*base, "invalid_structured") if i == 1 else base,
+        "no_attempt": lambda i: None if i == 1 else base,
+    }[kind]
 
+
+@pytest.mark.parametrize(
+    "kind",
+    [
+        "fell_back",
+        "attempt_index",
+        "provider",
+        "model",
+        "invoke_error",
+        "invalid_structured",
+        "no_attempt",
+    ],
+)
+def test_non_comparable_pair_marked_warned_and_rc_nonzero(tmp_path, monkeypatch, kind):
     cases = tmp_path / "c.json"
     cases.write_text(json.dumps(_cases()[:2]), encoding="utf-8")
     out = tmp_path / "pares"
-    argv = ["--cases", str(cases), "--out", str(out), "--mock"]
-    monkeypatch.setattr(np_, "_resolve_llm", lambda _m: _scripted(plan))
-    rc = np_.main(argv)
+    monkeypatch.setattr(np_, "_resolve_llm", lambda _m: _scripted(_trigger(kind)))
+    rc = np_.main(["--cases", str(cases), "--out", str(out), "--mock"])
     assert rc != 0
     data = json.loads(out.with_suffix(".json").read_text(encoding="utf-8"))
-    assert data["pairs"][0]["comparavel"] is False and data["pairs"][0]["motivo"]
+    assert [p["comparavel"] for p in data["pairs"]] == [False, True]
+    assert data["pairs"][0]["motivo"]
+    if kind in ("invoke_error", "invalid_structured"):
+        assert f"braco on amostra 1: outcome {kind}" in data["pairs"][0]["motivo"]
+    if kind == "no_attempt":
+        assert "braco on amostra 1: nenhuma tentativa" in data["pairs"][0]["motivo"]
     md = out.with_suffix(".md").read_text(encoding="utf-8")
     assert md.index("NÃO comparável") < md.index("## cena-1")
-    assert "text" not in json.dumps(data["pairs"][0]["off"]["llm_attempts"])
+    # o par invalido nao entra nas medianas; o valido (cena-2) sim
+    summ = data["summary"]
+    assert summ["excluded_pairs"] == ["cena-1"]
+    assert summ["classes"]["cena"]["on"]["n"] == 1
+
+
+def test_fallback_text_never_counts_in_summary(tmp_path, monkeypatch):
+    """invoke_error + AIMessage: o no usa o texto deterministico; ele nao entra em mediana alguma."""
+    cases = tmp_path / "c.json"
+    cases.write_text(json.dumps(_cases()[:1]), encoding="utf-8")
+    out = tmp_path / "pares"
+    plan = lambda i: ("deepseek", "deepseek-chat", False, "invoke_error")  # noqa: E731
+    monkeypatch.setattr(np_, "_resolve_llm", lambda _m: _scripted(plan))
+    assert np_.main(["--cases", str(cases), "--out", str(out), "--mock"]) == 3
+    data = json.loads(out.with_suffix(".json").read_text(encoding="utf-8"))
+    assert data["summary"]["classes"] == {} and data["summary"]["excluded_pairs"] == ["cena-1"]
+
+
+def test_budget_line_printed_before_any_call(tmp_path, monkeypatch, capsys):
+    def boom_if_early(*_a, **_k):
+        assert "chamadas de LLM previstas: 20 (teto 30)" in capsys.readouterr().err
+        return np_._FakeNarrator()
+
+    monkeypatch.setattr(np_, "_resolve_llm", boom_if_early)
+    out = tmp_path / "x"
+    assert np_.main(["--cases", str(CASES), "--out", str(out), "--mock"]) == 0
 
 
 def test_attempt_hook_restored_on_exit_and_on_error(monkeypatch):
@@ -373,9 +433,9 @@ def test_summary_hand_checked():
         return {"samples": smp, "llm_attempts": []}
 
     pairs = [
-        {"id": "cena-1", "expected_class": "cena", "off": arm("cena-1", "off"),
+        {"id": "cena-1", "comparavel": True, "expected_class": "cena", "off": arm("cena-1", "off"),
          "on": arm("cena-1", "on", opts=True)},
-        {"id": "cena-2", "expected_class": "cena", "off": arm("cena-2", "off"),
+        {"id": "cena-2", "comparavel": True, "expected_class": "cena", "off": arm("cena-2", "off"),
          "on": arm("cena-2", "on")},
     ]  # fmt: skip
     cls = np_.summarize(pairs)["classes"]["cena"]
