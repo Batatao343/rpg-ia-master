@@ -113,6 +113,9 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       await expect(pendingBtn(page)).toHaveText("Agir");
       expect(await sseReqs(page)).toHaveLength(2);
       expect(posts(backend)).toHaveLength(0);
+      await expect(composer(page)).toHaveValue("");
+      await expect(chip(page)).toHaveCount(0);
+      await expect(echoes(page, "olho o céu")).toHaveCount(1);
     });
 
     test("fila desligada: Enter ignorado como hoje", async ({ page, backend }) => {
@@ -195,6 +198,24 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
         expect(await sseReqs(page)).toHaveLength(1);
         expect(posts(backend)).toHaveLength(0);
         await expect(echoes(page, QUEUED)).toHaveCount(0);
+      });
+    }
+
+    for (const value of ["true", 1, "on", "1"] as const) {
+      test(`fila: action_queue=${JSON.stringify(value)} no /auth/config não liga (só o booleano true)`, async ({ page, backend }) => {
+        backend.actionQueue = value;
+        await installControlledSse(page);
+        await openGame(page);
+        await toNarrated(page);
+        await expect(pendingBtn(page)).toBeDisabled();
+        await expect(pendingBtn(page)).toHaveText("Aguardando o narrador");
+        await composer(page).fill(QUEUED);
+        await composer(page).press("Enter");
+        await expect(chip(page)).toHaveCount(0);
+        await expect(composer(page)).toHaveValue(QUEUED);
+        await closeTurn(page);
+        await expect(pendingBtn(page)).toBeEnabled();
+        expect(await sseReqs(page)).toHaveLength(1);
       });
     }
 
