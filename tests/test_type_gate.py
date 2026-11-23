@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import subprocess
 import sys
 import tomllib
@@ -236,6 +237,88 @@ def test_self_contained_fallback_pattern_is_rejected(tmp_path: Path) -> None:
     assert out.returncode == 1, out.stdout + out.stderr
     assert "reportAttributeAccessIssue" in out.stdout
     assert "AIMessage" in out.stdout
+
+
+LLM_PARAM = """\
+from pydantic import BaseModel
+
+from services.llm_protocol import LLMClient
+
+
+class Cena(BaseModel):
+    titulo: str
+
+
+def f(llm: LLMClient) -> str:
+    return llm.with_structured_output(Cena).invoke("x").titulo
+"""
+
+LLM_PARAM_GUARDED = LLM_PARAM.replace(
+    '    return llm.with_structured_output(Cena).invoke("x").titulo',
+    '    r = llm.with_structured_output(Cena).invoke("x")\n'
+    "    return r.titulo if isinstance(r, Cena) else ''",
+)
+
+LLM_PARAM_UNTYPED = LLM_PARAM.replace("llm: LLMClient", "llm").replace(
+    "from services.llm_protocol import LLMClient\n\n", ""
+)
+
+REAL_CLIENTS = """\
+from llm_setup import FallbackLLM, ModelTier, get_llm
+from mock_llm import MockLLM
+from services.llm_protocol import LLMClient
+
+a: LLMClient = get_llm(0.1, ModelTier.FAST)
+b: LLMClient = MockLLM()
+c: LLMClient = FallbackLLM("x")
+"""
+
+
+@pytest.mark.types_e2e
+def test_llm_param_unguarded_is_rejected(tmp_path: Path) -> None:
+    out = _gate_files(tmp_path, LLM_PARAM)
+    assert out.returncode == 1, out.stdout + out.stderr
+    lines = [ln for ln in out.stdout.splitlines() if "reportAttributeAccessIssue" in ln]
+    assert any(":11 " in ln for ln in lines), out.stdout
+
+
+@pytest.mark.types_e2e
+def test_llm_param_guarded_passes(tmp_path: Path) -> None:
+    out = _gate_files(tmp_path, LLM_PARAM_GUARDED)
+    assert out.returncode == 0, out.stdout + out.stderr
+
+
+@pytest.mark.types_e2e
+def test_untyped_llm_param_is_blind(tmp_path: Path) -> None:
+    """Controle: `llm` sem tipo vira Unknown e o gate nao enxerga o guard (o ponto cego de R3)."""
+    out = _gate_files(tmp_path, LLM_PARAM_UNTYPED)
+    assert out.returncode == 0, out.stdout + out.stderr
+
+
+@pytest.mark.types_e2e
+def test_real_clients_satisfy_protocol(tmp_path: Path) -> None:
+    out = _gate_files(tmp_path, REAL_CLIENTS)
+    assert out.returncode == 0, out.stdout + out.stderr
+
+
+def test_checker_cmd_pins_interpreter(tmp_path: Path) -> None:
+    for baseline in (None, tmp_path / "b.json"):
+        cmd = tg.checker_cmd(["x.py"], baseline, "/venv/python")
+        i = cmd.index("--pythonpath")
+        assert cmd[i + 1] == "/venv/python"
+        assert cmd[-1] == "x.py"
+        assert ("--writebaseline" in cmd) == (baseline is not None)
+
+
+def test_llm_protocol_has_only_typing_imports() -> None:
+    tree = ast.parse((ROOT / "services" / "llm_protocol.py").read_text(encoding="utf-8"))
+    mods = {
+        n.module if isinstance(n, ast.ImportFrom) else a.name
+        for n in ast.walk(tree)
+        if isinstance(n, ast.Import | ast.ImportFrom)
+        for a in (n.names if isinstance(n, ast.Import) else [n])
+    }
+    assert mods <= {"typing", "__future__"}, mods
 
 
 @pytest.mark.types_e2e

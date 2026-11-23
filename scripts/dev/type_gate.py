@@ -86,13 +86,20 @@ def _rel(path: str, repo: Path) -> str:
         return p.as_posix()
 
 
-def run_checker(paths: list[str] | None, baseline: Path | None, repo: Path = ROOT) -> list[Diag]:
-    """Unico ponto que chama o subprocesso. Com `baseline`: `--writebaseline` nessa copia."""
-    cmd = [sys.executable, "-m", "basedpyright", "--outputjson"]
+def checker_cmd(
+    paths: list[str] | None, baseline: Path | None, python: str = sys.executable
+) -> list[str]:
+    """SPEC-426 R7: fixa o interpretador; sem isso um .venv velho no worktree vence."""
+    cmd = [python, "-m", "basedpyright", "--outputjson", "--pythonpath", python]
     if baseline is not None:
         cmd += ["--writebaseline", "--baselinefile", str(baseline)]
+    return [*cmd, *(paths or [])]
+
+
+def run_checker(paths: list[str] | None, baseline: Path | None, repo: Path = ROOT) -> list[Diag]:
+    """Unico ponto que chama o subprocesso. Com `baseline`: `--writebaseline` nessa copia."""
     out = subprocess.run(
-        [*cmd, *(paths or [])],
+        checker_cmd(paths, baseline),
         cwd=repo,
         capture_output=True,
         text=True,

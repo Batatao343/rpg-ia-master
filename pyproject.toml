@@ -172,6 +172,7 @@ include = [
     "services/daily_spend_cap.py",
     "services/prologue.py",
     "services/shared_pool.py",
+    "services/llm_protocol.py",
 ]
 pythonVersion = "3.13"
 pythonPlatform = "Linux"
