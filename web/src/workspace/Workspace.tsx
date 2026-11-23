@@ -113,6 +113,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   if (contextVisible && !visited.has(state.tab)) setVisited(new Set(visited).add(state.tab));
 
   // O compositor fica display:none fora da superfície do chat (celular): o foco só vale depois do commit.
+  const [queueNote, setQueueNote] = useState<string | null>(null); // nota de devolução da fila (SPEC-427 R10)
   const wantComposer = useRef(false);
   const focusComposer = () => {
     dispatch(single ? { type: "close_context", single } : { type: "set_mode", mode: "chat" });
@@ -313,6 +314,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             {props.headActions}
           </div>
           {props.banner}
+          {surface !== "chat" && queueNote && <p className="composer-hint ws-mhead__note" aria-hidden="true">{queueNote}</p>}
         </>
       ) : (
       <div className="ws-bar" role="group" aria-label="Estado e navegação do painel">
@@ -361,7 +363,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} artPanel={props.artPanel}
             lastNarration={lastNarration} onShowChat={showChat} />
         </div>
-        <Composer ref={composerRef} owner={owner} data={data} busy={busy} blocked={blocked} deckLocked={!!data?.combat?.active && !!data?.combat?.pilhas} onFocusCombat={() => openTab("combate")}
+        <Composer ref={composerRef} owner={owner} data={data} busy={busy} blocked={blocked} deckLocked={!!data?.combat?.active && !!data?.combat?.pilhas} onFocusCombat={() => openTab("combate")} onQueueNote={setQueueNote}
           reactionCardId={reactionCardId} onAction={onAction} offSurface={mobile && surface !== "chat"}
           turn={turn} onRetry={onRetryTurn} />
       </div>

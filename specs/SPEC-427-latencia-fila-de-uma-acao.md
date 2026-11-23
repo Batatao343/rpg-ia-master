@@ -52,6 +52,7 @@ A fila **não** é a alternativa rejeitada. Nada vai ao servidor antes do `state
   - `submit` (`App.tsx:478`) e `resetTurn` (`App.tsx:73`, usado em `retryTurnInner`, `discardPending` e `useSaves`) zeram `delivered` (já zeram, por partir de `IDLE_TURN`).
   - A fila só envia com o sinal positivo. Qualquer fechamento sem ele devolve o texto ao rascunho (R10). Assim não é preciso enumerar cada caminho de falha para estar correto; a lista de R10 é a cobertura de teste.
 - **R10 — devolução ao rascunho.** Nos casos abaixo a fila **não** envia: o texto volta ao campo (R10.1), aparece uma nota visível curta abaixo do campo (`.composer-hint`, `aria-hidden`; some no próximo submit ou na próxima edição do campo) e a região viva única anuncia "A ação na fila não foi enviada: <motivo>. O texto voltou ao campo." Cada linha vira um teste (§4 Etapa 3).
+  - **Celular (painel único):** o compositor sai da tela fora do chat (`.is-offsurface`, `display: none`) e, quando o combate começa, o painel ativo passa a ser Combate; a nota então também é exibida no cabeçalho do painel ativo (`Workspace` `.ws-mhead__note`, `aria-hidden`, mesmo texto), alimentada por `Composer onQueueNote`. No caso a com o Baralho (`deckLocked`) o campo nem é renderizado: o texto devolvido fica no estado do compositor e reaparece no campo quando o combate acaba. Com a flag `off` a nota não existe. E2e: `devolve a com o Baralho` nos dois viewports.
 
   | # | Caso | Como o cliente detecta | Motivo na nota |
   |---|---|---|---|

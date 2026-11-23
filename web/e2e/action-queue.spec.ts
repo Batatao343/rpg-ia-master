@@ -590,7 +590,11 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       armDeck(backend); // combate com `pilhas` (o Baralho `on` do staging)
       await closeTurn(page);
       await expect(chip(page)).toHaveCount(0);
-      await expect(page.locator(".composer-locked")).toBeVisible();
+      // desktop: a nota mora no compositor travado; celular: o compositor sai da tela com o painel de Combate,
+      // então a nota sobe para o cabeçalho do painel ativo (espera pelo estado: a nota visível).
+      if (width < 600) await expect(page.locator(".ws-mhead__note")).toContainText("começou um combate");
+      else await expect(page.locator(".composer-locked")).toBeVisible();
+      await expect(page.locator(".ws-mhead__note, .composer-locked + .composer-hint").first()).toBeVisible();
       await expect(hint(page)).toContainText("começou um combate");
       await expect(live(page)).toContainText("A ação na fila não foi enviada: começou um combate");
       expect(await sseReqs(page)).toHaveLength(1);

@@ -534,3 +534,4 @@ details.scene-strip { display: block; }
 .deck-card-wrap { display: grid; gap: 0.3rem; align-content: start; }
 .deck-card__discard[aria-disabled="true"] { color: var(--muted); cursor: not-allowed; }
 .aimbar__discard { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+.ws-mhead__note { padding: 0.35rem 0.9rem; }

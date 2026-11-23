@@ -142,9 +142,11 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
   onRetry?: () => void;
   /** SPEC-347 R18: com o tabuleiro do Baralho aberto não há texto livre (o rascunho guardado volta depois). */
   deckLocked?: boolean;
+  /** SPEC-427 R10: no celular o compositor sai da tela fora do chat; a nota de devolução sobe para o painel visível. */
+  onQueueNote?: (note: string | null) => void;
   /** SPEC-347 R18.3: com o tabuleiro aberto, o atalho de foco do composer leva ao painel de Combate. */
   onFocusCombat?: () => void;
-}>(function Composer({ data, owner, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry, deckLocked = false, onFocusCombat }, inputRef) {
+}>(function Composer({ data, owner, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry, deckLocked = false, onFocusCombat, onQueueNote }, inputRef) {
   const gameId = data?.game_id;
   const formRef = useRef<HTMLFormElement>(null);
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -162,6 +164,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
   const base = queueBase(data, turn, busy, blocked, deckLocked);
   const queue = useQueuedAction({ base, owner, onAction, reactionCardId, setInput, focusInput: () => areaRef.current?.focus() });
   const queueBtn = queueButtonActive(base);
+  useEffect(() => { onQueueNote?.(queue.note); }, [queue.note, onQueueNote]);
   const voice = useVoiceInput(text => setInput(current => current ? `${current}${/\s$/.test(current) ? "" : " "}${text}` : text), gameId);
   const voiceActive = voice.requesting || ["recording", "uploading", "transcribing"].includes(voice.phase);
   // R5: trocar de superficie com a voz ativa libera o microfone e nao envia nada.
