@@ -359,6 +359,7 @@ def run(cases: list[dict], llm: Any, samples: int = 1) -> dict:
     plog.setLevel(logging.DEBUG)
     pairs: list[dict] = []
     old_size = os.environ.get("RPG_NARRATION_SIZE")
+    old_random = random.getstate()  # `_run_one` faz random.seed(1) no global
     try:
         for case in cases:
             row: dict[str, Any] = {"id": case["id"], "expected_class": case["expected_class"]}
@@ -376,6 +377,7 @@ def run(cases: list[dict], llm: Any, samples: int = 1) -> dict:
     finally:
         plog.removeHandler(handler)
         plog.setLevel(old_level)
+        random.setstate(old_random)
         if old_size is None:
             os.environ.pop("RPG_NARRATION_SIZE", None)
         else:

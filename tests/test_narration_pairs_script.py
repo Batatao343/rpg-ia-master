@@ -211,3 +211,13 @@ def test_run_restores_env_and_world_pulse(monkeypatch):
 
     assert os.environ["RPG_NARRATION_SIZE"] == "orig"
     assert st._story_world_pulse is pulse and st.check_encounter is enc
+
+
+def test_run_restores_global_random_state():
+    import random
+
+    random.seed(12345)
+    control = random.Random()
+    control.setstate(random.getstate())
+    np_.run(_cases()[:1], np_._FakeNarrator())
+    assert [random.random() for _ in range(3)] == [control.random() for _ in range(3)]
