@@ -23,7 +23,20 @@ from psycopg.types.json import Jsonb
 
 from scripts.staging import s192
 
-PROFILE = "local-1024"
+LOCAL_PROFILE = "local-1024"
+
+
+def active_profile(conn) -> str:
+    """Profile que o worker do staging usa em ``set_embedding`` (exige o mesmo id no documento).
+
+    Desde 17/10 o staging embute com provider real; ``local-1024`` fixo deixava o job em
+    ``exc:Conflict`` (documento/hash/profile divergente) e o cenário A nunca chegava a ``succeeded``.
+    """
+    row = conn.execute(
+        """select id from app.embedding_profiles where status='active'
+           order by (provider = 'local'), activated_at desc limit 1"""
+    ).fetchone()
+    return row["id"] if row else LOCAL_PROFILE
 
 
 def make_owner(env) -> dict:
@@ -85,13 +98,14 @@ def purge_owner(env, owner: dict) -> dict:
 
 def make_job(conn, owner: dict, text: str | None = None) -> dict:
     doc_id = f"spec192-{uuid4().hex}"
+    profile = active_profile(conn)
     text = text or f"Registro sintetico de teste {doc_id}."
     digest = hashlib.sha256(text.encode()).hexdigest()
     conn.execute(
         """insert into app.memory_documents(id,owner_id,game_id,scope,content,content_sha256,metadata,
                     canonical_entity_ids,visibility,timeline_epoch,embedding_profile_id)
                     values (%s,%s,%s,'session',%s,%s,'{}'::jsonb,'{}','public',0,%s)""",
-        (doc_id, owner["uid"], owner["game_id"], text, digest, PROFILE),
+        (doc_id, owner["uid"], owner["game_id"], text, digest, profile),
     )
     job_id = conn.execute(
         """insert into app.jobs(id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
@@ -104,7 +118,7 @@ def make_job(conn, owner: dict, text: str | None = None) -> dict:
                 {
                     "memory_id": doc_id,
                     "content_sha256": digest,
-                    "profile_id": PROFILE,
+                    "profile_id": profile,
                     "timeline_epoch": 0,
                 }
             ),
