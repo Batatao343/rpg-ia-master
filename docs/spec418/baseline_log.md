@@ -3,3 +3,4 @@
 Uma linha por `type_gate.py --update`: `AAAA-MM-DD · +N entradas · motivo`.
 
 2026-11-12 · +66 entradas · baseline inicial SPEC-418
+2026-11-23 · +181 entradas · SPEC-426 escopo agents + services LLM

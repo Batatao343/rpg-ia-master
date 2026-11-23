@@ -178,6 +178,15 @@ def test_basedpyright_config_matches_spec() -> None:
     cfg = data["tool"]["basedpyright"]
     assert "persistence.py" in cfg["include"] and "state.py" in cfg["include"]
     assert "infrastructure" in cfg["include"]
+    # SPEC-426 R5/R9: agents com LLM estruturado e os pontos cegos de services, por caminho explícito
+    for path in (
+        "services/llm_protocol.py", "character_creator.py", "agents/combat.py", "agents/npc.py",
+        "agents/router.py", "agents/storyteller.py", "services/death_flow.py",
+        "services/encounter_preparation.py", "services/narrative_sink.py",
+        "services/tactical_profile.py",
+    ):  # fmt: skip
+        assert path in cfg["include"], path
+    assert "agents" not in cfg["include"]  # nunca o diretório inteiro (RAM)
     assert cfg["pythonPlatform"] == "Linux"
     assert cfg["pythonVersion"] == "3.13"
     assert cfg["typeCheckingMode"] == "standard"

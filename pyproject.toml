@@ -162,17 +162,34 @@ precision = 1
 # SPEC-418: gate de tipos estreito; legado congelado em .basedpyright/baseline.json.
 # Escopo cortado por E0.7.3 (pico de RAM > 2 GB no escopo cheio; ver docs/spec418/medicao.md):
 # infrastructure/state/persistence + os arquivos de services/ que importam llm_setup.
+# SPEC-426 (degrau 2): + character_creator.py, os 10 arquivos de agents/ com LLM estruturado e os
+# 4 pontos cegos de services/ (pico 1,1 GB, quente 34,5 s; docs/spec426/medicao.md). Caminhos explícitos.
 include = [
     "infrastructure",
     "state.py",
     "state_archive.py",
     "persistence.py",
+    "character_creator.py",
+    "agents/archivist.py",
+    "agents/bestiary.py",
+    "agents/campaign_manager.py",
+    "agents/combat.py",
+    "agents/librarian.py",
+    "agents/loot.py",
+    "agents/npc.py",
+    "agents/router.py",
+    "agents/storyteller.py",
+    "agents/world_simulator.py",
     "services/chronicle_compression.py",
     "services/creature_gen.py",
     "services/daily_spend_cap.py",
+    "services/death_flow.py",
+    "services/encounter_preparation.py",
+    "services/llm_protocol.py",
+    "services/narrative_sink.py",
     "services/prologue.py",
     "services/shared_pool.py",
-    "services/llm_protocol.py",
+    "services/tactical_profile.py",
 ]
 pythonVersion = "3.13"
 pythonPlatform = "Linux"

@@ -93,14 +93,15 @@ A baseline fica em `docs/spec379/coverage-baseline.md`.
 
 ## Tipos (basedpyright, SPEC-418)
 
-- Escopo: `infrastructure/`, `state.py`, `persistence.py` e os `services/` que importam `llm_setup`
-  (`[tool.basedpyright].include`; medição em `docs/spec418/medicao.md`). Legado em `.basedpyright/baseline.json`.
-- `bash scripts/dev/py.sh scripts/dev/type_gate.py --check` (≈ 13 s, ≈ 1,8 GB: só com RAM livre ≥ 3 GB, nunca em
-  paralelo com pytest). Erro novo ou baseline folgada reprova; `--tighten` ao consertar legado (livre);
+- Escopo: `infrastructure/`, `state.py`, `persistence.py`, `character_creator.py`, os 10 `agents/` com LLM
+  estruturado e os `services/` que chamam LLM (`[tool.basedpyright].include`; medição em
+  `docs/spec418/medicao.md` e `docs/spec426/medicao.md`). Legado em `.basedpyright/baseline.json`.
+- `bash scripts/dev/py.sh scripts/dev/type_gate.py --check` (≈ 35 s quente e até minutos frio, pico ≈ 1,1 GB: só com RAM livre ≥ 3 GB,
+  nunca em paralelo com pytest). Erro novo ou baseline folgada reprova; `--tighten` ao consertar legado (livre);
   `--update --reason` sobe a baseline: só o coordenador. O `land_check` roda o check `types` só se o diff tocar
   `.py`/config e dá WARN se o venv não tiver basedpyright. Conflito de rebase na baseline: aceite a da `main` e rode `--tighten`.
-- Cego onde o parâmetro `llm` não tem tipo (`death_flow`, `encounter_preparation`, `narrative_sink`,
-  `tactical_profile`): o gate só vê o que flui de `get_llm`. `pytest -m types_e2e` roda o checador de verdade.
+- Parâmetro `llm` novo leva o tipo `LLMClient` (`services/llm_protocol.py`, SPEC-426): sem tipo o gate fica
+  cego. Ainda cego: `agents/storyteller.py` (`_StoryTurn.llm: Any`, `mediated_stream.narrate -> Any`). `pytest -m types_e2e` roda o checador de verdade.
 
 ## Frontend
 
