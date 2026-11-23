@@ -57,7 +57,21 @@ remoto** (migração, flag em `shadow`/`on` e smoke do staging são do coordenad
   passam no `audit-local` do CI (run 45069467628, Postgres com todas as migrações).
 - **Etapa 3 (`shadow`):** `RPG_RLS_STRICT_PRINCIPAL=shadow` entrou no preset (`45d569cb`) e no deploy `6a1f483b`
   de 22/11, ~21:33 UTC. Gates: `post_deploy_smoke`, `vercel_smoke` e `e2e_session` verdes.
-- **Etapas 4 e 5 (janela → `on`):** ver abaixo.
+- **Etapa 4 (janela `shadow`, deploy `6a1f483b`):** exercitados crons (96 respostas 200 em 65 min, `finops`
+  incluído), `e2e_session` (5 turnos), `voice_smoke`, cotação de imagem, `job_survival` cenário A (verde depois de
+  corrigir o smoke, que gravava o profile `local-1024`), `account_deletion_recovery` (exclusão interrompida
+  concluída pelo cron; o check `failure_alerting` do script ficou vermelho porque ele lê logs com o `VERCEL_TOKEN`
+  vencido) e ~35 turnos da sessão de latência. Logs da Vercel lidos em quatro fatias (22/11 21:11–21:56 e
+  21:41–22:22 UTC; 23/11 12:29–13:09 e 12:46–13:16 UTC): **0** `pool.checkout_without_principal` e **0**
+  `RlsScopeError`, com controle positivo (`rpg.cron` = 100 registros). O plano da Vercel guarda ~40 min de log, então
+  as ~14 h entre as fatias (máquina suspensa) não foram lidas. Não exercitado: turno que fecha capítulo
+  (`compress_chronicle`) e webhooks.
+- **Etapa 5 (`on`, deploy `6f10f34e`, 23/11 ~13:20 UTC):** `/health` com o sha; `post_deploy_smoke` e
+  `vercel_smoke` verdes (crons `jobs`, `account-deletions`, `operations` = 200); cron `finops` = 200; 15 min de
+  log com 0 `RlsScopeError`. **Pendente:** `e2e_session`, `job_survival` e `account_deletion_recovery` no `on`.
+  Os três criam jogo e o staging devolve 503 `daily_spend_cap` desde 23/11 13:2x UTC (gasto 5,08 de R$ 5,00: o
+  DeepSeek passou a responder 402 às 13:11 UTC e o fallback sem preço estourou o teto). Voltam a rodar quando o
+  teto zerar e o DeepSeek tiver saldo.
 
 ## Rollback
 

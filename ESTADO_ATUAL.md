@@ -8,10 +8,9 @@
 
 ## Estado em 10 linhas
 
-- **staging = `6a1f483b` (22/11)**: migrações 413 e 410 aplicadas (36/36), rate card `2026-11-13-v1` publicado, `RPG_RLS_STRICT_PRINCIPAL=shadow`. `post_deploy`, `vercel_smoke`, `e2e_session` e o smoke §6 da 409 verdes. Kill switch `image_generation` fica desligado lá.
-- **`VERCEL_TOKEN` do `.env.staging` perdeu o escopo do time em 14/11:** `vercel_env.py` dá 403. Em 22/11 as 46 variáveis não secretas foram pela CLI logada (`npx vercel@64.2.0 env add NOME production --force`); segredos intocados.
-- **Fechadas em 22/11:** 409, 411 (R5 aprovado no `eval-governance`), 424. **413** `in-progress` só por 2 critérios que não rodam nesta máquina (RPCs com JWT de usuário; `rollback.sql` num Postgres local). **410** `in-progress`: falta fechar a janela `shadow` e ligar `on` (`docs/spec410/README.md`).
-- `job_survival` no staging: verde depois de corrigir o smoke (gravava `local-1024`; o staging usa `jina-jina-embeddings-v3-1024` desde 17/10).
+- **staging = `6f10f34e` (23/11)**: migrações 413 e 410 aplicadas, rate card `2026-11-13-v1` publicado, `RPG_RLS_STRICT_PRINCIPAL=on`, `RPG_ARCHIVE_RECORD=shadow`. `post_deploy` e `vercel_smoke` verdes. **Turnos e novo jogo falham desde 23/11 13:11 UTC:** DeepSeek responde 402 e o fallback sem preço estourou o teto diário (503 `daily_spend_cap`). Kill switch `image_generation` fica desligado lá.
+- **`VERCEL_TOKEN` do `.env.staging` perdeu o escopo do time em 14/11:** `vercel_env.py` dá 403. Variáveis não secretas vão pela CLI logada (`npx vercel@64.2.0 env add NOME production --force`); segredos intocados desde 10/11.
+- **Fechadas em 22/11:** 409, 411 (R5 aprovado no `eval-governance`), 424. **413** `in-progress` só por 2 critérios que não rodam nesta máquina (RPCs com JWT de usuário; `rollback.sql` num Postgres local). **410** `in-progress`: `on` ligado; faltam `e2e_session`, `job_survival` e `account_deletion_recovery` no `on` (`docs/spec410/README.md`).
 - **Os rate cards vencem em 13/12; a `main` fica vermelha de propósito a partir de 03/12** (`test_rate_card_freshness`) até renovar: `docs/spec197/runbooks/budget.md` § Renovação. O card de imagem renovado ganha `extra_models` (425 R1/R3).
 - **425 (troca do modelo de imagem; `gpt-image-2` desliga em 10/02/2027):** Etapa 0 (suporte inerte ao 2.6 + script de medição com teto de US$ 2) na `main`. Etapas 1–3 esperam o dono (Bloqueios).
 - **426 (degrau 2 do gate de tipos):** `approved`, executor em curso; a ampliação do `include` e da baseline é commit do coordenador na `main` depois do pouso (R9). Job `types` do CI é bloqueante desde `54317a66`.
@@ -20,9 +19,9 @@
 
 ## Próximos 3 passos
 
-1. **Staging:** fechar a janela `shadow` da 410 (0 ocorrências de `pool.checkout_without_principal`; logs da Vercel só guardam ~40 min, ler em fatias) → deploy com `on` (leva `RPG_ARCHIVE_RECORD=shadow` da 422) → mesmos gates. Depois a sessão `fb` usa o staging para 419 §6 itens 2–3 e 423.
+1. **Staging, quando o DeepSeek tiver saldo e o teto diário zerar:** rodar `e2e_session`, `job_survival --skip-redeploy` e `account_deletion_recovery` no `on` e fechar a 410. Rollback: `shadow` + redeploy. A sessão `fb` usa o staging para 419 §6 itens 2–3 e 423.
 2. **Até 03/12:** renovar os 4 rate cards (reler as páginas; runbook `budget.md`), com `extra_models` no de imagem.
-3. **Follow-ups:** flake da 382: na suíte que falhou cada log chegou 2× ao root (só a parte `events` diverge); falta achar o teste que deixa o handler duplicado. Suíte no checkout principal chama o Jina de verdade (`.env` com `JINA_API_KEY` + `load_dotenv(override=True)` em `rag.py`): o golden de campanha sozinho falha ali e passa em worktree. `smoke_ab.py` não loga com Turnstile real (trocar o `grant_type=password` pelo caminho de `s192.app_login`). Guarda de relógio do R3 (409 P2-2). Antigos: middlewares `async` de `api.py`, SPEC-404, 383/384/392.
+3. **Follow-ups:** flake da 382: na suíte que falhou cada log chegou 2× ao root (só a parte `events` diverge); falta achar o teste que deixa o handler duplicado. Suíte no checkout principal chama o Jina de verdade (`.env` com `JINA_API_KEY` + `load_dotenv(override=True)` em `rag.py`): o golden de campanha sozinho falha ali e passa em worktree. `smoke_ab.py` não loga com Turnstile real (usar o caminho de `s192.app_login`). Guarda de relógio do R3 (409 P2-2).
 
 ## Bloqueios no dono
 
@@ -30,6 +29,7 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 
 | Item | Ação do dono | Quando ele disser… |
 |---|---|---|
+| **DeepSeek** | recarregar o saldo da conta (402 desde 23/11) | "recarreguei" → smokes de turno, fechar 410 e 419–422 |
 | **`VERCEL_TOKEN`** | criar token novo na Vercel com acesso ao time e colar no `.env.staging` | "troquei" → `vercel_env.py` volta a valer (hoje só CLI logada) |
 | **SPEC-425 Etapas 1–3** | D8: liberar até US$ 2,00 com a `OPENAI_API_KEY` (e a Organization Verification, se a OpenAI pedir); depois D1: escolher Sunburst ou Flare pela ficha de contato; D3 só se o teto passar de US$ 0,12 | "pode medir" → `scripts/art/measure_image_model.py --confirm-spend`, `escolha.md`, Etapa 2 |
 | Supabase Auth | ligar proteção contra senha vazada no painel | — |
