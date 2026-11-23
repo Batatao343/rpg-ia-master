@@ -19,6 +19,7 @@ Regras:
 - Espera em teste (`while not evento: await sleep`) sempre com teto (`asyncio.timeout`): regressão não pode pendurar a suíte (SPEC-412 rodada 2 P3)
 - Duplo cancelamento e exceção do thread durante a espera: um teste cada (SPEC-412 rodada 2 P3)
 - Exceção do thread engolida no cancelamento: `logger.warning`, nunca silêncio (SPEC-412 rodada 2 P3)
+- Envio automático do cliente (efeito React) contra envio manual no mesmo commit: o guarda `busy` do closure não basta; e2e com `MutationObserver` + `requestSubmit` no commit do `state` e trava síncrona (ref) no `handleAction` (SPEC-427 P1-1, `web/src/App.tsx:473`)
 
 ## sql-rls
 
