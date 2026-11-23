@@ -1,6 +1,6 @@
 # SPEC-426 — workspace-gate-de-tipos-degrau-2
 
-> **Status:** `in-progress` (23/11: branch pousado — protocolo, anotações, interpretador fixo; revisão `terra` APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-426-terra-review.md`; suíte completa 11898 passed, 2 deles na reexecução serial depois de 2 workers mortos por RAM. Falta o commit de R9 do coordenador na `main`. Aprovada em 22/11 por delegação do dono)
+> **Status:** `done` (23/11: branch pousado, revisão `terra` APPROVED_WITH_FOLLOWUPS em `handoffs/SPEC-426-terra-review.md`, suíte completa 11898 passed (2 na reexecução serial depois de 2 workers mortos por RAM); R9 aplicado pelo coordenador na `main`: `include` de 10 para 26 entradas, sem corte, baseline de 66 para 247 entradas (58,5 KB); job `types` do CI verde em 38 s no `e2e9e254`. Aprovada em 22/11 por delegação do dono)
 > **Criada:** 2026-11-22 · **Atualizada:** 2026-11-22
 > **Depende de:** SPEC-418 (`done`; gate bloqueante desde 22/11, `docs/spec418/medicao.md:81`).
 > **Desbloqueia:** degraus 4-5 da SPEC-418 (`routes/` + `api.py`, `reportUnnecessaryTypeIgnoreComment`); follow-up do `storyteller` (§2 Fora de escopo).
@@ -113,15 +113,15 @@ Commit de R9 na `main` (checador sozinho, RAM ≥ 3 GB), `type_gate.py --check` 
 
 ## 5. Critérios de aceite
 
-- [ ] `docs/spec426/medicao.md` com E0.1-E0.6 e nenhum marcador de medição pendente na spec.
-- [ ] `services/llm_protocol.py` só com `typing`; `get_llm()`, `MockLLM`, `FallbackLLM` aceitos como `LLMClient`.
-- [ ] 8 parâmetros `llm` anotados (R3), retorno `object` em `narrate_structured`; oráculo I1 igual.
-- [ ] `type_gate.py` com interpretador fixo; `test_checker_cmd_pins_interpreter` verde.
-- [ ] Branch: baseline sem entrada nova, `--land` → `OK types:`; R4 classificado, follow-ups listados.
-- [ ] Commit de R9 na `main` com linha no `baseline_log.md`; `--check` rc 0; job `types` verde ≤ 5 min.
-- [ ] `tests/test_type_gate.py` verde (default e `-m types_e2e`); `tests/test_size_budget.py` verde.
-- [ ] `uv run pytest` verde (suíte completa, coordenador no pouso).
-- [ ] Nenhum `with_structured_output` novo (o guard de FallbackLLM não se aplica); saves intocados.
+- [x] `docs/spec426/medicao.md` com E0.1-E0.6 e nenhum marcador de medição pendente na spec.
+- [x] `services/llm_protocol.py` só com `typing`; `get_llm()`, `MockLLM`, `FallbackLLM` aceitos como `LLMClient`.
+- [x] 8 parâmetros `llm` anotados (R3), retorno `object` em `narrate_structured`; oráculo I1 igual.
+- [x] `type_gate.py` com interpretador fixo; `test_checker_cmd_pins_interpreter` verde.
+- [x] Branch: baseline sem entrada nova, `--land` → `OK types:`; R4 classificado, follow-ups listados.
+- [x] Commit de R9 na `main` com linha no `baseline_log.md`; `--check` rc 0; job `types` verde ≤ 5 min.
+- [x] `tests/test_type_gate.py` verde (default e `-m types_e2e`); `tests/test_size_budget.py` verde.
+- [x] `uv run pytest` verde (suíte completa, coordenador no pouso).
+- [x] Nenhum `with_structured_output` novo (o guard de FallbackLLM não se aplica); saves intocados.
 
 ## 6. Smoke test real (sem LLM; infra = máquina local e CI)
 

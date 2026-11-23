@@ -13,7 +13,7 @@
 - **Fechadas em 22/11:** 409, 411 (R5 aprovado no `eval-governance`), 424. **413** `in-progress` só por 2 critérios que não rodam nesta máquina (RPCs com JWT de usuário; `rollback.sql` num Postgres local). **410** `in-progress`: `on` ligado; faltam `e2e_session`, `job_survival` e `account_deletion_recovery` no `on` (`docs/spec410/README.md`).
 - **Os rate cards vencem em 13/12; a `main` fica vermelha de propósito a partir de 03/12** (`test_rate_card_freshness`) até renovar: `docs/spec197/runbooks/budget.md` § Renovação. O card de imagem renovado ganha `extra_models` (425 R1/R3).
 - **425 (troca do modelo de imagem; `gpt-image-2` desliga em 10/02/2027):** Etapa 0 (suporte inerte ao 2.6 + script de medição com teto de US$ 2) na `main`. Etapas 1–3 esperam o dono (Bloqueios).
-- **426 (degrau 2 do gate de tipos):** `approved`, executor em curso; a ampliação do `include` e da baseline é commit do coordenador na `main` depois do pouso (R9). Job `types` do CI é bloqueante desde `54317a66`.
+- **426 `done` (23/11):** gate de tipos cobre `character_creator.py`, os 10 `agents/` com LLM estruturado e os `services/` que chamam LLM (baseline 247 entradas; job `types` bloqueante, 38 s). Parâmetro `llm` novo usa `LLMClient`. Ainda cego: `agents/storyteller.py`.
 - **Latência (419–423, sessão `fb`):** 419–422 na `main`, `in-progress` até o staging; 421 e 422 pousaram com a flag `off`. 423 (abertura, 3 pousos): Etapa 0 + Fase A na branch, em revisão Sol. Detalhe: `CHANGELOG.md` 22/11.
 - Suíte: última completa verde em 22/11, 11892 passed (`FULL_N=3 bash scripts/dev/full.sh`). Flakes: `test_spec361_gate::test_prazo_real_por_thread` (tempo); `test_spec382_node_golden[campaign_secret_rusher_off]`; e2e "F17 workspace_modes".
 
@@ -21,7 +21,7 @@
 
 1. **Staging, quando o DeepSeek tiver saldo e o teto diário zerar:** rodar `e2e_session`, `job_survival --skip-redeploy` e `account_deletion_recovery` no `on` e fechar a 410. Rollback: `shadow` + redeploy. A sessão `fb` usa o staging para 419 §6 itens 2–3 e 423.
 2. **Até 03/12:** renovar os 4 rate cards, com `extra_models` no de imagem.
-3. **Follow-ups:** flake da 382: na suíte que falhou cada log chegou 2× ao root (só a parte `events` diverge); falta achar o teste que deixa o handler duplicado. Suíte no checkout principal chama o Jina de verdade (`.env` com `JINA_API_KEY` + `load_dotenv(override=True)` em `rag.py`): o golden de campanha sozinho falha ali e passa em worktree. `smoke_ab.py` não loga com Turnstile real (usar o caminho de `s192.app_login`).
+3. **Follow-ups:** flake da 382: na suíte que falhou cada log chegou 2× ao root (só a parte `events` diverge); falta achar o teste que deixa o handler duplicado. Suíte no checkout principal chama o Jina de verdade (`.env` com `JINA_API_KEY` + `load_dotenv(override=True)` em `rag.py`). `smoke_ab.py` não loga com Turnstile real (usar o caminho de `s192.app_login`).
 
 ## Bloqueios no dono
 
@@ -51,9 +51,10 @@ Decididas por delegação em 09/11 (D-363-1, D-363-2, D-364-2, D-367-2, D-391-9/
 Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
+- 2026-11-23 · SPEC-429 `draft` — finops-stream-interrompido-estimativa-por-tokens
+- 2026-11-23 · SPEC-426 `done` — workspace-gate-de-tipos-degrau-2
 - 2026-11-22 · SPEC-428 `draft` — latencia-narracao-tamanho-alvo
 - 2026-11-22 · SPEC-427 `draft` — latencia-fila-de-uma-acao
-- 2026-11-22 · SPEC-426 `approved` — workspace-gate-de-tipos-degrau-2
 - 2026-11-22 · SPEC-425 `in-progress` — arte-troca-modelo-imagem-gpt-image-2-6
 - 2026-11-22 · SPEC-424 `done` — economia-execute-trade-sem-mutar-entrada
 - 2026-11-22 · SPEC-422 `in-progress` — latencia-arquivista-sem-llm-fatos-canonicos
@@ -71,7 +72,7 @@ Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os
 Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover para `CHANGELOG.md`.
 
 - Notas até 12/11 → `CHANGELOG.md`.
-- 22/11: dono liberou tudo que não exige ação externa dele ("autorizo a fazer tudo que vc pode fazer") e o piso de RAM só nesta sessão. Escrita no staging passou a andar pelo coordenador (migrações, card, env pela CLI, deploy). Duas sessões no mesmo checkout (esta e a `fb`, latência); deploy do staging só com aviso entre as duas. Push de branch `spec-NNN` autorizado (`RPG_WT_PUSH=1` em pouso de risco alto).
+- 22/11: dono liberou tudo que não exige ação externa dele ("autorizo a fazer tudo que vc pode fazer") e o piso de RAM só nesta sessão. Escrita no staging anda pelo coordenador. Duas sessões no mesmo checkout (esta e a `fb`, latência); deploy do staging só com aviso entre as duas. Push de branch `spec-NNN` autorizado (`RPG_WT_PUSH=1` em pouso de risco alto).
 
 ## Como rodar
 
