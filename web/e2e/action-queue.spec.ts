@@ -537,6 +537,33 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       expect((await sseReqs(page))[2].input_text).toBe("olho o céu");
     });
 
+    // R2-P1-1: o ramo `completed` do retry solta a trava (App.tsx, junto do `setBusy(false)`); vale com a flag off e on.
+    for (const queueOn of [false, true]) {
+      test(`trava solta: 'Tentar de novo' com a operação concluída (flag ${queueOn ? "on" : "off"}) e depois um envio novo`, async ({ page, backend }) => {
+        backend.actionQueue = queueOn;
+        await installControlledSse(page);
+        await openGame(page);
+        await page.clock.install();
+        await composer(page).fill("olho ao redor");
+        await composer(page).press("Enter");
+        await waitSseReqs(page, 1);
+        await push(page, ": ack\n\n" + ev("phase", { node: "campaign_manager", status: "done" }));
+        const opId = String((await sseReqs(page))[0].action_id);
+        const st = backend.states.get("game-a")!;
+        backend.operations.set(opId, {
+          signature: "x", response: { ...st, message: "Concluído no servidor." }, gameId: "game-a", ownerId: backend.userId,
+        } as never);
+        await page.clock.fastForward(25_000);
+        await page.locator(".ws-composer .turn-status").getByRole("button", { name: "Tentar de novo" }).click();
+        await expect(pendingBtn(page)).toBeEnabled();
+        expect(await sseReqs(page)).toHaveLength(1); // completed: restaura, não reenvia
+        await composer(page).fill("olho o céu");
+        await composer(page).press("Enter");
+        await waitSseReqs(page, 2); // sem o unlock do ramo completed a trava segura o envio e o 2º stream nunca chega
+        expect((await sseReqs(page))[1].input_text).toBe("olho o céu");
+      });
+    }
+
     // ---------------- P2-1: o anúncio de devolução não fica preso na região viva ----------------
     test("devolução: a região viva do turno seguinte não repete a mensagem antiga", async ({ page, backend }) => {
       backend.actionQueue = true;
