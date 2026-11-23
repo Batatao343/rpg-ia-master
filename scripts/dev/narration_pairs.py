@@ -73,12 +73,36 @@ def _base_state() -> dict[str, Any]:
     }
 
 
-def _case(cid: str, cls: str, action: str, *, visited=None, mediated=False, trap=False) -> dict:
+def _with_scene_people(state: dict[str, Any]) -> None:
+    """P3-1: 1 NPC ja criado e presente + 1 faccao conhecida (sem ficha a gerar)."""
+    state["npcs"] = {
+        "Velha Magda": {
+            "name": "Velha Magda",
+            "role": "Vidente",
+            "in_scene": True,
+            "home_location_id": "nova_arcadia",
+            "relationship": 6,
+            "hidden_traits": ["supersticioso"],
+            "revealed_traits": [],
+            "memory": ["Leu as cartas para o herói."],
+            "persona": "Guarda o que sabe sobre a Legião de Ferro.",
+        }
+    }
+    state["faction_intel"] = {"legiao_ferro": {"known": True, "knows_goal": False}}
+
+
+def _case(
+    cid: str, cls: str, action: str, *, visited=None, mediated=False, trap=False, people=False
+) -> dict:
     state = _base_state()
+    if people:
+        _with_scene_people(state)
     if visited:
         state["world"]["visited"] = list(visited)
     if mediated:
         state["interlocutor_reason"] = "meta_to_narrator"
+        if people:
+            state["mediated_subject_id"] = "npc_velha_magda"
     return {
         "id": cid,
         "expected_class": cls,
@@ -92,15 +116,27 @@ def build_cases() -> list[dict]:
     both = ["nova_arcadia", "brekmar"]
     return [
         _case("cena-1", "cena", "Observo a rua."),
-        _case("cena-2", "cena", "Examino a praça com calma, atento aos rostos."),
+        _case(
+            "cena-2",
+            "cena",
+            "Examino a praça com calma, atento aos rostos.",
+            people=True,
+        ),
         _case("cena-3", "cena", "Sigo pela rua em direção ao mercado."),
         _case(
             "fala-mediada-1",
             "fala_mediada",
             "Narrador, o que a cidade sabe sobre isto?",
             mediated=True,
+            people=True,
         ),
-        _case("fala-mediada-2", "fala_mediada", "Narrador, quem manda por aqui?", mediated=True),
+        _case(
+            "fala-mediada-2",
+            "fala_mediada",
+            "Narrador, quem manda por aqui?",
+            mediated=True,
+            people=True,
+        ),
         _case("descanso-1", "descanso", "Descanso até o amanhecer."),
         _case("descanso-2", "descanso", "Descanso um pouco antes de seguir."),
         _case("local-visitado", "cena", "Viajo para Brekmar.", visited=both),

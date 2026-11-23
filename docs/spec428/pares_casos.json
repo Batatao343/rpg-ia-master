@@ -70,9 +70,30 @@
           "nova_arcadia"
         ]
       },
-      "npcs": {},
+      "npcs": {
+        "Velha Magda": {
+          "name": "Velha Magda",
+          "role": "Vidente",
+          "in_scene": true,
+          "home_location_id": "nova_arcadia",
+          "relationship": 6,
+          "hidden_traits": [
+            "supersticioso"
+          ],
+          "revealed_traits": [],
+          "memory": [
+            "Leu as cartas para o herói."
+          ],
+          "persona": "Guarda o que sabe sobre a Legião de Ferro."
+        }
+      },
       "factions": [],
-      "faction_intel": {},
+      "faction_intel": {
+        "legiao_ferro": {
+          "known": true,
+          "knows_goal": false
+        }
+      },
       "quests": [],
       "campaign_plan": {},
       "event_log": [],
@@ -152,16 +173,38 @@
           "nova_arcadia"
         ]
       },
-      "npcs": {},
+      "npcs": {
+        "Velha Magda": {
+          "name": "Velha Magda",
+          "role": "Vidente",
+          "in_scene": true,
+          "home_location_id": "nova_arcadia",
+          "relationship": 6,
+          "hidden_traits": [
+            "supersticioso"
+          ],
+          "revealed_traits": [],
+          "memory": [
+            "Leu as cartas para o herói."
+          ],
+          "persona": "Guarda o que sabe sobre a Legião de Ferro."
+        }
+      },
       "factions": [],
-      "faction_intel": {},
+      "faction_intel": {
+        "legiao_ferro": {
+          "known": true,
+          "knows_goal": false
+        }
+      },
       "quests": [],
       "campaign_plan": {},
       "event_log": [],
       "world_projection": {},
       "narrative_summary": "",
       "archivist_last_run": 0,
-      "interlocutor_reason": "meta_to_narrator"
+      "interlocutor_reason": "meta_to_narrator",
+      "mediated_subject_id": "npc_velha_magda"
     }
   },
   {
@@ -194,16 +237,38 @@
           "nova_arcadia"
         ]
       },
-      "npcs": {},
+      "npcs": {
+        "Velha Magda": {
+          "name": "Velha Magda",
+          "role": "Vidente",
+          "in_scene": true,
+          "home_location_id": "nova_arcadia",
+          "relationship": 6,
+          "hidden_traits": [
+            "supersticioso"
+          ],
+          "revealed_traits": [],
+          "memory": [
+            "Leu as cartas para o herói."
+          ],
+          "persona": "Guarda o que sabe sobre a Legião de Ferro."
+        }
+      },
       "factions": [],
-      "faction_intel": {},
+      "faction_intel": {
+        "legiao_ferro": {
+          "known": true,
+          "knows_goal": false
+        }
+      },
       "quests": [],
       "campaign_plan": {},
       "event_log": [],
       "world_projection": {},
       "narrative_summary": "",
       "archivist_last_run": 0,
-      "interlocutor_reason": "meta_to_narrator"
+      "interlocutor_reason": "meta_to_narrator",
+      "mediated_subject_id": "npc_velha_magda"
     }
   },
   {
