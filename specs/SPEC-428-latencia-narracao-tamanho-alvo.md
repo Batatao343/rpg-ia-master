@@ -136,12 +136,13 @@ ganho; a parte fixa não muda. n = 20, estimativa, não medição causal: o crit
   (mesmo estado e mesma ação, `off` × `on`) para o dono ler, com contagens por par (§3.4). Cada tentativa de LLM
   do narrador (hook `llm_setup.set_llm_attempt_telemetry_hook`, salvo e restaurado) vai em `llm_attempts` por braço
   (`provider`, `model`, `outcome`, `http_status`, `attempt_index`, `fell_back`; sem texto, sem chave). Se qualquer
-  narração do par veio de candidato reserva (`fell_back`/`attempt_index > 0`) ou os braços diferem de
-  provedor/modelo, o par sai `comparavel: false` com `motivo`, o `.md` avisa no topo e o rc é 3 (arquivos gravados
+  amostra de qualquer braço não tem tentativa registrada, tem tentativa com `outcome` diferente de `success`
+  (o nó usaria o texto determinístico de fallback), veio de candidato reserva (`fell_back`/`attempt_index > 0`)
+  ou os braços diferem de provedor ou de modelo, o par sai `comparavel: false` com `motivo`, o `.md` avisa no topo e o rc é 3 (arquivos gravados
   para diagnóstico; o pacote não serve ao dono). `--samples N` guarda `chars`/`paragraphs`/`option_lines` e o texto
   de cada amostra; o `.md` mostra todas. `--max-calls N` (default 30, absoluto 120) é o teto de chamadas; o script
   imprime o total previsto e recusa antes da primeira se passar. O `summary` (`.json` e topo do `.md`) traz, por
-  classe e braço, mediana de caracteres, fração com bloco de opções e fração na faixa de `TARGETS`, e a diferença
+  classe e braço (só pares comparáveis; os demais ficam em `excluded_pairs` e o `.md` os lista), mediana de caracteres, fração com bloco de opções e fração na faixa de `TARGETS`, e a diferença
   de mediana `on − off` (controles incluídos).
 
 ### Fora de escopo
