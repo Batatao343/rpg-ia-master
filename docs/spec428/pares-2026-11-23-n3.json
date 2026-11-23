@@ -1,0 +1,1468 @@
+{
+  "git_sha": "93a79896",
+  "calls": 60,
+  "summary": {
+    "classes": {
+      "cena": {
+        "control": false,
+        "off": {
+          "n": 12,
+          "median_chars": 1196.5,
+          "option_fraction": 0.08333333333333333,
+          "in_range_fraction": 0.25
+        },
+        "on": {
+          "n": 12,
+          "median_chars": 706.5,
+          "option_fraction": 0.0,
+          "in_range_fraction": 0.25
+        },
+        "median_diff_on_minus_off": -490.0
+      },
+      "fala_mediada": {
+        "control": false,
+        "off": {
+          "n": 6,
+          "median_chars": 1450.0,
+          "option_fraction": 0.6666666666666666,
+          "in_range_fraction": 0.0
+        },
+        "on": {
+          "n": 6,
+          "median_chars": 770.0,
+          "option_fraction": 0.5,
+          "in_range_fraction": 0.8333333333333334
+        },
+        "median_diff_on_minus_off": -680.0
+      },
+      "descanso": {
+        "control": false,
+        "off": {
+          "n": 6,
+          "median_chars": 1141.0,
+          "option_fraction": 0.5,
+          "in_range_fraction": 0.16666666666666666
+        },
+        "on": {
+          "n": 6,
+          "median_chars": 753.5,
+          "option_fraction": 0.3333333333333333,
+          "in_range_fraction": 0.3333333333333333
+        },
+        "median_diff_on_minus_off": -387.5
+      },
+      "local_novo": {
+        "control": true,
+        "off": {
+          "n": 3,
+          "median_chars": 1440,
+          "option_fraction": 0.0,
+          "in_range_fraction": null
+        },
+        "on": {
+          "n": 3,
+          "median_chars": 1591,
+          "option_fraction": 0.0,
+          "in_range_fraction": null
+        },
+        "median_diff_on_minus_off": 151
+      },
+      "revelacao": {
+        "control": true,
+        "off": {
+          "n": 3,
+          "median_chars": 1598,
+          "option_fraction": 0.0,
+          "in_range_fraction": null
+        },
+        "on": {
+          "n": 3,
+          "median_chars": 1363,
+          "option_fraction": 0.0,
+          "in_range_fraction": null
+        },
+        "median_diff_on_minus_off": -235
+      }
+    },
+    "providers": {
+      "off": [
+        "deepseek/deepseek-v4-flash"
+      ],
+      "on": [
+        "deepseek/deepseek-v4-flash"
+      ]
+    }
+  },
+  "pairs": [
+    {
+      "id": "cena-1",
+      "expected_class": "cena",
+      "input_hash": "7d8fbba4d3d6e2cd",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 1298,
+          "paragraphs": 3,
+          "option_lines": 3
+        },
+        "sample_chars": [
+          1298,
+          901,
+          1195
+        ],
+        "samples": [
+          {
+            "chars": 1298,
+            "paragraphs": 3,
+            "option_lines": 3
+          },
+          {
+            "chars": 901,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1195,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 680,
+          "paragraphs": 2,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          680,
+          656,
+          766
+        ],
+        "samples": [
+          {
+            "chars": 680,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 656,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 766,
+            "paragraphs": 2,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "cena-2",
+      "expected_class": "cena",
+      "input_hash": "4b53a442d25b0705",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 999,
+          "paragraphs": 3,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          999,
+          1198,
+          1206
+        ],
+        "samples": [
+          {
+            "chars": 999,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1198,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1206,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 739,
+          "paragraphs": 2,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          739,
+          775,
+          627
+        ],
+        "samples": [
+          {
+            "chars": 739,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 775,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 627,
+            "paragraphs": 2,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "cena-3",
+      "expected_class": "cena",
+      "input_hash": "c0a6ba45c90ce522",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 1063,
+          "paragraphs": 3,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          1063,
+          1183,
+          923
+        ],
+        "samples": [
+          {
+            "chars": 1063,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1183,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 923,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 733,
+          "paragraphs": 2,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          733,
+          615,
+          626
+        ],
+        "samples": [
+          {
+            "chars": 733,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 615,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 626,
+            "paragraphs": 2,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "fala-mediada-1",
+      "expected_class": "fala_mediada",
+      "input_hash": "c7adcb381f5e483b",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 1523,
+          "paragraphs": 3,
+          "option_lines": 3
+        },
+        "sample_chars": [
+          1523,
+          1483,
+          1467
+        ],
+        "samples": [
+          {
+            "chars": 1523,
+            "paragraphs": 3,
+            "option_lines": 3
+          },
+          {
+            "chars": 1483,
+            "paragraphs": 3,
+            "option_lines": 3
+          },
+          {
+            "chars": 1467,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 705,
+          "paragraphs": 2,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          705,
+          907,
+          667
+        ],
+        "samples": [
+          {
+            "chars": 705,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 907,
+            "paragraphs": 2,
+            "option_lines": 2
+          },
+          {
+            "chars": 667,
+            "paragraphs": 2,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "fala-mediada-2",
+      "expected_class": "fala_mediada",
+      "input_hash": "07e5f21a39761f06",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 1433,
+          "paragraphs": 2,
+          "option_lines": 3
+        },
+        "sample_chars": [
+          1433,
+          1038,
+          991
+        ],
+        "samples": [
+          {
+            "chars": 1433,
+            "paragraphs": 2,
+            "option_lines": 3
+          },
+          {
+            "chars": 1038,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 991,
+            "paragraphs": 2,
+            "option_lines": 2
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 835,
+          "paragraphs": 2,
+          "option_lines": 2
+        },
+        "sample_chars": [
+          835,
+          666,
+          886
+        ],
+        "samples": [
+          {
+            "chars": 835,
+            "paragraphs": 2,
+            "option_lines": 2
+          },
+          {
+            "chars": 666,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 886,
+            "paragraphs": 2,
+            "option_lines": 2
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "descanso-1",
+      "expected_class": "descanso",
+      "input_hash": "f44f315afcf1dedb",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 799,
+          "paragraphs": 2,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          799,
+          1367,
+          1463
+        ],
+        "samples": [
+          {
+            "chars": 799,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 1367,
+            "paragraphs": 3,
+            "option_lines": 3
+          },
+          {
+            "chars": 1463,
+            "paragraphs": 3,
+            "option_lines": 3
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 662,
+          "paragraphs": 2,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          662,
+          713,
+          641
+        ],
+        "samples": [
+          {
+            "chars": 662,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 713,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 641,
+            "paragraphs": 2,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "descanso-2",
+      "expected_class": "descanso",
+      "input_hash": "67f3359d22be030d",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 1151,
+          "paragraphs": 3,
+          "option_lines": 3
+        },
+        "sample_chars": [
+          1151,
+          1131,
+          1047
+        ],
+        "samples": [
+          {
+            "chars": 1151,
+            "paragraphs": 3,
+            "option_lines": 3
+          },
+          {
+            "chars": 1131,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1047,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 794,
+          "paragraphs": 2,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          794,
+          908,
+          827
+        ],
+        "samples": [
+          {
+            "chars": 794,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 908,
+            "paragraphs": 2,
+            "option_lines": 2
+          },
+          {
+            "chars": 827,
+            "paragraphs": 2,
+            "option_lines": 2
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "local-visitado",
+      "expected_class": "cena",
+      "input_hash": "5b5902975b4f0f81",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 1549,
+          "paragraphs": 3,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          1549,
+          1267,
+          1579
+        ],
+        "samples": [
+          {
+            "chars": 1549,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1267,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1579,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 625,
+          "paragraphs": 2,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          625,
+          949,
+          1048
+        ],
+        "samples": [
+          {
+            "chars": 625,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 949,
+            "paragraphs": 2,
+            "option_lines": 0
+          },
+          {
+            "chars": 1048,
+            "paragraphs": 2,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "controle-local-novo",
+      "expected_class": "local_novo",
+      "input_hash": "5b5902975b4f0f81",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 1264,
+          "paragraphs": 3,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          1264,
+          1440,
+          1682
+        ],
+        "samples": [
+          {
+            "chars": 1264,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1440,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1682,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 1630,
+          "paragraphs": 3,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          1630,
+          1286,
+          1591
+        ],
+        "samples": [
+          {
+            "chars": 1630,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1286,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1591,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "controle-revelacao",
+      "expected_class": "revelacao",
+      "input_hash": "fa8b63770ef4c87a",
+      "comparavel": true,
+      "motivo": "",
+      "off": {
+        "counts": {
+          "chars": 2076,
+          "paragraphs": 3,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          2076,
+          1598,
+          1347
+        ],
+        "samples": [
+          {
+            "chars": 2076,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1598,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1347,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      },
+      "on": {
+        "counts": {
+          "chars": 1606,
+          "paragraphs": 3,
+          "option_lines": 0
+        },
+        "sample_chars": [
+          1606,
+          1363,
+          1336
+        ],
+        "samples": [
+          {
+            "chars": 1606,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1363,
+            "paragraphs": 3,
+            "option_lines": 0
+          },
+          {
+            "chars": 1336,
+            "paragraphs": 3,
+            "option_lines": 0
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "jina",
+            "model": "jina-embeddings-v3",
+            "outcome": "success"
+          }
+        ],
+        "llm_attempts": [
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 0
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 1
+          },
+          {
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash",
+            "outcome": "success",
+            "http_status": 0,
+            "attempt_index": 0,
+            "fell_back": false,
+            "sample": 2
+          }
+        ]
+      }
+    }
+  ]
+}
