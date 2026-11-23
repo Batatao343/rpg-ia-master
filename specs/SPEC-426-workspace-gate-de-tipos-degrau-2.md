@@ -1,6 +1,6 @@
 # SPEC-426 — workspace-gate-de-tipos-degrau-2
 
-> **Status:** `approved` (22/11, pelo coordenador, por delegação do dono; D-426-1 a D-426-5 como recomendado; veto do dono continua possível)
+> **Status:** `in-progress` (22/11, pelo coordenador, por delegação do dono; D-426-1 a D-426-5 como recomendado; veto do dono continua possível)
 > **Criada:** 2026-11-22 · **Atualizada:** 2026-11-22
 > **Depende de:** SPEC-418 (`done`; gate bloqueante desde 22/11, `docs/spec418/medicao.md:81`).
 > **Desbloqueia:** degraus 4-5 da SPEC-418 (`routes/` + `api.py`, `reportUnnecessaryTypeIgnoreComment`); follow-up do `storyteller` (§2 Fora de escopo).
@@ -88,12 +88,12 @@ Executor: só `tests/test_type_gate.py`, os testes dos 6 módulos de `services/`
 
 ### Etapa 0 — Medição (saída em `.tmp/spec426/`, resultado em `docs/spec426/medicao.md`)
 
-- **E0.1** `basedpyright --help`: nome da opção de interpretador na 1.40.2: <MEDIR: bash scripts/dev/py.sh -m basedpyright --help | grep -i python>.
-- **E0.2 Reproduzir o `.venv` velho.** No worktree, `uv venv .tmp/spec426/stale` e junção/cópia como `.venv`; `type_gate.py --check` → <MEDIR: rc e nº de reportMissingImports com .venv velho, sem R7>; com `--pythonpath` à mão → <MEDIR: rc com R7>. Não reproduziu → registrar e manter R7 mesmo assim (é determinismo barato), dizendo isso no hand-back.
-- **E0.3 Contagem** com o `include` de R5 numa config provisória (sem gravar baseline no repo): <MEDIR: erros por arquivo e por regra no escopo novo>; diagnósticos citando `object`/`AIMessage`: <MEDIR: n e lista arquivo:linha>, classificados por R4.
-- **E0.4 Tempo e RAM**, frio/quente, escopo atual vs R5: <MEDIR: tempo e pico (node + launcher) por rodada>; aplicar R6 e registrar cada corte.
-- **E0.5 Baseline** provisória (`--writebaseline` em `.tmp/`): <MEDIR: entradas e KB>.
-- **E0.6 Duração dos `types_e2e`** (8 testes): <MEDIR: tempo de pytest tests/test_type_gate.py -m types_e2e, sozinho>.
+- **E0.1** `basedpyright --help`: nome da opção de interpretador na 1.40.2: `--pythonpath <FILE>` (medido; `docs/spec426/medicao.md` E0.1).
+- **E0.2 Reproduzir o `.venv` velho.** No worktree, `uv venv .tmp/spec426/stale` e junção/cópia como `.venv`; `type_gate.py --check` → rc 0 e 0 `reportMissingImports` (não reproduziu); com `--pythonpath` à mão → rc 0. Não reproduziu → registrar e manter R7 mesmo assim (é determinismo barato), dizendo isso no hand-back.
+- **E0.3 Contagem** com o `include` de R5 numa config provisória (sem gravar baseline no repo): 153 erros em 11 arquivos (tabela em `medicao.md` E0.3); diagnósticos citando `object`/`AIMessage`: `librarian.py:91-95` e `character_creator.py:418` são os únicos guards fracos do LLM; classificação em `medicao.md`, classificados por R4.
+- **E0.4 Tempo e RAM**, frio/quente, escopo atual vs R5: atual 83 s / 749 MB; R5 quente 34,5 s / 1 083 MB; nenhum corte (`medicao.md` E0.4); aplicar R6 e registrar cada corte.
+- **E0.5 Baseline** provisória (`--writebaseline` em `.tmp/`): 247 entradas (+153), 57,2 KB.
+- **E0.6 Duração dos `types_e2e`** (8 testes): 8 passed em 37 s.
 
 ### Etapa 1 — Testes primeiro
 
@@ -113,7 +113,7 @@ Commit de R9 na `main` (checador sozinho, RAM ≥ 3 GB), `type_gate.py --check` 
 
 ## 5. Critérios de aceite
 
-- [ ] `docs/spec426/medicao.md` com E0.1-E0.6 e nenhum `<MEDIR:` na spec.
+- [ ] `docs/spec426/medicao.md` com E0.1-E0.6 e nenhum marcador de medição pendente na spec.
 - [ ] `services/llm_protocol.py` só com `typing`; `get_llm()`, `MockLLM`, `FallbackLLM` aceitos como `LLMClient`.
 - [ ] 8 parâmetros `llm` anotados (R3), retorno `object` em `narrate_structured`; oráculo I1 igual.
 - [ ] `type_gate.py` com interpretador fixo; `test_checker_cmd_pins_interpreter` verde.
@@ -132,7 +132,7 @@ Commit de R9 na `main` (checador sozinho, RAM ≥ 3 GB), `type_gate.py --check` 
 
 ## Não rodou e por quê
 
-- Autor da spec não rodou checador nem pytest (RAM): todos os números estão em `<MEDIR:>` da Etapa 0.
+- Autor da spec não rodou checador nem pytest (RAM): os números vieram da Etapa 0 (`docs/spec426/medicao.md`).
 - §6.4 depende de push (coordenador, após R9).
 
 ## 7. Riscos & compatibilidade
