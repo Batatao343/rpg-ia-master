@@ -114,6 +114,44 @@ Nenhum P0/P1.
 
 ## Evidência verificada
 
+### Reconferência 2 (`eecda1b7`)
+
+`bash scripts/dev/red_green.sh 428` → **red_green: 30/30 OK** (são os 25 da tabela abaixo mais estes 5 novos, todos `vermelho (import)` na `main` e `verde` na branch):
+
+| teste | main | branch | veredito |
+|---|---|---|---|
+| tests/test_narration_pairs_script.py::test_budget_refuses_before_any_call | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_fingerprint_ignores_only_size_lines | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_pairs_carry_input_hash_and_fail_on_divergence | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_world_pulse_llm_is_neutralised | vermelho (import) | verde | OK |
+| tests/test_narration_pairs_script.py::test_zero_llm_calls_outside_narrator | vermelho (import) | verde | OK |
+
+Mutantes do script (plugin `mutpairs428`, `MUTP=<nome>`) → **4/4 mortos**:
+
+| mutante | morto por |
+|---|---|
+| `pulse_on` (sem o no-op do pulso) | `test_world_pulse_llm_is_neutralised` |
+| `narrator_only` (o guard não troca os outros `get_llm`) | `test_zero_llm_calls_outside_narrator` |
+| `budget_late` (`check_budget` depois do 1º par) | `test_budget_refuses_before_any_call` (`assert 4 == 0`) |
+| `hash_blind` (hash constante) | `test_fingerprint_ignores_only_size_lines` |
+
+Comandos e resultados:
+
+```text
+git diff 9c8e40ec..HEAD -- agents/ services/ tests/fixtures/ → vazio
+git diff --stat main...HEAD -- evals/ → vazio
+pt.sh tests/test_narration_pairs_script.py tests/test_narration_size.py -n 2 → 94 passed
+pt.sh tests/test_ruff_counts.py tests/test_clock_asserts.py tests/test_size_budget.py tests/test_spec192_vercel_env.py tests/test_flag_registry.py -n 0 → 68 passed
+pt.sh tests/test_spec382_node_golden.py -n 0 → 66 passed
+baseline_growth.py --base main → "nenhum baseline cresceu", rc 0
+diff off × on dos prompts dos 10 casos (scratch chk428.py) → só a regra de parágrafos e a linha TAMANHO DA RESPOSTA
+pytest -n 0 -p leak428 tests/test_narration_pairs_script.py → 11 passed; foreign get_llm após a sessão: ['agents.campaign_manager']
+pytest -n 0 tests/test_enrich_node.py → 9 passed (sozinho)
+pytest -n 0 tests/test_narration_pairs_script.py tests/test_enrich_node.py → 7 FAILED em test_enrich_node.py (RuntimeError do guard)
+```
+
+### Revisão 1 (`ba4bc3ff`)
+
 `bash scripts/dev/red_green.sh 428`:
 
 | teste | main | branch | veredito |
