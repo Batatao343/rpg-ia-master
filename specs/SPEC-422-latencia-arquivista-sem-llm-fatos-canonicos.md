@@ -395,10 +395,39 @@ Staging (`Requer: staging`):
 6. A/B `off` × `on`, mesma L0: mediana de "pode agir" do descanso e número de turnos travados (hoje
    21/60).
 
+### Resultado do smoke local, itens 1–4 (24/11, `main` `37ba6222`)
+
+API local (perfil arquivo), DeepSeek real, `RPG_ARCHIVE_RECORD=on`, `RPG_ARCHIVE_POLICY=lean`. Seis rodadas curtas
+(4 a 11 turnos cada), todas as respostas com status 200, saves apagados no fim. Só tempos, contagens e nomes de evento
+foram lidos do log.
+
+- **Item 1 (descanso sem LLM): passou.** Em 7 descansos de 5 rodadas: `archivist.record {kind: "rest"}`, `llm_by_phase`
+  sem `archivist`, `phase_ms.archivist` de 8 a 40 ms em 6 deles. O resumo termina com a frase de R4. O 7º levou 611 ms
+  sem LLM: é a tentativa de gravar a memória vetorial, que falha nesta máquina (ver abaixo).
+- **Item 2 (fala com NPC já criado): passou.** Nos turnos com rota `npc_actor` o arquivista chamou o LLM (2,2 a 5,2 s) e
+  `archivist.trigger` saiu com os motivos (`archive_due`; `archive_due` + `vector_retry`).
+- **Item 3 (segundo descanso seguido): passou.** Dois descansos seguidos: o resumo ficou com 280 caracteres nos dois, com
+  **uma** frase de descanso (contagem de `O herói descansou em` = 1).
+- **Item 4 (cena seguinte): passou.** A cena depois do descanso respondeu sem erro com o resumo gravado. Quando o gate
+  disparou (cadência de 10 turnos; `vector_retry`), o arquivista com LLM rodou normalmente (4,0 e 4,9 s).
+- **Descanso na cadência:** no 10º turno o descanso chamou o LLM (`archivist.trigger` com `archive_due` + `cadence`,
+  4,9 s, sem `archivist.record`); o descanso seguinte voltou ao registro determinístico. É o comportamento de R2.
+- **P3 já conhecido:** a frase de R4 leva números do calendário ("15º dia de Malagor … Ano 112 da Era 7").
+
+Dois achados fora desta spec, vistos nos mesmos logs:
+
+1. **Memória vetorial local não grava neste checkout.** `rag.session_memory_failed` (`RuntimeError`) em toda gravação: o
+   FAISS não abre arquivo em caminho com acento (`…\Área de Trabalho\…`), e `_save_index` usa caminho absoluto desde a
+   SPEC-234 R10. Reproduzido isolado (3/3 falham); a mesma gravação numa pasta sem acento passa (3/3). Não tem relação
+   com a SPEC-419 nem com esta spec; o hospedado usa Postgres e não é afetado.
+2. **Fallback Groq do roteador recusa a resposta.** Com o DeepSeek em timeout, o Groq devolveu HTTP 400
+   `Tool call validation failed … missing properties: 'loot_context'`: `RouterDecision.loot_context` e `target` não têm
+   default e viram obrigatórios no schema da ferramenta. Um turno levou 25,8 s por causa disso.
+
 ## Não rodou e por quê
 
-- **Smoke §6, fase `shadow` e A/B (staging):** não rodaram. O staging está em `d7aa4beb` (10/11) e o próximo deploy depende
-  de o dono aplicar as migrações das SPEC-413/410 (`ESTADO_ATUAL.md` § Bloqueios).
+- **Smoke §6 itens 5–6, fase `shadow` e A/B (staging):** não rodaram. O staging ficou sem turno em 23/11 (teto diário de
+  gasto, SPEC-429) e só volta às 03:00 UTC de 24/11.
 - **CI pré-pouso de risco `alto`:** não rodou, por erro do coordenador: o push de branch `spec-NNN` estava autorizado
   desde 13/11 e eu trabalhei com um `ESTADO_ATUAL.md` antigo que dizia o contrário. O que rodou antes do pouso foi a
   suíte completa local e a revisão Sol com mutações. CI depois do pouso, no push da `main` `e71b08c3` (22/11), os três
