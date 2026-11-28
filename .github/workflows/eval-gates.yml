@@ -21,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
       - run: uv sync
       - id: scope
         env:
@@ -70,7 +70,7 @@ jobs:
       # SPEC-380 R1.4: `platform` (linux-py3.13.N) entra na compatibilidade da baseline;
       # patch fixo para o CI não ficar vermelho sozinho quando o runner sobe de versão.
       # Mudou o patch => regenerar evals/baselines/deterministic.json (eval authoring).
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
         with:
           python-version: "3.13.18"
       - run: uv sync
@@ -113,7 +113,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
       - run: uv sync
       # Push/PR: a suíte completa de validate.yml já cobre estes testes (backend implica test); só dispatch manual os roda aqui.
       - if: github.event_name == 'workflow_dispatch'
@@ -140,7 +140,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: web/.nvmrc
